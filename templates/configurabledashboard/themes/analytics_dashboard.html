@@ -1,0 +1,84 @@
+<!-- LAYOUT TEMPLATE: ANALYTICS, 3 COLUMN VIEW
+Data-focused analytics layout with a page-wide title bar
+Layout takes 3 input "component" templates to display each of the column graphics -->
+
+<script> import chart.js </script>
+
+<!-- load basic layout -->
+{% extends "customdashboard/themes/custom_base_layout.html" %}
+{% load staticfiles %}
+
+<!-- humanize numbers -->
+{% load humanize %}
+
+<!-- layout-specific content modules-->
+{% block content %}
+<!-- TODO: INPUT FORM FOR COMPONENT SELECTION
+		
+		NOTES: 
+		input form needs to capture chart_selection as "charts/chart_type" and .html component name needs to match
+		input form needs to capture narrative_selection as "narratives/narrative_type" and .html component name needs to match (ditto for other components) -->
+
+<div class='row'>
+	<div class='col-lg-12'>
+		<h3> Page title placeholder text</h3>
+	</div>
+</div>
+<div class='row'>
+	<div class='col-lg-9'>
+		<div class='panel'>
+			<div class='panel-heading text-center'>
+				{% with table4 as tolaTableData %}
+				    {% include 'customdashboard/components/charts/bar_graph.html' %}
+				{% endwith %}
+			</div>	
+		</div>
+	</div>
+	<div class='col-lg-3'>
+		<div class='panel'>
+			<div class='panel-heading text-center'>
+				{% with table2 as tolaTableData %}
+				    {% include 'customdashboard/components/charts/pie.html' %}
+				{% endwith %}
+			</div>	
+		</div>
+	</div>
+</div>
+<div class='row'>
+	<div class='col-md-4'>
+		<div class='panel panel-info '>
+			<div class='panel-heading text-center'></div>
+				<div class="panel-body" style="min-height: 300; max-height: 300;">
+				<span class='chart-title' style="overflow-y: scroll;">{{ tableHeaders.title1 }}</span>
+				{% with table2 as tolaTableData %}
+				    {% include 'customdashboard/components/charts/bar_graph.html' %}
+				{% endwith %}
+				</div>
+		</div>
+	</div>
+	<div class='col-md-4'>
+		<div class='panel panel-info '>
+			<div class='panel-heading'></div>
+				<div class="panel-body" style="min-height: 300; max-height: 300;">
+				<span class='chart-title' style="overflow-y: scroll;">{{ table2.column_heading }}</span>
+				{% with table2.data_set as tolaTableData %}
+				    {% include 'customdashboard/components/charts/doughnut.html' %}
+				{% endwith %}
+				</div>
+		</div>
+	</div>
+	<div class='col-md-4'>
+		<div class='panel panel-info '>
+			<div class='panel-heading'></div>
+				<div class="panel-body" style="min-height: 300; max-height: 300;">
+				<span class='chart-title' style="overflow-y: scroll;">{{ table3.column_heading}}</span>
+				{% with tableData1 as tolaTableData %}
+				    {% include 'customdashboard/components/charts/radar.html' %}
+				{% endwith %}
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}
+

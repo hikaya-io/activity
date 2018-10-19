@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block page_title %}Feedback{% endblock %}
+
+{% if messages %}
+<ul class="messages">
+    <p>Message:</p>
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% block content %}
+	<p>Let us know if you are having a problem or would like to see something change.</p>
+        {% csrf_token %}
+    {% load crispy_forms_tags %}
+    {% crispy form form.helper %}
+
+{% endblock content %}

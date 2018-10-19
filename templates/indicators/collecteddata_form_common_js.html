@@ -1,0 +1,175 @@
+<script>
+
+    // Intercept CollectedDataUpdate form submission and then use ajax to submit it.
+    $("#indicator_collecteddata_div").on("submit", "#collecteddata_update_form", function(e){
+        e.preventDefault();
+        var isFormValid = true;
+        $("#modalmessages").empty();
+        pts_valid = validatePeriodicTarget();
+        datecollected_valid = validateDateCollected();
+        achieved_valid = validate_achieved();
+        // if (pts_valid == false || datecollected_valid == false || achieved_valid == false) {
+        //     return false;
+        // }
+        if ($("#collecteddata_update_form div").hasClass('has-error')) {
+            createAlert("danger", "Please complete all required.", true, "#modalmessages");
+            $('#indicator_collecteddata_div').animate({ scrollTop: 0 }, 'slow');
+            return;
+        }
+        /*
+        var date_collected = new Date($(this.date_collected).val());
+        var date_collected_db_format = date_collected.getFullYear() + '-' + (parseInt(date_collected.getMonth()) + 1) + '-' + date_collected.getDate();
+        $(this.date_collected).val(date_collected_db_format);
+        */
+
+        var form_url = $(this).attr('action');
+        var form_data = $(this).serialize();
+        // mark that the form data has changed so that when the modal is closed the list view can be updated
+        $(this).data('recordchanged', true);
+        $.post(form_url, form_data,
+               function(response, status, jqXHR) { // success callback
+                    $("#modalmessages").empty();
+                    createAlert("success", "Success, form data saved.", true, "#modalmessages");
+                })
+            .fail(function(error){
+                createAlert("danger", "Could not save form. "  + error, true, "#modalmessages");
+            });
+        $('#indicator_collecteddata_div').animate({ scrollTop: 0 }, 'slow');
+    });
+
+
+    $("#indicator_collecteddata_div").on("change", "#id_date_collected", function(e){
+        // only validate periodicTarget dropdown if it is an existing record
+        // if( parseInt(`{{object.id|safe}}`) > 0 ){
+            validatePeriodicTarget(onlyPeriodic = true);
+        // }
+        validateDateCollected();
+    });
+
+    $("#indicator_collecteddata_div").on("change", "#id_periodic_target", function(e){
+        validatePeriodicTarget();
+    });
+
+    $("#indicator_collecteddata_div").on("change", "#id_achieved", function(e){
+        validate_achieved();
+    });
+
+
+    function validatePeriodicTarget(onlyPeriodic = false) {
+        if (setPeriodicTargetValue() == false) {
+            // $("#id_periodic_target").val('');
+            if ($("#id_periodic_target option").size() <= 1) {
+                $("#hint_id_periodic_target").html("<small>Targets are not set up for this indicator. <a id='targetsTabLink' href='/indicators/indicator_update/" + $("#id_indicator").val() + "/'><strong>Start by selecting a target frequency.</strong></a></small>");
+            } else {
+                if ($("#id_date_collected").val().length > 0){
+                $("#hint_id_periodic_target").html("<small>This date falls outside the range of your target periods. You can change the date or <a id='targetsTabLink' href='/indicators/indicator_update/" + $("#id_indicator").val() + "/'><strong>create additional target periods.</strong></a></small>");
+                }
+            }
+
+            $("#div_id_periodic_target").addClass('has-error');
+        } else if ($("#id_periodic_target").val() == '' && onlyPeriodic == false) {
+
+            $("#hint_id_periodic_target").html("<small>Pleae select a target.</small>");
+            $("#div_id_periodic_target").addClass('has-error');
+            return false;
+        } else {
+            $("#hint_id_periodic_target").html("");
+            $("#div_id_periodic_target").removeClass('has-error');
+            return true;
+        }
+    }
+
+
+    function validate_achieved() {
+        var actual = $("#id_achieved");
+        if (!actual.val() || !$.isNumeric(actual.val()) || actual.val() < 0) {
+            $("#div_id_achieved").addClass('has-error');
+            $("#hint_id_achieved").text(" Please enter a number with no letters or symbols.");
+            return false;
+        } else {
+            $("#div_id_achieved").removeClass('has-error');
+            $("#hint_id_achieved").text(" ");
+            return true;
+        }
+    }
+
+    function validateDateCollected(){
+        var field = $("#id_date_collected").val();
+        if ($.isEmptyObject(field)) {
+            $("#div_id_date_collected").addClass('has-error');
+            $("#hint_id_date_collected").html("<small>Please complete this field.</small>");
+        }else if (!isDate(field)) {
+            $("#div_id_date_collected").addClass('has-error');
+            $("#hint_id_date_collected").html("<small>Please enter a valid date.</small>");
+            return false;
+        } else {
+            var val = formatDate(field);
+            $("#id_date_collected").val(val);
+            $("#div_id_date_collected").removeClass('has-error');
+            $("#hint_id_date_collected").text(" ");
+            return true;
+        }
+    }
+
+    function setPeriodicTargetValue() {
+        //   \(    : match an opening parentheses
+        //   (     : begin capturing group
+        //   [^)]+ : match one or more non ) characters
+        //   )     : end capturing group
+        //   \)    : match closing parentheses
+        var regExp = /\(([^)]+)\)/;
+        var matchFound = false
+        var target_frequency = $("#id_target_frequency").val();
+
+        if (target_frequency == 1 || target_frequency == 2 || target_frequency == 8) {
+            return true;
+        }
+        $("#id_periodic_target option").each(function() {
+            var pt_date_range = regExp.exec(this.text);
+            if (!pt_date_range || pt_date_range == null || pt_date_range == 'null'){
+                return;
+            }
+            pt_date_range = pt_date_range[1].split('-');
+            try {
+                var start_date = new Date(pt_date_range[0].trim());
+                var end_date = new Date(pt_date_range[1].trim());
+                var collected_date = new Date($("#id_date_collected").val().trim());
+                if (collected_date >= start_date && collected_date <= end_date) {
+                    // deselect the currently selected option
+                    $("#id_periodic_target option:selected").attr("selected", false);
+                    // select the correct value
+                    $("#id_periodic_target").val(this.value);
+                    // set the selected option
+                    $("#id_periodic_target option[value=" + this.value + "]").attr('selected', 'selected');
+                    // disable all options except the selected option
+                    $("#id_periodic_target option:not(:selected)").attr("disabled", true);
+                    // enable the selected option
+                    $("#id_periodic_target option:selected").attr("disabled", false);
+                    matchFound = true;
+                    return;
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        });
+        if (!matchFound) {
+            // deselect the currently selected option
+            $("#id_periodic_target option:selected").attr("selected", false);
+            // change the value to nothing
+            $("#id_periodic_target").val('');
+            // select the nothing option
+            $("#id_periodic_target option[value='']").attr('selected', 'selected');
+            // disable all options except the selected option
+            $("#id_periodic_target option:not(:selected)").attr("disabled", true);
+            // enable the selected option
+            $("#id_periodic_target option:selected").attr("disabled", false);
+        }
+        return matchFound;
+    }
+
+
+    function lockPeriodicTargetDropdown(){
+        $("#id_periodic_target option:not(:selected)").attr("disabled", true);
+        $("#id_periodic_target").attr("readonly", true);
+    }
+</script>

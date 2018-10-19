@@ -1,0 +1,19 @@
+<!-- {% load staticfiles %}
+
+{% block content %}
+    <div>
+        <canvas id='{{tolaTableData.component_id}}'> </canvas>
+    </div>
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/charts/bubble_script.js"></script>
+<script>
+bubbleFunction(
+	//pass in the table data and labels data
+	{% autoescape off %}{{tolaTableData}}{% endautoescape %},
+	// {% autoescape off %}{{tolaTableData.data}}{% endautoescape %}, #programmatic version for wizard
+	//slice off the right number of doughnutColors to use in the chart
+	{% autoescape off %} {{colorPalettes.light}}.slice(0,({{tolaTableData.data_set}}.size)) {% endautoescape %}
+	//{% autoescape off %}{{tolaTableData.colors}} {% endautoescape %}, //programmatic version for wizard
+) </script>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Delete Documentation</title>
+</head>
+<body>
+
+<script type="text/javascript">
+    var frm = $('#monitorDelete');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#alert-error").html("Success! ");
+            },
+            error: function(data) {
+                $("#alert-error").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+</script>
+
+    <div class="modal-header">
+
+    <div class="alert alert-error" id="alert-error">
+        <strong>{{ error|escape }}</strong>
+    </div>
+
+    <h4 class="modal-title">{% block page_title %}Documentation Delete {% endblock %}</h4>
+
+    </div>
+    <div class="modal-body">
+
+    <form action="/workflow/documentation_agreement_delete/{{ id }}/" method="post" id="monitorDelete">{% csrf_token %}
+        <p>Are you sure you want to delete?</p>
+        <input type="submit" value="Confirm" />
+    </form>
+    <div class="modal-footer">
+       <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.location.href = '/workflow/projectagreement_update/{{ id }}/#project-planning';parent.location.reload();">Close</button>
+    </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,48 @@
+{% block extra_js_in_body %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+    <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+    <div class="modal-header">
+
+        <div class="alert alert-error" id="alert-error">
+            <strong>{{ error|escape }}</strong>
+        </div>
+
+        <h4 class="modal-title">{% block page_title %}Edit Dashboard Theme{% endblock %}</h4>
+
+    </div>
+    {% include "form_guidance.html" %}
+    <div class="modal-body">
+        {% load crispy_forms_tags %}
+        <form class="form-horizontal" method="post" id="dashboardThemeUpdateForm" action="/configurabledashboard/theme_update/{{pk}}/">
+
+        {% csrf_token %}
+        {% crispy form %}
+
+        <input type="submit" class="btn btn-primary" name="Save changes" value="Save changes"/>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.location.href = '/configurabledashboard/theme/';parent.location.reload();"> Close</button>
+    </div> 
+
+<script type="text/javascript">
+    var frm = $('#dashboardThemeUpdateForm');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#alert-error").html("Success! ");
+            },
+            error: function(data) {
+                $("#alert-error").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+
+</script>

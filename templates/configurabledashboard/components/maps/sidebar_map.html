@@ -1,0 +1,21 @@
+<div id="map" class="sidebar-map" style='height: 250px'></div>
+<script src="{{ STATIC_URL }}js/leaflet.js"></script>
+<script>
+
+    var mapCoordinates = [38.4237, 27.1428]
+
+    var mapScale = 13
+    var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                    'Imagery &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+                    mbUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+    var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox.light', attribution: mbAttr}),
+                    streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
+    var map = L.map('map', {
+                    center: mapCoordinates,
+                    zoom: mapScale,
+                    layers: [grayscale]
+                    });
+    var baseLayers = { "Grayscale": grayscale,"Streets": streets,};
+    L.control.layers(baseLayers).addTo(map);
+</script>

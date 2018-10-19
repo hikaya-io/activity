@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block page_title %}Checklist Confirm Delete{% endblock %}
+
+{% block content %}
+
+<form action="" method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <input type="submit" value="Confirm" />
+</form>
+
+
+{% endblock content %}

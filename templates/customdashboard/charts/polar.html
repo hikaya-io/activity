@@ -1,0 +1,78 @@
+<!---
+POLAR GRAPH template for custom charts
+required:
+* dataset[] with label and iterable data[] for each chart item (up to 8)
+  for side by side or stacked
+* elementID for placement on dashboard
+* legendID for placement of legend for graph
+* tooltip to append to tool tip i.e. (USD, KM, LBS, etc.)
+-->
+
+<script>
+    // polar chart for TOLA_IS
+    var data = [
+        {
+            value: {{ tola_is.adaptive_manag }},
+            color:"#F7464A",
+            highlight: "#FF5A5E",
+            label: "Adaptive Management"
+        },
+        {
+            value: {{ tola_is.an_indicator_t }},
+            color: "#46BFBD",
+            highlight: "#5AD3D1",
+            label: "Indicator Tracking"
+        },
+        {
+            value: {{ tola_is.a_data_managem }},
+            color: "#FDB45C",
+            highlight: "#FFC870",
+            label: "Data Management"
+        },
+        {
+            value: {{ tola_is.option_4 }},
+            color: "#949FB1",
+            highlight: "#A8B3C5",
+            label: "Evidence Based Decision Making"
+        },
+        {
+            value: {{ tola_is.all_of_the_abo }},
+            color: "#4D5360",
+            highlight: "#616774",
+            label: "All of the Above"
+        }
+
+    ];
+
+    var options = {
+        //Boolean - Show a backdrop to the scale label
+        scaleShowLabelBackdrop : true,
+        //String - The colour of the label backdrop
+        scaleBackdropColor : "rgba(255,255,255,0.75)",
+        // Boolean - Whether the scale should begin at zero
+        scaleBeginAtZero : true,
+        //Number - The backdrop padding above & below the label in pixels
+        scaleBackdropPaddingY : 2,
+        //Number - The backdrop padding to the side of the label in pixels
+        scaleBackdropPaddingX : 2,
+        //Boolean - Show line for each value in the scale
+        scaleShowLine : true,
+        //Boolean - Stroke a line around each segment in the chart
+        segmentShowStroke : true,
+        //String - The colour of the stroke on each segement.
+        segmentStrokeColor : "#fff",
+        //Number - The width of the stroke value in pixels
+        segmentStrokeWidth : 2,
+        //Number - Amount of animation steps
+        animationSteps : 100,
+        //String - Animation easing effect.
+        animationEasing : "easeOutBounce",
+        //Boolean - Whether to animate the rotation of the chart
+        animateRotate : true
+    };
+
+    var ctx = document.getElementById("tola_is").getContext("2d");
+    var polarChart = new Chart(ctx).PolarArea(data, options);
+    document.getElementById('tola_is-legend').innerHTML = polarChart.generateLegend();
+
+</script>

@@ -1,0 +1,30 @@
+<div class="sidebar-pane" id="narrative-pane" style="height: 250px; overflow-y: scroll;">
+    {% for textRecord in tolaTextData %}
+      <div class="panel-body"> <a href="/customdashboard/notebook/{{textRecord.id}}" style='float:left; color: black; '>{{textRecord.name}} </a> </div>
+    {% endfor %}
+</div>
+
+<!-- Modal -->
+<div id="newsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">LATEST NEWS</h4>
+      </div>
+      <div class="modal-body" style='overflow-x: scroll; word-wrap: break-word; '>
+              <!--populates news items of some type-->
+
+          {% for data in tolaTableData %}
+            <p>  {{ data.title }} </p><br>
+          {% endfor %}
+              
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

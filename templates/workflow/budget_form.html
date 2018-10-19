@@ -1,0 +1,72 @@
+
+
+<script type="text/javascript">
+    var frm = $('#outputForm');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                var jdata = jQuery.parseJSON(data);
+                var pk = jdata[0]['pk'];
+                var contributor = jdata[0]['fields']['contributor'];
+                var description = jdata[0]['fields']['description_of_contribution'];
+                var value = jdata[0]['fields']['proposed_value'];
+
+                //$("#alert-error").html("Success! ");
+                createAlert("success", "Budget information saved successfully.", true, "#alert-error");
+                var markup = "<td>" + contributor + "</td><td>" + description + "</td><td>"+ value+"</td><td><a class='output' href='/workflow/budget_update/" + pk + "/'>Edit</a> | <a class='output' href='/workflow/budget_delete/" + pk + "/'>Delete</a></td>";
+
+                $("#budget_contributions_table tbody tr").each(function (i, row){
+                    if (i == 0 ) { return true; }
+                    var $edit = $(row).find('td:nth-child(4)');
+                    var hrefval = $edit.find('a').attr('href').split("/");
+                    hrefval = hrefval[hrefval.length -2];
+                    var existing_pk = $.trim(hrefval);
+                    if (existing_pk == pk) {
+                        $(row).html(markup);
+                        pk = 0;
+                        return false;
+                    }
+                });
+                if (pk > 0) {
+                    $("#budget_contributions_table tbody").append("<tr>" + markup + "</tr>");
+                }
+            },
+            error: function(data) {
+                $("#alert-error").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+</script>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+        <div id="alert-error">
+            <strong>{{ error|escape }}</strong>
+        </div>
+
+        <h4 class="modal-title">{% block page_title %}Other Budget Contributions Form {{ id }} {% endblock %}</h4>
+        <p>Describe and quantify in dollars:</p>
+    </div>
+    <div class="modal-body">
+        {% if "/workflow/budget_add/" in request.get_full_path  %}
+            <form class="form-horizontal" method="post" id="outputForm" action="/workflow/budget_add/{{ id }}/">
+        {% else %}
+            <form class="form-horizontal" method="post" id="outputForm" action="/workflow/budget_update/{{ id }}/">
+        {% endif %}
+            {% load crispy_forms_tags %}
+            {% csrf_token %}
+            {% crispy form %}
+            <input type="submit" class="btn btn-primary" name="Save changes" value="Save changes"/>
+        </form>
+    </div>
+    <!--
+    <div class="modal-footer">
+       <button type="button" class="btn btn-default" data-dismiss="modal" onclick="parent.location.reload();">Close</button>
+    </div>
+    -->
+

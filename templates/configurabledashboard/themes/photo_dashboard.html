@@ -1,0 +1,24 @@
+<!-- load basic layout -->
+{% extends "customdashboard/themes/custom_base_layout.html" %}
+
+<!-- humanize numbers -->
+{% load humanize %}
+
+<!-- layout-specific content modules-->
+{% block content %}
+
+<!-- TODO: define layout sections -->
+
+<!-- TODO: INPUT FORM FOR COMPONENT SELECTION
+		
+		NOTES: 
+		input form needs to capture chart_selection as "charts/chart_type" and .html component name needs to match
+		input form needs to capture narrative_selection as "narratives/narrative_type" and .html component name needs to match (ditto for other components) -->
+
+<!-- for each layout section in layout sections-->
+	{% with component_selection.name|add:".html" as template %}
+    	{% include template %}
+	{% endwith %}
+
+{% endblock content %}
+

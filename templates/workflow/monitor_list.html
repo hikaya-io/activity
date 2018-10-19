@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block bread_crumb %}
+<ol class="breadcrumb">
+  <li><a href="/workflow/dashboard/0/">Program Dashboards</a></li>
+  <li><a href="/workflow/dashboard/project/{{ project_proposal_id }}/">Project Dashboards</a></li>
+  <li class="active">Monitoring and Benchmarks</li>
+</ol>
+{% endblock %}
+{% block page_title %}Benchmark and Monitoring Data List{% endblock %}
+
+{% block content %}
+<div>
+<a href="/workflow/monitor_add/0/" class="btn btn-large btn-success">New Monitoring Data</a> &nbsp;
+<a href="/workflow/benchmark_add/0/" class="btn btn-large btn-success">New Benchmark Data</a> &nbsp;
+<hr/>
+<br/>
+</div>
+<h3>Monitoring Data</h3>
+<ul class="list-group">
+{% for item in getMonitorData %}
+    <li class="list-group-item"><b><a href="/workflow/monitor_update/{{ item.id }}">{{ item.create_date|date }} - {{ item.name }}</a></b> &nbsp;<a href="/workflow/monitor_delete/{{ item.id }}" class="btn-xs btn-danger">Delete Data</a></li>
+{% empty %}
+    <li class="list-group-item">No data yet.</li>
+{% endfor %}
+</ul>
+<br/>
+<h3>Benchmark Data</h3>
+<ul class="list-group">
+{% for item in getBenchmarkData %}
+    <li class="list-group-item"><b><a href="/workflow/benchmark_update/{{ item.id }}">{{ item.create_date|date }} - {{ item.name }}</a></b> &nbsp;<a href="/workflow/benchmark_delete/{{ item.id }}" class="btn-xs btn-danger">Delete Data</a></li>
+{% empty %}
+    <li class="list-group-item">No data yet.</li>
+{% endfor %}
+</ul>
+{% endblock content %}

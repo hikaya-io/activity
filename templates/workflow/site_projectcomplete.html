@@ -1,0 +1,40 @@
+{% extends "base.html" %}{% load i18n %}
+{% block bread_crumb %}
+<ol class="breadcrumb">
+  <li><a href="/workflow/siteprofile_list/0/0/">Sites</a></li>
+  <li class="active">Site Projects</li>
+</ol>
+{% endblock %}
+{% block page_title %}Project Data for <small>{{ site }}</small> {% endblock %}
+
+{% block content %}
+
+    {% for item in projects %}
+        {% ifchanged item.program %}
+            {% if not forloop.first %}
+                </table></div></div>
+            {% endif %}
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ item.program }}</div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>Date Created</th>
+                            <th>Prjoect Name</th>
+                            <th>Project Code</th>
+                            <th>Office Code</th>
+                            <th>Form Version</th>
+                            <th>Approval Status</th>
+                        </tr>
+        {% endifchanged %}
+        <tr>
+            <td>{{ item.create_date|date:"d-m-Y" }}</td>
+            <td> {{ item.project_name }}</td>
+            <td>{{ item.activity_code }}</td>
+            <td>{{ item.office }}</td>
+            <td>{% if item.short %} Short {% else %} Long {% endif %}</td>
+            <td>{% if item.projectcomplete %} Tracking {% if item.projectcomplete.approval  %}{{ item.projectcomplete.approval|capfirst }}{% else %}Open{% endif %}{% else %} Initiation {% if item.approval  %}{{ item.approval|capfirst }}{% else %} Open {% endif %} {% endif %}</td>
+        </tr>
+        {% if forloop.last %}</table></div></div>{% endif %}
+    {% endfor %}
+{% endblock content %}

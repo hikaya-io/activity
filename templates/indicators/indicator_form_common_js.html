@@ -1,0 +1,884 @@
+<!-- <style>
+    .hide-calendar .ui-datepicker-calendar {
+        display: none;
+    }
+</style> -->
+<script>
+    var validation_msgs = {};
+    /*
+    var modalConfirm = function(callback){
+        // $("#btn-confirm").on("click", function(){
+            $("#conform_modal_div").modal('show');
+        // });
+
+        $("#modal-btn-si").on("click", function(){
+            callback(true);
+            $("#conform_modal_div").modal('hide');
+        });
+
+        $("#modal-btn-no").on("click", function(){
+            callback(false);
+            $("#conform_modal_div").modal('hide');
+        });
+    };
+    */
+
+    // modalConfirm(function(confirm){
+    //     if (confirm) {
+    //         $("#result").html("CONFIRMADO");
+    //     } else {
+    //         $("#result").html("NO CONFIRMADO");
+    //     }
+    // });
+
+    function setupPopupCalendar() {
+        $('.monthPicker').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'M d, yy',
+            /*
+            beforeShowDay: function(date) {
+                if (date.getDate() == 1) {
+                    return [true, ''];
+                }
+                return [false, ''];
+            },
+            */
+            beforeShow(input, inst){
+                // move date picker popup div inside modal dialog(fix for firefox)
+                $(input).parent().append($('#ui-datepicker-div'));
+                $('#ui-datepicker-div').hide();
+                // $(this).datepicker('setDate', $.datepicker.formatDate('M yy', new Date(2018, 3)));
+                // $(this).datepicker( "option", "defaultDate",$.datepicker.formatDate('M yy', new Date(2018, 3)));
+                // $(this).datepicker( "option", "defaultDate", "+1m");
+                // $(this).datepicker( "option", "defaultDate", "Mar 2018");
+                // $("#ui-datepicker-div .ui-datepicker-month").val(5);
+            },
+            onClose: function (dateText, inst) {
+                // var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                // var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $(this).datepicker("setDate", new Date(inst.selectedYear, inst.selectedMonth, 1));
+                $(this).datepicker("widget").find(".ui-datepicker-calendar").hide();
+                this.focus();
+            },
+        });
+
+        $(".monthPicker").focus(function () {
+            $(".ui-datepicker-calendar").hide();
+            $("#ui-datepicker-div").position({
+                my: "left top",
+                at: "left bottom",
+                of: $(this)
+            });
+        });
+
+    }
+    $( document ).ready(function() {
+        show_hide_frequency_fields();
+        setupPopupCalendar();
+    });
+
+    $("#indicator_modal_div").on('shown.bs.tab', function() {
+        show_hide_frequency_fields();
+        setupPopupCalendar();
+    });
+
+
+    // when a user clicks the 'Attach evidence' button in the indicator from.
+    $("#indicator_modal_content, #indicator_form").on("click", "#id_add_evidence_btn", function(e){
+        alert('Not implemented yet!');
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("click", "a.detelebtn", function(e){
+        e.preventDefault();
+         // $(e.target).closest("tr").prev("tr").find("a").show(); //.css("display", "block");
+        var url = $(this).attr('href');
+        var id = url.split('/')[url.split('/').length - 2];
+        var currnentRow = $(e.target).closest("tr");
+        var dataCount = parseInt(currnentRow.data("collectedCount"));
+        if ( dataCount != NaN && dataCount > 0) {
+            if (!confirm(`Warning: This action cannot be undone. Removing this target means that ${dataCount} data record/s will no longer have targets associated with them. \n\nProceed anyway?`)) {
+                dataCount = NaN;
+                return;
+            }
+        }
+        var prevDeleteBtn = currnentRow.prev("tr").find("a");
+        /*
+        if (prevDeleteBtn.length == 0) {
+            $("#id_div_periodic_tables_placeholder").empty();
+            reset_frequency_fields();
+        }
+        */
+
+        if (id == 'undefined') {
+            currnentRow.remove();
+            if ($('#periodic_targets_table tbody tr.periodic-target').length == 0) {
+                $("#id_div_periodic_tables_placeholder").empty();
+                reset_frequency_fields();
+            }
+            prevDeleteBtn.show();
+            return;
+        }
+
+        $.post(url)
+            .done(function(data, textStatus, jqXHR){
+                if (data.status == "success") {
+                    currnentRow.remove();
+                    prevDeleteBtn.show();
+                    $("#indicator_update_form").data('indicatorchanged', true);
+                    var targets_sum = data['targets_sum'];
+                    if (targets_sum != 0 && targets_sum != "None" && targets_sum != '' && targets_sum != 'undefined') {
+                        $("#id_span_targets_sum").text(targets_sum);
+                    }
+                    if ($('#periodic_targets_table tbody tr.periodic-target').length == 0) {
+                        $("#id_div_periodic_tables_placeholder").empty();
+                        reset_frequency_fields();
+                    }
+                } else {
+                    createAlert("danger", data.msg, true, "#modalmessages");
+                    $('#indicator_modal_div').animate({ scrollTop: 0 }, 'slow');
+                }
+            });
+    });
+
+
+    $("#indicator_form").on("submit", "#indicator_update_form", function(e){
+        e.preventDefault();
+        if (validateForm() == false) {
+            showValidations("#alerts");
+            return;
+        }
+        submitForm(this);
+    });
+
+    // Intercept IndicatorUpdate form submission and then use ajax to submit it.
+    $("#indicator_modal_content").on("submit", "#indicator_update_form", function(e){
+        e.preventDefault();
+        if (validateForm() == false) {
+            showValidations("#modalmessages");
+            return;
+        }
+        submitForm(this);
+    });
+
+
+    $("#indicator_modal_content, #indicator_form").on("keyup keypress", "#indicator_update_form", function(e){
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13 ){
+            e.preventDefault();
+            return false;
+        }
+
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("click", "#id_create_targets_btn", function(e) {
+        e.preventDefault();
+        if (validateForm() == false) {
+            showValidations("#modalmessages");
+            return;
+        }
+        $(this).attr("disabled", true);
+        submitForm($("#indicator_update_form"));
+    });
+
+
+    function createPeriodicTargetRow(pt, target_frequency, isLastIteration, rowNum) {
+        var markup = `
+                <tr class="periodic-target">
+                    <td style="width: 50px; border: none; vertical-align: middle;">
+                        <a href="/indicators/periodic_target_delete/${pt.id}/" class="detelebtn" style="text-align: center; color:red; margin: 3px 10px 0px; display: ${(isLastIteration && target_frequency != 2 || target_frequency == 8) ? 'block' : 'none'}">
+                            <span class=" glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+
+                    <td style="padding:1px; border: none; vertical-align: middle;">
+                        ${(target_frequency != 8) ? `
+                            <div style="line-height:1;"><strong>${pt.period }</strong></div>
+                            <div style="line-height:1; margin-top:4px;">${formatDate(pt.start_date)} ${ pt.start_date ? '-' : ''} ${formatDate(pt.end_date)}</div>`
+                            :
+                            `<div class="controls border-1px">
+                                <input type="text" name="${pt.period}" placeholder="Enter event name" value="${(rowNum == 0) ? pt.period : (pt.id ? pt.period : '') }" class="form-control input-text">
+                                <span style="margin:0px;" class="help-block"> </span>
+                            </div>`
+                        }
+                    </td>
+
+                    <td align="right" style="padding:1px; border:none; vertical-align:middle; width: 150px;">
+                        <div class="controls border-1px">
+                            <input type="number" id="pt-${pt.id}" value="${parseFloat(pt.target).toFixed(2).replace(/[.,]00$/, "")}" data-start-date="${formatDate(pt.start_date)}" data-end-date="${formatDate(pt.end_date)}" name="${pt.period}" placeholder="Enter target" class="form-control input-value">
+                            <span id="hint_id_pt_${pt.period}" style="margin:0px;" class="help-block"> </span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        return markup;
+    }
+
+    // delete periodic_target
+    $("#indicator_modal_content, #indicator_form").on("click", "#id_delete_targets_btn", function(e) {
+        e.preventDefault();
+        // console.log($("#id_target_frequency").find("option:selected").text());
+        var form_url = $("#indicator_update_form").attr('action');
+        var indicator_id = form_url.split('/').slice(-2, -1)[0];
+        var dataCountAttribute = $("#periodic_targets_table tr").attr("data-collected-count");
+        var msg = '';
+
+        if (typeof dataCountAttribute !== typeof undefined && dataCountAttribute !== false) {
+            msg = 'Warning: This action cannot be undone. Any data records assigned to a target will need to be reassigned.\n\n Are you sure you want to remove all targets?';
+        } else {
+            msg = 'Warning: This action cannot be undone. Are you sure you want to remove all targets?';
+        }
+        if (!confirm(msg)){
+            return;
+        }
+
+        $.post('/indicators/periodic_target_deleteall/' + indicator_id + '/true/', function(data){
+            var res = $.parseJSON(data);
+            if (res['status'] == 'success') {
+                $("#id_div_periodic_tables_placeholder").empty();
+                reset_frequency_fields();
+                show_hide_frequency_fields();
+                $("#indicator_update_form").data('indicatorchanged', true);
+            }
+
+        });
+    });
+
+    // add new periodic target
+    $("#indicator_modal_content, #indicator_form").on("click", "#addNewPeriodicTarget", function(e) {
+        e.preventDefault();
+        // console.log($("#id_target_frequency").find("option:selected").text());
+        var numTargets = $("#periodic_targets_table tbody tr").length-1;
+        var form_url = $("#indicator_update_form").attr('action');
+        var indicator_id = form_url.split('/').slice(-2, -1)[0]
+        $.get('/indicators/periodic_target_generate/' + indicator_id + '/?numTargets=' + numTargets, function(data){
+
+            var pt = $.parseJSON(data);
+            var isLastIteration = true;
+            var target_frequency = $("#id_target_frequency").val();
+            var markup = createPeriodicTargetRow(pt, target_frequency, isLastIteration);
+
+            // if target_frequency is not "EVENT" then hide the delete button
+            if (target_frequency != 8) {
+                $("#periodic_targets_table tbody tr:nth-last-child(3)").find("a").hide();
+            }
+            $("#periodic_targets_table tbody tr:nth-last-child(2)").before(markup);
+        });
+
+    });
+
+    function createPeriodTargetsHTML(periodic_targets, indicator, targets_sum) {
+        var markup;
+        var isLastIteration
+        var htmlString = `
+        <div class="container-fluid" style="background-color: #F5F5F5; margin: 0px -30px 0px -30px;">
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-8" style="padding-left: 1px; margin-top: 30px;">
+                    <h4>${$("#id_target_frequency").find("option:selected").text()} targets</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div id="periodic-targets-tablediv" class="col-sm-offset-2 col-sm-8">
+                    <table class="table table-condensed" id="periodic_targets_table" style="margin-bottom: 1px;">
+                        <tbody>`;
+
+        // Add table rows
+        $.each(periodic_targets, function(i, pt){
+            isLastIteration = i == periodic_targets.length -1;
+            markup = createPeriodicTargetRow(pt, indicator.fields.target_frequency, isLastIteration, i);
+            htmlString += markup;
+        });
+
+        htmlString +=       `<tr id="pt_sum_targets">
+                                <td class="pt-delete-row" style="border: none;">
+                                </td>
+                                <td align="left" style="padding-left: 0px; border: none; vertical-align: middle;">
+                                    <strong>Sum of targets</strong>
+                                </td>
+                                <td align="right" style="vertical-align: middle; border: none;">
+                                    <div style="margin: 5px 10px;">
+                                        <strong><span id="id_span_targets_sum">${targets_sum}</span></strong>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr style="background-color:#F5F5F5">
+                                <td class="pt-delete-row" style="border: none;">
+                                </td>
+                                <td align="left" style="padding-left: 0px; border: none; vertical-align: middle;">
+                                    <strong>Life of Program (LoP) target</strong>
+                                </td>
+                                <td align="right" style="vertical-align: middle; border: none;">
+                                    <div style="margin: 5px 10px;">
+                                        <strong><span id="id_span_targets_sum">${indicator.fields.lop_target}</span></strong>
+                                    </div>
+                                </td>
+                          </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr style="background-color:#F5F5F5">
+                                <td colspan="3" style="color:red; padding: 0px;" id="id_pt_errors"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            ${(indicator.fields.target_frequency != 2) ? `
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-8" style="padding-left: 1px; margin-top:10px; margin-bottom:40px;">
+                        <a href="#" id="addNewPeriodicTarget" style="padding-left: 1px;" class="button btn-lg btn-link"><span class=" glyphicon glyphicon-plus-sign"></span> ${getNewTargetBtnLabel(indicator.fields.target_frequency)}</a>
+                    </div>
+                </div>`
+                :
+                `<div class="row" style="height:30px;"></div>`
+              }
+        </div>`;
+        return htmlString;
+    }
+
+    function submitForm(form) {
+        var numDataPoints = parseInt($("#numDataPoints").text());
+        var initalTargetFrequency = parseInt($("#initialTargetFrequencyValue").text());
+        var target_frequency = $("#id_target_frequency").val();
+        // console.log("numDataPoints: ", numDataPoints, " initalTargetFrequency: ", initalTargetFrequency, " target_Frequency: ", target_frequency);
+
+        if (numDataPoints > 0 && initalTargetFrequency == 1 && target_frequency != 1) {
+
+            /*
+            modalConfirm(function(confirm){
+                alert(confirm);
+                if (!confirm) {
+                    console.log("haha");
+                }
+            });
+            return;
+            */
+            if (!confirm(`Warning: This action cannot be undone. If we make these changes, ${numDataPoints} data record/s will no longer be associated with the Life of Program target, and will need to be reassigned to new targets. \n\nProceed anyway?`)) {
+                initalTargetFrequency = undefined;
+                return;
+            }
+        }
+        // $("#id_create_targets_btn").attr("disabled", true);
+        var submitBtnName = $(form).find("input[type=submit]:focus" );
+        var form_url = $(form).attr('action');
+        var form_data = $(form).serialize();
+        // mark that the form data has changed so that when the modal is closed the list view can be updated
+        $(form).data('indicatorchanged', true);
+
+        var periodic_targets = [];
+
+        // Collect all existing periodic_targets into an array.
+        $('#periodic_targets_table tbody tr.periodic-target').each(function () {
+            var $this = $(this);
+            var values = [];
+            var eventNameElement = $($this.find('input[type=text]'));
+            var targetValueSelector = $($this.find('input[type=number]'));
+
+            var pt_id;
+            var pt_name;
+            try {
+                pt_id = parseInt(targetValueSelector.attr('id').split('-')[1]);
+                if (!$.isNumeric(pt_id)) { pt_id = 0; }
+            } catch (err) {
+                pt_id = 0;
+            }
+
+            if (eventNameElement.length > 0) {
+                pt_name = eventNameElement.val();
+            } else {
+                pt_name = targetValueSelector.attr('name');
+            }
+
+            var pt_value = targetValueSelector.val();
+            var start_date = targetValueSelector.data("startDate");
+            var end_date = targetValueSelector.data("endDate");
+
+            periodic_targets.push({'id': pt_id, 'period': pt_name, 'target': pt_value, 'start_date': start_date, 'end_date': end_date } );
+        });
+        // if there are errors in periodic targets then do not submit the form
+        if ($("#id_div_periodic_tables_placeholder input").parent().hasClass('has-error')) { return; }
+
+        // If there aren't any existing periodic_targets then set the flag to generate them.
+        if ($.isEmptyObject(periodic_targets)) {
+            form_data += "&periodic_targets=generateTargets";
+        } else {
+            form_data += "&periodic_targets=" + JSON.stringify(periodic_targets);
+        }
+
+        $("#modalmessages").html("<img src='{{ STATIC_URL }}/img/ajax-loader.gif'>  <span>Saving form... please wait.</span>");
+        $.ajax({
+            method: 'POST',
+            url: form_url,
+            data: form_data,
+            global: false, }
+        ).done(function(data, textStatus, jqXHR) {
+            var alertsElement = "#alerts";
+            if ( $("#modalmessages").length) {
+                alertsElement = "#modalmessages";
+            }
+            // if there are any erros show them and then STOP
+            if (jqXHR.getResponseHeader('error') == "True") {
+                //$("#modalerrors").html(data);
+                createAlert("danger", data, true, alertsElement);
+                return;
+            }
+            //var json = $.parseJSON(jqXHR.responseText);
+            $(alertsElement).html('');
+
+            createAlert("success", "Success, form data saved.", true, alertsElement);
+            var jsondata = $.parseJSON(data);
+            var indicator = jsondata[0][0];
+            var pts = jsondata[1];
+            var generateTargets = jsondata[2];
+            var targets_sum = jsondata[3];
+            var update_indicator_row = jsondata[4];
+            $(form).data('update_indicator_row', parseInt(update_indicator_row));
+
+            $("#initialTargetFrequencyValue").text(indicator.fields.target_frequency);
+
+            // $("#id_achieved").val(indicator['fields']['achieved']);
+            var htmlString = '';
+            if ($("#id_target_frequency").val() != 1) {
+                if (!$.isEmptyObject(generateTargets)) {
+                    htmlString = createPeriodTargetsHTML(generateTargets, indicator, targets_sum);
+                    $("#id_div_periodic_tables_placeholder").append(htmlString);
+                } else {
+                    htmlString = createPeriodTargetsHTML(pts, indicator, targets_sum);
+                    $("#id_div_periodic_tables_placeholder").empty();
+                    $("#id_div_periodic_tables_placeholder").append(htmlString);
+                    $("#id_span_targets_sum").text(targets_sum);
+                }
+            }
+            if ($('#indicator_modal_div').length == 1) {
+                // for the modal version;
+                $('#indicator_modal_div').animate({ scrollTop: 0 }, 'slow');
+            } else {
+                // for the non-modal version;
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+            }
+
+            // window.scrollTo(0, 0);
+            show_hide_frequency_fields(true);
+        });
+    }
+
+
+    function reset_frequency_fields() {
+        $("#id_target_frequency").val('');
+        $("#id_target_frequency option:not(:selected)").attr("disabled", false);
+        $("#id_target_frequency").attr("readonly", false);
+        $("#id_create_targets_btn").attr("disabled", false);
+        $("#id_target_frequency_start").val('');
+        $("#id_target_frequency_num_periods").val(1);
+        $("#id_target_frequency_custom").val('');
+    }
+
+
+    function show_hide_frequency_fields(lock = false) {
+        // set the text for the 'create new target' button.
+        var label = '<span class=" glyphicon glyphicon-plus-sign"></span> ' + getNewTargetBtnLabel($("#id_target_frequency").val());
+        $("#addNewPeriodicTarget").html(label);
+        var selected_option = $("#id_target_frequency").find("option:selected").text();
+        if ( (lock == true || $('#id_target_frequency').is('[readonly="readonly"]'))
+                 && selected_option != 'Life of Program (LoP) only') {
+            $("#id_target_frequency option:not(:selected)").attr("disabled", true);
+            $("#id_target_frequency").attr("readonly", true);
+            $("#id_create_targets_btn").attr("disabled", true);
+            $("#div_id_target_frequency_start").hide();
+            $("#div_id_target_frequency_num_periods").hide();
+            $("#div_id_target_frequency_custom").hide();
+            lock = true;
+        }
+        if (selected_option == 'Life of Program (LoP) only' || selected_option == '---------') {
+            $("#div_id_create_targets_btn").hide();
+        } else {
+            if ($("#id_div_periodic_tables_placeholder").children().length > 0) {
+                $("#id_delete_targets_btn").show();
+            } else {
+                $("#id_delete_targets_btn").hide();
+            }
+
+            if (selected_option == 'Event') {
+                $("#div_id_target_frequency_num_periods label").text("Number of events*");
+                $("#div_id_create_targets_btn").show();
+            } else {
+                $("#div_id_target_frequency_num_periods label").text("Number of target periods*");
+                $("#div_id_create_targets_btn").show();
+            }
+        }
+
+
+
+        if (lock == false) {
+            if (selected_option == 'Life of Program (LoP) only' ||
+                selected_option == 'Midline and endline' ||
+                selected_option == '---------') {
+                $("#div_id_target_frequency_start").hide();
+                $("#div_id_target_frequency_num_periods").hide();
+                $("#div_id_target_frequency_custom").hide();
+                $("#id_target_frequency_start").val('');
+                // $("#id_target_frequency_start").prop('required', false);
+                $("#id_target_frequency_custom").val('');
+
+            } else if (selected_option == 'Event') {
+                $("#div_id_target_frequency_start").hide();
+                $("#id_target_frequency_start").val('');
+                $("#div_id_target_frequency_custom").show();
+                $("#div_id_target_frequency_num_periods").show();
+            } else {
+                $("#div_id_target_frequency_start").show();
+                $("#div_id_target_frequency_num_periods").show();
+                $("#div_id_target_frequency_custom").hide();
+                $("#id_target_frequency_custom").val('');
+            }
+        }
+    }
+
+
+    function getNewTargetBtnLabel(index) {
+        var label = '';
+        if (index == 3 ) {
+            label += 'Add a year';
+        } else if (index == 4) {
+            label += 'Add a semi-annual period';
+        } else if (index == 5) {
+            label += 'Add a tri-annual period';
+        } else if (index == 6) {
+            label += 'Add a quarter';
+        } else if (index == 7) {
+            label += 'Add a month';
+        } else if (index == 8) {
+            label += 'Add an event';
+        } else {
+            label = 'Add a target';
+        }
+        return label;
+    }
+    $("#indicator_modal_content, #indicator_form").on("change", "#id_target_frequency", function(e){
+        show_hide_frequency_fields();
+    });
+
+
+    function reset_baseline_errors(){
+        $("#div_id_baseline").removeClass('has-error');
+        $("#div_id_baseline_na").removeClass('has-error');
+        $("#hint_id_baseline_na").html("");
+    }
+
+    function validate_baseline() {
+        var baseline = $("#id_baseline");
+        var baseline_na = $("#id_baseline_na");
+        if (baseline_na.is(':checked') == true) {
+            reset_baseline_errors();
+            return true;
+        }
+        // var indicator_form = $("#indicator_update_form")
+        // var sbmt = $("input[type=submit]", indicator_form);
+
+        if (!baseline.val()) {
+            $("#div_id_baseline").addClass('has-error');
+            $("#div_id_baseline_na").addClass('has-error');
+            $("#hint_id_baseline_na").html("<small>Please complete this field. Your baseline can be zero.</small>");
+            // sbmt.attr("disabled", true);
+            return false;
+        } else if (!$.isNumeric(baseline.val()) || baseline.val() < 0 ) {
+            $("#div_id_baseline").addClass('has-error');
+            $("#div_id_baseline_na").addClass('has-error');
+            $("#hint_id_baseline_na").html("<small>Please enter a number with no letters or symbols.<small>");
+            // sbmt.attr("disabled", true);
+            return false;
+        } else {
+            reset_baseline_errors();
+            // sbmt.attr("disabled", false);
+            return true;
+        }
+    }
+
+    function validate_loptarget() {
+        var lop = $("#id_lop_target");
+        // var indicator_form = $("#indicator_update_form")
+        // var sbmt = $("input[type=submit]", indicator_form);
+
+        if (!lop.val()) {
+            $("#div_id_lop_target").addClass('has-error');
+            $("#hint_id_lop_target").text("Please enter a number larger than zero.");
+            // sbmt.attr("disabled", true);
+            return false;
+        } else if (!$.isNumeric(lop.val()) || lop.val() <= 0) {
+            $("#div_id_lop_target").addClass('has-error');
+            $("#hint_id_lop_target").text(" Please enter a number larger than zero with no letters or symbols. If your target is a percentage, describe it in the unit of measure field.");
+            // sbmt.attr("disabled", true);
+            return false;
+        } else {
+            $("#div_id_lop_target").removeClass('has-error');
+            $("#hint_id_lop_target").text(" ");
+            // sbmt.attr("disabled", false);
+            return true;
+        }
+    }
+
+    function validateForEmptyField(fieldName) {
+        // var indicator_form = $("#indicator_update_form")
+        // var sbmt = $("input[type=submit]", indicator_form);
+        if ($.isEmptyObject($("#" + fieldName).val())) {
+            $("#div_" + fieldName).addClass('has-error');
+            $("#hint_" + fieldName).text("Please complete this field.");
+            // sbmt.attr("disabled", true);
+            return false;
+        } else {
+            $("#div_" + fieldName).removeClass('has-error');
+            $("#hint_" + fieldName).text(" ");
+            // sbmt.attr("disabled", false);
+            return true;
+        }
+    }
+
+    function validateNumPeriods() {
+
+        // var indicator_form = $("#indicator_update_form")
+        // var sbmt = $("input[type=submit]", indicator_form);
+        var numPeriodsField = $("#id_target_frequency_num_periods");
+        if (numPeriodsField.is(":visible")) {
+            if (numPeriodsField.val() > 12) {
+                $("#div_id_target_frequency_num_periods").addClass('has-error');
+                $("#hint_id_target_frequency_num_periods").text("You can start with up to 12 targets and add more later.");
+                // sbmt.attr("disabled", true);
+                return false;
+            } else if (!numPeriodsField.val()) {
+                $("#div_id_target_frequency_num_periods").addClass('has-error');
+                $("#hint_id_target_frequency_num_periods").text("Please complete this field.");
+                // sbmt.attr("disabled", true);
+                return false;
+            } else {
+                $("#div_id_target_frequency_num_periods").removeClass('has-error');
+                $("#hint_id_target_frequency_num_periods").text(" ");
+                // sbmt.attr("disabled", false);
+                return true;
+            }
+        }
+    }
+
+    function validatePeriodStartField() {
+        var field = $("#id_target_frequency_start").val();
+        if ($.isEmptyObject(field)) {
+            $("#div_id_target_frequency_start").addClass('has-error');
+            $("#hint_id_target_frequency_start").text("Please complete this field.");
+        } else if (!isDate(field)) {
+            $("#div_id_target_frequency_start").addClass('has-error');
+            $("#hint_id_target_frequency_start").text("Please enter a valid date.");
+            return false;
+        } else {
+            var val = formatDate(field, 1);
+            $("#id_target_frequency_start").val(val);
+            $("#div_id_target_frequency_start").removeClass('has-error');
+            $("#hint_id_target_frequency_start").text(" ");
+            return true;
+        }
+    }
+
+    function validatePeriodicTargets(){
+        var errorFlag = false;
+        $("#periodic_targets_table input[type=number]").each(function(){
+            if ($(this).attr('id').substr(0, 2) == "pt" ) {
+                if ($(this).val()) {
+                    $(this).parent().removeClass('has-error');
+                    $(this).parent().addClass('border-1px');
+                    // $(this).next('span:first').text('');
+                } else {
+                    $(this).parent().addClass('has-error');
+                    $(this).parent().removeClass('border-1px');
+                    errorFlag = true;
+                }
+            }
+           if ($(this).attr('type') == 'number' && $(this).val() && $(this).val() >= 0) {
+                $(this).parent().removeClass('has-error');
+                $(this).parent().addClass('border-1px');
+                // $(this).next('span:first').text('');
+                $("#id_pt_errors").text('');
+            } else {
+                $(this).parent().addClass('has-error');
+                $(this).parent().removeClass('border-1px');
+                errorFlag = true;
+            }
+        });
+
+        $("#periodic_targets_table input[type=text]").each(function(){
+            // if ($(this).attr('id').substr(0, 2) == "pt" ) {
+            if ($(this).val()) {
+                $(this).parent().removeClass('has-error');
+                $(this).parent().addClass('border-1px');
+            } else {
+                $(this).parent().addClass('has-error');
+                $(this).parent().removeClass('border-1px');
+                errorFlag = true;
+            }
+        });
+
+        if (errorFlag) {
+            $("#id_pt_errors").html(`<span class="target-value-error"><small>${getPTMessage()}</small></span>`);
+        }
+    }
+
+
+    function getPTMessage () {
+        if ($("#periodic_targets_table input[type=text]").length > 0){
+            return ("Please enter a name and target number for every event. Your target value can be zero.");
+        }
+        else {
+            return ("Please enter a target value. Your target value can be zero.");
+        }
+    }
+
+
+    function showValidations(messagesDiv) {
+        var msg = '';
+        $.each(validation_msgs, function(k,v) {
+            msg += v + '<br>';
+        });
+        $(messagesDiv).empty();
+        if (!jQuery.isEmptyObject(validation_msgs)) {
+            createAlert('danger', msg, false, messagesDiv);
+        }
+        validation_msgs = {};
+    }
+
+    function validateForm() {
+        var validationsTargetTab = true;
+        var validationsPerformanceTab = true;
+        if  (validate_baseline() == false ) {
+            validationsTargetTab = false
+        }
+        if (validate_loptarget() == false ) {
+            validationsTargetTab = false;
+        }
+        if (validateForEmptyField("id_unit_of_measure") == false ) {
+            validationsTargetTab = false;
+        }
+        if ($("#id_target_frequency_custom").is(":visible") && validateForEmptyField("id_target_frequency_custom") == false) {
+            validationsTargetTab = false;
+        }
+        if ($("#id_target_frequency_start").is(":visible") && validateForEmptyField("id_target_frequency_start") == false) {
+            validationsTargetTab = false;
+        }
+        if (validateForEmptyField("id_target_frequency") == false) {
+            validationsTargetTab = false;
+        }
+        if (validateNumPeriods() == false) {
+            validationsTargetTab = false;
+        }
+
+        if (validatePeriodicTargets() == false) {
+            validationsTargetTab = false;
+        }
+
+        if ($("#id_target_frequency_start").is(":visible") && validatePeriodStartField() == false ) {
+            validationsTargetTab = false;
+        }
+
+        // validate periodic targets
+        if ($("#id_div_periodic_tables_placeholder input").parent().hasClass('has-error')) {
+            validationsTargetTab = false;
+        }
+
+        if (validationsTargetTab == false) {
+            validation_msgs['target'] = 'Please complete all required fields in the Targets tab.';
+        } else {
+            delete validation_msgs['target'];
+        }
+
+        /* validate fields from the performance tab */
+        if (validateForEmptyField("id_name") == false) {
+            validationsPerformanceTab = false
+        }
+        if (validationsPerformanceTab == false) {
+            validation_msgs['performance'] = 'Please complete all required fields in the Performance tab.';
+        } else {
+            delete validation_msgs['performance'];
+        }
+        return (validationsTargetTab && validationsPerformanceTab) ? true: false;
+    }
+
+    $("#indicator_modal_content, #indicator_form").on("keypress", "input[type=number]", function(e){
+        if (e.which == 69 || e.which == 101){ //69 = e | 101 = E
+            e.preventDefault();
+        }
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("input", "#periodic_targets_table input[type=number]", function(e){
+        if ($(this).val() && $(this).val() >= 0) {
+            $(this).parent().removeClass('has-error');
+            $(this).parent().addClass('border-1px');
+            // $(this).next('span:first').text('');
+            $("#id_pt_errors").text('');
+        } else {
+            $(this).parent().addClass('has-error');
+            $(this).parent().removeClass('border-1px');
+        }
+        if ($("#id_div_periodic_tables_placeholder input[type=number], input[type=text]").parent().hasClass("has-error") ) {
+            $("#id_pt_errors").html(`<span class="target-value-error"><small>${getPTMessage()}</small></span>`);
+        }
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("input", "#periodic_targets_table input[type=text]", function(e){
+        if ($(this).val()) {
+            $(this).parent().removeClass('has-error');
+            $(this).parent().addClass('border-1px');
+            $("#id_pt_errors").text('');
+        } else {
+            $(this).parent().addClass('has-error');
+            $(this).parent().removeClass('border-1px');
+        }
+        if ($("#id_div_periodic_tables_placeholder input[type=text], input[type=number]").parent().hasClass("has-error") ) {
+            $("#id_pt_errors").html(`<span class="target-value-error"><small>${getPTMessage()}</small></span>`);
+        }
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("blur", "#id_unit_of_measure", function(e){
+        validateForEmptyField("id_unit_of_measure");
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("blur", "#id_target_frequency", function(e){
+        validateForEmptyField("id_target_frequency");
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("blur", "#id_lop_target", function(e){
+        validate_loptarget();
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("blur", "#id_baseline", function(e){
+        $("#id_baseline_na").prop('checked', false);
+        validate_baseline();
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("input", "#id_baseline", function(e){
+        $("#id_baseline_na").prop('checked', false);
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("change", "#id_baseline_na", function(e){
+        $("#id_baseline").val('');
+        if (!$(this).is(':checked')){
+            validate_baseline()
+        } else {
+            reset_baseline_errors();
+        }
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("blur", "#id_target_frequency_custom", function(e){
+        validateForEmptyField("id_target_frequency_custom");
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("change", "#id_target_frequency_start", function(e){
+        // validateForEmptyField("id_target_frequency_start");
+        validatePeriodStartField();
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("blur", "#id_target_frequency_num_periods", function(e){
+        validateNumPeriods();
+    });
+
+    $("#indicator_modal_content, #indicator_form").on("blur", "#id_name", function(e){
+        validateForEmptyField("id_name");
+    });
+
+
+</script>

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block bread_crumb %}
+<div>
+<ol class="breadcrumb">
+  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  <li class="active">Project Initiation</li>
+</ol>
+</div>
+{% endblock %}
+{% block page_title %}Project Initiation List{% endblock %}
+
+{% block content %}
+
+<div class="dropdown">
+    {% include "workflow/filter.html" %}
+</div>
+<br/>
+{% if getProgram %}
+<h3>{{getProgram.gaitid }} - {{ getProgram.name }}</h3>
+{% endif %}
+
+ <!-- Table -->
+<table class="table">
+    <tr>
+        <th>Date Created</th>
+        <th>Project Name</th>
+        <th>Activity Code</th>
+        <th>Approval Status</th>
+        <th>In Dashboard</th>
+        <th>&nbsp;</th>
+    </tr>
+    {% for item in getDashboard %}
+    <tr>
+        <td>{% if item.approval %}{{ item.create_date}}{% else %}<a href="/workflow/projectagreement_update/{{ item.id }}">{{ item.create_date}}</a>{% endif %}</td>
+        <td>{% if item.approval %} {{ item.project_name}}{% else %}<a href="/workflow/projectagreement_update/{{ item.id }}">{{ item.project_name}}</a>{% endif %}</td>
+        <td>{{ item.activity_code}}</td>
+        <td>{% if item.approval %} {{ item.approval}} {% else %} Open {% endif %}</td>
+        <td>{{ item.dashboard_name }}</td>
+        <td>
+            <a href="/workflow/dashboard/project/{{ item.id }}" class="btn btn-xs btn-success">Project Dashboard</a>
+            <a href="/workflow/projectagreement_delete/{{ item.id }}" class="btn btn-xs btn-danger">Delete Initiation</a>
+        </td>
+    </tr>
+    {% empty %}
+        <li class="list-group-item">No initiations yet.</li>
+    {% endfor %}
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div> <!-- /.modal-content -->
+    </div> <!-- /.modal-dialog -->
+</div> <!-- /.modal -->
+
+<script type="text/javascript">
+    function program_filter(program_id) {
+      window.location.href = '/workflow/projectagreement_list/'+program_id+'/none';
+      }
+
+    function status_filter(status) {
+      window.location.href = '/workflow/projectagreement_list/0/'+status;
+      }
+ </script>
+ 
+{% endblock content %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block bread_crumb %}
+<ol class="breadcrumb">
+  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  <li><a href="/workflow/dashboard/project/{{ project_agreement_id }}/">Project Dashboards</a></li>
+  <li class="active">Checklist</li>
+</ol>
+{% endblock %}
+{% block page_title %}Checklist List Items{% endblock %}
+
+{% block content %}
+<div>
+<a href="/workflow/checklistitem_add/{{ project_agreement_id }}/" class="btn btn-large btn-success">New Checklist Item</a> &nbsp;
+<hr/>
+<br/>
+</div>
+<h3>Checklist Items</h3>
+<ul class="list-group">
+{% for item in getChecklist %}
+    <li class="list-group-item"><b><a href="/workflow/checklistitem_update/{{ item.id }}">{{ item.create_date|date }} - {{ item.agreement }} - {{ item.item }}</a></b> &nbsp;<a href="/workflow/checklistitem_delete/{{ item.id }}" class="btn-xs btn-danger">Delete Item</a></li>
+{% empty %}
+    <li class="list-group-item">No Checklist yet.</li>
+{% endfor %}
+</ul>
+
+{% endblock content %}

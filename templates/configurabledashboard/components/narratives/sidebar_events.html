@@ -1,0 +1,10 @@
+<div class="sidebar-pane" id="narrative-news" style="height: 200px; overflow-y: scroll;">
+    {% for textRecord in tolaTextData %}
+      <div class="panel-body"> 
+        <a href="" style='float:left; color: black;'>
+          <strong>{{textRecord.date }}:</strong><br> {{textRecord.event}} </a> </div>
+    {% endfor %}
+</div>
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>

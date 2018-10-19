@@ -1,0 +1,11 @@
+<div id="map" class="content-map" style='height: 375pt'></div>
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/maps/componentizedLeaflet.js"></script>
+<script type="text/javascript">
+var result = {% autoescape off %}{{tolaMapData}}{% endautoescape %}
+var mapZoomLevel = result["mapZoom"]
+var mapCenterCoordinates = result["mapCenterCoordinates"]
+var mapSites = result["sites"]
+
+componentizedLeaflet(mapCenterCoordinates,mapZoomLevel,mapSites )
+</script>

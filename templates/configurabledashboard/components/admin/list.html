@@ -1,0 +1,43 @@
+<div class="modal-header">
+
+    <div class="alert alert-error" id="alert-error">
+        <strong>{{ error|escape }}</strong>
+    </div>
+
+    <h4 class="modal-title">{% block page_title %}Dashboard Components {% endblock %}</h4>
+
+</div>
+<div class="modal-body">  
+  <table class="table">
+    <tr>
+      <th>Date Created</th>
+      <th>Component Name</th>
+      <th>Component Type</th>
+      <th>Component Description</th>   
+      <th>Public?</th>
+      <th>Data Source</th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+    </tr>
+    {% for component in getDashboardListComponents %}
+    <tr>
+      <td> {{ component.create_date }}</td>       
+      <td> {{ component.component_name }}</td>
+      <td> {{ component.component_type }}</td>
+      <td> {{ component.component_description }}</td>
+      <td> {{ component.is_public }}</td>
+      <td> {% for data in component.data_sources.all %}
+              {{ data.data_name }} 
+            {% empty %}
+              NOT ASSIGNED
+            {% endfor %}
+      </td>    
+      <td><a data-toggle="modal" data-target="#myModal" href="/workflow/custom_dashboard/component_update/{{ component.id }}/" class="dashboards btn btn-xs btn-danger">Update</a></td>
+      <td> <a data-toggle="modal" data-target="#myModal" href="/workflow/custom_dashboard/component_delete/{{ component.id }}/" class="dashboards btn btn-xs btn-danger">Delete</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+<div class="modal-footer">
+   <button type="button" class="btn btn-default" data-dismiss="modal"> Close</button>
+</div> 

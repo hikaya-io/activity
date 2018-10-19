@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% load i18n %}
+{% block bread_crumb %}
+<ol class="breadcrumb">
+  <li><a href="/workflow/siteprofile_list/0/0/">Sites</a></li>
+  <li class="active">Site Data</li>
+</ol>
+{% endblock %}
+{% block page_title %}Indicator Data for <small>{{ site }}</small> {% endblock %}
+
+{% block content %}
+
+    {% for d in collecteddata %}
+        {% ifchanged d.program %}
+            {% if not forloop.first %}
+                </div></div>
+            {% endif %}
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ d.program }}</div>
+                    <div class="panel-body">
+
+        {% endifchanged %}
+
+
+        {% ifchanged d.indicator %}
+            <p>{{ d.indicator}}</p>
+        {% endifchanged %}
+        <table class="table table-striped table-bordered">
+            {% ifchanged d.indicator %}
+                <tr>
+                    <th>Achieved</th>
+                    <th>Periodic Target</th>
+                </tr>
+            {% endifchanged %}
+            <tr>
+                <td> {{ d.achieved }}</td>
+                <td> {{ d.periodic_target }} </td>
+            </tr>
+        </table>
+
+        {% if forloop.last %}</ul>{% endif %}
+    {% endfor %}
+{% endblock content %}

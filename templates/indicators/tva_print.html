@@ -1,0 +1,71 @@
+<html>
+    <head><title>TvA Report</title>
+        <style>
+            table {
+                background-color: transparent;
+                border-spacing: 0;
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 12px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+
+            th {
+                background-color: #bbbbbb;
+                color: white;
+            }
+            td, th {
+                border: 1px solid #ddd;
+                text-align: left;
+                padding-top: 6px;
+                padding-right: 6px;
+                padding-bottom: 6px;
+                padding-left: 6px;
+            }
+            tr:nth-child(even){background-color: #f2f2f2}
+
+            div.logo {
+                content:url('/static/img/org-logo.gif');
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <div style="float: left; margin-left: -25px; margin-top: -20px;">
+            <img src="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}{{STATIC_URL}}img/org-logo.gif">
+        </div>
+
+        <div style="float:right;">{% now "F j, Y" %}</div>
+        <div style="clear:both; text-align: center">
+            <h3>Indicator Target vs Actual Report for {{ program }} </h3>
+        </div>
+        <div id="tva_table_div" class="table-responsive">
+            <table id="tva_table" class="table table-hover table-striped table-bordered">
+                <thead>
+                    <th>No</th>
+                    <th>Indicator</th>
+                    <!-- <th>Type</th> -->
+                    <th>Level</th>
+                    <!-- <th>Sector</th> -->
+                    <th>LOP Target</th>
+                    <th>Actuals</th>
+                </thead>
+                {% for row in data %}
+                    <tr>
+                        <td>{{row.number}}</td>
+                        <td>{{row.name}}</td>
+                        <!-- <td>{{row.indicator_type.all.0.indicator_type|default_if_none:''}}</td> -->
+                        <td>{{row.level.all.0.name}}</td>
+                        <!-- <td>{{row.sector.sector}}</td> -->
+                        <td>{{row.lop_target|floatformat:"-2"}}</td>
+                        <td>{{row.actuals|floatformat:"-2"|default_if_none:''}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% if GOOGLE_ANALYTICS_PROPERTY_ID %}
+            {% include "google_analytics.html" %}
+        {% endif %}
+    </body>
+</html>

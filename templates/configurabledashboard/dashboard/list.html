@@ -1,0 +1,53 @@
+{% <!-- Dashboard List: 
+(1) Links to flow for new dashboard, 
+(2) Links to view of dashboard theme list (and theme creation, and 
+(3) lists all available dashboards (for editing/drafting)
+-->
+
+{% extends "base.html" %}
+{% load staticfiles %}
+
+<!-- humanize numbers -->
+{% load humanize %}
+
+<!-- layout-specific content modules-->
+{% block page_title %}Dashboard List{% endblock %}
+
+{% block content %}
+<div style="width:100%;">
+    <a href='/configurabledashboard/theme'  class="btn btn-smallbtn-default" style="float:right; padding-right: 3em;"> View Dashboard Themes</a>
+    <a href='/configurabledashboard/add/{{pk}}' class="btn btn-large btn-success">New Custom Dashboard</a> &nbsp;
+    <hr/>
+    <br/>
+</div>
+
+<h3>Current Dashboards</h3>
+
+<table class="table">
+    {% if getCustomDashboards %}
+    <tr>
+        <th>Date Created</th>
+        <th>Dashboard Name</th>
+        <th>Dashboard Description</th>
+        <th>Public?</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+    </tr>
+    {% endif %}
+    {% for dashboard in getCustomDashboards %}
+    <tr>
+       <td>{{ dashboard.create_date }}</td>       
+       <td>{{ dashboard.dashboard_name }}</td>
+       <td>{{ dashboard.dashboard_description }}</td>
+       <td>{{ dashboard.is_public }}</td>
+        <td> <a href='/configurabledashboard/detail/{{ dashboard.id }}' class="btn btn-xs btn-danger">View</a></td>
+        <td> <a href='/configurabledashboard/update/{{ dashboard.id }}' class="btn btn-xs btn-danger">Edit</a></td>
+        <td> <a href='/configurabledashboard/delete/{{ dashboard.id }}' class="btn btn-xs btn-danger">Delete</a></td>
+    </tr>
+    {% empty %}
+        <li class="list-group-item">No Custom Dashboards.</li>
+    {% endfor %}
+</table>
+
+{% endblock content %}

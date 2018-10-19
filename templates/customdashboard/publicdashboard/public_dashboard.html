@@ -1,0 +1,385 @@
+{% extends "customdashboard/publicdashboards.html" %}
+{% load humanize %}
+{% block content %}
+
+<!--- Hosted Leaflet CSS -->
+<link rel="stylesheet" href="{{ STATIC_URL }}css/leaflet.css">
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{{ STATIC_URL }}publicdashboard/css/main.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}publicdashboard/css/Leaflet.Photo.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}publicdashboard/css/map.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}publicdashboard/css/MarkerCluster.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}publicdashboard/css/leaflet-sidebar.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}js/highcharts/api/css/font-awesome.css">
+<link href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.10.4.min.css" rel="stylesheet" type="text/css" />
+
+<script src="https://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+<script src="{{ STATIC_URL }}js/leaflet-sidebar.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.11.1.min.js"></script>
+
+<script src="{{ STATIC_URL }}publicdashboard/js/vendor/Chart.min.js"></script>
+    <!--- Hosted Leaflet CSS -->
+<script src="{{ STATIC_URL }}js/Chart.HorizontalBar.js"></script>
+
+
+
+<link rel="borders" type="application/json" href="{{ STATIC_URL }}js/world_borders.geojson">
+
+  <div class="row">
+    <h3>{% if getProgram %}{{ getProgram.name }}{% endif %}</h3>
+
+            
+      <!-- tabs left -->
+      <div class="tabbable tabs-left">
+        <div class="tab_navs"></div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#dashboard"  data-toggle="tab"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li><a href="#projects"  data-toggle="tab"><i class="fa fa-folder-open"></i> Projects</a></li>
+            <li><a href="#indicators"  data-toggle="tab"><i class="fa fa-bars"></i> Indicators</a></li>
+            <li><a href="#monitoring"  data-toggle="tab"><i class="fa fa-tasks"></i> Monitoring</a></li>
+            <li><a href="#i_surveys" data-toggle="tab"><i class="fa fa-list-alt"></i> Evidence</a></li>
+    
+        </ul>
+        <div class="tab-content col-md-10 row">
+            
+            <div class="sidebar-pane" id="projects">
+                  <h1 class="sidebar-header">Project Status and Key Performance Indicators</h1>
+                    <br>
+                    <h4><strong>Number of Initiations</strong> <span class="badge">{{ total_projects }}</span></h4>
+                    <h4>
+                       <span class="label label-success">Approved &nbsp;<span class="badge">{{ getApprovedCount }}</span></span>
+                       <span class="label label-success">Awaiting Approval &nbsp;<span class="badge">{{ getAwaitingApprovalCount }}</span></span>
+                       <span class="label label-success">In Progress &nbsp;<span class="badge">{{ getRejectedCount }}</span></span>
+                       <span class="label label-success">New &nbsp;<span class="badge">{{ nostatus_count }}</span></span>
+                       <span class="label label-success">Rejected &nbsp;<span class="badge">{{ getInProgressCount }}</span></span>
+
+                      </a>
+                    </h4>  
+                     <!-- The table collapse panel -->
+                          <div class="panel-group">
+                            <div class="panel panel-default">
+                              <div class="panel-heading">
+                                <h4 class="panel-title">
+                                  <a data-toggle="collapse" href="#collapse{{ getProgram.id }}"><b>Summary of project initiations for - {% if getProgram %}{{ getProgram.name }}{% endif %}</b></a>
+                                </h4>
+                              </div>
+                              <div id="collapse{{ getProgram.id }}" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <table class="table table-striped">
+                                          <tr>
+                                              <th>Activity Code</th>
+                                              <th>Title</th>
+                                              <th>Status</th>
+                                              <th>EXp. Start Date</th>
+                                          </tr>
+                                          {% for project in getProjects|slice:"10" %}
+                                          <tr>
+                                              <td>{{ project.activity_code }}</td>
+                                              <td>{{ project.project_name }}</td>
+                                              <td>{{ project.approval }}</td>
+                                              <td>{{ project.expected_start_date }}</td>
+                                          </tr>
+                                          {% endfor %}
+                                      </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    <!-- End of the table collapse panel -->
+                    <!--  The bar charts -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <strong>Program Expenditure</strong><br>
+                                    <strong>Budgets</strong> Vs <strong>Actuals</strong>
+                                </div>
+
+                                <div class="panel-body">
+                                  <div class="canvas-container-fixed">
+                                        <canvas id="expenditure_canvas" height="200" width="300"></canvas>
+                                    </div>
+                                    <div id="exp-legend" class="chart-legend"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <strong>Key Performance Indicators (KPIs)</strong><br>
+                                    <strong>Targets</strong> Vs <strong>Actuals</strong>
+                                </div>
+                                <div class="panel-body">
+                                      <div class="canvas-container-fixed">
+                                        <canvas id="kpi"></canvas>
+                                      </div>
+                                    <div id="kpi-legend" class="chart-legend"></div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- End of bar charts -->
+
+                    <!-- The map -->
+                    <!-- <div class="row">
+                        <div class="panel panel-info">
+                            <div class="panel-heading"><strong> Projects Sites</strong></div>
+                            <div class="panel-body">
+
+
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- End of the map -->
+            </div>
+             <div class="tab-pane" id="indicators">
+                <h1 class="sidebar-header">Key Performance Indicators</h1>
+                    <br>
+                    <h4>
+                        <strong>Number of Indicator(s)</strong> <span class="badge">{{ getIndicatorCount }}</span>
+                        <strong>With Data</strong> <span class="badge">{{ getIndicatorCountData }}</span>
+                        <strong>KPIs</strong> <span class="badge">{{ getIndicatorCountKPI }}</span>
+                    </h4>
+                     <!-- The table collapse panel -->
+                        <div class="panel-group">
+                        <div class="panel panel-default">
+                          <div class="panel-heading">
+                            <h4 class="panel-title">
+                              <a data-toggle="collapse" href="#indi_collapse{{ getProgram.id }}"><b>Summary of Indicators for - {% if getProgram %}{{ getProgram.name }}{% endif %}</b></a>
+                            </h4>
+                          </div>
+                          <div id="indi_collapse{{ getProgram.id }}" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table class="table table-striped">
+                                      <tr>
+                                          <th>Indicator#</th>
+                                          <th>Name</th>
+                                          <th>Target</th>
+                                          <th>Actuals</th>
+                                          <th>Date</th>
+                                      </tr>
+                                      {% for indicator in getQuantitativeDataSums %}
+                                      <tr>
+                                          <td>{{ indicator.indicator__number }}</td>
+                                          <td>{{ indicator.indicator__name }}</td>
+                                          <td>{{ indicator.targets }}</td>
+                                          <td>{{ indicator.actuals }}</td>
+                                          <td>{{ indicator.date_collected }}</td>
+                                      </tr>
+                                      {% endfor %}
+                                  </table>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                    <!-- End of the table collapse panel -->
+                    <!--  The bar charts -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <strong>Indicator Status</strong><br>
+                                </div>
+
+                                <div class="panel-body">
+                                   <div class="canvas-container-fixed">
+                                        <canvas id="ind-status"></canvas>
+                                      </div>
+                                        <div id="ind-status-legend" class="chart-legend"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- End of doughnut and polar charts -->
+
+                    <!-- The map -->
+                    <!-- <div class="row">
+                        <div class="panel panel-info">
+                            <div class="panel-heading"><strong> Indicator Sites</strong></div>
+                            <div class="panel-body">
+
+
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- End of the map -->
+                
+            </div>
+
+            <!-- Monitoring contents -->
+            <div class="sidebar-pane" id="monitoring">
+                <h1 class="sidebar-header">Monitoring (Beneficiaries, Distributions & Trainings)</h1>
+                <br>
+                <div class="row">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><strong>Beneficiaries for {{ getProgram.name  }} </strong></div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                {% if getBeneficiaries %}
+                                  <tr>
+                                      <th>Date Created</th>
+                                      <th>Name</th>
+                                      <th>Age</th>
+                                      <th>Gender</th>
+                                  </tr>
+                                {% endif %}
+                                 {% for item in getBeneficiaries %}
+                                    <tr>
+                                        <td>{{ item.create_date|date }} </td>
+                                        <td>{{ item.beneficiary_name }}</td>
+                                        <td>{{ item.age }}</td>
+                                        <td>{{ item.gender }}</td>
+                                    </tr>
+
+                                {% empty %}
+                                        <li class="list-group-item">No beneficiaries yet.</li>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><strong>Trainings for {{ getProgram.name  }} </strong></div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                {% if getTrainings %}
+                                  <tr>
+                                      <th>Date Created</th>
+                                      <th>Name</th>
+                                  </tr>
+                                {% endif %}
+                                 {% for item in getTrainings %}
+                                    <tr>
+                                        <td>{{ item.create_date|date }} </td>
+                                        <td>{{ item.training_name }}</td>
+                                    </tr>
+
+                                {% empty %}
+                                        <li class="list-group-item">No Training(s) yet.</li>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><strong>Distributions for {{ getProgram.name  }} </strong></div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                {% if getDistributions %}
+                                  <tr>
+                                      <th>Date Created</th>
+                                      <th>Name</th>
+                                  </tr>
+                                {% endif %}
+                                 {% for item in getDistributions %}
+                                    <tr>
+                                        <td>{{ item.create_date|date }} </td>
+                                        <td>{{ item.distribution_name }}</td>
+                                    </tr>
+
+                                {% empty %}
+                                        <li class="list-group-item">No Distribution(s) yet.</li>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Monitoring Contents -->
+
+            <div class="sidebar-pane" id="i_surveys">
+                <h1 class="sidebar-header">{{ getProgramNarrative.narrative_title }}</h1>
+                <br>
+                <p>{{ getProgramNarrative.narrative }}</p>
+                <div class="col-md-6">
+                    {% for table in evidence_tables %}
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <strong>{{ table }}</strong><br>
+                        </div>
+                        <div class="panel-body">
+                              <div class="canvas-container-radar">
+                                  <canvas id="surveys"></canvas>
+                              </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                    
+            </div>
+
+            <div class="sidebar-pane active" id="dashboard">
+                <h1 class="sidebar-header"> General Dashboard</h1>
+                <br>
+               <!--  The doughnut and polar charts -->
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="panel panel-info">
+                            <div class="panel-heading"><strong>Project Status</strong></div>
+                            <div class="panel-body">
+                                  <div class="canvas-container-fixed">
+                                    <canvas id="status"></canvas>
+                                  </div>
+                                    <div id="status-legend" class="chart-legend"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                 <strong>Project Estimates & Actual Budget</strong><br>
+                            </div>
+                            <div class="panel-body">
+                                  <div class="canvas-container-dash">
+                                    <canvas id="program_chart"></canvas>
+                                  </div>
+                                    <div id="program-legend" class="chart-legend"></div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- End of doughnut and polar charts -->
+
+                
+                <!-- The map -->
+                <div class="row">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><b>Project Sites</b> {% if getFilteredName %} for <a href="/workflow/dashboard/{{ getFilteredName.id }}">{{ getFilteredName }}</a> {% endif %}</div>
+                        <div class="panel-body">
+
+                            <style>
+                                #map { height: 350px; }
+                            </style>
+                            <div id="map"></div>
+
+                            {% include "small_site_profile_map.html" %}
+
+                        </div>
+                    </div>
+                </div>
+                <!-- End of the map -->
+            </div>
+         </div>
+    </div>
+      <!-- /tabs -->
+    
+  </div><!-- /row -->
+
+        <script src="{{ STATIC_URL }}publicdashboard/js/vendor/jquery-1.11.1.min.js"></script>
+        <script src="{{ STATIC_URL }}publicdashboard/js/plugins.js"></script>
+        <div>{% include "customdashboard/charts/doughnut.html" %}</div>
+        <div>{% include "customdashboard/charts/public_program_bar.html" %}</div>
+        <div>{% include "customdashboard/charts/public_radar.html" %}</div>
+        <div>{% include "customdashboard/charts/public_Kpi_bar.html" %}</div>
+        <div>{% include "customdashboard/charts/public_indicator_pie.html" %}</div>
+        <div>{% include "customdashboard/charts/public_horizontal_bar.html" %}</div>
+{% endblock content %}

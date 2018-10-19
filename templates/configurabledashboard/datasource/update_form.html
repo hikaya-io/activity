@@ -1,0 +1,51 @@
+
+
+{% block extra_js_in_body %}
+    <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+    <div class="modal-header">
+
+        <div class="alert alert-error" id="alert-error">
+            <strong>{{ error|escape }}</strong>
+        </div>
+
+        <h4 class="modal-title">{% block page_title %}Edit Data Source {% endblock %}</h4>
+
+    </div>
+    {% include "form_guidance.html" %}
+    <div class="modal-body">
+        {% load crispy_forms_tags %}
+        {% if "/configurabledashboard/data_update" in request.get_full_path  %}
+            <form class="form-horizontal" method="post" id="dataUpdateForm" action="../../configurabledashboard/datasource/update/{{pk}}/">
+        {% endif %}
+
+        {% csrf_token %}
+        {% crispy form %}
+
+        </form>
+    </div>
+
+    <div class="modal-footer">
+       <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.location.href = '/configurabledashboard/data_update/{{ id }}/#add-dashboard-data-sources';parent.location.reload();">Close</button>
+    </div> 
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+<script type="text/javascript">
+    var frm = $('#dataUpdateForm');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#alert-error").html("Success! ");
+            },
+            error: function(data) {
+                $("#alert-error").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+
+</script>

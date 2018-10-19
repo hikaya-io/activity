@@ -1,0 +1,30 @@
+<div class="modal-header">
+
+    <div class="alert alert-error" id="alert-error">
+        <strong>{{ error|escape }}</strong>
+    </div>
+
+    <h4 class="modal-title">{% block page_title %}Component DataSources{% endblock %}</h4>
+
+</div>
+<div class="modal-body"> 
+  <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Source</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+    {% for data in getComponentDataSources %}
+    <tr>
+      <td>{{ data.data_name }}</td>
+      <td>{{ data.data_type }}</td>
+      <td>{{ data.data_source }}</td>
+      <td><a data-toggle="modal" data-target="#myModal" href='/configurabledashboard/data_update/{{ data.id }}/' class="components btn btn-xs btn-danger">Update</a></td>
+      <td><a data-toggle="modal" data-target="#myModal" href='/configurabledashboard/data_delete/{{ data.id }}/' class="components btn btn-xs btn-danger">Delete</a></td> 
+    </tr>
+    {% endfor %}
+  </table>
+</div>

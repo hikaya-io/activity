@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block bread_crumb %}
+<ol class="breadcrumb">
+  <li class="active">Import</li>
+</ol>
+{% endblock %}
+{% block page_title %}Import from Tola Tables{% endblock %}
+
+{% block content %}
+
+    <br/>
+    <div class="jumbotron">
+        <a class="output" data-toggle="modal" data-target="#myModal" href="/tables/import_table/">Import From Tola Tables</a>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div> <!-- /.modal-content -->
+        </div> <!-- /.modal-dialog -->
+    </div> <!-- /.modal -->
+{% endblock content %}

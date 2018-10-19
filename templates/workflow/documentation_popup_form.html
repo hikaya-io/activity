@@ -1,0 +1,120 @@
+
+
+<script type="text/javascript">
+    var frm = $('#documentForm');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#alert-error").html("Success! ");
+            },
+            error: function(data) {
+                $("#alert-error").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+
+
+    var developerKey = 'AIzaSyCT-IRNfrcEhYjcrf7CIHAF54eTldOaYlY';
+
+    // The Client ID obtained from the Google Developers Console. Replace with your own Client ID.
+    var clientId = "445847194486-gl2v6ud6ll65vf06vbjaslqqgejad61k.apps.googleusercontent.com"
+
+    // Scope to use to access user's drive.
+    var scope = ['https://www.googleapis.com/auth/drive.readonly'];
+    var pickerApiLoaded = false;
+    var oauthToken;
+    var actionType = null;
+
+    // Use the API Loader script to load google.picker and gapi.auth.
+    function onApiLoad() {
+        gapi.load('auth', {'callback': onAuthApiLoad});
+        gapi.load('picker', {'callback': onPickerApiLoad});
+    }
+
+    function onAuthApiLoad() {
+        window.gapi.auth.authorize(
+        {
+        'client_id': clientId,
+        'scope': scope,
+        'immediate': false
+        },
+        handleAuthResult);
+    }
+
+    function onPickerApiLoad() {
+        pickerApiLoaded = true;
+        createPicker();
+    }
+
+    function handleAuthResult(authResult) {
+        if (authResult && !authResult.error) {
+        oauthToken = authResult.access_token;
+        createPicker();
+        }
+    }
+
+    // Create and render a Picker object for picking user Photos.
+    function createPicker() {
+        if (pickerApiLoaded && oauthToken) {
+            var view = new google.picker.DocsView(google.picker.ViewId.DOCS);
+            view.setIncludeFolders(true);
+            view.setOwnedByMe(true);
+            view.setSelectFolderEnabled(false);
+            view.setMode("DocsViewMode.LIST");
+            var picker = new google.picker.PickerBuilder()
+                .enableFeature(google.picker.Feature.NAV_HIDDEN)
+                .addView(view)
+                .setOAuthToken(oauthToken)
+                .setDeveloperKey(developerKey)
+                .setCallback(pickerCallback)
+                .build();
+            picker.setVisible(true);
+        }
+    }
+
+    // A simple callback implementation.
+    function pickerCallback(data) {
+        //console.log(JSON.stringify(data));
+        if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+            var doc = data[google.picker.Response.DOCUMENTS][0];
+            var url = doc[google.picker.Document.URL];
+            var id = doc[google.picker.Document.ID];
+
+            console.log("URL: " + url);
+            console.log("ID: " + id);
+            console.log("name:" + doc['name']);
+
+            document.getElementById('id_url').value = url;
+            document.getElementById('id_name').value = doc['name'];
+        }
+    }
+
+</script>
+    <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+    <div class="modal-header">
+
+    <div class="alert alert-error" id="alert-error">
+        <strong>{{ error|escape }}</strong>
+    </div>
+
+    <h4 class="modal-title">{% block page_title %}Documentation for {{ project }} {% endblock %}</h4>
+    </div>
+    <div class="modal-body">
+    {% if "/workflow/documentation_agreement_add/" in request.get_full_path  %}
+        <form class="form-horizontal" method="post" id="documentForm" action="/workflow/documentation_agreement_add/{{ id }}/">
+    {% else %}
+        <form class="form-horizontal" method="post" id="documentForm" action="/workflow/documentation_agreement_update/{{ pk }}/{{ id }}/">
+    {% endif %}
+    {% load crispy_forms_tags %}
+    {% csrf_token %}
+    {% crispy form %}
+    </form>
+    </div>
+    <div class="modal-footer">
+       <button type="button" class="btn btn-default" data-dismiss="modal" onclick="parent.location.reload();">Close</button>
+    </div>
+

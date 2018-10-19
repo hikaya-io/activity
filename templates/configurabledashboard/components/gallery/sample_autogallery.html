@@ -1,0 +1,100 @@
+{% extends "publicdashboards.html" %}
+{% block content %}
+
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}gallery/css/gallery.css"/>
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}gallery/css/style.css"/>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Playfair+Display:400italic' rel='stylesheet' type='text/css'/>
+        <noscript><link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}gallery/css/noscript.css" /></noscript>
+
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}gallery/js/jquery.eislideshow.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}gallery/js/jquery.easing.1.3.js"></script>
+
+        <script type="text/javascript">
+            $(function() {
+                $('#ei-slider').eislideshow({
+					animation			: 'center',
+					autoplay			: true,
+					slideshow_interval	: 3000,
+					titlesFactor		: 0
+                });
+            });
+        </script>
+
+        <div class="container">
+
+            <h1>{% if getProgram %}{{ getProgram.name }}{% endif %} - <b>AutoPlay Image Gallery</b></h1>
+
+            <div class="wrapper_2">
+                <div id="ei-slider" class="ei-slider">
+                    <ul class="ei-slider-large">
+						<li>
+                            <img src="images/large/6.jpg" alt="image06"/>
+                            <div class="ei-title">
+                                <h2>Title 6 from Gallery Database</h2>
+                                <h3>Narrative text for Image 6 from Gallery Database</h3>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/large/1.jpg" alt="image01" />
+                            <div class="ei-title">
+                                <h2>Title 1 from Gallery Database</h2>
+                                <h3>Narrative text for Image 1 from Gallery Database</h3>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/large/2.jpg" alt="image02" />
+                            <div class="ei-title">
+                                <h2>Title 2 from Gallery Database</h2>
+                                <h3>Narrative text for Image 2 from Gallery Database</h3>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/large/3.jpg" alt="image03"/>
+                            <div class="ei-title">
+                                <h2>Title 3 from Gallery Database</h2>
+                                <h3>Narrative text for Image 3 from Gallery Database</h3>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/large/4.jpg" alt="image04"/>
+                            <div class="ei-title">
+                                <h2>Title 4 from Gallery Database</h2>
+                                <h3>Narrative text for Image 4 from Gallery Database</h3>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/large/5.jpg" alt="image05"/>
+                            <div class="ei-title">
+                                <h2>Title 5 from Gallery Database</h2>
+                                <h3>Narrative text for Image 5 from Gallery Database</h3>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/large/7.jpg" alt="image07"/>
+                            <div class="ei-title">
+                                <h2>Title 7 from Gallery Database</h2>
+                                <h3>Narrative text for Image 7 from Gallery Database</h3>
+                            </div>
+                        </li>
+                    </ul><!-- ei-slider-large -->
+                    <ul class="ei-slider-thumbs">
+                        <li class="ei-slider-element">Current</li>
+						<li><a href="#">Slide 6</a><img src="images/thumbs/6.jpg" alt="thumb06" /></li>
+                        <li><a href="#">Slide 1</a><img src="images/thumbs/1.jpg" alt="thumb01" /></li>
+                        <li><a href="#">Slide 2</a><img src="images/thumbs/2.jpg" alt="thumb02" /></li>
+                        <li><a href="#">Slide 3</a><img src="images/thumbs/3.jpg" alt="thumb03" /></li>
+                        <li><a href="#">Slide 4</a><img src="images/thumbs/4.jpg" alt="thumb04" /></li>
+                        <li><a href="#">Slide 5</a><img src="images/thumbs/5.jpg" alt="thumb05" /></li>
+                        <li><a href="#">Slide 7</a><img src="images/thumbs/7.jpg" alt="thumb07" /></li>
+                    </ul><!-- ei-slider-thumbs -->
+                </div><!-- ei-slider -->
+                <div class="reference">
+					<p class="demos"><a href="">Static Gallery</a> | <span>Autoplay Gallery<span></p>
+
+                </div>
+            </div><!-- wrapper -->
+        </div>
+
+
+{% endblock content %}

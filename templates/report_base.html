@@ -1,0 +1,193 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Mercy Corps Application">
+        <meta name="author" content="Mercy Corps">
+
+        <title>{% block title %} Tola-Activity {% endblock %}</title>
+
+        <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.png" type="image/png">
+
+        <!-- Bootstrap -->
+        <link href="{{ STATIC_URL}}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- JQuery UI CSS -->
+        <link href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.10.4.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- Custom Footer CSS -->
+        <link href="{{ STATIC_URL }}css/app.css" rel="stylesheet" type="text/css">
+
+        <!--- Django Tables2 css -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+
+        <!--- Hosted Leaflet CSS --->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/leaflet.css">
+
+        {% block extra_js_in_header %}
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.11.1.min.js"></script>
+
+        <!-- App specific Javascript -->
+        <script type="text/javascript" src="{{ STATIC_URL }}js/app.js"></script>
+
+        <!-- Hosted Leaflet -->
+        <script src="{{ STATIC_URL }}js/leaflet.js"></script>
+        {% endblock %}
+
+    </head>
+    <body>
+        <!--http://getbootstrap.com/examples/sticky-footer-navbar/-->
+        <div class="navbar navbar-default navbar-tola navbar-fixed-top" role="navigation">
+            <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <img style="margin-top: -3px; max-width: 140px;" src="{{ STATIC_URL }}img/tola-activity-primary-mark-white.png" />
+                </a>
+            </div>
+            <div class="navbar-collapse collapse" role="navigation">
+                <ul class="nav navbar-nav">
+                    <li class="{{ home_tab }}"><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Workflow<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/workflow/dashboard/0/"><span class="glyphicon glyphicon-dashboard"></span> Program Dashboard</a></li>
+                            <!-- CONFUSING TO USER FOR NOW TAKING OUT MAY ADD BACK IN IF NEEDED
+                            <li><a href="/workflow/projectproposal_list/0/"><span class="glyphicon glyphicon-th-list"></span> Project Proposal</a></li>
+                            <li><a href="/workflow/projectagreement_list/0/"><span class="glyphicon glyphicon-th-list"></span> Project Agreement</a></li>
+                            <li><a href="/workflow/projectcomplete_list/0/"><span class="glyphicon glyphicon-th-list"></span> Project Complete</a></li>
+                            -->
+                            <li><a href="/workflow/documentation_list/0/"><span class="glyphicon glyphicon-th-list"></span> Documents</a></li>
+                            <li><a href="/workflow/siteprofile_list/0/0/"><span class="glyphicon glyphicon-th-list"></span> Sites</a></li>
+                            <li><a href="/workflow/stakeholder_list/0/"><span class="glyphicon glyphicon-th-list"></span> Stakeholders</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Indicators<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/indicators/home/0/0/0/"><span class="glyphicon glyphicon-dashboard"></span> Indicator Planning</a></li>
+                            <li><a href="/indicators/collecteddata/0/0/"><span class="glyphicon glyphicon-th-list"></span> Indicator Data</a></li>
+                            <li><a href="/indicators/report/0/0/0/"><span class="glyphicon glyphicon-check"></span> Indicator Library</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Form Library<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/workflow/training_list/0/"><span class="glyphicon glyphicon-th-list"></span> Training</a></li>
+                            <li><a href="/workflow/beneficiary_list/0/"><span class="glyphicon glyphicon-th-list"></span> Beneficiaries</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/workflow/report/0/0/"><span class="glyphicon glyphicon-check"></span> Activity Report</a></li>
+                            <li><a href="/indicators/data/0/"><span class="glyphicon glyphicon-check"></span> Indicator Data Report</a></li>
+                            <li><a href="/workflow/report_builder" target="_new"><span class="glyphicon glyphicon-check"></span> Report Builder</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated  %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            {% if "demo" in request.build_absolute_uri %}
+                                <span class="label label-danger">DEMO SERVER</span>
+                            {% elif  "127." in request.build_absolute_uri %}
+                                <span class="label label-danger">LOCAL SERVER</span>
+                            {% elif "dev" in request.build_absolute_uri %}
+                                <span class="label label-danger">DEV SERVER</span>
+                            {% endif %}
+                            <span class="glyphicon glyphicon-user"></span> {{ user.userprofile.name }}<b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-lock"></span> Logout</a></li>
+                            <li><a href="{% url 'profile' %}"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                            <li><a href="{% url 'profile' %}"><span>{{ user.userprofile.countries_list }}</span></a></li>
+                        </ul>
+                    </li><!-- .dropdown collapse -->
+                </ul>
+                {% else %}
+                <form class="navbar-form navbar-right" role="form" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="hidden" name="next" value="{{ next }}" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="username" placeholder="Username" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" placeholder="Password" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success">Sign in</button>
+                </form>
+                {% endif %}
+            </div><!-- .navbar-header collapse -->
+            </div><!-- .container collapse -->
+        </div><!-- .navbar collapse -->
+        <br/>
+        <div class="container">
+            <br/>
+            <div>{% block bread_crumb %}{% endblock %}</div>
+            <div id = "alerts">
+                <!-- Any messages for users -->
+                {% block messages %}
+                    {% if messages %}
+                            {% for message in messages %}
+                                    {% if 'safe' in message.tags %}
+                                        <div class="alert alert-{{message.tags}}">{{ message|safe }}</div>
+                                    {% else %}
+                                        <div class="alert alert-{{message.tags}}">{{ message|safe }}</div>
+                                    {% endif %}
+                            {% endfor %}
+                    <br/>
+                    {% endif %}
+                {% endblock messages %}
+            </div>
+            <!-- Page title  -->
+            <h2>{% block page_title %}{% endblock %}</h2>
+
+            <!-- Main body content -->
+            <p>{% block content %}{% endblock %}</p>
+
+        </div><!-- .container collapse -->
+
+        <div id = "loading" class="modal"> </div>
+        <div id="footer">
+            <!-- Sticky Footer -->
+            <div class="container">
+                <div class="col-md-4 text-left">
+                    <a href="https://github.com/mercycorps/tola-activity/blob/master/LICENSE" class="text-muted">GNU GENERAL PUBLIC LICENSE Version 2</a>
+                </div>
+                <div class="col-md-4 text-center">
+                    <a href="http://www.toladata.com" class="text-muted">Inspired in Kabul. Built in Portland.</a>
+                </div>
+                <div class="col-md-4 text-right">
+                    <a href="{% url 'documentation' %}" class="text-muted">Documentation</a> | <a href="{% url 'faq' %}" class="text-muted">FAQ</a> | <a onclick="newPopup('http://tola.work/helpdesk/tickets/submit/','Tola Work - New Ticket'); return false;" href="#" class="text-muted">Feedback</a>
+                </div>
+            </div>
+        </div><!-- .footer collapse -->
+
+        <!-- jQuery UI (necessary for datepicker as well as dataTables library -->
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.10.4.min.js"></script>
+
+        <!-- data tables jquery javascript library -->
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+
+        <!-- Bootstrap compiled javascript plugins -->
+        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+
+        <!-- Typekit (Fonts) -->
+        <script src="https://use.typekit.net/lmu1xjz.js"></script>
+        <script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+        {% block extra_js_in_body %}{% endblock %}
+    </body>
+</html>
+

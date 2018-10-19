@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block bread_crumb %}
+<div>
+<ol class="breadcrumb">
+  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  <li class="active">Project Dashboard</li>
+</ol>
+</div>
+{% endblock %}
+
+{% block page_title %}Project Dashboard{% endblock %}
+
+{% block content %}
+{% if project_id == 0 %}
+
+    <div class="jumbotron">
+        <p>Name your new Project and associate it with a Program</p>
+        <form role="form" class="form-inline" action="/workflow/projectagreement_add/" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="program">Program:</label>
+                <select class="form-control" id="program" name="program" required="">
+                    {% for item in getPrograms %}
+                        <option value="{{ item.id }} ">{{ item.name|truncatechars:50 }}</option>
+                    {% endfor %}
+
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="project_name">Project Name:</label>
+                <input type="text" name="project_name" required="" id="id_project_name" class="textinput textInput form-control" maxlength="255">
+            </div>
+            <div class="form-group">
+                <label for="detailed">Short Form (recommended):</label>
+                <input type="checkbox" name="short" id="id_short" checked="checked" onchange="confirmshort();"> Yes
+            </div>
+            <br/>
+            <br/>
+            <div class="form-group">
+              <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </form>
+    </div>
+
+{% else %}
+    <br/>
+    <ul class="list-group">
+    <h3>{{ getProgram.name|truncatechars:70 }}<span style="float: right;"><a href="/workflow/projectagreement_detail/{{ getAgreement.id }}/" class="btn btn-sm btn-info">Print View</a></span></h3>
+        {% if getAgreement %}
+        <div class="jumbotron">
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-info">
+                    <h4>Project Initiation</h4>
+                    <span></span>
+                </li>
+
+                <li class="list-group-item"><b>Name: </b>{{ getAgreement.project_name }}<br/>
+                    <b>Project Code: </b>{{ getAgreement.activity_code }}<br/>
+                    <b>Created:</b> <span class="date-badge">{{ getAgreement.create_date|date }}</span> <b>Edited:</b> <span class="date-badge">{{ getAgreement.edit_date|date }}</span>
+                </li>
+                <li class="list-group-item">
+                    <div class="btn-group" role="group" aria-label="...">
+                        {% if getAgreement.approval == "approved" %}
+                            <button data-toggle="tooltip" data-placement="top" title="Initiation has been approved and can no longer be edited." type="button" class="btn btn-sm btn-frozen" onclick="location.href='/workflow/projectagreement_detail/{{ getAgreement.id }}'">View Initiation</button>
+                            <button data-toggle="tooltip" data-placement="top" title="Initiation has been approved and can no longer be deleted." type="button" class="btn btn-sm btn-frozen">Delete Initiation</button>
+                            {% if getComplete%}
+                                <button data-toggle="tooltip" data-placement="top" title="A completion form has already been created for the project" type="button" class="btn btn-sm btn-frozen">Project Initiation</button>
+                            {% else %}
+                                <button type="button" class="btn btn-sm btn-info" onclick="location.href='/workflow/projectcomplete_add/{{ getAgreement.id }}'">Start tracking your project</button>
+                            {% endif %}
+                        {% else %}
+                            <button type="button" class="btn btn-sm btn-warning" onclick="location.href='/workflow/projectagreement_update/{{ getAgreement.id }}'">Update Initiation</button>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="location.href='/workflow/projectagreement_delete/{{ getAgreement.id }}'">Delete Initiation</button>
+                            <button data-toggle="tooltip" data-placement="top" title="Once Approved you will be able to click here and start tracking the project" type="button" class="btn btn-sm btn-frozen">Start tracking your project</button>
+                        {% endif %}
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    {% if getAgreement.approval == "approved" %}
+                        <button class="btn btn-success" type="button">
+                          Approved
+                        </button>
+                    {% else %}
+                        <button class="btn btn-primary" type="button" onclick="location.href='/workflow/projectagreement_update/{{ getAgreement.id }}'">
+                        {% if getAgreement.approval %}
+                            {{ getAgreement.approval|title }}
+                        {% else %}
+                            Open
+                        {% endif %}
+                        </button>
+                    {% endif %}
+                 </li>
+            </ul>
+        {% endif %}
+        {% if getComplete %}
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-info">
+                    <h4>Project Tracking</h4>
+                </li>
+                <li class="list-group-item"><b>Name: </b>{{ getComplete.project_name }}<br/>
+                    <b>Project Code: </b>{{ getComplete.activity_code }}<br/>
+                    <b>Created:</b> <span class="date-badge">{{ getComplete.create_date|date }}</span> <b>Edited:</b> <span class="date-badge">{{ getComplete.edit_date|date }}</span>
+                </li>
+                <li class="list-group-item">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" class="btn btn-sm btn-warning" onclick="location.href='/workflow/projectcomplete_update/{{ getComplete.id }}'">Update Tracking</button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="location.href='/workflow/projectcomplete_delete/{{ getComplete.id }}'">Delete Tracking</button>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    {% if getComplete.approval == "approved" %}
+                        <button class="btn btn-success" type="button">
+                          Approved
+                        </button>
+                    {% else %}
+                        <button class="btn btn-primary" type="button" onclick="location.href='/workflow/projectcomplete_update/{{ getComplete.id }}'">
+                          {% if getComplete.approval %}
+                            {{ getComplete.approval|title }}
+                          {% else %}
+                            Open
+                          {% endif %}
+                        </button>
+                    {% endif %}
+                 </li>
+            </ul>
+        {% endif %}
+        <button class="btn btn-primary" type="button" onclick="location.href='/workflow/documentation_list/0/{{ getAgreement.id }}'">
+            Documents <span class="badge">{{ getDocumentCount }}</span>
+        </button>
+        <button class="btn btn-primary" type="button" onclick="location.href='/workflow/siteprofile_list/0/{{ getAgreement.id }}'">
+            Sites <span class="badge">{{ getCommunityCount }}</span>
+        </button>
+        <button class="btn btn-primary" type="button" onclick="location.href='/formlibrary/training_list/{{ getAgreement.id }}'">
+            Training <span class="badge">{{ getTrainingCount }}</span>
+        </button>
+        <button class="btn btn-primary" type="button" onclick="location.href='/formlibrary/distribution_list/{{ getProgram.id }}'">
+            Distributions <span class="badge">{{ getDistributionCount }}</span>
+        </button>
+        <button class="btn btn-primary" type="button" onclick="location.href='/workflow/checklistitem_list/{{ getAgreement.id }}'">
+            Checklist <span class="badge">{{ getChecklistCount }}</span>
+        </button>
+        <button class="btn btn-primary" type="button" onclick="location.href='/workflow/stakeholder_list/0/{{ getAgreement.id }}'">
+            Stakeholders <span class="badge">{{ getStakeholderCount }}</span>
+        </button>
+        </div>
+    </ul>
+
+    <div class="jumbotron">
+        <h3>
+            Project Checklist
+        </h3>
+        <table class="table table-striped">
+            <tr>
+                <th>Checklist Item</th>
+                <th>Is In the File?</th>
+                <th>Not Applicable?</th>
+            </tr>
+
+            {% for item in getChecklist %}
+            <tr>
+                <td>
+                    {{ item.item }}
+                </td>
+                <td>
+                    {% if item.in_file == True%} <a onclick="tasklistChange('{{ item.id }}','in_file','0')"><span id="in_file_{{ item.id }}" class="glyphicon glyphicon-check"></span></a>{% else %}<a onclick="tasklistChange('{{ item.id }}','in_file','1')"><span id="in_file_{{ item.id }}" class="glyphicon glyphicon-unchecked"></span></a>{% endif %}
+                </td>
+                <td>
+                    {% if item.not_applicable == True%} <a onclick="tasklistChange('{{ item.id }}','not_applicable','0')"><span id="not_applicable_{{ item.id }}" class="glyphicon glyphicon-check"></span></a>{% else %}<a onclick="tasklistChange('{{ item.id }}','not_applicable','1')"><span id="not_applicable_{{ item.id }}" class="glyphicon glyphicon-unchecked"></span></a>{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+{% endif %}
+
+<!-- Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div> <!-- /.modal-content -->
+    </div> <!-- /.modal-dialog -->
+</div> <!-- /.modal -->
+{% endblock content %}

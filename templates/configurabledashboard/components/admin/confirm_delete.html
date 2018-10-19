@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Dashboard Component Confirm Delete</title>
+</head>
+<body>
+
+	<div class="modal-header">
+
+	    <div class="alert alert-error" id="alert-error">
+	        <strong>{{ error|escape }}</strong>
+	    </div>
+
+	    <h4 class="modal-title">{% block page_title %}Delete Dashboard Component {% endblock %}</h4>
+
+	</div>
+
+    <div class="modal-body">
+        <form action="/workflow/custom_dashboard/component_delete/{{ pk }}/" id="componentDeleteForm" method="post">{% csrf_token %}
+            <p>Are you sure you want to delete "{{ object }}"?</p>
+            <input type="submit" value="Confirm" />
+        </form>
+    </div>
+
+	<div class="modal-footer">
+	   <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.location.href = '/workflow/custom_dashboard_update/{{ id }}';parent.location.reload();">Close</button>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+    var frm = $('#componentDeleteForm');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#alert-error").html("Success! ");
+            },
+            error: function(data) {
+                $("#alert-error").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+</script>

@@ -1,0 +1,46 @@
+
+
+<script>
+
+var randomScalingFactor = function(){
+      return Math.round(Math.random()*100);
+    };
+
+var options = {
+       responsive: true,
+	    barShowStroke: false,
+        multiTooltipTemplate: "<%= value + ' USD' %>",  
+
+    };
+
+var barChartData = {
+	labels : [{% for project in get_project_completed|slice:"10" %}'{{ project.activity_code }}',{%endfor%}'','',"Total B & A"],
+	datasets : [
+		{
+			label:"Budgeted",
+			fillColor : "rgba(220,220,220,0.5)",
+			strokeColor : "rgba(220,220,220,0.8)",
+			highlightFill: "rgba(220,220,220,0.75)",
+			highlightStroke: "rgba(220,220,220,1)",
+			data : [{% for project in get_project_completed|slice:"10" %}{{ project.total_estimated_budget }},{%endfor%}'','',{{totalBudgetted}}]
+		},
+		{
+			label : "Actual",
+			fillColor : "rgba(151,187,205,0.5)",
+			strokeColor : "rgba(151,187,205,0.8)",
+			highlightFill : "rgba(151,187,205,0.75)",
+			highlightStroke : "rgba(151,187,205,1)",
+			data : [{% for project in get_project_completed|slice:"10" %}{{ project.projectcomplete.actual_budget }},{%endfor%}'','',{{totalActual}}]
+		}
+	]
+
+};
+
+window.onload = function(){
+	var ctx = document.getElementById("program_chart").getContext("2d");
+
+	var chart = new Chart(ctx).HorizontalBar(barChartData, options);
+    document.getElementById('program-legend').innerHTML = chart.generateLegend();
+	};
+
+	</script>

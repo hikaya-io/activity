@@ -1,0 +1,68 @@
+<script>
+$(document).ready(function(){
+
+$('a[href=#projects]').on('shown.bs.tab', function(){
+	//KPI JSON data object
+
+var kpi_options = {
+    maintainAspectRatio: false,
+    responsive: true,
+    scaleOverlay : false,
+
+    scaleSteps : 10,
+    scaleStepWidth : 10,
+    scaleStartValue : 0,
+    scaleLineColor : "rgba(0,0,0,.25)",
+    scaleLineWidth : 1,
+    scaleShowLabels : true,
+    scaleLabel : "<%=value%>",
+    scaleFontFamily : "'Lato'",
+    scaleFontSize : 12,
+    scaleFontStyle : "800",
+    scaleFontColor : "#222",
+    scaleShowGridLines : true,
+    scaleGridLineColor : "rgba(0,0,0,.1)",
+    scaleGridLineWidth : 1,
+    bezierCurve : true,
+    pointDot : true,
+    pointDotRadius : 5,
+    pointDotStrokeWidth : 1,
+    datasetStroke : true,
+    datasetStrokeWidth : 1,
+    datasetFill : true,
+    animation : true,
+    animationSteps : 120,
+    animationEasing : "easeOutQuart",
+    onAnimationComplete : null,
+};
+var kpi_data = {
+    labels : [{% for program in getQuantitativeDataSums %} "{{ program.indicator__number }}", {% endfor %}],
+    datasets : [
+        {
+            label: "KPI Targets",
+            fillColor: "rgba(220,220,220,0.5)",
+            strokeColor: "rgba(220,220,220,0.8)",
+            highlightFill: "rgba(220,220,220,0.75)",
+            highlightStroke: "rgba(220,220,220,1)",
+            data: [{% for program in getQuantitativeDataSums %} "{{ program.targets }}", {% endfor %}],
+            //data : [65,59,90,41,56,55,40]
+        },
+        {
+            label: "KPI Actuals",
+            fillColor: "rgba(151,187,205,0.5)",
+            strokeColor: "rgba(151,187,205,0.8)",
+            highlightFill: "rgba(151,187,205,0.75)",
+            highlightStroke: "rgba(151,187,205,1)",
+            data: [{% for program in getQuantitativeDataSums %} "{{ program.actuals }}", {% endfor %}],
+            //data : [28,48,40,19,96,27,100]
+        }
+    ]
+}
+//retrieve kpi_canvas, pass the kpi_JSON into a Line_chart
+var ctx = document.getElementById("kpi").getContext("2d");
+var kpiChart = new Chart(ctx).Bar(kpi_data, kpi_options);
+document.getElementById('kpi-legend').innerHTML = kpiChart.generateLegend();
+
+});
+});
+</script>

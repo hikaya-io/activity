@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block bread_crumb %}
+<ol class="breadcrumb">
+  <li><a href="accounts/profile/">Profile</a></li>
+  <li class="active">Bookmark List</li>
+</ol>
+{% endblock %}
+{% block page_title %}Your Bookmarks List{% endblock %}
+
+{% block content %}
+<div>
+<br/>
+</div>
+<h3>Bookmarks</h3>
+
+<ul class="list-group">
+{% for item in getBookmarks %}
+
+    	<li class="list-group-item"><b>{{ item.create_date|date }} &nbsp;<a href="/bookmark_update/{{ item.id }}">{{ item.name }}</a></b> &nbsp;<a href="/bookmark_delete/{{ item.id }}/" class="btn-xs btn-danger">Delete Bookmark</a></li>
+
+{% empty %}
+    <li class="list-group-item">No bookmarks yet.</li>
+{% endfor %}
+</ul>
+{% endblock content %}

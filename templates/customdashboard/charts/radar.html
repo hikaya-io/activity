@@ -1,0 +1,24 @@
+<!---
+RADAR template for custom charts
+required:
+* dataset[] for values
+* labels[] for labels
+* elementID HTML/CSS document id for placement on dashboard
+-->
+<script>
+    //render on radar_chart
+    var data = {
+        labels : [{% for label in labels %} "{{ label }}", {% endfor %}],
+        dataset : [
+            {
+                fillColor : "rgba(220,220,220,0.5)",
+                strokeColor : "#637b85",
+                pointColor : "#dbba34",
+                pointStrokeColor : "#637b85",
+                data : [{% for data in dataset %} {{ data }},{% endfor %}]
+            }
+        ]
+    }
+    var ctx = document.getElementById(" {{ elementID }}").getContext("2d");
+    new Chart(ctx).Radar(survey_data);
+</script>

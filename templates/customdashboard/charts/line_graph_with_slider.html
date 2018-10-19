@@ -1,0 +1,151 @@
+
+  
+  <!-- import plugin script -->
+<script src="{{ STATIC_URL }}js/RangeSlider-all.min.js"></script>
+<link rel="stylesheet" href="{{ STATIC_URL }}css/RangeSlider-all.min.css">
+<div>
+
+
+  <script>
+
+    // line chart data
+    var label_data = [{% for data in getIndicatorData %}{% if data.date_collected  %}"{{data.date_collected | date}}",{% endif %}{% endfor %}];
+
+    var iniData = {
+      labels:[
+
+      {% for data in getIndicatorData %}
+        {% if data.date_collected  %}
+         "{{data.date_collected | date}}",
+        {% endif %}
+      {% endfor %}
+      ],
+      datasets:[{
+        label: "Targets",
+        fillColor:"rgba(172,194,132,0)",
+        strokeColor:"#C45662",
+        pointColor:"#C45662",
+        pointStrokeColor:"#fff",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: "#C45662",
+        data:[
+
+          {% for data in getIndicatorData %}
+            {% if data.date_collected  %}
+             {{data.targeted}},
+            {% endif %}
+          {% endfor %}
+        ]
+      },
+      {
+        label: "Achieved",
+        fillColor:"rgba(172,190,132,0)",
+        strokeColor:"#C45662",
+        pointColor:"#C45662",
+        pointStrokeColor:"#fff",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: "#C45662",
+        data:[
+          {% for data in getIndicatorData %}
+            {% if data.date_collected  %}
+             {{data.achieved}},
+            {% endif %}
+          {% endfor %}
+        ],
+      }]
+    },
+
+
+    // create the options
+    options = {
+      scaleBeginAtZero: true,
+    },
+
+    // get line chart canvas
+    ini = document.getElementById('ini').getContext('2d')
+
+
+    rs = new RangeSliderChart({
+
+      chartData: iniData,
+      chartOpts: options,
+      chartType: 'line',
+      chartCTX: ini,
+
+      initial: get_intial_data(),
+      pips: {
+            mode: 'values',
+            values: const_slider_val(),
+            density: 4
+          }
+    })
+    $('.noUi-value.noUi-value-horizontal.noUi-value-large').each(function(){
+          var val = $(this).html();
+          val = recountVal(parseInt(val));
+          $(this).html(val);
+          });
+
+    function recountVal(val){
+      return format_date(val);
+    }
+
+    function format_date(position){
+      data = label_data;
+      date_value = data[position]
+      console.log(date_value);
+
+      return date_value;
+    }
+    //Scale the slider
+    function const_slider_val(){
+      data = label_data;
+      new_data = [];
+      
+      last_index = data.length - 1;
+      if (last_index <= 200) {
+        for (var i = 0; i < data.length; i++) {
+           if(i % 10 == 0){
+              new_data.push(i)
+           }
+           if (last_index % 10 != 0 ) {
+              last_index = Math.round(last_index / 10) * 10; 
+              new_data.push(last_index);
+            };
+         }; 
+      }
+
+      else {
+        for (var i = 0; i < data.length; i++) {
+           if(i % 100 == 0){
+              new_data.push(i)
+           }
+           if (last_index % 100 != 0 ) {
+              last_index = Math.round(last_index / 100) * 100; 
+              new_data.push(last_index);
+            };
+         }; 
+      };
+
+
+      return new_data;
+    }
+
+    function get_intial_data(){
+      data = label_data;
+      initial = [];
+      data_size = data.length;
+      min = parseInt(data_size/4);
+      max_1 = parseInt(data_size)-parseInt(data_size/4);
+      max_2 = parseInt(data_size)-parseInt(data_size/2);
+      if (data_size <= 200) {
+        initial = [min, max_1];
+      } else{
+        initial = [min, max_2];
+
+      }
+
+      return initial;
+
+    }
+  </script>
+</div>

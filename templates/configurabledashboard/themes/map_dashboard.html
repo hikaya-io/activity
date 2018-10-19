@@ -1,0 +1,71 @@
+<!-- load basic layout -->
+{% extends "customdashboard/themes/custom_base_layout.html" %}
+{% load staticfiles %}
+
+<!-- humanize numbers -->
+{% load humanize %}
+
+<!-- layout-specific content modules-->
+{% block content %}
+
+<!-- TODO: define layout sections -->
+<div class="tab-content"'>
+	<div class='container-fluid'>		
+
+		<div class='row' '>
+			<div class='col-lg-12 borderless soft-border-top' style='background-color:#DB5E12; height: 75px; width: 97%; margin: 1% 1% 0 1.5%;' >
+				<h2 class='title-white'>Greece</h2>
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-lg-12'>
+				<div class='panel panel-info' style="height: 300pt; border-color: #00afaa;"">
+					{% with pageMap as tolaMapData %}
+						{% include 'customdashboard/components/maps/region_map.html' %}
+					{% endwith %}
+				</div>
+		</div>
+		<div class='row'>
+			<div class='col-md-4' style="height: 500;">
+				<div class='panel panel-info soft-border-full' style='border-color: #00afaa; '>
+					<div class='panel-heading text-center soft-border-top' style='background-color: #7B5213;'></div>
+						<div class="panel-body" style="min-height: 500; max-height: 500;">
+						<span class='chart-title' style="overflow-y: scroll;">{{ table1.column_heading }}</span>
+						{% with table1 as tolaTableData %}
+						    {% include 'customdashboard/components/charts/bar_graph.html' %}
+						{% endwith %}
+						</div>
+				</div>
+			</div>
+			<div class='col-md-4' style="height: 500;">
+				<div class='panel panel-info soft-border-full' style='border-color: #00afaa;'>
+					<div class='panel-heading soft-border-top' style='background-color: #7B5213;'></div>
+						<div class="panel-body" style="min-height: 500; max-height: 500;">
+						<span class='chart-title' style="overflow-y: scroll;">{{ table2.column_heading }}</span>
+						{% with table2 as tolaTableData %}
+						    {% include 'customdashboard/components/charts/doughnut.html' %}
+						{% endwith %}
+						</div>
+				</div>
+			</div>
+			<div class='col-md-4' style="height: 500;">
+				<div class='panel panel-info soft-border-full' style='border-color: #00afaa;'>
+					<div class='panel-heading soft-border-top' style='background-color: #7B5213;'></div>
+						<div class="panel-body" style="min-height: 500; max-height: 500;">
+						<span class='chart-title' style="overflow-y: scroll;">{{ table3.column_heading }}</span>
+						{% with table3 as tolaTableData %}
+						    {% include 'customdashboard/components/charts/doughnut.html' %}
+						{% endwith %}
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+<div id="map" class="content-map" style='height: 375pt'></div>

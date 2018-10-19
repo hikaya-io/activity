@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block page_title %}Public Dashboards{% endblock %}
+
+{% block content %}
+
+<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+    Countries
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/program_list/0">--All--</a></li>
+    {% for country in getCountry %}
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/program_list/{{ country.id }}">{{ country.country}}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+<br/>
+{% if country %}
+<h3>{{ country }}</h3>
+{% endif %}
+
+ <!-- Table -->
+<table class="table">
+    <tr>
+        <th>Date Created</th>
+        <th>Program Name</th>
+        <th>Data Complete</th>
+        <th>Public Dashboard</th>
+        <th>View Dashboard</th>
+    </tr>
+    {% for item in getProgram %}
+    <tr>
+        <td>{{ item.create_date}}</td>
+        <td>{{ item.name}}</td>
+        <td width="250">
+            <strong>Indicators</strong>
+            <div class="progress">
+              <div class="progress-bar progress-bar-warning" style="width: {{ item.indicator_data_percent }}%">
+                <font color="black">Data {{ item.indicator_data_percent }} %</font>
+              </div>
+              <div class="progress-bar progress-bar-success" style="width: {{ item.indicator_percent }}%">
+                <font color="black">No Data {{ item.indicator_percent }} %</font>
+              </div>
+            </div>
+            <strong>Projects</strong>
+            <div class="progress">
+              <div class="progress-bar progress-bar-warning" style="width: {{ item.project_percent }}%">
+                <font color="black">Tracking {{ item.project_percent }} %</font>
+              </div>
+              <div class="progress-bar progress-bar-info" style="width: {{ item.project_agreement_percent }}%">
+                <font color="black">Initiation {{ item.project_agreement_percent }} %</font>
+              </div>
+            </div>
+        </td>
+        <td>{% if item.public_dashboard %}<a href="/customdashboard/program_dashboard/{{ item.id }}/1/">Public</a> {% else %} N/A {% endif %}</td>
+        <td><a href="/customdashboard/program_dashboard/{{ item.id }}/0/">Internal</a></td>
+    </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4">No dashboards yet.</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div> <!-- /.modal-content -->
+    </div> <!-- /.modal-dialog -->
+</div> <!-- /.modal -->
+{% endblock content %}

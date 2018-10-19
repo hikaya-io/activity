@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block page_title %}Internal Dashboards{% endblock %}
+
+{% block content %}
+
+<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+    Countries
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/internal_dashboard/0">--All--</a></li>
+    {% for country in getCountry %}
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/internal_dashboard/{{ country.id }}">{{ country.name}}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+<br/>
+{% if getCountry %}
+<h3>{{getCountry.name }}</h3>
+{% endif %}
+
+ <!-- Table -->
+<table class="table">
+    <tr>
+        <th>Date Created</th>
+        <th>Program Name</th>
+
+        <th>View Dashboard</th>
+    </tr>
+    {% for item in getProgram %}
+    <tr>
+        <td>{{ item.create_date}}</td>
+        <td>{{ item.name}}</td>
+
+        <td><a href="/customdashboard/public/{{ item.id }}">{{ item.dashboard_name }}</a></td>
+    </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4">No dashboards yet.</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div> <!-- /.modal-content -->
+    </div> <!-- /.modal-dialog -->
+</div> <!-- /.modal -->
+{% endblock content %}

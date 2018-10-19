@@ -1,0 +1,306 @@
+{% load staticfiles %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="Survery Dashboard">
+    <meta name="author" content=TolaData"">
+    <title>TolaData Rollout Dashboard</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.png" type="image/png"/>
+
+    <!-- Bootstrap -->
+    <link href="{{ STATIC_URL}}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom styles for this template -->
+    <link href="{{ STATIC_URL}}css/tola-dashboard.css" rel="stylesheet" type="text/css" />
+    <link href="{{ STATIC_URL}}css/app.css" rel="stylesheet" type="text/css" />
+    <!-- JQuery UI CSS -->
+    <link href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.10.4.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.11.1.min.js"></script>
+    <script src="{{ STATIC_URL }}publicdashboard/js/vendor/Chart.min.js"></script>
+    <link rel="borders" type="application/json" href="js/world_borders.geojson">
+    <!-- Hosted Leaflet -->
+    <script src="{{ STATIC_URL }}js/leaflet.js"></script>
+    <!--- Hosted Leaflet CSS --->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/leaflet.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">TolaData Dashboard</a>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+              <ul class="nav nav-sidebar">
+                <li {% if dashboard == True %} class="active" {% endif %}><a href="/customdashboard/survey_public/">Survey <span class="sr-only">(current)</span></a></li>
+                <li {% if report == True %} class="active" {% endif %}><a href="/customdashboard/survey_public/report">Rollout Report</a></li>
+              </ul>
+            </div>
+
+            {% if report == True %}
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    <h2>Country Rollout Report</h2>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                        Country
+                        <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="/workflow/dashboard/0">-- All --</a></li>
+                        {% for country in countries %}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="/workflow/dashboard/{{ country.id }}">{{ country.country }}</a></li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    <br/>
+                    <table class="table striped">
+                        <tr>
+                            <th>
+                                Milestones:
+                            </th>
+                            <th>
+                                2-Month
+                            </th>
+                            <th>
+                                4-Month
+                            </th>
+                            <th>
+                                6-Month
+                            </th>
+                            <th>
+                                1 Year
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>Adoption of Workflow</td>
+                            <td bgcolor="Green">Green</td>
+                            <td bgcolor="Yellow">Yellow</td>
+                            <td bgcolor="Red">Red</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>Adoption of Indicator</td>
+                            <td bgcolor="Green">Green</td>
+                            <td bgcolor="Yellow">Yellow</td>
+                            <td bgcolor="Red">Red</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>Indicators w/ Evidence</td>
+                            <td bgcolor="Green">Green</td>
+                            <td bgcolor="Yellow">Yellow</td>
+                            <td bgcolor="Red">Red</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </table>
+                </div>
+            {% else %}
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    <div class="row placeholders">
+                        <div class="col-md-4">
+                            <h4>What Made You Join Us Today?</h4>
+                            <canvas id="join" height="200" width="200"></canvas>
+                            <div id="join-legend" class="chart-legend"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <h4>TolaData is a System for?</h4>
+                            <canvas id="tola_is" height="200" width="200"></canvas>
+                            <div id="tola_is-legend" class="chart-legend"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <h4>Tola Is A Pashto Word Meaning?</h4>
+                            <canvas id="meaning" height="300" width="300"></canvas>
+                        </div>
+                    </div>
+
+                    <h2 class="sub-header">Tola Global Rollout Map</h2>
+                    <div class="map-container">
+                        <style>
+                          #map { height: 350px; }
+                        </style>
+                        <div id="map"></div>
+                        <script>
+                        var countries = new L.LayerGroup();
+
+                        // Define an icon called cssIcon
+                        var countryIcon = L.divIcon({
+                          // Specify a class name we can refer to in CSS.
+                          // Set marker width and height
+                          html:'<div class="map-marker"></div>',
+                          iconSize: [0,0]
+                        });
+
+
+                        {% for item in countries %}
+                            L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: countryIcon}).addTo(countries).bindPopup("" + "<b>{{ item.country }}</b><br/>TolaData country<br/> ");
+                        {%   endfor %}
+
+                        var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                        'Imagery &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+                        mbUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+                        var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox.light', attribution: mbAttr}),
+                        streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
+                        var map = L.map('map', {
+                        center: [25, 25],
+                        zoom: 2,
+                        layers: [grayscale, countries]
+                        });
+                        var baseLayers = {
+                        "Grayscale": grayscale,
+                        "Streets": streets,
+                        };
+                        var overlays = {
+                        "TolaData Countries": countries,
+                        };
+                        L.control.layers(baseLayers, overlays).addTo(map);
+                        </script>
+                    </div>
+                </div>
+                <script>
+                    //render join in a doughnut chart
+                    var status_options = {
+                        // single tooltip
+                        tooltipTemplate: "<%=label + ' Why did you join us Today?' %>",
+                    };
+                    var status_data = [
+                        {
+                        value: {{ join.tola_is_a_mystery }},
+                        color:"#637b85",
+                        label: "Tola is a Mystery - {{ join.tola_is_a_mystery }}"
+                        },
+                        {
+                        value : {{ join.i_like_beer }},
+                        color : "#2c9c69",
+                        label: "I Like Beer - {{ join.i_like_beer }}"
+                        },
+                        {
+                        value : {{ join.to_meet_the_team }},
+                        color : "#dbba34",
+                        label: "Meet the Team - {{ join.to_meet_the_team }}"
+                        },
+                        {
+                        value : {{ join.not_sure }},
+                        color : "#c62f29",
+                        label: "Not Sure - {{ join.not_sure }}"
+                        }
+                    ];
+                    var ctx = document.getElementById("join").getContext("2d");
+                    var statusChart = new Chart(ctx).Doughnut(status_data,status_options);
+                    document.getElementById('join-legend').innerHTML = statusChart.generateLegend();
+
+
+                    // polar chart for TOLA_IS
+                    var data = [
+                        {
+                            value: {{ tola_is.adaptive_manag }},
+                            color:"#F7464A",
+                            highlight: "#FF5A5E",
+                            label: "Adaptive Management"
+                        },
+                        {
+                            value: {{ tola_is.an_indicator_t }},
+                            color: "#46BFBD",
+                            highlight: "#5AD3D1",
+                            label: "Indicator Tracking"
+                        },
+                        {
+                            value: {{ tola_is.a_data_managem }},
+                            color: "#FDB45C",
+                            highlight: "#FFC870",
+                            label: "Data Management"
+                        },
+                        {
+                            value: {{ tola_is.option_4 }},
+                            color: "#949FB1",
+                            highlight: "#A8B3C5",
+                            label: "Evidence Based Decision Making"
+                        },
+                        {
+                            value: {{ tola_is.all_of_the_abo }},
+                            color: "#4D5360",
+                            highlight: "#616774",
+                            label: "All of the Above"
+                        }
+
+                    ];
+
+                    var options = {
+                        //Boolean - Show a backdrop to the scale label
+                        scaleShowLabelBackdrop : true,
+                        //String - The colour of the label backdrop
+                        scaleBackdropColor : "rgba(255,255,255,0.75)",
+                        // Boolean - Whether the scale should begin at zero
+                        scaleBeginAtZero : true,
+                        //Number - The backdrop padding above & below the label in pixels
+                        scaleBackdropPaddingY : 2,
+                        //Number - The backdrop padding to the side of the label in pixels
+                        scaleBackdropPaddingX : 2,
+                        //Boolean - Show line for each value in the scale
+                        scaleShowLine : true,
+                        //Boolean - Stroke a line around each segment in the chart
+                        segmentShowStroke : true,
+                        //String - The colour of the stroke on each segement.
+                        segmentStrokeColor : "#fff",
+                        //Number - The width of the stroke value in pixels
+                        segmentStrokeWidth : 2,
+                        //Number - Amount of animation steps
+                        animationSteps : 100,
+                        //String - Animation easing effect.
+                        animationEasing : "easeOutBounce",
+                        //Boolean - Whether to animate the rotation of the chart
+                        animateRotate : true
+                    };
+
+                    var ctx = document.getElementById("tola_is").getContext("2d");
+                    var polarChart = new Chart(ctx).PolarArea(data, options);
+                    document.getElementById('tola_is-legend').innerHTML = polarChart.generateLegend();
+
+
+                    //render meaning on radar_chart
+                    var survey_data = {
+                        labels : ['All or Complete','Peaceful','Global','I Give Up'],
+                        datasets : [
+                            {
+                                fillColor : "rgba(220,220,220,0.5)",
+                                strokeColor : "#637b85",
+                                pointColor : "#dbba34",
+                                pointStrokeColor : "#637b85",
+                                data : [ {{ meaning.all_or_complete }},{{ meaning.peaceful}}, {{ meaning.is_global }} ,{{ meaning.i_give_up }} ]
+                            }
+                        ]
+                    }
+                    var ctx = document.getElementById("meaning").getContext("2d");
+                    new Chart(ctx).Radar(survey_data);
+                </script>
+            {% endif %}
+        </div>
+    </div>
+  </body>
+</html>
+

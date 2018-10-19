@@ -1,0 +1,31 @@
+<div class="sidebar-gallery" style="position: absolute; top: 0;">
+  <button class='btn btn-default' type=link style='border: none;position: absolute; bottom:0; right:0; margin: .0 .25em .25em 0; background-color: #DB5E11; color: white; font-size: 1.5em; z-index: 10;' data-toggle="modal" data-target="#photoModal">Photo Gallery</button> 
+	<img src="{{STATIC_URL}}img/rrima_images/leadexampleimage.jpg" style='width: 370pt; float: left; z-index: 1;'>
+  
+</div>
+
+<!-- Modal -->
+<div id="photoModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel" aria-hidden="true" >
+  <div class="modal-dialog" role="document" style='width:75%'>
+
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{tolaImageData.title}}</h4>
+      </div>
+      <div class="modal-body" style='overflow-y: scroll; '>
+         {% for photo in tolaImageData%}
+           <div class='col-lg-3' >
+           	 <!-- <a href="#">{{photo.name}}</a> -->
+             <img src="{{STATIC_URL}}/{% autoescape off %}{{ photo }} {% endautoescape %}" / class='gallery_thumbnail' style='width: 200pt; padding: 1em;'>
+       		</div>   
+    	{% endfor %}
+              
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

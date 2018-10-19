@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Addtional Permissions Required{% endblock %}
+
+{% block page_title %}You don't appear to have the proper permissions to access this page.{% endblock page_title %}
+
+{% block content %}
+<p>
+    Please check with your organization or country admin if you think you should have access to this section.
+    <br/>
+    <a href="http://tola.work">Tola Work</a>
+</p>
+<img src="{{ STATIC_URL }}img/denied.jpg" border="1">
+{% endblock content %}

@@ -1,0 +1,33 @@
+<div class="sidebar-pane" id="narrative-context" style='height: 245pt; overflow-y: scroll;'>
+	<h4 style='text-align: center;'> {{tolaTextData.title}}</h4>
+    <div> <br>{{tolaTextData.excerpt}} </div>
+	<button class='btn btn-link' type=link style='float:right;' data-toggle="modal" data-target="#newsModal">Read More</button>
+</div>
+
+<!-- Modal -->
+<div id="newsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width:50%;" role="document">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3 class="modal-title">{{tolaTextData.title}}</h3>
+      </div>
+      <div class="modal-body " style='overflow-y: scroll; word-wrap: break-word; '>
+
+        {% for paragraph in tolaTextData.full %}
+          <p>{{paragraph}}</p>
+        {% endfor %}
+        <ul>
+        {% for item in tolaTextData.highlightList %}
+          <li>{{item}}</li>
+        {% endfor %}
+        </ul>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not found{% endblock %}
+
+{% block page_title %}Page Not found{% endblock page_title %}
+
+{% block content %}
+<p>This is not the page you were looking for, you may be lost.</p>
+<img src="{{ STATIC_URL }}img/Portland-404.png" border="1">
+{% endblock content %}

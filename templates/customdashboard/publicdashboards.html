@@ -1,0 +1,104 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Mercy Corps Public Dashboard">
+        <meta name="author" content="Mercy Corps">
+
+        <title>{% block title %} Public Dashboard {% endblock %}</title>
+
+        <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.png" type="image/png">
+
+        <!-- Bootstrap -->
+        <link href="{{ STATIC_URL}}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- JQuery UI CSS -->
+        <link href="{{ STATIC_URL }}css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- Custom Footer CSS -->
+        <link href="{{ STATIC_URL }}css/app.css" rel="stylesheet" type="text/css">
+
+        <!--- Hosted Leaflet CSS --->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/leaflet.css">
+
+        {% block extra_js_in_header %}
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+
+        <!-- Hosted Leaflet -->
+        <script src="{{ STATIC_URL }}js/leaflet.js"></script>
+        {% endblock %}
+
+    </head>
+    <body>
+        <!--http://getbootstrap.com/examples/sticky-footer-navbar/-->
+        <div class="navbar navbar-default navbar-tola navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'index' %}">
+                        <img style="margin-top: -3px; max-width: 140px;" src="{{ STATIC_URL }}img/tola-activity-primary-mark-white.png" />
+                    </a>
+                    <!-- hamburger nav --->
+                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- end hamburger nav -->
+                </div>
+                <div class="navbar-collapse collapse" role="navigation">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Public Dashboard</b></a>
+                        </li>
+                    </ul>
+                </div><!-- .navbar-header collapse -->
+            </div><!-- .container collapse -->
+        </div><!-- .navbar collapse -->
+        <br/>
+        <div class="container">
+
+            <div>{% block bread_crumb %}{% endblock %}</div>
+
+            <!-- Page title  -->
+            <h2>{% block page_title %}{% endblock %}</h2>
+
+            <!-- Main body content -->
+            <p>{% block content %}{% endblock %}</p>
+
+        </div><!-- .container collapse -->
+
+        <div id = "loading" class="modal"> </div>
+        <div id="footer">
+            <!-- Sticky Footer -->
+            <div class="container">
+                <div class="col-md-6 text-left">
+                    <a href="http://www.toladata.com" class="text-muted"><b>Tola</b>Data: Built by</a> <a href="http://www.mercycorps.org" class="text-muted">MercyCorps</a>
+                </div>
+                <div class="col-md-6 text-right">
+                    <a href="http://tola.work/documentation" class="text-muted">Documentation</a> | <a href="http://tola.work/faq" class="text-muted">FAQ</a> | <a href="http://tola.work/helpdesk/tickets/submit/" class="text-muted">Feedback</a> | <a href="https://github.com/toladata/TolaActivity/blob/master/LICENSE" class="text-muted">License</a>
+                </div>
+            </div>
+        </div><!-- .footer collapse -->
+
+
+        <!-- data tables jquery javascript library -->
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+
+        <!-- Bootstrap compiled javascript plugins -->
+        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        {% if offline_mode %}
+            <!--- offline mode so don't try and load the external fonts --->
+        {% else %}
+            <!-- Typekit (Fonts) -->
+            <script src="https://use.typekit.net/shi4wqr.js"></script>
+            <script>try{Typekit.load({ async: true });}catch(e){}</script>
+        {% endif %}
+
+        {% block extra_js_in_body %}{% endblock %}
+    </body>
+</html>

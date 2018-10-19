@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block bread_crumb %}
+<ol class="breadcrumb">
+  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  {%  if project_agreement_id != '0'%}
+    <li><a href="/workflow/dashboard/project/{{ project_agreement_id }}/">Project Dashboards</a></li>
+  {% endif %}
+  <li class="active">Form Library</li>
+</ol>
+{% endblock %}
+{% load group_tag %}
+{% block page_title %}Form Library{% endblock %}
+
+{% block content %}
+
+<ul class="list-group">
+{% for item in getForms %}
+    <li class="list-group-item"><b>{{ item.create_date|date }} - {{ item.name }}</b>
+    </li>
+
+{% empty %}
+    <li class="list-group-item">No forms yet.</li>
+{% endfor %}
+</ul>
+
+<!-- Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div> <!-- /.modal-content -->
+    </div> <!-- /.modal-dialog -->
+</div> <!-- /.modal -->
+{% endblock content %}

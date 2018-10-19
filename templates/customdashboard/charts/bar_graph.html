@@ -1,0 +1,70 @@
+<!---
+BAR GRAPH template for custom charts
+required:
+* dataset[] with label and iterable data[] for each chart item (up to 2)
+  for side by side or stacked
+* elementID for placement on dashboard
+* legendID for placement of legend for graph
+* tooltip to append to tool tip i.e. (USD, KM, LBS, etc.)
+-->
+<script>
+    //render bar_chart
+    var options = {
+        maintainAspectRatio: false,
+        responsive: true,
+        scaleOverlay : false,
+        scaleSteps : 10,
+        scaleStepWidth : 10,
+        scaleStartValue : 0,
+        scaleLineColor : "rgba(0,0,0,.25)",
+        scaleLineWidth : 1,
+        scaleShowLabels : true,
+        scaleLabel : "<%=value%>",
+        scaleFontFamily : "'Lato'",
+        scaleFontSize : 12,
+        scaleFontStyle : "800",
+        scaleFontColor : "#222",
+        scaleShowGridLines : true,
+        scaleGridLineColor : "rgba(0,0,0,.1)",
+        scaleGridLineWidth : 1,
+        bezierCurve : true,
+        pointDot : true,
+        pointDotRadius : 5,
+        pointDotStrokeWidth : 1,
+        datasetStroke : true,
+        datasetStrokeWidth : 1,
+        datasetFill : true,
+        animation : true,
+        animationSteps : 120,
+        animationEasing : "easeOutQuart",
+        onAnimationComplete : null,
+        //tooltip
+        multiTooltipTemplate: "<%= value + ' ' %>",
+
+    };
+    var data = {
+        labels: [{% for indicator in getQuantitativeDataSums %}  "{{ indicator.indicator__number }}", {% endfor %} '','',"Total A & T"],
+        datasets: [
+            {
+                label: "Targeted",
+                fillColor: "rgba(220,220,220,0.5)",
+                strokeColor: "rgba(220,220,220,0.8)",
+                highlightFill: "rgba(220,220,220,0.75)",
+                highlightStroke: "rgba(220,220,220,1)",
+                data : [{% for indicator in getQuantitativeDataSums %}  {{ indicator.targets }}, {% endfor %} '','', {{totalTargets.targets__sum}}]
+            },
+            {
+                label: "Actuals",
+                fillColor: "rgba(151,187,205,0.5)",
+                strokeColor: "rgba(151,187,205,0.8)",
+                highlightFill: "rgba(151,187,205,0.75)",
+                highlightStroke: "rgba(151,187,205,1)",
+                data : [{% for indicator in getQuantitativeDataSums %}  {{ indicator.actuals }}, {% endfor %}'','',{{totalActuals.actuals__sum}}]
+            }
+        ]
+    };
+    //retrieve expenditure_canvas, pass the into a bar_chart
+    var ctx = document.getElementById("expenditure_canvas").getContext("2d");
+    var expChart = new Chart(ctx).Bar(data,options);
+    document.getElementById('exp-legend').innerHTML = expChart.generateLegend();
+</script>

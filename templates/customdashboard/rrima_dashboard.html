@@ -1,0 +1,387 @@
+{% load staticfiles %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Mercy Corps Public Dashboard">
+        <meta name="author" content="Mercy Corps">
+        <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.png" type="image/png">
+
+        <!-- Bootstrap -->
+        <link href="{{ STATIC_URL}}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="{{ STATIC_URL}}css/tola-dashboard.css" rel="stylesheet" type="text/css" />
+
+        <!-- JQuery UI CSS -->
+        <link href="{{ STATIC_URL }}css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- Custom Footer CSS -->
+        <link href="{{ STATIC_URL }}css/app.css" rel="stylesheet" type="text/css">
+        <!-- - RRIMA CSS --> 
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/rrima.css">
+        <!-- - Hosted Leaflet CSS --> 
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/leaflet.css">
+
+        {% block extra_js_in_header %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/leaflet.js"></script>
+		 
+        {% endblock %} 
+
+    </head>
+<!-- load basic layout -->
+{% load staticfiles %}
+
+<!-- humanize numbers -->
+{% load humanize %}
+
+<!-- nav bar -->  
+    <body style='background-color:#4d525a;'>
+
+		<nav class = "navbar navbar-inverse navbar-fixed-top" role = "navigation" style='background-color:#4d525a; color: white; padding: .5em .25em 1.25em 1em; margin: 0 0 0 0; box-shadow: 0.156em 0.156em 0.313em black;' >
+		   
+		   <div class = "navbar-header" style='float: left;'>
+		      <button type = "button" class = "navbar-toggle" 
+		         data-toggle = "collapse" data-target = "#rrima-navbar-collapse">
+		         <span class = "sr-only">Toggle navigation</span>
+		         <span class = "icon-bar">
+		         	            <ul class = "dropdown-menu"">
+		<!--                <li><a href = "#report1"><span class="glyphicon glyphicon-stats"></span> Report 1</a></li>
+		               <li><a href = "#report2"><span class="glyphicon glyphicon-stats"></span> Report 2</a></li>
+		               <li><a href = "#report3"><span class="glyphicon glyphicon-stats"></span> Report 3</a></li>
+		               <li><a href = "#report4"><span class="glyphicon glyphicon-stats"></span> Report 4</a></li> -->
+		            </ul>
+		         </span>
+		         <span class = "icon-bar"></span>
+		         <span class = "icon-bar"></span>
+		      </button>
+				
+		       
+		   </div>
+		   
+		   <div class = "collapse navbar-collapse" id = "rrima-navbar-collapse">
+			
+		      <ul class = "nav navbar-nav red-solid" style='float: left; border-radius:0.313em; text-align: left; box-shadow: 0.156em 0.156em 0.156em black;padding: 0em 1.5em .5em 1.5em; '>
+		         <li class='col-lg-1 col-md-1 col-sm-1' style="padding-left:.25em; float: left;"><a href="#rrimaHome"><span class="glyphicon glyphicon-home"></span> </a></li>
+		         <li class = "dropdown col-lg-6 col-md-6 col-sm-6" style="padding-left:.25em; float: left;">
+		            <a href = "#" class = "dropdown-toggle" data-toggle = "dropdown">
+		               RRIMA REPORTS<b class = "caret"></b>
+		            </a>
+		            
+		            <ul class = "dropdown-menu">
+		               <li><a href = "#report1"><span class="glyphicon glyphicon-stats"></span> Report 1</a></li>
+		               <li><a href = "#report2"><span class="glyphicon glyphicon-stats"></span> Report 2</a></li>
+		               <li><a href = "#report3"><span class="glyphicon glyphicon-stats"></span> Report 3</a></li>
+		               <li><a href = "#report4"><span class="glyphicon glyphicon-stats"></span> Report 4</a></li>
+		               <li><a href = "#report5"><span class="glyphicon glyphicon-stats"></span> Report 5</a></li>
+		            </ul>
+					
+		         <li class = "dropdown col-lg-5 col-md-5 col-sm-5" style="padding:0; float: left;">
+		            <a href = "#" class = "dropdown-toggle" data-toggle = "dropdown">
+		               MORE
+		               <b class = "caret"></b>
+		            </a>
+		            
+		            <ul class = "dropdown-menu">
+		               <li><a href="#timeline"><span class="glyphicon glyphicon-film"></span> Timeline</a></li>
+		               <li><a href="#programhub"><span class="glyphicon glyphicon-map-marker"></span> Program Hub</a></li>
+		               <li><a href="#familyprofiles"><span class="glyphicon glyphicon-picture"></span> Family Profiles</a></li>
+		               <li><a href="#newsresources"><span class="glyphicon glyphicon-paperclip"></span> News Resources</a></li>
+		            </ul>
+		            
+		         </li>
+					
+		      </ul>
+		      <div class='col-lg-6 col-md-6 col-sm-6 red-solid' style='border-radius:0.313em; text-align: left; margin: 0.5em 2em 0em .5em; box-shadow: 0.156em 0.156em 0.156em black;padding: 0em 1.5em .5em 1.5em; float: right'> <h2>RRIMA Refugee & Migration News</h2></div>
+		   </div>
+		</nav>
+
+<!-- TODO: define layout sections -->
+			<div class="tab-content">
+				<div id="menu0" class="tab-pane fade in active">
+					<div class='container-fluid col-lg-12 dark-white-gradient' style='padding: 0 4em 0 4em;'>
+
+						<div class='row' style='padding: 1em 0 1em 0;'>
+							<div class='col-lg-9 col-md-12 col-sm-12' style='height: 100; overflow-y: scroll; color: #4d525a; padding-left: 3em; padding-bottom: 2em; padding-right: 4em; text-align: left;' >
+								<h3 id="rrimaHome">{{pageText.projectSummary.title}}</h3>
+								<p>With <a href="http://ec.europa.eu/echo/" style="color: #0065a2;"><u>ECHO</u></a> funding, <strong>Mercy Corps’ Refugee Response Information Management and Analysis (RRIMA)</strong> team aims to:</p>
+								<div class='row' style='margin-left: 2em; margin-right: 4em; padding: 1em 2em 1em 2em; '>
+									<!-- <div class='row' style="width:75%;"> -->
+										<div style='text-align: center;'><span class='highlight-title'><strong>Centralize </strong></span><span style='color: black;'>existing data sources, </span><span class='highlight-title'><strong>identify </strong></span><span style='color: black;'>trends within a given context, <span class='highlight-title'><strong>analyze </strong></span><span style='color: black;'>real-time data assets, </span><span class='highlight-title'><strong>inform </strong></span><span style='color: black;'>adaptive program delivery, and </span><span class='highlight-title'><strong>promote </strong></span><span style='color:black;'>data sharing and learning.</span></div>
+									<!-- </div>						 -->
+								</div>
+							</div>
+							<div class='col-lg-3 col-md-4 col-sm-6 col-xs-6' style='background-color: white; padding: 0em 2em 0em 2em; margin-top: 2em; float:left'>
+								<div class="panel-body">
+									<img src="{{STATIC_URL}}/img/EU_Logo1.png" style='background-color: white; height: 7.813em; padding: .5em 0 .5em .5em; float: right; border: none;'>
+									<img src="{{STATIC_URL}}/img/MC_Logo.png" style='background-color: white; height: 7.813em; padding: .5em; float: right; border: none;'>
+								
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class='container-fluid col-lg-12 col-md-12 col-sm-12 dark-white-gradient' style='padding: 0em 4em 2em 4em;'>
+						<div class='row' >
+							<div class='col-lg-12' style="height: 150; padding-bottom: 2em;">
+								<a id="programhub" class="anchor"></a>
+								<h3 style='text-align: right;'>PROGRAM HUBS </h3>
+								<div style='padding-bottom: 2em;'><h4><strong>The path of a refugee…</strong></h4>
+								<p>According to <a href="http://data.unhcr.org/mediterranean/regional.php/"><u>UNHCR</u></a>, more than 1 million migrants and refugees crossed into Europe in 2015 - the vast majority of which traveled along the Aegean Route from countries such as Syria, Afghanistan, and Iraq through Turkey, Greece and the Balkans. <strong>Mercy Corps is strategically positioned</strong> with teams in active areas along the Aegean Migration Route.</p> </div>
+								{% with pageMap as tolaMapData %}
+								    {% include 'customdashboard/rrima_components/rrima_map.html' %}
+								{% endwith %}
+							</div>
+						</div>
+					</div>
+
+					<div class='container-fluid col-lg-12 col-md-12 col-sm-12 dark-white-gradient' style='padding: 0 4em 0 4em;'>
+						<div class='row'>
+							<div class='col-lg-9 col-md-12 col-sm-12' style='padding: 0em 2em 0em 0em;'>
+								<a id="report1" class="anchor"></a>
+								<h3>WHO IS MOVING THROUGH THE AEGEAN?</h3>
+								<p>Over 4 million Syrian refugees. 2.6 million displaced Iraqis. Conflict is tearing countries apart. People are moving at a greater rate than ever before. <i>Who are the primary populations moving? </i>The simple answer is: everyone. Routes are now flooded by families fleeing homes and countries that are no longer safe or habitable.</p><p>Where are people coming from? Who is staying in Turkey versus moving on to Greece and the Balkans? RRIMA Report 1 focuses on <i><strong>who</strong></i> Mercy Corps is serving along the Aegean Migration Route.</p>
+								<div style='padding: 1em 0 1em 0;'>
+									<ul target=“_blank” rel="noopener noreferrer" style='list-style: none;'><strong>A Deeper Look...</strong>
+										<li style="pointer-events: initial;"><a href='http://www.independent.co.uk/news/world/refugee-crisis-where-are-all-these-people-coming-from-and-why-10490425.html/'><u>Refugee crisis: Where are all these people coming from and why?</u></a></li> 
+									</ul>
+								</div> 
+							</div>
+							<div class='col-lg-3 col-md-3  col-sm-6 col-xs-12' style='padding: 0em 0em 0em 0em;'>
+								<div class='panel red-gradient button-selector' style='margin-top: 3em; padding: .5em .5em 2em .5em;'>
+									<div class='panel-body' style='padding-top: 0em;'>
+									<a href="../notebook/1" style='color: white;'>
+										RRIMA Report Vol. 1</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+<!-- Carousel section -->
+					<div class='container-fluid col-lg-12 col-md-12 col-sm-12 dark-white-gradient' style='padding: 0 4em 0em 4em;'>
+						<div class='row'>
+						<div class='col-lg-12 col-md-12 col-sm-12' style='width: 100%; padding: 0em 0em 2em 0em;'>
+							<a id="familyprofiles" class="anchor"></a>
+							<h3 style="text-align:center;">FAMILY PROFILES</h3>
+					    	<p> In the process of analyzing data for the RRIMA subject reports, the team leveraged collected data and its findings to create sample representative households for 4 of the locations it has reported on in Turkey and Greece.  In presenting these  profiles, the team seeks to provide an example of the size and makeup of a household and to highlight a few of the typical challenges that household members may face.  While representative household profiles are intended to be an average example of a household from region to region, a wide range of households and related challenges was seen across all locations.  For issue-specific findings, please see the RRIMA Reports directly.</p>
+				    	</div>
+						<div id="custom_carousel" class="container-fluid col-lg-12 col-md-12 col-sm-12 carousel slide" style='padding: 0 0em 2em 10em;' data-ride="carousel" data-interval="10000">
+							<div class='col-lg-10 col-md-12 col-sm-12' style='padding: 0em 0em 0em 0em;'>
+						        <!-- Wrapper for slides -->
+						        <p><strong>The average refugee household size in Turkey was larger than in Greece.  Single travelers and young couples traveling without families were more likely to travel onward to Greece than families with children. The majority of refugees in Turkey are Syrian, while refugees in Greece come from many different countries of origin (Syria, Afghanistan, Iraq, Iran, and Pakistan). </strong></p>
+						        <div class="carousel-inner" style='background-color:#eee; width: 100%;'>
+						            <div class="item active ">
+						                <div class="container-fluid bigger">
+						                    <div class="row bigger">
+						                        <div class="col-md-12">
+						                            <h4 style='text-align: left; padding-left: 15em;'>Gaziantep</h4>
+						                            <div class="bigger"><img src="{{STATIC_URL}}img/GZTfamily.png" class="img-responsive" ></div>
+						                        </div>
+						                    </div>
+						                </div>            
+						            </div> 
+						            <div class="item">
+						                <div class="container-fluid bigger">
+						                    <div class="row bigger">
+						                        <div class="col-md-12">
+						                            <h4 style='text-align: left; padding-left: 15em;'>Izmir</h4>
+						                            <div class="bigger"><img src="{{STATIC_URL}}img/IZMfamily.png" class="img-responsive" ></div>
+						                        </div>
+						                    </div>
+						                </div>            
+						            </div> 
+						            <div class="item">
+						                <div class="container-fluid bigger">
+						                    <div class="row bigger">
+						                        <div class="col-md-12">
+						                            <h4 style='text-align: left; padding-left: 15em;'>Greece (Mainland)</h4>
+						                            <div class="bigger"><img src="{{STATIC_URL}}img/GRC2family.png" class="img-responsive mediumbig" style="padding-left: 5em;"></div>
+						                        </div>
+						                    </div>
+						                </div>           
+						            </div> 
+						            <div class="item">
+						                <div class="container-fluid bigger">
+						                    <div class="row bigger">
+						                        <div class="col-md-12">
+						                            <h4 style='text-align: left; padding-left: 15em;'>Greece (Islands)</h4>
+						                            <div class="bigger"><img src="{{STATIC_URL}}img/GRC1family.png" class="img-responsive mediumbig" style="padding-left: 10em;"></div>
+						                        </div>
+						                    </div>
+						                </div>           
+						            </div> 
+						        <!-- End Item -->
+						        </div>
+					        <!-- End Carousel Inner -->
+						        <div class="controls">
+						            <ul class="nav" id="carousel-buttons">
+						                <li data-target="#custom_carousel" data-slide-to="0" class="active smaller"><a href="#"><img src="{{STATIC_URL}}img/GZTfamily.png" class="smaller"><small>Gaziantep</small></a></li>
+						                <li data-target="#custom_carousel" data-slide-to="1" class="smaller"><a href="#"><img src="{{STATIC_URL}}img/IZMfamily.png" class="smaller"><small>Izmir</small></a></li>
+						                <li data-target="#custom_carousel" data-slide-to="2"><a href="#"><img src="{{STATIC_URL}}img/GRC1family.png" class="smaller" class="smaller"><small>Greece (Mainland)</small></a></li>
+						                <li data-target="#custom_carousel" data-slide-to="3" class="smaller"><a href="#"><img src="{{STATIC_URL}}img/GRC2family.png" class="smaller"><small>Greece (Island)</small></a></li>
+						            </ul>
+						        </div>
+							</div>
+						</div>
+    				</div>
+    			</div>
+<!-- End Carousel Profile section -->
+
+					<div class='container-fluid col-lg-12 col-md-12 col-sm-12 dark-white-gradient' style='padding: 0 4em 0 4em;'>
+						<div class='row'>
+							<div class='col-lg-9 col-md-12 col-sm-12' style='padding: 0em 4em 0em 0;'>
+								<a id="report2" class="anchor"></a>
+								<h3>WHAT CHALLENGES ARE THEY FACING?</h3>
+								<p>Refugees, asylum seekers and migrant populations each have their own story for why and how they left their country of origin. But all are arriving in a foreign country with limited resources and knowledge of the language, government policies and services available to them. </p>
+								<p>Turkey is host to at least 2.75 million Syrian refugees (among others). What are the primary needs and concerns for these populations? What issues are they running into? RRIMA Report 2 focuses on needs and challenges for refugee populations in Izmir, Turkey. </p>
+								<div style='padding: 1em 0 1em 0;'>
+									<ul target=“_blank” rel="noopener noreferrer" style='list-style: none;'><strong>A Deeper Look...</strong>
+										<li style="pointer-events: initial;"><a href="../notebook/5"><u>Izmir WASH Report</u></a></li> 
+									</ul>
+								</div> 
+							</div>
+							<div class='col-lg-3 col-md-3 col-sm-6 col-xs-12' style='padding: 0em 0 0em 0;'>
+								<div class='panel red-gradient button-selector' style='height: 40px; margin-top: 3em; padding: .5em .5em 2em .5em; border-radius:0.313em box-shadow: 0.156em 0.156em 0.156em black; color: white'>
+									<div class='panel-body' style='padding-top: 0em;'>
+									<a href="../notebook/2" style='color: white;'>
+									RRIMA Report Vol. 2</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					<div class='row'>
+						<div class='col-lg-9 col-md-12 col-sm-12' style='padding: 0em 4em 0em 0;'>
+							<a id="report3" class="anchor"></a>
+							<h3>WHERE IS EVERYONE GOING?</h3>
+							<p>Y2016 has been a tumultuous year for migration patterns across the Mediterranean and European routes.This massive movement of people has placed a strain on existing resources and support services that has never been experienced before. </p><p>Which countries have received the most arrivals, and how has that changed over time? How do challenges and needs for refugees change along the route? RRIMA Report 3 looks at a timeline of events since January 2016, mapping out movements and highlighting moments of note this year. </p>
+								<div style='padding: 1em 0 1em 0;'>
+									<ul style='list-style: none;'><strong>A Deeper Look...</strong>
+										<li><a href="http://www.medmig.info/"><u>MEDMIG: Unraveling the Mediterranean Crisis</u></a></li> 
+									</ul>
+								</div>
+							</div>
+							<div class='col-lg-3 col-md-3 col-sm-6 col-xs-12' style='padding: 0em 0 0em 0;'>
+								<div class='panel red-gradient button-selector' style='height: 40px; margin-top: 3em; padding: .5em .5em 2em .5em;border-radius:0.313em box-shadow: 0.156em 0.156em 0.156em black; color: white'>
+									<div class='panel-body ' style='padding-top: 0em;'>
+									<a href="../notebook/3" style='color: white;'>RRIMA Report Vol. 3</a></div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<!-- Timeline section -->
+					<div class='container-fluid col-lg-12 col-md-12 col-sm-12 dark-white-gradient' style='padding: 2em 4em 2em 4em;'>
+						<div class='row'>
+							<div class='col-lg-10 col-md-12 col-sm-12' style='border-radius: 0.313em; float: left; width:100%; overflow-y: scroll; box-shadow: 0.063em 0.063em 0.063em 0.063em #8b8b8b inset;'>
+								<a id="timeline" class="anchor"></a>
+								<h3 style='text-align: center;'>TIMELINE </h3>
+								<div style='padding-bottom: 1.5em; text-align: center;'>2016 has been marked by a series of key events affecting migrant and refugee decisions about if, how, where and when they will attempt the journey to Europe…</div>
+								<iframe src='https://cdn.knightlab.com/libs/timeline3/latest/embed/index.html?source=1lTZN_JUG7clZ8a4FKpGL0dbcFaK-KY_4BvjlWpOlD6c&font=Default&lang=en&initial_zoom=1&height=450' width='1000' height='450' frameborder='0' style="padding-left: 9em;"></iframe>
+							</div>
+							<div class='col-lg-1'></div>
+						</div>
+					</div>
+					<!-- End timeline -->
+					<div class='container-fluid col-lg-12 col-md-12 col-sm-12 dark-white-gradient' style='padding: 0 4em 0 4em;'>
+						<div class='row'>
+							<div class='col-lg-9 col-md-12 col-sm-12' style='padding: 0em 2em 4em 0em;'>
+							<a id="report4" class="anchor"></a>
+							<h3>WHAT COPING MECHANSIMS ARE BEING USED?</h3>
+							<p>In both Turkey and Syria there are many barriers to working and earning enough income to support a family. Despite the fact that there are support services in place, that is often not enough to meet the needs of those who have been displaced by conflict.</p><p>How are displaced persons, both within and outside of Syria, coping with the challenges they are facing? Are they able to get work? If so, are they earning enough to support their families? RRIMA Report #4 explores the coping mechanisms most in use in North Syria and across the Turkish border, in Gaziantep.  </p>
+							</div>
+							<div class='col-lg-3 col-md-3 col-sm-6 col-xs-12' style='padding: 0em 0 0em 0;'>
+								<div class='panel red-gradient button-selector' style='height: 40px; margin-top: 3em; padding: .5em .5em 2em .5em;border-radius:0.313em box-shadow: 0.156em 0.156em 0.156em black; color: white'>
+									<div class='panel-body ' style='padding-top: 0em;'>
+									<a href="../notebook/4" style='color: white;'>RRIMA Report Vol. 4</a></div>
+								</div>
+							</div>
+
+						</div>
+						<div class='row'>
+							<div class='col-lg-9 col-md-12 col-sm-12' style='padding: 0em 2em 4em 0em;'>
+							<a id="report5" class="anchor"></a>
+							<h3>PROGRAM END-OF-YEAR REFLECTIONS</h3>
+							<p>Both the PRM-funded MALUMAT program in Gaziantep, Turkey and the ECHO-funded Aegean Response program in Izmir, Turkey are concluding and transitioning into their next phase(s).  This report serves to wrap up the analysis for the current phase of programming and to provide some reflections and comparisons not provided in previous reports.</p><p> What do livelihoods and coping strategies look like in Izmir in comparison to Gaziantep? What are the push and pull factors in Gaziantep?  Do those differ from the push and pull factors identified for Izmir? RRIMA Report #5 explores these questions, as well as provides some final reflections about program operations.  </p>
+							</div>
+							<div class='col-lg-3 col-md-3 col-sm-6 col-xs-12' style='padding: 0em 0 0em 0;'>
+								<div class='panel red-gradient button-selector' style='height: 40px; margin-top: 3em; padding: .5em .5em 2em .5em;border-radius:0.313em box-shadow: 0.156em 0.156em 0.156em black; color: white'>
+									<div class='panel-body ' style='padding-top: 0em;'>
+									<a href="../notebook/6" style='color: white;'>RRIMA Report Vol. 5</a></div>
+								</div>
+							</div>
+
+						</div>
+					</div>		
+
+    <!-- End Carousel -->
+					<div class='container-fluid col-lg-12 col-md-12 col-sm-12 dark-white-gradient' style='padding: 0 4em 4em 4em;'>
+						<div style='width: 100%; padding: 0em 2em 0em 0;'>
+
+							<h3 style='padding: 1em 0 1em 0;'>NEWS FEEDS</h3>
+							<ul style='width: 100%;'>
+							    <li class='col-lg-3 col-md-4 col-sm-6 col-xs-12' style='list-style: none;'>
+							    	<div class='panel red-gradient button-selector'><div class='panel-body' style='padding-top: 0em;'><a href='https://newsthatmoves.org/en/' style='color: white; text-align: left; width: 100%;'>NEWS THAT MOVES</a><br></div>
+							    	</div>
+							    </li>
+							    <li class='col-lg-3 col-md-4 col-sm-6 col-xs-12' style='list-style: none;'>
+							    	<div class='panel red-gradient button-selector'><div class='panel-body' style='padding-top: 0em;'><a href='http://www.unhcr.org/news.html' style='color: white; text-align: left; width: 100%;'>UNHCR</a>
+							    	<br></div>
+							    	</div>
+							    </li>
+							    <li class='col-lg-3 col-md-4 col-sm-6 col-xs-12' style='list-style: none;'>
+							    	<div class='panel red-gradient button-selector'><div class='panel-body' style='padding-top: 0em;'><a href='https://www.newsdeeply.com/refugees' style='color: white; text-align: left; width: 100%;'>News Deeply - Refugees </a>
+							    	<br></div>
+							    	</div>
+							    </li>
+							    <li class='col-lg-3 col-md-4 col-sm-6 col-xs-12' style='list-style: none;'>
+							    	<div class='panel red-gradient button-selector'><div class='panel-body' style='padding-top: 0em;'><a href='http://www.ecre.org/news/news/' style='color: white; text-align: left; width: 100%;'>ECRE News</a>
+							    	</div></br></div>
+							    </li>
+							 </ul>
+							 <a id="newsresources" class="anchor"></a>
+						</div>
+					<div class='container-fluid'></div>
+				</div>
+			</div>
+	<!-- footer -->
+	    <div id="footer">
+	        <!-- Sticky Footer -->
+	        <div class="container">
+	            <div class="col-md-6 text-left">
+	                <a href="http://www.toladata.com" class="text-muted"><b>Tola</b>Data: Built by</a> <a href="http://www.mercycorps.org" class="text-muted">MercyCorps</a>
+	            </div>
+	            <div class="col-md-6 text-right">
+	                <a href="http://tola.work/documentation" class="text-muted">Documentation</a> | <a href="http://tola.work/faq" class="text-muted">FAQ</a> | <a href="http://tola.work/helpdesk/tickets/submit/" class="text-muted">Feedback</a> | <a href="https://github.com/toladata/TolaActivity/blob/master/LICENSE" class="text-muted">License</a>
+	            </div>
+	        </div>
+	    </div><!-- .footer collapse -->
+    
+        {% block extra_js_in_body %}
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-73736890-1', 'auto');
+          ga('send', 'pageview');
+
+        </script>
+
+        {% endblock %}
+    </body>
+    <script type="text/javascript">
+    	$(document).ready(function(evt){
+
+		    $('#custom_carousel').on('slide.bs.carousel', function (evt) {
+		      $('#custom_carousel .controls li.active').removeClass('active');
+		      $('#custom_carousel .controls li:eq('+$(evt.relatedTarget).index()+')').addClass('active');
+		    })
+		})
+    </script>
+</html>

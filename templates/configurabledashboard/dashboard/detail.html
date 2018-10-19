@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+<!-- humanize numbers -->
+{% load humanize %}
+
+{% block extra_js_in_body %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+    <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div class='panel panel-default'>
+    <div class='panel-heading'>Custom Dashboard</div>
+        <p>This should be a dashboard view -- I should see this </p>
+</div>
+{% endblock content %}

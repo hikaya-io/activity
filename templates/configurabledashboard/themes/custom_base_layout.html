@@ -1,0 +1,81 @@
+{% load staticfiles %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Mercy Corps Public Dashboard">
+        <meta name="author" content="Mercy Corps">
+
+        <!-- <title>{% block title %} Program Dashboard {% endblock %}</title> -->
+
+        <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.png" type="image/png">
+
+        <!-- Bootstrap -->
+        <link href="{{ STATIC_URL}}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="{{ STATIC_URL}}css/tola-dashboard.css" rel="stylesheet" type="text/css" />
+
+        <!-- JQuery UI CSS -->
+        <link href="{{ STATIC_URL }}css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- Custom Footer CSS -->
+        <link href="{{ STATIC_URL }}css/app.css" rel="stylesheet" type="text/css">
+
+        <!-- - Hosted Leaflet CSS --> 
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/leaflet.css">
+
+        {% block extra_js_in_header %}
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins)  -->
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+
+        <!-- <!- Hosted Leaflet -->
+		 <script src="{{ STATIC_URL }}js/leaflet.js"></script>
+        {% endblock %} 
+
+    </head>
+
+<!-- nav bar -->  
+    <body  style='background-color:#00afaa;'>
+        <!--http://getbootstrap.com/examples/sticky-footer-navbar/-->
+        <div class="navbar navbar-default navbar-tola navbar-fixed-top" role="navigation">
+            <div class="container">
+            
+	            <div class="navbar-collapse collapse" role="navigation">
+	                <ul class="nav navbar-nav">
+	                    <li class="{{ home_tab }}"><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+	                    <!-- Dropdown / additional nav options go here-->
+	                </ul>
+	            </div><!-- .navbar-header collapse -->
+            </div><!-- .container collapse -->
+        </div>
+<!-- main container goes here/ add basic grid system layout here -->
+        <div class="container">
+            <div>{% block bread_crumb %}{% endblock %}</div>
+
+            <!-- Page title  -->
+            <h2>{% block page_title %}{% endblock %}</h2>
+
+            <!-- Main body content -->
+            <p>{% block content %}{% endblock %}</p>
+        </div>
+<!-- footer -->
+    <div id="footer">
+        <!-- Sticky Footer -->
+        <div class="container">
+            <div class="col-md-6 text-left">
+                <a href="http://www.toladata.com" class="text-muted"><b>Tola</b>Data: Built by</a> <a href="http://www.mercycorps.org" class="text-muted">MercyCorps</a>
+            </div>
+            <div class="col-md-6 text-right">
+                <a href="http://tola.work/documentation" class="text-muted">Documentation</a> | <a href="http://tola.work/faq" class="text-muted">FAQ</a> | <a href="http://tola.work/helpdesk/tickets/submit/" class="text-muted">Feedback</a> | <a href="https://github.com/toladata/TolaActivity/blob/master/LICENSE" class="text-muted">License</a>
+            </div>
+        </div>
+    </div><!-- .footer collapse -->
+
+      
+        <!-- <!- {% block extra_js_in_body %} --> 
+        <!-- {% endblock %} -->
+    </body>
+</html>

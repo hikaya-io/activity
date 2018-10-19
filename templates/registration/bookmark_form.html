@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block bread_crumb %}
+<div>
+<ol class="breadcrumb">
+  <li><a href="accounts/profile/">Profile</a></li>
+  <li><a href="/bookmark_list">Bookmarks</a></li>
+  <li class="active">Bookmark Form</li>
+</ol>
+</div>
+{% endblock %}
+{% block page_title %}Bookmark Form{% endblock %}
+
+
+{% block content %}
+    {% include "form_guidance.html" %}
+    {% if form.errors %}
+        <div class="help-block">
+        {% for field in form %}
+            {% for error in field.errors %}
+                    <strong><i>{{ field.label }}</i> - {{ error|escape }}</strong>&nbsp;
+            {% endfor %}
+        {% endfor %}
+        </div>
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-error">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+	{% csrf_token %}
+    {% load crispy_forms_tags %}
+    {% crispy form %}
+
+{% endblock content %}

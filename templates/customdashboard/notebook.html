@@ -1,0 +1,26 @@
+<!-- import chart.js -->
+
+<!-- load basic layout -->
+{% extends "customdashboard/custom_base_layout.html" %}
+{% load staticfiles %}
+
+<!-- humanize numbers -->
+{% load humanize %}
+
+
+<!-- layout-specific content modules-->
+{% block content %}
+
+<!-- layout-specific content modules-->
+{% block breadcrumb %}
+<ol class="breadcrumb" style="width: 65%;">
+  <li><a href="/customdashboard/0/">Dashboards</a></li>
+  <li class="active">Notebook {{ getNotebook.name }}</li>
+</ol>
+{% endblock %}
+
+<!-- TODO: define layout sections -->
+<div class="tab-content">
+	<iframe style="position: absolute; height: 100%; top: 0; border: none; width: 90%;" src="/media/{{ getNotebook.file }}"></iframe>
+</div>
+{% endblock content %}

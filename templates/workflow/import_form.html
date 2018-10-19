@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Import from TolaTables</title>
+</head>
+<body>
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+<link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
+
+<script type="text/javascript">
+    //Searchable select option for service indicator
+    $(document).ready(function() {
+        /* add select2 js library to the indicator select box */
+        $("#service_indicator").select2();
+    });
+</script>
+
+<script type="text/javascript">
+    var frm = $('#importForm');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#alert-error").html("Success! ");
+            },
+            error: function(data) {
+                $("#alert-error").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+</script>
+
+    <div class="modal-header">
+
+    <div class="alert alert-error" id="alert-error">
+        <strong>{{ error|escape }}</strong>
+    </div>
+
+    <h4 class="modal-title">{% block page_title %}Import from Tola Tables {{ id }} {% endblock %}</h4>
+    <p>Choose source to import:</p>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" method="post" id="importForm" action="/workflow/do_import">
+           {% csrf_token %}
+              <div class="form-group">
+                  <label for="services">Indicator Service Templates (leave blank for custom indicators)</label>
+                  <select name="services" id="services" class="form-control">
+                      <option value="0"> -- select -- </option>
+                      {% for item in getServices %}
+                      <option value="{{ item.id }}"> {{ item.name }}</option>
+                      {% endfor %}
+                  </select>
+                  <span id="helpBlock" class="help-block">Select an indicator service (The DIG, donor etc) to select a pre-defined indicator from.</span>
+              </div>
+
+              <div class="form-group">
+                  <label for="service_indicator">Service Indicator (leave blank for custom indicators)</label>
+                  <select name="service_indicator" id="service_indicator" class="form-control">
+                      <option value="0"> -- select -- </option>
+                  </select>
+                  <span id="helpBlock" class="help-block">Type the name of the Indicator in the box above to search, starting with type then level then title.</span>
+              </div>
+              <div class="form-group">
+                  <div class="input-group">
+                  <label for="country">Country</label>
+                  <select name="country" id="country" class="form-control">
+                      <option value="0"> -- select -- </option>
+                      {% for item in getCountries %}
+                      <option value="{{ item.id }}" {% if country_id == item.id %} selected="selected"{%endif%}>{{ item.country }}</option>
+                      {% endfor %}
+                  </select>
+                  </div>
+              </div>
+              <div class="form-group">
+              <label for="program">Program</label>
+              <select name="program" id="program" class="form-control">
+                  <option value="0"> -- select -- </option>
+                  {% for item in getPrograms %}
+                  <option value="{{ item.id }}" {% if program_id == item.id %} selected="selected"{% endif %}> {{ item.name }}</option>
+                  {% endfor %}
+              </select>
+              </div>
+              <br/>
+              <input type="submit" name="submit" value="save" class="btn btn-success">
+        </form>
+    </div>
+    <div class="modal-footer">
+       <button type="button" class="btn btn-default" data-dismiss="modal" onclick="parent.location.reload();">Close</button>
+    </div>
+
+</body>
+</html>
+
+
+

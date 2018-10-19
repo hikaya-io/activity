@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Create an account{% endblock %}
+
+{% block content %}
+  <h1>Create an account</h1>
+
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-error">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-error">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+  <form action="" method="post">
+      {% csrf_token %}
+      {% load crispy_forms_tags %}
+      {{ userform|crispy }}
+      {{ tolaform|crispy }}
+      <div id="iframe">
+      <h6>Notice/Disclaimer:</h6>
+
+          <p>
+            {{ privacy.privacy_disclaimer }}
+          </p>
+
+      </div>
+        <br/>
+      <div>
+      <input type="submit" value="Create the account">
+      </div>
+  </form>
+{% endblock %}

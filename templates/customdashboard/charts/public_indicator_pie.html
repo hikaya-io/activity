@@ -1,0 +1,34 @@
+<!---
+DOUGHNUT CHART template for custom charts
+required:
+* dataset[] with label and iterable data[] for each chart item (up to 6)
+  for side by side or stacked
+* elementID for placement on dashboard
+* legendID for placement of legend for graph
+* tooltip to append to tool tip i.e. (USD, KM, LBS, etc.)
+-->
+
+<script id="doughnutchart">
+$('a[href=#indicators]').on('shown.bs.tab', function(){
+//render project_status in a doughnut chart
+var options = {
+    // single tooltip
+    tooltipTemplate: "<%=label + ' {{ tooltip }}' %>",
+};
+var data = [
+    {
+    value: {{ getApprovedCount }},
+    color:"#637b85",
+    label: "Approved - {{ getIndicatorsApprovedCount }}"
+    },
+    {
+    value : {{ getInProgressCount }},
+    color : "#c62f29",
+    label: "In Progress - {{ getIndicatorInProgressCount }}"
+    }
+];
+var ctx = document.getElementById("ind-status").getContext("2d");
+var statusChart = new Chart(ctx).Pie(data,options);
+document.getElementById('ind-status-legend').innerHTML = statusChart.generateLegend();
+});
+</script>

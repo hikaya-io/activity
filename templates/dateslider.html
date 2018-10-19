@@ -1,0 +1,19 @@
+{# dateslider.html #}
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var type = $('<input type="date" />').attr('type');
+    if (type == 'text') { // No HTML5 support
+      var options = {
+        dateFormat: 'yy-mm-dd'
+      };
+      $('#{{ attrs.id }}').dateRangeSlider();
+    }
+  });
+</script>
+
+<article style="padding:50px 20px">
+
+<div id="slider"></div>
+
+</article>

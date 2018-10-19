@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block bread_crumb %}
+<ol class="breadcrumb">
+  <li><a href="/indicators/home/0/0/0/">Indicators</a></li>
+  <li class="active">Indicator Form</li>
+</ol>
+{% endblock %}
+{% block page_title %}Create an Indicator{% endblock %}
+
+
+{% block extra_js_in_body %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+    <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        //Searchable select option for service indicator
+        $(document).ready(function() {
+            /* add select2 js library to the indicator select box */
+            $("#service_indicator").select2();
+        });
+    </script>
+
+{% endblock %}
+
+
+{% block content %}
+    <span style="float: right;"><a onclick="newPopup('https://docs.google.com/document/d/126B9zmnMhS-KYrmoyswrG2PGglIJPtkSVhkDX4NsMoM/edit','Form Help/Guidance'); return false;" href="#" class="btn btn-sm btn-info">Form Help/Guidance</a></span>
+    {% if form.errors %}
+        <div class="help-block">
+        {% for field in form %}
+            {% for error in field.errors %}
+                    <strong><i>{{ field.label }}</i> - {{ error|escape }}</strong>&nbsp;
+            {% endfor %}
+        {% endfor %}
+        </div>
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-error">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <br/>
+    <br/>
+    <div class='jumbotron'>
+
+        <h4>Create an Indicator from an External Template.</h4>
+        <p>External template indicators include agency standard indicator feeds or donor required indicators from a web service.  Skip The service section if creating a "custom" indicator.</p>
+        <div class="panel-body">
+            <form class="form-horizontal" method="post" enctype="multipart/form-data" name="most" action="/indicators/indicator_create/{{ program_id }}/" role="form">
+              {% csrf_token %}
+              <div class="form-group">
+                  <label for="services">Indicator Service Templates (leave blank for custom indicators)</label>
+                  <select name="services" id="services" class="form-control">
+                      <option value="0"> -- select -- </option>
+                      {% for item in getServices %}
+                      <option value="{{ item.id }}"> {{ item.name }}</option>
+                      {% endfor %}
+                  </select>
+                  <span id="helpBlock" class="help-block">Select an indicator service to select a pre-defined indicator from.</span>
+              </div>
+
+              <div class="form-group">
+                  <label for="service_indicator">Service Indicator (leave blank for custom indicators)</label>
+                  <select name="service_indicator" id="service_indicator" class="form-control">
+                      <option value="0"> -- select -- </option>
+                  </select>
+                  <span id="helpBlock" class="help-block">Type the name of the Indicator in the box above to search, starting with type then level then title.</span>
+              </div>
+              <div class="form-group">
+                  <div class="input-group">
+                  <label for="country">Country</label>
+                  <select name="country" id="country" class="form-control">
+                      <option value="0"> -- select -- </option>
+                      {% for item in getCountries %}
+                      <option value="{{ item.id }}" {% if country_id == item.id %} selected="selected"{%endif%}>{{ item.country }}</option>
+                      {% endfor %}
+                  </select>
+                  </div>
+              </div>
+              <div class="form-group">
+              <label for="program">Program</label>
+              <select name="program" id="program" class="form-control">
+                  <option value="0"> -- select -- </option>
+                  {% for item in getPrograms %}
+                  <option value="{{ item.id }}" {% if program_id == item.id %} selected="selected"{% endif %}> {{ item.name }}</option>
+                  {% endfor %}
+              </select>
+              </div>
+              <br/>
+              <input type="submit" name="submit" value="save" class="btn btn-success">
+            </form>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div> <!-- /.modal-content -->
+        </div> <!-- /.modal-dialog -->
+    </div> <!-- /.modal -->
+
+
+    <!--- my end form --->
+{% endblock content %}

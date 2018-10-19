@@ -1,0 +1,67 @@
+{% extends "base.html" %} 
+{% block page_title %}Merge Columns{% endblock %} 
+
+{% block content %}
+	<form action="/workflow/doMerge/{{ from_silo_id }}/" method="post">	{% csrf_token %}
+	<table border="1">
+		<tr>
+			<th>From Column</th>
+			<th>To Column</th>
+		</tr>
+
+		{% for item in getSourceFrom %}
+			<tr>
+				<td>{{ item.name }} <input type="hidden" name="from_column_id" value="{{ item.id }}"></td>
+
+                {% if item.name == "approval/submitted_by" %}
+                    <td align="middle">
+                        <select name="approval/submitted_by">
+                        {% for user in users %}
+                            <option value="{{ user.id }}" {% if item2|lower == user.username|lower %} selected="selected" {% endif %}>
+                                {{ user.username }}</option>
+                        {% endfor %}
+                        {% if item.name not in user.name %}
+                            {% for user in users %}
+                                <option value="{{user.id}}"> {{user.username}}</option>
+                            {% endfor %}
+                        {% endif %}
+                        </select>
+                    </td>
+                {% elif item.name == "approval/approve_by" %}
+                    <td align="middle">
+                        <select name="approval/approve_by">
+                        {% for user in users %}
+                            <option value="{{ user.id }}" {% if item2|lower == user.username|lower %} selected="selected" {% endif %}>
+                                {{ user.username }}</option>
+                        {% endfor %}
+                        {% if item.name not in users.name %}
+                            {% for user in users %}
+                                <option value="{{user.id}}"> {{user.username}}</option>
+                            {% endfor %}
+                        {% endif %}
+                        </select>
+                    </td>
+                {% else %}
+                    <td align="middle">
+                        <select name="{{ item.name }}">
+                        {% for item2 in getSourceTo %}
+                            <option value="{{ item2}}" {% if item2|lower == item.name|lower %} selected="selected" {% endif %}>
+                                {{ item2 }}</option>
+                        {% endfor %}
+                        {% if item.name not in getSourceTo %}
+                            <option value="0" selected="selected">  New Column !!</option>
+                            <option name="Ignore">Ignore</option>
+                        {% endif %}
+                        </select>
+                    </td>
+                {% endif %}
+			</tr>
+		{% endfor %}
+	</table>
+
+	<br>
+	<input type="hidden" name="from_silo_id" value="{{ from_silo_id }}">
+	<input type="submit" value="Submit" />
+	</form>
+
+{% endblock content %}

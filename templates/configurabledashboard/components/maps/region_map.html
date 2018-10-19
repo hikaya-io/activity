@@ -1,0 +1,60 @@
+<div id="map" class="content-map" style='height: 300pt;'></div>
+<link rel="stylesheet" href="{{ STATIC_URL }}css/leaflet-zoomhome.css"/>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+<script src="{{ STATIC_URL }}js/maps/zoomhome.js"></script>
+<script type="text/javascript">
+
+    var layeredCountries = new L.LayerGroup();
+    // Define an icon called cssIcon
+
+    var countryIcon = L.divIcon({
+      // Set class name for CSS and marker width/height
+      html:'<div class="map-marker"></div>',
+      iconSize: [0,0]
+    });
+
+    {% for site in tolaMapData%}
+        var marker = L.marker([{{ site.latitude }}, {{ site.longitude }}], {icon: countryIcon})
+            .addEventListener('popupopen', function () {
+                this._icon.id = "{{site.location_name}}"
+                current_position = [this._latlng.lat, this._latlng.lng]
+                zoom = this._map._zoom
+                if (current_position && zoom != 12) {
+                    newZoom = 11
+                    map.setView(current_position, newZoom, {animation: true});
+                    return false;
+                }               
+            }).addEventListener('click', function () {
+        		this._icon.id = "{{site.location_name}}"
+                this.bindPopup("" + "<b>{{ site.location_name }}</b><br><br><b>Site Contact:</b><br>{{ site.site_contact }}<br/><br><b>Programs Offered:</b><br>{{ site.site_description }}<br/> ");
+        		current_position = [this._latlng.lat, this._latlng.lng]
+            }).addTo(layeredCountries)
+        	;
+    {%   endfor %}
+
+
+    var mapCoordinates = [38.4237, 27.1428]
+
+    var mapScale = 6
+    var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                    'Imagery &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+                    mbUrl = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+
+
+    var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox.light', attribution: mbAttr}),
+                    streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr});
+    var map = L.map('map', {
+                    center: mapCoordinates,
+                    zoomControl: false,
+                    zoom: mapScale,
+                    layers: [grayscale, layeredCountries]
+                    });
+
+    var baseLayers = { "Grayscale": grayscale,"Streets": streets,};
+    var overlays = {"RRIMA Location": layeredCountries, };
+    L.control.layers(baseLayers, overlays).addTo(map);
+	var zoomHome = L.Control.zoomHome();
+	zoomHome.addTo(map);
+
+</script>

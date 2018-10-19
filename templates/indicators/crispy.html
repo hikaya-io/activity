@@ -1,0 +1,18 @@
+{% load crispy_forms_field %}
+
+{% if field.is_hidden %}
+    {{ field }}
+{% endif %}
+
+<div id="div_{{ field.auto_id }}" style="margin-right: -15px; margin-left: -15px;" class="form-group2 {% if form_show_errors%}{% if field.errors %} has-error{% endif %}{% endif %}{% if field.css_classes %}{{ field.css_classes }}{% endif %}">
+    <label for="{{ field.id_for_label }}" class="control-label {{ label_class }}
+        {% if field.field.required %} requiredField{% endif %}">
+        {{ field.label|safe }}
+        {% if field.field.required %}
+            <span class="asteriskField">*</span>
+        {% endif %}
+    </label>
+    <div class="controls {{ field_class }}">
+        {% crispy_field field %}
+    </div>
+</div>

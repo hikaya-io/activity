@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block page_title %}Documentation{% endblock %}
+
+{% block content %}
+<ul class="list-group">
+{% for item in getDocumentation %}
+    <li class="list-group-item"><h3> {{ item.name }}</h3>
+    <div class="well well-sm">
+        <p>{{ item.documentation}}</p>
+    </div>
+    </li>
+{% empty %}
+    <li class="list-group-item">No Documentation yet.</li>
+{% endfor %}
+</ul>
+
+{% endblock content %}

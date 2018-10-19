@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Import from Tola Tables</title>
+</head>
+<body>
+<script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+<link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
+<script type="text/javascript">
+    //Searchable select option for service indicator
+    $(document).ready(function() {
+        /* add select2 js library to the indicator select box */
+        $("#service_table").select2();
+    });
+
+</script>
+
+<script type="text/javascript">
+    var frm = $('#importForm');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#alert-error").html("Success! ");
+            },
+            error: function(data) {
+                $("#alert-error").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+</script>
+
+    <div class="modal-header">
+
+    <div class="alert alert-error" id="alert-error">
+        <strong>{{ error|escape }}</strong>
+    </div>
+
+    <h4 class="modal-title">{% block page_title %}Import A Tola Table{% endblock %}</h4>
+
+    </div>
+    <div class="modal-body">
+    {% if form.errors %}
+        <div class="help-block">
+        {% for field in form %}
+            {% for error in field.errors %}
+                    <strong><i>{{ field.label }}</i> - {{ error|escape }}</strong>&nbsp;
+            {% endfor %}
+        {% endfor %}
+        </div>
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-error">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <br/>
+    <br/>
+    <div class='jumbotron'>
+
+        <h4>Import a data table from <a href="http://tola-tables.mercycorps.org" target="_new">Tola Tables</a>.</h4>
+        <p>Import one of your Tola Tables or a Table shared with you as a Project Initiation, Indicator, Site Profile or Indicator Evidence.</p>
+        <div class="panel-body">
+            <form class="form-horizontal" method="post" enctype="multipart/form-data" id="importForm" name="most" action="/tables/import/" role="form">
+              {% csrf_token %}
+
+              <div class="form-group">
+
+                  <label for="service_table">Tola Tables </label>
+                  <select name="service_table" id="service_table" class="form-control">
+                      {% for table in getTables.results %}
+                      <option value="{{ table.id }}"> {{ table.owner.username }} - {{ table.name }} </option>
+                      {% endfor %}
+                  </select>
+                  <span id="helpBlock" class="help-block">Type the name of the Table in the box above to search.</span>
+
+                  <label for="service_table">Import to: </label>
+                  <select name="import_object" id="import_object" class="form-control">
+                      <option value="agreement">Project Initiation</option>
+                      <option value="site">Site Profile</option>
+                      <option value="indicator">Indicator</option>
+                      <option value="evidence">Indicator Evidence</option>
+                  </select>
+              </div>
+
+              <br/>
+              <input type="submit" name="submit" value="save" class="btn btn-success">
+            </form>
+        </div>
+    </div>
+
+    </div>
+    <div class="modal-footer">
+       <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.location.reload();parent.location.reload();">Close</button>
+    </div>
+
+</body>
+</html>
+

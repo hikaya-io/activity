@@ -1,0 +1,23 @@
+<tr>
+    <td>{{ item.create_date|date:"d-m-Y" }}</td>
+    <td> {{ item.project_name }} <br/>
+        {% if item.approval == "approved" %}
+          <a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-lock"></span>Initiation Form</a>
+        {% else %}
+          <a class="btn btn-xs btn-default" href="/workflow/projectagreement_update/{{ item.id }}">Initiation Form</a>
+        {% endif%}
+        {% if item.projectcomplete %}
+          <a class="btn btn-xs btn-default" href="/workflow/projectcomplete_update/{{ item.projectcomplete.id }}">Tracking Form</a>
+        {% else %}
+          <a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-lock"></span>Tracking Form</a>
+        {% endif%}
+        <a href="/workflow/projectagreement_detail/{{ item.id }}" class="btn btn-xs btn-default">Print View</a>
+    </td>
+    <td>{{ item.activity_code }}</td>
+    <td>{{ item.office }} </td>
+    <td>{% if item.short %} Short {% else %} Long {% endif %}</td>
+    <td>{% if item.projectcomplete %} Tracking {% if item.projectcomplete.approval  %}{{ item.projectcomplete.approval|capfirst }}{% else %}Open{% endif %}{% else %} Initiation {% if item.approval  %}{{ item.approval|capfirst }}{% else %} Open {% endif %} {% endif %}</td>
+    <td>
+        <a href="/workflow/dashboard/project/{{ item.id }}" class="btn btn-xs btn-success">Project Dashboard</a>
+    </td>
+</tr>

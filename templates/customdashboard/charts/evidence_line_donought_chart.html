@@ -1,0 +1,107 @@
+<script>
+$(document).ready(function(){
+
+		$('a[href=#i_surveys]').on('shown.bs.tab', function(){
+			//Donought Chat
+			/*$(function () {
+					var options2 = {
+					    // single tooltip
+					    tooltipTemplate: "<%=label + ' {{ tooltip }}' %>",
+					     legendTemplate : '<table>'
+                            +'<% for (var i=0; i<datasets.length; i++) { %>'
+                            +'<tr><td><div class=\"boxx\" style=\"background-color:<%=datasets[i].fillColor %>\"></div></td>'
+                            +'<% if (datasets[i].label) { %><td><%= datasets[i].label %></td><% } %></tr><tr height="5"></tr>'
+                            +'<% } %>'
+                            +'</table>',
+
+					};
+
+					var data2 = [
+					    {
+					    value: {{ getApprovedCount }},
+					    color:"#637b85",
+					    label: "Approved - {{ getApprovedCount }}"
+					    },
+					    {
+					    value : {{ getAwaitingApprovalCount }},
+					    color : "#2c9c69",
+					    label: "Waiting - {{ getAwaitingApprovalCount }}"
+					    },
+					    {
+					    value : {{ getRejectedCount }},
+					    color : "#dbba34",
+					    label: "Rejected - {{ getRejectedCount }}"
+					    },
+					    {
+					    value : {{ nostatus_count }},
+					    color : "#00bfff",
+					    label: "New - {{ nostatus_count }}"
+					    },
+					    {
+					    value : {{ getInProgressCount }},
+					    color : "#c62f29",
+					    label: "In Progress - {{ getInProgressCount }}"
+					    }
+					];
+
+					var options2 = {
+					    // single tooltip
+					    tooltipTemplate: "<%=label + ' {{ tooltip }}' %>",
+					};
+
+					var ctx2 = document.getElementById("collected_data_donought").getContext("2d");
+					var statusChart = new Chart(ctx2).Doughnut(data2,options2);
+					document.getElementById('collected_data-legend').innerHTML = statusChart.generateLegend();
+				});
+*/
+			$(function () {
+
+
+    				document.getElementById('main_panel').innerHTML = '';
+
+    				{% for item in evidence_tables %}
+    					var url = '{{item.url}}';
+
+				        var newDivElement = $('<div class="col-md-6">'+'<div class="panel panel-info">'+'<div class="panel-heading">'+'<strong><a href="'+String(url)+'">'+String(url)+' </a><br>Owner:{{ item.owner }} Total Records = {{ item.table_data.recordsTotal}}</strong>'+'</div>'+'<div class="panel-body">'+'{% if not item.table_data.data %}'+' <b>'+'No data for this table '+'</b>'+'{% endif %}'+'<div class="canvas-container-radar">'+'<canvas id="{{item.id}}" width="350" height="250"></canvas>'+'</div>'+'</div>'+'</div>'+'</div>'+'<br>');
+
+						$('#main_panel').append(newDivElement);
+				        var startingData = {
+				            labels: [
+				            			{% for item2 in item.table_data.data|slice:"20" %}
+
+											{% if item2.evidence and item2.date_collected%}
+												"{{item2.date_collected|truncatechars:13}}",
+											{% endif %}
+
+										{% endfor %}],
+				            datasets: [
+				                {
+				                    fillColor : "rgba(220,220, 220,0.5)",
+									strokeColor : "rgba(135,206,250,1)",
+									pointColor : "rgba(255,165,0,1)",
+									pointStrokeColor : "#fff",
+				                    data: [
+				                    		{% for item2 in item.table_data.data|slice:"20" %}
+												{% if item2.evidence and item2.date_collected%}
+													"{{item2.evidence}}",
+												{% endif %}
+
+											{% endfor %}]
+				                }
+				            ]
+				        };
+
+				        var chartOptions = {
+
+				        };
+
+				        var lineChartCanvas = $("#"+{{item.id}}).get(0).getContext("2d");
+				        var datakey = new Chart(lineChartCanvas).Line(startingData, chartOptions);
+				        var lineChartOptions = chartOptions;
+				        lineChartOptions.datasetFill = false;
+				    {% endfor %}
+
+				});
+		});
+});
+</script>

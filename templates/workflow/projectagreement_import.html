@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Import from TolaTables</title>
+</head>
+<body>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+<link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
+
+<script type="text/javascript">
+    //Searchable select option for service indicator
+    $(document).ready(function() {
+        /* add select2 js library to the indicator select box */
+        $("#service_indicator").select2();
+
+        /*
+         * Handle change in the indicator services drop-down; updates the province drop-down accordingly.
+         */
+        $("#services").change(function() {
+            var selected_service = $(this).val();
+            if (selected_service == undefined || selected_service == -1 || selected_service == '') {
+                $("#serivce").html("<option>--Service--</option>");
+            } else {
+                var url = "/workflow/service/" + selected_service + "/service_json/";
+                $.getJSON(url, function(service) {
+                    var options = '<option value="0">--Data--</option>';
+                    for (var i = 0; i < service.length; i++) {
+                        options += '<option value="' + service[i].id + '">' + service[i].name + '</option>';
+                    }
+
+                    $("#service_data").html(options);
+                    $("#service_data_option:first").attr('selected', 'selected');
+                });
+            }
+
+            // page-specific-action call if a page has implemented the 'country_dropdwon_has_changed' function
+            if(typeof services_dropdwon_has_changed != 'undefined') services_dropdwon_has_changed(selected_service);
+        });
+
+
+    });
+</script>
+
+<script type="text/javascript">
+    var frm = $('#importForm');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#alert-error").html("Success! ");
+            },
+            error: function(data) {
+                $("#alert-error").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+</script>
+
+    <div class="modal-header">
+
+    <div class="alert alert-error" id="alert-error">
+        <strong>{{ error|escape }}</strong>
+    </div>
+
+    <h4 class="modal-title">{% block page_title %}Import from Tola Tables {{ id }} {% endblock %}</h4>
+    <p>Choose source to import:</p>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" method="post" id="importForm" action="/workflow/do_import">
+           {% csrf_token %}
+              <div class="form-group">
+                  <label for="services">Import from TolaTables or a third party data service</label>
+                  <select name="services" id="services" class="form-control">
+                      <option value="0"> -- select -- </option>
+                      {% for item in getServices %}
+                      <option value="{{ item.id }}"> {{ item.name }}</option>
+                      {% endfor %}
+                  </select>
+                  <span id="helpBlock" class="help-block"></span>
+              </div>
+
+              <div class="form-group">
+                  <label for="service_data">Service Data</label>
+                  <select name="service_data" id="service_data" class="form-control">
+                      <option value="0"> -- select -- </option>
+                  </select>
+                  <span id="helpBlock" class="help-block">Type the name of the table or service data in the box above to search.</span>
+              </div>
+
+              <div class="form-group">
+              <label for="program">Program</label>
+              <select name="program" id="program" class="form-control">
+                  <option value="0"> -- select -- </option>
+                  {% for item in getPrograms %}
+                  <option value="{{ item.id }}" {% if program_id == item.id %} selected="selected"{% endif %}> {{ item.name }}</option>
+                  {% endfor %}
+              </select>
+              </div>
+              <br/>
+              <input type="submit" name="submit" value="save" class="btn btn-success">
+        </form>
+    </div>
+    <div class="modal-footer">
+       <button type="button" class="btn btn-default" data-dismiss="modal" onclick="parent.location.reload();">Close</button>
+    </div>
+
+</body>
+</html>
+
+
+

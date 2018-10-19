@@ -1,0 +1,53 @@
+{% block extra_js_in_body %}
+    <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+    <div class="modal-header">
+
+        <div class="alert alert-error" id="alert-error">
+            <strong>{{ error|escape }}</strong>
+        </div>
+
+        <h4 class="modal-title">{% block page_title %}Update Template Mapping {% endblock %}</h4>
+
+    </div>
+    <div class="modal-body">
+        {% load crispy_forms_tags %}
+        <div>Currently mapped component: {{getCustomDashboard.component_map}}</div>
+        <form class="form-horizontal" method="post" id="componentMapForm" action="{{ request.get_full_path }}"">
+            <select id="id_component_map" name="component_map" class="form-control" >
+                {% for component in getDashboardComponents %}
+                    {% if component.component_type in request.get_full_path %}
+                        <option value="{{component.id}}">{{component.component_name}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        <button class="btn btn-default" type="submit" value="Map"> Update </button>   
+        {% csrf_token %}
+
+        </form>
+    </div>
+
+    <div class="modal-footer">
+       <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.location.href = '/workflow/custom_dashboard_update/{{ id }}/#add-dashboard-components';parent.location.reload();">Close</button>
+    </div> 
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+<script type="text/javascript">
+    var frm = $('#componentRemapForm');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#alert-error").html("Success!");
+            },
+            error: function(data) {
+                $("#alert-error").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+
+</script>

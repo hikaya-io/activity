@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+<!-- humanize numbers -->
+{% load humanize %}
+
+{% block page_title %}Dashboard Themes{% endblock %}
+
+{% block content %}
+
+<!-- Table -->
+<table class="table">
+    <tr>
+        <th>Date Created</th>
+        <th>Theme Name</th>
+        <th>Theme Description</th>
+        <th># of Components</th>
+        <th>Distribution</th>
+        <th>Example Dashboard</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+    </tr>
+    {% for item in getDashboardThemes %}
+    <tr>
+       <td> {{item.create_date}} </td>       
+       <td> {{item.theme_name}} </td>
+       <td> {{item.theme_description}} </td>
+       <td> {{item.number_of_components}} </td>
+       <td> {% if item.is_public == "True" %}
+            Public
+            {% else %}
+            Private
+            {% endif %} 
+            </td>        
+       <td> <a href="" >Example </a></td> <!-- This is a sample image of the layout -->
+       <td> 
+      <a data-toggle="modal" data-target="#myModal" href="/configurabledashboard/theme_update/{{ item.id }}/" class="dashboards btn btn-xs btn-danger">Edit </a></td>
+
+       <td> <a data-toggle="modal" data-target="#myModal" href="/configurabledashboard/theme_delete/{{ item.id }}/" class="btn btn-xs btn-danger">Delete </a></td>
+    </tr>
+    {% empty %}
+        <li class="list-group-item">No Dashboard Themes Available Yet.</li>
+    {% endfor %}
+</table>
+
+<div class="panel-footer">
+    <a class="dashboards" data-toggle="modal" data-target="#myModal" href="/configurabledashboard/theme_add/">Add New Theme</a>
+</div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+          </div> <!-- /.modal-content -->
+      </div> <!-- /.modal-dialog -->
+  </div> <!-- /.modal -->
+
+{% endblock content %}

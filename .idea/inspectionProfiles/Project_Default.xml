@@ -1,0 +1,52 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="39">
+            <item index="0" class="java.lang.String" itemvalue="django-ckeditor" />
+            <item index="1" class="java.lang.String" itemvalue="PyYAML" />
+            <item index="2" class="java.lang.String" itemvalue="django-localflavor" />
+            <item index="3" class="java.lang.String" itemvalue="python-dateutil" />
+            <item index="4" class="java.lang.String" itemvalue="django-geojson" />
+            <item index="5" class="java.lang.String" itemvalue="httplib2" />
+            <item index="6" class="java.lang.String" itemvalue="requests" />
+            <item index="7" class="java.lang.String" itemvalue="django-leaflet" />
+            <item index="8" class="java.lang.String" itemvalue="django-tables2" />
+            <item index="9" class="java.lang.String" itemvalue="django-extensions" />
+            <item index="10" class="java.lang.String" itemvalue="python-ldap" />
+            <item index="11" class="java.lang.String" itemvalue="jdcal" />
+            <item index="12" class="java.lang.String" itemvalue="django-wysiwyg" />
+            <item index="13" class="java.lang.String" itemvalue="requests-oauthlib" />
+            <item index="14" class="java.lang.String" itemvalue="django-registration" />
+            <item index="15" class="java.lang.String" itemvalue="ldap" />
+            <item index="16" class="java.lang.String" itemvalue="macholib" />
+            <item index="17" class="java.lang.String" itemvalue="django-admin-report" />
+            <item index="18" class="java.lang.String" itemvalue="djangorestframework" />
+            <item index="19" class="java.lang.String" itemvalue="WeasyPrint" />
+            <item index="20" class="java.lang.String" itemvalue="django-simple-history" />
+            <item index="21" class="java.lang.String" itemvalue="django-report-utils" />
+            <item index="22" class="java.lang.String" itemvalue="django-crispy-forms" />
+            <item index="23" class="java.lang.String" itemvalue="django-uuidfield" />
+            <item index="24" class="java.lang.String" itemvalue="django-mathfilters" />
+            <item index="25" class="java.lang.String" itemvalue="django-multiupload" />
+            <item index="26" class="java.lang.String" itemvalue="django-import-export" />
+            <item index="27" class="java.lang.String" itemvalue="django-rest-swagger" />
+            <item index="28" class="java.lang.String" itemvalue="reportlab" />
+            <item index="29" class="java.lang.String" itemvalue="MySQL-python" />
+            <item index="30" class="java.lang.String" itemvalue="dicttoxml" />
+            <item index="31" class="java.lang.String" itemvalue="simplejson" />
+            <item index="32" class="java.lang.String" itemvalue="social-auth-app-django" />
+            <item index="33" class="java.lang.String" itemvalue="django-filter" />
+            <item index="34" class="java.lang.String" itemvalue="Django" />
+            <item index="35" class="java.lang.String" itemvalue="pytz" />
+            <item index="36" class="java.lang.String" itemvalue="openpyxl" />
+            <item index="37" class="java.lang.String" itemvalue="Pillow" />
+            <item index="38" class="java.lang.String" itemvalue="python-logstash" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
