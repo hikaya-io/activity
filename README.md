@@ -34,7 +34,7 @@ virtualenv --no-site-packages venv
 . venv/bin/activate
 * allows us to just use pip from command line by adding to the path rather then full path
 
-##Activate Virtualenv
+## Activate Virtualenv
 source venv/bin/activate
 
 ## Fix probable mysql path issue (for mac)
