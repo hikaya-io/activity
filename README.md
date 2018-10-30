@@ -28,7 +28,7 @@ Run the following commands from the root of this repository:
 pip install virtualenv
 
 # Create Virtualenv
-virtualenv —-no-site-packages venv
+virtualenv --no-site-packages venv
 * use no site packages to prevent virtualenv from seeing your global packages
 
 . venv/bin/activate
