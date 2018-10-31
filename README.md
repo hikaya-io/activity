@@ -25,33 +25,77 @@ Run the following commands from the root of this repository:
 
 ## USING virtualenv
 (Install virtualenv)
-pip install virtualenv
+```bash
+$ pip install virtualenv
+```
+
 
 # Create Virtualenv
-virtualenv --no-site-packages venv
+```bash
+$ virtualenv --no-site-packages venv
+```
 * use no site packages to prevent virtualenv from seeing your global packages
-
-. venv/bin/activate
-* allows us to just use pip from command line by adding to the path rather then full path
+* . venv/bin/activate allows us to just use pip from command line by adding to the path rather then full path
 
 ## Activate Virtualenv
-source venv/bin/activate
+```bash
+$ source venv/bin/activate
+```
+
 
 ## Fix probable mysql path issue (for mac)
 export PATH=$PATH:/usr/local/mysql/bin
 * or whatever path you have to your installed mysql_config file in the bin folder of mysql
 
-pip install -r requirements.txt
+## Install Requirements
+```bash
+$ pip install -r requirements.txt
+```
+
+
+## Modify the config file
+
+Edit _config/settings.secret.yml_. Find the node named, "DATABASES" and set the 
+database `PASSWORD` as appropriate. The result should resemble the following:
+
+```yaml
+47 DATABASES:
+48  'default': {
+49    #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+50    'ENGINE': "django.db.backends.mysql"
+51    'NAME': "tola_activity"
+52    'USER': "root"
+53    'PASSWORD': 'tolageek',
+54    'HOST': "localhost"
+55    'PORT': '',
+```
+* Replace user and password by your Mysql username and password 
+
+## Set up Django's MySQL backing store
+
+```sql
+CREATE DATABASE 'tola_activity';
+CREATE USER 'root';
+GRANT ALL ON tola_activity.* TO 'root'@'localhost' IDENTIFIED BY 'tolageek';
+```
+* When you use these SQL queries, beware of not writting the quotes.
 
 ## Set up DB
-python manage.py migrate
+```bash
+$ python manage.py migrate
+```
+* If you get access denied, it means you need to modify the config file and write your Mysql username and password in the file
 
 # Run App
 If your using more then one settings file change manage.py to point to local or dev file first
+```bash
+$ python manage.py runserver
+```
 
-python manage.py runserver 0.0.0.0:8000
 
 GOOGLE API
+```bash
+$ sudo pip install --upgrade google-api-python-client
+```
 
-sudo pip install --upgrade google-api-python-client
 * 0’s let it run on any local address i.e. localhost,127.0.0.1 etc.
