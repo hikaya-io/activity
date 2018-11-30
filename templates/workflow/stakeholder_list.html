@@ -20,6 +20,8 @@
     {% endfor %}
   </ul>
 <a href="/workflow/stakeholder_add/0/" class="btn btn-large btn-success">New Stakeholder</a> &nbsp;
+<a href="/workflow/export_stakeholders_list/{{ program_id }}/" class="btn btn-sm btn-primary float-right"><span class="glyphicon glyphicon-export"></span> Export to CSV</a>&nbsp;
+<br><br>
 </div>
 <hr/>
 <br/>
@@ -27,8 +29,7 @@
 
     <h3>Stakeholder</h3>
 
-<a href="/workflow/export_stakeholders_list/{{ program_id }}/" class="btn btn-sm btn-primary float-right"><span class="glyphicon glyphicon-export"></span> Export to Excel</a>&nbsp;
-<br><br>
+
 
 <!-- Table -->
 <table class="table" id="stakeholdertable">

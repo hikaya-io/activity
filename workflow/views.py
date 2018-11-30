@@ -42,7 +42,7 @@ logger = logging.getLogger(__name__)
 from django.utils.decorators import method_decorator
 from tola.util import getCountry, emailGroup, group_excluded, group_required
 from mixins import AjaxableResponseMixin
-from export import ProjectAgreementResource, StakeholderResource
+from export import ProjectAgreementResource, StakeholderResource, SiteProfileResource
 
 APPROVALS = (
     ('in_progress',('in progress')),
@@ -2381,6 +2381,22 @@ def export_stakeholders_list(request, **kwargs):
 
     return response
 
+def export_sites_list(request, **kwargs):
+
+    #program_id = int(kwargs['program_id'])
+    countries = getCountry(request.user)
+
+    #if program_id != 0:
+    #    getSites = Sites.objects.prefetch_related('sector').filter(projectagreement__program__id=program_id).distinct()
+    #else:
+    getSites = SiteProfile.objects.prefetch_related('sector').filter(country__in=countries)
+
+    dataset = SiteProfileResource().export(getSites)
+    response = HttpResponse(dataset.csv, content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=sites.csv'
+
+    return response
+
 
 def save_bookmark(request):
     """
@@ -2434,6 +2450,45 @@ class StakeholderObjects(View, AjaxableResponseMixin):
         return JsonResponse(final_dict, safe=False)
 
 
+class SiteProfileObjects(View, AjaxableResponseMixin):
+    """
+    Render Agreements json object response to the report ajax call
+    """
+
+    def get(self, request, *args, **kwargs):
+
+        # Check for project filter
+        project_agreement_id = self.kwargs['pk']
+        # Check for program filter
+
+        if self.kwargs['program_id']:
+            program_id = int(self.kwargs['program_id'])
+        else:
+            program_id = 0
+
+        countries = getCountry(request.user)
+
+        countries = getCountry(request.user)
+
+        if program_id != 0:
+            getSites = SiteProfile.objects.all().filter(projectagreement__program__id=program_id).distinct().values('id')
+
+        elif int(self.kwargs['pk']) != 0:
+            getSites = SiteProfile.objects.all().filter(projectagreement=self.kwargs['pk']).distinct().values('id')
+
+
+        else:
+            getSites = SiteProfile.objects.all().filter(country__in=countries).values('id')
+
+
+        getSites = json.dumps(list(getSites), cls=DjangoJSONEncoder)
+
+        final_dict = {'getSites': getSites}
+
+        return JsonResponse(final_dict, safe=False)
+
+
+
 class DocumentationListObjects(View, AjaxableResponseMixin):
 
     def get(self, request, *args, **kwargs):
@@ -2454,5 +2509,3 @@ class DocumentationListObjects(View, AjaxableResponseMixin):
         final_dict  = {'getDocumentation': getDocumentation}
 
         return JsonResponse(final_dict, safe=False)
-
-
