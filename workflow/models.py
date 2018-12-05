@@ -66,6 +66,7 @@ class TolaSitesAdmin(admin.ModelAdmin):
 class Organization(models.Model):
     name = models.CharField("Organization Name", max_length=255, blank=True, default="TolaData")
     description = models.TextField("Description/Notes", max_length=765, null=True, blank=True)
+    logo = models.FileField("Your Organization Logo", blank=True,null=True,upload_to="static/img/")
     organization_url = models.CharField(blank=True, null=True, max_length=255)
     level_1_label = models.CharField("Project/Program Organization Level 1 label", default="Program", max_length=255, blank=True)
     level_2_label = models.CharField("Project/Program Organization Level 2 label", default="Project", max_length=255, blank=True)
@@ -1404,6 +1405,3 @@ def get_user_country(request):
     except Exception, e:
         response = "undefined"
         return response
-
-
-

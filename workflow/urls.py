@@ -72,6 +72,15 @@ urlpatterns = [
                        url(r'^stakeholder_delete/(?P<pk>\w+)/$', StakeholderDelete.as_view(), name='stakeholder_delete'),
                        url(r'^export_stakeholders_list/(?P<program_id>\w+)/$', export_stakeholders_list, name='export_stakeholders_list'),
 
+                       url(r'^site_list/(?P<program_id>\w+)/(?P<pk>\w+)/$', SiteProfileList.as_view(), name='site_list'),
+
+                       url(r'^site_table/(?P<program_id>\w+)/(?P<pk>\w+)/$', SiteProfileObjects.as_view(), name='site_table'),
+
+                       url(r'^site_add/(?P<id>\w+)/$', SiteProfileCreate.as_view(), name='site_add'),
+                       url(r'^site_update/(?P<pk>\w+)/$', SiteProfileUpdate.as_view(), name='site_update'),
+                       url(r'^site_delete/(?P<pk>\w+)/$', SiteProfileDelete.as_view(), name='site_delete'),
+                       url(r'^export_sites_list/(?P<program_id>\w+)/$', export_sites_list, name='export_sites_list'),
+
                        url(r'^contact_list/(?P<pk>\w+)/$', ContactList.as_view(), name='contact_list'),
                        url(r'^contact_add/(?P<stakeholder_id>\w+)/(?P<id>\w+)/$', ContactCreate.as_view(), name='contact_add'),
                        url(r'^contact_update/(?P<stakeholder_id>\w+)/(?P<pk>\w+)/$', ContactUpdate.as_view(), name='contact_update'),
@@ -92,6 +101,7 @@ urlpatterns = [
                        url(r'^report/(?P<pk>\w+)/(?P<status>[\w ]+)/$', Report.as_view(), name='report'),
                        url(r'^report_table/(?P<pk>\w+)/(?P<status>[\w ]+)/$', ReportData.as_view(), name='report_data'),
                        url(r'^export_stakeholders_list/', export_stakeholders_list, name='export_stakeholders_list'),
+                       url(r'^export_sites_list/', export_sites_list, name='export_sites_list'),
 
                        url(r'^province/(?P<province>[-\w]+)/province_json/', province_json, name='province_json'),
                        url(r'^country/(?P<country>[-\w]+)/country_json/', country_json, name='country_json'),
