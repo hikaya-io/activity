@@ -1,15 +1,10 @@
 Tola Activity [![Build Status](https://travis-ci.org/toladata/TolaActivity.svg?branch=master)](https://travis-ci.org/toladata/TolaActivity)
 ====
-http://toladata.com/products/activity/
+http://toladata.org
 
-TolaActivity extends the functionality of TolaData to include a set of forms and
-reports for managing project activities for a Program.  It includes workflow for approving
-and completing projects as well as sharing the output data.
+Activity-CE is the community edition of TolaActivity; the ultimate tool for humanitarians to manage project activities and indicator results for their programs, including project approval workflows and reporting.
 
-
-TolaActivity functionality http://www.github.com/toladata/TolaActivity is intended to allow importing
-and exporting of project specific data from 3rd party data sources or excel
-files.
+The community edition is for and built by humanitarians; it shall always be free.
 
 ## Configuration
 Copy the tola/settings/local-sample.py to local.py and modify for your environment.
