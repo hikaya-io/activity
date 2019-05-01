@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 from django.shortcuts import render
 from workflow.models import ProjectAgreement, ProjectComplete, Program, SiteProfile,Country, TolaSites
-from customdashboard.models import ProgramNarratives, JupyterNotebooks
+from .models import ProgramNarratives, JupyterNotebooks
 from formlibrary.models import TrainingAttendance, Distribution, Beneficiary
 from indicators.models import CollectedData, Indicator, TolaTable
 
@@ -188,11 +188,11 @@ def PublicDashboard(request,id=0,public=0):
 
             table.table_data = get_table(table.url)
 
-            print table.table_data
+            print(table.table_data)
 
             evidence_tables.append(table)
 
-    except Exception, e:
+    except Exception as e:
         pass
 
     for p in getProjects:
@@ -218,7 +218,7 @@ def PublicDashboard(request,id=0,public=0):
 
     # public dashboards have a different template display
     if int(public) == 1:
-        print "public"
+        print("public")
         template = "customdashboard/publicdashboard/public_dashboard.html"
     else:
         template = "customdashboard/publicdashboard/program_dashboard.html"
@@ -264,7 +264,7 @@ def SurveyPublicDashboard(request,id=0):
                    'Authorization': 'Token ' + token.tola_tables_token}
     else:
         headers = {'content-type': 'application/json'}
-        print "Token Not Found"
+        print("Token Not Found")
 
     response = requests.get(filter_url, headers=headers, verify=False)
     get_json = json.loads(response.content)
@@ -273,7 +273,7 @@ def SurveyPublicDashboard(request,id=0):
     join = []
     tola_is = []
     for item in data['data']:
-        print item['tola_is_a_pashto_word_meaning_']
+        print(item['tola_is_a_pashto_word_meaning_'])
         meaning.append(item['tola_is_a_pashto_word_meaning_'])
         # multiple choice
         join.append(list(x for x in item['thanks_for_coming_what_made_you_join_us_today_'].split()))

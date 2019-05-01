@@ -14,7 +14,7 @@ from django.db.models import Q
 
 from django.http import  HttpResponseRedirect, JsonResponse
 from django.views.generic.detail import View
-from mixins import AjaxableResponseMixin
+from .mixins import AjaxableResponseMixin
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -391,7 +391,7 @@ class TrainingListObjects(View, AjaxableResponseMixin):
 
         program_id = int(self.kwargs['program'])
         project_id = int(self.kwargs['project'])
-        print project_id
+        print(project_id)
         countries = getCountry(request.user)
         if int(self.kwargs['program']) == 0:
             getTraining = TrainingAttendance.objects.all().filter(program__country__in=countries).values('id', 'create_date', 'training_name', 'project_agreement__project_name')

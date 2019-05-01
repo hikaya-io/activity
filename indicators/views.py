@@ -2,7 +2,7 @@ from django.db import connection
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from urlparse import urlparse
+from urllib.parse import urlparse
 import re
 from .models import Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue, CollectedData, IndicatorType, Level, ExternalServiceRecord, ExternalService, TolaTable
 from workflow.models import Program, SiteProfile, Country, Sector, TolaSites, TolaUser, FormGuidance
@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response
 from django.contrib import messages
 from django.core.serializers.json import DjangoJSONEncoder
 from tola.util import getCountry, get_table
-from tables import IndicatorDataTable
+from .tables import IndicatorDataTable
 from django_tables2 import RequestConfig
 from workflow.forms import FilterForm
 from .forms import IndicatorForm, CollectedDataForm
@@ -32,7 +32,7 @@ from workflow.mixins import AjaxableResponseMixin
 import json
 
 import requests
-from export import IndicatorResource, CollectedDataResource
+from .export import IndicatorResource, CollectedDataResource
 # from reportlab.pdfgen import canvas
 from weasyprint import HTML, CSS
 from django.template.loader import get_template
@@ -827,7 +827,7 @@ def getTableCount(url,table_id):
         headers = {'content-type': 'application/json', 'Authorization': 'Token ' + token.tola_tables_token }
     else:
         headers = {'content-type': 'application/json'}
-        print "Token Not Found"
+        print("Token Not Found")
 
     response = requests.get(url,headers=headers, verify=True)
     data = json.loads(response.content)
@@ -937,7 +937,7 @@ def collected_data_json(AjaxableResponseMixin, indicator, program):
         for data in collecteddata:
             if data.tola_table:
                 data.tola_table.detail_url = const_table_det_url(str(data.tola_table.url))
-    except Exception, e:
+    except Exception as e:
         pass
 
     collected_sum = CollectedData.objects\

@@ -50,7 +50,7 @@ def emailGroup(country,group,link,subject,message,submiter=None):
             to = [str(item) for item in getGroupEmails]
             if submiter:
                 to.append(submiter)
-            print to
+            print(to)
 
             email = EmailMessage(subject, message, 'systems@mercycorps.org',
                     to)
@@ -73,7 +73,7 @@ def get_table(url,data=None):
                'Authorization': 'Token ' + token.tola_tables_token }
     else:
         headers = {'content-type': 'application/json'}
-        print "Token Not Found"
+        print("Token Not Found")
 
     response = requests.get(url,headers=headers, verify=True)
     if data:

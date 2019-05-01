@@ -23,8 +23,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Count
 from django.db.models import Q
-from tables import ProjectAgreementTable
-from filters import ProjectAgreementFilter
+from .tables import ProjectAgreementTable
+from .filters import ProjectAgreementFilter
 import json
 import requests
 import logging
@@ -41,8 +41,8 @@ logger = logging.getLogger(__name__)
 
 from django.utils.decorators import method_decorator
 from tola.util import getCountry, emailGroup, group_excluded, group_required
-from mixins import AjaxableResponseMixin
-from export import ProjectAgreementResource, StakeholderResource, SiteProfileResource
+from .mixins import AjaxableResponseMixin
+from .export import ProjectAgreementResource, StakeholderResource, SiteProfileResource
 
 APPROVALS = (
     ('in_progress',('in progress')),
@@ -1517,7 +1517,7 @@ class ContactList(ListView):
         try:
             getStakeholder = Stakeholder.objects.get(id=stakeholder_id)
 
-        except Exception, e:
+        except Exception as e:
             pass
 
         if int(self.kwargs['pk']) == 0:

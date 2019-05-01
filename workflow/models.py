@@ -1343,7 +1343,7 @@ class ChecklistItemAdmin(admin.ModelAdmin):
 
 #Logged users
 from django.contrib.auth.signals import user_logged_in, user_logged_out
-from urllib2 import urlopen
+from urllib.request import urlopen
 import json
 
 
@@ -1375,7 +1375,7 @@ class LoggedUser(models.Model):
                 if data.get('google-oauth2_state'):
                     LoggedUser(username=user.username, country=country, email=user.email).save()
 
-        except Exception, e:
+        except Exception as e:
             pass
 
 
@@ -1402,6 +1402,6 @@ def get_user_country(request):
         response = json.loads(response)
         return response['country'].lower()
 
-    except Exception, e:
+    except Exception as e:
         response = "undefined"
         return response
