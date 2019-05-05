@@ -36,7 +36,8 @@ class TolaSites(models.Model):
     tola_tables_url = models.CharField(blank=True, null=True, max_length=255)
     tola_tables_user = models.CharField(blank=True, null=True, max_length=255)
     tola_tables_token = models.CharField(blank=True, null=True, max_length=255)
-    site = models.ForeignKey(Site)
+    # TODO : Verify if on_delete parameter with Cascade deletion is compatible
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
     privacy_disclaimer = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now=False, blank=True, null=True)
     updated = models.DateTimeField(auto_now=False, blank=True, null=True)
@@ -99,7 +100,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 class Country(models.Model):
     country = models.CharField("Country Name", max_length=255, blank=True)
-    organization = models.ForeignKey(Organization, blank=True, null=True)
+    organization = models.ForeignKey(Organization, blank=True, null=True, on_delete=models.SET_NULL)
     code = models.CharField("2 Letter Country Code", max_length=4, blank=True)
     description = models.TextField("Description/Notes", max_length=765,blank=True)
     latitude = models.CharField("Latitude", max_length=255, null=True, blank=True)
@@ -136,9 +137,9 @@ class TolaUser(models.Model):
     title = models.CharField(blank=True, null=True, max_length=3, choices=TITLE_CHOICES)
     name = models.CharField("Given Name", blank=True, null=True, max_length=100)
     employee_number = models.IntegerField("Employee Number", blank=True, null=True)
-    user = models.OneToOneField(User, unique=True, related_name='tola_user')
-    organization = models.ForeignKey(Organization, default=1, blank=True, null=True)
-    country = models.ForeignKey(Country, blank=True, null=True)
+    user = models.OneToOneField(User, unique=True, related_name='tola_user', on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, default=1, blank=True, null=True, on_delete=models.SET_NULL)
+    country = models.ForeignKey(Country, blank=True, null=True, on_delete=models.SET_NULL)
     countries = models.ManyToManyField(Country, verbose_name="Accessible Countries", related_name='countries', blank=True)
     tables_api_token = models.CharField(blank=True, null=True, max_length=255)
     activity_api_token = models.CharField(blank=True, null=True, max_length=255)
@@ -165,10 +166,10 @@ class TolaUser(models.Model):
 
 
 class TolaBookmarks(models.Model):
-    user = models.ForeignKey(TolaUser, related_name='tolabookmark')
+    user = models.ForeignKey(TolaUser, related_name='tolabookmark', on_delete=models.CASCADE)
     name = models.CharField(blank=True, null=True, max_length=255)
     bookmark_url = models.CharField(blank=True, null=True, max_length=255)
-    program = models.ForeignKey("Program", blank=True, null=True)
+    program = models.ForeignKey("Program", blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -265,7 +266,7 @@ class Contact(models.Model):
     address = models.TextField("Address", max_length=255, blank=True, null=True)
     email = models.CharField("Email", max_length=255, blank=True, null=True)
     phone = models.CharField("Phone", max_length=255, blank=True, null=True)
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -355,10 +356,11 @@ class Program(models.Model):
 
 
 class ApprovalAuthority(models.Model):
-    approval_user = models.ForeignKey(TolaUser,help_text='User with Approval Authority', blank=True, null=True, related_name="auth_approving")
+    approval_user = models.ForeignKey(TolaUser, help_text='User with Approval Authority', 
+        blank=True, null=True, related_name="auth_approving", on_delete=models.SET_NULL)
     budget_limit = models.IntegerField(null=True, blank=True)
     fund = models.CharField("Fund",max_length=255,null=True, blank=True)
-    country = models.ForeignKey("Country", null=True, blank=True)
+    country = models.ForeignKey("Country", null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -380,7 +382,7 @@ class ApprovalAuthority(models.Model):
 
 class Province(models.Model):
     name = models.CharField("Admin Level 1", max_length=255, blank=True)
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -410,7 +412,7 @@ class ProvinceAdmin(admin.ModelAdmin):
 
 class District(models.Model):
     name = models.CharField("Admin Level 2", max_length=255, blank=True)
-    province = models.ForeignKey(Province,verbose_name="Admin Level 1")
+    province = models.ForeignKey(Province, verbose_name="Admin Level 1", on_delete=models.CASCADE)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -440,7 +442,7 @@ class DistrictAdmin(admin.ModelAdmin):
 
 class AdminLevelThree(models.Model):
     name = models.CharField("Admin Level 3", max_length=255, blank=True)
-    district = models.ForeignKey(District,verbose_name="Admin Level 2")
+    district = models.ForeignKey(District, verbose_name="Admin Level 2", blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -470,8 +472,9 @@ class AdminLevelThreeAdmin(admin.ModelAdmin):
 
 class Village(models.Model):
     name = models.CharField("Admin Level 4", max_length=255, blank=True)
-    district = models.ForeignKey(District,null=True,blank=True)
-    admin_3 = models.ForeignKey(AdminLevelThree,verbose_name="Admin Level 3",null=True,blank=True)
+    district = models.ForeignKey(District, null=True, blank=True, on_delete=models.SET_NULL)
+    admin_3 = models.ForeignKey(AdminLevelThree, verbose_name="Admin Level 3", 
+        null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -500,7 +503,7 @@ class VillageAdmin(admin.ModelAdmin):
 class Office(models.Model):
     name = models.CharField("Office Name", max_length=255, blank=True)
     code = models.CharField("Office Code", max_length=255, blank=True)
-    province = models.ForeignKey(Province,verbose_name="Admin Level 1")
+    province = models.ForeignKey(Province, verbose_name="Admin Level 1", on_delete=models.CASCADE)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -586,8 +589,8 @@ class SiteProfileManager(models.Manager):
 class SiteProfile(models.Model):
     profile_key = models.UUIDField(default=uuid.uuid4, unique=True),
     name = models.CharField("Site Name", max_length=255, blank=False)
-    type = models.ForeignKey(ProfileType, blank=True, null=True)
-    office = models.ForeignKey(Office, blank=True, null=True)
+    type = models.ForeignKey(ProfileType, blank=True, null=True, on_delete=models.SET_NULL)
+    office = models.ForeignKey(Office, blank=True, null=True, on_delete=models.SET_NULL)
     contact_leader = models.CharField("Contact Name", max_length=255, blank=True, null=True)
     date_of_firstcontact = models.DateTimeField("Date of First Contact", null=True, blank=True)
     contact_number = models.CharField("Contact Number", max_length=255, blank=True, null=True)
@@ -614,7 +617,7 @@ class SiteProfile(models.Model):
     total_population = models.IntegerField(null=True, blank=True)
     total_male = models.IntegerField(null=True, blank=True)
     total_female = models.IntegerField(null=True, blank=True)
-    classify_land = models.ForeignKey(LandType, blank=True, null=True)
+    classify_land = models.ForeignKey(LandType, blank=True, null=True, on_delete=models.SET_NULL)
     total_land = models.IntegerField("Total Land", help_text="In hectares/jeribs", null=True, blank=True)
     total_agricultural_land = models.IntegerField("Total Agricultural Land", help_text="In hectares/jeribs", null=True, blank=True)
     total_rainfed_land = models.IntegerField("Total Rain-fed Land", help_text="In hectares/jeribs", null=True, blank=True)
@@ -627,18 +630,21 @@ class SiteProfile(models.Model):
     avg_landholding_size = models.DecimalField("Average Landholding Size", decimal_places=14,max_digits=25, help_text="In hectares/jeribs", default=Decimal("0.00"))
     households_owning_livestock = models.IntegerField("Households Owning Livestock", help_text="(%)", null=True, blank=True)
     animal_type = models.CharField("Animal Types", help_text="List Animal Types", max_length=255, null=True, blank=True)
-    country = models.ForeignKey(Country)
-    province = models.ForeignKey(Province, verbose_name="Administrative Level 1", null=True, blank=True)
-    district = models.ForeignKey(District, verbose_name="Administrative Level 2", null=True, blank=True)
-    admin_level_three = models.ForeignKey(AdminLevelThree, verbose_name="Administrative Level 3", null=True, blank=True)
+    country = models.ForeignKey(Country, blank=True, null=True, on_delete=models.SET_NULL)
+    province = models.ForeignKey(Province, verbose_name="Administrative Level 1", null=True, blank=True, on_delete=models.SET_NULL)
+    district = models.ForeignKey(District, verbose_name="Administrative Level 2", null=True, blank=True, on_delete=models.SET_NULL)
+    admin_level_three = models.ForeignKey(AdminLevelThree, verbose_name="Administrative Level 3", null=True, blank=True, on_delete=models.SET_NULL)
     village = models.CharField("Administrative Level 4", help_text="", max_length=255, null=True, blank=True)
     latitude = models.DecimalField("Latitude (Decimal Coordinates)", decimal_places=16,max_digits=25, default=Decimal("0.00"))
     longitude = models.DecimalField("Longitude (Decimal Coordinates)", decimal_places=16,max_digits=25, default=Decimal("0.00"))
     status = models.BooleanField("Site Active", default=True)
     approval = models.CharField("Approval", default="in progress", max_length=255, blank=True, null=True)
-    approved_by = models.ForeignKey(TolaUser,help_text='This is the Provincial Line Manager', blank=True, null=True, related_name="comm_approving")
-    filled_by = models.ForeignKey(TolaUser, help_text='This is the originator', blank=True, null=True, related_name="comm_estimate")
-    location_verified_by = models.ForeignKey(TolaUser, help_text='This should be GIS Manager', blank=True, null=True, related_name="comm_gis")
+    approved_by = models.ForeignKey(TolaUser,help_text='This is the Provincial Line Manager', blank=True, null=True, 
+        related_name="comm_approving", on_delete=models.SET_NULL)
+    filled_by = models.ForeignKey(TolaUser, help_text='This is the originator', blank=True, null=True, 
+        related_name="comm_estimate", on_delete=models.SET_NULL)
+    location_verified_by = models.ForeignKey(TolaUser, help_text='This should be GIS Manager', blank=True, null=True, 
+        related_name="comm_gis", on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
     history = HistoricalRecords()
@@ -811,17 +817,21 @@ class StakeholderManager(models.Manager):
 
 class Stakeholder(models.Model):
     name = models.CharField("Stakeholder/Organization Name", max_length=255, blank=True, null=True)
-    type = models.ForeignKey(StakeholderType, blank=True, null=True)
+    type = models.ForeignKey(StakeholderType, blank=True, null=True, on_delete=models.SET_NULL)
     contact = models.ManyToManyField(Contact, max_length=255, blank=True)
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, blank=True, null=True, on_delete=models.SET_NULL)
     #sector = models.ForeignKey(Sector, blank=True, null=True, related_name='sects')
     sectors = models.ManyToManyField(Sector, blank=True)
     stakeholder_register = models.BooleanField("Has this partner been added to stakeholder register?")
-    formal_relationship_document = models.ForeignKey('Documentation', verbose_name="Formal Written Description of Relationship", null=True, blank=True, related_name="relationship_document")
-    vetting_document = models.ForeignKey('Documentation', verbose_name="Vetting/ due diligence statement", null=True, blank=True, related_name="vetting_document")
+    formal_relationship_document = models.ForeignKey('Documentation', verbose_name="Formal Written Description of Relationship", 
+        null=True, blank=True, related_name="relationship_document", on_delete=models.SET_NULL)
+    vetting_document = models.ForeignKey('Documentation', verbose_name="Vetting/ due diligence statement", null=True, blank=True, 
+        related_name="vetting_document", on_delete=models.SET_NULL)
     approval = models.CharField("Approval", default="in progress", max_length=255, blank=True, null=True)
-    approved_by = models.ForeignKey(TolaUser, help_text='', blank=True, null=True, related_name="stake_approving")
-    filled_by = models.ForeignKey(TolaUser, help_text='', blank=True, null=True, related_name="stake_filled")
+    approved_by = models.ForeignKey(TolaUser, help_text='', blank=True, null=True, 
+        related_name="stake_approving", on_delete=models.SET_NULL)
+    filled_by = models.ForeignKey(TolaUser, help_text='', blank=True, null=True, 
+        related_name="stake_filled", on_delete=models.SET_NULL)
     notes = models.TextField(max_length=765, blank=True, null=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
@@ -889,19 +899,20 @@ class Migration(migrations.Migration):
 class ProjectAgreement(models.Model):
     agreement_key = models.UUIDField(default=uuid.uuid4, unique=True),
     short = models.BooleanField(default=True,verbose_name="Short Form (recommended)")
-    program = models.ForeignKey(Program, verbose_name="Program", related_name="agreement")
+    program = models.ForeignKey(Program, verbose_name="Program", related_name="agreement", on_delete=models.CASCADE)
     date_of_request = models.DateTimeField("Date of Request", blank=True, null=True)
     # Rename to more generic "nonproject" names
     project_name = models.CharField("Project Name", help_text='Please be specific in your name.  Consider that your Project Name includes WHO, WHAT, WHERE, HOW', max_length=255)
-    project_type = models.ForeignKey(ProjectType, verbose_name="Project Type", help_text='', max_length=255, blank=True, null=True)
+    project_type = models.ForeignKey(ProjectType, verbose_name="Project Type", help_text='', max_length=255, 
+        blank=True, null=True, on_delete=models.SET_NULL)
     project_activity = models.CharField("Project Activity", help_text='This should come directly from the activities listed in the Logframe', max_length=255, blank=True, null=True)
     project_description = models.TextField("Project Description", help_text='', blank=True, null=True)
     site = models.ManyToManyField(SiteProfile, blank=True)
     has_rej_letter = models.BooleanField("If Rejected: Rejection Letter Sent?", help_text='If yes attach copy', default=False)
     activity_code = models.CharField("Project Code", help_text='', max_length=255, blank=True, null=True)
-    office = models.ForeignKey(Office, verbose_name="Office", null=True, blank=True)
+    office = models.ForeignKey(Office, verbose_name="Office", null=True, blank=True, on_delete=models.SET_NULL)
     cod_num = models.CharField("Project COD #", max_length=255, blank=True, null=True)
-    sector = models.ForeignKey("Sector", verbose_name="Sector", blank=True, null=True)
+    sector = models.ForeignKey("Sector", verbose_name="Sector", blank=True, null=True, on_delete=models.SET_NULL)
     project_design = models.CharField("Activity design for", max_length=255, blank=True, null=True)
     account_code = models.CharField("Fund Code", help_text='', max_length=255, blank=True, null=True)
     lin_code = models.CharField("LIN Code", help_text='', max_length=255, blank=True, null=True)
@@ -949,22 +960,28 @@ class ProjectAgreement(models.Model):
     End Clean Up
     """
     estimation_date = models.DateTimeField(blank=True, null=True)
-    estimated_by = models.ForeignKey(TolaUser, blank=True, null=True,verbose_name="Originated By", related_name="estimating")
+    estimated_by = models.ForeignKey(TolaUser, blank=True, null=True, verbose_name="Originated By", 
+        related_name="estimating", on_delete=models.SET_NULL)
     estimated_by_date = models.DateTimeField("Date Originated", null=True, blank=True)
-    checked_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="checking")
+    checked_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="checking", on_delete=models.SET_NULL)
     checked_by_date = models.DateTimeField("Date Checked", null=True, blank=True)
-    reviewed_by = models.ForeignKey(TolaUser, verbose_name="Request review", blank=True, null=True, related_name="reviewing" )
+    reviewed_by = models.ForeignKey(TolaUser, verbose_name="Request review", blank=True, null=True, 
+        related_name="reviewing", on_delete=models.SET_NULL)
     reviewed_by_date = models.DateTimeField("Date Verified", null=True, blank=True)
-    finance_reviewed_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="finance_reviewing")
+    finance_reviewed_by = models.ForeignKey(TolaUser, blank=True, null=True, 
+        related_name="finance_reviewing", on_delete=models.SET_NULL)
     finance_reviewed_by_date = models.DateTimeField("Date Reviewed by Finance", null=True, blank=True)
-    me_reviewed_by = models.ForeignKey(TolaUser, blank=True, null=True, verbose_name="M&E Reviewed by", related_name="reviewing_me")
+    me_reviewed_by = models.ForeignKey(TolaUser, blank=True, null=True, verbose_name="M&E Reviewed by", 
+        related_name="reviewing_me", on_delete=models.SET_NULL)
     me_reviewed_by_date = models.DateTimeField("Date Reviewed by M&E", null=True, blank=True)
     capacity = models.ManyToManyField(Capacity,verbose_name="Sustainability Plan", blank=True)
     evaluate = models.ManyToManyField(Evaluate, blank=True)
     approval = models.CharField("Approval Status", default="in progress", max_length=255, blank=True, null=True)
-    approved_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="approving_agreement", verbose_name="Request approval")
+    approved_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="approving_agreement", 
+        verbose_name="Request approval", on_delete=models.SET_NULL)
     approved_by_date = models.DateTimeField("Date Approved", null=True, blank=True)
-    approval_submitted_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="submitted_by_agreement")
+    approval_submitted_by = models.ForeignKey(TolaUser, blank=True, null=True, 
+        related_name="submitted_by_agreement", on_delete=models.SET_NULL)
     approval_remarks = models.CharField("Approval Remarks", max_length=255, blank=True, null=True)
     justification_background = models.TextField("General Background and Problem Statement", blank=True, null=True)
     risks_assumptions = models.TextField("Risks and Assumptions", blank=True, null=True)
@@ -1045,15 +1062,15 @@ class Migration(migrations.Migration):
 """
 class ProjectComplete(models.Model):
     short = models.BooleanField(default=True,verbose_name="Short Form (recommended)")
-    program = models.ForeignKey(Program, null=True, blank=True, related_name="complete")
-    project_agreement = models.OneToOneField(ProjectAgreement, verbose_name="Project Initiation")
+    program = models.ForeignKey(Program, null=True, blank=True, related_name="complete", on_delete=models.SET_NULL)
+    project_agreement = models.OneToOneField(ProjectAgreement, verbose_name="Project Initiation", on_delete=models.CASCADE)
     # Rename to more generic "nonproject" names
     activity_code = models.CharField("Project Code", max_length=255, blank=True, null=True)
     project_name = models.CharField("Project Name", max_length=255, blank=True, null=True)
     project_activity = models.CharField("Project Activity", max_length=255, blank=True, null=True)
-    project_type = models.ForeignKey(ProjectType, max_length=255, blank=True, null=True)
-    office = models.ForeignKey(Office, null=True, blank=True)
-    sector = models.ForeignKey("Sector", blank=True, null=True)
+    project_type = models.ForeignKey(ProjectType, max_length=255, blank=True, null=True, on_delete=models.SET_NULL)
+    office = models.ForeignKey(Office, null=True, blank=True, on_delete=models.SET_NULL)
+    sector = models.ForeignKey("Sector", blank=True, null=True, on_delete=models.SET_NULL)
     expected_start_date = models.DateTimeField(help_text="Imported from Project Initiation", blank=True, null=True)
     expected_end_date = models.DateTimeField(help_text="Imported Project Initiation", blank=True, null=True)
     expected_duration = models.CharField("Expected Duration", max_length=255, help_text="Imported from Project Initiation", blank=True, null=True)
@@ -1098,12 +1115,12 @@ class ProjectComplete(models.Model):
     issues_and_challenges = models.TextField("List any issues or challenges faced (include reasons for delays)", blank=True, null=True)
     lessons_learned= models.TextField("Lessons learned", blank=True, null=True)
     site = models.ManyToManyField(SiteProfile, blank=True)
-    estimated_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="estimating_complete")
-    checked_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="checking_complete")
-    reviewed_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="reviewing_complete")
+    estimated_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="estimating_complete", on_delete=models.SET_NULL)
+    checked_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="checking_complete", on_delete=models.SET_NULL)
+    reviewed_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="reviewing_complete", on_delete=models.SET_NULL)
     approval = models.CharField("Approval Status", default="in progress", max_length=255, blank=True, null=True)
-    approved_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="approving_agreement_complete")
-    approval_submitted_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="submitted_by_complete")
+    approved_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="approving_agreement_complete", on_delete=models.SET_NULL)
+    approval_submitted_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="submitted_by_complete", on_delete=models.SET_NULL)
     approval_remarks = models.CharField("Approval Remarks", max_length=255, blank=True, null=True)
     create_date = models.DateTimeField("Date Created", null=True, blank=True)
     edit_date = models.DateTimeField("Last Edit Date", null=True, blank=True)
@@ -1148,10 +1165,10 @@ class Documentation(models.Model):
     name = models.CharField("Name of Document", max_length=135, blank=True, null=True)
     url = models.CharField("URL (Link to document or document repository)", blank=True, null=True, max_length=135)
     description = models.CharField(max_length=255, blank=True, null=True)
-    template = models.ForeignKey(Template, blank=True, null=True)
+    template = models.ForeignKey(Template, blank=True, null=True, on_delete=models.SET_NULL)
     file_field = models.FileField(upload_to="uploads", blank=True, null=True)
-    project = models.ForeignKey(ProjectAgreement, blank=True, null=True)
-    program = models.ForeignKey(Program)
+    project = models.ForeignKey(ProjectAgreement, blank=True, null=True, on_delete=models.SET_NULL)
+    program = models.ForeignKey(Program, blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -1195,12 +1212,12 @@ class Benchmarks(models.Model):
     est_end_date = models.DateTimeField(null=True, blank=True)
     actual_start_date = models.DateTimeField(null=True, blank=True)
     actual_end_date = models.DateTimeField(null=True, blank=True)
-    site = models.ForeignKey(SiteProfile, null=True, blank=True)
+    site = models.ForeignKey(SiteProfile, null=True, blank=True, on_delete=models.SET_NULL)
     budget = models.IntegerField("Estimated Budget", blank=True, null=True)
     cost = models.IntegerField("Actual Cost", blank=True, null=True)
     description = models.CharField("Description", max_length=255, blank=True)
-    agreement = models.ForeignKey(ProjectAgreement,blank=True, null=True, verbose_name="Project Initiation")
-    complete = models.ForeignKey(ProjectComplete,blank=True, null=True)
+    agreement = models.ForeignKey(ProjectAgreement,blank=True, null=True, verbose_name="Project Initiation", on_delete=models.SET_NULL)
+    complete = models.ForeignKey(ProjectComplete,blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -1230,8 +1247,8 @@ class Monitor(models.Model):
     responsible_person = models.CharField("Person Responsible", max_length=25, blank=True, null=True)
     frequency = models.CharField("Frequency", max_length=25, blank=True, null=True)
     type = models.TextField("Type", null=True, blank=True)
-    agreement = models.ForeignKey(ProjectAgreement,blank=True, null=True, verbose_name="Project Initiation")
-    complete = models.ForeignKey(ProjectComplete,blank=True, null=True)
+    agreement = models.ForeignKey(ProjectAgreement,blank=True, null=True, verbose_name="Project Initiation", on_delete=models.SET_NULL)
+    complete = models.ForeignKey(ProjectComplete,blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -1260,7 +1277,7 @@ class Budget(models.Model):
     contributor = models.CharField(max_length=135, blank=True, null=True)
     description_of_contribution = models.CharField(max_length=255, blank=True, null=True)
     proposed_value = models.IntegerField("Value",default=0, blank=True, null=True)
-    agreement = models.ForeignKey(ProjectAgreement, blank=True, null=True, verbose_name="Project Initiation")
+    agreement = models.ForeignKey(ProjectAgreement, blank=True, null=True, verbose_name="Project Initiation", on_delete=models.SET_NULL)
     complete = models.ForeignKey(ProjectComplete, blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
@@ -1286,8 +1303,8 @@ class BudgetAdmin(admin.ModelAdmin):
 
 class Checklist(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True,default="Checklist")
-    agreement = models.ForeignKey(ProjectAgreement, null=True, blank=True, verbose_name="Project Initiation")
-    country = models.ForeignKey(Country,null=True,blank=True)
+    agreement = models.ForeignKey(ProjectAgreement, null=True, blank=True, verbose_name="Project Initiation", on_delete=models.SET_NULL)
+    country = models.ForeignKey(Country,null=True,blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -1313,11 +1330,11 @@ class ChecklistAdmin(admin.ModelAdmin):
 
 class ChecklistItem(models.Model):
     item = models.CharField(max_length=255)
-    checklist = models.ForeignKey(Checklist)
+    checklist = models.ForeignKey(Checklist, on_delete=models.CASCADE)
     in_file = models.BooleanField(default=False)
     not_applicable = models.BooleanField(default=False)
     global_item = models.BooleanField(default=False)
-    owner = models.ForeignKey(TolaUser, null=True, blank=True)
+    owner = models.ForeignKey(TolaUser, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 

@@ -120,7 +120,7 @@ SECRET_KEY = r"!0^+)=t*ly6ycprf9@kfw$6fsjd0xoh#pa*2erx1m*lp5k9ko7"
 ########## SITE CONFIGURATION
 # Hosts/domain names that are valid for this site
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['127.0.0.1', 'mercycorps.org']
+ALLOWED_HOSTS = ['127.0.0.1']
 ########## END SITE CONFIGURATION
 
 

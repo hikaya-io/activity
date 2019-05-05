@@ -12,8 +12,8 @@ except ImportError:
 
 class TrainingAttendance(models.Model):
     training_name = models.CharField(max_length=255)
-    program = models.ForeignKey(Program, null=True, blank=True)
-    project_agreement = models.ForeignKey(ProjectAgreement, null=True, blank=True, verbose_name="Project Initiation")
+    program = models.ForeignKey(Program, null=True, blank=True, on_delete=models.SET_NULL)
+    project_agreement = models.ForeignKey(ProjectAgreement, null=True, blank=True, verbose_name="Project Initiation", on_delete=models.SET_NULL)
     implementer = models.CharField(max_length=255, null=True, blank=True)
     reporting_period = models.CharField(max_length=255, null=True, blank=True)
     total_participants = models.IntegerField(null=True, blank=True)
@@ -60,13 +60,13 @@ class TrainingAttendanceAdmin(admin.ModelAdmin):
 
 class Distribution(models.Model):
     distribution_name = models.CharField(max_length=255)
-    program = models.ForeignKey(Program, null=True, blank=True)
-    initiation = models.ForeignKey(ProjectAgreement, null=True, blank=True, verbose_name="Project Initiation")
-    office_code = models.ForeignKey(Office, null=True, blank=True)
+    program = models.ForeignKey(Program, null=True, blank=True, on_delete=models.SET_NULL)
+    initiation = models.ForeignKey(ProjectAgreement, null=True, blank=True, verbose_name="Project Initiation", on_delete=models.SET_NULL)
+    office_code = models.ForeignKey(Office, null=True, blank=True, on_delete=models.SET_NULL)
     distribution_indicator = models.CharField(max_length=255)
     distribution_implementer = models.CharField(max_length=255, null=True, blank=True)
     reporting_period = models.CharField(max_length=255, null=True, blank=True)
-    province = models.ForeignKey(Province, null=True, blank=True)
+    province = models.ForeignKey(Province, null=True, blank=True, on_delete=models.SET_NULL)
     total_beneficiaries_received_input = models.IntegerField(null=True, blank=True)
     distribution_location = models.CharField(max_length=255, null=True, blank=True)
     input_type_distributed = models.CharField(max_length=255, null=True, blank=True)
@@ -120,7 +120,7 @@ class Beneficiary(models.Model):
     father_name = models.CharField(max_length=255, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
     gender = models.CharField(max_length=255, null=True, blank=True)
-    site = models.ForeignKey(SiteProfile, null=True, blank=True)
+    site = models.ForeignKey(SiteProfile, null=True, blank=True, on_delete=models.SET_NULL)
     signature = models.BooleanField(default=True)
     remarks = models.CharField(max_length=255, null=True, blank=True)
     program = models.ManyToManyField(Program, blank=True)
