@@ -222,7 +222,6 @@ DJANGO_APPS = (
     'django.contrib.humanize',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    'admin_report',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'social_django',
@@ -256,7 +255,7 @@ LOCAL_APPS = (
     #'configurabledashboard',
     'tables',
     'reports',
-
+    'adminreport',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

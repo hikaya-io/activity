@@ -247,7 +247,7 @@ def profile(request):
     Update a User profile using built in Django Users Model if the user is logged in
     otherwise redirect them to registration version
     """
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         obj = get_object_or_404(TolaUser, user=request.user)
         form = RegistrationForm(request.POST or None, instance=obj,initial={'username': request.user})
 

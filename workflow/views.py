@@ -1081,7 +1081,7 @@ class SiteProfileList(ListView):
     template_name = 'workflow/site_profile_list.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if request.GET.has_key('report'):
+        if 'report' in request.GET:
             template_name = 'workflow/site_profile_report.html'
         else:
             template_name = 'workflow/site_profile_list.html'

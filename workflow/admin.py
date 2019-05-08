@@ -3,7 +3,7 @@ from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from tola.util import getCountry
-from admin_report.mixins import ChartReportAdmin
+from adminreport.mixins import ChartReportAdmin
 
 
 # Resource for CSV export

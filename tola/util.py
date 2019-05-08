@@ -104,7 +104,7 @@ def user_to_tola(backend, user, response, *args, **kwargs):
 def group_excluded(*group_names, **url):
     # If user is in the group passed in permission denied
     def in_groups(u):
-        if u.is_authenticated():
+        if u.is_authenticated:
             if not bool(u.groups.filter(name__in=group_names)):
                 return True
             raise PermissionDenied
