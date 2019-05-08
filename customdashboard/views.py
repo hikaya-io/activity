@@ -223,24 +223,21 @@ def PublicDashboard(request,id=0,public=0):
     else:
         template = "customdashboard/publicdashboard/program_dashboard.html"
 
-    return render(request, template, {'getProgram':getProgram,'getProjects':getProjects,
-                                                                     'getSiteProfile':getSiteProfile,
-                                                                     'countries': countries, 'getProgramNarrative': getProgramNarrative,
-                                                                     'getAwaitingApprovalCount':getAwaitingApprovalCount,'getQuantitativeDataSums_2':getQuantitativeDataSums_2,
-                                                                     'getApprovedCount': getApprovedCount,
-                                                                     'getRejectedCount': getRejectedCount,
-                                                                     'getInProgressCount': getInProgressCount,'nostatus_count': nostatus_count,
-                                                                     'total_projects': getProjectsCount,
-                                                                     'getIndicatorCount': getIndicatorCount,
-                                                                     'getIndicatorData': getIndicatorData,
-                                                                     'getIndicatorCountData':getIndicatorCountData,
-                                                                     'getIndicatorCountKPI': getIndicatorCountKPI,
-                                                                     'getEvidence': getEvidence,
-                                                                     'evidence_tables': evidence_tables,
-                                                                     'getNotebooks': getNotebooks,
-                                                                     'evidence_tables_count': evidence_tables_count,
-                                                                     'getQuantitativeDataSums': getQuantitativeDataSums,
-                                                                     'getSiteProfileIndicator': getSiteProfileIndicator, 'getSiteProfileIndicatorCount': getSiteProfileIndicator.count(), 'getBeneficiaries': getBeneficiaries, 'getDistributions': getDistributions, 'getTrainings': getTrainings, 'get_project_completed': get_project_completed, 'getAllProjects': getAllProjects})
+    return render(request, template, {
+        'getProgram':getProgram,'getProjects':getProjects,
+        'getSiteProfile':getSiteProfile, 'countries': countries, 
+        'getProgramNarrative': getProgramNarrative, 'getAwaitingApprovalCount':getAwaitingApprovalCount,
+        'getQuantitativeDataSums_2':getQuantitativeDataSums_2, 'getApprovedCount': getApprovedCount,
+        'getRejectedCount': getRejectedCount, 'getInProgressCount': getInProgressCount,
+        'nostatus_count': nostatus_count, 'total_projects': getProjectsCount,
+        'getIndicatorCount': getIndicatorCount, 'getIndicatorData': getIndicatorData,
+        'getIndicatorCountData':getIndicatorCountData, 'getIndicatorCountKPI': getIndicatorCountKPI,
+        'getEvidence': getEvidence, 'evidence_tables': evidence_tables,
+        'getNotebooks': getNotebooks, 'evidence_tables_count': evidence_tables_count,
+        'getQuantitativeDataSums': getQuantitativeDataSums, 'getSiteProfileIndicator': getSiteProfileIndicator, 
+        'getSiteProfileIndicatorCount': getSiteProfileIndicator.count(), 'getBeneficiaries': getBeneficiaries, 
+        'getDistributions': getDistributions, 'getTrainings': getTrainings, 
+        'get_project_completed': get_project_completed, 'getAllProjects': getAllProjects})
 
 
 """

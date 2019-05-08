@@ -13,7 +13,7 @@ LINK_TYPE_CHOICES = (
 
 
 class ProgramNarratives(models.Model):
-    program = models.ForeignKey(Program, blank=True)
+    program = models.ForeignKey(Program, blank=True, null=True, on_delete=models.SET_NULL)
     narrative_title = models.CharField("Narrative Title", max_length=100, blank=True)
     narrative = models.TextField("Narrative Text", blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
@@ -43,9 +43,9 @@ class LinkAdmin(admin.ModelAdmin):
 
 
 class ProgramLinks(models.Model):
-    program = models.ForeignKey(Program, blank=True)
+    program = models.ForeignKey(Program, blank=True, null=True, on_delete=models.SET_NULL)
     type = models.CharField("Type of Link",blank=True, null=True, max_length=255, choices=LINK_TYPE_CHOICES)
-    link = models.ForeignKey(Link, max_length=200, blank=True)
+    link = models.ForeignKey(Link, max_length=200, blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -61,7 +61,7 @@ class ProgramLinksAdmin(admin.ModelAdmin):
 
 class JupyterNotebooks(models.Model):
     name = models.CharField("Notebook Name", max_length=255)
-    program = models.ForeignKey(Program, blank=True,null=True)
+    program = models.ForeignKey(Program, blank=True, null=True, on_delete=models.SET_NULL)
     very_custom_dashboard = models.CharField("Specialty Custom Dashboard Links",blank=True, null=True, max_length=255)
     file = models.FileField("HTML/Jupyter Nontebook File", blank=True,null=True,upload_to="media")
     create_date = models.DateTimeField(null=True, blank=True)

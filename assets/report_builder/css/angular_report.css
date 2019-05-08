@@ -1,0 +1,149 @@
+html, body, .fullheight {
+   height: 100%;
+}
+.btn {
+    margin-right: 8px;
+}
+
+.field {
+    background: #f8faff;
+    border: 1px solid #dae2ea;
+    color: #7c9eb2;
+}
+
+.field:hover {
+    color: #438eb9;
+    background: #f4f6f7;
+    border-color: #dce2e8;
+}
+
+.angular-ui-tree-placeholder {
+    background: #f0f9ff;
+    border: 2px dashed #bed2db;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.angular-ui-tree-nodes .angular-ui-tree-nodes {
+  padding-left: 8px;
+}
+
+.group-title {
+    background-color: #687074 !important;
+    color: #FFF !important;
+}
+
+.field input {
+  margin-top: 4px;
+}
+
+.angular-ui-tree-node {
+  padding-left: 4px;
+}
+
+div.col_sort {
+  max-width: 60px;
+}
+
+div.col_checkbox {
+  max-width: 60px;
+}
+
+input[type="text"].small_input {
+  width: 2em;
+g}
+
+.move_trash {
+  max-width: 53px;
+}
+
+.col_aggregate {
+  max-width: 6em;
+  min-width: 5em;
+}
+
+.col_format {
+  min-width: 5em; 
+}
+
+.col_filter_type {
+  min-width: 14em;
+}
+input[type="text"] {
+  width: 100%; 
+  box-sizing: border-box;
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing: border-box;
+}
+
+.md-button.md-fab.md-fab-bottom-left{
+      bottom: 16px;
+      left: 16px;
+}
+.md-button.md-fab.md-fab-bottom-right{
+      bottom: 16px;
+      right: 16px;
+}
+
+body {
+  overflow:hidden;
+}
+
+.fullscreen:fullscreen {
+  display: none;
+} 
+
+.caps {
+  text-transform: capitalize;
+}
+
+.form {
+  max-width: 864px;
+  margin: auto;
+}
+
+#reportapp ul {
+    list-style-type: none;
+    padding-left:0;
+}
+
+.searchInput {
+    margin-top: 5px;
+    width: 165px;
+}
+
+
+.handsontable table.htCore {
+    padding-top: 0px;
+}
+.ht_clone_top {
+    z-index: 58;
+}
+
+.sidebar-left-search {
+  padding-bottom: 5px;
+}
+
+.sidenav-report-link {
+    text-transform: none !important;
+    border-radius: 0px !important;
+}
+
+.sidenav-report-link .report-meta-data {
+    font-size: 0.8em;
+    color: #bbb;
+}
+
+.sort-by-label {
+  font-size: 0.7em;
+  color: #bbb;
+}
+
+.sort-button {
+  text-transform: none !important;
+}
+
+.report-list-header {
+  padding-left: 6px;
+}

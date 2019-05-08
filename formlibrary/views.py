@@ -1,7 +1,7 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from .models import TrainingAttendance, Beneficiary, Distribution
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 
 from .forms import TrainingAttendanceForm, BeneficiaryForm, DistributionForm
 from workflow.models import FormGuidance, Program, ProjectAgreement
