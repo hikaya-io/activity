@@ -1,6 +1,6 @@
 from import_export import resources
 from .models import Indicator, CollectedData, Country, Program, Sector, DisaggregationValue, ReportingFrequency
-from workflow.models import ProjectAgreement, ProjectComplete, TolaUser
+from workflow.models import ProjectAgreement, ProjectComplete, ActivityUser
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from import_export import fields
@@ -24,9 +24,9 @@ class IndicatorResource(resources.ModelResource):
     disaggregation = fields.Field(
         column_name='disaggregation', attribute='disaggregations')
     approval_submitted_by = fields.Field(column_name='approval submitted by',
-                                         attribute='approval_submitted_by', widget=ForeignKeyWidget(TolaUser, 'name'))
+                                         attribute='approval_submitted_by', widget=ForeignKeyWidget(ActivityUser, 'name'))
     approved_by = fields.Field(
-        column_name='approved by', attribute='approved_by', widget=ForeignKeyWidget(TolaUser, 'name'))
+        column_name='approved by', attribute='approved_by', widget=ForeignKeyWidget(ActivityUser, 'name'))
 
     class Meta:
         model = Indicator

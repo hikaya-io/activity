@@ -5,8 +5,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from urllib.parse import urlparse
 import re
-from .models import Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue, CollectedData, IndicatorType, Level, ExternalServiceRecord, ExternalService, TolaTable
-from workflow.models import Program, SiteProfile, Country, Sector, TolaSites, TolaUser, FormGuidance
+from .models import Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue, CollectedData, IndicatorType, Level, ExternalServiceRecord, ExternalService, ActivityTable
+from workflow.models import Program, SiteProfile, Country, Sector, ActivitySites, ActivityUser, FormGuidance
 from django.shortcuts import render_to_response
 from django.contrib import messages
 from django.core.serializers.json import DjangoJSONEncoder
@@ -295,7 +295,7 @@ class IndicatorCreate(CreateView):
 
     # pre-populate parts of the form
     def get_initial(self):
-        user_profile = TolaUser.objects.get(user=self.request.user)
+        user_profile = ActivityUser.objects.get(user=self.request.user)
         initial = {
             'program': self.kwargs['id'],
         }
@@ -707,7 +707,7 @@ class CollectedDataCreate(CreateView):
         # update the count with the value of Table unique count
         if form.instance.update_count_tola_table and form.instance.tola_table:
             try:
-                getTable = TolaTable.objects.get(
+                getTable = ActivityTable.objects.get(
                     id=self.request.POST['tola_table'])
             except DisaggregationLabel.DoesNotExist:
                 getTable = None
@@ -836,9 +836,9 @@ class CollectedDataUpdate(UpdateView):
         # update the count with the value of Table unique count
         if form.instance.update_count_tola_table and form.instance.tola_table:
             try:
-                getTable = TolaTable.objects.get(
+                getTable = ActivityTable.objects.get(
                     id=self.request.POST['tola_table'])
-            except TolaTable.DoesNotExist:
+            except ActivityTable.DoesNotExist:
                 getTable = None
             if getTable:
                 # if there is a trailing slash, remove it since TT api does not like it.
@@ -889,11 +889,11 @@ class CollectedDataDelete(DeleteView):
 
 def getTableCount(url, table_id):
     """
-    Count the number of rowns in a TolaTable
-    :param table_id: The TolaTable ID to update count from and return
-    :return: count : count of rows from TolaTable
+    Count the number of rowns in a ActivityTable
+    :param table_id: The ActivityTable ID to update count from and return
+    :return: count : count of rows from ActivityTable
     """
-    token = TolaSites.objects.get(site_id=1)
+    token = ActivitySites.objects.get(site_id=1)
     if token.tola_tables_token:
         headers = {'content-type': 'application/json',
                    'Authorization': 'Token ' + token.tola_tables_token}
@@ -906,7 +906,7 @@ def getTableCount(url, table_id):
     count = None
     try:
         count = data['data_count']
-        TolaTable.objects.filter(table_id=table_id).update(unique_count=count)
+        ActivityTable.objects.filter(table_id=table_id).update(unique_count=count)
     except KeyError:
         pass
 
@@ -933,7 +933,7 @@ def collecteddata_import(request):
     """
     owner = request.user
     # get the TolaTables URL and token from the sites object
-    service = TolaSites.objects.get(site_id=1)
+    service = ActivitySites.objects.get(site_id=1)
 
     # add filter to get just the users tables only
     user_filter_url = service.tola_tables_url + \
@@ -966,11 +966,11 @@ def collecteddata_import(request):
 
         # get the users country
         countries = getCountry(request.user)
-        check_for_existence = TolaTable.objects.all().filter(name=name, owner=owner)
+        check_for_existence = ActivityTable.objects.all().filter(name=name, owner=owner)
         if check_for_existence:
             result = check_for_existence[0].id
         else:
-            create_table = TolaTable.objects.create(
+            create_table = ActivityTable.objects.create(
                 name=name, owner=owner, remote_owner=remote_owner, table_id=id, url=url, unique_count=count)
             create_table.country.add(countries[0].id)
             create_table.save()

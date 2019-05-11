@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from workflow.models import ProjectAgreement, ProjectComplete, Program, SiteProfile, Sector, Country, TolaUser, TolaSites, TolaBookmarks, FormGuidance
+from workflow.models import ProjectAgreement, ProjectComplete, Program, SiteProfile, Sector, Country, ActivityUser, ActivitySites, ActivityBookmarks, FormGuidance
 from indicators.models import CollectedData, Indicator
 
 from activity.tables import IndicatorDataTable
@@ -38,7 +38,7 @@ def index(request, selected_countries=None, id=0, sector=0):
         selected_countries_label_list = Country.objects.all().filter(
             id__in=selected_countries).values('country')
 
-    getAgencySite = TolaSites.objects.all().filter(id=1)
+    getAgencySite = ActivitySites.objects.all().filter(id=1)
     getSectors = Sector.objects.all().exclude(
         program__isnull=True).select_related()
 
@@ -183,7 +183,7 @@ def index(request, selected_countries=None, id=0, sector=0):
     count_program = Program.objects.all().filter(
         country__in=selected_countries, funding_status='Funded').count()
 
-    approved_by = TolaUser.objects.get(user_id=request.user)
+    approved_by = ActivityUser.objects.get(user_id=request.user)
     user_pending_approvals = ProjectAgreement.objects.filter(
         approved_by=approved_by).exclude(approval='approved')
 
@@ -266,7 +266,7 @@ def register(request):
     """
     Register a new User profile using built in Django Users Model
     """
-    privacy = TolaSites.objects.get(id=1)
+    privacy = ActivitySites.objects.get(id=1)
     if request.method == 'POST':
         uf = NewUserRegistrationForm(request.POST)
         tf = NewTolaUserRegistrationForm(request.POST)
@@ -296,7 +296,7 @@ def profile(request):
     otherwise redirect them to registration version
     """
     if request.user.is_authenticated:
-        obj = get_object_or_404(TolaUser, user=request.user)
+        obj = get_object_or_404(ActivityUser, user=request.user)
         form = RegistrationForm(request.POST or None, instance=obj, initial={
                                 'username': request.user})
 
@@ -317,12 +317,12 @@ class BookmarkList(ListView):
     """
     Bookmark Report filtered by project
     """
-    model = TolaBookmarks
+    model = ActivityBookmarks
     template_name = 'registration/bookmark_list.html'
 
     def get(self, request, *args, **kwargs):
-        getUser = TolaUser.objects.all().filter(user=request.user)
-        getBookmarks = TolaBookmarks.objects.all().filter(user=getUser)
+        getUser = ActivityUser.objects.all().filter(user=request.user)
+        getBookmarks = ActivityBookmarks.objects.all().filter(user=getUser)
 
         return render(request, self.template_name, {'getBookmarks': getBookmarks})
 
@@ -331,7 +331,7 @@ class BookmarkCreate(CreateView):
     """
     Using Bookmark Form for new bookmark per user
     """
-    model = TolaBookmarks
+    model = ActivityBookmarks
     template_name = 'registration/bookmark_form.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -364,7 +364,7 @@ class BookmarkCreate(CreateView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Success, Bookmark Created!')
-        latest = TolaBookmarks.objects.latest('id')
+        latest = ActivityBookmarks.objects.latest('id')
         redirect_url = '/bookmark_update/' + str(latest.id)
         return HttpResponseRedirect(redirect_url)
 
@@ -375,7 +375,7 @@ class BookmarkUpdate(UpdateView):
     """
     Bookmark Form Update an existing site profile
     """
-    model = TolaBookmarks
+    model = ActivityBookmarks
     template_name = 'registration/bookmark_form.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -402,7 +402,7 @@ class BookmarkUpdate(UpdateView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Success, Bookmark Updated!')
-        latest = TolaBookmarks.objects.latest('id')
+        latest = ActivityBookmarks.objects.latest('id')
         redirect_url = '/bookmark_update/' + str(latest.id)
         return HttpResponseRedirect(redirect_url)
 
@@ -413,7 +413,7 @@ class BookmarkDelete(DeleteView):
     """
     Bookmark Form Delete an existing bookmark
     """
-    model = TolaBookmarks
+    model = ActivityBookmarks
     template_name = 'registration/bookmark_confirm_delete.html'
     success_url = "/bookmark_list"
 

@@ -180,7 +180,7 @@ class TolaUserProxyResource(resources.ModelResource):
         return '%s' % (user.user.email)
 
     class Meta:
-        model = TolaUserProxy
+        model = ActivityUserProxy
         fields = ('title', 'name', 'user', 'country', 'create_date', 'email')
         export_order = ('title', 'name', 'user',
                         'country', 'email', 'create_date')
@@ -233,8 +233,8 @@ admin.site.register(Checklist, ChecklistAdmin)
 admin.site.register(Stakeholder, StakeholderAdmin)
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(StakeholderType)
-admin.site.register(TolaUser, TolaUserAdmin)
-admin.site.register(TolaSites, TolaSitesAdmin)
+admin.site.register(ActivityUser, ActivityUserAdmin)
+admin.site.register(ActivitySites, ActivitySitesAdmin)
 admin.site.register(FormGuidance, FormGuidanceAdmin)
-admin.site.register(TolaUserProxy, ReportTolaUserProxyAdmin)
-admin.site.register(TolaBookmarks, TolaBookmarksAdmin)
+admin.site.register(ActivityUserProxy, ReportTolaUserProxyAdmin)
+admin.site.register(ActivityBookmarks, ActivityBookmarksAdmin)

@@ -3,8 +3,8 @@ from .serializers import *
 from workflow.models import Program, Sector, ProjectType, Office, SiteProfile, Country, ProjectComplete, \
     ProjectAgreement, Stakeholder, Capacity, Evaluate, ProfileType, \
     Province, District, AdminLevelThree, Village, StakeholderType, Contact, Documentation, Checklist
-from indicators.models import Indicator, Objective, ReportingFrequency, TolaUser, IndicatorType, DisaggregationType, \
-    Level, ExternalService, ExternalServiceRecord, StrategicObjective, CollectedData, TolaTable, DisaggregationValue, DisaggregationLabel
+from indicators.models import Indicator, Objective, ReportingFrequency, ActivityUser, IndicatorType, DisaggregationType, \
+    Level, ExternalService, ExternalServiceRecord, StrategicObjective, CollectedData, ActivityTable, DisaggregationValue, DisaggregationLabel
 
 from django.db.models import Count
 from django.contrib.auth.models import User
@@ -236,19 +236,19 @@ class TolaUserViewSet(viewsets.ModelViewSet):
     """
 
     def list(self, request):
-        queryset = TolaUser.objects.all()
+        queryset = ActivityUser.objects.all()
         serializer = TolaUserSerializer(instance=queryset, context={
                                         'request': request}, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = TolaUser.objects.all()
+        queryset = ActivityUser.objects.all()
         user = get_object_or_404(queryset, pk=pk)
         serializer = TolaUserSerializer(
             instance=user, context={'request': request})
         return Response(serializer.data)
 
-    queryset = TolaUser.objects.all()
+    queryset = ActivityUser.objects.all()
     serializer_class = TolaUserSerializer
 
 
@@ -454,14 +454,14 @@ class TolaTableViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         #user_countries = getCountry(request.user)
-        #queryset = TolaTable.objects.all().filter(country__in=user_countries)
+        #queryset = ActivityTable.objects.all().filter(country__in=user_countries)
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
     def get_queryset(self):
         user_countries = getCountry(self.request.user)
-        queryset = TolaTable.objects.filter(country__in=user_countries)
+        queryset = ActivityTable.objects.filter(country__in=user_countries)
         table_id = self.request.query_params.get('table_id', None)
         if table_id is not None:
             queryset = queryset.filter(table_id=table_id)

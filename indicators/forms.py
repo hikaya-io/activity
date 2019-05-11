@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
-from indicators.models import Indicator, PeriodicTarget, CollectedData, Objective, StrategicObjective, TolaTable, DisaggregationType
-from workflow.models import Program, SiteProfile, Documentation, ProjectComplete, TolaUser
+from indicators.models import Indicator, PeriodicTarget, CollectedData, Objective, StrategicObjective, ActivityTable, DisaggregationType
+from workflow.models import Program, SiteProfile, Documentation, ProjectComplete, ActivityUser
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import *
 from crispy_forms.bootstrap import *
@@ -236,9 +236,9 @@ class IndicatorForm(forms.ModelForm):
             program__id__in=self.program)
         self.fields['strategic_objectives'].queryset = StrategicObjective.objects.filter(
             country__in=countries)
-        self.fields['approved_by'].queryset = TolaUser.objects.filter(
+        self.fields['approved_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
-        self.fields['approval_submitted_by'].queryset = TolaUser.objects.filter(
+        self.fields['approval_submitted_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
         self.fields['program'].widget.attrs['readonly'] = "readonly"
         self.fields['baseline'].widget.attrs['class'] = 'col-sm-4'
@@ -455,7 +455,7 @@ class CollectedDataForm(forms.ModelForm):
             country__in=countries)
 
         #self.fields['indicator'].queryset = Indicator.objects.filter(name__isnull=False, program__country__in=countries)
-        self.fields['tola_table'].queryset = TolaTable.objects.filter(
+        self.fields['tola_table'].queryset = ActivityTable.objects.filter(
             Q(owner=self.request.user) | Q(id=self.tola_table))
         self.fields['periodic_target'].label = 'Measure against target*'
         self.fields['achieved'].label = 'Actual value'

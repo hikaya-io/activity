@@ -3,7 +3,7 @@ import json
 import sys
 import requests
 
-from workflow.models import Country, TolaUser, TolaSites
+from workflow.models import Country, ActivityUser, ActivitySites
 from django.contrib.auth.models import User
 from django.core.mail import send_mail, mail_admins, mail_managers, EmailMessage
 from django.core.exceptions import PermissionDenied
@@ -33,7 +33,7 @@ def getCountry(user):
     Returns the object the view is displaying.
     """
     # get users country from django cosign module
-    user_countries = TolaUser.objects.all().filter(
+    user_countries = ActivityUser.objects.all().filter(
         user__id=user.id).values('countries')
 
     get_countries = Country.objects.all().filter(id__in=user_countries)
@@ -72,7 +72,7 @@ def get_table(url, data=None):
     :param url: URL to silo meta detail info
     :return: json dump of table data
     """
-    token = TolaSites.objects.get(site_id=1)
+    token = ActivitySites.objects.get(site_id=1)
     if token.tola_tables_token:
         headers = {'content-type': 'application/json',
                    'Authorization': 'Token ' + token.tola_tables_token}
@@ -92,7 +92,7 @@ def user_to_tola(backend, user, response, *args, **kwargs):
 
     # Add a google auth user to the activity profile
     default_country = Country.objects.first()
-    userprofile, created = TolaUser.objects.get_or_create(
+    userprofile, created = ActivityUser.objects.get_or_create(
         user=user)
 
     userprofile.country = default_country

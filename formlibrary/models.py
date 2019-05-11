@@ -46,7 +46,7 @@ class TrainingAttendance(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(TrainingAttendance, self).save()
@@ -155,7 +155,7 @@ class Beneficiary(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Beneficiary, self).save()

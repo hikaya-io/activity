@@ -4,7 +4,7 @@ from crispy_forms.bootstrap import *
 from crispy_forms.layout import Layout, Submit, Reset, Div
 from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from workflow.models import TolaUser, TolaBookmarks
+from workflow.models import ActivityUser, ActivityBookmarks
 from django.contrib.auth.models import User
 
 
@@ -24,7 +24,7 @@ class RegistrationForm(UserChangeForm):
             self.fields['country'].widget.attrs['disabled'] = "disabled"
 
     class Meta:
-        model = TolaUser
+        model = ActivityUser
         fields = '__all__'
 
     helper = FormHelper()
@@ -70,7 +70,7 @@ class NewTolaUserRegistrationForm(forms.ModelForm):
     Form for registering a new account.
     """
     class Meta:
-        model = TolaUser
+        model = ActivityUser
         fields = ['title', 'country', 'privacy_disclaimer_accepted']
 
     def __init__(self, *args, **kwargs):
@@ -98,7 +98,7 @@ class BookmarkForm(forms.ModelForm):
     Form for registering a new account.
     """
     class Meta:
-        model = TolaBookmarks
+        model = ActivityBookmarks
         fields = ['name', 'bookmark_url']
 
     def __init__(self, *args, **kwargs):

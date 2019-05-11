@@ -4,8 +4,8 @@ from rest_framework import serializers
 from workflow.models import Program, Sector, ProjectType, Office, SiteProfile, Country, ProjectComplete, \
     ProjectAgreement, Stakeholder, Capacity, Evaluate, ProfileType, \
     Province, District, AdminLevelThree, Village, StakeholderType, Contact, Documentation, LoggedUser, Checklist, Organization
-from indicators.models import Indicator, ReportingFrequency, TolaUser, IndicatorType, Objective, DisaggregationType, \
-    Level, ExternalService, ExternalServiceRecord, StrategicObjective, CollectedData, TolaTable, DisaggregationValue,\
+from indicators.models import Indicator, ReportingFrequency, ActivityUser, IndicatorType, Objective, DisaggregationType, \
+    Level, ExternalService, ExternalServiceRecord, StrategicObjective, CollectedData, ActivityTable, DisaggregationValue,\
     PeriodicTarget
 from django.contrib.auth.models import User
 from django.core.serializers.python import Serializer as PythonSerializer
@@ -225,7 +225,7 @@ class ReportingFrequencySerializer(serializers.HyperlinkedModelSerializer):
 class TolaUserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = TolaUser
+        model = ActivityUser
         fields = '__all__'
 
 
@@ -365,7 +365,7 @@ class CollectedDataSerializer(serializers.HyperlinkedModelSerializer):
 class TolaTableSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = TolaTable
+        model = ActivityTable
         # HyperlinkedModelSerializer does not include id field by default so manually setting it
         fields = ('id', 'name', 'table_id', 'owner', 'remote_owner',
                   'country', 'url', 'unique_count', 'create_date', 'edit_date')

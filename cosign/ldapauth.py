@@ -5,7 +5,7 @@ import datetime
 import ldap
 import re
 import logging
-from workflow.models import Country, TolaUser
+from workflow.models import Country, ActivityUser
 
 from django.utils.timezone import utc
 
@@ -81,7 +81,7 @@ class RemoteUserBackend(object):
 
         create_params2 = {'created': datetime.datetime.utcnow().replace(
             tzinfo=utc), 'modified_by': user}
-        userprofile, created = TolaUser.objects.get_or_create(
+        userprofile, created = ActivityUser.objects.get_or_create(
             user=user,
             defaults=create_params2)
 

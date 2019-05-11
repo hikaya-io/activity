@@ -2,10 +2,10 @@ from django.views.generic.list import ListView
 from django.http import HttpResponse
 
 from django.shortcuts import render
-from workflow.models import ProjectAgreement, ProjectComplete, Program, SiteProfile, Country, TolaSites
+from workflow.models import ProjectAgreement, ProjectComplete, Program, SiteProfile, Country, ActivitySites
 from .models import ProgramNarratives, JupyterNotebooks
 from formlibrary.models import TrainingAttendance, Distribution, Beneficiary
-from indicators.models import CollectedData, Indicator, TolaTable
+from indicators.models import CollectedData, Indicator, ActivityTable
 
 from django.db.models import Sum
 from django.db.models import Q
@@ -218,7 +218,7 @@ def PublicDashboard(request, id=0, public=0):
     training_id_list = []
 
     # Indicator Evidence
-    getEvidence = TolaTable.objects.all().filter(country__in=countries)
+    getEvidence = ActivityTable.objects.all().filter(country__in=countries)
     evidence_tables_count = getEvidence.count()
     evidence_tables = []
 
@@ -298,7 +298,7 @@ def SurveyPublicDashboard(request, id=0):
     countries = Country.objects.all()
 
     filter_url = "http://activity-tables.mercycorps.org/api/silo/430/data/"
-    token = TolaSites.objects.get(site_id=1)
+    token = ActivitySites.objects.get(site_id=1)
     if token.tola_tables_token:
         headers = {'content-type': 'application/json',
                    'Authorization': 'Token ' + token.tola_tables_token}

@@ -4,7 +4,7 @@ import datetime
 import ldap
 import re
 import logging
-from workflow.models import TolaUser, Country
+from workflow.models import ActivityUser, Country
 
 from django.contrib.auth.backends import RemoteUserBackend
 from django.utils.timezone import utc
@@ -80,7 +80,7 @@ class CosignBackend(RemoteUserBackend):
         if new == True:
             country.save()
 
-        userprofile, created = TolaUser.objects.get_or_create(
+        userprofile, created = ActivityUser.objects.get_or_create(
             user=user)
 
         userprofile.country = country

@@ -7,11 +7,11 @@ Runs twice via function calls at bottom once
 """
 
 from djangocosign.models import UserProfile, Country as CosignCountry
-from workflow.models import TolaUser, Country
+from workflow.models import ActivityUser, Country
 
 
 def run():
-    print "Migrating User from Djangocosign to TolaUser"
+    print "Migrating User from Djangocosign to ActivityUser"
 
 
 def getAllData():
@@ -19,8 +19,8 @@ def getAllData():
     for item in getUsers:
         cosign_user = UserProfile.objects.get(user=item.user)
         try:
-            get_user = TolaUser.objects.get(user=item.user)
-        except TolaUser.DoesNotExist:
+            get_user = ActivityUser.objects.get(user=item.user)
+        except ActivityUser.DoesNotExist:
             get_user = None
         print cosign_user.user
         try:
@@ -31,7 +31,7 @@ def getAllData():
         if get_user:
             print "user exists"
         else:
-            get_user = TolaUser.objects.create(
+            get_user = ActivityUser.objects.create(
                 title=cosign_user.title,
                 name=cosign_user.name,
                 user=cosign_user.user,

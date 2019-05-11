@@ -46,7 +46,7 @@ class IndicatorAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
 class TolaTableResource(resources.ModelResource):
 
     class Meta:
-        model = TolaTable
+        model = ActivityTable
         fields = ('id', 'name', 'table_id', 'owner', 'remote_owner', 'url')
         #import_id_fields = ['id']
 
@@ -92,6 +92,6 @@ admin.site.register(StrategicObjective, StrategicObjectiveAdmin)
 admin.site.register(Level)
 admin.site.register(ExternalService, ExternalServiceAdmin)
 admin.site.register(ExternalServiceRecord, ExternalServiceRecordAdmin)
-admin.site.register(TolaTable, TolaTableAdmin)
+admin.site.register(ActivityTable, TolaTableAdmin)
 admin.site.register(DataCollectionFrequency)
 admin.site.register(PeriodicTarget, PeriodicTargetAdmin)

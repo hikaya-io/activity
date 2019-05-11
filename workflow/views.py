@@ -6,7 +6,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from .models import Program, Country, Province, AdminLevelThree, District, ProjectAgreement, ProjectComplete, SiteProfile, \
     Documentation, Monitor, Benchmarks, Budget, ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder, FormGuidance, \
-    TolaBookmarks, TolaUser
+    ActivityBookmarks, ActivityUser
 from formlibrary.models import TrainingAttendance, Distribution
 from indicators.models import CollectedData, ExternalService
 from django.utils import timezone
@@ -2507,9 +2507,9 @@ def save_bookmark(request):
     """
     url = request.POST['url']
     username = request.user
-    tola_user = TolaUser.objects.get(user=username)
+    tola_user = ActivityUser.objects.get(user=username)
 
-    TolaBookmarks.objects.create(bookmark_url=url, name=url, user=tola_user)
+    ActivityBookmarks.objects.create(bookmark_url=url, name=url, user=tola_user)
 
     return HttpResponse(url)
 

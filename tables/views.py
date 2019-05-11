@@ -3,8 +3,8 @@ from django.shortcuts import render, get_object_or_404
 
 import json
 from django.http import HttpResponseRedirect
-from indicators.models import Indicator, TolaTable, ExternalService
-from workflow.models import Program, SiteProfile, Country, Sector, TolaUser
+from indicators.models import Indicator, ActivityTable, ExternalService
+from workflow.models import Program, SiteProfile, Country, Sector, ActivityUser
 from django.shortcuts import render_to_response
 from django.contrib import messages
 from activity.util import getCountry
@@ -52,11 +52,11 @@ def import_table(request):
             url = item['data']
             remote_owner = item['owner']['username']
 
-        check_for_existence = TolaTable.objects.all().filter(name=name, owner=owner)
+        check_for_existence = ActivityTable.objects.all().filter(name=name, owner=owner)
         if check_for_existence:
             result = "error"
         else:
-            create_table = TolaTable.objects.create(
+            create_table = ActivityTable.objects.create(
                 name=name, owner=owner, remote_owner=remote_owner, table_id=id, url=url)
             create_table.save()
             result = "success"

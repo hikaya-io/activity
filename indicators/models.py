@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib import admin
-from workflow.models import Program, Sector, SiteProfile, ProjectAgreement, ProjectComplete, Country, Office, Documentation, TolaUser
+from workflow.models import Program, Sector, SiteProfile, ProjectAgreement, ProjectComplete, Country, Office, Documentation, ActivityUser
 from datetime import datetime, timedelta
 from django.utils import timezone
 import uuid
@@ -9,7 +9,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 
 
-class TolaTable(models.Model):
+class ActivityTable(models.Model):
     name = models.CharField(max_length=255, blank=True)
     table_id = models.IntegerField(blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -24,7 +24,7 @@ class TolaTable(models.Model):
         return self.name
 
 
-class TolaTableAdmin(admin.ModelAdmin):
+class ActivityTableAdmin(admin.ModelAdmin):
     list_display = ('name', 'country', 'owner',
                     'url', 'create_date', 'edit_date')
     search_fields = ('country', 'name')
@@ -253,7 +253,7 @@ class ExternalServiceRecord(models.Model):
 class ExternalServiceRecordAdmin(admin.ModelAdmin):
     list_display = ('external_service', 'full_url',
                     'record_id', 'create_date', 'edit_date')
-    display = 'Exeternal Indicator Data Service'
+    display = 'External Indicator Data Service'
 
 
 class IndicatorManager(models.Manager):
@@ -349,10 +349,10 @@ class Indicator(models.Model):
         Sector, null=True, blank=True, help_text=" ", on_delete=models.SET_NULL)
     key_performance_indicator = models.BooleanField(
         "Key Performance Indicator for this program?", default=False, help_text=" ")
-    approved_by = models.ForeignKey(TolaUser, blank=True, null=True,
+    approved_by = models.ForeignKey(ActivityUser, blank=True, null=True,
                                     related_name="approving_indicator", help_text=" ", on_delete=models.SET_NULL)
     approval_submitted_by = models.ForeignKey(
-        TolaUser, blank=True, null=True, related_name="indicator_submitted_by", help_text=" ", on_delete=models.SET_NULL)
+        ActivityUser, blank=True, null=True, related_name="indicator_submitted_by", help_text=" ", on_delete=models.SET_NULL)
     external_service_record = models.ForeignKey(
         ExternalServiceRecord, verbose_name="External Service ID", blank=True, null=True, help_text=" ", on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True, help_text=" ")
@@ -367,7 +367,7 @@ class Indicator(models.Model):
 
     def save(self, *args, **kwargs):
         # onsave add create date or update edit date
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Indicator, self).save(*args, **kwargs)
@@ -475,7 +475,7 @@ class CollectedData(models.Model):
         default=uuid.uuid4, unique=True, help_text=" "),
     periodic_target = models.ForeignKey(
         PeriodicTarget, null=True, blank=True, help_text=" ", on_delete=models.SET_NULL)
-    #targeted = models.DecimalField("Targeted", max_digits=20, decimal_places=2, default=Decimal('0.00'))
+    # targeted = models.DecimalField("Targeted", max_digits=20, decimal_places=2, default=Decimal('0.00'))
     achieved = models.DecimalField(
         "Achieved", max_digits=20, decimal_places=2, help_text=" ")
     disaggregation_value = models.ManyToManyField(
@@ -495,10 +495,10 @@ class CollectedData(models.Model):
         "Comment/Explanation", max_length=255, blank=True, null=True, help_text=" ")
     evidence = models.ForeignKey(Documentation, null=True, blank=True,
                                  verbose_name="Evidence Document or Link", help_text=" ", on_delete=models.SET_NULL)
-    approved_by = models.ForeignKey(TolaUser, blank=True, null=True, verbose_name="Originated By",
+    approved_by = models.ForeignKey(ActivityUser, blank=True, null=True, verbose_name="Originated By",
                                     related_name="approving_data", help_text=" ", on_delete=models.SET_NULL)
     tola_table = models.ForeignKey(
-        TolaTable, blank=True, null=True, help_text=" ", on_delete=models.SET_NULL)
+        ActivityTable, blank=True, null=True, help_text=" ", on_delete=models.SET_NULL)
     update_count_tola_table = models.BooleanField(
         "Would you like to update the achieved total with the row count from TolaTables?", default=False, help_text=" ")
     create_date = models.DateTimeField(null=True, blank=True, help_text=" ")
@@ -513,7 +513,7 @@ class CollectedData(models.Model):
 
     # onsave add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.utcnow()
         super(CollectedData, self).save()

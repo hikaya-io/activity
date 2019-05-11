@@ -31,14 +31,14 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
-class TolaSites(models.Model):
+class ActivitySites(models.Model):
     name = models.CharField(blank=True, null=True, max_length=255)
     agency_name = models.CharField(blank=True, null=True, max_length=255)
     agency_url = models.CharField(blank=True, null=True, max_length=255)
-    tola_report_url = models.CharField(blank=True, null=True, max_length=255)
-    tola_tables_url = models.CharField(blank=True, null=True, max_length=255)
-    tola_tables_user = models.CharField(blank=True, null=True, max_length=255)
-    tola_tables_token = models.CharField(blank=True, null=True, max_length=255)
+    activity_report_url = models.CharField(blank=True, null=True, max_length=255)
+    activity_tables_url = models.CharField(blank=True, null=True, max_length=255)
+    activity_tables_user = models.CharField(blank=True, null=True, max_length=255)
+    activity_tables_token = models.CharField(blank=True, null=True, max_length=255)
     # TODO : Verify if on_delete parameter with Cascade deletion is compatible
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     privacy_disclaimer = models.TextField(blank=True, null=True)
@@ -46,7 +46,7 @@ class TolaSites(models.Model):
     updated = models.DateTimeField(auto_now=False, blank=True, null=True)
 
     class Meta:
-        verbose_name_plural = "Tola Sites"
+        verbose_name_plural = "Activity Sites"
 
     def __unicode__(self):
         return self.name
@@ -57,19 +57,19 @@ class TolaSites(models.Model):
             self.created = datetime.now()
         else:
             self.updated = datetime.now()
-        return super(TolaSites, self).save(*args, **kwargs)
+        return super(ActivitySites, self).save(*args, **kwargs)
 
 
-class TolaSitesAdmin(admin.ModelAdmin):
+class ActivitySitesAdmin(admin.ModelAdmin):
     list_display = ('name', 'agency_name')
-    display = 'Tola Site'
+    display = 'Activity Site'
     list_filter = ('name',)
     search_fields = ('name', 'agency_name')
 
 
 class Organization(models.Model):
     name = models.CharField("Organization Name",
-                            max_length=255, blank=True, default="TolaData")
+                            max_length=255, blank=True, default="Hikaya")
     description = models.TextField(
         "Description/Notes", max_length=765, null=True, blank=True)
     logo = models.FileField("Your Organization Logo",
@@ -93,7 +93,7 @@ class Organization(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Organization, self).save()
@@ -130,7 +130,7 @@ class Country(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Country, self).save()
@@ -147,7 +147,7 @@ TITLE_CHOICES = (
 )
 
 
-class TolaUser(models.Model):
+class ActivityUser(models.Model):
     title = models.CharField(blank=True, null=True,
                              max_length=3, choices=TITLE_CHOICES)
     name = models.CharField("Given Name", blank=True,
@@ -155,7 +155,7 @@ class TolaUser(models.Model):
     employee_number = models.IntegerField(
         "Employee Number", blank=True, null=True)
     user = models.OneToOneField(
-        User, unique=True, related_name='tola_user', on_delete=models.CASCADE)
+        User, unique=True, related_name='activity_user', on_delete=models.CASCADE)
     organization = models.ForeignKey(
         Organization, default=1, blank=True, null=True, on_delete=models.SET_NULL)
     country = models.ForeignKey(
@@ -184,12 +184,12 @@ class TolaUser(models.Model):
         if self.create_date == None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
-        super(TolaUser, self).save()
+        super(ActivityUser, self).save()
 
 
-class TolaBookmarks(models.Model):
+class ActivityBookmarks(models.Model):
     user = models.ForeignKey(
-        TolaUser, related_name='tolabookmark', on_delete=models.CASCADE)
+        ActivityUser, related_name='activitybookmark', on_delete=models.CASCADE)
     name = models.CharField(blank=True, null=True, max_length=255)
     bookmark_url = models.CharField(blank=True, null=True, max_length=255)
     program = models.ForeignKey(
@@ -205,31 +205,31 @@ class TolaBookmarks(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
-        super(TolaBookmarks, self).save()
+        super(ActivityBookmarks, self).save()
 
 
-class TolaBookmarksAdmin(admin.ModelAdmin):
+class ActivityBookmarksAdmin(admin.ModelAdmin):
 
     list_display = ('user', 'name')
-    display = 'Tola User Bookmarks'
+    display = 'Activity User Bookmarks'
     list_filter = ('user__name',)
     search_fields = ('name', 'user')
 
 
-class TolaUserProxy(TolaUser):
+class ActivityUserProxy(ActivityUser):
 
     class Meta:
-        verbose_name, verbose_name_plural = u"Report Tola User", u"Report Tola Users"
+        verbose_name, verbose_name_plural = u"Report Activity User", u"Report Activity Users"
         proxy = True
 
 
-class TolaUserAdmin(admin.ModelAdmin):
+class ActivityUserAdmin(admin.ModelAdmin):
 
     list_display = ('name', 'country')
-    display = 'Tola User'
+    display = 'Activity User'
     list_filter = ('country', 'user__is_staff',)
     search_fields = ('name', 'country__country', 'title')
 
@@ -361,7 +361,7 @@ class Program(models.Model):
     budget_check = models.BooleanField(
         "Enable Approval Authority", default=False)
     country = models.ManyToManyField(Country)
-    user_access = models.ManyToManyField(TolaUser, blank=True)
+    user_access = models.ManyToManyField(ActivityUser, blank=True)
     public_dashboard = models.BooleanField(
         "Enable Public Dashboard", default=False)
 
@@ -387,7 +387,7 @@ class Program(models.Model):
 
 
 class ApprovalAuthority(models.Model):
-    approval_user = models.ForeignKey(TolaUser, help_text='User with Approval Authority',
+    approval_user = models.ForeignKey(ActivityUser, help_text='User with Approval Authority',
                                       blank=True, null=True, related_name="auth_approving", on_delete=models.SET_NULL)
     budget_limit = models.IntegerField(null=True, blank=True)
     fund = models.CharField("Fund", max_length=255, null=True, blank=True)
@@ -398,7 +398,7 @@ class ApprovalAuthority(models.Model):
 
     class Meta:
         ordering = ('approval_user',)
-        verbose_name_plural = "Tola Approval Authority"
+        verbose_name_plural = "Activity Approval Authority"
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
@@ -487,7 +487,7 @@ class AdminLevelThree(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(AdminLevelThree, self).save()
@@ -520,7 +520,7 @@ class Village(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Village, self).save()
@@ -549,7 +549,7 @@ class Office(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Office, self).save()
@@ -713,11 +713,11 @@ class SiteProfile(models.Model):
     status = models.BooleanField("Site Active", default=True)
     approval = models.CharField(
         "Approval", default="in progress", max_length=255, blank=True, null=True)
-    approved_by = models.ForeignKey(TolaUser, help_text='This is the Provincial Line Manager', blank=True, null=True,
+    approved_by = models.ForeignKey(ActivityUser, help_text='This is the Provincial Line Manager', blank=True, null=True,
                                     related_name="comm_approving", on_delete=models.SET_NULL)
-    filled_by = models.ForeignKey(TolaUser, help_text='This is the originator', blank=True, null=True,
+    filled_by = models.ForeignKey(ActivityUser, help_text='This is the originator', blank=True, null=True,
                                   related_name="comm_estimate", on_delete=models.SET_NULL)
-    location_verified_by = models.ForeignKey(TolaUser, help_text='This should be GIS Manager', blank=True, null=True,
+    location_verified_by = models.ForeignKey(ActivityUser, help_text='This should be GIS Manager', blank=True, null=True,
                                              related_name="comm_gis", on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
@@ -912,9 +912,9 @@ class Stakeholder(models.Model):
                                          related_name="vetting_document", on_delete=models.SET_NULL)
     approval = models.CharField(
         "Approval", default="in progress", max_length=255, blank=True, null=True)
-    approved_by = models.ForeignKey(TolaUser, help_text='', blank=True, null=True,
+    approved_by = models.ForeignKey(ActivityUser, help_text='', blank=True, null=True,
                                     related_name="stake_approving", on_delete=models.SET_NULL)
-    filled_by = models.ForeignKey(TolaUser, help_text='', blank=True, null=True,
+    filled_by = models.ForeignKey(ActivityUser, help_text='', blank=True, null=True,
                                   related_name="stake_filled", on_delete=models.SET_NULL)
     notes = models.TextField(max_length=765, blank=True, null=True)
     create_date = models.DateTimeField(null=True, blank=True)
@@ -1098,23 +1098,23 @@ class ProjectAgreement(models.Model):
     End Clean Up
     """
     estimation_date = models.DateTimeField(blank=True, null=True)
-    estimated_by = models.ForeignKey(TolaUser, blank=True, null=True, verbose_name="Originated By",
+    estimated_by = models.ForeignKey(ActivityUser, blank=True, null=True, verbose_name="Originated By",
                                      related_name="estimating", on_delete=models.SET_NULL)
     estimated_by_date = models.DateTimeField(
         "Date Originated", null=True, blank=True)
     checked_by = models.ForeignKey(
-        TolaUser, blank=True, null=True, related_name="checking", on_delete=models.SET_NULL)
+        ActivityUser, blank=True, null=True, related_name="checking", on_delete=models.SET_NULL)
     checked_by_date = models.DateTimeField(
         "Date Checked", null=True, blank=True)
-    reviewed_by = models.ForeignKey(TolaUser, verbose_name="Request review", blank=True, null=True,
+    reviewed_by = models.ForeignKey(ActivityUser, verbose_name="Request review", blank=True, null=True,
                                     related_name="reviewing", on_delete=models.SET_NULL)
     reviewed_by_date = models.DateTimeField(
         "Date Verified", null=True, blank=True)
-    finance_reviewed_by = models.ForeignKey(TolaUser, blank=True, null=True,
+    finance_reviewed_by = models.ForeignKey(ActivityUser, blank=True, null=True,
                                             related_name="finance_reviewing", on_delete=models.SET_NULL)
     finance_reviewed_by_date = models.DateTimeField(
         "Date Reviewed by Finance", null=True, blank=True)
-    me_reviewed_by = models.ForeignKey(TolaUser, blank=True, null=True, verbose_name="M&E Reviewed by",
+    me_reviewed_by = models.ForeignKey(ActivityUser, blank=True, null=True, verbose_name="M&E Reviewed by",
                                        related_name="reviewing_me", on_delete=models.SET_NULL)
     me_reviewed_by_date = models.DateTimeField(
         "Date Reviewed by M&E", null=True, blank=True)
@@ -1123,11 +1123,11 @@ class ProjectAgreement(models.Model):
     evaluate = models.ManyToManyField(Evaluate, blank=True)
     approval = models.CharField(
         "Approval Status", default="in progress", max_length=255, blank=True, null=True)
-    approved_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="approving_agreement",
+    approved_by = models.ForeignKey(ActivityUser, blank=True, null=True, related_name="approving_agreement",
                                     verbose_name="Request approval", on_delete=models.SET_NULL)
     approved_by_date = models.DateTimeField(
         "Date Approved", null=True, blank=True)
-    approval_submitted_by = models.ForeignKey(TolaUser, blank=True, null=True,
+    approval_submitted_by = models.ForeignKey(ActivityUser, blank=True, null=True,
                                               related_name="submitted_by_agreement", on_delete=models.SET_NULL)
     approval_remarks = models.CharField(
         "Approval Remarks", max_length=255, blank=True, null=True)
@@ -1315,17 +1315,17 @@ class ProjectComplete(models.Model):
         "Lessons learned", blank=True, null=True)
     site = models.ManyToManyField(SiteProfile, blank=True)
     estimated_by = models.ForeignKey(
-        TolaUser, blank=True, null=True, related_name="estimating_complete", on_delete=models.SET_NULL)
+        ActivityUser, blank=True, null=True, related_name="estimating_complete", on_delete=models.SET_NULL)
     checked_by = models.ForeignKey(
-        TolaUser, blank=True, null=True, related_name="checking_complete", on_delete=models.SET_NULL)
+        ActivityUser, blank=True, null=True, related_name="checking_complete", on_delete=models.SET_NULL)
     reviewed_by = models.ForeignKey(
-        TolaUser, blank=True, null=True, related_name="reviewing_complete", on_delete=models.SET_NULL)
+        ActivityUser, blank=True, null=True, related_name="reviewing_complete", on_delete=models.SET_NULL)
     approval = models.CharField(
         "Approval Status", default="in progress", max_length=255, blank=True, null=True)
-    approved_by = models.ForeignKey(TolaUser, blank=True, null=True,
+    approved_by = models.ForeignKey(ActivityUser, blank=True, null=True,
                                     related_name="approving_agreement_complete", on_delete=models.SET_NULL)
     approval_submitted_by = models.ForeignKey(
-        TolaUser, blank=True, null=True, related_name="submitted_by_complete", on_delete=models.SET_NULL)
+        ActivityUser, blank=True, null=True, related_name="submitted_by_complete", on_delete=models.SET_NULL)
     approval_remarks = models.CharField(
         "Approval Remarks", max_length=255, blank=True, null=True)
     create_date = models.DateTimeField("Date Created", null=True, blank=True)
@@ -1568,7 +1568,7 @@ class ChecklistItem(models.Model):
     not_applicable = models.BooleanField(default=False)
     global_item = models.BooleanField(default=False)
     owner = models.ForeignKey(
-        TolaUser, null=True, blank=True, on_delete=models.SET_NULL)
+        ActivityUser, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 

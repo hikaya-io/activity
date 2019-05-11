@@ -6,7 +6,7 @@ from django.forms import HiddenInput
 from functools import partial
 from .widgets import GoogleMapsWidget
 from django import forms
-from .models import ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation, Benchmarks, Monitor, Budget, Capacity, Evaluate, Office, Checklist, ChecklistItem, Province, Stakeholder, TolaUser, Contact, Sector
+from .models import ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation, Benchmarks, Monitor, Budget, Capacity, Evaluate, Office, Checklist, ChecklistItem, Province, Stakeholder, ActivityUser, Contact, Sector
 from indicators.models import CollectedData, Indicator, PeriodicTarget
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
 from activity.util import getCountry
@@ -434,17 +434,17 @@ class ProjectAgreementForm(forms.ModelForm):
         self.fields['program2'].initial = self.instance.program
         self.fields['program2'].label = "Program"
 
-        self.fields['approved_by'].queryset = TolaUser.objects.filter(
+        self.fields['approved_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
-        self.fields['estimated_by'].queryset = TolaUser.objects.filter(
+        self.fields['estimated_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
-        self.fields['reviewed_by'].queryset = TolaUser.objects.filter(
+        self.fields['reviewed_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
-        self.fields['finance_reviewed_by'].queryset = TolaUser.objects.filter(
+        self.fields['finance_reviewed_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
-        self.fields['me_reviewed_by'].queryset = TolaUser.objects.filter(
+        self.fields['me_reviewed_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
-        self.fields['approval_submitted_by'].queryset = TolaUser.objects.filter(
+        self.fields['approval_submitted_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
 
         # override the office queryset to use request.user for country
@@ -717,11 +717,11 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         self.fields['program2'].initial = self.instance.program
         self.fields['program2'].label = "Program"
 
-        self.fields['approved_by'].queryset = TolaUser.objects.filter(
+        self.fields['approved_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
-        self.fields['reviewed_by'].queryset = TolaUser.objects.filter(
+        self.fields['reviewed_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
-        self.fields['estimated_by'].queryset = TolaUser.objects.filter(
+        self.fields['estimated_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
 
         # override the office queryset to use request.user for country
@@ -1089,7 +1089,7 @@ class ProjectCompleteForm(forms.ModelForm):
         self.fields['project_agreement2'].initial = self.instance.project_agreement
         self.fields['project_agreement2'].label = "Project Initiation"
 
-        self.fields['approved_by'].queryset = TolaUser.objects.filter(
+        self.fields['approved_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
 
         # override the office queryset to use request.user for country
@@ -1345,7 +1345,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
         self.fields['project_agreement2'].initial = self.instance.project_agreement
         self.fields['project_agreement2'].label = "Project Initiation"
 
-        self.fields['approved_by'].queryset = TolaUser.objects.filter(
+        self.fields['approved_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
 
         # override the office queryset to use request.user for country
@@ -1490,9 +1490,9 @@ class SiteProfileForm(forms.ModelForm):
             province__country__in=countries)
         self.fields['province'].queryset = Province.objects.filter(
             country__in=countries)
-        self.fields['approved_by'].queryset = TolaUser.objects.filter(
+        self.fields['approved_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
-        self.fields['filled_by'].queryset = TolaUser.objects.filter(
+        self.fields['filled_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
 
 
@@ -1773,7 +1773,7 @@ class StakeholderForm(forms.ModelForm):
         super(StakeholderForm, self).__init__(*args, **kwargs)
 
         countries = getCountry(self.request.user)
-        users = TolaUser.objects.filter(country__in=countries)
+        users = ActivityUser.objects.filter(country__in=countries)
         self.fields['contact'].queryset = Contact.objects.filter(
             country__in=countries)
         self.fields['sectors'].queryset = Sector.objects.all()
