@@ -1,15 +1,16 @@
 from django.urls import reverse_lazy
-from indicators.models import Indicator, PeriodicTarget, CollectedData, Objective, StrategicObjective, TolaTable, DisaggregationType
-from workflow.models import Program, SiteProfile, Documentation, ProjectComplete, TolaUser
+from indicators.models import Indicator, PeriodicTarget, CollectedData, Objective, StrategicObjective, ActivityTable, DisaggregationType
+from workflow.models import Program, SiteProfile, Documentation, ProjectComplete, ActivityUser
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import *
 from crispy_forms.bootstrap import *
 from crispy_forms.layout import Layout, Submit, Reset, Div
 from functools import partial
 from django import forms
-from tola.util import getCountry
+from activity.util import getCountry
 from django.db.models import Q
 from datetime import datetime
+
 
 class DatePicker(forms.DateInput):
     """
@@ -23,28 +24,29 @@ class DatePicker(forms.DateInput):
 class IndicatorForm(forms.ModelForm):
     class Meta:
         model = Indicator
-        exclude = ['create_date','edit_date']
+        exclude = ['create_date', 'edit_date']
         widgets = {
             #{'program': forms.Select()}
-            'definition': forms.Textarea(attrs={'rows':4}),
-            'justification': forms.Textarea(attrs={'rows':4}),
-            'quality_assurance': forms.Textarea(attrs={'rows':4}),
-            'data_issues': forms.Textarea(attrs={'rows':4}),
-            'indicator_changes': forms.Textarea(attrs={'rows':4}),
-            'comments': forms.Textarea(attrs={'rows':4}),
-            'notes': forms.Textarea(attrs={'rows':4}),
+            'definition': forms.Textarea(attrs={'rows': 4}),
+            'justification': forms.Textarea(attrs={'rows': 4}),
+            'quality_assurance': forms.Textarea(attrs={'rows': 4}),
+            'data_issues': forms.Textarea(attrs={'rows': 4}),
+            'indicator_changes': forms.Textarea(attrs={'rows': 4}),
+            'comments': forms.Textarea(attrs={'rows': 4}),
+            'notes': forms.Textarea(attrs={'rows': 4}),
             'rationale_for_target': forms.Textarea(attrs={'rows': 4}),
         }
 
     def __init__(self, *args, **kwargs):
-        #get the user object to check permissions with
+        # get the user object to check permissions with
         #print(".............................%s............................" % kwargs.get('targets_sum', 'no targets sum found!!!!') )
         indicator = kwargs.get('instance', None)
         self.request = kwargs.pop('request')
         self.program = kwargs.pop('program')
         self.helper = FormHelper()
         self.helper.form_method = 'post'
-        self.helper.form_action = reverse_lazy('indicator_update', kwargs={'pk': indicator.id})
+        self.helper.form_action = reverse_lazy(
+            'indicator_update', kwargs={'pk': indicator.id})
         self.helper.form_id = 'indicator_update_form'
         self.helper.form_class = 'form-horizontal'
         self.helper.label_class = 'col-sm-4'
@@ -58,9 +60,9 @@ class IndicatorForm(forms.ModelForm):
 
             TabHolder(
                 Tab('Summary',
-                     Fieldset('',
-                        'program','sector','objectives','strategic_objectives',
-                    ),
+                    Fieldset('',
+                             'program', 'sector', 'objectives', 'strategic_objectives',
+                             ),
                     HTML("""
                         {% if getExternalServiceRecord %}
                             <div class='panel panel-default'>
@@ -80,25 +82,26 @@ class IndicatorForm(forms.ModelForm):
                             </div>
                         {% endif %}
                     """),
-                ),
+                    ),
                 Tab('Performance',
-                     Fieldset('',
-                        'name', 'level', 'number', 'source', 'definition', 'justification', 'disaggregation','indicator_type',PrependedText('key_performance_indicator', False)
-                        ),
-                ),
+                    Fieldset('',
+                             'name', 'level', 'number', 'source', 'definition', 'justification', 'disaggregation', 'indicator_type', PrependedText(
+                                 'key_performance_indicator', False)
+                             ),
+                    ),
                 Tab('Targets',
                     Fieldset('',
-                        'unit_of_measure', 'lop_target', 'rationale_for_target',
-                        #Div(
-                        Field('baseline', template="indicators/crispy.html"),
-                        #Div(HTML('<button type="button" id="id_add_evidence_btn" class="btn btn-sm btn-primary">Attach evidence</button>')),
-                        #    css_class="form-group"
-                        #),
-                        'baseline_na',
-                        'target_frequency', 'target_frequency_start', 'target_frequency_custom', 'target_frequency_num_periods'
-                    ),
+                             'unit_of_measure', 'lop_target', 'rationale_for_target',
+                             # Div(
+                             Field('baseline', template="indicators/crispy.html"),
+                             #Div(HTML('<button type="button" id="id_add_evidence_btn" class="btn btn-sm btn-primary">Attach evidence</button>')),
+                             #    css_class="form-group"
+                             # ),
+                             'baseline_na',
+                             'target_frequency', 'target_frequency_start', 'target_frequency_custom', 'target_frequency_num_periods'
+                             ),
                     Fieldset('',
-                        HTML("""
+                             HTML("""
                             <div id="div_id_create_targets_btn" class="form-group">
                                 <div class="controls col-sm-offset-4 col-sm-6">
                                     <button type="button" id="id_create_targets_btn" class="btn btn-primary">Create targets</button>
@@ -106,9 +109,9 @@ class IndicatorForm(forms.ModelForm):
                                 </div>
                             </div>
                         """)
-                    ),
+                             ),
                     Fieldset('',
-                        HTML("""
+                             HTML("""
                             <div id="id_div_periodic_tables_placeholder">
                             {% if periodic_targets and indicator.target_frequency != 1%}
                                 <div class="container-fluid" style="background-color: #F5F5F5; margin: 0px -30px 0px -30px;">
@@ -195,23 +198,23 @@ class IndicatorForm(forms.ModelForm):
                             {% endif %}
                             </div>
                         """),
+                             ),
                     ),
-                ),
                 Tab('Data Acquisition',
                     Fieldset('',
-                        'means_of_verification','data_collection_method', 'data_collection_frequency', 'data_points', 'responsible_person',
-                        ),
-                ),
+                             'means_of_verification', 'data_collection_method', 'data_collection_frequency', 'data_points', 'responsible_person',
+                             ),
+                    ),
                 Tab('Analysis and Reporting',
                     Fieldset('',
-                        'method_of_analysis','information_use', 'reporting_frequency', 'quality_assurance', 'data_issues', 'indicator_changes', 'comments','notes'
+                             'method_of_analysis', 'information_use', 'reporting_frequency', 'quality_assurance', 'data_issues', 'indicator_changes', 'comments', 'notes'
+                             ),
                     ),
-                ),
                 Tab('Approval',
                     Fieldset('',
-                        'approval_submitted_by', 'approved_by',
+                             'approval_submitted_by', 'approved_by',
+                             ),
                     ),
-                ),
             ),
 
             # HTML("""<hr/>"""),
@@ -223,14 +226,20 @@ class IndicatorForm(forms.ModelForm):
 
         super(IndicatorForm, self).__init__(*args, **kwargs)
 
-        #override the program queryset to use request.user for country
+        # override the program queryset to use request.user for country
         countries = getCountry(self.request.user)
-        self.fields['program'].queryset = Program.objects.filter(funding_status="Funded", country__in=countries)
-        self.fields['disaggregation'].queryset = DisaggregationType.objects.filter(country__in=countries).filter(standard=False)
-        self.fields['objectives'].queryset = Objective.objects.all().filter(program__id__in=self.program)
-        self.fields['strategic_objectives'].queryset = StrategicObjective.objects.filter(country__in=countries)
-        self.fields['approved_by'].queryset = TolaUser.objects.filter(country__in=countries).distinct()
-        self.fields['approval_submitted_by'].queryset = TolaUser.objects.filter(country__in=countries).distinct()
+        self.fields['program'].queryset = Program.objects.filter(
+            funding_status="Funded", country__in=countries)
+        self.fields['disaggregation'].queryset = DisaggregationType.objects.filter(
+            country__in=countries).filter(standard=False)
+        self.fields['objectives'].queryset = Objective.objects.all().filter(
+            program__id__in=self.program)
+        self.fields['strategic_objectives'].queryset = StrategicObjective.objects.filter(
+            country__in=countries)
+        self.fields['approved_by'].queryset = ActivityUser.objects.filter(
+            country__in=countries).distinct()
+        self.fields['approval_submitted_by'].queryset = ActivityUser.objects.filter(
+            country__in=countries).distinct()
         self.fields['program'].widget.attrs['readonly'] = "readonly"
         self.fields['baseline'].widget.attrs['class'] = 'col-sm-4'
         #self.fields['target_frequency_start'].widget = DatePicker.DateInput()
@@ -244,23 +253,28 @@ class IndicatorForm(forms.ModelForm):
             # self.fields['target_frequency_start'].widget = forms.HiddenInput()
             # self.fields['target_frequency_num_periods'].widget = forms.HiddenInput()
 
+
 class CollectedDataForm(forms.ModelForm):
 
     class Meta:
         model = CollectedData
         exclude = ['create_date', 'edit_date']
         widgets = {
-            'description': forms.Textarea(attrs={'rows':4}),
+            'description': forms.Textarea(attrs={'rows': 4}),
         }
+
     def clean_date_collected(self):
         date_collected = self.cleaned_data['date_collected']
         date_collected = datetime.strftime(date_collected, '%Y-%m-%d')
         return date_collected
 
-    program2 =  forms.CharField( widget=forms.TextInput(attrs={'readonly':'readonly', 'label': 'Program'}) )
-    indicator2 = forms.CharField( widget=forms.TextInput(attrs={'readonly':'readonly', 'label': 'Indicator'}) )
+    program2 = forms.CharField(widget=forms.TextInput(
+        attrs={'readonly': 'readonly', 'label': 'Program'}))
+    indicator2 = forms.CharField(widget=forms.TextInput(
+        attrs={'readonly': 'readonly', 'label': 'Indicator'}))
     target_frequency = forms.CharField()
-    date_collected = forms.DateField(widget=DatePicker.DateInput(), required=True)
+    date_collected = forms.DateField(
+        widget=DatePicker.DateInput(), required=True)
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance', None)
@@ -274,7 +288,8 @@ class CollectedDataForm(forms.ModelForm):
         self.helper.label_class = 'col-sm-4'
         self.helper.field_class = 'col-sm-6'
         self.helper.form_error_title = 'Form Errors'
-        self.helper.form_action = reverse_lazy('collecteddata_update' if instance else 'collecteddata_add', kwargs={'pk': instance.id} if instance else {'program': self.program, 'indicator': self.indicator})
+        self.helper.form_action = reverse_lazy('collecteddata_update' if instance else 'collecteddata_add', kwargs={
+                                               'pk': instance.id} if instance else {'program': self.program, 'indicator': self.indicator})
         self.helper.form_id = 'collecteddata_update_form'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
@@ -283,17 +298,17 @@ class CollectedDataForm(forms.ModelForm):
         self.helper.layout = Layout(
             HTML("""<br/>"""),
             Fieldset('Collected Data',
-                'program', 'program2', 'indicator', 'indicator2', 'target_frequency', 'site', 'date_collected', 'periodic_target', 'achieved', 'description',
+                     'program', 'program2', 'indicator', 'indicator2', 'target_frequency', 'site', 'date_collected', 'periodic_target', 'achieved', 'description',
 
-            ),
+                     ),
             Fieldset('Evidence',
-                'complete', 'evidence','tola_table','update_count_tola_table',
-                HTML("""<a class="output" data-toggle="modal" data-target="#tolatablemodal" href="/indicators/collecteddata_import/">Import Evidence From Tola Tables</a>"""),
+                     'complete', 'evidence', 'tola_table', 'update_count_tola_table',
+                     HTML("""<a class="output" data-toggle="modal" data-target="#tolatablemodal" href="/indicators/collecteddata_import/">Import Evidence From Tola Tables</a>"""),
 
-            ),
+                     ),
 
-                Div(
-                        HTML("""<br/>
+            Div(
+                HTML("""<br/>
                                 {% if getDisaggregationLabelStandard and not getDisaggregationValueStandard %}
                                     <div class='panel panel-default'>
                                         <!-- Default panel contents -->
@@ -388,7 +403,7 @@ class CollectedDataForm(forms.ModelForm):
                                     </div>
                                 {% endif %}
                              """),
-                ),
+            ),
 
             HTML("""<br/>"""),
             FormActions(
@@ -399,14 +414,16 @@ class CollectedDataForm(forms.ModelForm):
 
         super(CollectedDataForm, self).__init__(*args, **kwargs)
 
-        #override the program queryset to use request.user for country
-        self.fields['evidence'].queryset = Documentation.objects.filter(program=self.program)
+        # override the program queryset to use request.user for country
+        self.fields['evidence'].queryset = Documentation.objects.filter(
+            program=self.program)
 
-        #override the program queryset to use request.user for country
-        self.fields['complete'].queryset = ProjectComplete.objects.filter(program=self.program)
+        # override the program queryset to use request.user for country
+        self.fields['complete'].queryset = ProjectComplete.objects.filter(
+            program=self.program)
         self.fields['complete'].label = "Project"
 
-        #override the program queryset to use request.user for country
+        # override the program queryset to use request.user for country
         countries = getCountry(self.request.user)
         #self.fields['program'].queryset = Program.objects.filter(funding_status="Funded", country__in=countries).distinct()
         try:
@@ -415,7 +432,8 @@ class CollectedDataForm(forms.ModelForm):
         except TypeError:
             pass
 
-        self.fields['periodic_target'].queryset = PeriodicTarget.objects.filter(indicator=self.indicator).order_by('customsort','create_date', 'period')
+        self.fields['periodic_target'].queryset = PeriodicTarget.objects.filter(
+            indicator=self.indicator).order_by('customsort', 'create_date', 'period')
 
         self.fields['program2'].initial = self.program
         self.fields['program2'].label = "Program"
@@ -432,11 +450,13 @@ class CollectedDataForm(forms.ModelForm):
         self.fields['indicator'].widget = forms.HiddenInput()
         self.fields['target_frequency'].initial = self.indicator.target_frequency
         self.fields['target_frequency'].widget = forms.HiddenInput()
-        #override the program queryset to use request.user for country
-        self.fields['site'].queryset = SiteProfile.objects.filter(country__in=countries)
+        # override the program queryset to use request.user for country
+        self.fields['site'].queryset = SiteProfile.objects.filter(
+            country__in=countries)
 
         #self.fields['indicator'].queryset = Indicator.objects.filter(name__isnull=False, program__country__in=countries)
-        self.fields['tola_table'].queryset = TolaTable.objects.filter(Q(owner=self.request.user) | Q(id=self.tola_table))
+        self.fields['tola_table'].queryset = ActivityTable.objects.filter(
+            Q(owner=self.request.user) | Q(id=self.tola_table))
         self.fields['periodic_target'].label = 'Measure against target*'
         self.fields['achieved'].label = 'Actual value'
         self.fields['date_collected'].help_text = ' '

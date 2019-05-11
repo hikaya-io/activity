@@ -4,7 +4,7 @@ from django import forms
 from .models import TrainingAttendance, Distribution, Beneficiary
 from workflow.models import Program, ProjectAgreement, Office, Province, SiteProfile
 from functools import partial
-from tola.util import getCountry
+from activity.util import getCountry
 
 
 class DatePicker(forms.DateInput):
@@ -38,8 +38,10 @@ class TrainingAttendanceForm(forms.ModelForm):
         super(TrainingAttendanceForm, self).__init__(*args, **kwargs)
 
         countries = getCountry(self.request.user)
-        self.fields['project_agreement'].queryset = ProjectAgreement.objects.filter(program__country__in=countries)
-        self.fields['program'].queryset = Program.objects.filter(country__in=countries)
+        self.fields['project_agreement'].queryset = ProjectAgreement.objects.filter(
+            program__country__in=countries)
+        self.fields['program'].queryset = Program.objects.filter(
+            country__in=countries)
 
 
 class DistributionForm(forms.ModelForm):
@@ -67,10 +69,14 @@ class DistributionForm(forms.ModelForm):
         super(DistributionForm, self).__init__(*args, **kwargs)
 
         countries = getCountry(self.request.user)
-        self.fields['initiation'].queryset = ProjectAgreement.objects.filter(program__country__in=countries)
-        self.fields['program'].queryset = Program.objects.filter(country__in=countries)
-        self.fields['office_code'].queryset = Office.objects.filter(province__country__in=countries)
-        self.fields['province'].queryset = Province.objects.filter(country__in=countries)
+        self.fields['initiation'].queryset = ProjectAgreement.objects.filter(
+            program__country__in=countries)
+        self.fields['program'].queryset = Program.objects.filter(
+            country__in=countries)
+        self.fields['office_code'].queryset = Office.objects.filter(
+            province__country__in=countries)
+        self.fields['province'].queryset = Province.objects.filter(
+            country__in=countries)
 
 
 class BeneficiaryForm(forms.ModelForm):
@@ -94,8 +100,11 @@ class BeneficiaryForm(forms.ModelForm):
         super(BeneficiaryForm, self).__init__(*args, **kwargs)
 
         countries = getCountry(self.request.user)
-        self.fields['training'].queryset = TrainingAttendance.objects.filter(program__country__in=countries)
-        self.fields['training'].queryset = TrainingAttendance.objects.filter(program__country__in=countries)
-        self.fields['distribution'].queryset = Distribution.objects.filter(program__country__in=countries)
-        self.fields['site'].queryset = SiteProfile.objects.filter(country__in=countries)
-
+        self.fields['training'].queryset = TrainingAttendance.objects.filter(
+            program__country__in=countries)
+        self.fields['training'].queryset = TrainingAttendance.objects.filter(
+            program__country__in=countries)
+        self.fields['distribution'].queryset = Distribution.objects.filter(
+            program__country__in=countries)
+        self.fields['site'].queryset = SiteProfile.objects.filter(
+            country__in=countries)

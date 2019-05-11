@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib import admin
-from workflow.models import Program, Sector, SiteProfile, ProjectAgreement, ProjectComplete, Country, Office, Documentation, TolaUser
+from workflow.models import Program, Sector, SiteProfile, ProjectAgreement, ProjectComplete, Country, Office, Documentation, ActivityUser
 from datetime import datetime, timedelta
 from django.utils import timezone
 import uuid
@@ -8,7 +8,8 @@ from simple_history.models import HistoricalRecords
 from decimal import Decimal
 from django.contrib.auth.models import User
 
-class TolaTable(models.Model):
+
+class ActivityTable(models.Model):
     name = models.CharField(max_length=255, blank=True)
     table_id = models.IntegerField(blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -23,9 +24,10 @@ class TolaTable(models.Model):
         return self.name
 
 
-class TolaTableAdmin(admin.ModelAdmin):
-    list_display = ('name','country','owner','url','create_date','edit_date')
-    search_fields = ('country','name')
+class ActivityTableAdmin(admin.ModelAdmin):
+    list_display = ('name', 'country', 'owner',
+                    'url', 'create_date', 'edit_date')
+    search_fields = ('country', 'name')
     list_filter = ('country__country',)
     display = 'Tola Table'
 
@@ -41,19 +43,21 @@ class IndicatorType(models.Model):
 
 
 class IndicatorTypeAdmin(admin.ModelAdmin):
-    list_display = ('indicator_type','description','create_date','edit_date')
+    list_display = ('indicator_type', 'description',
+                    'create_date', 'edit_date')
     display = 'Indicator Type'
 
 
 class StrategicObjective(models.Model):
     name = models.CharField(max_length=135, blank=True)
-    country = models.ForeignKey(Country, null=True, blank=True, on_delete=models.SET_NULL)
+    country = models.ForeignKey(
+        Country, null=True, blank=True, on_delete=models.SET_NULL)
     description = models.TextField(max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        ordering = ('country','name')
+        ordering = ('country', 'name')
 
     def __unicode__(self):
         return self.name
@@ -65,21 +69,22 @@ class StrategicObjective(models.Model):
 
 
 class StrategicObjectiveAdmin(admin.ModelAdmin):
-    list_display = ('country','name')
-    search_fields = ('country__country','name')
+    list_display = ('country', 'name')
+    search_fields = ('country__country', 'name')
     list_filter = ('country__country',)
     display = 'Strategic Objectives'
 
 
 class Objective(models.Model):
     name = models.CharField(max_length=135, blank=True)
-    program = models.ForeignKey(Program, null=True, blank=True, on_delete=models.SET_NULL)
+    program = models.ForeignKey(
+        Program, null=True, blank=True, on_delete=models.SET_NULL)
     description = models.TextField(max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        ordering = ('program','name')
+        ordering = ('program', 'name')
 
     def __unicode__(self):
         return self.name
@@ -91,8 +96,8 @@ class Objective(models.Model):
 
 
 class ObjectiveAdmin(admin.ModelAdmin):
-    list_display = ('program','name')
-    search_fields = ('name','program__name')
+    list_display = ('program', 'name')
+    search_fields = ('name', 'program__name')
     list_filter = ('program__country__country',)
     display = 'Objectives'
 
@@ -120,8 +125,10 @@ class LevelAdmin(admin.ModelAdmin):
 class DisaggregationType(models.Model):
     disaggregation_type = models.CharField(max_length=135, blank=True)
     description = models.CharField(max_length=765, blank=True)
-    country = models.ForeignKey(Country, null=True, blank=True, on_delete=models.SET_NULL)
-    standard = models.BooleanField(default=False, verbose_name="Standard (TolaData Admins Only)")
+    country = models.ForeignKey(
+        Country, null=True, blank=True, on_delete=models.SET_NULL)
+    standard = models.BooleanField(
+        default=False, verbose_name="Standard (TolaData Admins Only)")
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -130,13 +137,15 @@ class DisaggregationType(models.Model):
 
 
 class DisaggregationTypeAdmin(admin.ModelAdmin):
-    list_display = ('disaggregation_type','country','standard','description')
-    list_filter = ('country','standard','disaggregation_type')
+    list_display = ('disaggregation_type', 'country',
+                    'standard', 'description')
+    list_filter = ('country', 'standard', 'disaggregation_type')
     display = 'Disaggregation Type'
 
 
 class DisaggregationLabel(models.Model):
-    disaggregation_type = models.ForeignKey(DisaggregationType, on_delete=models.CASCADE)
+    disaggregation_type = models.ForeignKey(
+        DisaggregationType, on_delete=models.CASCADE)
     label = models.CharField(max_length=765, blank=True)
     customsort = models.IntegerField(blank=True, null=True)
     create_date = models.DateTimeField(null=True, blank=True)
@@ -153,7 +162,8 @@ class DisaggregationLabelAdmin(admin.ModelAdmin):
 
 
 class DisaggregationValue(models.Model):
-    disaggregation_label = models.ForeignKey(DisaggregationLabel, on_delete=models.CASCADE)
+    disaggregation_label = models.ForeignKey(
+        DisaggregationLabel, on_delete=models.CASCADE)
     value = models.CharField(max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
@@ -163,8 +173,10 @@ class DisaggregationValue(models.Model):
 
 
 class DisaggregationValueAdmin(admin.ModelAdmin):
-    list_display = ('disaggregation_label','value','create_date','edit_date')
-    list_filter = ('disaggregation_label__disaggregation_type__disaggregation_type','disaggregation_label')
+    list_display = ('disaggregation_label', 'value',
+                    'create_date', 'edit_date')
+    list_filter = (
+        'disaggregation_label__disaggregation_type__disaggregation_type', 'disaggregation_label')
     display = 'Disaggregation Value'
 
 
@@ -181,12 +193,14 @@ class ReportingFrequency(models.Model):
 class DataCollectionFrequency(models.Model):
     frequency = models.CharField(max_length=135, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
-    numdays = models.PositiveIntegerField(default=0, verbose_name="Frequency in number of days")
+    numdays = models.PositiveIntegerField(
+        default=0, verbose_name="Frequency in number of days")
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
         return self.frequency
+
 
 class DataCollectionFrequencyAdmin(admin.ModelAdmin):
     list_display = ('frequency', 'description', 'create_date', 'edit_date')
@@ -194,7 +208,8 @@ class DataCollectionFrequencyAdmin(admin.ModelAdmin):
 
 
 class ReportingPeriod(models.Model):
-    frequency = models.ForeignKey(ReportingFrequency, null=True, on_delete=models.SET_NULL)
+    frequency = models.ForeignKey(
+        ReportingFrequency, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -203,7 +218,7 @@ class ReportingPeriod(models.Model):
 
 
 class ReportingPeriodAdmin(admin.ModelAdmin):
-    list_display = ('frequency','create_date','edit_date')
+    list_display = ('frequency', 'create_date', 'edit_date')
     display = 'Reporting Frequency'
 
 
@@ -219,14 +234,15 @@ class ExternalService(models.Model):
 
 
 class ExternalServiceAdmin(admin.ModelAdmin):
-    list_display = ('name','url','feed_url','create_date','edit_date')
+    list_display = ('name', 'url', 'feed_url', 'create_date', 'edit_date')
     display = 'External Indicator Data Service'
 
 
 class ExternalServiceRecord(models.Model):
-    external_service = models.ForeignKey(ExternalService, blank=True, null=True, on_delete=models.SET_NULL)
+    external_service = models.ForeignKey(
+        ExternalService, blank=True, null=True, on_delete=models.SET_NULL)
     full_url = models.CharField(max_length=765, blank=True)
-    record_id = models.CharField("Unique ID",max_length=765, blank=True)
+    record_id = models.CharField("Unique ID", max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -235,8 +251,9 @@ class ExternalServiceRecord(models.Model):
 
 
 class ExternalServiceRecordAdmin(admin.ModelAdmin):
-    list_display = ('external_service','full_url','record_id','create_date','edit_date')
-    display = 'Exeternal Indicator Data Service'
+    list_display = ('external_service', 'full_url',
+                    'record_id', 'create_date', 'edit_date')
+    display = 'External Indicator Data Service'
 
 
 class IndicatorManager(models.Manager):
@@ -265,57 +282,92 @@ class Indicator(models.Model):
         (EVENT, 'Event')
     )
 
-    indicator_key = models.UUIDField(default=uuid.uuid4, unique=True, help_text=" "),
-    indicator_type = models.ManyToManyField(IndicatorType, blank=True, help_text=" ")
+    indicator_key = models.UUIDField(
+        default=uuid.uuid4, unique=True, help_text=" "),
+    indicator_type = models.ManyToManyField(
+        IndicatorType, blank=True, help_text=" ")
     level = models.ManyToManyField(Level, blank=True, help_text=" ")
-    objectives = models.ManyToManyField(Objective, blank=True,verbose_name="Program Objective", related_name="obj_indicator", help_text=" ")
-    strategic_objectives = models.ManyToManyField(StrategicObjective, verbose_name="Country Strategic Objective", blank=True, related_name="strat_indicator", help_text=" ")
-    name = models.CharField(verbose_name="Name", max_length=255, null=False, help_text=" ")
-    number = models.CharField(max_length=255, null=True, blank=True, help_text=" ")
-    source = models.CharField(max_length=255, null=True, blank=True, help_text=" ")
+    objectives = models.ManyToManyField(
+        Objective, blank=True, verbose_name="Program Objective", related_name="obj_indicator", help_text=" ")
+    strategic_objectives = models.ManyToManyField(
+        StrategicObjective, verbose_name="Country Strategic Objective", blank=True, related_name="strat_indicator", help_text=" ")
+    name = models.CharField(verbose_name="Name",
+                            max_length=255, null=False, help_text=" ")
+    number = models.CharField(
+        max_length=255, null=True, blank=True, help_text=" ")
+    source = models.CharField(
+        max_length=255, null=True, blank=True, help_text=" ")
     definition = models.TextField(null=True, blank=True, help_text=" ")
-    justification = models.TextField(max_length=500, null=True, blank=True, verbose_name="Rationale or Justification for Indicator", help_text=" ")
-    unit_of_measure = models.CharField(max_length=135, null=True, blank=True, verbose_name="Unit of measure*", help_text=" ")
-    disaggregation = models.ManyToManyField(DisaggregationType, blank=True, help_text=" ")
-    baseline = models.CharField(verbose_name="Baseline*", max_length=255, null=True, blank=True, help_text=" ")
-    baseline_na = models.BooleanField(verbose_name="Not applicable", default=False, help_text=" ")
-    lop_target = models.CharField(verbose_name="Life of Program (LoP) target*",max_length=255, null=True, blank=True, help_text=" ")
-    rationale_for_target = models.TextField(max_length=255, null=True, blank=True, help_text=" ")
-    target_frequency = models.IntegerField(blank=False, null=True, choices=TARGET_FREQUENCIES, verbose_name="Target frequency", help_text=" ")
-    target_frequency_custom = models.CharField(null=True, blank=True, max_length=100, verbose_name="First event name*", help_text=" ")
-    target_frequency_start = models.DateField(blank=True, null=True, auto_now=False, auto_now_add=False, verbose_name="First target period begins*", help_text=" ")
-    target_frequency_num_periods = models.IntegerField(blank=True, null=True, verbose_name="Number of target periods*", help_text=" ")
-    means_of_verification = models.CharField(max_length=255, null=True, blank=True, verbose_name="Means of Verification / Data Source", help_text=" ")
-    data_collection_method = models.CharField(max_length=255, null=True, blank=True, verbose_name="Data Collection Method", help_text=" ")
-    data_collection_frequency = models.ForeignKey(DataCollectionFrequency, null=True, blank=True, verbose_name="Frequency of Data Collection", help_text=" ", on_delete=models.SET_NULL)
-    data_points = models.TextField(max_length=500, null=True, blank=True, verbose_name="Data Points", help_text=" ")
-    responsible_person = models.CharField(max_length=255, null=True, blank=True, verbose_name="Responsible Person(s) and Team", help_text=" ")
-    method_of_analysis = models.CharField(max_length=255, null=True, blank=True, verbose_name="Method of Analysis", help_text=" ")
-    information_use = models.CharField(max_length=255, null=True, blank=True, verbose_name="Information Use", help_text=" ")
-    reporting_frequency = models.ForeignKey(ReportingFrequency, null=True, blank=True, verbose_name="Frequency of Reporting", help_text=" ", on_delete=models.SET_NULL)
-    quality_assurance = models.TextField(max_length=500, null=True, blank=True, verbose_name="Quality Assurance Measures", help_text=" ")
-    data_issues = models.TextField(max_length=500, null=True, blank=True, verbose_name="Data Issues", help_text=" ")
-    indicator_changes = models.TextField(max_length=500, null=True, blank=True, verbose_name="Changes to Indicator", help_text=" ")
-    comments = models.TextField(max_length=255, null=True, blank=True, help_text=" ")
+    justification = models.TextField(max_length=500, null=True, blank=True,
+                                     verbose_name="Rationale or Justification for Indicator", help_text=" ")
+    unit_of_measure = models.CharField(
+        max_length=135, null=True, blank=True, verbose_name="Unit of measure*", help_text=" ")
+    disaggregation = models.ManyToManyField(
+        DisaggregationType, blank=True, help_text=" ")
+    baseline = models.CharField(
+        verbose_name="Baseline*", max_length=255, null=True, blank=True, help_text=" ")
+    baseline_na = models.BooleanField(
+        verbose_name="Not applicable", default=False, help_text=" ")
+    lop_target = models.CharField(verbose_name="Life of Program (LoP) target*",
+                                  max_length=255, null=True, blank=True, help_text=" ")
+    rationale_for_target = models.TextField(
+        max_length=255, null=True, blank=True, help_text=" ")
+    target_frequency = models.IntegerField(
+        blank=False, null=True, choices=TARGET_FREQUENCIES, verbose_name="Target frequency", help_text=" ")
+    target_frequency_custom = models.CharField(
+        null=True, blank=True, max_length=100, verbose_name="First event name*", help_text=" ")
+    target_frequency_start = models.DateField(
+        blank=True, null=True, auto_now=False, auto_now_add=False, verbose_name="First target period begins*", help_text=" ")
+    target_frequency_num_periods = models.IntegerField(
+        blank=True, null=True, verbose_name="Number of target periods*", help_text=" ")
+    means_of_verification = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name="Means of Verification / Data Source", help_text=" ")
+    data_collection_method = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name="Data Collection Method", help_text=" ")
+    data_collection_frequency = models.ForeignKey(
+        DataCollectionFrequency, null=True, blank=True, verbose_name="Frequency of Data Collection", help_text=" ", on_delete=models.SET_NULL)
+    data_points = models.TextField(
+        max_length=500, null=True, blank=True, verbose_name="Data Points", help_text=" ")
+    responsible_person = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name="Responsible Person(s) and Team", help_text=" ")
+    method_of_analysis = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name="Method of Analysis", help_text=" ")
+    information_use = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name="Information Use", help_text=" ")
+    reporting_frequency = models.ForeignKey(ReportingFrequency, null=True, blank=True,
+                                            verbose_name="Frequency of Reporting", help_text=" ", on_delete=models.SET_NULL)
+    quality_assurance = models.TextField(
+        max_length=500, null=True, blank=True, verbose_name="Quality Assurance Measures", help_text=" ")
+    data_issues = models.TextField(
+        max_length=500, null=True, blank=True, verbose_name="Data Issues", help_text=" ")
+    indicator_changes = models.TextField(
+        max_length=500, null=True, blank=True, verbose_name="Changes to Indicator", help_text=" ")
+    comments = models.TextField(
+        max_length=255, null=True, blank=True, help_text=" ")
     program = models.ManyToManyField(Program, help_text=" ")
-    sector = models.ForeignKey(Sector, null=True, blank=True, help_text=" ", on_delete=models.SET_NULL)
-    key_performance_indicator = models.BooleanField("Key Performance Indicator for this program?",default=False, help_text=" ")
-    approved_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="approving_indicator", help_text=" ", on_delete=models.SET_NULL)
-    approval_submitted_by = models.ForeignKey(TolaUser, blank=True, null=True, related_name="indicator_submitted_by", help_text=" ", on_delete=models.SET_NULL)
-    external_service_record = models.ForeignKey(ExternalServiceRecord, verbose_name="External Service ID", blank=True, null=True, help_text=" ", on_delete=models.SET_NULL)
+    sector = models.ForeignKey(
+        Sector, null=True, blank=True, help_text=" ", on_delete=models.SET_NULL)
+    key_performance_indicator = models.BooleanField(
+        "Key Performance Indicator for this program?", default=False, help_text=" ")
+    approved_by = models.ForeignKey(ActivityUser, blank=True, null=True,
+                                    related_name="approving_indicator", help_text=" ", on_delete=models.SET_NULL)
+    approval_submitted_by = models.ForeignKey(
+        ActivityUser, blank=True, null=True, related_name="indicator_submitted_by", help_text=" ", on_delete=models.SET_NULL)
+    external_service_record = models.ForeignKey(
+        ExternalServiceRecord, verbose_name="External Service ID", blank=True, null=True, help_text=" ", on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True, help_text=" ")
     edit_date = models.DateTimeField(null=True, blank=True, help_text=" ")
     history = HistoricalRecords()
     notes = models.TextField(max_length=500, null=True, blank=True)
-    #optimize query for class based views etc.
+    # optimize query for class based views etc.
     objects = IndicatorManager()
 
     class Meta:
         ordering = ('create_date',)
 
     def save(self, *args, **kwargs):
-        #onsave add create date or update edit date
-        if self.create_date == None:
+        # onsave add create date or update edit date
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Indicator, self).save(*args, **kwargs)
@@ -368,22 +420,25 @@ class Indicator(models.Model):
         return self.name
 
 
-
 class PeriodicTarget(models.Model):
-    indicator = models.ForeignKey(Indicator, null=False, blank=False, on_delete=models.CASCADE)
+    indicator = models.ForeignKey(
+        Indicator, null=False, blank=False, on_delete=models.CASCADE)
     period = models.CharField(max_length=255, null=True, blank=True)
-    target = models.DecimalField(max_digits=20, decimal_places=2, default=Decimal('0.00'))
-    start_date = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
-    end_date = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
+    target = models.DecimalField(
+        max_digits=20, decimal_places=2, default=Decimal('0.00'))
+    start_date = models.DateField(
+        auto_now=False, auto_now_add=False, null=True, blank=True)
+    end_date = models.DateField(
+        auto_now=False, auto_now_add=False, null=True, blank=True)
     customsort = models.IntegerField(blank=True, null=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
         if self.indicator.target_frequency == Indicator.LOP \
-            or self.indicator.target_frequency == Indicator.EVENT \
-            or self.indicator.target_frequency == Indicator.MID_END:
-                return self.period
+                or self.indicator.target_frequency == Indicator.EVENT \
+                or self.indicator.target_frequency == Indicator.MID_END:
+            return self.period
         if self.start_date and self.end_date:
             return "%s (%s - %s)" % (self.period, self.start_date.strftime('%b %d, %Y'), self.end_date.strftime('%b %d, %Y'))
         return self.period
@@ -412,49 +467,64 @@ class PeriodicTargetAdmin(admin.ModelAdmin):
 
 class CollectedDataManager(models.Manager):
     def get_queryset(self):
-        return super(CollectedDataManager, self).get_queryset().prefetch_related('site','disaggregation_value').select_related('program','indicator','agreement','complete','evidence','tola_table')
+        return super(CollectedDataManager, self).get_queryset().prefetch_related('site', 'disaggregation_value').select_related('program', 'indicator', 'agreement', 'complete', 'evidence', 'tola_table')
 
 
 class CollectedData(models.Model):
-    data_key = models.UUIDField(default=uuid.uuid4, unique=True, help_text = " "),
-    periodic_target = models.ForeignKey(PeriodicTarget, null=True, blank=True, help_text = " ", on_delete=models.SET_NULL)
-    #targeted = models.DecimalField("Targeted", max_digits=20, decimal_places=2, default=Decimal('0.00'))
-    achieved = models.DecimalField("Achieved", max_digits=20, decimal_places=2, help_text = " ")
-    disaggregation_value = models.ManyToManyField(DisaggregationValue, blank=True, help_text = " ")
-    description = models.TextField("Remarks/comments", blank=True, null=True, help_text = " ")
-    indicator = models.ForeignKey(Indicator, help_text = " ", null=True, on_delete=models.SET_NULL)
-    agreement = models.ForeignKey(ProjectAgreement, blank=True, null=True, related_name="q_agreement2", verbose_name="Project Initiation", help_text = " ", on_delete=models.SET_NULL)
-    complete = models.ForeignKey(ProjectComplete, blank=True, null=True, related_name="q_complete2", on_delete=models.SET_NULL, help_text = " ")
-    program = models.ForeignKey(Program, blank=True, null=True, related_name="i_program", help_text=" ", on_delete=models.SET_NULL)
+    data_key = models.UUIDField(
+        default=uuid.uuid4, unique=True, help_text=" "),
+    periodic_target = models.ForeignKey(
+        PeriodicTarget, null=True, blank=True, help_text=" ", on_delete=models.SET_NULL)
+    # targeted = models.DecimalField("Targeted", max_digits=20, decimal_places=2, default=Decimal('0.00'))
+    achieved = models.DecimalField(
+        "Achieved", max_digits=20, decimal_places=2, help_text=" ")
+    disaggregation_value = models.ManyToManyField(
+        DisaggregationValue, blank=True, help_text=" ")
+    description = models.TextField(
+        "Remarks/comments", blank=True, null=True, help_text=" ")
+    indicator = models.ForeignKey(
+        Indicator, help_text=" ", null=True, on_delete=models.SET_NULL)
+    agreement = models.ForeignKey(ProjectAgreement, blank=True, null=True, related_name="q_agreement2",
+                                  verbose_name="Project Initiation", help_text=" ", on_delete=models.SET_NULL)
+    complete = models.ForeignKey(ProjectComplete, blank=True, null=True,
+                                 related_name="q_complete2", on_delete=models.SET_NULL, help_text=" ")
+    program = models.ForeignKey(Program, blank=True, null=True,
+                                related_name="i_program", help_text=" ", on_delete=models.SET_NULL)
     date_collected = models.DateTimeField(null=True, blank=True, help_text=" ")
-    comment = models.TextField("Comment/Explanation", max_length=255, blank=True, null=True, help_text = " ")
-    evidence = models.ForeignKey(Documentation, null=True, blank=True, verbose_name="Evidence Document or Link", help_text = " ", on_delete=models.SET_NULL)
-    approved_by = models.ForeignKey(TolaUser, blank=True, null=True, verbose_name="Originated By", related_name="approving_data", help_text = " ", on_delete=models.SET_NULL)
-    tola_table = models.ForeignKey(TolaTable, blank=True, null=True, help_text = " ", on_delete=models.SET_NULL)
-    update_count_tola_table = models.BooleanField("Would you like to update the achieved total with the row count from TolaTables?",default=False, help_text = " ")
-    create_date = models.DateTimeField(null=True, blank=True, help_text = " ")
-    edit_date = models.DateTimeField(null=True, blank=True, help_text = " ")
-    site = models.ManyToManyField(SiteProfile, blank=True, help_text = " ")
+    comment = models.TextField(
+        "Comment/Explanation", max_length=255, blank=True, null=True, help_text=" ")
+    evidence = models.ForeignKey(Documentation, null=True, blank=True,
+                                 verbose_name="Evidence Document or Link", help_text=" ", on_delete=models.SET_NULL)
+    approved_by = models.ForeignKey(ActivityUser, blank=True, null=True, verbose_name="Originated By",
+                                    related_name="approving_data", help_text=" ", on_delete=models.SET_NULL)
+    tola_table = models.ForeignKey(
+        ActivityTable, blank=True, null=True, help_text=" ", on_delete=models.SET_NULL)
+    update_count_tola_table = models.BooleanField(
+        "Would you like to update the achieved total with the row count from TolaTables?", default=False, help_text=" ")
+    create_date = models.DateTimeField(null=True, blank=True, help_text=" ")
+    edit_date = models.DateTimeField(null=True, blank=True, help_text=" ")
+    site = models.ManyToManyField(SiteProfile, blank=True, help_text=" ")
     history = HistoricalRecords()
     objects = CollectedDataManager()
 
     class Meta:
-        ordering = ('agreement','indicator','date_collected','create_date')
+        ordering = ('agreement', 'indicator', 'date_collected', 'create_date')
         verbose_name_plural = "Indicator Output/Outcome Collected Data"
 
-    #onsave add create date or update edit date
+    # onsave add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.utcnow()
         super(CollectedData, self).save()
 
-    #displayed in admin templates
+    # displayed in admin templates
     def __unicode__(self):
         return self.description
 
     def achieved_sum(self):
-        achieved=CollectedData.targeted.filter(indicator__id=self).sum('achieved')
+        achieved = CollectedData.targeted.filter(
+            indicator__id=self).sum('achieved')
         return achieved
 
     @property
@@ -469,6 +539,6 @@ class CollectedData(models.Model):
 
 
 class CollectedDataAdmin(admin.ModelAdmin):
-    list_display = ('indicator','date_collected', 'create_date', 'edit_date')
+    list_display = ('indicator', 'date_collected', 'create_date', 'edit_date')
     list_filter = ['indicator__program__country__country']
     display = 'Indicator Output/Outcome Collected Data'

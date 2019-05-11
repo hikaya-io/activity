@@ -3,11 +3,11 @@ from django.shortcuts import render, get_object_or_404
 
 import json
 from django.http import HttpResponseRedirect
-from indicators.models import Indicator, TolaTable, ExternalService
-from workflow.models import Program, SiteProfile, Country, Sector, TolaUser
+from indicators.models import Indicator, ActivityTable, ExternalService
+from workflow.models import Program, SiteProfile, Country, Sector, ActivityUser
 from django.shortcuts import render_to_response
 from django.contrib import messages
-from tola.util import getCountry
+from activity.util import getCountry
 
 import requests
 
@@ -27,7 +27,7 @@ def import_table(request):
     owner = request.user
     service = ExternalService.objects.get(name="TolaTables")
 
-    #add filter to get just the users tables only
+    # add filter to get just the users tables only
     user_filter_url = service.feed_url + "&owner__username=" + str(owner)
     #public_filter_url = service.feed_url + "&public=True"
     #shared_filter_url = service.feed_url + "&shared__username=" + str(owner)
@@ -37,8 +37,8 @@ def import_table(request):
 
     data = user_json
 
-    #debug the json data string uncomment dump and print
-    #data2 = json.dumps(data) # json formatted string
+    # debug the json data string uncomment dump and print
+    # data2 = json.dumps(data) # json formatted string
     #print data2
 
     if request.method == 'POST':
@@ -52,15 +52,16 @@ def import_table(request):
             url = item['data']
             remote_owner = item['owner']['username']
 
-        check_for_existence = TolaTable.objects.all().filter(name=name,owner=owner)
+        check_for_existence = ActivityTable.objects.all().filter(name=name, owner=owner)
         if check_for_existence:
             result = "error"
         else:
-            create_table = TolaTable.objects.create(name=name,owner=owner,remote_owner=remote_owner,table_id=id,url=url)
+            create_table = ActivityTable.objects.create(
+                name=name, owner=owner, remote_owner=remote_owner, table_id=id, url=url)
             create_table.save()
             result = "success"
 
-        #send result back as json
+        # send result back as json
         message = result
         return HttpResponse(json.dumps(message), content_type='application/json')
 

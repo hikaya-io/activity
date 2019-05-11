@@ -5,7 +5,9 @@ from django.db import connection
 
 app_models = apps.get_app_config('workflow').get_models()
 
-#rename the app tables from the old activitydb to workflow
+# rename the app tables from the old activitydb to workflow
+
+
 def run():
 
     print "Migration"
@@ -16,10 +18,10 @@ def run():
         temp = name.split("_")
         old_appname = "tola_activity.activitydb_" + temp[1]
 
-        sql_query = "RENAME TABLE %s TO %s" % (old_appname,new_appname)
+        sql_query = "RENAME TABLE %s TO %s" % (old_appname, new_appname)
 
         print sql_query
-        #catch any existing tables
+        # catch any existing tables
         try:
             # Renaming model from 'Foo' to 'Bar'
             with connection.cursor() as cursor:
@@ -41,7 +43,7 @@ def run():
             'quantitativeoutputs',
             'stakeholder_contact',
             'tolauser_countries'
-            ]
+        ]
 
         for name in name_list:
             old_appname = "tola_activity.activitydb_" + name
@@ -58,14 +60,17 @@ def run():
         try:
             # Renaming model from 'Foo' to 'Bar'
             with connection.cursor() as cursor:
-                cursor.execute("RENAME TABLE activitydb_beneficiary TO formlibrary_beneficiary")
-                cursor.execute("RENAME TABLE activitydb_beneficiary_distribution TO formlibrary_beneficiary_distribution")
-                cursor.execute("RENAME TABLE activitydb_beneficiary_program TO formlibrary_beneficiary_program")
-                cursor.execute("RENAME TABLE activitydb_beneficiary_training TO formlibrary_beneficiary_training")
-                cursor.execute("RENAME TABLE activitydb_trainingattendance TO formlibrary_trainingattendance")
-                cursor.execute("RENAME TABLE activitydb_distribution TO formlibrary_distribution")
+                cursor.execute(
+                    "RENAME TABLE activitydb_beneficiary TO formlibrary_beneficiary")
+                cursor.execute(
+                    "RENAME TABLE activitydb_beneficiary_distribution TO formlibrary_beneficiary_distribution")
+                cursor.execute(
+                    "RENAME TABLE activitydb_beneficiary_program TO formlibrary_beneficiary_program")
+                cursor.execute(
+                    "RENAME TABLE activitydb_beneficiary_training TO formlibrary_beneficiary_training")
+                cursor.execute(
+                    "RENAME TABLE activitydb_trainingattendance TO formlibrary_trainingattendance")
+                cursor.execute(
+                    "RENAME TABLE activitydb_distribution TO formlibrary_distribution")
         except:
             "Table Already Exists"
-
-
-
