@@ -18,13 +18,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='JupyterNotebooks',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, verbose_name=b'Notebook Name')),
-                ('very_custom_dashboard', models.CharField(blank=True, max_length=255, null=True, verbose_name=b'Specialty Custom Dashboard Links')),
-                ('file', models.FileField(blank=True, null=True, upload_to=b'media', verbose_name=b'HTML/Jupyter Nontebook File')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(
+                    max_length=255, verbose_name=b'Notebook Name')),
+                ('very_custom_dashboard', models.CharField(blank=True, max_length=255,
+                                                           null=True, verbose_name=b'Specialty Custom Dashboard Links')),
+                ('file', models.FileField(blank=True, null=True,
+                                          upload_to=b'media', verbose_name=b'HTML/Jupyter Nontebook File')),
                 ('create_date', models.DateTimeField(blank=True, null=True)),
                 ('edit_date', models.DateTimeField(blank=True, null=True)),
-                ('program', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='workflow.Program')),
+                ('program', models.ForeignKey(blank=True, null=True,
+                                              on_delete=django.db.models.deletion.CASCADE, to='workflow.Program')),
             ],
             options={
                 'ordering': ('name',),
@@ -34,8 +39,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Link',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('link', models.CharField(blank=True, max_length=200, verbose_name=b'Link to Service')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('link', models.CharField(blank=True,
+                                          max_length=200, verbose_name=b'Link to Service')),
                 ('create_date', models.DateTimeField(blank=True, null=True)),
                 ('edit_date', models.DateTimeField(blank=True, null=True)),
             ],
@@ -43,23 +50,31 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProgramLinks',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.CharField(blank=True, choices=[(b'gallery', b'Gallery'), (b'map', b'MapBox Map Layer')], max_length=255, null=True, verbose_name=b'Type of Link')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('type', models.CharField(blank=True, choices=[(b'gallery', b'Gallery'), (
+                    b'map', b'MapBox Map Layer')], max_length=255, null=True, verbose_name=b'Type of Link')),
                 ('create_date', models.DateTimeField(blank=True, null=True)),
                 ('edit_date', models.DateTimeField(blank=True, null=True)),
-                ('link', models.ForeignKey(blank=True, max_length=200, on_delete=django.db.models.deletion.CASCADE, to='customdashboard.Link')),
-                ('program', models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, to='workflow.Program')),
+                ('link', models.ForeignKey(blank=True, max_length=200,
+                                           on_delete=django.db.models.deletion.CASCADE, to='customdashboard.Link')),
+                ('program', models.ForeignKey(
+                    blank=True, on_delete=django.db.models.deletion.CASCADE, to='workflow.Program')),
             ],
         ),
         migrations.CreateModel(
             name='ProgramNarratives',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('narrative_title', models.CharField(blank=True, max_length=100, verbose_name=b'Narrative Title')),
-                ('narrative', models.TextField(blank=True, verbose_name=b'Narrative Text')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('narrative_title', models.CharField(blank=True,
+                                                     max_length=100, verbose_name=b'Narrative Title')),
+                ('narrative', models.TextField(
+                    blank=True, verbose_name=b'Narrative Text')),
                 ('create_date', models.DateTimeField(blank=True, null=True)),
                 ('edit_date', models.DateTimeField(blank=True, null=True)),
-                ('program', models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, to='workflow.Program')),
+                ('program', models.ForeignKey(
+                    blank=True, on_delete=django.db.models.deletion.CASCADE, to='workflow.Program')),
             ],
         ),
     ]

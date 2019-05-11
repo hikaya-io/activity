@@ -18,12 +18,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ComponentDataSource',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('data_name', models.CharField(blank=True, max_length=255, verbose_name='Name of Source Data')),
-                ('data_type', models.CharField(blank=True, help_text='Is this data photos? Text? Numerical data?', max_length=200, null=True, verbose_name='Data Type')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('data_name', models.CharField(blank=True,
+                                               max_length=255, verbose_name='Name of Source Data')),
+                ('data_type', models.CharField(blank=True, help_text='Is this data photos? Text? Numerical data?',
+                                               max_length=200, null=True, verbose_name='Data Type')),
                 ('data_source', models.URLField(blank=True, null=True)),
-                ('data_source_type', models.CharField(blank=True, max_length=200, null=True, verbose_name='Data Source Type')),
-                ('data_filter_key', models.CharField(blank=True, max_length=255, verbose_name='Key Term')),
+                ('data_source_type', models.CharField(blank=True,
+                                                      max_length=200, null=True, verbose_name='Data Source Type')),
+                ('data_filter_key', models.CharField(
+                    blank=True, max_length=255, verbose_name='Key Term')),
                 ('create_date', models.DateTimeField(blank=True, null=True)),
                 ('edit_date', models.DateTimeField(blank=True, null=True)),
             ],
@@ -34,12 +39,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CustomDashboard',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('dashboard_name', models.CharField(blank=True, max_length=255, verbose_name='Custom Dashboard Name')),
-                ('dashboard_description', models.TextField(blank=True, help_text='What does this custom dashboard display to the user?', null=True, verbose_name='Brief Description')),
-                ('is_public', models.BooleanField(default=False, verbose_name='External Public Dashboard')),
-                ('color_palette', models.CharField(default='bright', max_length=255, verbose_name='Color Scheme')),
-                ('component_map', models.TextField(blank=True, null=True, verbose_name='Dashboard Layout Dictionary')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('dashboard_name', models.CharField(blank=True,
+                                                    max_length=255, verbose_name='Custom Dashboard Name')),
+                ('dashboard_description', models.TextField(
+                    blank=True, help_text='What does this custom dashboard display to the user?', null=True, verbose_name='Brief Description')),
+                ('is_public', models.BooleanField(default=False,
+                                                  verbose_name='External Public Dashboard')),
+                ('color_palette', models.CharField(default='bright',
+                                                   max_length=255, verbose_name='Color Scheme')),
+                ('component_map', models.TextField(blank=True,
+                                                   null=True, verbose_name='Dashboard Layout Dictionary')),
                 ('create_date', models.DateTimeField(blank=True, null=True)),
                 ('edit_date', models.DateTimeField(blank=True, null=True)),
             ],
@@ -50,16 +61,24 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DashboardComponent',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('component_name', models.CharField(blank=True, max_length=255, verbose_name='Component Name')),
-                ('component_description', models.TextField(blank=True, help_text='What does this component do?', null=True, verbose_name='Brief Description')),
-                ('is_public', models.BooleanField(default=False, verbose_name='External Public Dashboard')),
-                ('component_type', models.CharField(blank=True, max_length=255, verbose_name='Component Type')),
-                ('data_required', models.CharField(max_length=255, verbose_name='Required Data Type')),
-                ('data_map', models.TextField(blank=True, null=True, verbose_name='Data Mapping Dictionary')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('component_name', models.CharField(blank=True,
+                                                    max_length=255, verbose_name='Component Name')),
+                ('component_description', models.TextField(
+                    blank=True, help_text='What does this component do?', null=True, verbose_name='Brief Description')),
+                ('is_public', models.BooleanField(default=False,
+                                                  verbose_name='External Public Dashboard')),
+                ('component_type', models.CharField(blank=True,
+                                                    max_length=255, verbose_name='Component Type')),
+                ('data_required', models.CharField(
+                    max_length=255, verbose_name='Required Data Type')),
+                ('data_map', models.TextField(blank=True, null=True,
+                                              verbose_name='Data Mapping Dictionary')),
                 ('create_date', models.DateTimeField(blank=True, null=True)),
                 ('edit_date', models.DateTimeField(blank=True, null=True)),
-                ('data_sources', models.ManyToManyField(related_name='datasourceset', to='configurabledashboard.ComponentDataSource')),
+                ('data_sources', models.ManyToManyField(
+                    related_name='datasourceset', to='configurabledashboard.ComponentDataSource')),
             ],
             options={
                 'ordering': ('component_name',),
@@ -68,13 +87,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DashboardTheme',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('theme_name', models.CharField(blank=True, max_length=255, verbose_name='Dashboard Theme Name')),
-                ('theme_description', models.TextField(blank=True, help_text='What is the focus of this theme?', null=True, verbose_name='Brief Description')),
-                ('theme_template', models.CharField(blank=True, max_length=255, verbose_name='Template')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
+                ('theme_name', models.CharField(blank=True,
+                                                max_length=255, verbose_name='Dashboard Theme Name')),
+                ('theme_description', models.TextField(
+                    blank=True, help_text='What is the focus of this theme?', null=True, verbose_name='Brief Description')),
+                ('theme_template', models.CharField(
+                    blank=True, max_length=255, verbose_name='Template')),
                 ('is_public', models.BooleanField(default=False)),
                 ('number_of_components', models.IntegerField(default=1)),
-                ('layout_dictionary', models.TextField(blank=True, null=True, verbose_name='Dashboard Layout Dictionary')),
+                ('layout_dictionary', models.TextField(blank=True,
+                                                       null=True, verbose_name='Dashboard Layout Dictionary')),
                 ('create_date', models.DateTimeField(blank=True, null=True)),
                 ('edit_date', models.DateTimeField(blank=True, null=True)),
             ],
@@ -85,16 +109,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='customdashboard',
             name='components',
-            field=models.ManyToManyField(blank=True, related_name='componentset', to='configurabledashboard.DashboardComponent'),
+            field=models.ManyToManyField(
+                blank=True, related_name='componentset', to='configurabledashboard.DashboardComponent'),
         ),
         migrations.AddField(
             model_name='customdashboard',
             name='program',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='dashboard_program', to='workflow.Program', verbose_name='Program'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='dashboard_program', to='workflow.Program', verbose_name='Program'),
         ),
         migrations.AddField(
             model_name='customdashboard',
             name='theme',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='theme', to='configurabledashboard.DashboardTheme'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='theme', to='configurabledashboard.DashboardTheme'),
         ),
     ]

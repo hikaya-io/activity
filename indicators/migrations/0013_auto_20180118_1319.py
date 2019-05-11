@@ -15,11 +15,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='historicalindicator',
             name='baseline_na',
-            field=models.BooleanField(default=False, help_text=b' ', verbose_name=b'Not applicable'),
+            field=models.BooleanField(
+                default=False, help_text=b' ', verbose_name=b'Not applicable'),
         ),
         migrations.AddField(
             model_name='indicator',
             name='baseline_na',
-            field=models.BooleanField(default=False, help_text=b' ', verbose_name=b'Not applicable'),
+            field=models.BooleanField(
+                default=False, help_text=b' ', verbose_name=b'Not applicable'),
         ),
     ]

@@ -1,10 +1,11 @@
 """Common settings and globals."""
 
+import os
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
 
-########## PATH CONFIGURATION
-#BASE DIR
+# PATH CONFIGURATION
+# BASE DIR
 #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Absolute filesystem path to the Django project directory:
@@ -19,19 +20,19 @@ SITE_NAME = basename(DJANGO_ROOT)
 # Add our project to our pythonpath, this way we don't need to type our project
 # name in our dotted import paths:
 path.append(DJANGO_ROOT)
-########## END PATH CONFIGURATION
+# END PATH CONFIGURATION
 
 
-########## DEBUG CONFIGURATION
+# DEBUG CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = False
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-debug
 TEMPLATE_DEBUG = DEBUG
-########## END DEBUG CONFIGURATION
+# END DEBUG CONFIGURATION
 
 
-########## MANAGER CONFIGURATION
+# MANAGER CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
     ('Your Name', 'your_email@example.com'),
@@ -39,10 +40,10 @@ ADMINS = (
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
-########## END MANAGER CONFIGURATION
+# END MANAGER CONFIGURATION
 
 
-########## DATABASE CONFIGURATION
+# DATABASE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     'default': {
@@ -54,10 +55,10 @@ DATABASES = {
         'PORT': '',
     }
 }
-########## END DATABASE CONFIGURATION
+# END DATABASE CONFIGURATION
 
 
-########## GENERAL CONFIGURATION
+# GENERAL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
 TIME_ZONE = 'America/Los_Angeles'
 
@@ -77,19 +78,19 @@ USE_L10N = False
 USE_TZ = True
 
 DATE_FORMAT = 'Y-n-d'
-########## END GENERAL CONFIGURATION
+# END GENERAL CONFIGURATION
 
 
-########## MEDIA CONFIGURATION
+# MEDIA CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-root
 MEDIA_ROOT = normpath(join(SITE_ROOT, 'media'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
-########## END MEDIA CONFIGURATION
+# END MEDIA CONFIGURATION
 
 
-########## STATIC FILE CONFIGURATION
+# STATIC FILE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = normpath(join(SITE_ROOT, 'assets'))
 
@@ -107,41 +108,41 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
-########## END STATIC FILE CONFIGURATION
+# END STATIC FILE CONFIGURATION
 
 
-########## SECRET CONFIGURATION
+# SECRET CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # Note: This key should only be used for development and testing.
 SECRET_KEY = r"!0^+)=t*ly6ycprf9@kfw$6fsjd0xoh#pa*2erx1m*lp5k9ko7"
-########## END SECRET CONFIGURATION
+# END SECRET CONFIGURATION
 
 
-########## SITE CONFIGURATION
+# SITE CONFIGURATION
 # Hosts/domain names that are valid for this site
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['127.0.0.1']
-########## END SITE CONFIGURATION
+# END SITE CONFIGURATION
 
 
-########## FIXTURE CONFIGURATION
+# FIXTURE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-FIXTURE_DIRS
 FIXTURE_DIRS = (
     normpath(join(SITE_ROOT, 'fixtures')),
 )
-########## END FIXTURE CONFIGURATION
+# END FIXTURE CONFIGURATION
 
 
-########## TEMPLATE CONFIGURATION
+# TEMPLATE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        #'APP_DIRS': True,
+        # 'APP_DIRS': True,
         'DIRS': [
             normpath(join(SITE_ROOT, 'templates')),
-            normpath(join(SITE_ROOT, 'customdashboard','templates')),
+            normpath(join(SITE_ROOT, 'customdashboard', 'templates')),
         ],
         'OPTIONS': {
             'context_processors': [
@@ -165,10 +166,10 @@ TEMPLATES = [
     },
 ]
 
-########## END TEMPLATE CONFIGURATION
+# END TEMPLATE CONFIGURATION
 
 
-########## MIDDLEWARE CONFIGURATION
+# MIDDLEWARE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#middleware-classes
 MIDDLEWARE = (
     # Default Django middleware.
@@ -182,12 +183,12 @@ MIDDLEWARE = (
     'simple_history.middleware.HistoryRequestMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'tola.middleware.TimingMiddleware'
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
-########## END MIDDLEWARE CONFIGURATION
+# END MIDDLEWARE CONFIGURATION
 
 
-########## REST CONFIGURATION
+# REST CONFIGURATION
 # Add Pagination to Rest Framework lists
 REST_FRAMEWORK = {
     'PAGINATE_BY': 10,
@@ -201,16 +202,16 @@ REST_FRAMEWORK = {
     )
 }
 
-########## END REST CONFIGURATION
+# END REST CONFIGURATION
 
 
-########## URL CONFIGURATION
+# URL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
 ROOT_URLCONF = '%s.urls' % SITE_NAME
-########## END URL CONFIGURATION
+# END URL CONFIGURATION
 
 
-########## APP CONFIGURATION
+# APP CONFIGURATION
 DJANGO_APPS = (
     # Default Django apps:
     'django.contrib.auth',
@@ -225,7 +226,7 @@ DJANGO_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'social_django',
-    #'social.apps.django_app.default'
+    # 'social.apps.django_app.default'
 )
 
 THIRD_PARTY_APPS = (
@@ -252,7 +253,7 @@ LOCAL_APPS = (
     'feed',
     'indicators',
     'customdashboard',
-    #'configurabledashboard',
+    # 'configurabledashboard',
     'tables',
     'reports',
     'adminreport',
@@ -260,17 +261,17 @@ LOCAL_APPS = (
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
-########## END APP CONFIGURATION
+# END APP CONFIGURATION
 
 ####### AUTHENTICATION BAKEND CONFIG ##################
 # https://github.com/django/django/blob/master/django/contrib/auth/backends.py
 AUTHENTICATION_BACKENDS = (
-    #'social_core.backends.open_id.OpenIdAuth',
-    #'social_core.backends.google.GoogleOpenId',
+    # 'social_core.backends.open_id.OpenIdAuth',
+    # 'social_core.backends.google.GoogleOpenId',
     'social_core.backends.google.GoogleOAuth2',
-    #'social_core.backends.google.GoogleOAuth',
-    #'social_core.backends.twitter.TwitterOAuth',
-    #'social_core.backends.yahoo.YahooOpenId',
+    # 'social_core.backends.google.GoogleOAuth',
+    # 'social_core.backends.twitter.TwitterOAuth',
+    # 'social_core.backends.yahoo.YahooOpenId',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -294,7 +295,7 @@ LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
-########## LOGGING CONFIGURATION
+# LOGGING CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#logging
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -302,12 +303,11 @@ SOCIAL_AUTH_URL_NAMESPACE = 'social'
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 
-import os
 PROJECT_PATH = dirname(dirname(dirname(abspath(__file__))))
 path.append(PROJECT_PATH)
 
 
-#LOGGING = {
+# LOGGING = {
 #    'version': 1,
 #    'disable_existing_loggers': False,
 #    'filters': {
@@ -329,7 +329,7 @@ path.append(PROJECT_PATH)
 #            'propagate': True,
 #        },
 #    }
-#}
+# }
 
 
 LOGGING = {
@@ -351,22 +351,22 @@ LOGGING = {
     },
 }
 
-########## END LOGGING CONFIGURATION
+# END LOGGING CONFIGURATION
 
 
-########## WSGI CONFIGURATION
+# WSGI CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
-########## END WSGI CONFIGURATION
+# END WSGI CONFIGURATION
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-#Report Builder
+# Report Builder
 # REPORT_BUILDER_INCLUDE = []
 # REPORT_BUILDER_EXCLUDE = ['user','groups','read','template','silo','readtoken']
 # REPORT_BUILDER_ASYNC_REPORT = False
 
-#wysiwyg settings
+# wysiwyg settings
 DJANGO_WYSIWYG_FLAVOR = "ckeditor"
 CKEDITOR_UPLOAD_PATH = "media/uploads/"
 
@@ -380,7 +380,5 @@ CKEDITOR_CONFIGS = {
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-GOOGLE_ANALYTICS_PROPERTY_ID = None # replaced in private settings file
-GOOGLE_ANALYTICS_DOMAIN = 'example.org' # replaced in private settings file
-
-
+GOOGLE_ANALYTICS_PROPERTY_ID = None  # replaced in private settings file
+GOOGLE_ANALYTICS_DOMAIN = 'example.org'  # replaced in private settings file

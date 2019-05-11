@@ -24,19 +24,21 @@ def getAllData():
             get_user = None
         print cosign_user.user
         try:
-            get_country = Country.objects.get(code=cosign_user.country.iso_two_letters_code)
+            get_country = Country.objects.get(
+                code=cosign_user.country.iso_two_letters_code)
         except Country.DoesNotExist:
             get_country = None
         if get_user:
             print "user exists"
         else:
             get_user = TolaUser.objects.create(
-            title=cosign_user.title,
-            name=cosign_user.name,
-            user=cosign_user.user,
-            modified_by=cosign_user.modified_by,
-            country=get_country
+                title=cosign_user.title,
+                name=cosign_user.name,
+                user=cosign_user.user,
+                modified_by=cosign_user.modified_by,
+                country=get_country
             )
             get_user.save()
+
 
 getAllData()

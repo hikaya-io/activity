@@ -16,5 +16,3 @@ class DatePicker(forms.DateInput):
     template_name = 'datepicker.html'
 
     DateInput = partial(forms.DateInput, {'class': 'datepicker'})
-
-

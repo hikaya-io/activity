@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.db import migrations
 from django.db.models import Sum
 
+
 def moveTargetedToPeriodicTargets(apps, schema_editor):
     CollectedData = apps.get_model("indicators", "CollectedData")
     PeriodicTarget = apps.get_model("indicators", "PeriodicTarget")
@@ -29,7 +30,8 @@ def moveTargetedToPeriodicTargets(apps, schema_editor):
     """
     for ind in Indicator.objects.all():
         #sum_targets = ind.collecteddata_set.all().annotate(targets_sum=Sum('achieved'))[0].targets_sum
-        targets_sum = ind.collecteddata_set.all().aggregate(total_sum=Sum('targeted'))['total_sum']
+        targets_sum = ind.collecteddata_set.all().aggregate(
+            total_sum=Sum('targeted'))['total_sum']
         if not targets_sum:
             targets_sum = 0
         pt = PeriodicTarget.objects.create(period="Temp label for periodic target",
@@ -37,7 +39,6 @@ def moveTargetedToPeriodicTargets(apps, schema_editor):
                                            indicator=ind,
                                            create_date=timezone.now())
         ind.collecteddata_set.all().update(periodic_target=pt)
-
 
 
 # https://github.com/toladata/TolaActivity/blob/new_dev/workflow/migrations/0013_auto_20170406_1012.py

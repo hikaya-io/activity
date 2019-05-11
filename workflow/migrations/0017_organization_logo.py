@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='organization',
             name='logo',
-            field=models.FileField(blank=True, null=True, upload_to='static/img/', verbose_name='Your Organization Logo'),
+            field=models.FileField(
+                blank=True, null=True, upload_to='static/img/', verbose_name='Your Organization Logo'),
         ),
     ]

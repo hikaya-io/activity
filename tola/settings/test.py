@@ -1,7 +1,8 @@
+from os.path import join, normpath
 from base import *
 
 
-########## IN-MEMORY TEST DATABASE
+# IN-MEMORY TEST DATABASE
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -14,12 +15,10 @@ DATABASES = {
 }
 """Development settings and globals."""
 
-from os.path import join, normpath
-
 
 #from mongoengine import connect
 
-########## MANAGER CONFIGURATION
+# MANAGER CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
     ('test', 'test@test.com'),
@@ -27,24 +26,24 @@ ADMINS = (
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
-########## END MANAGER CONFIGURATION
+# END MANAGER CONFIGURATION
 
 
-########## DEBUG CONFIGURATION
+# DEBUG CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = True
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-debug
 TEMPLATE_DEBUG = DEBUG
-########## END DEBUG CONFIGURATION
+# END DEBUG CONFIGURATION
 
 
-########## EMAIL CONFIGURATION
+# EMAIL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-########## END EMAIL CONFIGURATION
+# END EMAIL CONFIGURATION
 
-########## EMAIL SETTINGS
+# EMAIL SETTINGS
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
@@ -56,14 +55,14 @@ SERVER_EMAIL = "test@test.com"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #DEFAULT_TO_EMAIL = 'to email'
 
-########## END EMAIL SETTINGS
+# END EMAIL SETTINGS
 
 
-########## MongoDB Connect
+# MongoDB Connect
 
-#connect('feeds')
+# connect('feeds')
 
-########## END DATABASE CONFIGURATION
+# END DATABASE CONFIGURATION
 
 ########## GOOGLE CLIENT CONFIG ###########
 GOOGLE_STEP2_URI = ''
@@ -71,16 +70,11 @@ GOOGLE_CLIENT_ID = ''
 GOOGLE_CLIENT_SECRET = ''
 
 
-########## CACHE CONFIGURATION
+# CACHE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#caches
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
-########## END CACHE CONFIGURATION
-
-
-
-
-
+# END CACHE CONFIGURATION

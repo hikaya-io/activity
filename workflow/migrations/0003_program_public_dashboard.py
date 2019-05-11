@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='program',
             name='public_dashboard',
-            field=models.BooleanField(default=False, verbose_name='Enable Public Dashboard'),
+            field=models.BooleanField(
+                default=False, verbose_name='Enable Public Dashboard'),
         ),
     ]

@@ -4,12 +4,12 @@
 from os import environ
 
 from .base import *
+from django.core.exceptions import ImproperlyConfigured
 
 DEBUG = True
 
 # Normally you should not import ANYTHING from Django directly
 # into your settings, but ImproperlyConfigured is an exception.
-from django.core.exceptions import ImproperlyConfigured
 
 
 def get_env_setting(setting):
@@ -20,12 +20,13 @@ def get_env_setting(setting):
         error_msg = "Set the %s env variable" % setting
         raise ImproperlyConfigured(error_msg)
 
-########## HOST CONFIGURATION
+
+'''HOST CONFIGURATION'''
 # See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production
 ALLOWED_HOSTS = []
-########## END HOST CONFIGURATION
+'''END HOST CONFIGURATION'''
 
-########## EMAIL CONFIGURATION
+'''EMAIL CONFIGURATION'''
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -49,35 +50,36 @@ EMAIL_USE_TLS = True
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = EMAIL_HOST_USER
-########## END EMAIL CONFIGURATION
+'''END EMAIL CONFIGURATION'''
 
-########## DATABASE CONFIGURATION
+'''DATABASE CONFIGURATION'''
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'tola_base',
-        'USER': 'root',
-        'PASSWORD': 'notapassword',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('ACTIVITY_CE_DB_NAME', ''),
+        'USER': os.environ.get('ACTIVITY_CE_DB_USER', ''),
+        'PASSWORD': os.environ.get('ACTIVITY_CE_DB_PASSWORD', ''),
+        'HOST': os.environ.get('ACTIVITY_CE_DB_HOST', ''),
+        'PORT': os.environ.get('ACTIVITY_CE_DB_PORT', ''),
     }
 }
-########## END DATABASE CONFIGURATION
+'''END DATABASE CONFIGURATION'''
 
 
-########## CACHE CONFIGURATION
+'''CACHE CONFIGURATION'''
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#caches
-CACHES = { "default":
-   {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}
+CACHES = {
+    "default":
+        {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+        }
 }
+'''END CACHE CONFIGURATION'''
 
-########## END CACHE CONFIGURATION
-
-
-########## SECRET CONFIGURATION
+'''SECRET CONFIGURATION'''
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # SECRET_KEY = get_env_setting('SECRET_KEY')
-########## END SECRET CONFIGURATION
+'''END SECRET CONFIGURATION'''
 
 REPORT_SERVER = False
 OFFLINE_MODE = False

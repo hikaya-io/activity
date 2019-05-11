@@ -14,36 +14,43 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='beneficiary',
             name='site',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.SiteProfile'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.SiteProfile'),
         ),
         migrations.AlterField(
             model_name='distribution',
             name='initiation',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.ProjectAgreement', verbose_name='Project Initiation'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                    to='workflow.ProjectAgreement', verbose_name='Project Initiation'),
         ),
         migrations.AlterField(
             model_name='distribution',
             name='office_code',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Office'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Office'),
         ),
         migrations.AlterField(
             model_name='distribution',
             name='program',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
         ),
         migrations.AlterField(
             model_name='distribution',
             name='province',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Province'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Province'),
         ),
         migrations.AlterField(
             model_name='trainingattendance',
             name='program',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
         ),
         migrations.AlterField(
             model_name='trainingattendance',
             name='project_agreement',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.ProjectAgreement', verbose_name='Project Initiation'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                    to='workflow.ProjectAgreement', verbose_name='Project Initiation'),
         ),
     ]

@@ -14,42 +14,50 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='jupyternotebooks',
             name='file',
-            field=models.FileField(blank=True, null=True, upload_to='media', verbose_name='HTML/Jupyter Nontebook File'),
+            field=models.FileField(
+                blank=True, null=True, upload_to='media', verbose_name='HTML/Jupyter Nontebook File'),
         ),
         migrations.AlterField(
             model_name='jupyternotebooks',
             name='name',
-            field=models.CharField(max_length=255, verbose_name='Notebook Name'),
+            field=models.CharField(
+                max_length=255, verbose_name='Notebook Name'),
         ),
         migrations.AlterField(
             model_name='jupyternotebooks',
             name='program',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
         ),
         migrations.AlterField(
             model_name='jupyternotebooks',
             name='very_custom_dashboard',
-            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Specialty Custom Dashboard Links'),
+            field=models.CharField(blank=True, max_length=255, null=True,
+                                   verbose_name='Specialty Custom Dashboard Links'),
         ),
         migrations.AlterField(
             model_name='link',
             name='link',
-            field=models.CharField(blank=True, max_length=200, verbose_name='Link to Service'),
+            field=models.CharField(
+                blank=True, max_length=200, verbose_name='Link to Service'),
         ),
         migrations.AlterField(
             model_name='programlinks',
             name='link',
-            field=models.ForeignKey(blank=True, max_length=200, null=True, on_delete=django.db.models.deletion.SET_NULL, to='customdashboard.Link'),
+            field=models.ForeignKey(blank=True, max_length=200, null=True,
+                                    on_delete=django.db.models.deletion.SET_NULL, to='customdashboard.Link'),
         ),
         migrations.AlterField(
             model_name='programlinks',
             name='program',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
         ),
         migrations.AlterField(
             model_name='programlinks',
             name='type',
-            field=models.CharField(blank=True, choices=[('gallery', 'Gallery'), ('map', 'MapBox Map Layer')], max_length=255, null=True, verbose_name='Type of Link'),
+            field=models.CharField(blank=True, choices=[('gallery', 'Gallery'), (
+                'map', 'MapBox Map Layer')], max_length=255, null=True, verbose_name='Type of Link'),
         ),
         migrations.AlterField(
             model_name='programnarratives',
@@ -59,11 +67,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='programnarratives',
             name='narrative_title',
-            field=models.CharField(blank=True, max_length=100, verbose_name='Narrative Title'),
+            field=models.CharField(
+                blank=True, max_length=100, verbose_name='Narrative Title'),
         ),
         migrations.AlterField(
             model_name='programnarratives',
             name='program',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
         ),
     ]

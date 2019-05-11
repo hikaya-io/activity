@@ -13,7 +13,7 @@ class CustomDashboardCreateForm(forms.ModelForm):
         exclude = ['create_date', 'edit_date', 'component_map', 'components']
 
     def __init__(self, *args, **kwargs):
-        #get the user object from request to check permissions
+        # get the user object from request to check permissions
         self.request = kwargs.pop('request')
         self.helper = FormHelper()
         self.helper.form_method = 'post'
@@ -32,16 +32,17 @@ class CustomDashboardCreateForm(forms.ModelForm):
         # Commit is already set to false
         obj = super(CustomDashboardCreateForm, self).save(*args, **kwargs)
         return obj
-        
+
+
 class CustomDashboardModalForm(forms.ModelForm):
-    
+
     class Meta:
         model = CustomDashboard
         exclude = ['create_date', 'edit_date', 'component_map', 'components']
 
     def __init__(self, *args, **kwargs):
 
-        #get the user object from request to check permissions
+        # get the user object from request to check permissions
         self.request = kwargs.pop("request")
         self.helper = FormHelper()
         self.helper.form_method = 'post'
@@ -54,18 +55,19 @@ class CustomDashboardModalForm(forms.ModelForm):
         self.helper.html5_required = True
         self.helper.form_tag = True
         self.helper.add_input(Submit('submit', 'Save'))
-        
+
         super(CustomDashboardModalForm, self).__init__(*args, **kwargs)
-   
+
+
 class CustomDashboardMapForm(forms.ModelForm):
-    
+
     class Meta:
         model = CustomDashboard
         exclude = ['create_date', 'edit_date']
 
     def __init__(self, *args, **kwargs):
 
-        #get the user object from request to check permissions
+        # get the user object from request to check permissions
         self.request = kwargs.pop("request")
         self.helper = FormHelper()
         self.helper.form_method = 'post'
@@ -77,20 +79,21 @@ class CustomDashboardMapForm(forms.ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.form_tag = False
-        
+
         super(CustomDashboardMapForm, self).__init__(*args, **kwargs)
-   
+
+
 class CustomDashboardForm(forms.ModelForm):
 
     class Meta:
         model = CustomDashboard
         exclude = ['create_date', 'edit_date']
 
-    # components_offered = forms.ModelChoiceField(queryset=getDashboardComponents.filter(component_type=value)) 
+    # components_offered = forms.ModelChoiceField(queryset=getDashboardComponents.filter(component_type=value))
 
     def __init__(self, *args, **kwargs):
 
-        #get the user object from request to check permissions
+        # get the user object from request to check permissions
         self.request = kwargs.pop("request")
         self.helper = FormHelper()
         self.helper.form_method = 'post'
@@ -108,7 +111,7 @@ class CustomDashboardForm(forms.ModelForm):
             TabHolder(
                 Tab('Build Your View',
                     Fieldset("Step 1: View Properties",
-                        HTML("""
+                             HTML("""
                             <div class='panel panel-default'>
                               <!-- Default panel contents -->
                               {% if getCustomDashboard %}
@@ -136,11 +139,11 @@ class CustomDashboardForm(forms.ModelForm):
                               {% endif %}
                             </div>
                             """),
-                        ),
+                             ),
                     ),
                 Tab('Add Components',
                     Fieldset("Step 2: Place Components on Your Page",
-                        HTML("""
+                             HTML("""
                             <div class='panel panel-default'>
                                 <div class='panel panel-heading'>Layout For Your Page:</div>
                                 <div class='panel panel-body'>
@@ -193,12 +196,13 @@ class CustomDashboardForm(forms.ModelForm):
                                 </div>
                             </div>
                             """),
-                        ),
-                        PrependedAppendedText('forms.ModelChoiceField(queryset=getDashboardComponents.filter(component_type=value)'),
+                             ),
+                    PrependedAppendedText(
+                        'forms.ModelChoiceField(queryset=getDashboardComponents.filter(component_type=value)'),
                     ),
                 Tab('Add Data Sources',
                     Fieldset("Step 3: Add Data Sources for Components",
-                        HTML("""
+                             HTML("""
                             <div class='panel panel-default'>
                                 <div class='panel panel-heading'>Assigned Data Sources</div>
                                 <div class='panel panel-body'>Layout Image for your Theme Goes Here<br><br>
@@ -287,11 +291,11 @@ class CustomDashboardForm(forms.ModelForm):
                                 </div>
                             </div>
                             """),
-                        ),
+                             ),
                     ),
                 Tab('Assign Data',
                     Fieldset("Step 4: Assign Data Values",
-                        HTML("""
+                             HTML("""
                             <div class='panel panel-default'>
                                 <table class="table">
                                     <tr>
@@ -327,11 +331,11 @@ class CustomDashboardForm(forms.ModelForm):
                                 </div>
                             </div>
                             """),
-                        ),
+                             ),
                     ),
                 Tab('Preview & Submit',
                     Fieldset("Step 5: Preview & Finalize ",
-                        HTML("""
+                             HTML("""
                             <div class='panel panel-body'>
                                 {% if getCustomDashboard %}
                                     <a class="btn btn-info" data-toggle="modal" data-target="#myPreviewModal" aria-hidden="true" href="/workflow/custom_dashboard_preview/{{ pk }}">Preview Dashboard</a>
@@ -352,14 +356,14 @@ class CustomDashboardForm(forms.ModelForm):
                                 </div>
                             </div>
                             """),
-                        ),
-                        FormActions(
-                            Submit('submit', 'Save', css_class='btn-default'),
-                            Reset('reset', 'Reset', css_class='btn-warning'),
-                        ),
+                             ),
+                    FormActions(
+                        Submit('submit', 'Save', css_class='btn-default'),
+                        Reset('reset', 'Reset', css_class='btn-warning'),
                     ),
-                ),
-                HTML("""<br/>"""),
+                    ),
+            ),
+            HTML("""<br/>"""),
 
         )
 
@@ -370,12 +374,13 @@ class CustomDashboardForm(forms.ModelForm):
     # )
         super(CustomDashboardForm, self).__init__(*args, **kwargs)
 
-        #here go the filters and overrides
+        # here go the filters and overrides
+
 
 class CustomDashboardDetailForm(forms.ModelForm):
     class Meta:
         model = CustomDashboard
-        exclude = ['create_date', 'edit_date','global_item']
+        exclude = ['create_date', 'edit_date', 'global_item']
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
@@ -390,7 +395,9 @@ class CustomDashboardDetailForm(forms.ModelForm):
 
         super(CustomDashbaordDetailForm, self).__init__(*args, **kwargs)
 
-## Dashboard Theme Form Classes
+# Dashboard Theme Form Classes
+
+
 class DashboardThemeCreateForm(forms.ModelForm):
 
     class Meta:
@@ -415,6 +422,7 @@ class DashboardThemeCreateForm(forms.ModelForm):
         obj = super(DashboardThemeCreateForm, self).save(*args, **kwargs)
         return obj
 
+
 class DashboardThemeForm(forms.ModelForm):
 
     class Meta:
@@ -423,7 +431,7 @@ class DashboardThemeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
 
-        #get the user object from request to check permissions
+        # get the user object from request to check permissions
         self.request = kwargs.pop('request')
         self.helper = FormHelper()
         self.helper.form_method = 'post'
@@ -440,12 +448,14 @@ class DashboardThemeForm(forms.ModelForm):
 
         super(DashboardThemeForm, self).__init__(*args, **kwargs)
 
-## --------Dashboard Component Form Classes-------------
+# --------Dashboard Component Form Classes-------------
+
+
 class DashboardComponentCreateForm(forms.ModelForm):
 
     class Meta:
         model = DashboardComponent
-        exclude = ['create_date', 'edit_date','data_sources']
+        exclude = ['create_date', 'edit_date', 'data_sources']
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
@@ -459,12 +469,12 @@ class DashboardComponentCreateForm(forms.ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.form_tag = False
-        self.helper.form_id = "new-component"         
+        self.helper.form_id = "new-component"
         self.helper.layout = Layout(
 
             HTML("""<br/>"""),
 
-                'component_name' ,'component_description','is_public','component_type','data_required','data_sources',
+            'component_name', 'component_description', 'is_public', 'component_type', 'data_required', 'data_sources',
 
         )
 
@@ -475,6 +485,7 @@ class DashboardComponentCreateForm(forms.ModelForm):
         obj = super(DashboardComponentCreateForm, self).save(*args, **kwargs)
         return obj
 
+
 class DashboardComponentForm(forms.ModelForm):
 
     class Meta:
@@ -483,7 +494,7 @@ class DashboardComponentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
 
-        #get the user object from request to check permissions
+        # get the user object from request to check permissions
         self.request = kwargs.pop("request")
         self.helper = FormHelper()
         self.helper.form_method = 'post'
@@ -499,8 +510,9 @@ class DashboardComponentForm(forms.ModelForm):
 
         super(DashboardComponentForm, self).__init__(*args, **kwargs)
 
+
 class DashboardComponentUpdateForm(forms.ModelForm):
-    
+
     class Meta:
         model = DashboardComponent
         exclude = ['create_date', 'edit_date']
@@ -519,10 +531,12 @@ class DashboardComponentUpdateForm(forms.ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.form_tag = False
-        
+
         super(DashboardComponentUpdateForm, self).__init__(*args, **kwargs)
 
-## --------Data Source Form Classes-------------
+# --------Data Source Form Classes-------------
+
+
 class ComponentDataSourceCreateForm(forms.ModelForm):
 
     class Meta:
@@ -540,13 +554,14 @@ class ComponentDataSourceCreateForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.form_tag = False   
-        self.helper.form_id = "data-source" 
+        self.helper.form_tag = False
+        self.helper.form_id = "data-source"
         super(ComponentDataSourceCreateForm, self).__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         obj = super(ComponentDataSourceCreateForm, self).save(*args, **kwargs)
         return obj
+
 
 class ComponentDataSourceForm(forms.ModelForm):
 
@@ -556,7 +571,7 @@ class ComponentDataSourceForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
 
-        #get the user object from request to check permissions
+        # get the user object from request to check permissions
         self.request = kwargs.pop('request')
         self.helper = FormHelper()
         self.helper.form_method = 'post'
@@ -573,15 +588,16 @@ class ComponentDataSourceForm(forms.ModelForm):
 
         super(ComponentDataSourceForm, self).__init__(*args, **kwargs)
 
+
 class ComponentDataSourceUpdateForm(forms.ModelForm):
-    
+
     class Meta:
         model = ComponentDataSource
         exclude = ['create_date', 'edit_date']
 
     def __init__(self, *args, **kwargs):
 
-        #get the user object from request to check permissions
+        # get the user object from request to check permissions
         self.request = kwargs.pop("request")
         self.helper = FormHelper()
         self.helper.form_method = 'post'
@@ -594,6 +610,5 @@ class ComponentDataSourceUpdateForm(forms.ModelForm):
         self.helper.html5_required = True
         self.helper.form_tag = True
         self.helper.add_input(Submit('submit', 'Save'))
-        
+
         super(ComponentDataSourceUpdateForm, self).__init__(*args, **kwargs)
-   

@@ -15,11 +15,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='collecteddata',
             name='achieved',
-            field=models.DecimalField(decimal_places=2, max_digits=20, verbose_name=b'Achieved'),
+            field=models.DecimalField(
+                decimal_places=2, max_digits=20, verbose_name=b'Achieved'),
         ),
         migrations.AlterField(
             model_name='historicalcollecteddata',
             name='achieved',
-            field=models.DecimalField(decimal_places=2, max_digits=20, verbose_name=b'Achieved'),
+            field=models.DecimalField(
+                decimal_places=2, max_digits=20, verbose_name=b'Achieved'),
         ),
     ]

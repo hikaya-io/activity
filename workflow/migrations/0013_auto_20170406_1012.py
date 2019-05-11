@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
+
 def moveSectorFKtoM2M(apps, schema_editor):
     Stakeholder = apps.get_model("workflow", "Stakeholder")
     stakeholders = Stakeholder.objects.all()
@@ -12,6 +13,7 @@ def moveSectorFKtoM2M(apps, schema_editor):
             sid = stakeholder.sector.id
             stakeholder.sectors.add(sid)
             stakeholder.save()
+
 
 class Migration(migrations.Migration):
 

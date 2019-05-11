@@ -16,42 +16,50 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='historicalindicator',
             name='target_frequency',
-            field=models.IntegerField(choices=[(1, b'Life of Program (LoP) only'), (2, b'Midline and endline'), (3, b'Annual'), (4, b'Semi-annual'), (5, b'Tri-annual'), (6, b'Quarterly'), (7, b'Monthly'), (8, b'Event')], help_text=b' ', null=True, verbose_name=b'Target frequency'),
+            field=models.IntegerField(choices=[(1, b'Life of Program (LoP) only'), (2, b'Midline and endline'), (3, b'Annual'), (
+                4, b'Semi-annual'), (5, b'Tri-annual'), (6, b'Quarterly'), (7, b'Monthly'), (8, b'Event')], help_text=b' ', null=True, verbose_name=b'Target frequency'),
         ),
         migrations.AddField(
             model_name='historicalindicator',
             name='target_frequency_custom',
-            field=models.CharField(blank=True, help_text=b' ', max_length=100, null=True, verbose_name=b'First event name*'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=100,
+                                   null=True, verbose_name=b'First event name*'),
         ),
         migrations.AddField(
             model_name='historicalindicator',
             name='target_frequency_num_periods',
-            field=models.IntegerField(blank=True, help_text=b' ', null=True, verbose_name=b'Number of target periods*'),
+            field=models.IntegerField(
+                blank=True, help_text=b' ', null=True, verbose_name=b'Number of target periods*'),
         ),
         migrations.AddField(
             model_name='historicalindicator',
             name='target_frequency_start',
-            field=models.DateField(blank=True, help_text=b' ', null=True, verbose_name=b'First target period begins*'),
+            field=models.DateField(
+                blank=True, help_text=b' ', null=True, verbose_name=b'First target period begins*'),
         ),
         migrations.AddField(
             model_name='indicator',
             name='target_frequency',
-            field=models.IntegerField(choices=[(1, b'Life of Program (LoP) only'), (2, b'Midline and endline'), (3, b'Annual'), (4, b'Semi-annual'), (5, b'Tri-annual'), (6, b'Quarterly'), (7, b'Monthly'), (8, b'Event')], help_text=b' ', null=True, verbose_name=b'Target frequency'),
+            field=models.IntegerField(choices=[(1, b'Life of Program (LoP) only'), (2, b'Midline and endline'), (3, b'Annual'), (
+                4, b'Semi-annual'), (5, b'Tri-annual'), (6, b'Quarterly'), (7, b'Monthly'), (8, b'Event')], help_text=b' ', null=True, verbose_name=b'Target frequency'),
         ),
         migrations.AddField(
             model_name='indicator',
             name='target_frequency_custom',
-            field=models.CharField(blank=True, help_text=b' ', max_length=100, null=True, verbose_name=b'First event name*'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=100,
+                                   null=True, verbose_name=b'First event name*'),
         ),
         migrations.AddField(
             model_name='indicator',
             name='target_frequency_num_periods',
-            field=models.IntegerField(blank=True, help_text=b' ', null=True, verbose_name=b'Number of target periods*'),
+            field=models.IntegerField(
+                blank=True, help_text=b' ', null=True, verbose_name=b'Number of target periods*'),
         ),
         migrations.AddField(
             model_name='indicator',
             name='target_frequency_start',
-            field=models.DateField(blank=True, help_text=b' ', null=True, verbose_name=b'First target period begins*'),
+            field=models.DateField(
+                blank=True, help_text=b' ', null=True, verbose_name=b'First target period begins*'),
         ),
         migrations.AddField(
             model_name='periodictarget',
@@ -66,12 +74,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='historicalindicator',
             name='baseline',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Baseline*'),
+            field=models.CharField(
+                blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Baseline*'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='comments',
-            field=models.TextField(blank=True, help_text=b' ', max_length=255, null=True),
+            field=models.TextField(
+                blank=True, help_text=b' ', max_length=255, null=True),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
@@ -81,17 +91,20 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='historicalindicator',
             name='data_collection_method',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Data Collection Method'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=255,
+                                   null=True, verbose_name=b'Data Collection Method'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='data_issues',
-            field=models.TextField(blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Data Issues'),
+            field=models.TextField(
+                blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Data Issues'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='data_points',
-            field=models.TextField(blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Data Points'),
+            field=models.TextField(
+                blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Data Points'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
@@ -106,92 +119,110 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='historicalindicator',
             name='indicator_changes',
-            field=models.TextField(blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Changes to Indicator'),
+            field=models.TextField(blank=True, help_text=b' ', max_length=500,
+                                   null=True, verbose_name=b'Changes to Indicator'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='information_use',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Information Use'),
+            field=models.CharField(
+                blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Information Use'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='justification',
-            field=models.TextField(blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Rationale or Justification for Indicator'),
+            field=models.TextField(blank=True, help_text=b' ', max_length=500,
+                                   null=True, verbose_name=b'Rationale or Justification for Indicator'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='key_performance_indicator',
-            field=models.BooleanField(default=False, help_text=b' ', verbose_name=b'Key Performance Indicator for this program?'),
+            field=models.BooleanField(
+                default=False, help_text=b' ', verbose_name=b'Key Performance Indicator for this program?'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='lop_target',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Life of Program (LoP) target*'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=255,
+                                   null=True, verbose_name=b'Life of Program (LoP) target*'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='means_of_verification',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Means of Verification / Data Source'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=255,
+                                   null=True, verbose_name=b'Means of Verification / Data Source'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='method_of_analysis',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Method of Analysis'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=255,
+                                   null=True, verbose_name=b'Method of Analysis'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='name',
-            field=models.CharField(help_text=b' ', max_length=255, verbose_name=b'Name'),
+            field=models.CharField(
+                help_text=b' ', max_length=255, verbose_name=b'Name'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='number',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True),
+            field=models.CharField(
+                blank=True, help_text=b' ', max_length=255, null=True),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='quality_assurance',
-            field=models.TextField(blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Quality Assurance Measures'),
+            field=models.TextField(blank=True, help_text=b' ', max_length=500,
+                                   null=True, verbose_name=b'Quality Assurance Measures'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='rationale_for_target',
-            field=models.TextField(blank=True, help_text=b' ', max_length=255, null=True),
+            field=models.TextField(
+                blank=True, help_text=b' ', max_length=255, null=True),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='responsible_person',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Responsible Person(s) and Team'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=255,
+                                   null=True, verbose_name=b'Responsible Person(s) and Team'),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='source',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True),
+            field=models.CharField(
+                blank=True, help_text=b' ', max_length=255, null=True),
         ),
         migrations.AlterField(
             model_name='historicalindicator',
             name='unit_of_measure',
-            field=models.CharField(blank=True, help_text=b' ', max_length=135, null=True, verbose_name=b'Unit of measure*'),
+            field=models.CharField(
+                blank=True, help_text=b' ', max_length=135, null=True, verbose_name=b'Unit of measure*'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='approval_submitted_by',
-            field=models.ForeignKey(blank=True, help_text=b' ', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='indicator_submitted_by', to='workflow.TolaUser'),
+            field=models.ForeignKey(blank=True, help_text=b' ', null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='indicator_submitted_by', to='workflow.TolaUser'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='approved_by',
-            field=models.ForeignKey(blank=True, help_text=b' ', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='approving_indicator', to='workflow.TolaUser'),
+            field=models.ForeignKey(blank=True, help_text=b' ', null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='approving_indicator', to='workflow.TolaUser'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='baseline',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Baseline*'),
+            field=models.CharField(
+                blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Baseline*'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='comments',
-            field=models.TextField(blank=True, help_text=b' ', max_length=255, null=True),
+            field=models.TextField(
+                blank=True, help_text=b' ', max_length=255, null=True),
         ),
         migrations.AlterField(
             model_name='indicator',
@@ -201,22 +232,26 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='indicator',
             name='data_collection_frequency',
-            field=models.ForeignKey(blank=True, help_text=b' ', null=True, on_delete=django.db.models.deletion.CASCADE, to='indicators.DataCollectionFrequency', verbose_name=b'Frequency of Data Collection'),
+            field=models.ForeignKey(blank=True, help_text=b' ', null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='indicators.DataCollectionFrequency', verbose_name=b'Frequency of Data Collection'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='data_collection_method',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Data Collection Method'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=255,
+                                   null=True, verbose_name=b'Data Collection Method'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='data_issues',
-            field=models.TextField(blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Data Issues'),
+            field=models.TextField(
+                blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Data Issues'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='data_points',
-            field=models.TextField(blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Data Points'),
+            field=models.TextField(
+                blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Data Points'),
         ),
         migrations.AlterField(
             model_name='indicator',
@@ -226,7 +261,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='indicator',
             name='disaggregation',
-            field=models.ManyToManyField(blank=True, help_text=b' ', to='indicators.DisaggregationType'),
+            field=models.ManyToManyField(
+                blank=True, help_text=b' ', to='indicators.DisaggregationType'),
         ),
         migrations.AlterField(
             model_name='indicator',
@@ -236,111 +272,133 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='indicator',
             name='external_service_record',
-            field=models.ForeignKey(blank=True, help_text=b' ', null=True, on_delete=django.db.models.deletion.CASCADE, to='indicators.ExternalServiceRecord', verbose_name=b'External Service ID'),
+            field=models.ForeignKey(blank=True, help_text=b' ', null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='indicators.ExternalServiceRecord', verbose_name=b'External Service ID'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='indicator_changes',
-            field=models.TextField(blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Changes to Indicator'),
+            field=models.TextField(blank=True, help_text=b' ', max_length=500,
+                                   null=True, verbose_name=b'Changes to Indicator'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='indicator_type',
-            field=models.ManyToManyField(blank=True, help_text=b' ', to='indicators.IndicatorType'),
+            field=models.ManyToManyField(
+                blank=True, help_text=b' ', to='indicators.IndicatorType'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='information_use',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Information Use'),
+            field=models.CharField(
+                blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Information Use'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='justification',
-            field=models.TextField(blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Rationale or Justification for Indicator'),
+            field=models.TextField(blank=True, help_text=b' ', max_length=500,
+                                   null=True, verbose_name=b'Rationale or Justification for Indicator'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='key_performance_indicator',
-            field=models.BooleanField(default=False, help_text=b' ', verbose_name=b'Key Performance Indicator for this program?'),
+            field=models.BooleanField(
+                default=False, help_text=b' ', verbose_name=b'Key Performance Indicator for this program?'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='level',
-            field=models.ManyToManyField(blank=True, help_text=b' ', to='indicators.Level'),
+            field=models.ManyToManyField(
+                blank=True, help_text=b' ', to='indicators.Level'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='lop_target',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Life of Program (LoP) target*'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=255,
+                                   null=True, verbose_name=b'Life of Program (LoP) target*'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='means_of_verification',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Means of Verification / Data Source'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=255,
+                                   null=True, verbose_name=b'Means of Verification / Data Source'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='method_of_analysis',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Method of Analysis'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=255,
+                                   null=True, verbose_name=b'Method of Analysis'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='name',
-            field=models.CharField(help_text=b' ', max_length=255, verbose_name=b'Name'),
+            field=models.CharField(
+                help_text=b' ', max_length=255, verbose_name=b'Name'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='number',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True),
+            field=models.CharField(
+                blank=True, help_text=b' ', max_length=255, null=True),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='objectives',
-            field=models.ManyToManyField(blank=True, help_text=b' ', related_name='obj_indicator', to='indicators.Objective', verbose_name=b'Program Objective'),
+            field=models.ManyToManyField(blank=True, help_text=b' ', related_name='obj_indicator',
+                                         to='indicators.Objective', verbose_name=b'Program Objective'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='program',
-            field=models.ManyToManyField(help_text=b' ', to='workflow.Program'),
+            field=models.ManyToManyField(
+                help_text=b' ', to='workflow.Program'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='quality_assurance',
-            field=models.TextField(blank=True, help_text=b' ', max_length=500, null=True, verbose_name=b'Quality Assurance Measures'),
+            field=models.TextField(blank=True, help_text=b' ', max_length=500,
+                                   null=True, verbose_name=b'Quality Assurance Measures'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='rationale_for_target',
-            field=models.TextField(blank=True, help_text=b' ', max_length=255, null=True),
+            field=models.TextField(
+                blank=True, help_text=b' ', max_length=255, null=True),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='reporting_frequency',
-            field=models.ForeignKey(blank=True, help_text=b' ', null=True, on_delete=django.db.models.deletion.CASCADE, to='indicators.ReportingFrequency', verbose_name=b'Frequency of Reporting'),
+            field=models.ForeignKey(blank=True, help_text=b' ', null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='indicators.ReportingFrequency', verbose_name=b'Frequency of Reporting'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='responsible_person',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True, verbose_name=b'Responsible Person(s) and Team'),
+            field=models.CharField(blank=True, help_text=b' ', max_length=255,
+                                   null=True, verbose_name=b'Responsible Person(s) and Team'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='sector',
-            field=models.ForeignKey(blank=True, help_text=b' ', null=True, on_delete=django.db.models.deletion.CASCADE, to='workflow.Sector'),
+            field=models.ForeignKey(blank=True, help_text=b' ', null=True,
+                                    on_delete=django.db.models.deletion.CASCADE, to='workflow.Sector'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='source',
-            field=models.CharField(blank=True, help_text=b' ', max_length=255, null=True),
+            field=models.CharField(
+                blank=True, help_text=b' ', max_length=255, null=True),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='strategic_objectives',
-            field=models.ManyToManyField(blank=True, help_text=b' ', related_name='strat_indicator', to='indicators.StrategicObjective', verbose_name=b'Country Strategic Objective'),
+            field=models.ManyToManyField(blank=True, help_text=b' ', related_name='strat_indicator',
+                                         to='indicators.StrategicObjective', verbose_name=b'Country Strategic Objective'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='unit_of_measure',
-            field=models.CharField(blank=True, help_text=b' ', max_length=135, null=True, verbose_name=b'Unit of measure*'),
+            field=models.CharField(
+                blank=True, help_text=b' ', max_length=135, null=True, verbose_name=b'Unit of measure*'),
         ),
     ]

@@ -15,11 +15,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='historicalindicator',
             name='information_use',
-            field=models.CharField(blank=True, max_length=255, null=True, verbose_name=b'Information Use'),
+            field=models.CharField(
+                blank=True, max_length=255, null=True, verbose_name=b'Information Use'),
         ),
         migrations.AlterField(
             model_name='indicator',
             name='information_use',
-            field=models.CharField(blank=True, max_length=255, null=True, verbose_name=b'Information Use'),
+            field=models.CharField(
+                blank=True, max_length=255, null=True, verbose_name=b'Information Use'),
         ),
     ]

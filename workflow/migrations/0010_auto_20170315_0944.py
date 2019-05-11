@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='contact',
-            options={'ordering': ('name', 'country', 'title'), 'verbose_name_plural': 'Contact'},
+            options={'ordering': ('name', 'country', 'title'),
+                     'verbose_name_plural': 'Contact'},
         ),
         migrations.RemoveField(
             model_name='historicalsiteprofile',
@@ -83,161 +84,193 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='female_0_5',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 0-5'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 0-5'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='female_10_14',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 10-14'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 10-14'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='female_15_19',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 15-19'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 15-19'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='female_20_24',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 20-24'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 20-24'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='female_25_34',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 25-34'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 25-34'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='female_35_49',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 35-49'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 35-49'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='female_6_9',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 6-9'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 6-9'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='female_over_50',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female Over 50'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female Over 50'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='male_0_5',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 0-5'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 0-5'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='male_10_14',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 10-14'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 10-14'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='male_15_19',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 15-19'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 15-19'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='male_20_24',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 20-24'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 20-24'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='male_25_34',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 25-34'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 25-34'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='male_35_49',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 35-49'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 35-49'),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='male_6_9',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 6-9 '),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 6-9 '),
         ),
         migrations.AddField(
             model_name='historicalsiteprofile',
             name='male_over_50',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male Over 50'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male Over 50'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='female_0_5',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 0-5'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 0-5'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='female_10_14',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 10-14'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 10-14'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='female_15_19',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 15-19'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 15-19'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='female_20_24',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 20-24'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 20-24'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='female_25_34',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 25-34'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 25-34'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='female_35_49',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 35-49'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 35-49'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='female_6_9',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female age 6-9'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female age 6-9'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='female_over_50',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Female Over 50'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Female Over 50'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='male_0_5',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 0-5'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 0-5'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='male_10_14',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 10-14'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 10-14'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='male_15_19',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 15-19'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 15-19'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='male_20_24',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 20-24'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 20-24'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='male_25_34',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 25-34'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 25-34'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='male_35_49',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 35-49'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 35-49'),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='male_6_9',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male age 6-9 '),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male age 6-9 '),
         ),
         migrations.AddField(
             model_name='siteprofile',
             name='male_over_50',
-            field=models.IntegerField(blank=True, null=True, verbose_name='Male Over 50'),
+            field=models.IntegerField(
+                blank=True, null=True, verbose_name='Male Over 50'),
         ),
     ]

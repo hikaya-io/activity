@@ -8,11 +8,11 @@ from workflow.models import TolaUser, TolaBookmarks
 from django.contrib.auth.models import User
 
 
-
 class RegistrationForm(UserChangeForm):
     """
     Form for registering a new account.
     """
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('initial')
         super(RegistrationForm, self).__init__(*args, **kwargs)
@@ -27,7 +27,6 @@ class RegistrationForm(UserChangeForm):
         model = TolaUser
         fields = '__all__'
 
-
     helper = FormHelper()
     helper.form_method = 'post'
     helper.form_class = 'form-horizontal'
@@ -37,8 +36,8 @@ class RegistrationForm(UserChangeForm):
     helper.error_text_inline = True
     helper.help_text_inline = True
     helper.html5_required = True
-    helper.layout = Layout(Fieldset('','title', 'name', 'employee_number', 'user', 'username',
-                                    'country', 'countries','modified_by','created','updated'),
+    helper.layout = Layout(Fieldset('', 'title', 'name', 'employee_number', 'user', 'username',
+                                    'country', 'countries', 'modified_by', 'created', 'updated'),
                            Submit('submit', 'Submit', css_class='btn-default'),
                            Reset('reset', 'Reset', css_class='btn-warning'))
 
@@ -49,11 +48,10 @@ class NewUserRegistrationForm(UserCreationForm):
     """
     class Meta:
         model = User
-        fields = ['first_name', 'last_name','email','username']
+        fields = ['first_name', 'last_name', 'email', 'username']
 
     def __init__(self, *args, **kwargs):
         super(NewUserRegistrationForm, self).__init__(*args, **kwargs)
-
 
     helper = FormHelper()
     helper.form_method = 'post'
@@ -89,10 +87,11 @@ class NewTolaUserRegistrationForm(forms.ModelForm):
     helper.html5_required = True
     helper.form_tag = False
     helper.layout = Layout(
-        Fieldset('Information','title', 'country'),
-        Fieldset('Privacy Statement','privacy_disclaimer_accepted',),
+        Fieldset('Information', 'title', 'country'),
+        Fieldset('Privacy Statement', 'privacy_disclaimer_accepted',),
 
     )
+
 
 class BookmarkForm(forms.ModelForm):
     """
@@ -116,8 +115,6 @@ class BookmarkForm(forms.ModelForm):
     helper.html5_required = True
     helper.form_tag = True
     helper.layout = Layout(
-        Fieldset('','name','bookmark_url'),
+        Fieldset('', 'name', 'bookmark_url'),
         Submit('submit', 'Submit', css_class='btn-default'),
         Reset('reset', 'Reset', css_class='btn-warning'))
-
-

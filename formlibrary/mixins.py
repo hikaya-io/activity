@@ -3,6 +3,7 @@ from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from rest_framework import authentication, permissions, viewsets
 
+
 class LoggedInMixin(object):
 
     @method_decorator(login_required)
@@ -15,6 +16,7 @@ class AjaxableResponseMixin(object):
     Mixin to add AJAX support to a form.
     Must be used with an object-based FormView (e.g. CreateView)
     """
+
     def form_invalid(self, form):
         response = super(AjaxableResponseMixin, self).form_invalid(form)
         if self.request.is_ajax():
@@ -35,18 +37,20 @@ class AjaxableResponseMixin(object):
         else:
             return response
 
-#API Mixin
-class APIDefaultsMixin(object):   
+# API Mixin
+
+
+class APIDefaultsMixin(object):
     """Default settings for view authentication, permissions,   
-     filtering and pagination."""   
+     filtering and pagination."""
 
     authentication_classes = (
-         authentication.BasicAuthentication,        
-         authentication.TokenAuthentication,
-    )   
+        authentication.BasicAuthentication,
+        authentication.TokenAuthentication,
+    )
     permission_classes = (
-         permissions.IsAuthenticated,
-    )   
-    paginate_by = 20    
-    paginate_by_param = 'page_size'    
+        permissions.IsAuthenticated,
+    )
+    paginate_by = 20
+    paginate_by_param = 'page_size'
     max_paginate_by = 50

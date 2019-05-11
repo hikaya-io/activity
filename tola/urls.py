@@ -16,7 +16,7 @@ from django.contrib import admin
 admin.autodiscover()
 admin.site.site_header = 'Activity CE administration'
 
-#REST FRAMEWORK
+# REST FRAMEWORK
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'programs', ProgramViewSet)
@@ -55,69 +55,76 @@ router.register(r'projectagreements', ProjectAgreementViewSet)
 router.register(r'loggedusers', LoggedUserViewSet)
 router.register(r'checklist', ChecklistViewSet)
 router.register(r'organization', OrganizationViewSet)
-router.register(r'pindicators', PogramIndicatorReadOnlyViewSet, base_name='pindicators')
-router.register(r'periodictargets', PeriodicTargetReadOnlyViewSet, base_name='periodictargets')
+router.register(r'pindicators', PogramIndicatorReadOnlyViewSet,
+                base_name='pindicators')
+router.register(r'periodictargets', PeriodicTargetReadOnlyViewSet,
+                base_name='periodictargets')
 
 
-urlpatterns = [ # rest framework
-                path('api/', include(router.urls)),
-                path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-                path('api-token-auth/', auth_views.obtain_auth_token),
+urlpatterns = [  # rest framework
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-token-auth/', auth_views.obtain_auth_token),
 
-                # index
-                path('', views.index, name='index'),
-                # enable the admin:
-                path('admin/doc/', include('django.contrib.admindocs.urls')),
-                path('admin/', admin.site.urls),
-                re_path(r'^(?P<selected_countries>\w+)/$', views.index, name='index'),
+    # index
+    path('', views.index, name='index'),
+    # enable the admin:
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
+    path('admin/', admin.site.urls),
+    re_path(r'^(?P<selected_countries>\w+)/$',
+            views.index, name='index'),
 
-                # index
-                re_path(r'^dashboard/(?P<id>\w+)/(?P<sector>\w+)/$', tolaviews.index, name='index'),
+    # index
+    re_path(r'^dashboard/(?P<id>\w+)/(?P<sector>\w+)/$',
+            tolaviews.index, name='index'),
 
-                # base template for layout
-                path('', TemplateView.as_view(template_name='base.html')),
+    # base template for layout
+    path('', TemplateView.as_view(template_name='base.html')),
 
-                # enable admin documentation:
-                path('admin/doc/', include('django.contrib.admindocs.urls')),
+    # enable admin documentation:
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
 
-                # app include of workflow urls
-                path('workflow/', include('workflow.urls')),
+    # app include of workflow urls
+    path('workflow/', include('workflow.urls')),
 
-                # app include of indicator urls
-                path('indicators/', include('indicators.urls')),
+    # app include of indicator urls
+    path('indicators/', include('indicators.urls')),
 
-                # app include of customdashboard urls
-                path('customdashboard/', include('customdashboard.urls')),
+    # app include of customdashboard urls
+    path('customdashboard/', include('customdashboard.urls')),
 
-                # app include of reports urls
-                path('reports/', include('reports.urls')),
+    # app include of reports urls
+    path('reports/', include('reports.urls')),
 
-                # app include of workflow urls
-                path('formlibrary/', include('formlibrary.urls')),
+    # app include of workflow urls
+    path('formlibrary/', include('formlibrary.urls')),
 
-                # app include of configurable dashboard urls
-                # path('configurabledashboard/', include('configurabledashboard.urls')),
+    # app include of configurable dashboard urls
+    # path('configurabledashboard/', include('configurabledashboard.urls')),
 
-                # local login
-                path('login/', authviews.LoginView.as_view(), name='login'),
-                path('accounts/login/', authviews.LoginView.as_view(), name='login'),
-                path('accounts/logout/', views.logout_view, name='logout'),
+    # local login
+    path('login/', authviews.LoginView.as_view(), name='login'),
+    path('accounts/login/', authviews.LoginView.as_view(), name='login'),
+    path('accounts/logout/', views.logout_view, name='logout'),
 
-                # accounts
-                path('accounts/profile/', views.profile, name='profile'),
-                path('accounts/register/', views.register, name='register'),
+    # accounts
+    path('accounts/profile/', views.profile, name='profile'),
+    path('accounts/register/', views.register, name='register'),
 
-                #bookmarks
-                path('bookmark_list', BookmarkList.as_view(), name='bookmark_list'),
-                path('bookmark_add', BookmarkCreate.as_view(), name='bookmark_add'),
-                re_path(r'^bookmark_update/(?P<pk>\w+)/$', BookmarkUpdate.as_view(), name='bookmark_update'),
-                re_path(r'^bookmark_delete/(?P<pk>\w+)/$', BookmarkDelete.as_view(), name='bookmark_delete'),
+    # bookmarks
+    path('bookmark_list', BookmarkList.as_view(),
+         name='bookmark_list'),
+    path('bookmark_add', BookmarkCreate.as_view(), name='bookmark_add'),
+    re_path(r'^bookmark_update/(?P<pk>\w+)/$',
+            BookmarkUpdate.as_view(), name='bookmark_update'),
+    re_path(r'^bookmark_delete/(?P<pk>\w+)/$',
+            BookmarkDelete.as_view(), name='bookmark_delete'),
 
-                # Auth backend URL's
-                path('', include(('django.contrib.auth.urls', "django.contrib.auth"), namespace='auth')),
-                #path('', include('social.apps.django_app.urls', namespace='social')),
-                path('', include('social_django.urls', namespace='social'))
-                #path('oauth/', include('social_django.urls', namespace='social')),
+    # Auth backend URL's
+    path('', include(('django.contrib.auth.urls',
+                      "django.contrib.auth"), namespace='auth')),
+    #path('', include('social.apps.django_app.urls', namespace='social')),
+    path('', include('social_django.urls', namespace='social'))
+    #path('oauth/', include('social_django.urls', namespace='social')),
 
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

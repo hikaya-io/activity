@@ -14,36 +14,43 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='report',
             name='agreement',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.ProjectAgreement'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.ProjectAgreement'),
         ),
         migrations.AlterField(
             model_name='report',
             name='collected',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='indicators.CollectedData'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='indicators.CollectedData'),
         ),
         migrations.AlterField(
             model_name='report',
             name='complete',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.ProjectComplete'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.ProjectComplete'),
         ),
         migrations.AlterField(
             model_name='report',
             name='country',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Country'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Country'),
         ),
         migrations.AlterField(
             model_name='report',
             name='description',
-            field=models.CharField(blank=True, max_length=200, verbose_name='Status Description'),
+            field=models.CharField(
+                blank=True, max_length=200, verbose_name='Status Description'),
         ),
         migrations.AlterField(
             model_name='report',
             name='indicator',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='indicators.Indicator'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='indicators.Indicator'),
         ),
         migrations.AlterField(
             model_name='report',
             name='program',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
         ),
     ]

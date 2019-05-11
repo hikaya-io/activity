@@ -16,21 +16,25 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='collecteddata',
             name='achieved',
-            field=models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=20, verbose_name=b'Achieved'),
+            field=models.DecimalField(decimal_places=2, default=Decimal(
+                '0.00'), max_digits=20, verbose_name=b'Achieved'),
         ),
         migrations.AlterField(
             model_name='collecteddata',
             name='targeted',
-            field=models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=20, verbose_name=b'Targeted'),
+            field=models.DecimalField(decimal_places=2, default=Decimal(
+                '0.00'), max_digits=20, verbose_name=b'Targeted'),
         ),
         migrations.AlterField(
             model_name='historicalcollecteddata',
             name='achieved',
-            field=models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=20, verbose_name=b'Achieved'),
+            field=models.DecimalField(decimal_places=2, default=Decimal(
+                '0.00'), max_digits=20, verbose_name=b'Achieved'),
         ),
         migrations.AlterField(
             model_name='historicalcollecteddata',
             name='targeted',
-            field=models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=20, verbose_name=b'Targeted'),
+            field=models.DecimalField(decimal_places=2, default=Decimal(
+                '0.00'), max_digits=20, verbose_name=b'Targeted'),
         ),
     ]

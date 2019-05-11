@@ -5,21 +5,20 @@ country records
 Install module django-extensions
 Runs twice via function calls at bottom once
 """
+from indicators.models import Indicator, Level
+from workflow.models import Program
+import sys
+import unicodedata
+import json
+from os.path import exists
 from django.db import connection, transaction
 
 cursor = connection.cursor()
-from os.path import exists
-import json
-import unicodedata
-import sys
 
 
 def run():
     print "Setting KPI"
 
-
-from workflow.models import Program
-from indicators.models import Indicator, Level
 
 for program in Program.objects.all():
     kpi_count = 0
@@ -30,6 +29,7 @@ for program in Program.objects.all():
     if kpi_count == 0:
         # get_level = Level.objects.get(name="Goal")
         get_level = Level.objects.get(name="Impact")
-        Indicator.objects.all().filter(program__id=program.id,level=get_level).update(key_performance_indicator=True)
+        Indicator.objects.all().filter(program__id=program.id,
+                                       level=get_level).update(key_performance_indicator=True)
     print program
     print kpi_count

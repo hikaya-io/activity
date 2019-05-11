@@ -16,29 +16,35 @@ class IndicatorTable(tables.Table):
     class Meta:
         model = Indicator
         attrs = {"class": "paleblue"}
-        fields = ('programs', 'sector','indicator_type', 'name', 'number','key_performance_indicator', 'source', 'definition', 'disaggregation', 'baseline', 'lop_target', 'means_of_verification', 'data_collection_method', 'responsible_person',
-                    'method_of_analysis', 'information_use', 'reporting_frequency','create_date', 'edit_date')
-        sequence = ('programs', 'sector','indicator_type', 'name', 'number', 'key_performance_indicator', 'source', 'definition', 'disaggregation', 'baseline', 'lop_target', 'means_of_verification', 'data_collection_method', 'responsible_person',
+        fields = ('programs', 'sector', 'indicator_type', 'name', 'number', 'key_performance_indicator', 'source', 'definition', 'disaggregation', 'baseline', 'lop_target', 'means_of_verification', 'data_collection_method', 'responsible_person',
+                  'method_of_analysis', 'information_use', 'reporting_frequency', 'create_date', 'edit_date')
+        sequence = ('programs', 'sector', 'indicator_type', 'name', 'number', 'key_performance_indicator', 'source', 'definition', 'disaggregation', 'baseline', 'lop_target', 'means_of_verification', 'data_collection_method', 'responsible_person',
                     'method_of_analysis', 'information_use', 'reporting_frequency', 'create_date', 'edit_date')
 
 
 class IndicatorDataTable(tables.Table):
 
-    agreement = tables.LinkColumn('projectagreement_update', args=[A('agreement_id')])
+    agreement = tables.LinkColumn(
+        'projectagreement_update', args=[A('agreement_id')])
 
     class Meta:
         model = CollectedData
         attrs = {"class": "paleblue"}
-        fields = ('targeted', 'achieved', 'description', 'indicator', 'agreement', 'complete')
-        sequence = ('targeted', 'achieved', 'description', 'indicator', 'agreement', 'complete')
+        fields = ('targeted', 'achieved', 'description',
+                  'indicator', 'agreement', 'complete')
+        sequence = ('targeted', 'achieved', 'description',
+                    'indicator', 'agreement', 'complete')
 
 
 class CollectedDataTable(tables.Table):
 
-    agreement = tables.LinkColumn('projectagreement_update', args=[A('agreement_id')])
+    agreement = tables.LinkColumn(
+        'projectagreement_update', args=[A('agreement_id')])
 
     class Meta:
         model = CollectedData
         attrs = {"class": "paleblue"}
-        fields = ('targeted', 'achieved', 'description', 'indicator', 'sector', 'community', 'agreement', 'complete')
-        sequence = ('targeted', 'achieved', 'description', 'indicator', 'sector', 'community', 'agreement', 'complete')
+        fields = ('targeted', 'achieved', 'description', 'indicator',
+                  'sector', 'community', 'agreement', 'complete')
+        sequence = ('targeted', 'achieved', 'description', 'indicator',
+                    'sector', 'community', 'agreement', 'complete')

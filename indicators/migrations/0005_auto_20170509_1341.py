@@ -17,23 +17,28 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PeriodicTarget',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('period', models.CharField(blank=True, max_length=255, null=True)),
-                ('target', models.DecimalField(decimal_places=2, default=Decimal('0.00'), max_digits=20)),
+                ('target', models.DecimalField(decimal_places=2,
+                                               default=Decimal('0.00'), max_digits=20)),
                 ('customsort', models.IntegerField(blank=True, null=True)),
                 ('create_date', models.DateTimeField(blank=True, null=True)),
                 ('edit_date', models.DateTimeField(blank=True, null=True)),
-                ('indicator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='indicators.Indicator')),
+                ('indicator', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='indicators.Indicator')),
             ],
         ),
         migrations.AddField(
             model_name='collecteddata',
             name='periodic_target',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='indicators.PeriodicTarget'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='indicators.PeriodicTarget'),
         ),
         migrations.AddField(
             model_name='historicalcollecteddata',
             name='periodic_target',
-            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='indicators.PeriodicTarget'),
+            field=models.ForeignKey(blank=True, db_constraint=False, null=True,
+                                    on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='indicators.PeriodicTarget'),
         ),
     ]

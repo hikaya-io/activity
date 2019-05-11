@@ -17,11 +17,14 @@ class UniqueEmailForm:
         else:
             return self.cleaned_data['email']
 
+
 class MyUserChangeForm(UniqueEmailForm, UserChangeForm):
     email = forms.EmailField(required=True)
 
+
 class MyUserCreationForm(UniqueEmailForm, UserCreationForm):
     email = forms.EmailField(required=True)
+
 
 class MyUserAdmin(UserAdmin):
     # add the email field in to the initial add_user form
@@ -38,6 +41,7 @@ class MyUserAdmin(UserAdmin):
 
     form = MyUserChangeForm
     add_form = MyUserCreationForm
+
 
 # Re-register UserAdmin with custom options
 admin.site.unregister(User)

@@ -15,11 +15,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='organization',
             name='level_3_label',
-            field=models.CharField(blank=True, default='Component', max_length=255, verbose_name='Project/Program Organization Level 3 label'),
+            field=models.CharField(blank=True, default='Component', max_length=255,
+                                   verbose_name='Project/Program Organization Level 3 label'),
         ),
         migrations.AlterField(
             model_name='organization',
             name='level_4_label',
-            field=models.CharField(blank=True, default='Activity', max_length=255, verbose_name='Project/Program Organization Level 4 label'),
+            field=models.CharField(blank=True, default='Activity', max_length=255,
+                                   verbose_name='Project/Program Organization Level 4 label'),
         ),
     ]

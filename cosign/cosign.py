@@ -1,6 +1,9 @@
-from django.contrib.auth.models import User,Permission, Group
+from django.contrib.auth.models import User, Permission, Group
 from django.conf import settings
-import datetime, ldap, re, logging
+import datetime
+import ldap
+import re
+import logging
 from workflow.models import TolaUser, Country
 
 from django.contrib.auth.backends import RemoteUserBackend
@@ -15,6 +18,7 @@ class CosignBackend(RemoteUserBackend):
     additional info from LDAP to populate the fields such as email,
     full name, and fields in the profile/userprofile table such as employee_number,etc.
     """
+
     def clean_username(self, username):
         #logger.error("username is claned.....")
         """
@@ -43,7 +47,8 @@ class CosignBackend(RemoteUserBackend):
         ldap_info = self.get_ldap_info(str('uid'), username)
 
         if not ldap_info:
-            logger.error("Could not retrieve info for %s in ldap" % user.username)
+            logger.error("Could not retrieve info for %s in ldap" %
+                         user.username)
             return user
 
         user.first_name = ldap_info['first_name']
@@ -68,15 +73,15 @@ class CosignBackend(RemoteUserBackend):
         create_params = {
             'create_date': datetime.datetime.utcnow().replace(tzinfo=utc),
             'country': ldap_info['country_name']
-            }
+        }
         country, new = Country.objects.get_or_create(
-            code = ldap_info['country_id'],
-            defaults = create_params)
+            code=ldap_info['country_id'],
+            defaults=create_params)
         if new == True:
             country.save()
 
         userprofile, created = TolaUser.objects.get_or_create(
-            user = user)
+            user=user)
 
         userprofile.country = country
 
@@ -84,7 +89,7 @@ class CosignBackend(RemoteUserBackend):
         userprofile.employee_number = ldap_info['employee_number']
 
         userprofile.save()
-        #add user to country permissions table
+        # add user to country permissions table
         userprofile.countries.add(country)
 
         return True
@@ -133,7 +138,7 @@ class CosignBackend(RemoteUserBackend):
         ldap_info = {}
         try:
             attributes = [str('uid'), str('mail'), str('employeeNumber'), str('givenName'),
-            str('sn'), str('cn'), str('dn'), str('nsAccountLock')]
+                          str('sn'), str('cn'), str('dn'), str('nsAccountLock')]
             search_filter = str(attr + '=' + value)
             l = ldap.initialize(settings.LDAP_SERVER)
             l.simple_bind_s(settings.LDAP_LOGIN, settings.LDAP_PASSWORD)
@@ -192,7 +197,8 @@ class CosignBackend(RemoteUserBackend):
             attributes = [str('cn')]
 
             # TODO: change the group name ertb to mcapi and then remove this comment
-            search_filter = '(&(objectClass=mercycorpsGroup)(uniqueMember=uid='+ldap_info['uid']+',*)(cn=ertb))'
+            search_filter = '(&(objectClass=mercycorpsGroup)(uniqueMember=uid=' + \
+                ldap_info['uid']+',*)(cn=ertb))'
             r = l.search_s(base_dn, search_scope, search_filter, attributes)
 
             if r:
@@ -202,7 +208,8 @@ class CosignBackend(RemoteUserBackend):
 
             # TODO: change the group name ertb to mcapi and then remove this comment
             # Now determine if user is a member of the mcapi-admin group
-            search_filter = '(&(objectClass=mercycorpsGroup)(uniqueMember=uid='+ldap_info['uid']+',*)(cn=ertb-admin))'
+            search_filter = '(&(objectClass=mercycorpsGroup)(uniqueMember=uid=' + \
+                ldap_info['uid']+',*)(cn=ertb-admin))'
             r = l.search_s(base_dn, search_scope, search_filter, attributes)
 
             if r:
@@ -211,6 +218,7 @@ class CosignBackend(RemoteUserBackend):
                 ldap_info['admin'] = False
 
         except Exception as e:
-            logger.error("Error: %s %s- while getting user info" % (type(e), e))
+            logger.error("Error: %s %s- while getting user info" %
+                         (type(e), e))
         l.unbind()
         return ldap_info
