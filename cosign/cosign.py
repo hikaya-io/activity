@@ -9,7 +9,7 @@ from workflow.models import TolaUser, Country
 from django.contrib.auth.backends import RemoteUserBackend
 from django.utils.timezone import utc
 
-logger = logging.getLogger("tola")
+logger = logging.getLogger("activity")
 
 
 class CosignBackend(RemoteUserBackend):

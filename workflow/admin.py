@@ -2,7 +2,7 @@ from .models import *
 from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
 from import_export.admin import ImportExportModelAdmin, ExportMixin
-from tola.util import getCountry
+from activity.util import getCountry
 from adminreport.mixins import ChartReportAdmin
 
 

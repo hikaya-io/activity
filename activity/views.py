@@ -1,6 +1,6 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-from tola.forms import RegistrationForm, NewUserRegistrationForm, NewTolaUserRegistrationForm, BookmarkForm
+from activity.forms import RegistrationForm, NewUserRegistrationForm, NewTolaUserRegistrationForm, BookmarkForm
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
@@ -8,10 +8,10 @@ from django.shortcuts import render
 from workflow.models import ProjectAgreement, ProjectComplete, Program, SiteProfile, Sector, Country, TolaUser, TolaSites, TolaBookmarks, FormGuidance
 from indicators.models import CollectedData, Indicator
 
-from tola.tables import IndicatorDataTable
+from activity.tables import IndicatorDataTable
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum, Q, Count
-from tola.util import getCountry
+from activity.util import getCountry
 from django.contrib.auth.models import Group
 
 from django.contrib.auth.decorators import login_required

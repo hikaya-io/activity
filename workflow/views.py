@@ -36,7 +36,7 @@ from django.views.generic.detail import View
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.decorators import method_decorator
-from tola.util import getCountry, emailGroup, group_excluded, group_required
+from activity.util import getCountry, emailGroup, group_excluded, group_required
 from .mixins import AjaxableResponseMixin
 from .export import ProjectAgreementResource, StakeholderResource, SiteProfileResource
 from datetime import datetime

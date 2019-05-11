@@ -592,7 +592,7 @@ class ProfileTypeAdmin(admin.ModelAdmin):
     display = 'ProfileType'
 
 
-# Add land classification - 'Rural', 'Urban', 'Peri-Urban', tola-help issue #162
+# Add land classification - 'Rural', 'Urban', 'Peri-Urban', activity-help issue #162
 class LandType(models.Model):
     classify_land = models.CharField(
         "Land Classification", help_text="Rural, Urban, Peri-Urban", max_length=100, blank=True)

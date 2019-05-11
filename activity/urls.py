@@ -1,5 +1,5 @@
-from tola import views
-from tola.views import *
+from activity import views
+from activity.views import *
 from feed.views import *
 from django.urls import include, path, re_path
 from django.views.generic import TemplateView
@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 from rest_framework.authtoken import views as auth_views
 from django.contrib.auth import views as authviews
 
-from tola import views as tolaviews
+from activity import views as tolaviews
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin

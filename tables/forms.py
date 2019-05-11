@@ -6,7 +6,7 @@ from crispy_forms.bootstrap import *
 from crispy_forms.layout import Layout, Submit, Reset, Field
 from functools import partial
 from django import forms
-from tola.util import getCountry
+from activity.util import getCountry
 
 
 class DatePicker(forms.DateInput):

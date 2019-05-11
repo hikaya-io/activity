@@ -7,7 +7,7 @@ from crispy_forms.bootstrap import *
 from crispy_forms.layout import Layout, Submit, Reset, Div
 from functools import partial
 from django import forms
-from tola.util import getCountry
+from activity.util import getCountry
 from django.db.models import Q
 from datetime import datetime
 

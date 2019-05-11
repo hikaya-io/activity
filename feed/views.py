@@ -8,7 +8,7 @@ from indicators.models import Indicator, Objective, ReportingFrequency, TolaUser
 
 from django.db.models import Count
 from django.contrib.auth.models import User
-from tola.util import getCountry
+from activity.util import getCountry
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets

@@ -11,9 +11,9 @@ class IndicatorTestCase(TestCase):
     fixtures = ['fixtures/organization.json', 'fixtures/country.json']
 
     def setUp(self):
-        new_organization = Organization.objects.create(name="tola")
+        new_organization = Organization.objects.create(name="activity")
         new_organization.save()
-        get_organization = Organization.objects.get(name="tola")
+        get_organization = Organization.objects.get(name="activity")
         new_country = Country.objects.create(
             country="testcountry", organization=get_organization)
         new_country.save()

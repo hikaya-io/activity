@@ -90,7 +90,7 @@ def get_table(url, data=None):
 
 def user_to_tola(backend, user, response, *args, **kwargs):
 
-    # Add a google auth user to the tola profile
+    # Add a google auth user to the activity profile
     default_country = Country.objects.first()
     userprofile, created = TolaUser.objects.get_or_create(
         user=user)

@@ -10,7 +10,7 @@ from workflow.models import Program, SiteProfile, Country, Sector, TolaSites, To
 from django.shortcuts import render_to_response
 from django.contrib import messages
 from django.core.serializers.json import DjangoJSONEncoder
-from tola.util import getCountry, get_table
+from activity.util import getCountry, get_table
 from .tables import IndicatorDataTable
 from django_tables2 import RequestConfig
 from workflow.forms import FilterForm

@@ -1,5 +1,5 @@
 from mixins import AjaxableResponseMixin
-from tola.util import getCountry, group_excluded
+from activity.util import getCountry, group_excluded
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView

@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from .forms import TrainingAttendanceForm, BeneficiaryForm, DistributionForm
 from workflow.models import FormGuidance, Program, ProjectAgreement
 from django.utils.decorators import method_decorator
-from tola.util import getCountry, group_excluded
+from activity.util import getCountry, group_excluded
 
 from django.shortcuts import render
 from django.contrib import messages

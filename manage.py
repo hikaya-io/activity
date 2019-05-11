@@ -4,7 +4,7 @@ import sys
 
 if __name__ == "__main__":
 
-    settings = 'tola.settings.test' if 'test' in sys.argv else 'tola.settings.local'
+    settings = 'activity.settings.test' if 'test' in sys.argv else 'activity.settings.local'
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings)
 

@@ -4,7 +4,7 @@ from django import forms
 from .models import TrainingAttendance, Distribution, Beneficiary
 from workflow.models import Program, ProjectAgreement, Office, Province, SiteProfile
 from functools import partial
-from tola.util import getCountry
+from activity.util import getCountry
 
 
 class DatePicker(forms.DateInput):

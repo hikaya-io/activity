@@ -7,7 +7,7 @@ from indicators.models import Indicator, TolaTable, ExternalService
 from workflow.models import Program, SiteProfile, Country, Sector, TolaUser
 from django.shortcuts import render_to_response
 from django.contrib import messages
-from tola.util import getCountry
+from activity.util import getCountry
 
 import requests
 

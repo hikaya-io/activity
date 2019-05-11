@@ -10,7 +10,7 @@ from indicators.models import CollectedData, Indicator, TolaTable
 from django.db.models import Sum
 from django.db.models import Q
 
-from tola.util import getCountry, get_table
+from activity.util import getCountry, get_table
 
 from django.contrib.auth.decorators import login_required
 import requests
@@ -297,7 +297,7 @@ def SurveyPublicDashboard(request, id=0):
     # get all countires
     countries = Country.objects.all()
 
-    filter_url = "http://tola-tables.mercycorps.org/api/silo/430/data/"
+    filter_url = "http://activity-tables.mercycorps.org/api/silo/430/data/"
     token = TolaSites.objects.get(site_id=1)
     if token.tola_tables_token:
         headers = {'content-type': 'application/json',
