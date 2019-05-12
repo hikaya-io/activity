@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import django_tables2 as tables
 from .models import ProjectAgreement
 
@@ -17,10 +20,12 @@ class ProjectAgreementTable(tables.Table):
     class Meta:
         model = ProjectAgreement
         attrs = {"class": "paleblue"}
-        fields = ('program', 'project_name', 'sites', 'activity_code', 'office', 'project_name', 'sector', 'project_activity',
-                             'project_type', 'account_code', 'lin_code', 'estimated_by', 'total_estimated_budget', 'mc_estimated_budget', 'total_cost')
-        sequence = ('program', 'project_name', 'sites', 'activity_code', 'office', 'project_name', 'sector', 'project_activity',
-                    'project_type', 'account_code', 'lin_code', 'estimated_by', 'total_estimated_budget', 'mc_estimated_budget', 'total_cost')
+        fields = ('program', 'project_name', 'sites', 'activity_code', 'office', 'project_name', 'sector',
+                  'project_activity', 'project_type', 'account_code', 'lin_code', 'estimated_by',
+                  'total_estimated_budget', 'mc_estimated_budget', 'total_cost')
+        sequence = ('program', 'project_name', 'sites', 'activity_code', 'office', 'project_name', 'sector',
+                    'project_activity','project_type', 'account_code', 'lin_code', 'estimated_by',
+                    'total_estimated_budget', 'mc_estimated_budget', 'total_cost')
 
 
 TEMPLATE2 = '''

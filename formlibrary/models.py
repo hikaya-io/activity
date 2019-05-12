@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib import admin
@@ -52,8 +55,8 @@ class TrainingAttendance(models.Model):
         super(TrainingAttendance, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
-        return unicode(self.training_name)
+    def __str__(self):
+        return self.training_name
 
 
 class TrainingAttendanceAdmin(admin.ModelAdmin):
@@ -119,14 +122,14 @@ class Distribution(models.Model):
         ordering = ('distribution_name',)
 
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Distribution, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
-        return unicode(self.distribution_name)
+    def __str__(self):
+        return self.distribution_name
 
 
 class DistributionAdmin(admin.ModelAdmin):
@@ -161,8 +164,8 @@ class Beneficiary(models.Model):
         super(Beneficiary, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
-        return unicode(self.beneficiary_name)
+    def __str__(self):
+        return self.beneficiary_name
 
 
 class BeneficiaryAdmin(admin.ModelAdmin):

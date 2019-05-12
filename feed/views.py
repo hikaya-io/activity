@@ -1,14 +1,6 @@
-from .serializers import *
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
-from workflow.models import Program, Sector, ProjectType, Office, SiteProfile, Country, ProjectComplete, \
-    ProjectAgreement, Stakeholder, Capacity, Evaluate, ProfileType, \
-    Province, District, AdminLevelThree, Village, StakeholderType, Contact, Documentation, Checklist
-from indicators.models import Indicator, Objective, ReportingFrequency, ActivityUser, IndicatorType, DisaggregationType, \
-    Level, ExternalService, ExternalServiceRecord, StrategicObjective, CollectedData, ActivityTable, DisaggregationValue, DisaggregationLabel
-
-from django.db.models import Count
-from django.contrib.auth.models import User
-from activity.util import getCountry
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets
@@ -16,7 +8,21 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 import django_filters
 
+from .serializers import *
+from activity.util import get_country
+
 from workflow.mixins import APIDefaultsMixin
+
+from workflow.models import (
+    Program, Sector, ProjectType, Office, SiteProfile, Country, ProjectComplete, Checklist,
+    ProjectAgreement, Stakeholder, Capacity, Evaluate, ProfileType, Contact, Documentation,
+    Province, District, AdminLevelThree, Village, StakeholderType
+)
+from indicators.models import (
+    Indicator, Objective, ReportingFrequency, ActivityUser, IndicatorType, DisaggregationType,
+    Level, ExternalService, ExternalServiceRecord, StrategicObjective, CollectedData,
+    ActivityTable, DisaggregationValue, DisaggregationLabel
+)
 
 
 class LargeResultsSetPagination(PageNumberPagination):
@@ -79,7 +85,7 @@ class ProgramViewSet(viewsets.ModelViewSet):
     """
 
     def list(self, request):
-        user_countries = getCountry(request.user)
+        user_countries = get_country(request.user)
         queryset = Program.objects.all().filter(country__in=user_countries)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
@@ -126,7 +132,7 @@ class SiteProfileViewSet(viewsets.ModelViewSet):
     """
 
     def list(self, request):
-        user_countries = getCountry(request.user)
+        user_countries = get_country(request.user)
         queryset = SiteProfile.objects.all().filter(country__in=user_countries)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
@@ -155,7 +161,7 @@ class AgreementViewSet(viewsets.ModelViewSet):
     """
 
     def list(self, request):
-        user_countries = getCountry(request.user)
+        user_countries = get_country(request.user)
         queryset = ProjectAgreement.objects.all().filter(
             program__country__in=user_countries)
         serializer = self.get_serializer(queryset, many=True)
@@ -187,7 +193,7 @@ class CompleteViewSet(viewsets.ModelViewSet):
     """
 
     def list(self, request):
-        user_countries = getCountry(request.user)
+        user_countries = get_country(request.user)
         queryset = ProjectComplete.objects.all().filter(
             program__country__in=user_countries)
         serializer = self.get_serializer(queryset, many=True)
@@ -209,7 +215,7 @@ class IndicatorViewSet(viewsets.ModelViewSet):
     """
 
     def list(self, request):
-        user_countries = getCountry(request.user)
+        user_countries = get_country(request.user)
         queryset = Indicator.objects.all().filter(program__country__in=user_countries)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
@@ -297,7 +303,7 @@ class StakeholderViewSet(viewsets.ModelViewSet):
     """
 
     def list(self, request):
-        user_countries = getCountry(request.user)
+        user_countries = get_country(request.user)
         queryset = Stakeholder.objects.all().filter(country__in=user_countries)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
@@ -432,7 +438,7 @@ class CollectedDataViewSet(viewsets.ModelViewSet):
     """
 
     def list(self, request):
-        user_countries = getCountry(request.user)
+        user_countries = get_country(request.user)
         queryset = CollectedData.objects.all().filter(
             program__country__in=user_countries)
         serializer = self.get_serializer(queryset, many=True)
@@ -453,14 +459,12 @@ class TolaTableViewSet(viewsets.ModelViewSet):
     """
 
     def list(self, request):
-        #user_countries = getCountry(request.user)
-        #queryset = ActivityTable.objects.all().filter(country__in=user_countries)
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
     def get_queryset(self):
-        user_countries = getCountry(self.request.user)
+        user_countries = get_country(self.request.user)
         queryset = ActivityTable.objects.filter(country__in=user_countries)
         table_id = self.request.query_params.get('table_id', None)
         if table_id is not None:
@@ -481,7 +485,7 @@ class DisaggregationValueViewSet(viewsets.ModelViewSet):
     """
 
     def list(self, request):
-        user_countries = getCountry(request.user)
+        user_countries = get_country(request.user)
         queryset = DisaggregationValue.objects.all().filter(country__in=user_countries)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)

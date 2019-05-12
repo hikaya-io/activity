@@ -1,7 +1,9 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import csv
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from indicators.models import *
-from django.utils import timezone
 
 
 class Command(BaseCommand):
@@ -32,7 +34,6 @@ class Command(BaseCommand):
                 lop = row[5].replace(',', '')
                 baseline = row[6].replace(',', '')
                 baseline_na = False
-                indicator = None
                 try:
                     lop = float(lop) if '.' in lop else int(lop)
                 except ValueError as e:
@@ -44,7 +45,8 @@ class Command(BaseCommand):
                     baseline = float(
                         baseline) if '.' in baseline else int(baseline)
                 except ValueError as e:
-                    if baseline and baseline.lower() == 'na' or baseline.lower() == 'n/a' or baseline.lower() == 'not applicable':
+                    if baseline and baseline.lower() == 'na' or baseline.lower() == 'n/a' or \
+                            baseline.lower() == 'not applicable':
                         baseline_na = True
                     else:
                         self.stdout.write(self.style.ERROR(
@@ -61,7 +63,7 @@ class Command(BaseCommand):
                 try:
                     indicator.unit_of_measure = unit_of_measure
                     indicator.lop_target = lop
-                    if baseline_na == True:
+                    if baseline_na:
                         indicator.baseline = None
                         indicator.baseline_na = True
                     else:

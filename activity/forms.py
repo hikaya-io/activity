@@ -1,11 +1,13 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import *
-from crispy_forms.bootstrap import *
-from crispy_forms.layout import Layout, Submit, Reset, Div
+from crispy_forms.layout import Layout, Submit, Reset
 from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from workflow.models import ActivityUser, ActivityBookmarks
 from django.contrib.auth.models import User
+from workflow.models import ActivityUser, ActivityBookmarks
 
 
 class RegistrationForm(UserChangeForm):
@@ -19,7 +21,8 @@ class RegistrationForm(UserChangeForm):
         del self.fields['password']
         print(user['username'].is_superuser)
         # if they aren't a super user or User Admin don't let them change countries form field
-        if 'User Admin' not in user['username'].groups.values_list('name', flat=True) and not user['username'].is_superuser:
+        if 'User Admin' not in user['username'].groups.values_list('name', flat=True) and \
+                not user['username'].is_superuser:
             self.fields['countries'].widget.attrs['disabled'] = "disabled"
             self.fields['country'].widget.attrs['disabled'] = "disabled"
 

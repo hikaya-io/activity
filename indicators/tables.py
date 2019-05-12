@@ -1,6 +1,10 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import django_tables2 as tables
-from .models import Indicator, CollectedData
 from django_tables2.utils import A
+from .models import Indicator, CollectedData
+
 
 TEMPLATE = '''
 <div class="btn-group btn-group-xs">
@@ -16,10 +20,14 @@ class IndicatorTable(tables.Table):
     class Meta:
         model = Indicator
         attrs = {"class": "paleblue"}
-        fields = ('programs', 'sector', 'indicator_type', 'name', 'number', 'key_performance_indicator', 'source', 'definition', 'disaggregation', 'baseline', 'lop_target', 'means_of_verification', 'data_collection_method', 'responsible_person',
-                  'method_of_analysis', 'information_use', 'reporting_frequency', 'create_date', 'edit_date')
-        sequence = ('programs', 'sector', 'indicator_type', 'name', 'number', 'key_performance_indicator', 'source', 'definition', 'disaggregation', 'baseline', 'lop_target', 'means_of_verification', 'data_collection_method', 'responsible_person',
-                    'method_of_analysis', 'information_use', 'reporting_frequency', 'create_date', 'edit_date')
+        fields = ('programs', 'sector', 'indicator_type', 'name', 'number', 'key_performance_indicator', 'source',
+                  'definition', 'disaggregation', 'baseline', 'lop_target', 'means_of_verification',
+                  'data_collection_method', 'responsible_person', 'method_of_analysis', 'information_use',
+                  'reporting_frequency', 'create_date', 'edit_date')
+        sequence = ('programs', 'sector', 'indicator_type', 'name', 'number', 'key_performance_indicator', 'source',
+                    'definition', 'disaggregation', 'baseline', 'lop_target', 'means_of_verification',
+                    'data_collection_method', 'responsible_person', 'method_of_analysis', 'information_use',
+                    'reporting_frequency', 'create_date', 'edit_date')
 
 
 class IndicatorDataTable(tables.Table):

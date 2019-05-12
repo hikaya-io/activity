@@ -1,18 +1,24 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.contrib import admin
-from workflow.models import Program, Sector, SiteProfile, ProjectAgreement, ProjectComplete, Country, Office, Documentation, ActivityUser
-from datetime import datetime, timedelta
 from django.utils import timezone
+
 import uuid
 from simple_history.models import HistoricalRecords
 from decimal import Decimal
-from django.contrib.auth.models import User
+from datetime import datetime, timedelta
+
+from workflow.models import (
+    Program, Sector, SiteProfile, ProjectAgreement, ProjectComplete,
+    Country, Documentation, ActivityUser)
 
 
 class ActivityTable(models.Model):
     name = models.CharField(max_length=255, blank=True)
     table_id = models.IntegerField(blank=True, null=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(ActivityUser, on_delete=models.CASCADE)
     remote_owner = models.CharField(max_length=255, blank=True)
     country = models.ManyToManyField(Country, blank=True)
     url = models.CharField(max_length=255, blank=True)
@@ -20,7 +26,7 @@ class ActivityTable(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -38,7 +44,7 @@ class IndicatorType(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.indicator_type
 
 
@@ -59,7 +65,7 @@ class StrategicObjective(models.Model):
     class Meta:
         ordering = ('country', 'name')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self):
@@ -86,7 +92,7 @@ class Objective(models.Model):
     class Meta:
         ordering = ('program', 'name')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self):
@@ -108,7 +114,7 @@ class Level(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self):
@@ -118,7 +124,7 @@ class Level(models.Model):
 
 
 class LevelAdmin(admin.ModelAdmin):
-    list_display = ('name')
+    list_display = 'name'
     display = 'Levels'
 
 
@@ -132,7 +138,7 @@ class DisaggregationType(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.disaggregation_type
 
 
@@ -151,7 +157,7 @@ class DisaggregationLabel(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
 
@@ -168,7 +174,7 @@ class DisaggregationValue(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.value
 
 
@@ -186,7 +192,7 @@ class ReportingFrequency(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.frequency
 
 
@@ -198,7 +204,7 @@ class DataCollectionFrequency(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.frequency
 
 
@@ -213,7 +219,7 @@ class ReportingPeriod(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.frequency
 
 
@@ -229,7 +235,7 @@ class ExternalService(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -246,7 +252,7 @@ class ExternalServiceRecord(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.full_url
 
 
@@ -290,7 +296,8 @@ class Indicator(models.Model):
     objectives = models.ManyToManyField(
         Objective, blank=True, verbose_name="Program Objective", related_name="obj_indicator", help_text=" ")
     strategic_objectives = models.ManyToManyField(
-        StrategicObjective, verbose_name="Country Strategic Objective", blank=True, related_name="strat_indicator", help_text=" ")
+        StrategicObjective, verbose_name="Country Strategic Objective", blank=True,
+        related_name="strat_indicator", help_text=" ")
     name = models.CharField(verbose_name="Name",
                             max_length=255, null=False, help_text=" ")
     number = models.CharField(
@@ -317,7 +324,8 @@ class Indicator(models.Model):
     target_frequency_custom = models.CharField(
         null=True, blank=True, max_length=100, verbose_name="First event name*", help_text=" ")
     target_frequency_start = models.DateField(
-        blank=True, null=True, auto_now=False, auto_now_add=False, verbose_name="First target period begins*", help_text=" ")
+        blank=True, null=True, auto_now=False, auto_now_add=False,
+        verbose_name="First target period begins*", help_text=" ")
     target_frequency_num_periods = models.IntegerField(
         blank=True, null=True, verbose_name="Number of target periods*", help_text=" ")
     means_of_verification = models.CharField(
@@ -325,7 +333,8 @@ class Indicator(models.Model):
     data_collection_method = models.CharField(
         max_length=255, null=True, blank=True, verbose_name="Data Collection Method", help_text=" ")
     data_collection_frequency = models.ForeignKey(
-        DataCollectionFrequency, null=True, blank=True, verbose_name="Frequency of Data Collection", help_text=" ", on_delete=models.SET_NULL)
+        DataCollectionFrequency, null=True, blank=True, verbose_name="Frequency of Data Collection",
+        help_text=" ", on_delete=models.SET_NULL)
     data_points = models.TextField(
         max_length=500, null=True, blank=True, verbose_name="Data Points", help_text=" ")
     responsible_person = models.CharField(
@@ -335,7 +344,8 @@ class Indicator(models.Model):
     information_use = models.CharField(
         max_length=255, null=True, blank=True, verbose_name="Information Use", help_text=" ")
     reporting_frequency = models.ForeignKey(ReportingFrequency, null=True, blank=True,
-                                            verbose_name="Frequency of Reporting", help_text=" ", on_delete=models.SET_NULL)
+                                            verbose_name="Frequency of Reporting",
+                                            help_text=" ", on_delete=models.SET_NULL)
     quality_assurance = models.TextField(
         max_length=500, null=True, blank=True, verbose_name="Quality Assurance Measures", help_text=" ")
     data_issues = models.TextField(
@@ -352,9 +362,11 @@ class Indicator(models.Model):
     approved_by = models.ForeignKey(ActivityUser, blank=True, null=True,
                                     related_name="approving_indicator", help_text=" ", on_delete=models.SET_NULL)
     approval_submitted_by = models.ForeignKey(
-        ActivityUser, blank=True, null=True, related_name="indicator_submitted_by", help_text=" ", on_delete=models.SET_NULL)
+        ActivityUser, blank=True, null=True, related_name="indicator_submitted_by",
+        help_text=" ", on_delete=models.SET_NULL)
     external_service_record = models.ForeignKey(
-        ExternalServiceRecord, verbose_name="External Service ID", blank=True, null=True, help_text=" ", on_delete=models.SET_NULL)
+        ExternalServiceRecord, verbose_name="External Service ID", blank=True, null=True,
+        help_text=" ", on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True, help_text=" ")
     edit_date = models.DateTimeField(null=True, blank=True, help_text=" ")
     history = HistoricalRecords()
@@ -416,7 +428,7 @@ class Indicator(models.Model):
             return Indicator.TARGET_FREQUENCIES[self.target_frequency-1][1]
         return None
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -434,13 +446,14 @@ class PeriodicTarget(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.indicator.target_frequency == Indicator.LOP \
                 or self.indicator.target_frequency == Indicator.EVENT \
                 or self.indicator.target_frequency == Indicator.MID_END:
             return self.period
         if self.start_date and self.end_date:
-            return "%s (%s - %s)" % (self.period, self.start_date.strftime('%b %d, %Y'), self.end_date.strftime('%b %d, %Y'))
+            return "%s (%s - %s)" % (self.period, self.start_date.strftime('%b %d, %Y'),
+                                     self.end_date.strftime('%b %d, %Y'))
         return self.period
 
     class Meta:
@@ -467,7 +480,8 @@ class PeriodicTargetAdmin(admin.ModelAdmin):
 
 class CollectedDataManager(models.Manager):
     def get_queryset(self):
-        return super(CollectedDataManager, self).get_queryset().prefetch_related('site', 'disaggregation_value').select_related('program', 'indicator', 'agreement', 'complete', 'evidence', 'tola_table')
+        return super(CollectedDataManager, self).get_queryset().prefetch_related('site', 'disaggregation_value')\
+            .select_related('program', 'indicator', 'agreement', 'complete', 'evidence', 'tola_table')
 
 
 class CollectedData(models.Model):
@@ -519,7 +533,7 @@ class CollectedData(models.Model):
         super(CollectedData, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.description
 
     def achieved_sum(self):

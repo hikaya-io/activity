@@ -1,6 +1,7 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.test import TestCase
-from django.test import RequestFactory
-from django.test import Client
 from indicators.models import Indicator, IndicatorType, DisaggregationType, ReportingFrequency, CollectedData
 from workflow.models import Program, Country, Organization
 from django.contrib.auth.models import User

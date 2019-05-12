@@ -1,14 +1,23 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-from rest_framework import serializers
-from workflow.models import Program, Sector, ProjectType, Office, SiteProfile, Country, ProjectComplete, \
-    ProjectAgreement, Stakeholder, Capacity, Evaluate, ProfileType, \
-    Province, District, AdminLevelThree, Village, StakeholderType, Contact, Documentation, LoggedUser, Checklist, Organization
-from indicators.models import Indicator, ReportingFrequency, ActivityUser, IndicatorType, Objective, DisaggregationType, \
-    Level, ExternalService, ExternalServiceRecord, StrategicObjective, CollectedData, ActivityTable, DisaggregationValue,\
-    PeriodicTarget
 from django.contrib.auth.models import User
 from django.core.serializers.python import Serializer as PythonSerializer
+from rest_framework import serializers
+
+from indicators.models import (
+    Indicator, ReportingFrequency, ActivityUser, IndicatorType, Objective,
+    DisaggregationType, Level, ExternalService, ExternalServiceRecord,
+    StrategicObjective, CollectedData, ActivityTable, DisaggregationValue, PeriodicTarget
+)
+from workflow.models import (
+    Program, Sector, ProjectType, Office, SiteProfile, Country, ProjectComplete,
+    ProjectAgreement, Stakeholder, Capacity, Evaluate, ProfileType,
+    Province, District, AdminLevelThree, Village, StakeholderType,
+    Contact, Documentation, LoggedUser, Checklist, Organization
+)
 
 
 class FlatJsonSerializer(PythonSerializer):
@@ -19,6 +28,7 @@ class FlatJsonSerializer(PythonSerializer):
         serializer = FlatJsonSerializer()
         json_data = serializer.serialize(<queryset>, <optional>fields=('field1', 'field2'))
     """
+    _current = None
 
     def get_dump_object(self, obj):
         data = self._current
@@ -189,7 +199,7 @@ class IndicatorLightSerializer(serializers.ModelSerializer):
     datacount = serializers.SerializerMethodField()
 
     def get_datacount(self, obj):
-        # Returns the number of collecteddata points by an indicator
+        # Returns the number of collected data points by an indicator
         return obj.collecteddata_set.count()
 
     def get_sector(self, obj):
@@ -369,7 +379,7 @@ class TolaTableSerializer(serializers.HyperlinkedModelSerializer):
         # HyperlinkedModelSerializer does not include id field by default so manually setting it
         fields = ('id', 'name', 'table_id', 'owner', 'remote_owner',
                   'country', 'url', 'unique_count', 'create_date', 'edit_date')
-        #fields = '__all__'
+        # fields = '__all__'
 
 
 class DisaggregationValueSerializer(serializers.HyperlinkedModelSerializer):

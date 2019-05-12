@@ -1,14 +1,11 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
+from indicators.models import ActivityTable, ExternalService
 
 import json
-from django.http import HttpResponseRedirect
-from indicators.models import Indicator, ActivityTable, ExternalService
-from workflow.models import Program, SiteProfile, Country, Sector, ActivityUser
-from django.shortcuts import render_to_response
-from django.contrib import messages
-from activity.util import getCountry
-
 import requests
 
 
@@ -16,7 +13,6 @@ def home(request):
     """
     Import
     """
-
     return render(request, 'tables/home.html')
 
 
@@ -29,8 +25,8 @@ def import_table(request):
 
     # add filter to get just the users tables only
     user_filter_url = service.feed_url + "&owner__username=" + str(owner)
-    #public_filter_url = service.feed_url + "&public=True"
-    #shared_filter_url = service.feed_url + "&shared__username=" + str(owner)
+    # public_filter_url = service.feed_url + "&public=True"
+    # shared_filter_url = service.feed_url + "&shared__username=" + str(owner)
 
     response = requests.get(user_filter_url)
     user_json = json.loads(response.content)
@@ -39,7 +35,7 @@ def import_table(request):
 
     # debug the json data string uncomment dump and print
     # data2 = json.dumps(data) # json formatted string
-    #print data2
+    # print data2
 
     if request.method == 'POST':
         id = request.POST['service_table']
@@ -54,15 +50,14 @@ def import_table(request):
 
         check_for_existence = ActivityTable.objects.all().filter(name=name, owner=owner)
         if check_for_existence:
-            result = "error"
+            message = "error"
         else:
             create_table = ActivityTable.objects.create(
                 name=name, owner=owner, remote_owner=remote_owner, table_id=id, url=url)
             create_table.save()
-            result = "success"
+            message = "success"
 
         # send result back as json
-        message = result
         return HttpResponse(json.dumps(message), content_type='application/json')
 
     # send the keys and vars from the json data to the template along with submitted feed info and silos for new form

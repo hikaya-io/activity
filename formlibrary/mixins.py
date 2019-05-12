@@ -1,7 +1,10 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse
-from rest_framework import authentication, permissions, viewsets
+from rest_framework import authentication, permissions
 
 
 class LoggedInMixin(object):
@@ -36,8 +39,6 @@ class AjaxableResponseMixin(object):
             return JsonResponse(data)
         else:
             return response
-
-# API Mixin
 
 
 class APIDefaultsMixin(object):

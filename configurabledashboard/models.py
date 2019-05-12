@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 
 from django.db import models
@@ -30,13 +33,13 @@ class DashboardTheme(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(DashboardTheme, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.theme_name
 
 
@@ -63,13 +66,13 @@ class ComponentDataSource(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(ComponentDataSource, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.data_name
 
 
@@ -101,13 +104,13 @@ class DashboardComponent(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(DashboardComponent, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.component_name
 
 
@@ -125,9 +128,9 @@ class CustomDashboard(models.Model):
         "Brief Description", null=True, blank=True, help_text="What does this custom dashboard display to the user?")
     is_public = models.BooleanField("External Public Dashboard", default=False)
     theme = models.ForeignKey(
-        DashboardTheme, blank=True, null=True, related_name='theme')
+        DashboardTheme, blank=True, null=True, related_name='theme', on_delete=models.SET_NULL)
     program = models.ForeignKey(Program, verbose_name="Program",
-                                related_name="dashboard_program", null=True, blank=True)
+                                related_name="dashboard_program", null=True, blank=True, on_delete=models.SET_NULL)
     color_palette = models.CharField(
         "Color Scheme", max_length=255, blank=False, default="bright")
     components = models.ManyToManyField(
@@ -142,13 +145,13 @@ class CustomDashboard(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(CustomDashboard, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.dashboard_name
 
 
