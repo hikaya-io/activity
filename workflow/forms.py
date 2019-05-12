@@ -94,8 +94,9 @@ class BudgetForm(forms.ModelForm):
         self.helper.html5_required = True
         self.helper.form_tag = False
         self.helper.layout = Layout(
-            Field('contributor', required=False), Field('description_of_contribution',
-                                                        required=False), PrependedAppendedText('proposed_value', '$', '.00'), 'agreement', 'complete',
+            Field('contributor', required=False),
+            Field('description_of_contribution',required=False),
+            PrependedAppendedText('proposed_value', '$', '.00'), 'agreement', 'complete',
         )
 
         super(BudgetForm, self).__init__(*args, **kwargs)
