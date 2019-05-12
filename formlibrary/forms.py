@@ -1,10 +1,13 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django import forms
 from .models import TrainingAttendance, Distribution, Beneficiary
 from workflow.models import Program, ProjectAgreement, Office, Province, SiteProfile
 from functools import partial
-from activity.util import getCountry
+from activity.util import get_country
 
 
 class DatePicker(forms.DateInput):
@@ -37,7 +40,7 @@ class TrainingAttendanceForm(forms.ModelForm):
 
         super(TrainingAttendanceForm, self).__init__(*args, **kwargs)
 
-        countries = getCountry(self.request.user)
+        countries = get_country(self.request.user)
         self.fields['project_agreement'].queryset = ProjectAgreement.objects.filter(
             program__country__in=countries)
         self.fields['program'].queryset = Program.objects.filter(
@@ -68,7 +71,7 @@ class DistributionForm(forms.ModelForm):
 
         super(DistributionForm, self).__init__(*args, **kwargs)
 
-        countries = getCountry(self.request.user)
+        countries = get_country(self.request.user)
         self.fields['initiation'].queryset = ProjectAgreement.objects.filter(
             program__country__in=countries)
         self.fields['program'].queryset = Program.objects.filter(
@@ -99,7 +102,7 @@ class BeneficiaryForm(forms.ModelForm):
 
         super(BeneficiaryForm, self).__init__(*args, **kwargs)
 
-        countries = getCountry(self.request.user)
+        countries = get_country(self.request.user)
         self.fields['training'].queryset = TrainingAttendance.objects.filter(
             program__country__in=countries)
         self.fields['training'].queryset = TrainingAttendance.objects.filter(

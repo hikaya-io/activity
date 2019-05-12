@@ -7,10 +7,10 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="TolaData - TolaActivity: Putting Adaptive Management into Practice">
-        <meta name="author" content="TolaData">
+        <meta name="description" content="Hikaya - Activity CE : We help organizations tell their stories through data">
+        <meta name="author" content="Hikaya">
 
-        <title>{% block title %} TolaActivity {% endblock %}</title>
+        <title>{% block title %} Activity CE {% endblock %}</title>
 
         <link rel="icon" href="{% static 'img/favicon.ico' %}" />
 
@@ -54,7 +54,7 @@
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'index' %}">
-                        <img style="margin-top: -3px; max-width: 140px;" src="{% static 'img/tola-activity-primary-mark-white.png' %}" />
+                        <img style="margin-top: -5px; max-width: 140px;" src="{% static 'img/hikaya-primary-mark-white.png' %}" />
                     </a>
                     <!-- hamburger nav -->
                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
@@ -237,14 +237,11 @@
         <div id="footer">
             <!-- Sticky Footer -->
             <div class="container">
-                <div class="col-md-6 text-left">
-                    <a href="http://www.toladata.com" class="text-muted"><b>Tola</b>Data</a>
-                </div>
                 {% if "links.html"|template_exists %}
                     {% include "links.html" %}
                 {% else %}
-                    <div class="col-md-6 text-right">
-                        <a href="https://sites.google.com/mercycorps.org/tolauserguide/home" class="text-muted" target="_blank">Documentation</a> | <a href="http://tola.work/faq" class="text-muted">FAQ</a> | <a href="http://tola.work/helpdesk/tickets/submit/" class="text-muted">Feedback</a> | <a href="https://github.com/toladata/TolaActivity/blob/master/LICENSE" class="text-muted">License</a>
+                    <div class="text-center">
+                        <a href="http://www.hikaya.com" class="text-muted">Hikaya</a> | <a href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE" class="text-muted">License</a>
                     </div>
                 {% endif %}
 

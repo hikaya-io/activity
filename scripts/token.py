@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 """
 import json data from API
 IMPORTANT!! you must turn off pagination for this to work from a URL and get all
@@ -7,17 +10,13 @@ Runs twice via function calls at bottom once
 """
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-import sys
-import unicodedata
-import json
-from os.path import exists
-from django.db import connection, transaction
+from django.db import connection
 
 cursor = connection.cursor()
 
 
 def run():
-    print "Setting Tokens"
+    print("Setting Tokens")
 
 
 for user in User.objects.all():

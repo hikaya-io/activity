@@ -1,7 +1,8 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.contrib import admin
-from django.conf import settings
-from datetime import datetime
 
 from workflow.models import Program
 
@@ -21,7 +22,7 @@ class ProgramNarratives(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.narrative_title
 
 
@@ -35,7 +36,7 @@ class Link(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.link
 
 
@@ -53,10 +54,6 @@ class ProgramLinks(models.Model):
                              blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
-
-    def __unicode__(self):
-
-        return self.title
 
 
 class ProgramLinksAdmin(admin.ModelAdmin):
@@ -79,7 +76,7 @@ class JupyterNotebooks(models.Model):
         ordering = ('name',)
         verbose_name_plural = "Jupyter Notebooks"
 
-    def __unicode__(self):
+    def __str__(self):
 
         return self.name
 

@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.views.generic.list import ListView
 from django.http import HttpResponse
 
@@ -10,12 +13,11 @@ from indicators.models import CollectedData, Indicator, ActivityTable
 from django.db.models import Sum
 from django.db.models import Q
 
-from activity.util import getCountry, get_table
+from activity.util import get_country, get_table
 
 from django.contrib.auth.decorators import login_required
 import requests
 import json
-from datetime import *
 import ast
 
 
@@ -31,40 +33,40 @@ class ProgramList(ListView):
 
         # retrieve the coutries the user has data access for
         country = None
-        countries = getCountry(request.user)
+        countries = get_country(request.user)
         country_list = Country.objects.all().filter(id__in=countries)
         if int(self.kwargs['pk']) == 0:
-            getProgram = Program.objects.all().filter(country__in=countries)
+            get_program = Program.objects.all().filter(country__in=countries)
         else:
-            getProgram = Program.objects.all().filter(
+            get_program = Program.objects.all().filter(
                 country__id=self.kwargs['pk'])
             country = Country.objects.get(id=self.kwargs['pk']).country
 
         program_list = []
-        for program in getProgram:
+        for program in get_program:
             # get the percentage of indicators with data
-            getInidcatorDataCount = Indicator.objects.filter(
+            get_indicator_data_count = Indicator.objects.filter(
                 program__id=program.id).exclude(collecteddata__periodic_target=None).count()
-            getInidcatorCount = Indicator.objects.filter(
+            get_indicator_count = Indicator.objects.filter(
                 program__id=program.id).count()
-            if getInidcatorCount > 0 and getInidcatorDataCount > 0:
-                getInidcatorDataPercent = 100 * \
-                    float(getInidcatorDataCount) / float(getInidcatorCount)
+            if get_indicator_count > 0 and get_indicator_data_count > 0:
+                get_indicator_data_percent = 100 * \
+                    float(get_indicator_data_count) / float(get_indicator_count)
             else:
-                getInidcatorDataPercent = 0
+                get_indicator_data_percent = 0
 
-            program.indicator_data_percent = int(getInidcatorDataPercent)
-            program.indicator_percent = int(100 - getInidcatorDataPercent)
+            program.indicator_data_percent = int(get_indicator_data_percent)
+            program.indicator_percent = int(100 - get_indicator_data_percent)
 
             # get the percentage of projects with completes (tracking)
-            getProjectAgreementCount = ProjectAgreement.objects.filter(
+            get_project_agreement_count = ProjectAgreement.objects.filter(
                 program__id=program.id).count()
-            getProjectCompleteCount = ProjectComplete.objects.filter(
+            get_project_complete_count = ProjectComplete.objects.filter(
                 program__id=program.id).count()
-            if getProjectAgreementCount > 0 and getProjectCompleteCount > 0:
+            if get_project_agreement_count > 0 and get_project_complete_count > 0:
                 project_percent = 100 * \
-                    float(getProjectCompleteCount) / \
-                    float(getProjectAgreementCount)
+                    float(get_project_complete_count) / \
+                    float(get_project_agreement_count)
             else:
                 project_percent = 0
 
@@ -73,93 +75,105 @@ class ProgramList(ListView):
             program.project_agreement_percent = int(100 - project_percent)
             program_list.append(program)
 
-        return render(request, self.template_name, {'getProgram': program_list, 'getCountry': country_list, 'country': country})
+        return render(request, self.template_name,
+                      {'getProgram': program_list, 'getCountry': country_list, 'country': country})
 
 
 @login_required(login_url='/accounts/login/')
-def DefaultCustomDashboard(request, id=0, status=0):
+def default_custom_dashboard(request, id=0, status=0):
     """
     This is used as the workflow program dashboard
     # of agreements, approved, rejected, waiting, archived and total for dashboard
     http://127.0.0.1:8000/customdashboard/65/
     """
     program_id = id
-
-    countries = getCountry(request.user)
+    countries = get_country(request.user)
 
     # transform to list if a submitted country
     selected_countries_list = Country.objects.all().filter(program__id=program_id)
 
-    getQuantitativeDataSums = CollectedData.objects.filter(indicator__program__id=program_id, achieved__isnull=False, indicator__key_performance_indicator=True).exclude(achieved=None).order_by(
-        'indicator__number').values('indicator__number', 'indicator__name', 'indicator__id').annotate(targets=Sum('periodic_target__target'), actuals=Sum('achieved')).exclude(achieved=None)
+    get_quantitative_data_sums = CollectedData.objects.filter(
+        indicator__program__id=program_id, achieved__isnull=False, indicator__key_performance_indicator=True)\
+        .exclude(achieved=None).order_by(
+        'indicator__number').values('indicator__number', 'indicator__name', 'indicator__id')\
+        .annotate(targets=Sum('periodic_target__target'), actuals=Sum('achieved')).exclude(achieved=None)
 
-    totalTargets = getQuantitativeDataSums.aggregate(Sum('targets'))
-    totalActuals = getQuantitativeDataSums.aggregate(Sum('actuals'))
+    total_targets = get_quantitative_data_sums.aggregate(Sum('targets'))
+    total_actuals = get_quantitative_data_sums.aggregate(Sum('actuals'))
 
-    getFilteredName = Program.objects.get(id=program_id)
+    get_filtered_name = Program.objects.get(id=program_id)
 
-    getProjectsCount = ProjectAgreement.objects.all().filter(
+    get_projects_count = ProjectAgreement.objects.all().filter(
         program__id=program_id, program__country__in=countries).count()
-    getBudgetEstimated = ProjectAgreement.objects.all().filter(program__id=program_id,
-                                                               program__country__in=countries).annotate(estimated=Sum('total_estimated_budget'))
-    getAwaitingApprovalCount = ProjectAgreement.objects.all().filter(
+    get_budget_estimated = ProjectAgreement.objects.all().filter(
+        program__id=program_id, program__country__in=countries).annotate(estimated=Sum('total_estimated_budget'))
+    get_awaiting_approval_count = ProjectAgreement.objects.all().filter(
         program__id=program_id, approval='awaiting approval', program__country__in=countries).count()
-    getApprovedCount = ProjectAgreement.objects.all().filter(
+    get_approved_count = ProjectAgreement.objects.all().filter(
         program__id=program_id, approval='approved', program__country__in=countries).count()
-    getRejectedCount = ProjectAgreement.objects.all().filter(
+    get_rejected_count = ProjectAgreement.objects.all().filter(
         program__id=program_id, approval='rejected', program__country__in=countries).count()
-    getInProgressCount = ProjectAgreement.objects.all().filter(program__id=program_id).filter(
+    get_in_progress_count = ProjectAgreement.objects.all().filter(program__id=program_id).filter(
         Q(Q(approval='in progress') | Q(approval=None)), program__country__in=countries).count()
-    nostatus_count = ProjectAgreement.objects.all().filter(
+    no_status_count = ProjectAgreement.objects.all().filter(
         program__id=program_id).filter(Q(Q(approval=None) | Q(approval=""))).count()
 
-    getSiteProfile = SiteProfile.objects.all().filter(
+    get_site_profile = SiteProfile.objects.all().filter(
         Q(projectagreement__program__id=program_id) | Q(collecteddata__program__id=program_id))
-    getSiteProfileIndicator = SiteProfile.objects.all().filter(
+    get_site_profile_indicator = SiteProfile.objects.all().filter(
         Q(collecteddata__program__id=program_id))
 
-    if (status) == 'Approved':
-        getProjects = ProjectAgreement.objects.all().filter(program__id=program_id,
-                                                            program__country__in=countries, approval='approved').prefetch_related('projectcomplete')
-    elif(status) == 'Rejected':
-        getProjects = ProjectAgreement.objects.all().filter(program__id=program_id,
-                                                            program__country__in=countries, approval='rejected').prefetch_related('projectcomplete')
-    elif(status) == 'In Progress':
-        getProjects = ProjectAgreement.objects.all().filter(program__id=program_id,
-                                                            program__country__in=countries, approval='in progress').prefetch_related('projectcomplete')
-    elif(status) == 'Awaiting Approval':
-        getProjects = ProjectAgreement.objects.all().filter(program__id=program_id, program__country__in=countries,
-                                                            approval='awaiting approval').prefetch_related('projectcomplete')
+    if status == 'Approved':
+        get_projects = ProjectAgreement.objects.all().filter(
+            program__id=program_id,
+            program__country__in=countries, approval='approved').prefetch_related('projectcomplete')
+    elif status == 'Rejected':
+        get_projects = ProjectAgreement.objects.all().filter(
+            program__id=program_id,
+            program__country__in=countries, approval='rejected').prefetch_related('projectcomplete')
+    elif status == 'In Progress':
+        get_projects = ProjectAgreement.objects.all().filter(
+            program__id=program_id,
+            program__country__in=countries, approval='in progress').prefetch_related('projectcomplete')
+    elif status == 'Awaiting Approval':
+        get_projects = ProjectAgreement.objects.all().filter(
+            program__id=program_id, program__country__in=countries,
+            approval='awaiting approval').prefetch_related('projectcomplete')
     else:
-        getProjects = ProjectAgreement.objects.all().filter(
+        get_projects = ProjectAgreement.objects.all().filter(
             program__id=program_id, program__country__in=countries)
 
     get_project_completed = []
 
-    totalBudgetted = 0.00
-    totalActual = 0.00
+    total_budgetted = 0.00
+    total_actual = 0.00
 
-    getProjectsComplete = ProjectComplete.objects.all()
-    for project in getProjects:
-        for complete in getProjectsComplete:
-            if complete.actual_budget != None:
+    get_projects_complete = ProjectComplete.objects.all()
+    for project in get_projects:
+        for complete in get_projects_complete:
+            if complete.actual_budget is not None:
                 if project.id == complete.project_agreement_id:
-                    totalBudgetted = float(
-                        totalBudgetted) + float(project.total_estimated_budget)
-                    totalActual = float(totalActual) + \
+                    total_budgetted = float(
+                        total_budgetted) + float(project.total_estimated_budget)
+                    total_actual = float(total_actual) + \
                         float(complete.actual_budget)
 
                     get_project_completed.append(project)
 
-    return render(request, "customdashboard/customdashboard/visual_dashboard.html", {'getSiteProfile': getSiteProfile, 'getBudgetEstimated': getBudgetEstimated, 'getQuantitativeDataSums': getQuantitativeDataSums,
-                                                                                     'country': countries, 'getAwaitingApprovalCount': getAwaitingApprovalCount,
-                                                                                     'getFilteredName': getFilteredName, 'getProjects': getProjects, 'getApprovedCount': getApprovedCount,
-                                                                                     'getRejectedCount': getRejectedCount, 'getInProgressCount': getInProgressCount, 'nostatus_count': nostatus_count,
-                                                                                     'getProjectsCount': getProjectsCount, 'selected_countries_list': selected_countries_list,
-                                                                                     'getSiteProfileIndicator': getSiteProfileIndicator, 'get_project_completed': get_project_completed, 'totalActuals': totalActuals, 'totalTargets': totalTargets, 'totalBudgetted': totalBudgetted, 'totalActual': totalActual})
+    return render(request, "customdashboard/customdashboard/visual_dashboard.html",
+                  {'get_site_profile': get_site_profile, 'get_budget_estimated': get_budget_estimated,
+                   'getQuantitativeDataSums': get_quantitative_data_sums, 'country': countries,
+                   'get_awaiting_approval_count': get_awaiting_approval_count,
+                   'getFilteredName': get_filtered_name, 'get_projects': get_projects,
+                   'get_approved_count': get_approved_count, 'get_rejected_count': get_rejected_count,
+                   'get_in_progress_count': get_in_progress_count, 'nostatus_count': no_status_count,
+                   'get_projects_count': get_projects_count, 'selected_countries_list': selected_countries_list,
+                   'get_site_profile_indicator': get_site_profile_indicator,
+                   'get_project_completed': get_project_completed, 'totalActuals': total_actuals,
+                   'totalTargets': total_targets, 'total_budgetted': total_budgetted,'total_actual': total_actual})
 
 
-def PublicDashboard(request, id=0, public=0):
+def public_dashboard(request, id=0, public=0):
     """
     This is used as the internal and external (public) dashboard view
     the template is changed for public
@@ -168,49 +182,52 @@ def PublicDashboard(request, id=0, public=0):
     http://127.0.0.1:8000/customdashboard/program_dashboard/65/0/
     """
     program_id = id
-    getQuantitativeDataSums_2 = CollectedData.objects.all().filter(indicator__program__id=program_id, achieved__isnull=False).order_by(
-        'indicator__source').values('indicator__number', 'indicator__source', 'indicator__id')
-    getQuantitativeDataSums = CollectedData.objects.filter(indicator__program__id=program_id, achieved__isnull=False).exclude(achieved=None).order_by(
-        'indicator__number').values('indicator__number', 'indicator__name', 'indicator__id').annotate(targets=Sum('periodic_target__target'), actuals=Sum('achieved'))
-    getIndicatorCount = Indicator.objects.all().filter(program__id=program_id).count()
+    get_quantitative_data_sums_2 = CollectedData.objects.all().filter(
+        indicator__program__id=program_id, achieved__isnull=False)\
+        .order_by('indicator__source').values('indicator__number', 'indicator__source', 'indicator__id')
+    get_quantitative_data_sums = CollectedData.objects.filter(
+        indicator__program__id=program_id, achieved__isnull=False).exclude(achieved=None)\
+        .order_by('indicator__number').values('indicator__number', 'indicator__name', 'indicator__id')\
+        .annotate(targets=Sum('periodic_target__target'), actuals=Sum('achieved'))
+    get_indicator_count = Indicator.objects.all().filter(program__id=program_id).count()
 
-    getIndicatorData = CollectedData.objects.all().filter(
+    get_indicator_data = CollectedData.objects.all().filter(
         indicator__program__id=program_id, achieved__isnull=False).order_by('date_collected')
 
-    getIndicatorCountData = getIndicatorData.count()
+    get_indicator_count_data = get_indicator_data.count()
 
-    getIndicatorCountKPI = Indicator.objects.all().filter(
+    get_indicator_count_kpi = Indicator.objects.all().filter(
         program__id=program_id, key_performance_indicator=1).count()
-    getProgram = Program.objects.all().get(id=program_id)
+    get_program = Program.objects.all().get(id=program_id)
     try:
-        getProgramNarrative = ProgramNarratives.objects.get(
+        get_program_narrative = ProgramNarratives.objects.get(
             program_id=program_id)
     except ProgramNarratives.DoesNotExist:
-        getProgramNarrative = None
-    getProjects = ProjectComplete.objects.all().filter(program_id=program_id)
-    getAllProjects = ProjectAgreement.objects.all().filter(program_id=program_id)
-    getSiteProfile = SiteProfile.objects.all().filter(
+        get_program_narrative = None
+    get_projects = ProjectComplete.objects.all().filter(program_id=program_id)
+    get_all_projects = ProjectAgreement.objects.all().filter(program_id=program_id)
+    get_site_profile = SiteProfile.objects.all().filter(
         projectagreement__program__id=program_id)
-    getSiteProfileIndicator = SiteProfile.objects.all().filter(
+    get_site_profile_indicator = SiteProfile.objects.all().filter(
         Q(collecteddata__program__id=program_id))
 
-    getProjectsCount = ProjectAgreement.objects.all().filter(
+    get_projects_count = ProjectAgreement.objects.all().filter(
         program__id=program_id).count()
-    getAwaitingApprovalCount = ProjectAgreement.objects.all().filter(
+    get_awaiting_approval_count = ProjectAgreement.objects.all().filter(
         program__id=program_id, approval='awaiting approval').count()
-    getApprovedCount = ProjectAgreement.objects.all().filter(
+    get_approved_count = ProjectAgreement.objects.all().filter(
         program__id=program_id, approval='approved').count()
-    getRejectedCount = ProjectAgreement.objects.all().filter(
+    get_rejected_count = ProjectAgreement.objects.all().filter(
         program__id=program_id, approval='rejected').count()
-    getInProgressCount = ProjectAgreement.objects.all().filter(Q(program__id=program_id) & Q(
+    get_in_progress_count = ProjectAgreement.objects.all().filter(Q(program__id=program_id) & Q(
         Q(approval='in progress') | Q(approval=None) | Q(approval=""))).count()
 
-    nostatus_count = ProjectAgreement.objects.all().filter(
+    no_status_count = ProjectAgreement.objects.all().filter(
         Q(program__id=program_id) & Q(Q(approval=None) | Q(approval=""))).count()
 
-    getNotebooks = JupyterNotebooks.objects.all().filter(program__id=program_id)
+    get_notebooks = JupyterNotebooks.objects.all().filter(program__id=program_id)
 
-    # get all countires
+    # get all countries
     countries = Country.objects.all().filter(program__id=program_id)
 
     # Trainings
@@ -218,12 +235,12 @@ def PublicDashboard(request, id=0, public=0):
     training_id_list = []
 
     # Indicator Evidence
-    getEvidence = ActivityTable.objects.all().filter(country__in=countries)
-    evidence_tables_count = getEvidence.count()
+    get_evidence = ActivityTable.objects.all().filter(country__in=countries)
+    evidence_tables_count = get_evidence.count()
     evidence_tables = []
 
     try:
-        for table in getEvidence:
+        for table in get_evidence:
 
             table.table_data = get_table(table.url)
 
@@ -234,26 +251,26 @@ def PublicDashboard(request, id=0, public=0):
     except Exception as e:
         pass
 
-    for p in getProjects:
+    for p in get_projects:
         agreement_id_list.append(p.id)
 
-    getTrainings = TrainingAttendance.objects.all().filter(
+    get_trainings = TrainingAttendance.objects.all().filter(
         project_agreement_id__in=agreement_id_list)
 
-    getDistributions = Distribution.objects.all().filter(
+    get_distributions = Distribution.objects.all().filter(
         initiation_id__in=agreement_id_list)
 
-    for t in getTrainings:
+    for t in get_trainings:
         training_id_list.append(t.id)
 
-    getBeneficiaries = Beneficiary.objects.all().filter(training__in=training_id_list)
+    get_beneficiaries = Beneficiary.objects.all().filter(training__in=training_id_list)
 
     get_project_completed = []
 
-    getProjectsComplete = ProjectComplete.objects.all()
-    for project in getProjects:
-        for complete in getProjectsComplete:
-            if complete.actual_budget != None:
+    get_projects_complete = ProjectComplete.objects.all()
+    for project in get_projects:
+        for complete in get_projects_complete:
+            if complete.actual_budget is not None:
                 if project.id == complete.project_agreement_id:
                     get_project_completed.append(project)
 
@@ -265,20 +282,21 @@ def PublicDashboard(request, id=0, public=0):
         template = "customdashboard/publicdashboard/program_dashboard.html"
 
     return render(request, template, {
-        'getProgram': getProgram, 'getProjects': getProjects,
-        'getSiteProfile': getSiteProfile, 'countries': countries,
-        'getProgramNarrative': getProgramNarrative, 'getAwaitingApprovalCount': getAwaitingApprovalCount,
-        'getQuantitativeDataSums_2': getQuantitativeDataSums_2, 'getApprovedCount': getApprovedCount,
-        'getRejectedCount': getRejectedCount, 'getInProgressCount': getInProgressCount,
-        'nostatus_count': nostatus_count, 'total_projects': getProjectsCount,
-        'getIndicatorCount': getIndicatorCount, 'getIndicatorData': getIndicatorData,
-        'getIndicatorCountData': getIndicatorCountData, 'getIndicatorCountKPI': getIndicatorCountKPI,
-        'getEvidence': getEvidence, 'evidence_tables': evidence_tables,
-        'getNotebooks': getNotebooks, 'evidence_tables_count': evidence_tables_count,
-        'getQuantitativeDataSums': getQuantitativeDataSums, 'getSiteProfileIndicator': getSiteProfileIndicator,
-        'getSiteProfileIndicatorCount': getSiteProfileIndicator.count(), 'getBeneficiaries': getBeneficiaries,
-        'getDistributions': getDistributions, 'getTrainings': getTrainings,
-        'get_project_completed': get_project_completed, 'getAllProjects': getAllProjects})
+        'get_program': get_program, 'get_projects': get_projects,
+        'get_site_profile': get_site_profile, 'countries': countries,
+        'get_program_narrative': get_program_narrative, 'get_awaiting_approval_count': get_awaiting_approval_count,
+        'get_quantitative_data_sums_2': get_quantitative_data_sums_2, 'get_approved_count': get_approved_count,
+        'get_rejected_count': get_rejected_count, 'get_in_progress_count': get_in_progress_count,
+        'nostatus_count': no_status_count, 'total_projects': get_projects_count,
+        'get_indicator_count': get_indicator_count, 'get_indicator_data': get_indicator_data,
+        'get_indicator_count_data': get_indicator_count_data, 'get_indicator_count_kpi': get_indicator_count_kpi,
+        'get_evidence': get_evidence, 'evidence_tables': evidence_tables,
+        'get_notebooks': get_notebooks, 'evidence_tables_count': evidence_tables_count,
+        'get_quantitative_data_sums': get_quantitative_data_sums,
+        'get_site_profile_indicator': get_site_profile_indicator,
+        'getSiteProfileIndicatorCount': get_site_profile_indicator.count(), 'get_beneficiaries': get_beneficiaries,
+        'get_distributions': get_distributions, 'get_trainings': get_trainings,
+        'get_project_completed': get_project_completed, 'get_all_projects': get_all_projects})
 
 
 """
@@ -288,7 +306,7 @@ customer requests outside the scope of customized program dashboards
 """
 
 
-def SurveyPublicDashboard(request, id=0):
+def survey_public_dashboard(request, id=0):
     """
     DEMO only survey for Tola survey
     :return:
@@ -309,9 +327,9 @@ def SurveyPublicDashboard(request, id=0):
     response = requests.get(filter_url, headers=headers, verify=False)
     get_json = json.loads(response.content)
     data = ast.literal_eval(get_json)
-    meaning = []
-    join = []
-    tola_is = []
+    meaning = list()
+    join = list()
+    tola_is = list()
     for item in data['data']:
         print(item['tola_is_a_pashto_word_meaning_'])
         meaning.append(item['tola_is_a_pashto_word_meaning_'])
@@ -325,7 +343,7 @@ def SurveyPublicDashboard(request, id=0):
     join: tola_is_a_myst, i_like_beer,to_meet_the_team,not_sure_what_
     tola_is: adaptive_manag an_indicator_t a_data_managem option_4 all_of_the_abo
     """
-    meaningcount = {}
+    meaningcount = dict()
     meaningcount['peaceful'] = 0
     meaningcount['is_global'] = 0
     meaningcount['i_give_up'] = 0
@@ -340,7 +358,7 @@ def SurveyPublicDashboard(request, id=0):
         if answer == "peaceful":
             meaningcount['peaceful'] = meaningcount['peaceful'] + 1
 
-    joincount = {}
+    joincount = dict()
     joincount['tola_is_a_mystery'] = 0
     joincount['i_like_beer'] = 0
     joincount['to_meet_the_team'] = 0
@@ -355,7 +373,7 @@ def SurveyPublicDashboard(request, id=0):
         if "not_sure_what_" in answer:
             joincount['not_sure'] = joincount['not_sure'] + 1
 
-    tolacount = {}
+    tolacount = dict()
     tolacount['adaptive_manag'] = 0
     tolacount['an_indicator_t'] = 0
     tolacount['a_data_managem'] = 0
@@ -375,10 +393,12 @@ def SurveyPublicDashboard(request, id=0):
 
     dashboard = True
 
-    return render(request, "customdashboard/themes/survey_public_dashboard.html", {'meaning': meaningcount, 'join': joincount, 'tola_is': tolacount, 'countries': countries, 'dashboard': dashboard})
+    return render(request, "customdashboard/themes/survey_public_dashboard.html",
+                  {'meaning': meaningcount, 'join': joincount, 'tola_is': tolacount,
+                   'countries': countries, 'dashboard': dashboard})
 
 
-def SurveyTalkPublicDashboard(request, id=0):
+def survey_talk_public_dashboard(request, id=0):
     """
     DEMO only survey for Tola survey for use with public talks about TolaData
     Share URL to survey and data will be aggregated in tolatables
@@ -396,10 +416,10 @@ def SurveyTalkPublicDashboard(request, id=0):
     response = requests.get(filter_url, headers=headers, verify=False)
     get_json = json.loads(json.dumps(response.content))
     data = ast.literal_eval(get_json)
-    meaning = []
-    join = []
-    tola_is = []
-    country_from = []
+    meaning = list()
+    join = list()
+    tola_is = list()
+    country_from = list()
     for item in data['data']:
         meaning.append(item['tola_is_a_pashto_word_meaning_'])
         # multiple choice
@@ -414,7 +434,7 @@ def SurveyTalkPublicDashboard(request, id=0):
     join: tola_is_a_myst, i_like_a_good_power_point,data_is_king,not_sure_what_
     tola_is: adaptive_manag an_indicator_t a_data_managem option_4 all_of_the_abo
     """
-    meaningcount = {}
+    meaningcount = dict()
     meaningcount['peaceful'] = 0
     meaningcount['is_global'] = 0
     meaningcount['i_give_up'] = 0
@@ -429,7 +449,7 @@ def SurveyTalkPublicDashboard(request, id=0):
         if answer == "peaceful":
             meaningcount['peaceful'] = meaningcount['peaceful'] + 1
 
-    joincount = {}
+    joincount = dict()
     joincount['tola_is_a_mystery'] = 0
     joincount['i_like_power_point_templates'] = 0
     joincount['data_is_king'] = 0
@@ -444,7 +464,7 @@ def SurveyTalkPublicDashboard(request, id=0):
         if "not_sure_what_" in answer:
             joincount['not_sure'] = joincount['not_sure'] + 1
 
-    tolacount = {}
+    tolacount = dict()
     tolacount['adaptive_manag'] = 0
     tolacount['an_indicator_t'] = 0
     tolacount['a_data_managem'] = 0
@@ -464,11 +484,13 @@ def SurveyTalkPublicDashboard(request, id=0):
 
     dashboard = True
 
-    return render(request, "customdashboard/survey_talk_public_dashboard.html", {'meaning': meaningcount, 'join': joincount, 'tola_is': tolacount, 'country_from': country_from, 'countries': countries, 'dashboard': dashboard})
+    return render(request, "customdashboard/survey_talk_public_dashboard.html",
+                  {'meaning': meaningcount, 'join': joincount, 'tola_is': tolacount,
+                   'country_from': country_from, 'countries': countries, 'dashboard': dashboard})
 
 
 # RRIMA PROJECT DASHBOARD (in use 12/16)
-def RRIMAPublicDashboard(request, id=0):
+def rrima_public_dashboard(request, id=0):
     """
     :param request:
     :param id:
@@ -480,53 +502,65 @@ def RRIMAPublicDashboard(request, id=0):
     getProgram = Program.objects.all().filter(id=program_id)
 
     # retrieve the coutries the user has data access for
-    countries = getCountry(request.user)
+    countries = get_country(request.user)
 
     # retrieve projects for a program
     # .filter(program__id=1, program__country__in=1)
     getProjects = ProjectAgreement.objects.all()
 
-    pageText = {}
-    pageText['pageTitle'] = "Refugee Response and Migration News"
-    pageText['projectSummary'] = {}
+    page_text = dict()
+    page_text['pageTitle'] = "Refugee Response and Migration News"
+    page_text['projectSummary'] = {}
 
-    pageMap = [{"latitude": 39.9334, "longitude": 32.8597, "location_name": "Ankara", "site_contact": "Sonal Shinde, Migration Response Director, sshinde@mercycorps.org", "site_description": "Migration Response Coordination", "region_name": "Turkey"},
-               {"latitude": 38.4237, "longitude": 27.1428, "location_name": "Izmir", "site_contact": "Tracy Lucas, Emergency Program Manager, ECHO Aegean Response, tlucas@mercycorps.org",
+    page_map = [{"latitude": 39.9334, "longitude": 32.8597, "location_name": "Ankara",
+                "site_contact": "Sonal Shinde, Migration Response Director, sshinde@mercycorps.org",
+                "site_description": "Migration Response Coordination", "region_name": "Turkey"},
+               {"latitude": 38.4237, "longitude": 27.1428, "location_name": "Izmir",
+                "site_contact": "Tracy Lucas, Emergency Program Manager, ECHO Aegean Response, tlucas@mercycorps.org",
                    "site_description": "Cash, Information Dissemination, Youth, Protection", "region_name": "Turkey"},
-               {"latitude": 37.0660, "longitude": 37.3781, "location_name": "Gaziantep", "site_contact": "Jihane Nami, Director of Programs Turkey, jnami@mercycorps.org",
-                   "site_description": "Cash, NFI, Shelter, Protection, Information Dissemination", "region_name": "Turkey"},
-               {"latitude": 39.2645, "longitude": 26.2777, "location_name": "Lesvos", "site_contact": "Chiara Bogoni, Island Emergency Program Manager, cbogoni@mercycorps.org",
+               {"latitude": 37.0660, "longitude": 37.3781, "location_name": "Gaziantep",
+                "site_contact": "Jihane Nami, Director of Programs Turkey, jnami@mercycorps.org",
+                "site_description": "Cash, NFI, Shelter, Protection, Information Dissemination",
+                "region_name": "Turkey"},
+               {"latitude": 39.2645, "longitude": 26.2777, "location_name": "Lesvos",
+                "site_contact": "Chiara Bogoni, Island Emergency Program Manager, cbogoni@mercycorps.org",
                 "site_description": "Cash, Youth Programs, Food", "region_link": "Greece"},
-               {"latitude": 37.9838, "longitude": 23.7275, "location_name": "Athens", "site_contact": "Josh Kreger, Team Leader - Greece, jkreger@mercycorps.org and Kaja Wislinska, Team Leader - Athens and Mainland, kwislinska@mercycorps.org",
-                   "site_description": "Cash, Youth Psychosocial Support, Legal Support", "region_link": "Greece", "region_link": "Greece"},
-               {"latitude": 44.7866, "longitude": 20.4489, "location_name": "Belgrade", "site_contact": "", "site_description": "RRIMA (In partnership with IRC) ", "region_name": "Balkans"}]
-   # Borrowed data for bar graph
+               {"latitude": 37.9838, "longitude": 23.7275, "location_name": "Athens",
+                "site_contact": "Josh Kreger, Team Leader - Greece, jkreger@mercycorps.org and Kaja Wislinska, " +
+                                "Team Leader - Athens and Mainland, kwislinska@mercycorps.org",
+                   "site_description": "Cash, Youth Psychosocial Support, Legal Support", "region_link": "Greece"},
+               {"latitude": 44.7866, "longitude": 20.4489, "location_name": "Belgrade",
+                "site_contact": "", "site_description": "RRIMA (In partnership with IRC) ", "region_name": "Balkans"}]
+    # Borrowed data for bar graph
     colorPalettes = {
-        'bright': ['#82BC00', '#C8C500', '#10A400', '#CF102E', '#DB5E11', '#A40D7A', '#00AFA8', '#1349BB', '#FFD200 ', '#FF7100', '#FFFD00', '#ABABAB', '#7F7F7F', '#7B5213', '#C18A34'],
-        'light': ['#BAEE46', '#FDFB4A', '#4BCF3D', '#F2637A', '#FFA268', '#C451A4', '#4BC3BE', '#5B7FCC', '#9F54CC', '#FFE464', '#FFA964', '#FFFE64', '#D7D7D7', '#7F7F7F', '#D2A868', '#FFD592']
+        'bright': ['#82BC00', '#C8C500', '#10A400', '#CF102E', '#DB5E11', '#A40D7A', '#00AFA8', '#1349BB', '#FFD200 ',
+                   '#FF7100', '#FFFD00', '#ABABAB', '#7F7F7F', '#7B5213', '#C18A34'],
+        'light': ['#BAEE46', '#FDFB4A', '#4BCF3D', '#F2637A', '#FFA268', '#C451A4', '#4BC3BE', '#5B7FCC', '#9F54CC',
+                  '#FFE464', '#FFA964', '#FFFE64', '#D7D7D7', '#7F7F7F', '#D2A868', '#FFD592']
     }
 
-    getNotebooks = JupyterNotebooks.objects.all().filter(very_custom_dashboard="RRIMA")
+    get_notebooks = JupyterNotebooks.objects.all().filter(very_custom_dashboard="RRIMA")
 
     return render(request, 'customdashboard/rrima_dashboard.html',
-                  {'pageText': pageText, 'pageMap': pageMap, 'countries': countries, 'getNotebooks': getNotebooks})
+                  {'page_text': page_text, 'page_map': page_map,
+                   'countries': countries, 'get_notebooks': get_notebooks})
 
 # RRIMA Custom Dashboard Report Page (in use 12/16)
 
 
-def Notebook(request, id=0):
+def notebook(request, id=0):
     """
     :param request:
     :param id:
     :return:
     """
-    getNotebook = JupyterNotebooks.objects.get(id=id)
-    return render(request, "customdashboard/notebook.html", {'getNotebook': getNotebook})
+    get_notebook = JupyterNotebooks.objects.get(id=id)
+    return render(request, "customdashboard/notebook.html", {'get_notebook': get_notebook})
 
 # RRIMA JupyterView (in use 12/16)
 
 
-def RRIMAJupyterView1(request, id=0):
+def rrima_jupyter_view1(request, id=0):
     """
     RRIMA custom dashboard TODO: Migrate this to the existing configurable dashboard
     :param request:
@@ -538,7 +572,7 @@ def RRIMAJupyterView1(request, id=0):
     # getProgram = Program.objects.all().filter(id=program_id)
 
     # retrieve the coutries the user has data access for
-    countries = getCountry(request.user)
+    countries = get_country(request.user)
     with open('static/rrima.html') as myfile:
         data = "\n".join(line for line in myfile)
 

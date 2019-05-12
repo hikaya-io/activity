@@ -1,4 +1,6 @@
-from django import template
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.contrib.auth.models import Group
 
 from django import template
@@ -15,9 +17,9 @@ def has_group(user, group_name):
 
 @register.filter
 @stringfilter
-def template_exists(template_name):
+def template_exists(template_name="links.html"):
     try:
-        template.loader.get_template("links.html")
+        template.loader.get_template(template_name)
         return True
     except template.TemplateDoesNotExist:
         return False

@@ -1,5 +1,11 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.test import TestCase
-from workflow.models import Program, Country, Province, ProjectAgreement, Sector, ProjectType, SiteProfile, Office
+from workflow.models import (
+    Program, Country, Province, ProjectAgreement, Sector,
+    ProjectType, SiteProfile, Office
+)
 from formlibrary.models import TrainingAttendance, Distribution, Beneficiary
 from datetime import datetime
 

@@ -1,5 +1,7 @@
-from .views import *
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
+from .views import *
 from django.urls import re_path
 
 # place app url patterns here

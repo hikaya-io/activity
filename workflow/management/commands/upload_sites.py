@@ -1,6 +1,9 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import csv
 import re
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from workflow.models import *
 from django.utils import timezone
 
@@ -33,8 +36,8 @@ class Command(BaseCommand):
                 type_of_site = row[1].strip()
                 # read the first 7 characters only
                 # latitude = re.sub('[^0-9]', '', row[2])
-                latitude = re.findall('\d+\.\d+', row[2])
-                longitude = re.findall('\d+\.\d+', row[3])
+                latitude = re.findall(r'\d+\.\d+', row[2])
+                longitude = re.findall(r'\d+\.\d+', row[3])
                 office_name = row[4].strip()
                 contact = row[5].strip()
                 country_name = row[6].strip()
@@ -106,12 +109,13 @@ class Command(BaseCommand):
                         '%s, invalid longitude = %s' % (site_name, longitude)))
 
                 try:
-                    site, created = SiteProfile.objects.update_or_create(name=site_name,
-                                                                         defaults={
-                                                                             'type': profile_type, 'office': office, 'contact_leader': contact,
-                                                                             'latitude': lat, 'longitude': lon, 'country': country, 'province': province,
-                                                                             'district': district, 'create_date': timezone.now()
-                                                                         })
+                    site, created = SiteProfile.objects.update_or_create(
+                        name=site_name,
+                        defaults={
+                            'type': profile_type, 'office': office, 'contact_leader': contact,
+                            'latitude': lat, 'longitude': lon, 'country': country, 'province': province,
+                            'district': district, 'create_date': timezone.now()
+                        })
                     self.stdout.write(self.style.SUCCESS(
                         '%s site_profile created(%s) successfully!' % (site_name, created)))
                 except Exception as e:
