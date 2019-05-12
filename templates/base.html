@@ -8,7 +8,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="Hikaya - Activity CE : We help organizations tell their stories through data">
-        <meta name="author" content="TolaData">
+        <meta name="author" content="Hikaya">
 
         <title>{% block title %} Activity CE {% endblock %}</title>
 
@@ -27,7 +27,7 @@
         <link rel="stylesheet" href="{% static 'css/select2.min.css' %} ">
 
         <!-- Custom CSS -->
-        <<link href="{% static 'css/app.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/app.css' %}" rel="stylesheet" type="text/css">
 
         <!--- Django Tables2 css -->
         <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}" />
@@ -54,7 +54,7 @@
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'index' %}">
-                        <img style="margin-top: -3px; max-width: 140px;" src="{% static 'img/tola-activity-primary-mark-white.png' %}" />
+                        <img style="margin-top: -5px; max-width: 140px;" src="{% static 'img/hikaya-primary-mark-white.png' %}" />
                     </a>
                     <!-- hamburger nav -->
                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
@@ -241,7 +241,7 @@
                     {% include "links.html" %}
                 {% else %}
                     <div class="text-center">
-                        <a href="http://www.hikaya.com" class="text-muted"><b>Hikaya</a> | <a href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE" class="text-muted">License</a>
+                        <a href="http://www.hikaya.com" class="text-muted">Hikaya</a> | <a href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE" class="text-muted">License</a>
                     </div>
                 {% endif %}
 
