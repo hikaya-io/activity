@@ -143,8 +143,8 @@ class IndicatorList(ListView):
 
     def get(self, request, *args, **kwargs):
 
-        # countries = getCountry(request.user)
-        countries = request.user.tola_user.countries.all()
+        # countries = get_country(request.user)
+        countries = request.user.activity_user.countries.all()
         get_programs = Program.objects.filter(
             funding_status="Funded", country__in=countries).distinct()
         # .exclude(collecteddata__isnull=True)
@@ -1072,7 +1072,7 @@ def tool(request):
 
 # REPORT VIEWS
 def indicator_report(request, program=0, indicator=0, type=0):
-    countries = request.user.tola_user.countries.all()
+    countries = request.user.activity_user.countries.all()
     get_programs = Program.objects.filter(
         funding_status="Funded", country__in=countries).distinct()
     get_indicator_types = IndicatorType.objects.all()
@@ -1200,7 +1200,7 @@ def programIndicatorReport(request, program=0):
 
 
 def indicator_data_report(request, id=0, program=0, type=0):
-    countries = request.user.tola_user.countries.all()
+    countries = request.user.activity_user.countries.all()
     get_programs = Program.objects.all().filter(
         funding_status="Funded", country__in=countries).distinct()
     get_indicators = Indicator.objects.select_related().filter(
@@ -1429,7 +1429,7 @@ class DisaggregationReportMixin(object):
                 indicators = indicators.filter(program=program_id)
 
         disagg_query = "SELECT i.id AS IndicatorID, dt.disaggregation_type AS DType, "\
-            "l.customsort AS customsort, l.label AS Disaggregation, SUM(dv.value) AS Actuals "\
+            "l.customsort AS customsort, l.label AS Disaggregation, SUM(CAST(dv.value as decimal)) AS Actuals "\
             "FROM indicators_collecteddata_disaggregation_value AS cdv "\
             "INNER JOIN indicators_collecteddata AS c ON c.id = cdv.collecteddata_id "\
             "INNER JOIN indicators_indicator AS i ON i.id = c.indicator_id "\
