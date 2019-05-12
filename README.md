@@ -20,8 +20,16 @@ Once all your changes have been commited to the repo, and before pushing them, r
 
 ## To deploy locally via Docker
 Run the following commands from the root of this repository:
-  - `docker-compose build`
+  - `docker-compose build .`
   - `docker-compose up`
+  # run  migrations
+  - `docker-compose run web python /code/manage.py migrate --noinput`
+  # create superuser
+  - `docker-compose run web python /code/manage.py createsuperuser`
+  # start the app
+  - `docker-compose up -d --build`
+  # open on browser
+  - `http://127.0.0.1:8000/`
 
 ## USING virtualenv
 (Install virtualenv)
@@ -54,18 +62,16 @@ $ pip install -r requirements.txt
 
 
 ## Modify the config file
-
-Edit _config/settings.secret.yml_. Find the node named, "DATABASES" and set the 
-database `PASSWORD` as appropriate. The result should resemble the following:
+Edit database settings settings/local.py
 
 ```yaml
 47 DATABASES:
 48  'default': {
-49    #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-50    'ENGINE': "django.db.backends.mysql"
+49    #'ENGINE': 'django.db.backends.postgresql', # Add 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+50    'ENGINE': "django.db.backends.postgresql"
 51    'NAME': "tola_activity"
 52    'USER': "root"
-53    'PASSWORD': 'tolageek',
+53    'PASSWORD': 'your_Password',
 54    'HOST': "localhost"
 55    'PORT': '',
 ```
