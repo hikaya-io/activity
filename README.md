@@ -18,8 +18,10 @@ Copy the tola/settings/local-sample.py to local.py and modify for your environme
 Once all your changes have been commited to the repo, and before pushing them, run:
 `. travis.sh`
 
-## To deploy locally via Docker
+## To deploy localy via Docker
 Run the following commands from the root of this repository:
+
+NB: Ensure you have docker installed on your machine
   - `docker-compose build .`
   - `docker-compose up`
   # run  migrations
