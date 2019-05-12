@@ -1,4 +1,7 @@
-from django.core.management.base import BaseCommand, CommandError
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+from django.core.management.base import BaseCommand
 from indicators.models import *
 from django.utils import timezone
 
@@ -41,7 +44,8 @@ class Command(BaseCommand):
                     # remove all existing periodic targets
                     ind.periodictarget_set.all().delete()
 
-                    # just checking to see if lop_target is a numeric value; if it is not then exception will be raised.
+                    # just checking to see if lop_target is a numeric value;
+                    # if it is not then exception will be raised.
                     lop = float(ind.lop_target)
 
                     # create a "Life of Program (LOP) Only" target
@@ -51,7 +55,8 @@ class Command(BaseCommand):
                         target=ind.lop_target,
                         create_date=timezone.now())
 
-                    # associate all collected_data records of this indicator with the newly created "Life of Program (LOP) Only" target
+                    # associate all collected_data records of this indicator with the newly created
+                    # "Life of Program (LOP) Only" target
                     ind.collecteddata_set.update(periodic_target=lop_pt)
 
                     # set the target_frequency of this indicator to "Life of Program (LOP) Only" target

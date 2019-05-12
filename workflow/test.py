@@ -1,5 +1,11 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.test import TestCase
-from workflow.models import Organization, Program, Country, Province, ProjectAgreement, Sector, ProjectComplete, ProjectType, SiteProfile, Office, Monitor, Benchmarks, Budget
+from workflow.models import (
+    Organization, Program, Country, Province, ProjectAgreement, Sector,
+    ProjectComplete, ProjectType, SiteProfile, Office, Monitor, Benchmarks, Budget
+)
 
 
 class SiteProfileTestCase(TestCase):
@@ -64,9 +70,9 @@ class AgreementTestCase(TestCase):
         # load from fixtures
         get_project_type = ProjectType.objects.get(id='1')
         get_sector = Sector.objects.get(id='2')
-        new_agreement = ProjectAgreement.objects.create(program=get_program, project_name="testproject", project_type=get_project_type,
-                                                        activity_code="111222", office=get_office,
-                                                        sector=get_sector)
+        new_agreement = ProjectAgreement.objects.create(program=get_program, project_name="testproject",
+                                                        project_type=get_project_type, activity_code="111222",
+                                                        office=get_office, sector=get_sector)
         new_agreement.save()
         new_agreement.site.add(get_community)
 
@@ -75,7 +81,8 @@ class AgreementTestCase(TestCase):
         new_benchmarks.save()
 
         new_budget = Budget.objects.create(
-            contributor="testbudget", description_of_contribution="new_province", proposed_value="24", agreement=new_agreement)
+            contributor="testbudget", description_of_contribution="new_province", proposed_value="24",
+            agreement=new_agreement)
         new_budget.save()
 
         new_monitor = Monitor.objects.create(
@@ -137,9 +144,9 @@ class CompleteTestCase(TestCase):
         # load from fixtures
         get_project_type = ProjectType.objects.get(id='1')
         get_sector = Sector.objects.get(id='2')
-        new_agreement = ProjectAgreement.objects.create(program=get_program, project_name="testproject", project_type=get_project_type,
-                                                        activity_code="111222", office=get_office,
-                                                        sector=get_sector)
+        new_agreement = ProjectAgreement.objects.create(program=get_program, project_name="testproject",
+                                                        project_type=get_project_type, activity_code="111222",
+                                                        office=get_office, sector=get_sector)
         new_agreement.save()
         new_agreement.site.add(get_community)
         get_agreement = ProjectAgreement.objects.get(

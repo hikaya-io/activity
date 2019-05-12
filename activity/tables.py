@@ -1,5 +1,8 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import django_tables2 as tables
-from indicators.models import Indicator, CollectedData
+from indicators.models import CollectedData
 from django_tables2.utils import A
 from django.template.defaultfilters import floatformat
 

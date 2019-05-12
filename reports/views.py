@@ -1,5 +1,8 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.views.generic import TemplateView, View
-from workflow.models import ProjectAgreement, ProjectComplete, Program
+from workflow.models import ProjectAgreement, Program
 from indicators.models import CollectedData, Indicator
 from .forms import FilterForm
 
@@ -20,11 +23,11 @@ def make_filter(my_request):
     """
     Build a list of filters for each object
     """
-    query_attrs = {}
-    query_attrs['program'] = {}
-    query_attrs['project'] = {}
-    query_attrs['indicator'] = {}
-    query_attrs['collecteddata'] = {}
+    query_attrs = dict()
+    query_attrs['program'] = dict()
+    query_attrs['project'] = dict()
+    query_attrs['indicator'] = dict()
+    query_attrs['collecteddata'] = dict()
     for param, val in my_request.iteritems():
         if param == 'program':
             query_attrs['program']['id__in'] = val.split(',')
@@ -98,8 +101,8 @@ class ReportData(View, AjaxableResponseMixin):
         project_filter = filter['project']
         indicator_filter = filter['indicator']
 
-        program = Program.objects.all().filter(**program_filter).values('gaitid', 'name',
-                                                                        'funding_status', 'cost_center', 'country__country', 'sector__sector')
+        program = Program.objects.all().filter(**program_filter).values(
+            'gaitid', 'name', 'funding_status', 'cost_center', 'country__country', 'sector__sector')
         approval_count = ProjectAgreement.objects.all().filter(
             **project_filter).filter(approval='awaiting approval').count()
         approved_count = ProjectAgreement.objects.all().filter(
@@ -152,8 +155,10 @@ class ProjectReportData(View, AjaxableResponseMixin):
 
         print(project_filter)
 
-        project = ProjectAgreement.objects.all().filter(**project_filter).values('program__name', 'project_name',
-                                                                                 'activity_code', 'project_type__name', 'sector__sector', 'total_estimated_budget', 'approval')
+        project = ProjectAgreement.objects.all().filter(**project_filter).values(
+            'program__name', 'project_name',
+            'activity_code', 'project_type__name',
+            'sector__sector', 'total_estimated_budget', 'approval')
         approval_count = ProjectAgreement.objects.all().filter(**project_filter).filter(
             program__funding_status="Funded", approval='awaiting approval').count()
         approved_count = ProjectAgreement.objects.all().filter(
@@ -203,8 +208,10 @@ class IndicatorReportData(View, AjaxableResponseMixin):
         filter = make_filter(self.request.GET)
         indicator_filter = filter['indicator']
 
-        indicator = Indicator.objects.all().filter(**indicator_filter).values('id', 'program__name', 'program__id', 'name', 'indicator_type__indicator_type',
-                                                                              'sector__sector', 'strategic_objectives', 'level__name', 'lop_target', 'collecteddata', 'key_performance_indicator')
+        indicator = Indicator.objects.all().filter(**indicator_filter).values(
+            'id', 'program__name', 'program__id', 'name', 'indicator_type__indicator_type',
+            'sector__sector', 'strategic_objectives', 'level__name', 'lop_target',
+            'collecteddata', 'key_performance_indicator')
         indicator_count = Indicator.objects.all().filter(
             **indicator_filter).filter(collecteddata__isnull=True).count()
         indicator_data_count = Indicator.objects.all().filter(
@@ -242,8 +249,8 @@ class CollectedDataReportData(View, AjaxableResponseMixin):
         filter = make_filter(self.request.GET)
         collecteddata_filter = filter['collecteddata']
 
-        collecteddata = CollectedData.objects.all().filter(**collecteddata_filter).values('indicator__program__name',
-                                                                                          'indicator__name', 'indicator__number', 'targeted', 'achieved')
+        collecteddata = CollectedData.objects.all().filter(**collecteddata_filter).values(
+            'indicator__program__name', 'indicator__name', 'indicator__number', 'targeted', 'achieved')
 
         collecteddata_serialized = json.dumps(list(collecteddata))
 

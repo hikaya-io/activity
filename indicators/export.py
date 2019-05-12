@@ -1,14 +1,16 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from import_export import resources
-from .models import Indicator, CollectedData, Country, Program, Sector, DisaggregationValue, ReportingFrequency
+from .models import Indicator, CollectedData, Program, Sector, ReportingFrequency
 from workflow.models import ProjectAgreement, ProjectComplete, ActivityUser
 from import_export.admin import ImportExportModelAdmin
-from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
+from import_export.widgets import ForeignKeyWidget
 from import_export import fields
 
 
 class IndicatorResource(resources.ModelResource):
 
-    # country = fields.Field(column_name='country', attribute='country', widget=ManyToManyWidget(Program, field='country'))
     indicator_type = fields.Field(
         column_name='indicator types', attribute='indicator_types')
     objectives = fields.Field(column_name='objectives',
@@ -19,12 +21,14 @@ class IndicatorResource(resources.ModelResource):
     sector = fields.Field(column_name='sector', attribute='sector',
                           widget=ForeignKeyWidget(Sector, 'sector'))
     reporting_frequency = fields.Field(column_name='reporting_frequency',
-                                       attribute='reporting_frequency', widget=ForeignKeyWidget(ReportingFrequency, 'frequency'))
+                                       attribute='reporting_frequency',
+                                       widget=ForeignKeyWidget(ReportingFrequency, 'frequency'))
     level = fields.Field(column_name='levels', attribute='levels')
     disaggregation = fields.Field(
         column_name='disaggregation', attribute='disaggregations')
     approval_submitted_by = fields.Field(column_name='approval submitted by',
-                                         attribute='approval_submitted_by', widget=ForeignKeyWidget(ActivityUser, 'name'))
+                                         attribute='approval_submitted_by',
+                                         widget=ForeignKeyWidget(ActivityUser, 'name'))
     approved_by = fields.Field(
         column_name='approved by', attribute='approved_by', widget=ForeignKeyWidget(ActivityUser, 'name'))
 

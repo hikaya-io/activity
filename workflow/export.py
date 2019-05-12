@@ -1,8 +1,14 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from import_export import resources
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from import_export import fields
-from .models import ProjectAgreement, Program, SiteProfile, Capacity, Evaluate, Documentation,\
-    Stakeholder, Sector, ProjectType, Office, ActivityUser, ProjectComplete, Country, Contact, StakeholderType, ActivityUserProxy, ProfileType
+from .models import (
+    ProjectAgreement, Program, SiteProfile, Capacity, Evaluate, Documentation,
+    Stakeholder, Sector, ProjectType, Office, ActivityUser, ProjectComplete,
+    Country, Contact, StakeholderType, ProfileType
+)
 
 
 class ProjectAgreementResource(resources.ModelResource):
@@ -79,7 +85,8 @@ class StakeholderResource(resources.ModelResource):
     stakeholder_register = fields.Field(
         column_name='stakeholder_register', attribute='stakeholder_register')
     formal_relationship_document = fields.Field(column_name='formal_relationship_document',
-                                                attribute='formal_relationship_document', widget=ForeignKeyWidget(Documentation, 'name_n_url'))
+                                                attribute='formal_relationship_document',
+                                                widget=ForeignKeyWidget(Documentation, 'name_n_url'))
     vetting_document = fields.Field(column_name='vetting_document', attribute='vetting_document',
                                     widget=ForeignKeyWidget(Documentation, 'name_n_url'))
 
@@ -88,11 +95,9 @@ class StakeholderResource(resources.ModelResource):
 
     def dehydrate_stakeholder_register(self, stakeholder):
         if stakeholder.stakeholder_register == 1:
-
             return 'True'
 
         if stakeholder.stakeholder_register == 0:
-
             return 'False'
 
 

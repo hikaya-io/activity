@@ -6,7 +6,7 @@ from sys import path
 
 # PATH CONFIGURATION
 # BASE DIR
-#BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Absolute filesystem path to the Django project directory:
 DJANGO_ROOT = dirname(dirname(abspath(__file__)))
@@ -263,7 +263,7 @@ LOCAL_APPS = (
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # END APP CONFIGURATION
 
-####### AUTHENTICATION BAKEND CONFIG ##################
+# ###### AUTHENTICATION BAKEND CONFIG ######
 # https://github.com/django/django/blob/master/django/contrib/auth/backends.py
 AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.open_id.OpenIdAuth',
@@ -288,9 +288,9 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 )
 
-############ END OF AUTHENTICATION BACKEND ##############
+# ########### END OF AUTHENTICATION BACKEND ##############
 
-########## Login redirect ###########
+# ######### Login redirect ###########
 LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_URL_NAMESPACE = 'social'

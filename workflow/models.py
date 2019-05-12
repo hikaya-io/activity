@@ -48,11 +48,11 @@ class ActivitySites(models.Model):
     class Meta:
         verbose_name_plural = "Activity Sites"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
-        ''' On save, update timestamps as appropriate '''
+        """ On save, update timestamps as appropriate """
         if kwargs.pop('new_entry', True):
             self.created = datetime.now()
         else:
@@ -99,7 +99,7 @@ class Organization(models.Model):
         super(Organization, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -136,7 +136,7 @@ class Country(models.Model):
         super(Country, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.country
 
 
@@ -172,7 +172,7 @@ class ActivityUser(models.Model):
     class Meta:
         ordering = ('name',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -181,7 +181,7 @@ class ActivityUser(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(ActivityUser, self).save()
@@ -200,7 +200,7 @@ class ActivityBookmarks(models.Model):
     class Meta:
         ordering = ('name',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     # on save add create date or update edit date
@@ -249,8 +249,8 @@ class FormGuidance(models.Model):
             self.create_date = datetime.now()
         super(FormGuidance, self).save()
 
-    def __unicode__(self):
-        return unicode(self.form)
+    def __str__(self):
+        return self.form
 
 
 class FormGuidanceAdmin(admin.ModelAdmin):
@@ -268,13 +268,13 @@ class Sector(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Sector, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.sector
 
 
@@ -302,13 +302,13 @@ class Contact(models.Model):
 
     # onsave add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Contact, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return u'%s, %s' % (self.name, self.title)
 
 
@@ -330,13 +330,13 @@ class FundCode(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(FundCode, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -372,7 +372,7 @@ class Program(models.Model):
     def save(self, *args, **kwargs):
         if not 'force_insert' in kwargs:
             kwargs['force_insert'] = False
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Program, self).save()
@@ -382,7 +382,7 @@ class Program(models.Model):
         return ', '.join([x.country for x in self.country.all()])
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -402,13 +402,13 @@ class ApprovalAuthority(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(ApprovalAuthority, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.approval_user.user.first_name + " " + self.approval_user.user.last_name
 
 
@@ -425,13 +425,13 @@ class Province(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Province, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -456,13 +456,13 @@ class District(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(District, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -493,7 +493,7 @@ class AdminLevelThree(models.Model):
         super(AdminLevelThree, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -526,7 +526,7 @@ class Village(models.Model):
         super(Village, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -555,8 +555,8 @@ class Office(models.Model):
         super(Office, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
-        new_name = unicode(self.name) + unicode(" - ") + unicode(self.code)
+    def __str__(self):
+        new_name = self.name + " - " + self.code
         return new_name
 
 
@@ -577,13 +577,13 @@ class ProfileType(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(ProfileType, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.profile
 
 
@@ -604,13 +604,13 @@ class LandType(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(LandType, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.classify_land
 
 
@@ -621,7 +621,8 @@ class LandTypeAdmin(admin.ModelAdmin):
 
 class SiteProfileManager(models.Manager):
     def get_queryset(self):
-        return super(SiteProfileManager, self).get_queryset().prefetch_related().select_related('country', 'province', 'district', 'admin_level_three', 'type')
+        return super(SiteProfileManager, self).get_queryset().prefetch_related()\
+            .select_related('country', 'province', 'district', 'admin_level_three', 'type')
 
 
 class SiteProfile(models.Model):
@@ -691,7 +692,8 @@ class SiteProfile(models.Model):
     populations_owning_land = models.IntegerField(
         "Households Owning Land", help_text="(%)", null=True, blank=True)
     avg_landholding_size = models.DecimalField(
-        "Average Landholding Size", decimal_places=14, max_digits=25, help_text="In hectares/jeribs", default=Decimal("0.00"))
+        "Average Landholding Size", decimal_places=14, max_digits=25, help_text="In hectares/jeribs",
+        default=Decimal("0.00"))
     households_owning_livestock = models.IntegerField(
         "Households Owning Livestock", help_text="(%)", null=True, blank=True)
     animal_type = models.CharField(
@@ -713,12 +715,12 @@ class SiteProfile(models.Model):
     status = models.BooleanField("Site Active", default=True)
     approval = models.CharField(
         "Approval", default="in progress", max_length=255, blank=True, null=True)
-    approved_by = models.ForeignKey(ActivityUser, help_text='This is the Provincial Line Manager', blank=True, null=True,
-                                    related_name="comm_approving", on_delete=models.SET_NULL)
+    approved_by = models.ForeignKey(ActivityUser, help_text='This is the Provincial Line Manager',
+                                    blank=True, null=True,related_name="comm_approving", on_delete=models.SET_NULL)
     filled_by = models.ForeignKey(ActivityUser, help_text='This is the originator', blank=True, null=True,
                                   related_name="comm_estimate", on_delete=models.SET_NULL)
-    location_verified_by = models.ForeignKey(ActivityUser, help_text='This should be GIS Manager', blank=True, null=True,
-                                             related_name="comm_gis", on_delete=models.SET_NULL)
+    location_verified_by = models.ForeignKey(ActivityUser, help_text='This should be GIS Manager', blank=True,
+                                             null=True,related_name="comm_gis", on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
     history = HistoricalRecords()
@@ -733,14 +735,14 @@ class SiteProfile(models.Model):
     def save(self, *args, **kwargs):
 
         # Check if a create date has been specified. If not, display today's date in create_date and edit_date
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
             self.edit_date = datetime.now()
 
         super(SiteProfile, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         new_name = self.name
         return new_name
 
@@ -765,13 +767,13 @@ class Capacity(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Capacity, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.capacity
 
 
@@ -792,13 +794,13 @@ class StakeholderType(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(StakeholderType, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -821,13 +823,13 @@ class Evaluate(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Evaluate, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.evaluate
 
 
@@ -844,12 +846,12 @@ class ProjectType(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(ProjectType, self).save()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -871,12 +873,12 @@ class Template(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Template, self).save()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -902,14 +904,16 @@ class Stakeholder(models.Model):
     contact = models.ManyToManyField(Contact, max_length=255, blank=True)
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
-    #sector = models.ForeignKey(Sector, blank=True, null=True, related_name='sects')
+    # sector = models.ForeignKey(Sector, blank=True, null=True, related_name='sects')
     sectors = models.ManyToManyField(Sector, blank=True)
     stakeholder_register = models.BooleanField(
         "Has this partner been added to stakeholder register?")
-    formal_relationship_document = models.ForeignKey('Documentation', verbose_name="Formal Written Description of Relationship",
-                                                     null=True, blank=True, related_name="relationship_document", on_delete=models.SET_NULL)
-    vetting_document = models.ForeignKey('Documentation', verbose_name="Vetting/ due diligence statement", null=True, blank=True,
-                                         related_name="vetting_document", on_delete=models.SET_NULL)
+    formal_relationship_document = models.ForeignKey('Documentation',
+                                                     verbose_name="Formal Written Description of Relationship",
+                                                     null=True, blank=True, related_name="relationship_document",
+                                                     on_delete=models.SET_NULL)
+    vetting_document = models.ForeignKey('Documentation', verbose_name="Vetting/ due diligence statement", null=True,
+                                         blank=True,related_name="vetting_document", on_delete=models.SET_NULL)
     approval = models.CharField(
         "Approval", default="in progress", max_length=255, blank=True, null=True)
     approved_by = models.ForeignKey(ActivityUser, help_text='', blank=True, null=True,
@@ -928,14 +932,14 @@ class Stakeholder(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Stakeholder, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return self.name
 
 
 class StakeholderAdmin(admin.ModelAdmin):
@@ -994,11 +998,14 @@ class ProjectAgreement(models.Model):
         "Date of Request", blank=True, null=True)
     # Rename to more generic "nonproject" names
     project_name = models.CharField(
-        "Project Name", help_text='Please be specific in your name.  Consider that your Project Name includes WHO, WHAT, WHERE, HOW', max_length=255)
+        "Project Name",
+        help_text='Please be specific in your name.  Consider that your Project Name includes WHO, WHAT, WHERE, HOW',
+        max_length=255)
     project_type = models.ForeignKey(ProjectType, verbose_name="Project Type", help_text='', max_length=255,
                                      blank=True, null=True, on_delete=models.SET_NULL)
     project_activity = models.CharField(
-        "Project Activity", help_text='This should come directly from the activities listed in the Logframe', max_length=255, blank=True, null=True)
+        "Project Activity", help_text='This should come directly from the activities listed in the Logframe',
+        max_length=255, blank=True, null=True)
     project_description = models.TextField(
         "Project Description", help_text='', blank=True, null=True)
     site = models.ManyToManyField(SiteProfile, blank=True)
@@ -1034,21 +1041,32 @@ class ProjectAgreement(models.Model):
     expected_duration = models.CharField(
         "Expected duration", help_text="[MONTHS]/[DAYS]", blank=True, null=True, max_length=255)
     beneficiary_type = models.CharField(
-        "Type of direct beneficiaries", help_text="i.e. Farmer, Association, Student, Govt, etc.", max_length=255, blank=True, null=True)
+        "Type of direct beneficiaries", help_text="i.e. Farmer, Association, Student, Govt, etc.", max_length=255,
+        blank=True, null=True)
     estimated_num_direct_beneficiaries = models.CharField(
-        "Estimated number of direct beneficiaries", help_text="Please provide achievable estimates as we will use these as our 'Targets'", max_length=255, blank=True, null=True)
+        "Estimated number of direct beneficiaries",
+        help_text="Please provide achievable estimates as we will use these as our 'Targets'", max_length=255,
+        blank=True, null=True)
     average_household_size = models.CharField(
-        "Average Household Size", help_text="Refer to Form 01 - Community Profile", max_length=255, blank=True, null=True)
+        "Average Household Size", help_text="Refer to Form 01 - Community Profile",
+        max_length=255, blank=True, null=True)
     estimated_num_indirect_beneficiaries = models.CharField(
-        "Estimated Number of indirect beneficiaries", help_text="This is a calculation - multiply direct beneficiaries by average household size", max_length=255, blank=True, null=True)
+        "Estimated Number of indirect beneficiaries",
+        help_text="This is a calculation - multiply direct beneficiaries by average household size", max_length=255,
+        blank=True, null=True)
     total_estimated_budget = models.DecimalField(
-        "Total Project Budget", decimal_places=2, max_digits=12, help_text="In USD", default=Decimal("0.00"), blank=True)
+        "Total Project Budget", decimal_places=2, max_digits=12, help_text="In USD", default=Decimal("0.00"),
+        blank=True)
     mc_estimated_budget = models.DecimalField("Organizations portion of Project Budget",
-                                              decimal_places=2, max_digits=12, help_text="In USD", default=Decimal("0.00"), blank=True)
+                                              decimal_places=2, max_digits=12, help_text="In USD",
+                                              default=Decimal("0.00"), blank=True)
     local_total_estimated_budget = models.DecimalField(
-        "Estimated Total in Local Currency", decimal_places=2, max_digits=12, help_text="In Local Currency", default=Decimal("0.00"), blank=True)
+        "Estimated Total in Local Currency", decimal_places=2, max_digits=12, help_text="In Local Currency",
+        default=Decimal("0.00"), blank=True)
     local_mc_estimated_budget = models.DecimalField("Estimated Organization Total in Local Currency", decimal_places=2,
-                                                    max_digits=12, help_text="Total portion of estimate for your agency", default=Decimal("0.00"), blank=True)
+                                                    max_digits=12,
+                                                    help_text="Total portion of estimate for your agency",
+                                                    default=Decimal("0.00"), blank=True)
     exchange_rate = models.CharField(
         help_text="Local Currency exchange rate to USD", max_length=255, blank=True, null=True)
     exchange_rate_date = models.DateField(
@@ -1059,7 +1077,8 @@ class ProjectAgreement(models.Model):
     community_rep = models.CharField(
         "Community Representative", max_length=255, blank=True, null=True)
     community_rep_contact = models.CharField(
-        "Community Representative Contact", help_text='Can have mulitple contact numbers', max_length=255, blank=True, null=True)
+        "Community Representative Contact", help_text='Can have mulitple contact numbers', max_length=255,
+        blank=True, null=True)
     community_mobilizer = models.CharField(
         "Community Mobilizer", max_length=255, blank=True, null=True)
     community_mobilizer_contact = models.CharField(
@@ -1142,8 +1161,9 @@ class ProjectAgreement(models.Model):
         blank=True, null=True)
     description_of_community_involvement = models.TextField(
         blank=True, null=True)
-    community_project_description = models.TextField("Describe the project you would like the program to consider",
-                                                     blank=True, null=True, help_text="Description must describe how the Community Proposal meets the project criteria")
+    community_project_description = models.TextField(
+        "Describe the project you would like the program to consider", blank=True, null=True,
+        help_text="Description must describe how the Community Proposal meets the project criteria")
     create_date = models.DateTimeField("Date Created", null=True, blank=True)
     edit_date = models.DateTimeField("Last Edit Date", null=True, blank=True)
     history = HistoricalRecords()
@@ -1159,16 +1179,16 @@ class ProjectAgreement(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         # defaults don't work if they aren't in the form so preset these to 0
-        if self.total_estimated_budget == None:
+        if self.total_estimated_budget is None:
             self.total_estimated_budget = Decimal("0.00")
-        if self.mc_estimated_budget == None:
+        if self.mc_estimated_budget is None:
             self.mc_estimated_budget = Decimal("0.00")
-        if self.local_total_estimated_budget == None:
+        if self.local_total_estimated_budget is None:
             self.local_total_estimated_budget = Decimal("0.00")
-        if self.local_mc_estimated_budget == None:
+        if self.local_mc_estimated_budget is None:
             self.local_mc_estimated_budget = Decimal("0.00")
 
         self.edit_date = datetime.now()
@@ -1195,9 +1215,8 @@ class ProjectAgreement(models.Model):
         return ', '.join([x.evaluate for x in self.evaluate.all()])
 
     # displayed in admin templates
-    def __unicode__(self):
-        new_name = unicode(self.office) + unicode(" - ") + \
-            unicode(self.project_name)
+    def __str__(self):
+        new_name = self.office + " - " + self.project_name
         return new_name
 
 
@@ -1259,7 +1278,9 @@ class ProjectComplete(models.Model):
     estimated_budget = models.DecimalField(
         "Estimated Budget", decimal_places=2, max_digits=12, help_text="", default=Decimal("0.00"), blank=True)
     actual_budget = models.DecimalField("Actual Cost", decimal_places=2, max_digits=20, default=Decimal(
-        "0.00"), blank=True, help_text="What was the actual final cost?  This should match any financial documentation you have in the file.   It should be completely documented and verifiable by finance and any potential audit")
+        "0.00"), blank=True, help_text="What was the actual final cost?  This should match any financial " +
+                                       "documentation you have in the file.   It should be completely documented " +
+                                       "and verifiable by finance and any potential audit")
     actual_cost_date = models.DateTimeField(blank=True, null=True)
     budget_variance = models.CharField(
         "Budget versus Actual variance", blank=True, null=True, max_length=255)
@@ -1270,9 +1291,11 @@ class ProjectComplete(models.Model):
     agency_cost = models.DecimalField("Actual Cost for Organization", decimal_places=2,
                                       max_digits=12, help_text="In USD", default=Decimal("0.00"), blank=True)
     local_total_cost = models.DecimalField(
-        "Actual Cost", decimal_places=2, max_digits=12, help_text="In Local Currency", default=Decimal("0.00"), blank=True)
+        "Actual Cost", decimal_places=2, max_digits=12, help_text="In Local Currency", default=Decimal("0.00"),
+        blank=True)
     local_agency_cost = models.DecimalField("Actual Cost for Organization", decimal_places=2,
-                                            max_digits=12, help_text="In Local Currency", default=Decimal("0.00"), blank=True)
+                                            max_digits=12, help_text="In Local Currency", default=Decimal("0.00"),
+                                            blank=True)
     exchange_rate = models.CharField(
         help_text="Local Currency exchange rate to USD", max_length=255, blank=True, null=True)
     exchange_rate_date = models.DateField(
@@ -1281,11 +1304,15 @@ class ProjectComplete(models.Model):
     Start Clean Up - These can be removed
     """
     beneficiary_type = models.CharField(
-        "Type of direct beneficiaries", help_text="i.e. Farmer, Association, Student, Govt, etc.", max_length=255, blank=True, null=True)
+        "Type of direct beneficiaries", help_text="i.e. Farmer, Association, Student, Govt, etc.", max_length=255,
+        blank=True, null=True)
     average_household_size = models.CharField(
-        "Average Household Size", help_text="Refer to Form 01 - Community Profile", max_length=255, blank=True, null=True)
-    indirect_beneficiaries = models.CharField("Estimated Number of indirect beneficiaries",
-                                              help_text="This is a calculation - multiply direct beneficiaries by average household size", max_length=255, blank=True, null=True)
+        "Average Household Size", help_text="Refer to Form 01 - Community Profile", max_length=255, blank=True,
+        null=True)
+    indirect_beneficiaries = models.CharField(
+        "Estimated Number of indirect beneficiaries",
+        help_text="This is a calculation - multiply direct beneficiaries by average household size", max_length=255,
+        blank=True, null=True)
     direct_beneficiaries = models.CharField(
         "Actual Direct Beneficiaries", max_length=255, blank=True, null=True)
     jobs_created = models.CharField(
@@ -1338,28 +1365,27 @@ class ProjectComplete(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         # defaults don't work if they aren't in the form so preset these to 0
-        if self.estimated_budget == None:
+        if self.estimated_budget is None:
             self.estimated_budget = Decimal("0.00")
-        if self.actual_budget == None:
+        if self.actual_budget is None:
             self.actual_budget = Decimal("0.00")
-        if self.total_cost == None:
+        if self.total_cost is None:
             self.total_cost = Decimal("0.00")
-        if self.agency_cost == None:
+        if self.agency_cost is None:
             self.agency_cost = Decimal("0.00")
-        if self.local_total_cost == None:
+        if self.local_total_cost is None:
             self.local_total_cost = Decimal("0.00")
-        if self.local_agency_cost == None:
+        if self.local_agency_cost is None:
             self.local_agency_cost = Decimal("0.00")
         self.edit_date = datetime.now()
         super(ProjectComplete, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
-        new_name = unicode(self.office) + unicode(" - ") + \
-            unicode(self.project_name)
+    def __str__(self):
+        new_name = self.office + " - " + self.project_name
         return new_name
 
     @property
@@ -1386,12 +1412,12 @@ class Documentation(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Documentation, self).save()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -1445,13 +1471,13 @@ class Benchmarks(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Benchmarks, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.description
 
 
@@ -1481,13 +1507,13 @@ class Monitor(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Monitor, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
+    def __str__(self):
         return self.responsible_person
 
 
@@ -1513,12 +1539,12 @@ class Budget(models.Model):
     # on save add create date or update edit date
 
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Budget, self).save()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.contributor
 
     class Meta:
@@ -1546,14 +1572,14 @@ class Checklist(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(Checklist, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
-        return unicode(self.agreement)
+    def __str__(self):
+        return self.agreement
 
 
 class ChecklistAdmin(admin.ModelAdmin):
@@ -1577,14 +1603,14 @@ class ChecklistItem(models.Model):
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
-        if self.create_date == None:
+        if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
         super(ChecklistItem, self).save()
 
     # displayed in admin templates
-    def __unicode__(self):
-        return unicode(self.item)
+    def __str__(self):
+        return self.item
 
 
 class ChecklistItemAdmin(admin.ModelAdmin):
@@ -1602,7 +1628,7 @@ class LoggedUser(models.Model):
     email = models.CharField(max_length=100, blank=False,
                              default='user@mercycorps.com')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.username
 
     def login_user(sender, request, user, **kwargs):

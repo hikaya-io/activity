@@ -1,14 +1,20 @@
-from mixins import AjaxableResponseMixin
-from activity.util import getCountry, group_excluded
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+from .mixins import AjaxableResponseMixin
+from activity.util import get_country, group_excluded
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from .models import CustomDashboard, DashboardComponent, ComponentDataSource, DashboardTheme
 from workflow.models import Program, FormGuidance
-from .forms import CustomDashboardCreateForm, CustomDashboardForm, CustomDashboardModalForm, \
-    CustomDashboardMapForm, DashboardThemeCreateForm, DashboardThemeForm, DashboardComponentCreateForm, DashboardComponentForm, ComponentDataSourceForm, \
+from .forms import (
+    CustomDashboardCreateForm, CustomDashboardForm, CustomDashboardModalForm,
+    CustomDashboardMapForm, DashboardThemeCreateForm, DashboardThemeForm,
+    DashboardComponentCreateForm, DashboardComponentForm, ComponentDataSourceForm,
     ComponentDataSourceCreateForm
+)
 
 from django.shortcuts import render
 from django.contrib import messages
@@ -26,11 +32,6 @@ logger = logging.getLogger(__name__)
 # ===========================================
 # This lists available custom dashboards to view
 class CustomDashboardList(ListView):
-    """
-    CustomDashboard
-    :param request:
-    :param pk: program_id
-    """
     model = CustomDashboard
     template_name = 'configurabledashboard/dashboard/list.html'
 
@@ -38,10 +39,10 @@ class CustomDashboardList(ListView):
         # retrieve program
         model = Program
         program_id = int(self.kwargs['pk'])
-        getProgram = Program.objects.all().filter(id=program_id)
+        get_program = Program.objects.all().filter(id=program_id)
 
         # retrieve the coutries the user has data access for
-        countries = getCountry(request.user)
+        countries = get_country(request.user)
 
         # retrieve projects for a program
         # getProjects = ProjectAgreement.objects.all().filter(program__id=program__id, program__country__in=countries)
@@ -49,7 +50,8 @@ class CustomDashboardList(ListView):
         # retrieve projects for a program
         getCustomDashboards = CustomDashboard.objects.all().filter(program=program_id)
 
-        return render(request, self.template_name, {'pk': program_id, 'getCustomDashboards': getCustomDashboards, 'getProgram': getProgram})
+        return render(request, self.template_name, {'pk': program_id, 'getCustomDashboards': getCustomDashboards,
+                                                    'getProgram': get_program})
 
 
 class CustomDashboardCreate(CreateView):

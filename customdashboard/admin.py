@@ -1,6 +1,8 @@
-from django.contrib import admin
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 from .models import *
+from django.contrib import admin
 
 
 class GalleryAdmin(admin.ModelAdmin):

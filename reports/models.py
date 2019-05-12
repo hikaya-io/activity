@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.contrib import admin
 from workflow.models import Program, ProjectAgreement, ProjectComplete, Country
@@ -24,8 +27,8 @@ class Report(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
-        return self.program__name
+    def __str__(self):
+        return self.program.name
 
 
 class ReportAdmin(admin.ModelAdmin):

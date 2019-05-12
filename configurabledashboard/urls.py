@@ -1,5 +1,7 @@
-from .views import *
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
+from .views import *
 from django.urls import path, re_path
 
 # place app url patterns here
@@ -34,7 +36,8 @@ urlpatterns = [
     path('component_add/<int:id>/', DashboardComponentCreate.as_view(),
          name='custom_dashboard/component_add'),
     path('component_update/<int:pk>/', DashboardComponentUpdate.as_view(
-        template_name="configurabledashboard/components/admin/update_form.html"), name='custom_dashboard/component_update'),
+        template_name="configurabledashboard/components/admin/update_form.html"),
+         name='custom_dashboard/component_update'),
     path('component_delete/<int:pk>/', DashboardComponentDelete.as_view(),
          name='custom_dashboard/component_delete'),
 
@@ -45,7 +48,8 @@ urlpatterns = [
     path('data_detail/<int:pk>/', ComponentDataSourceDetail.as_view(),
          name='custom_data_source_detail'),
     path('data_assign/<int:pk>/', DashboardComponentUpdate.as_view(
-        template_name="configurabledashboard/datasource/assign.html"), name='custom_dashboard/data_assign'),
+        template_name="configurabledashboard/datasource/assign.html"),
+         name='custom_dashboard/data_assign'),
     path('data_update/<int:pk>/', ComponentDataSourceUpdate.as_view(),
          name='custom_dashboard/data_update'),
     path('data_delete/<int:pk>/', ComponentDataSourceDelete.as_view(),

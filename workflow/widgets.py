@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django import forms
 from django.utils.safestring import mark_safe
 
@@ -19,7 +22,9 @@ class GoogleMapsWidget(forms.HiddenInput):
         self.attrs['country'] = self.attrs.get('country', country)
 
         maps_html = u"""
-            <script type="text/javascript" src="https://maps.google.com/maps/api/js?v=3&key=AIzaSyAc76ZfKuHCvwXAEAiR2vINQPgNRenCf_8&sensor=false"></script>
+            <script type="text/javascript" 
+            src="https://maps.google.com/maps/api/js?v=3&key=AIzaSyAc76ZfKuHCvwXAEAiR2vINQPgNRenCf_8&sensor=false">
+            </script>
             <script type="text/javascript">
 
                 $(document).ready(function(){
@@ -127,8 +132,10 @@ class GoogleMapsWidget(forms.HiddenInput):
 
 
 
-            """ % {'latitude': self.attrs['latitude'], 'longitude': self.attrs['longitude'], 'base_longitude': self.attrs['base_longitude'],
-                   'base_latitude': self.attrs['base_latitude'], 'width': self.attrs['width'], 'height': self.attrs['height'], 'country': self.attrs['country']}
+            """ % {'latitude': self.attrs['latitude'], 'longitude': self.attrs['longitude'],
+                   'base_longitude': self.attrs['base_longitude'],
+                   'base_latitude': self.attrs['base_latitude'], 'width': self.attrs['width'],
+                   'height': self.attrs['height'], 'country': self.attrs['country']}
 
         rendered = super(GoogleMapsWidget, self).render(name, value, attrs)
         return rendered + mark_safe(maps_html)

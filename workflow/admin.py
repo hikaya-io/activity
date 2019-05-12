@@ -1,8 +1,11 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from .models import *
 from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
 from import_export.admin import ImportExportModelAdmin, ExportMixin
-from activity.util import getCountry
+from activity.util import get_country
 from adminreport.mixins import ChartReportAdmin
 
 
@@ -57,7 +60,7 @@ class ProjectAgreementAdmin(ImportExportModelAdmin):
         `self.value()`.
         """
         # Filter by logged in users allowable countries
-        user_countries = getCountry(request.user)
+        user_countries = get_country(request.user)
         # if not request.user.user.is_superuser:
         return queryset.filter(country__in=user_countries)
 
@@ -93,7 +96,7 @@ class ProjectCompleteAdmin(ImportExportModelAdmin):
         `self.value()`.
         """
         # Filter by logged in users allowable countries
-        user_countries = getCountry(request.user)
+        user_countries = get_country(request.user)
         # if not request.user.user.is_superuser:
         return queryset.filter(country__in=user_countries)
 
@@ -102,7 +105,6 @@ class ProjectCompleteAdmin(ImportExportModelAdmin):
 
 # Resource for CSV export
 class CountryResource(resources.ModelResource):
-
     class Meta:
         model = Country
 
@@ -127,13 +129,13 @@ class SiteProfileResource(resources.ModelResource):
     province = fields.Field(column_name='admin level 1',
                             attribute='province', widget=ForeignKeyWidget(Province, 'name'))
     admin_level_three = fields.Field(
-        column_name='admin level 3', attribute='admin_level_three', widget=ForeignKeyWidget(AdminLevelThree, 'name'))
+        column_name='admin level 3', attribute='admin_level_three',
+        widget=ForeignKeyWidget(AdminLevelThree, 'name'))
 
     class Meta:
         model = SiteProfile
         skip_unchanged = True
         report_skipped = False
-        #import_id_fields = ['id']
 
 
 class SiteProfileAdmin(ImportExportModelAdmin):
@@ -177,7 +179,7 @@ class TolaUserProxyResource(resources.ModelResource):
     email = fields.Field()
 
     def dehydrate_email(self, user):
-        return '%s' % (user.user.email)
+        return str(user.user.email)
 
     class Meta:
         model = ActivityUserProxy
@@ -200,6 +202,7 @@ class ReportTolaUserProxyAdmin(ChartReportAdmin, ExportMixin, admin.ModelAdmin):
 
     def email(self, data):
         auth_users = User.objects.all()
+        email = ''
         for a_user in auth_users:
             if data.user == a_user:
                 email = a_user.email

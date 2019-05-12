@@ -49,16 +49,16 @@ router.register(r'village', VillageViewSet)
 router.register(r'contact', ContactViewSet)
 router.register(r'documentation', DocumentationViewSet)
 router.register(r'collecteddata', CollectedDataViewSet)
-router.register(r'tolatable', TolaTableViewSet, base_name='tolatable')
+router.register(r'tolatable', TolaTableViewSet, basename='tolatable')
 router.register(r'disaggregationvalue', DisaggregationValueViewSet)
 router.register(r'projectagreements', ProjectAgreementViewSet)
 router.register(r'loggedusers', LoggedUserViewSet)
 router.register(r'checklist', ChecklistViewSet)
 router.register(r'organization', OrganizationViewSet)
 router.register(r'pindicators', PogramIndicatorReadOnlyViewSet,
-                base_name='pindicators')
+                basename='pindicators')
 router.register(r'periodictargets', PeriodicTargetReadOnlyViewSet,
-                base_name='periodictargets')
+                basename='periodictargets')
 
 
 urlpatterns = [  # rest framework
@@ -123,8 +123,8 @@ urlpatterns = [  # rest framework
     # Auth backend URL's
     path('', include(('django.contrib.auth.urls',
                       "django.contrib.auth"), namespace='auth')),
-    #path('', include('social.apps.django_app.urls', namespace='social')),
+    # path('', include('social.apps.django_app.urls', namespace='social')),
     path('', include('social_django.urls', namespace='social'))
-    #path('oauth/', include('social_django.urls', namespace='social')),
+    # path('oauth/', include('social_django.urls', namespace='social')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
