@@ -235,27 +235,27 @@ class ReportingFrequencyViewSet(viewsets.ModelViewSet):
     serializer_class = ReportingFrequencySerializer
 
 
-class TolaUserViewSet(viewsets.ModelViewSet):
+class ActivityUserViewSet(viewsets.ModelViewSet):
     """
-    A ViewSet for listing or retrieving TolaUsers.
+    A ViewSet for listing or retrieving ActivityUsers.
 
     """
 
     def list(self, request):
         queryset = ActivityUser.objects.all()
-        serializer = TolaUserSerializer(instance=queryset, context={
+        serializer = ActivityUserSerializer(instance=queryset, context={
                                         'request': request}, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         queryset = ActivityUser.objects.all()
         user = get_object_or_404(queryset, pk=pk)
-        serializer = TolaUserSerializer(
+        serializer = ActivityUserSerializer(
             instance=user, context={'request': request})
         return Response(serializer.data)
 
     queryset = ActivityUser.objects.all()
-    serializer_class = TolaUserSerializer
+    serializer_class = ActivityUserSerializer
 
 
 class IndicatorTypeViewSet(viewsets.ModelViewSet):
@@ -452,7 +452,7 @@ class CollectedDataViewSet(viewsets.ModelViewSet):
     pagination_class = SmallResultsSetPagination
 
 
-class TolaTableViewSet(viewsets.ModelViewSet):
+class activitytableViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
@@ -474,7 +474,7 @@ class TolaTableViewSet(viewsets.ModelViewSet):
     filter_fields = ('table_id', 'country__country',
                      'collecteddata__indicator__program__name')
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-    serializer_class = TolaTableSerializer
+    serializer_class = activitytableSerializer
     pagination_class = StandardResultsSetPagination
 
 
@@ -496,7 +496,7 @@ class DisaggregationValueViewSet(viewsets.ModelViewSet):
     serializer_class = DisaggregationValueSerializer
     pagination_class = StandardResultsSetPagination
 
-# Returns a list of all project agreement and feed to TolaWork
+# Returns a list of all project agreement and feed to Hikaya
 
 
 class ProjectAgreementViewSet(APIDefaultsMixin, viewsets.ModelViewSet):

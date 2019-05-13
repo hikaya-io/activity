@@ -1,18 +1,14 @@
-Tola Activity [![Build Status](https://travis-ci.org/toladata/TolaActivity.svg?branch=master)](https://travis-ci.org/toladata/TolaActivity)
+Activity [![Build Status](https://travis-ci.org/hikaya/Activity-CE.svg?branch=master)](https://travis-ci.org/hikaya/Activity-CE)
 ====
-http://toladata.com/products/activity/
 
-TolaActivity extends the functionality of TolaData to include a set of forms and
-reports for managing project activities for a Program.  It includes workflow for approving
-and completing projects as well as sharing the output data.
+Activity includes a set of forms and reports for managing project activities for a Program.  It includes workflow for approving and completing projects as well as sharing the output data.
 
 
-TolaActivity functionality http://www.github.com/toladata/TolaActivity is intended to allow importing
-and exporting of project specific data from 3rd party data sources or excel
-files.
+Activity functionality http://www.github.com/hikaya/Activity-CE is intended to allow importing
+and exporting of project specific data from 3rd party data sources or excel files.
 
 ## Configuration
-Copy the tola/settings/local-sample.py to local.py and modify for your environment.
+Copy the activity/settings/local-sample.py to local.py and modify for your environment.
 
 ## To deploy changes in activity servers
 Once all your changes have been commited to the repo, and before pushing them, run:
@@ -63,9 +59,9 @@ database `PASSWORD` as appropriate. The result should resemble the following:
 48  'default': {
 49    #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 50    'ENGINE': "django.db.backends.mysql"
-51    'NAME': "tola_activity"
+51    'NAME': "activity"
 52    'USER': "root"
-53    'PASSWORD': 'tolageek',
+53    'PASSWORD': 'hikayageek',
 54    'HOST': "localhost"
 55    'PORT': '',
 ```
@@ -74,9 +70,9 @@ database `PASSWORD` as appropriate. The result should resemble the following:
 ## Set up Django's MySQL backing store
 
 ```sql
-CREATE DATABASE 'tola_activity';
+CREATE DATABASE 'activity';
 CREATE USER 'root';
-GRANT ALL ON tola_activity.* TO 'root'@'localhost' IDENTIFIED BY 'tolageek';
+GRANT ALL ON ctivity.* TO 'root'@'localhost' IDENTIFIED BY 'hikayageek';
 ```
 * When you use these SQL queries, beware of not writting the quotes.
 

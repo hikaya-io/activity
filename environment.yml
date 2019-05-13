@@ -1,4 +1,4 @@
-name: tolaenv
+name: activityenv
 channels:
   - conda-forge
   - defaults
@@ -96,5 +96,5 @@ dependencies:
     - webencodings==0.5.1
     - xlrd==1.2.0
     - xlwt==1.3.0
-prefix: /home/user/anaconda3/envs/tolaenv
+prefix: /home/user/anaconda3/envs/activityenv
 

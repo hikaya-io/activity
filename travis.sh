@@ -24,7 +24,7 @@ elif [ $(travis status) == passed ];
   then
      echo $(travis status)
      echo run Docker script
-     ssh activity . /home/TolaActivity/docker.sh
+     ssh activity . /home/Activity-CE/docker.sh
 else
      echo error
 fi

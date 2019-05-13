@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>Import from TolaTables</title>
+  <title>Import from activitytables</title>
 </head>
 <body>
 
@@ -69,14 +69,14 @@
         <strong>{{ error|escape }}</strong>
     </div>
 
-    <h4 class="modal-title">{% block page_title %}Import from Tola Tables {{ id }} {% endblock %}</h4>
+    <h4 class="modal-title">{% block page_title %}Import from Activity Tables {{ id }} {% endblock %}</h4>
     <p>Choose source to import:</p>
     </div>
     <div class="modal-body">
         <form class="form-horizontal" method="post" id="importForm" action="/workflow/do_import">
            {% csrf_token %}
               <div class="form-group">
-                  <label for="services">Import from TolaTables or a third party data service</label>
+                  <label for="services">Import from activitytables or a third party data service</label>
                   <select name="services" id="services" class="form-control">
                       <option value="0"> -- select -- </option>
                       {% for item in getServices %}

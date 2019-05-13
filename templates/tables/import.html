@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>Import from Tola Tables</title>
+  <title>Import from Activity Tables</title>
 </head>
 <body>
 <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
@@ -40,7 +40,7 @@
         <strong>{{ error|escape }}</strong>
     </div>
 
-    <h4 class="modal-title">{% block page_title %}Import A Tola Table{% endblock %}</h4>
+    <h4 class="modal-title">{% block page_title %}Import An Activity Table{% endblock %}</h4>
 
     </div>
     <div class="modal-body">
@@ -62,15 +62,15 @@
     <br/>
     <div class='jumbotron'>
 
-        <h4>Import a data table from <a href="http://tola-tables.mercycorps.org" target="_new">Tola Tables</a>.</h4>
-        <p>Import one of your Tola Tables or a Table shared with you as a Project Initiation, Indicator, Site Profile or Indicator Evidence.</p>
+        <h4>Import a data table from <a href="#" target="_new">Activity Tables</a>.</h4>
+        <p>Import one of your Activity Tables or a Table shared with you as a Project Initiation, Indicator, Site Profile or Indicator Evidence.</p>
         <div class="panel-body">
             <form class="form-horizontal" method="post" enctype="multipart/form-data" id="importForm" name="most" action="/tables/import/" role="form">
               {% csrf_token %}
 
               <div class="form-group">
 
-                  <label for="service_table">Tola Tables </label>
+                  <label for="service_table">Activity Tables </label>
                   <select name="service_table" id="service_table" class="form-control">
                       {% for table in getTables.results %}
                       <option value="{{ table.id }}"> {{ table.owner.username }} - {{ table.name }} </option>

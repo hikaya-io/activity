@@ -4,13 +4,13 @@
         $(document).ready(function() {
             /* add select2 js library to the indicator select box */
             $("#id_site").select2();
-            $("#id_tola_table").select2();
+            $("#id_activity_table").select2();
             $("#id_evidence").select2();
             $("#id_agreement").select2();
 
-            $('#tolatablemodal').on('hidden.bs.modal', function (e) {
+            $('#activitytablemodal').on('hidden.bs.modal', function (e) {
                 var sel = $("#service_table option:selected");
-                $("#id_tola_table").append($("<option></option>")
+                $("#id_activity_table").append($("<option></option>")
                             .attr("value", sel.val())
                             .text(sel.text()));
             });

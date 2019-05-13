@@ -2,7 +2,7 @@
 
 <script type="text/javascript" src="{{ STATIC_URL }}js/maps/componentizedLeaflet.js"></script>
 <script type="text/javascript">
-var result = {% autoescape off %}{{tolaMapData}}{% endautoescape %}
+var result = {% autoescape off %}{{activityMapData}}{% endautoescape %}
 var mapZoomLevel = result["mapZoom"]
 var mapCenterCoordinates = result["mapCenterCoordinates"]
 var mapSites = result["sites"]

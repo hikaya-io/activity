@@ -171,7 +171,7 @@ class StakeholderAdmin(ImportExportModelAdmin):
     list_filter = ('country', 'type')
 
 
-class TolaUserProxyResource(resources.ModelResource):
+class ActivityUserProxyResource(resources.ModelResource):
     country = fields.Field(column_name='country', attribute='country',
                            widget=ForeignKeyWidget(Country, 'country'))
     user = fields.Field(column_name='user', attribute='user',
@@ -188,13 +188,13 @@ class TolaUserProxyResource(resources.ModelResource):
                         'country', 'email', 'create_date')
 
 
-class ReportTolaUserProxyAdmin(ChartReportAdmin, ExportMixin, admin.ModelAdmin):
+class ReportActivityUserProxyAdmin(ChartReportAdmin, ExportMixin, admin.ModelAdmin):
 
-    resource_class = TolaUserProxyResource
+    resource_class = ActivityUserProxyResource
 
     def get_queryset(self, request):
 
-        qs = super(ReportTolaUserProxyAdmin, self).get_queryset(request)
+        qs = super(ReportActivityUserProxyAdmin, self).get_queryset(request)
         return qs.filter(user__is_active=True)
 
     list_display = ('title', 'name', 'user', 'email', 'country', 'create_date')
@@ -239,5 +239,5 @@ admin.site.register(StakeholderType)
 admin.site.register(ActivityUser, ActivityUserAdmin)
 admin.site.register(ActivitySites, ActivitySitesAdmin)
 admin.site.register(FormGuidance, FormGuidanceAdmin)
-admin.site.register(ActivityUserProxy, ReportTolaUserProxyAdmin)
+admin.site.register(ActivityUserProxy, ReportActivityUserProxyAdmin)
 admin.site.register(ActivityBookmarks, ActivityBookmarksAdmin)

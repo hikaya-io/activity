@@ -12,10 +12,10 @@
     <div class="modal-content" >
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">{{tolaImageData.title}}</h4>
+        <h4 class="modal-title">{{activityImageData.title}}</h4>
       </div>
       <div class="modal-body" style='overflow-y: scroll; '>
-         {% for photo in tolaImageData%}
+         {% for photo in activityImageData%}
            <div class='col-lg-3' >
            	 <!-- <a href="#">{{photo.name}}</a> -->
              <img src="{{STATIC_URL}}/{% autoescape off %}{{ photo }} {% endautoescape %}" / class='gallery_thumbnail' style='width: 200pt; padding: 1em;'>

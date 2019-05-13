@@ -28,7 +28,7 @@ Layout takes 3 input "component" templates to display each of the column graphic
 	<div class='col-lg-9'>
 		<div class='panel'>
 			<div class='panel-heading text-center'>
-				{% with table4 as tolaTableData %}
+				{% with table4 as activitytableData %}
 				    {% include 'customdashboard/components/charts/bar_graph.html' %}
 				{% endwith %}
 			</div>	
@@ -37,7 +37,7 @@ Layout takes 3 input "component" templates to display each of the column graphic
 	<div class='col-lg-3'>
 		<div class='panel'>
 			<div class='panel-heading text-center'>
-				{% with table2 as tolaTableData %}
+				{% with table2 as activitytableData %}
 				    {% include 'customdashboard/components/charts/pie.html' %}
 				{% endwith %}
 			</div>	
@@ -50,7 +50,7 @@ Layout takes 3 input "component" templates to display each of the column graphic
 			<div class='panel-heading text-center'></div>
 				<div class="panel-body" style="min-height: 300; max-height: 300;">
 				<span class='chart-title' style="overflow-y: scroll;">{{ tableHeaders.title1 }}</span>
-				{% with table2 as tolaTableData %}
+				{% with table2 as activitytableData %}
 				    {% include 'customdashboard/components/charts/bar_graph.html' %}
 				{% endwith %}
 				</div>
@@ -61,7 +61,7 @@ Layout takes 3 input "component" templates to display each of the column graphic
 			<div class='panel-heading'></div>
 				<div class="panel-body" style="min-height: 300; max-height: 300;">
 				<span class='chart-title' style="overflow-y: scroll;">{{ table2.column_heading }}</span>
-				{% with table2.data_set as tolaTableData %}
+				{% with table2.data_set as activitytableData %}
 				    {% include 'customdashboard/components/charts/doughnut.html' %}
 				{% endwith %}
 				</div>
@@ -72,7 +72,7 @@ Layout takes 3 input "component" templates to display each of the column graphic
 			<div class='panel-heading'></div>
 				<div class="panel-body" style="min-height: 300; max-height: 300;">
 				<span class='chart-title' style="overflow-y: scroll;">{{ table3.column_heading}}</span>
-				{% with tableData1 as tolaTableData %}
+				{% with tableData1 as activitytableData %}
 				    {% include 'customdashboard/components/charts/radar.html' %}
 				{% endwith %}
 			</div>

@@ -56,8 +56,8 @@
                                 </a>
                             {% endif %}
                         {%endif%}
-                        {% if cdata.tola_table %}
-                            <a href="{{ cdata.tola_table.detail_url }}" target="_blank">{{ cdata.tola_table }}</a>
+                        {% if cdata.activity_table %}
+                            <a href="{{ cdata.activity_table.detail_url }}" target="_blank">{{ cdata.activity_table }}</a>
                         {% endif %}
                     </td>
                     <td>{{ cdata.complete|default_if_none:cdata.agreement|default_if_none:'' }}</td>
@@ -101,8 +101,8 @@
                             </a>
                         {% endif %}
                     {%endif%}
-                    {% if coldata.tola_table %}
-                        <a href="{{ coldata.tola_table.detail_url }}" target="_blank">{{ coldata.tola_table }}</a>
+                    {% if coldata.activity_table %}
+                        <a href="{{ coldata.activity_table.detail_url }}" target="_blank">{{ coldata.activity_table }}</a>
                     {% endif %}
                 </td>
                 <td>{{ coldata.agreement|default_if_none:"" }}</td>

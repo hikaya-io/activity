@@ -20,7 +20,7 @@
 		<div class='row'>
 			<div class='col-lg-12'>
 				<div class='panel panel-info' style="height: 300pt; border-color: #00afaa;"">
-					{% with pageMap as tolaMapData %}
+					{% with pageMap as activityMapData %}
 						{% include 'customdashboard/components/maps/region_map.html' %}
 					{% endwith %}
 				</div>
@@ -31,7 +31,7 @@
 					<div class='panel-heading text-center soft-border-top' style='background-color: #7B5213;'></div>
 						<div class="panel-body" style="min-height: 500; max-height: 500;">
 						<span class='chart-title' style="overflow-y: scroll;">{{ table1.column_heading }}</span>
-						{% with table1 as tolaTableData %}
+						{% with table1 as activitytableData %}
 						    {% include 'customdashboard/components/charts/bar_graph.html' %}
 						{% endwith %}
 						</div>
@@ -42,7 +42,7 @@
 					<div class='panel-heading soft-border-top' style='background-color: #7B5213;'></div>
 						<div class="panel-body" style="min-height: 500; max-height: 500;">
 						<span class='chart-title' style="overflow-y: scroll;">{{ table2.column_heading }}</span>
-						{% with table2 as tolaTableData %}
+						{% with table2 as activitytableData %}
 						    {% include 'customdashboard/components/charts/doughnut.html' %}
 						{% endwith %}
 						</div>
@@ -53,7 +53,7 @@
 					<div class='panel-heading soft-border-top' style='background-color: #7B5213;'></div>
 						<div class="panel-body" style="min-height: 500; max-height: 500;">
 						<span class='chart-title' style="overflow-y: scroll;">{{ table3.column_heading }}</span>
-						{% with table3 as tolaTableData %}
+						{% with table3 as activitytableData %}
 						    {% include 'customdashboard/components/charts/doughnut.html' %}
 						{% endwith %}
 						</div>

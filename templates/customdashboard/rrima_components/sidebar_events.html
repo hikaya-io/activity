@@ -1,5 +1,5 @@
 <div class="sidebar-pane" id="narrative-news">
-    {% for textRecord in tolaTextData %}
+    {% for textRecord in activityTextData %}
       <div class="panel-body"> 
         <a href="{{textRecord.link}}" style='float:left; color: black;'>
           <strong>{{textRecord.date }}:</strong><br> {{textRecord.event}} </a> </div>

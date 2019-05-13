@@ -208,7 +208,7 @@ class ProjectAgreementList(ListView):
 
 class ProjectAgreementImport(ListView):
     """
-    Import a project agreement from TolaData or other third party service
+    Import a project agreement from Hikaya or other third party service
     """
 
     template_name = 'workflow/projectagreement_import.html'
@@ -2563,9 +2563,9 @@ def save_bookmark(request):
     """
     url = request.POST['url']
     username = request.user
-    tola_user = ActivityUser.objects.get(user=username)
+    activity_user = ActivityUser.objects.get(user=username)
 
-    ActivityBookmarks.objects.create(bookmark_url=url, name=url, user=tola_user)
+    ActivityBookmarks.objects.create(bookmark_url=url, name=url, user=activity_user)
 
     return HttpResponse(url)
 

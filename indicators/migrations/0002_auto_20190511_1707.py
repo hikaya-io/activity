@@ -173,7 +173,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='historicalcollecteddata',
-            name='tola_table',
+            name='activity_table',
             field=models.ForeignKey(blank=True, db_constraint=False, help_text=' ', null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='indicators.ActivityTable'),
         ),
         migrations.AddField(
@@ -243,7 +243,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='collecteddata',
-            name='tola_table',
+            name='activity_table',
             field=models.ForeignKey(blank=True, help_text=' ', null=True, on_delete=django.db.models.deletion.SET_NULL, to='indicators.ActivityTable'),
         ),
         migrations.AddField(

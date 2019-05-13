@@ -13,7 +13,7 @@
       iconSize: [0,0]
     });
 
-    {% for site in tolaMapData%}
+    {% for site in activityMapData%}
         var marker = L.marker([{{ site.latitude }}, {{ site.longitude }}], {icon: countryIcon})
             .addEventListener('popupopen', function () {
                 this._icon.id = "{{site.location_name}}"

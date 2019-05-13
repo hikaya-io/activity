@@ -68,7 +68,7 @@ class NewUserRegistrationForm(UserCreationForm):
     helper.form_tag = False
 
 
-class NewTolaUserRegistrationForm(forms.ModelForm):
+class NewActivityUserRegistrationForm(forms.ModelForm):
     """
     Form for registering a new account.
     """
@@ -77,7 +77,7 @@ class NewTolaUserRegistrationForm(forms.ModelForm):
         fields = ['title', 'country', 'privacy_disclaimer_accepted']
 
     def __init__(self, *args, **kwargs):
-        super(NewTolaUserRegistrationForm, self).__init__(*args, **kwargs)
+        super(NewActivityUserRegistrationForm, self).__init__(*args, **kwargs)
 
     helper = FormHelper()
     helper.form_method = 'post'

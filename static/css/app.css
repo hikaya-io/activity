@@ -46,27 +46,27 @@ button:focus,
   margin-top: 10px;
 }
 
-.navbar-tola {
+.navbar-activity {
   /* Hikaya Brand Color: */
   background-color: rgb(37, 206, 209);
   border: none;
 }
 
-.navbar-tola .navbar-nav > li > a {
+.navbar-activity .navbar-nav > li > a {
   color: #fff;
 }
 
-.navbar-tola .navbar-nav > li > a:hover,
-.navbar-tola .navbar-nav > li > a:focus,
-.navbar-tola .navbar-nav > li.active > a,
-.navbar-tola .navbar-nav > li.active > a:hover,
-.navbar-tola .navbar-nav > li.active > a:focus,
-.navbar-tola .navbar-nav .dropdown.open a.dropdown-toggle {
+.navbar-activity .navbar-nav > li > a:hover,
+.navbar-activity .navbar-nav > li > a:focus,
+.navbar-activity .navbar-nav > li.active > a,
+.navbar-activity .navbar-nav > li.active > a:hover,
+.navbar-activity .navbar-nav > li.active > a:focus,
+.navbar-activity .navbar-nav .dropdown.open a.dropdown-toggle {
   color: #fff;
   background-color: rgba(0, 0, 0, .15);
 }
 
-.navbar-tola .navbar-nav .navbar-collapse {
+.navbar-activity .navbar-nav .navbar-collapse {
     clear: both;
     float: none;
 }

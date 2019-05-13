@@ -14,7 +14,7 @@
 user=
 password=
 host="localhost"
-db_name="tola_activity"
+db_name="activity"
 
 
 backup_path="$HOME/sqlbackups"

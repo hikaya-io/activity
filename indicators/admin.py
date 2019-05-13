@@ -47,18 +47,18 @@ class IndicatorAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     pass
 
 
-class TolaTableResource(resources.ModelResource):
+class activitytableResource(resources.ModelResource):
 
     class Meta:
         model = ActivityTable
         fields = ('id', 'name', 'table_id', 'owner', 'remote_owner', 'url')
 
 
-class TolaTableAdmin(ImportExportModelAdmin):
+class activitytableAdmin(ImportExportModelAdmin):
     list_display = ('name', 'owner', 'url', 'create_date', 'edit_date')
     search_fields = ('country__country', 'name')
     list_filter = ('country__country',)
-    display = 'Tola Table'
+    display = 'Activity Table'
     pass
 
 
@@ -94,6 +94,6 @@ admin.site.register(StrategicObjective, StrategicObjectiveAdmin)
 admin.site.register(Level)
 admin.site.register(ExternalService, ExternalServiceAdmin)
 admin.site.register(ExternalServiceRecord, ExternalServiceRecordAdmin)
-admin.site.register(ActivityTable, TolaTableAdmin)
+admin.site.register(ActivityTable, activitytableAdmin)
 admin.site.register(DataCollectionFrequency)
 admin.site.register(PeriodicTarget, PeriodicTargetAdmin)

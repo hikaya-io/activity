@@ -298,7 +298,7 @@ class CollectedDataForm(forms.ModelForm):
         self.request = kwargs.pop('request')
         self.program = kwargs.pop('program')
         self.indicator = kwargs.pop('indicator', None)
-        self.tola_table = kwargs.pop('tola_table')
+        self.activity_table = kwargs.pop('activity_table')
         self.helper.form_method = 'post'
         self.helper.form_class = 'form-horizontal'
         self.helper.label_class = 'col-sm-4'
@@ -320,9 +320,9 @@ class CollectedDataForm(forms.ModelForm):
 
                      ),
             Fieldset('Evidence',
-                     'complete', 'evidence', 'tola_table', 'update_count_tola_table',
-                     HTML("""<a class="output" data-toggle="modal" data-target="#tolatablemodal" 
-                     href="/indicators/collecteddata_import/">Import Evidence From Tola Tables</a>"""),
+                     'complete', 'evidence', 'activity_table', 'update_count_activity_table',
+                     HTML("""<a class="output" data-toggle="modal" data-target="#activitytablemodal" 
+                     href="/indicators/collecteddata_import/">Import Evidence From Activity Tables</a>"""),
 
                      ),
 
@@ -474,8 +474,8 @@ class CollectedDataForm(forms.ModelForm):
 
         # self.fields['indicator'].queryset = Indicator.objects.filter(name__isnull=False,
         #                                                              program__country__in=countries)
-        self.fields['tola_table'].queryset = ActivityTable.objects.filter(
-            Q(owner=self.request.user) | Q(id=self.tola_table))
+        self.fields['activity_table'].queryset = ActivityTable.objects.filter(
+            Q(owner=self.request.user) | Q(id=self.activity_table))
         self.fields['periodic_target'].label = 'Measure against target*'
         self.fields['achieved'].label = 'Actual value'
         self.fields['date_collected'].help_text = ' '
