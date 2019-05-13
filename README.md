@@ -23,7 +23,6 @@ Run the following commands from the root of this repository:
 
 NB: Ensure you have docker installed on your machine
   - `docker-compose build .`
-  - `docker-compose up`
   # run  migrations
   - `docker-compose run web python /code/manage.py migrate --noinput`
   # create superuser
