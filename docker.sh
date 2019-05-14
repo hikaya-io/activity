@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### It dockerizes automatically ###
-cd /home/TolaActivity
+cd /home/Activity-CE
 git stash
 git pull origin master
 

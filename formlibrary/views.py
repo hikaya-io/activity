@@ -1,20 +1,23 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from .models import TrainingAttendance, Beneficiary, Distribution
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 
 from .forms import TrainingAttendanceForm, BeneficiaryForm, DistributionForm
 from workflow.models import FormGuidance, Program, ProjectAgreement
 from django.utils.decorators import method_decorator
-from tola.util import getCountry, group_excluded
+from activity.util import get_country, group_excluded
 
 from django.shortcuts import render
 from django.contrib import messages
 from django.db.models import Q
 
-from django.http import  HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views.generic.detail import View
-from mixins import AjaxableResponseMixin
+from .mixins import AjaxableResponseMixin
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -29,14 +32,19 @@ class TrainingList(ListView):
     def get(self, request, *args, **kwargs):
 
         project_agreement_id = self.kwargs['pk']
-        countries = getCountry(request.user)
-        getPrograms = Program.objects.all().filter(funding_status="Funded", country__in=countries).distinct()        
+        countries = get_country(request.user)
+        get_programs = Program.objects.all().filter(
+            funding_status="Funded", country__in=countries).distinct()
         if int(self.kwargs['pk']) == 0:
-            getTraining = TrainingAttendance.objects.all().filter(program__country__in=countries)
+            get_training = TrainingAttendance.objects.all().filter(
+                program__country__in=countries)
         else:
-            getTraining = TrainingAttendance.objects.all().filter(project_agreement_id=self.kwargs['pk'])
+            get_training = TrainingAttendance.objects.all().filter(
+                project_agreement_id=self.kwargs['pk'])
 
-        return render(request, self.template_name, {'getTraining': getTraining, 'project_agreement_id': project_agreement_id, 'getPrograms': getPrograms})
+        return render(request, self.template_name,
+                      {'get_training': get_training, 'project_agreement_id': project_agreement_id,
+                       'get_programs': get_programs})
 
 
 class TrainingCreate(CreateView):
@@ -44,7 +52,7 @@ class TrainingCreate(CreateView):
     Training Form
     """
     model = TrainingAttendance
-
+    guidance = None
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -62,7 +70,7 @@ class TrainingCreate(CreateView):
     def get_initial(self):
         initial = {
             'agreement': self.kwargs['id'],
-            }
+        }
 
         return initial
 
@@ -87,7 +95,7 @@ class TrainingUpdate(UpdateView):
     Training Form
     """
     model = TrainingAttendance
-
+    guidance = None
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -149,16 +157,20 @@ class BeneficiaryList(ListView):
     def get(self, request, *args, **kwargs):
 
         project_agreement_id = self.kwargs['pk']
-        countries = getCountry(request.user)
-        getPrograms = Program.objects.all().filter(funding_status="Funded", country__in=countries).distinct()
-        
+        countries = get_country(request.user)
+        get_programs = Program.objects.all().filter(
+            funding_status="Funded", country__in=countries).distinct()
 
         if int(self.kwargs['pk']) == 0:
-            getBeneficiaries = Beneficiary.objects.all().filter(Q(training__program__country__in=countries) | Q(distribution__program__country__in=countries) )
+            get_beneficiaries = Beneficiary.objects.all().filter(Q(training__program__country__in=countries)
+                                                                | Q(distribution__program__country__in=countries))
         else:
-            getBeneficiaries = Beneficiary.objects.all().filter(training__id=self.kwargs['pk'])
+            get_beneficiaries = Beneficiary.objects.all().filter(
+                training__id=self.kwargs['pk'])
 
-        return render(request, self.template_name, {'getBeneficiaries': getBeneficiaries, 'project_agreement_id': project_agreement_id, 'getPrograms': getPrograms})
+        return render(request, self.template_name,
+                      {'get_beneficiaries': get_beneficiaries,
+                       'project_agreement_id': project_agreement_id, 'get_programs': get_programs})
 
 
 class BeneficiaryCreate(CreateView):
@@ -166,7 +178,7 @@ class BeneficiaryCreate(CreateView):
     Beneficiary Form
     """
     model = Beneficiary
-
+    guidance = None
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -178,7 +190,7 @@ class BeneficiaryCreate(CreateView):
     def get_initial(self):
         initial = {
             'training': self.kwargs['id'],
-            }
+        }
 
         return initial
 
@@ -209,7 +221,7 @@ class BeneficiaryUpdate(UpdateView):
     Training Form
     """
     model = Beneficiary
-
+    guidance = None
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -274,15 +286,18 @@ class DistributionList(ListView):
     def get(self, request, *args, **kwargs):
 
         program_id = self.kwargs['pk']
-        countries = getCountry(request.user)
-        getPrograms = Program.objects.all().filter(funding_status="Funded", country__in=countries).distinct()
+        countries = get_country(request.user)
+        get_programs = Program.objects.all().filter(
+            funding_status="Funded", country__in=countries).distinct()
 
         if int(self.kwargs['pk']) == 0:
-            getDistribution = Distribution.objects.all().filter(program__country__in=countries)
+            get_distribution = Distribution.objects.all().filter(program__country__in=countries)
         else:
-            getDistribution = Distribution.objects.all().filter(program_id=self.kwargs['pk'])
+            get_distribution = Distribution.objects.all().filter(
+                program_id=self.kwargs['pk'])
 
-        return render(request, self.template_name, {'getDistribution': getDistribution, 'program_id': program_id, 'getPrograms': getPrograms})
+        return render(request, self.template_name, {'get_distribution': get_distribution,
+                                                    'program_id': program_id, 'get_programs': get_programs})
 
 
 class DistributionCreate(CreateView):
@@ -290,7 +305,7 @@ class DistributionCreate(CreateView):
     Distribution Form
     """
     model = Distribution
-
+    guidance = None
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -308,7 +323,7 @@ class DistributionCreate(CreateView):
     def get_initial(self):
         initial = {
             'program': self.kwargs['id']
-            }
+        }
 
         return initial
 
@@ -333,7 +348,7 @@ class DistributionUpdate(UpdateView):
     Distribution Form
     """
     model = Distribution
-
+    guidance = None
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -384,49 +399,61 @@ class DistributionDelete(DeleteView):
 
     form_class = DistributionForm
 
-#Ajax views for ajax filters and paginators
+# Ajax views for ajax filters and paginators
+
+
 class TrainingListObjects(View, AjaxableResponseMixin):
 
     def get(self, request, *args, **kwargs):
 
         program_id = int(self.kwargs['program'])
         project_id = int(self.kwargs['project'])
-        print project_id
-        countries = getCountry(request.user)
+        print(project_id)
+        countries = get_country(request.user)
         if int(self.kwargs['program']) == 0:
-            getTraining = TrainingAttendance.objects.all().filter(program__country__in=countries).values('id', 'create_date', 'training_name', 'project_agreement__project_name')
+            get_training = TrainingAttendance.objects.all().filter(program__country__in=countries).values(
+                'id', 'create_date', 'training_name', 'project_agreement__project_name')
         elif program_id != 0 and project_id == 0:
-            getTraining = TrainingAttendance.objects.all().filter(program=program_id).values('id','create_date', 'training_name', 'project_agreement__project_name')
+            get_training = TrainingAttendance.objects.all().filter(program=program_id).values(
+                'id', 'create_date', 'training_name', 'project_agreement__project_name')
         else:
-            getTraining = TrainingAttendance.objects.all().filter(program_id=program_id, project_agreement_id=project_id).values('id','create_date', 'training_name', 'project_agreement__project_name')
+            get_training = TrainingAttendance.objects.all().filter(program_id=program_id,
+                                                                   project_agreement_id=project_id).values(
+                'id', 'create_date', 'training_name', 'project_agreement__project_name')
 
-        getTraining = json.dumps(list(getTraining), cls=DjangoJSONEncoder)
+        get_training = json.dumps(list(get_training), cls=DjangoJSONEncoder)
 
-        final_dict = {'getTraining': getTraining}
+        final_dict = {'get_training': get_training}
 
         return JsonResponse(final_dict, safe=False)
 
 
 class BeneficiaryListObjects(View, AjaxableResponseMixin):
-    
+
     def get(self, request, *args, **kwargs):
 
         program_id = int(self.kwargs['program'])
         project_id = int(self.kwargs['project'])
-        countries = getCountry(request.user)
+        countries = get_country(request.user)
 
         if program_id == 0:
-            getBeneficiaries = Beneficiary.objects.all().filter(Q(training__program__country__in=countries) | Q(distribution__program__country__in=countries) ).values('id', 'beneficiary_name', 'create_date')
-        elif program_id !=0 and project_id == 0:
-            getBeneficiaries = Beneficiary.objects.all().filter(program__id=program_id).values('id', 'beneficiary_name', 'create_date')
+            get_beneficiaries = Beneficiary.objects.all().filter(Q(training__program__country__in=countries) | Q(
+                distribution__program__country__in=countries)).values('id', 'beneficiary_name', 'create_date')
+        elif program_id != 0 and project_id == 0:
+            get_beneficiaries = Beneficiary.objects.all().filter(
+                program__id=program_id).values('id', 'beneficiary_name', 'create_date')
         else:
-            getBeneficiaries = Beneficiary.objects.all().filter(program__id=program_id, training__project_agreement=project_id).values('id', 'beneficiary_name', 'create_date')
+            get_beneficiaries = Beneficiary.objects.all().filter(
+                program__id=program_id,
+                training__project_agreement=project_id).values('id', 'beneficiary_name', 'create_date')
 
-        getBeneficiaries = json.dumps(list(getBeneficiaries), cls=DjangoJSONEncoder)
+        get_beneficiaries = json.dumps(
+            list(get_beneficiaries), cls=DjangoJSONEncoder)
 
-        final_dict = {'getBeneficiaries': getBeneficiaries}
+        final_dict = {'get_beneficiaries': get_beneficiaries}
 
         return JsonResponse(final_dict, safe=False)
+
 
 class DistributionListObjects(View, AjaxableResponseMixin):
 
@@ -434,39 +461,43 @@ class DistributionListObjects(View, AjaxableResponseMixin):
 
         program_id = int(self.kwargs['program'])
         project_id = int(self.kwargs['project'])
-        countries = getCountry(request.user)
+        countries = get_country(request.user)
         if program_id == 0:
-            getDistribution = Distribution.objects.all().filter(program__country__in=countries).values('id', 'distribution_name', 'create_date', 'program')
-        elif program_id !=0 and project_id == 0:
-            getDistribution = Distribution.objects.all().filter(program_id=program_id).values('id', 'distribution_name', 'create_date', 'program')
+            get_distribution = Distribution.objects.all().filter(program__country__in=countries).values(
+                'id', 'distribution_name', 'create_date', 'program')
+        elif program_id != 0 and project_id == 0:
+            get_distribution = Distribution.objects.all().filter(program_id=program_id).values(
+                'id', 'distribution_name', 'create_date', 'program')
         else:
-            getDistribution = Distribution.objects.all().filter(program_id=program_id, initiation_id=project_id).values('id', 'distribution_name', 'create_date', 'program')
+            get_distribution = Distribution.objects.all().filter(
+                program_id=program_id,
+                initiation_id=project_id).values('id', 'distribution_name', 'create_date', 'program')
 
-        
-        getDistribution = json.dumps(list(getDistribution), cls=DjangoJSONEncoder)
+        get_distribution = json.dumps(
+            list(get_distribution), cls=DjangoJSONEncoder)
 
-        final_dict = {'getDistribution': getDistribution}
+        final_dict = {'get_distribution': get_distribution}
 
         return JsonResponse(final_dict, safe=False)
 
 
-#program and project & training filters
+# program and project & training filters
 class GetAgreements(View, AjaxableResponseMixin):
 
     def get(self, request, *args, **kwargs):
 
         program_id = self.kwargs['program']
-        countries = getCountry(request.user)
+        countries = get_country(request.user)
         if program_id != 0:
-            getAgreements = ProjectAgreement.objects.all().filter(program = program_id).values('id', 'project_name')
+            get_agreements = ProjectAgreement.objects.all().filter(
+                program=program_id).values('id', 'project_name')
         else:
             pass
-        
+
         final_dict = {}
-        if getAgreements:
-
-            getAgreements = json.dumps(list(getAgreements), cls=DjangoJSONEncoder)
-
-            final_dict = {'getAgreements': getAgreements}
+        if get_agreements:
+            get_agreements = json.dumps(
+                list(get_agreements), cls=DjangoJSONEncoder)
+            final_dict = {'get_agreements': get_agreements}
 
         return JsonResponse(final_dict, safe=False)

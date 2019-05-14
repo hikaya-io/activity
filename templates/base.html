@@ -7,10 +7,10 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="TolaData - TolaActivity: Putting Adaptive Management into Practice">
-        <meta name="author" content="TolaData">
+        <meta name="description" content="Hikaya - Activity CE : We help organizations tell their stories through data">
+        <meta name="author" content="Hikaya">
 
-        <title>{% block title %} TolaActivity {% endblock %}</title>
+        <title>{% block title %} Activity CE {% endblock %}</title>
 
         <link rel="icon" href="{% static 'img/favicon.ico' %}" />
 
@@ -50,11 +50,11 @@
     </head>
     <body>
         <!--http://getbootstrap.com/examples/sticky-footer-navbar/-->
-        <nav class="navbar navbar-default navbar-tola navbar-fixed-top" role="navigation">
+        <nav class="navbar navbar-default navbar-activity navbar-fixed-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'index' %}">
-                        <img style="margin-top: -3px; max-width: 140px;" src="{% static 'img/tola-activity-primary-mark-white.png' %}" />
+                        <img style="margin-top: -5px; max-width: 140px;" src="{% static 'img/hikaya-activity-logo.png' %}" />
                     </a>
                     <!-- hamburger nav -->
                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
@@ -138,12 +138,12 @@
                                 {% elif "report" in request.build_absolute_uri %}
                                     <span class="label label-info">REPORT</span>
                                 {% endif %}
-                                <span class="glyphicon glyphicon-user"></span> {{ user.tola_user.name }} <b class="caret"></b>
+                                <span class="glyphicon glyphicon-user"></span> {{ user.activity_user.name }} <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-lock"></span> Logout</a></li> -->
                                 <li><a href="{% url 'profile' %}"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
-                                <li><a href="{% url 'profile' %}"><span>{{ user.tola_user.countries_list }}</span></a></li>
+                                <li><a href="{% url 'profile' %}"><span>{{ user.activity_user.countries_list }}</span></a></li>
                             </ul>
                         </li><!-- .dropdown collapse -->
                         <!-- bookmarks -->
@@ -152,13 +152,13 @@
                                  <span class="glyphicon glyphicon-bookmark"></span> Bookmarks<b class="caret"></b>
                              </a>
                              <ul class="dropdown-menu" id="bookmarks">
-                                 {% if request.path in user.tola_user.tolabookmark.bookmark_url %}
+                                 {% if request.path in user.activity_user.activitybookmark.bookmark_url %}
                                     <li>This page is in your bookmarks!</li>
                                  {% else %}
                                     <li><a onClick="newBookmark('{{ request.path }}','{{ user }}')"><span class="glyphicon glyphicon-star-empty"></span> <b>Bookmark Current Page</b></a></li>
                                  {% endif %}
-                                 {% if user.tola_user.tolabookmark %}
-                                     {% for bookmark in user.tola_user.tolabookmark.all %}
+                                 {% if user.activity_user.activitybookmark %}
+                                     {% for bookmark in user.activity_user.activitybookmark.all %}
                                         <li><a href="{{ bookmark.bookmark_url }}"><span class="glyphicon glyphicon-star"></span> {{ bookmark.name }}</a></li>
                                      {% endfor %}
                                  {% endif %}
@@ -173,14 +173,14 @@
                             <ul class="dropdown-menu">
                                 <li>
                                     <div class="navbar-text">
-                                        {% if report_server == True or non_ldap == True%}
+                                        <!--{% if report_server == True or non_ldap == True%}
                                             Login via
                                             <div class="social-buttons">
                                                 <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-go"><i class="fa fa-google"></i> Google</a>
                                             </div>
                                             or
                                         {% endif %}
-                                        <a href="{% url 'login' %}">Login with Tola Account</a><br/>
+                                        <a href="{% url 'login' %}">Login with - Account</a><br/>-->
 
                                         <form class="form" role="form" method="post" action="{% url 'login' %}">
                                             {% csrf_token %}
@@ -228,23 +228,20 @@
 
             <!-- Main body content -->
             <p>{% block content %}{% endblock %}</p>
-            {% if not user.is_authenticated  %}
+            <!--{% if not user.is_authenticated  %}
                 <a href="{% url "social:begin" "google-oauth2" %}">Google+</a>
-            {% endif %}
+            {% endif %}-->
         </div><!-- .container collapse -->
 
         <div id = "ajaxloading" class="modal ajax_loading"></div>
         <div id="footer">
             <!-- Sticky Footer -->
             <div class="container">
-                <div class="col-md-6 text-left">
-                    <a href="http://www.toladata.com" class="text-muted"><b>Tola</b>Data</a>
-                </div>
                 {% if "links.html"|template_exists %}
                     {% include "links.html" %}
                 {% else %}
-                    <div class="col-md-6 text-right">
-                        <a href="https://sites.google.com/mercycorps.org/tolauserguide/home" class="text-muted" target="_blank">Documentation</a> | <a href="http://tola.work/faq" class="text-muted">FAQ</a> | <a href="http://tola.work/helpdesk/tickets/submit/" class="text-muted">Feedback</a> | <a href="https://github.com/toladata/TolaActivity/blob/master/LICENSE" class="text-muted">License</a>
+                    <div class="column col-xs-16 text-right">
+                        <a href="http://www.hikaya.io" class="text-muted">Hikaya</a> | <a href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE" class="text-muted">License</a>
                     </div>
                 {% endif %}
 
@@ -269,9 +266,9 @@
             <script>try{Typekit.load({ async: true });}catch(e){}</script>
         {% endif %}
 
-        {% if GOOGLE_ANALYTICS_PROPERTY_ID %}
+        <!--{% if GOOGLE_ANALYTICS_PROPERTY_ID %}
             {% include "google_analytics.html" %}
-        {% endif %}
+        {% endif %}-->
 
         {% block extra_js_in_body %}
 

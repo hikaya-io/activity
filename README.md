@@ -1,22 +1,32 @@
-Tola Activity [![Build Status](https://travis-ci.org/toladata/TolaActivity.svg?branch=master)](https://travis-ci.org/toladata/TolaActivity)
+Activity [![Build Status](https://travis-ci.org/hikaya/Activity-CE.svg?branch=master)](https://travis-ci.org/hikaya/Activity-CE)
 ====
-http://toladata.org
 
-Activity-CE is the community edition of TolaActivity; the ultimate tool for humanitarians to manage project activities and indicator results for their programs, including project approval workflows and reporting.
+Activity includes a set of forms and reports for managing project activities for a Program.  It includes workflow for approving and completing projects as well as sharing the output data.
 
-The community edition is for and built by humanitarians; it shall always be free.
+
+Activity functionality http://www.github.com/hikaya/Activity-CE is intended to allow importing
+and exporting of project specific data from 3rd party data sources or excel files.
 
 ## Configuration
-Copy the tola/settings/local-sample.py to local.py and modify for your environment.
+Copy the activity/settings/local-sample.py to local.py and modify for your environment.
 
 ## To deploy changes in activity servers
 Once all your changes have been commited to the repo, and before pushing them, run:
 `. travis.sh`
 
-## To deploy locally via Docker
+## To deploy localy via Docker
 Run the following commands from the root of this repository:
-  - `docker-compose build`
-  - `docker-compose up`
+
+NB: Ensure you have docker installed on your machine
+  - `docker-compose build .`
+  # run  migrations
+  - `docker-compose run web python /code/manage.py migrate --noinput`
+  # create superuser
+  - `docker-compose run web python /code/manage.py createsuperuser`
+  # start the app
+  - `docker-compose up -d --build`
+  # open on browser
+  - `http://127.0.0.1:8000/`
 
 ## USING virtualenv
 (Install virtualenv)
@@ -49,18 +59,16 @@ $ pip install -r requirements.txt
 
 
 ## Modify the config file
-
-Edit _config/settings.secret.yml_. Find the node named, "DATABASES" and set the 
-database `PASSWORD` as appropriate. The result should resemble the following:
+Edit database settings settings/local.py
 
 ```yaml
 47 DATABASES:
 48  'default': {
 49    #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 50    'ENGINE': "django.db.backends.mysql"
-51    'NAME': "tola_activity"
+51    'NAME': "activity"
 52    'USER': "root"
-53    'PASSWORD': 'tolageek',
+53    'PASSWORD': 'password',
 54    'HOST': "localhost"
 55    'PORT': '',
 ```
@@ -69,9 +77,9 @@ database `PASSWORD` as appropriate. The result should resemble the following:
 ## Set up Django's MySQL backing store
 
 ```sql
-CREATE DATABASE 'tola_activity';
+CREATE DATABASE 'activity';
 CREATE USER 'root';
-GRANT ALL ON tola_activity.* TO 'root'@'localhost' IDENTIFIED BY 'tolageek';
+GRANT ALL ON ctivity.* TO 'root'@'localhost' IDENTIFIED BY 'root';
 ```
 * When you use these SQL queries, beware of not writting the quotes.
 

@@ -1,14 +1,15 @@
-from datetime import datetime
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import dateutil.parser
 import csv
-import json
 from time import strptime
 
-from django.core.management.base import BaseCommand, CommandError
-from django.utils import timezone
+from django.core.management.base import BaseCommand
 
 from indicators.models import *
 from indicators.views import generate_periodic_targets
+
 
 class Command(BaseCommand):
     help = """
@@ -19,13 +20,13 @@ class Command(BaseCommand):
         """
         Help on arguments: https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser.add_argument
         """
-        parser.add_argument('-f', '--file', action='store', nargs='?', required=True, dest='filepath')
-
+        parser.add_argument('-f', '--file', action='store',
+                            nargs='?', required=True, dest='filepath')
 
     def handle(self, *args, **options):
         file = options['filepath']
-        generated_pt_ids = []
-        self.stdout.write(self.style.WARNING('creating targetes for indicators from = "%s"' % file))
+        self.stdout.write(self.style.WARNING(
+            'creating targetes for indicators from = "%s"' % file))
 
         with open(file, 'rb') as csvfile:
             indicatorcsv_reader = csv.reader(csvfile)
@@ -37,15 +38,15 @@ class Command(BaseCommand):
                 target_frequency = row[4].strip()
                 month_name = row[5].strip()
                 year = row[6].strip()
-                numTargets = row[7].strip()
-                indicator = None
+                num_targets = row[7].strip()
                 target_frequency_start = None
 
-
                 # lookup target_frequency index:
-                target_frequency_id = next((i for i, v in enumerate(Indicator.TARGET_FREQUENCIES) if v[1] == target_frequency), None)
+                target_frequency_id = next((i for i, v in enumerate(
+                    Indicator.TARGET_FREQUENCIES) if v[1] == target_frequency), None)
                 if target_frequency_id is None:
-                    self.stdout.write(self.style.ERROR('%s, invalid target_frequency = %s' % (indicator_id, target_frequency) ))
+                    self.stdout.write(self.style.ERROR(
+                        '%s, invalid target_frequency = %s' % (indicator_id, target_frequency)))
                     continue
                 else:
                     target_frequency_id += 1
@@ -54,48 +55,57 @@ class Command(BaseCommand):
                 try:
                     month = strptime(month_name, '%B').tm_mon
                 except ValueError as e:
-                    self.stdout.write(self.style.ERROR('%s, invalid month = %s' % (indicator_id, month_name) ))
+                    self.stdout.write(self.style.ERROR(
+                        '%s, invalid month = %s' % (indicator_id, month_name)))
                     continue
 
                 # make sure year is valid
                 try:
                     year = float(year) if '.' in year else int(year)
                 except ValueError as e:
-                    self.stdout.write(self.style.ERROR('%s, invalid year = %s' % (indicator_id, year) ))
+                    self.stdout.write(self.style.ERROR(
+                        '%s, invalid year = %s' % (indicator_id, year)))
                     continue
 
-                # make sure numTargets is valid
+                # make sure num_targets is valid
                 try:
-                    numTargets = float(numTargets) if '.' in numTargets else int(numTargets)
+                    num_targets = float(
+                        num_targets) if '.' in num_targets else int(num_targets)
                 except ValueError as e:
-                    self.stdout.write(self.style.ERROR('%s, invalid numTargets = %s' % (indicator_id, numTargets) ))
+                    self.stdout.write(self.style.ERROR(
+                        '%s, invalid num_targets = %s' % (indicator_id, num_targets)))
                     continue
 
                 # Fetch the indicator
                 try:
                     indicator = Indicator.objects.get(pk=indicator_id)
                 except Indicator.DoesNotExist as e:
-                    self.stdout.write(self.style.ERROR('%s, indicator does not exist!' % indicator_id))
+                    self.stdout.write(self.style.ERROR(
+                        '%s, indicator does not exist!' % indicator_id))
                     continue
 
                 try:
-                    target_frequency_start = datetime.strptime('%s-%s-%s' % (year, month, '01'), '%Y-%m-%d')
+                    target_frequency_start = datetime.strptime(
+                        '%s-%s-%s' % (year, month, '01'), '%Y-%m-%d')
                 except ValueError as e:
-                    self.stdout.write(self.style.ERROR('%s, target_frequency_start date parse error' % (indicator_id, target_frequency_start) ))
+                    self.stdout.write(self.style.ERROR('%s, %s target_frequency_start date parse error' % (
+                        indicator_id, target_frequency_start)))
                     continue
 
+                generated_targets = generate_periodic_targets(
+                    target_frequency_id, target_frequency_start, num_targets, None)
 
-                generatedTargets = generate_periodic_targets(target_frequency_id, target_frequency_start, numTargets, None)
-
-                for i, pt in enumerate(generatedTargets):
+                for i, pt in enumerate(generated_targets):
                     try:
-                        start_date = dateutil.parser.parse(pt.get('start_date', None))
+                        start_date = dateutil.parser.parse(
+                            pt.get('start_date', None))
                         start_date = datetime.strftime(start_date, '%Y-%m-%d')
                     except (ValueError, AttributeError):
                         start_date = None
 
                     try:
-                        end_date = dateutil.parser.parse(pt.get('end_date', None))
+                        end_date = dateutil.parser.parse(
+                            pt.get('end_date', None))
                         end_date = datetime.strftime(end_date, '%Y-%m-%d')
                     except (ValueError, AttributeError) as e:
                         end_date = None
@@ -106,7 +116,8 @@ class Command(BaseCommand):
                         try:
                             period = pt.get('period', None)
                         except AttributeError as e:
-                            self.stdout.write(self.style.ERROR('%s, --- no period' % indicator.id ))
+                            self.stdout.write(self.style.ERROR(
+                                '%s, --- no period' % indicator.id))
                             continue
 
                     if target_frequency_id == Indicator.LOP:
@@ -114,42 +125,49 @@ class Command(BaseCommand):
                     else:
                         try:
                             target_value = pt.get('target', '0')
-                        except ( AttributeError) as e:
-                            self.stdout.write(self.style.ERROR('%s, --- there is no target for this period (%s)' % (indicator.id, period) ))
+                        except AttributeError as e:
+                            self.stdout.write(self.style.ERROR(
+                                '%s, --- there is no target for this period (%s)' % (indicator.id, period)))
 
                     try:
-                        target = float(target_value) if '.' in target_value else int(target_value)
+                        target = float(target_value) if '.' in target_value else int(
+                            target_value)
                     except ValueError as e:
-                        self.stdout.write(self.style.ERROR('%s, --- target is not a numeric value (%s)' % (indicator.id, target_value) ))
+                        self.stdout.write(self.style.ERROR(
+                            '%s, --- target is not a numeric value (%s)' % (indicator.id, target_value)))
                         continue
 
                     try:
-                        ptarget = PeriodicTarget.objects.create(\
-                            indicator = indicator,
-                            period = period,
-                            target = target,
-                            customsort = i,
-                            start_date = start_date,
-                            end_date = end_date,
-                            create_date = timezone.now() )
+                        ptarget = PeriodicTarget.objects.create(
+                            indicator=indicator,
+                            period=period,
+                            target=target,
+                            customsort=i,
+                            start_date=start_date,
+                            end_date=end_date,
+                            create_date=timezone.now())
                     except Exception as e:
-                        self.stdout.write(self.style.ERROR('%s, --- could not create target (%s)' % (indicator.id, period) ))
+                        self.stdout.write(self.style.ERROR(
+                            '%s, --- could not create target (%s)' % (indicator.id, period)))
                         continue
 
                     try:
-                        CollectedData.objects.filter(indicator=indicator,date_collected__range=[ptarget.start_date, ptarget.end_date])\
+                        CollectedData.objects.filter(indicator=indicator,
+                                                     date_collected__range=[ptarget.start_date, ptarget.end_date])\
                             .update(periodic_target=ptarget)
                     except Exception as e:
-                        self.stdout.write(self.style.ERROR('%s, could not associate data records for periodic_target (%s)' % (indicator.id, ptarget.period) ))
-
+                        self.stdout.write(self.style.ERROR(
+                            '%s, could not associate data records for periodic_target (%s)' % (indicator.id,
+                                                                                               ptarget.period)))
 
                 try:
                     indicator.target_frequency = target_frequency_id
                     if target_frequency_id != Indicator.LOP:
                         indicator.target_frequency_start = target_frequency_start
-                        indicator.target_frequency_num_periods = numTargets
+                        indicator.target_frequency_num_periods = num_targets
                     indicator.save()
-                    self.stdout.write(self.style.SUCCESS('%s, processed successfully.' % indicator.id))
+                    self.stdout.write(self.style.SUCCESS(
+                        '%s, processed successfully.' % indicator.id))
                 except Exception as e:
-                    self.stdout.write(self.style.ERROR('%s, failed to save indicator: %s' % (indicator.id, e) ))
-
+                    self.stdout.write(self.style.ERROR(
+                        '%s, failed to save indicator: %s' % (indicator.id, e)))

@@ -10,7 +10,7 @@
     {% for item in collected %}
     <tr>
         <td>{{ item.date_collected|date:"d-m-Y" }}</td>
-        <td>{{ item.evidence }} {{ item.tola_table}}</td>
+        <td>{{ item.evidence }} {{ item.activity_table}}</td>
         <td>{{ item.targeted|floatformat:"-2" }}</td>
         <td>{{ item.achieved|floatformat:"-2" }}</td>
     </tr>

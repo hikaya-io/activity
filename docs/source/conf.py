@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# TolaActivity documentation build configuration file, created by
+# Activity documentation build configuration file, created by
 # sphinx-quickstart on Tue Jan 24 14:45:55 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -31,11 +31,11 @@
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode']
+              'sphinx.ext.doctest',
+              'sphinx.ext.intersphinx',
+              'sphinx.ext.todo',
+              'sphinx.ext.ifconfig',
+              'sphinx.ext.viewcode']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -50,9 +50,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'TolaActivity'
-copyright = u'2017, TolaData'
-author = u'TolaData'
+project = u'Activity'
+copyright = u'2019, Hikaya'
+author = u'Hikaya'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -132,7 +132,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'TolaActivity.tex', u'TolaActivity Documentation',
-     u'TolaData', 'manual'),
+     u'Hikaya', 'manual'),
 ]
 
 
@@ -158,7 +158,6 @@ texinfo_documents = [
 ]
 
 
-
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
@@ -178,7 +177,6 @@ epub_copyright = copyright
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
-
 
 
 # Example configuration for intersphinx: refer to the Python standard library.

@@ -1,9 +1,7 @@
-from django.contrib import admin
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from .models import *
-from import_export import resources, fields
-from import_export.widgets import ForeignKeyWidget
-from import_export.admin import ImportExportModelAdmin
-from tola.util import getCountry
 
 
 admin.site.register(CustomDashboard, CustomDashboardAdmin)

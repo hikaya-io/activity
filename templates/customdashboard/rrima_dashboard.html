@@ -7,13 +7,13 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Mercy Corps Public Dashboard">
-        <meta name="author" content="Mercy Corps">
+        <meta name="description" content="Hikaya Public Dashboard">
+        <meta name="author" content="hikaya">
         <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.png" type="image/png">
 
         <!-- Bootstrap -->
         <link href="{{ STATIC_URL}}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <link href="{{ STATIC_URL}}css/tola-dashboard.css" rel="stylesheet" type="text/css" />
+        <link href="{{ STATIC_URL}}css/activity-dashboard.css" rel="stylesheet" type="text/css" />
 
         <!-- JQuery UI CSS -->
         <link href="{{ STATIC_URL }}css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
@@ -132,7 +132,7 @@
 								<h3 style='text-align: right;'>PROGRAM HUBS </h3>
 								<div style='padding-bottom: 2em;'><h4><strong>The path of a refugee…</strong></h4>
 								<p>According to <a href="http://data.unhcr.org/mediterranean/regional.php/"><u>UNHCR</u></a>, more than 1 million migrants and refugees crossed into Europe in 2015 - the vast majority of which traveled along the Aegean Route from countries such as Syria, Afghanistan, and Iraq through Turkey, Greece and the Balkans. <strong>Mercy Corps is strategically positioned</strong> with teams in active areas along the Aegean Migration Route.</p> </div>
-								{% with pageMap as tolaMapData %}
+								{% with pageMap as activityMapData %}
 								    {% include 'customdashboard/rrima_components/rrima_map.html' %}
 								{% endwith %}
 							</div>
@@ -353,10 +353,10 @@
 	        <!-- Sticky Footer -->
 	        <div class="container">
 	            <div class="col-md-6 text-left">
-	                <a href="http://www.toladata.com" class="text-muted"><b>Tola</b>Data: Built by</a> <a href="http://www.mercycorps.org" class="text-muted">MercyCorps</a>
+	                <a href="#" class="text-muted"><b>Activity</b>: Built by</a> <a href="http://www.hikaya.io" class="text-muted">Hikaya</a>
 	            </div>
 	            <div class="col-md-6 text-right">
-	                <a href="http://tola.work/documentation" class="text-muted">Documentation</a> | <a href="http://tola.work/faq" class="text-muted">FAQ</a> | <a href="http://tola.work/helpdesk/tickets/submit/" class="text-muted">Feedback</a> | <a href="https://github.com/toladata/TolaActivity/blob/master/LICENSE" class="text-muted">License</a>
+	                <a href="#" class="text-muted">Documentation</a> | <a href="#" class="text-muted">FAQ</a> | <a href="#" class="text-muted">Feedback</a> | <a href="https://github.com/hikaya/Activity-CE/blob/master/LICENSE" class="text-muted">License</a>
 	            </div>
 	        </div>
 	    </div><!-- .footer collapse -->

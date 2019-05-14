@@ -39,7 +39,7 @@
                     {% if not forloop.first %}
                         <tr>
                     {% endif %}
-                    <td {% if cdata.periodic_target == None %} style="border: 3px solid red;" {% endif %}>
+                    <td {% if cdata.periodic_target is None %} style="border: 3px solid red;" {% endif %}>
                         <a href="{% url 'collecteddata_update' cdata.id %}" class="collecteddata-link" id="collected-{{cdata.id}}">
                             {{ cdata.date_collected_formatted|default_if_none:"" }}
                         </a>
@@ -56,8 +56,8 @@
                                 </a>
                             {% endif %}
                         {%endif%}
-                        {% if cdata.tola_table %}
-                            <a href="{{ cdata.tola_table.detail_url }}" target="_blank">{{ cdata.tola_table }}</a>
+                        {% if cdata.activity_table %}
+                            <a href="{{ cdata.activity_table.detail_url }}" target="_blank">{{ cdata.activity_table }}</a>
                         {% endif %}
                     </td>
                     <td>{{ cdata.complete|default_if_none:cdata.agreement|default_if_none:'' }}</td>
@@ -101,8 +101,8 @@
                             </a>
                         {% endif %}
                     {%endif%}
-                    {% if coldata.tola_table %}
-                        <a href="{{ coldata.tola_table.detail_url }}" target="_blank">{{ coldata.tola_table }}</a>
+                    {% if coldata.activity_table %}
+                        <a href="{{ coldata.activity_table.detail_url }}" target="_blank">{{ coldata.activity_table }}</a>
                     {% endif %}
                 </td>
                 <td>{{ coldata.agreement|default_if_none:"" }}</td>
@@ -118,7 +118,7 @@
         {% endfor %}
 
         {% if collecteddata_without_periodictargets.count %}
-            {% if indicator.target_frequency == None %}
+            {% if indicator.target_frequency is None %}
                 {% assign err 'Error_1' %}
             {% elif indicator.target_frequency == 2 or indicator.target_frequency == 8 %}
                 {% assign err 'Error_2' %}
@@ -134,7 +134,7 @@
             <td align="right"><strong>{{ collected_sum.achieved__sum|floatformat:"-2" }}</strong></td>
             <td align="right"><strong>{% widthratio collected_sum.achieved__sum indicator.lop_target 100 %}%</strong></td>
             <td colspan="3" align="right">
-                <span class="{% if indicator.target_frequency == None or err == 'Error_1' %} disable-span {% endif %}">
+                <span class="{% if indicator.target_frequency is None or err == 'Error_1' %} disable-span {% endif %}">
                     <a href="{% url 'collecteddata_add' program_id indicator.id %}" class="btn-sm btn-info collecteddata-link"> New Data</a>
                 </span>
             </td>

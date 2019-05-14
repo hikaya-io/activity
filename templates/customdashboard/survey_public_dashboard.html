@@ -8,8 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="Survery Dashboard">
-    <meta name="author" content=TolaData"">
-    <title>TolaData Rollout Dashboard</title>
+    <meta name="author" content=Hikaya"">
+    <title>Hikaya Rollout Dashboard</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.png" type="image/png"/>
@@ -18,7 +18,7 @@
     <link href="{{ STATIC_URL}}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 
     <!-- Custom styles for this template -->
-    <link href="{{ STATIC_URL}}css/tola-dashboard.css" rel="stylesheet" type="text/css" />
+    <link href="{{ STATIC_URL}}css/activity-dashboard.css" rel="stylesheet" type="text/css" />
     <link href="{{ STATIC_URL}}css/app.css" rel="stylesheet" type="text/css" />
     <!-- JQuery UI CSS -->
     <link href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.10.4.min.css" rel="stylesheet" type="text/css" />
@@ -49,7 +49,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">TolaData Dashboard</a>
+          <a class="navbar-brand" href="#">Hikaya Dashboard</a>
         </div>
       </div>
     </nav>
@@ -128,17 +128,17 @@
                             <div id="join-legend" class="chart-legend"></div>
                         </div>
                         <div class="col-md-4">
-                            <h4>TolaData is a System for?</h4>
-                            <canvas id="tola_is" height="200" width="200"></canvas>
-                            <div id="tola_is-legend" class="chart-legend"></div>
+                            <h4>Hikaya is a System for?</h4>
+                            <canvas id="activity_is" height="200" width="200"></canvas>
+                            <div id="activity_is-legend" class="chart-legend"></div>
                         </div>
                         <div class="col-md-4">
-                            <h4>Tola Is A Pashto Word Meaning?</h4>
+                            <h4>Activity Is A Pashto Word Meaning?</h4>
                             <canvas id="meaning" height="300" width="300"></canvas>
                         </div>
                     </div>
 
-                    <h2 class="sub-header">Tola Global Rollout Map</h2>
+                    <h2 class="sub-header">Activity Global Rollout Map</h2>
                     <div class="map-container">
                         <style>
                           #map { height: 350px; }
@@ -157,7 +157,7 @@
 
 
                         {% for item in countries %}
-                            L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: countryIcon}).addTo(countries).bindPopup("" + "<b>{{ item.country }}</b><br/>TolaData country<br/> ");
+                            L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: countryIcon}).addTo(countries).bindPopup("" + "<b>{{ item.country }}</b><br/>Hikaya country<br/> ");
                         {%   endfor %}
 
                         var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -176,7 +176,7 @@
                         "Streets": streets,
                         };
                         var overlays = {
-                        "TolaData Countries": countries,
+                        "Hikaya Countries": countries,
                         };
                         L.control.layers(baseLayers, overlays).addTo(map);
                         </script>
@@ -190,9 +190,9 @@
                     };
                     var status_data = [
                         {
-                        value: {{ join.tola_is_a_mystery }},
+                        value: {{ join.activity_is_a_mystery }},
                         color:"#637b85",
-                        label: "Tola is a Mystery - {{ join.tola_is_a_mystery }}"
+                        label: "Activity is a Mystery - {{ join.activity_is_a_mystery }}"
                         },
                         {
                         value : {{ join.i_like_beer }},
@@ -215,34 +215,34 @@
                     document.getElementById('join-legend').innerHTML = statusChart.generateLegend();
 
 
-                    // polar chart for TOLA_IS
+                    // polar chart for activity_is
                     var data = [
                         {
-                            value: {{ tola_is.adaptive_manag }},
+                            value: {{ activity_is.adaptive_manag }},
                             color:"#F7464A",
                             highlight: "#FF5A5E",
                             label: "Adaptive Management"
                         },
                         {
-                            value: {{ tola_is.an_indicator_t }},
+                            value: {{ activity_is.an_indicator_t }},
                             color: "#46BFBD",
                             highlight: "#5AD3D1",
                             label: "Indicator Tracking"
                         },
                         {
-                            value: {{ tola_is.a_data_managem }},
+                            value: {{ activity_is.a_data_managem }},
                             color: "#FDB45C",
                             highlight: "#FFC870",
                             label: "Data Management"
                         },
                         {
-                            value: {{ tola_is.option_4 }},
+                            value: {{ activity_is.option_4 }},
                             color: "#949FB1",
                             highlight: "#A8B3C5",
                             label: "Evidence Based Decision Making"
                         },
                         {
-                            value: {{ tola_is.all_of_the_abo }},
+                            value: {{ activity_is.all_of_the_abo }},
                             color: "#4D5360",
                             highlight: "#616774",
                             label: "All of the Above"
@@ -277,9 +277,9 @@
                         animateRotate : true
                     };
 
-                    var ctx = document.getElementById("tola_is").getContext("2d");
+                    var ctx = document.getElementById("activity_is").getContext("2d");
                     var polarChart = new Chart(ctx).PolarArea(data, options);
-                    document.getElementById('tola_is-legend').innerHTML = polarChart.generateLegend();
+                    document.getElementById('activity_is-legend').innerHTML = polarChart.generateLegend();
 
 
                     //render meaning on radar_chart

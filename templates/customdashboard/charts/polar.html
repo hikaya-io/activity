@@ -9,34 +9,34 @@ required:
 -->
 
 <script>
-    // polar chart for TOLA_IS
+    // polar chart for activity_is
     var data = [
         {
-            value: {{ tola_is.adaptive_manag }},
+            value: {{ activity_is.adaptive_manag }},
             color:"#F7464A",
             highlight: "#FF5A5E",
             label: "Adaptive Management"
         },
         {
-            value: {{ tola_is.an_indicator_t }},
+            value: {{ activity_is.an_indicator_t }},
             color: "#46BFBD",
             highlight: "#5AD3D1",
             label: "Indicator Tracking"
         },
         {
-            value: {{ tola_is.a_data_managem }},
+            value: {{ activity_is.a_data_managem }},
             color: "#FDB45C",
             highlight: "#FFC870",
             label: "Data Management"
         },
         {
-            value: {{ tola_is.option_4 }},
+            value: {{ activity_is.option_4 }},
             color: "#949FB1",
             highlight: "#A8B3C5",
             label: "Evidence Based Decision Making"
         },
         {
-            value: {{ tola_is.all_of_the_abo }},
+            value: {{ activity_is.all_of_the_abo }},
             color: "#4D5360",
             highlight: "#616774",
             label: "All of the Above"
@@ -71,8 +71,8 @@ required:
         animateRotate : true
     };
 
-    var ctx = document.getElementById("tola_is").getContext("2d");
+    var ctx = document.getElementById("activity_is").getContext("2d");
     var polarChart = new Chart(ctx).PolarArea(data, options);
-    document.getElementById('tola_is-legend').innerHTML = polarChart.generateLegend();
+    document.getElementById('activity_is-legend').innerHTML = polarChart.generateLegend();
 
 </script>

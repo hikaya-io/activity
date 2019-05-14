@@ -5,10 +5,10 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Mercy Corps Application">
-        <meta name="author" content="Mercy Corps">
+        <meta name="description" content="Hikaya Application">
+        <meta name="author" content="Hikaya">
 
-        <title>{% block title %} Tola-Activity {% endblock %}</title>
+        <title>{% block title %} Hikaya-Activity {% endblock %}</title>
 
         <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.png" type="image/png">
 
@@ -41,11 +41,11 @@
     </head>
     <body>
         <!--http://getbootstrap.com/examples/sticky-footer-navbar/-->
-        <div class="navbar navbar-default navbar-tola navbar-fixed-top" role="navigation">
+        <div class="navbar navbar-default navbar-activity navbar-fixed-top" role="navigation">
             <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand" href="{% url 'index' %}">
-                    <img style="margin-top: -3px; max-width: 140px;" src="{{ STATIC_URL }}img/tola-activity-primary-mark-white.png" />
+                    <img style="margin-top: -3px; max-width: 140px;" src="{{ STATIC_URL }}img/hikaya-activity-logo.png" />
                 </a>
             </div>
             <div class="navbar-collapse collapse" role="navigation">
@@ -163,13 +163,13 @@
             <!-- Sticky Footer -->
             <div class="container">
                 <div class="col-md-4 text-left">
-                    <a href="https://github.com/mercycorps/tola-activity/blob/master/LICENSE" class="text-muted">GNU GENERAL PUBLIC LICENSE Version 2</a>
+                    <a href="https://github.com/hikaya/activity-ce/blob/master/LICENSE" class="text-muted">GNU GENERAL PUBLIC LICENSE Version 2</a>
                 </div>
                 <div class="col-md-4 text-center">
-                    <a href="http://www.toladata.com" class="text-muted">Inspired in Kabul. Built in Portland.</a>
+                    <a href="http://www.hikaya.io" class="text-muted">Inspired in Kabul. Built in Portland.</a>
                 </div>
                 <div class="col-md-4 text-right">
-                    <a href="{% url 'documentation' %}" class="text-muted">Documentation</a> | <a href="{% url 'faq' %}" class="text-muted">FAQ</a> | <a onclick="newPopup('http://tola.work/helpdesk/tickets/submit/','Tola Work - New Ticket'); return false;" href="#" class="text-muted">Feedback</a>
+                    <a href="{% url 'documentation' %}" class="text-muted">Documentation</a> | <a href="{% url 'faq' %}" class="text-muted">FAQ</a> | <a onclick="newPopup('#','Activity Work - New Ticket'); return false;" href="#" class="text-muted">Feedback</a>
                 </div>
             </div>
         </div><!-- .footer collapse -->
