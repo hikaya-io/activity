@@ -28,7 +28,7 @@
 					<div class='col-md-6 row-eq-height bounded-column'>
 						<div class='panel panel-info borderless soft-border-full' style="float: left; height: 245pt;">
 							<div class="panel-body">
-								<!-- {% with pageImages.imageset as tolaImageData %} -->
+								<!-- {% with pageImages.imageset as activityImageData %} -->
 								{% with getAllComponentData.1 %}
 								    <!-- {% include 'customdashboard/components/gallery/sidebar_gallery.html' %} -->
 								    {% include getDashboardComponents.component_id.template_name %}
@@ -39,7 +39,7 @@
 					<div class='col-md-6 row-eq-height bounded-column'>
 						<div class='panel panel-info borderless soft-border-full' style="float: left; height: 245pt; ">
 							<div class="panel-body" style='overflow-y: scroll; ' >
-								<!-- {% with pageText.projectSummary as tolaTextData %} -->
+								<!-- {% with pageText.projectSummary as activityTextData %} -->
 								{% with getAllComponentData.2 %}
 								    <!-- {% include 'customdashboard/components/narratives/context_pane.html' %} -->
 								    {% include getDashboardComponents.component_id.template_name %}
@@ -53,7 +53,7 @@
 						<div class='panel panel-info borderless soft-border-full'>
 							<div class='panel-heading borderless soft-border-top' style='background-color: #7B5213;'><span class='title-white'> PROGRAM MAP </span></div>
 								<div class="panel-body" style="height: 300;">
-								<!-- {% with pageMap as tolaMapData %} -->
+								<!-- {% with pageMap as activityMapData %} -->
 								{% with getAllComponentData.3 %}
 								    <!-- {% include 'customdashboard/components/maps/content_map.html' %} -->
 								    {% include getDashboardComponents.component_id.template_name %}
@@ -82,7 +82,7 @@
 				<div class='col-md-12'>
 					<div class='panel panel-info borderless soft-border-full' style="min-height: 200; max-height: 200; ">
 					<div class='panel-heading borderless soft-border-top' style='background-color: #7B5213;'><span class='title-white'> LATEST EVENTS</span></div>
-						<!-- {% with pageText.timelineLinks as tolaTextData %} -->
+						<!-- {% with pageText.timelineLinks as activityTextData %} -->
 						{% with getAllComponentData.4 %}
 							<!-- {% include 'customdashboard/components/narratives/sidebar_events.html' %} -->
 							{% include getDashboardComponents.component_id.template_name %}
@@ -94,7 +94,7 @@
 					<div class='panel-heading borderless soft-border-top' style='background-color: #7B5213;'><span class='title-white'> NEWSFEED</span></div>
 						<div class="panel-body">
 							<!-- <span class='chart-title' style="overflow-y: scroll; ">NEWSFEED</span> -->
-							<!-- {% with pageNews as tolaTextData %} -->
+							<!-- {% with pageNews as activityTextData %} -->
 							{% with getAllComponentData.5 %}
 							    <!-- {% include 'customdashboard/components/narratives/sidebar_news.html' %} -->
 							    {% include getDashboardComponents.component_id.template_name %}

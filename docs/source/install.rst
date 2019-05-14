@@ -1,14 +1,11 @@
 Install
 ====
-http://toladata.github.io/TolaActivity
 
-TolaActivity extends the functionality of TolaData to include a set of forms and
-reports for managing project activities for a Program.  It includes workflow for approving
-and completing projects as well as sharing the output data.
+Activity includes a set of forms and reports for managing project activities for a Program.  
+It includes workflow for approving and completing projects as well as sharing the output data.
 
-TolaActivity functionality http:www.github.com/toladata/TolaAcitivty is intended to allow importing
-and exporting of project specific data from 3rd party data sources or excel
-files.
+Activity functionality http://github.com/hikaya/Activity-CE is intended to allow importing
+and exporting of project specific data from 3rd party data sources or excel files.
 
 ## Configuration
 Ensure that the configuration files (`.secret`, `.secret.yml`) are in the `config` folder.

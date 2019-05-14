@@ -308,18 +308,18 @@ customer requests outside the scope of customized program dashboards
 
 def survey_public_dashboard(request, id=0):
     """
-    DEMO only survey for Tola survey
+    DEMO only survey for Activity survey
     :return:
     """
 
     # get all countires
     countries = Country.objects.all()
-
+    # TODO : change this url
     filter_url = "http://activity-tables.mercycorps.org/api/silo/430/data/"
     token = ActivitySites.objects.get(site_id=1)
-    if token.tola_tables_token:
+    if token.activity_tables_token:
         headers = {'content-type': 'application/json',
-                   'Authorization': 'Token ' + token.tola_tables_token}
+                   'Authorization': 'Token ' + token.activity_tables_token}
     else:
         headers = {'content-type': 'application/json'}
         print("Token Not Found")
@@ -329,19 +329,19 @@ def survey_public_dashboard(request, id=0):
     data = ast.literal_eval(get_json)
     meaning = list()
     join = list()
-    tola_is = list()
+    activity_is = list()
     for item in data['data']:
-        print(item['tola_is_a_pashto_word_meaning_'])
-        meaning.append(item['tola_is_a_pashto_word_meaning_'])
+        print(item['activity_is_a_pashto_word_meaning_'])
+        meaning.append(item['activity_is_a_pashto_word_meaning_'])
         # multiple choice
         join.append(
             list(x for x in item['thanks_for_coming_what_made_you_join_us_today_'].split()))
         # multiple choice
-        tola_is.append(list(x for x in item['tola_is_a_system_for_'].split()))
+        activity_is.append(list(x for x in item['activity_is_a_system_for_'].split()))
     """
     meaning: all_or_complet,peaceful,global,i_give_up
-    join: tola_is_a_myst, i_like_beer,to_meet_the_team,not_sure_what_
-    tola_is: adaptive_manag an_indicator_t a_data_managem option_4 all_of_the_abo
+    join: activity_is_a_myst, i_like_beer,to_meet_the_team,not_sure_what_
+    activity_is: adaptive_manag an_indicator_t a_data_managem option_4 all_of_the_abo
     """
     meaningcount = dict()
     meaningcount['peaceful'] = 0
@@ -359,13 +359,13 @@ def survey_public_dashboard(request, id=0):
             meaningcount['peaceful'] = meaningcount['peaceful'] + 1
 
     joincount = dict()
-    joincount['tola_is_a_mystery'] = 0
+    joincount['activity_is_a_mystery'] = 0
     joincount['i_like_beer'] = 0
     joincount['to_meet_the_team'] = 0
     joincount['not_sure'] = 0
     for answer in join:
-        if "tola_is_a_myst" in answer:
-            joincount['tola_is_a_mystery'] = joincount['tola_is_a_mystery'] + 1
+        if "activity_is_a_myst" in answer:
+            joincount['activity_is_a_mystery'] = joincount['activity_is_a_mystery'] + 1
         if "i_like_beer" in answer:
             joincount['i_like_beer'] = joincount['i_like_beer'] + 1
         if "to_meet_the_team" in answer:
@@ -373,42 +373,43 @@ def survey_public_dashboard(request, id=0):
         if "not_sure_what_" in answer:
             joincount['not_sure'] = joincount['not_sure'] + 1
 
-    tolacount = dict()
-    tolacount['adaptive_manag'] = 0
-    tolacount['an_indicator_t'] = 0
-    tolacount['a_data_managem'] = 0
-    tolacount['option_4'] = 0
-    tolacount['all_of_the_abo'] = 0
-    for answer in tola_is:
+    activitycount = dict()
+    activitycount['adaptive_manag'] = 0
+    activitycount['an_indicator_t'] = 0
+    activitycount['a_data_managem'] = 0
+    activitycount['option_4'] = 0
+    activitycount['all_of_the_abo'] = 0
+    for answer in activity_is:
         if "adaptive_manag" in answer:
-            tolacount['adaptive_manag'] = tolacount['adaptive_manag'] + 1
+            activitycount['adaptive_manag'] = activitycount['adaptive_manag'] + 1
         if "an_indicator_t" in answer:
-            tolacount['an_indicator_t'] = tolacount['an_indicator_t'] + 1
+            activitycount['an_indicator_t'] = activitycount['an_indicator_t'] + 1
         if "a_data_managem" in answer:
-            tolacount['a_data_managem'] = tolacount['a_data_managem'] + 1
+            activitycount['a_data_managem'] = activitycount['a_data_managem'] + 1
         if "option_4" in answer:
-            tolacount['option_4'] = tolacount['option_4'] + 1
+            activitycount['option_4'] = activitycount['option_4'] + 1
         if "all_of_the_abo" in answer:
-            tolacount['all_of_the_abo'] = tolacount['all_of_the_abo'] + 1
+            activitycount['all_of_the_abo'] = activitycount['all_of_the_abo'] + 1
 
     dashboard = True
 
     return render(request, "customdashboard/themes/survey_public_dashboard.html",
-                  {'meaning': meaningcount, 'join': joincount, 'tola_is': tolacount,
+                  {'meaning': meaningcount, 'join': joincount, 'activity_is': activitycount,
                    'countries': countries, 'dashboard': dashboard})
 
 
 def survey_talk_public_dashboard(request, id=0):
     """
-    DEMO only survey for Tola survey for use with public talks about TolaData
-    Share URL to survey and data will be aggregated in tolatables
+    DEMO only survey for Activity survey for use with public talks about Activity
+    Share URL to survey and data will be aggregated in activitytables
     then imported to this dashboard
     :return:
     """
     # get all countires
     countries = Country.objects.all()
 
-    filter_url = "http://tables.toladata.io/api/silo/9/data/"
+    # TODO : change this url
+    filter_url = "http://tables.Hikaya.io/api/silo/9/data/"
 
     headers = {'content-type': 'application/json',
                'Authorization': 'Token bd43de0c16ac0400bc404c6598a6fe0e4ce73aa2'}
@@ -418,21 +419,21 @@ def survey_talk_public_dashboard(request, id=0):
     data = ast.literal_eval(get_json)
     meaning = list()
     join = list()
-    tola_is = list()
+    activity_is = list()
     country_from = list()
     for item in data['data']:
-        meaning.append(item['tola_is_a_pashto_word_meaning_'])
+        meaning.append(item['activity_is_a_pashto_word_meaning_'])
         # multiple choice
         join.append(
             list(x for x in item['thanks_for_coming_what_made_you_join_us_today_'].split()))
         # multiple choice
-        tola_is.append(list(x for x in item['tola_is_a_system_for_'].split()))
+        activity_is.append(list(x for x in item['activity_is_a_system_for_'].split()))
         # country
         country_from.append(item['what_country_were_you_in_last'])
     """
     meaning: all_or_complet,peaceful,global,i_give_up
-    join: tola_is_a_myst, i_like_a_good_power_point,data_is_king,not_sure_what_
-    tola_is: adaptive_manag an_indicator_t a_data_managem option_4 all_of_the_abo
+    join: activity_is_a_myst, i_like_a_good_power_point,data_is_king,not_sure_what_
+    activity_is: adaptive_manag an_indicator_t a_data_managem option_4 all_of_the_abo
     """
     meaningcount = dict()
     meaningcount['peaceful'] = 0
@@ -450,13 +451,13 @@ def survey_talk_public_dashboard(request, id=0):
             meaningcount['peaceful'] = meaningcount['peaceful'] + 1
 
     joincount = dict()
-    joincount['tola_is_a_mystery'] = 0
+    joincount['activity_is_a_mystery'] = 0
     joincount['i_like_power_point_templates'] = 0
     joincount['data_is_king'] = 0
     joincount['not_sure'] = 0
     for answer in join:
-        if "tola_is_a_mystery" in answer:
-            joincount['tola_is_a_mystery'] = joincount['tola_is_a_mystery'] + 1
+        if "activity_is_a_mystery" in answer:
+            joincount['activity_is_a_mystery'] = joincount['activity_is_a_mystery'] + 1
         if "i_like_power_point_templates" in answer:
             joincount['i_like_power_point_templates'] = joincount['i_like_power_point_templates'] + 1
         if "data_is_king" in answer:
@@ -464,28 +465,28 @@ def survey_talk_public_dashboard(request, id=0):
         if "not_sure_what_" in answer:
             joincount['not_sure'] = joincount['not_sure'] + 1
 
-    tolacount = dict()
-    tolacount['adaptive_manag'] = 0
-    tolacount['an_indicator_t'] = 0
-    tolacount['a_data_managem'] = 0
-    tolacount['option_4'] = 0
-    tolacount['all_of_the_abo'] = 0
-    for answer in tola_is:
+    activitycount = dict()
+    activitycount['adaptive_manag'] = 0
+    activitycount['an_indicator_t'] = 0
+    activitycount['a_data_managem'] = 0
+    activitycount['option_4'] = 0
+    activitycount['all_of_the_abo'] = 0
+    for answer in activity_is:
         if "adaptive_manag" in answer:
-            tolacount['adaptive_manag'] = tolacount['adaptive_manag'] + 1
+            activitycount['adaptive_manag'] = activitycount['adaptive_manag'] + 1
         if "an_indicator_t" in answer:
-            tolacount['an_indicator_t'] = tolacount['an_indicator_t'] + 1
+            activitycount['an_indicator_t'] = activitycount['an_indicator_t'] + 1
         if "a_data_managem" in answer:
-            tolacount['a_data_managem'] = tolacount['a_data_managem'] + 1
+            activitycount['a_data_managem'] = activitycount['a_data_managem'] + 1
         if "option_4" in answer:
-            tolacount['option_4'] = tolacount['option_4'] + 1
+            activitycount['option_4'] = activitycount['option_4'] + 1
         if "all_of_the_abo" in answer:
-            tolacount['all_of_the_abo'] = tolacount['all_of_the_abo'] + 1
+            activitycount['all_of_the_abo'] = activitycount['all_of_the_abo'] + 1
 
     dashboard = True
 
     return render(request, "customdashboard/survey_talk_public_dashboard.html",
-                  {'meaning': meaningcount, 'join': joincount, 'tola_is': tolacount,
+                  {'meaning': meaningcount, 'join': joincount, 'activity_is': activitycount,
                    'country_from': country_from, 'countries': countries, 'dashboard': dashboard})
 
 
@@ -511,7 +512,7 @@ def rrima_public_dashboard(request, id=0):
     page_text = dict()
     page_text['pageTitle'] = "Refugee Response and Migration News"
     page_text['projectSummary'] = {}
-
+    # TODO : Change this variable 
     page_map = [{"latitude": 39.9334, "longitude": 32.8597, "location_name": "Ankara",
                 "site_contact": "Sonal Shinde, Migration Response Director, sshinde@mercycorps.org",
                 "site_description": "Migration Response Coordination", "region_name": "Turkey"},

@@ -693,7 +693,7 @@ class CollectedDataCreate(CreateView):
         kwargs['request'] = self.request
         kwargs['program'] = self.kwargs['program']
         kwargs['indicator'] = self.kwargs['indicator']
-        kwargs['tola_table'] = None
+        kwargs['activity_table'] = None
 
         return kwargs
 
@@ -709,10 +709,10 @@ class CollectedDataCreate(CreateView):
             Q(disaggregation_type__standard=True))
 
         # update the count with the value of Table unique count
-        if form.instance.update_count_tola_table and form.instance.tola_table:
+        if form.instance.update_count_activity_table and form.instance.activity_table:
             try:
                 get_table = ActivityTable.objects.get(
-                    id=self.request.POST['tola_table'])
+                    id=self.request.POST['activity_table'])
             except DisaggregationLabel.DoesNotExist:
                 get_table = None
             if get_table:
@@ -823,10 +823,10 @@ class CollectedDataUpdate(UpdateView):
         kwargs['request'] = self.request
         kwargs['program'] = get_data.program
         kwargs['indicator'] = get_data.indicator
-        if get_data.tola_table:
-            kwargs['tola_table'] = get_data.tola_table.id
+        if get_data.activity_table:
+            kwargs['activity_table'] = get_data.activity_table.id
         else:
-            kwargs['tola_table'] = None
+            kwargs['activity_table'] = None
         return kwargs
 
     def form_valid(self, form):
@@ -839,10 +839,10 @@ class CollectedDataUpdate(UpdateView):
         get_indicator = CollectedData.objects.get(id=self.kwargs['pk'])
 
         # update the count with the value of Table unique count
-        if form.instance.update_count_tola_table and form.instance.tola_table:
+        if form.instance.update_count_activity_table and form.instance.activity_table:
             try:
                 get_table = ActivityTable.objects.get(
-                    id=self.request.POST['tola_table'])
+                    id=self.request.POST['activity_table'])
             except ActivityTable.DoesNotExist:
                 get_table = None
             if get_table:
@@ -899,9 +899,9 @@ def get_table_count(url, table_id):
     :return: count : count of rows from ActivityTable
     """
     token = ActivitySites.objects.get(site_id=1)
-    if token.tola_tables_token:
+    if token.activity_tables_token:
         headers = {'content-type': 'application/json',
-                   'Authorization': 'Token ' + token.tola_tables_token}
+                   'Authorization': 'Token ' + token.activity_tables_token}
     else:
         headers = {'content-type': 'application/json'}
         print("Token Not Found")
@@ -932,18 +932,18 @@ def merge_two_dicts(x, y):
 
 def collecteddata_import(request):
     """
-    Import collected data from Tola Tables
+    Import collected data from Activity Tables
     :param request:
     :return:
     """
     owner = request.user
-    # get the TolaTables URL and token from the sites object
+    # get the activitytables URL and token from the sites object
     service = ActivitySites.objects.get(site_id=1)
 
     # add filter to get just the users tables only
-    user_filter_url = service.tola_tables_url + \
+    user_filter_url = service.activity_tables_url + \
         "&owner__username=" + str(owner)
-    shared_filter_url = service.tola_tables_url + \
+    shared_filter_url = service.activity_tables_url + \
         "&shared__username=" + str(owner)
 
     user_json = get_table(user_filter_url)
@@ -956,7 +956,7 @@ def collecteddata_import(request):
 
     if request.method == 'POST':
         id = request.POST['service_table']
-        filter_url = service.tola_tables_url + "&id=" + id
+        filter_url = service.activity_tables_url + "&id=" + id
 
         data = get_table(filter_url)
 
@@ -1018,9 +1018,9 @@ def collected_data_json(AjaxableResponseMixin, indicator, program):
     detail_url = ''
     # try:
     #     for data in collecteddata:
-    #         if data.tola_table:
-    #             data.tola_table.detail_url = const_table_det_url(
-    #                 str(data.tola_table.url))
+    #         if data.activity_table:
+    #             data.activity_table.detail_url = const_table_det_url(
+    #                 str(data.activity_table.url))
     # except Exception as e:
     #     pass
 
@@ -1383,7 +1383,7 @@ class CollectedDataReportData(View, AjaxableResponseMixin):
                     'indicator__level__name', 'indicator__sector__sector', 'date_collected', 'indicator__baseline',
                     'indicator__lop_target', 'indicator__key_performance_indicator',
                     'indicator__external_service_record__external_service__name', 'evidence',
-                    'tola_table', 'periodic_target', 'achieved')
+                    'activity_table', 'periodic_target', 'achieved')
 
         collected_sum = CollectedData.objects.select_related('periodic_target')\
             .filter(program__country__in=countries).filter(**q).aggregate(
@@ -1650,7 +1650,7 @@ class CollectedDataList(ListView):
                                         'indicator__sector__sector', 'date_collected', 'indicator__baseline',
                                         'indicator__lop_target', 'indicator__key_performance_indicator',
                                         'indicator__external_service_record__external_service__name', 'evidence',
-                                        'tola_table', 'periodic_target', 'achieved')
+                                        'activity_table', 'periodic_target', 'achieved')
 
         if self.request.GET.get('export'):
             dataset = CollectedDataResource().export(indicators)

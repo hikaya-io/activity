@@ -16,9 +16,9 @@ def run():
 
     for app in app_models:
         name = str(app._meta.db_table)
-        new_appname = "tola_activity." + name
+        new_appname = "activity." + name
         temp = name.split("_")
-        old_appname = "tola_activity.activitydb_" + temp[1]
+        old_appname = "activity.activitydb_" + temp[1]
 
         sql_query = "RENAME TABLE %s TO %s" % (old_appname, new_appname)
 
@@ -44,12 +44,12 @@ def run():
             'projectcomplete_stakeholder',
             'quantitativeoutputs',
             'stakeholder_contact',
-            'tolauser_countries'
+            'activityuser_countries'
         ]
 
         for name in name_list:
-            old_appname = "tola_activity.activitydb_" + name
-            new_appname = "tola_activity.workflow_" + name
+            old_appname = "activity.activitydb_" + name
+            new_appname = "activity.workflow_" + name
             sql_query = "RENAME TABLE %s TO %s" % (old_appname, new_appname)
             try:
                 # Renaming model from 'Foo' to 'Bar'

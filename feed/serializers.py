@@ -232,7 +232,7 @@ class ReportingFrequencySerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
 
 
-class TolaUserSerializer(serializers.HyperlinkedModelSerializer):
+class ActivityUserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ActivityUser
@@ -372,7 +372,7 @@ class CollectedDataSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
 
 
-class TolaTableSerializer(serializers.HyperlinkedModelSerializer):
+class activitytableSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ActivityTable

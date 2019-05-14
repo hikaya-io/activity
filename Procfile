@@ -1,1 +1,1 @@
-web: gunicorn tola.wsgi --log-file -
+web: gunicorn activity.wsgi --log-file -

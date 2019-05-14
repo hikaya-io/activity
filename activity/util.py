@@ -44,7 +44,8 @@ def email_group(country, group, link, subject, message, submiter=None):
     for single_country in country.all():
         country = Country.objects.all().filter(country=single_country)
         get_group_emails = User.objects.all().filter(
-            tola_user=group, tola_user__country=country).values_list('email', flat=True)
+            activity_user=group, 
+            activity_user__country=country).values_list('email', flat=True)
         email_link = link
         formatted_email = email_link
         subject = str(subject)
@@ -68,9 +69,9 @@ def get_table(url, data=None):
     :return: json dump of table data
     """
     token = ActivitySites.objects.get(site_id=1)
-    if token.tola_tables_token:
+    if token.activity_tables_token:
         headers = {'content-type': 'application/json',
-                   'Authorization': 'Token ' + token.tola_tables_token}
+                   'Authorization': 'Token ' + token.activity_tables_token}
     else:
         headers = {'content-type': 'application/json'}
         print("Token Not Found")
@@ -83,7 +84,7 @@ def get_table(url, data=None):
     return data
 
 
-def user_to_tola(user, response):
+def user_to_activity(user, response):
 
     # Add a google auth user to the activity profile
     default_country = Country.objects.first()

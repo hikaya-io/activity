@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 from rest_framework.authtoken import views as auth_views
 from django.contrib.auth import views as authviews
 
-from activity import views as tolaviews
+from activity import views as activityviews
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -29,7 +29,7 @@ router.register(r'initiations', AgreementViewSet)
 router.register(r'tracking', CompleteViewSet)
 router.register(r'indicator', IndicatorViewSet)
 router.register(r'reportingfrequency', ReportingFrequencyViewSet)
-router.register(r'tolauser', TolaUserViewSet)
+router.register(r'activityuser', ActivityUserViewSet)
 router.register(r'indicatortype', IndicatorTypeViewSet)
 router.register(r'objective', ObjectiveViewSet)
 router.register(r'disaggregationtype', DisaggregationTypeViewSet)
@@ -49,7 +49,7 @@ router.register(r'village', VillageViewSet)
 router.register(r'contact', ContactViewSet)
 router.register(r'documentation', DocumentationViewSet)
 router.register(r'collecteddata', CollectedDataViewSet)
-router.register(r'tolatable', TolaTableViewSet, basename='tolatable')
+router.register(r'activitytable', activitytableViewSet, basename='activitytable')
 router.register(r'disaggregationvalue', DisaggregationValueViewSet)
 router.register(r'projectagreements', ProjectAgreementViewSet)
 router.register(r'loggedusers', LoggedUserViewSet)
@@ -76,7 +76,7 @@ urlpatterns = [  # rest framework
 
     # index
     re_path(r'^dashboard/(?P<id>\w+)/(?P<sector>\w+)/$',
-            tolaviews.index, name='index'),
+            activityviews.index, name='index'),
 
     # base template for layout
     path('', TemplateView.as_view(template_name='base.html')),

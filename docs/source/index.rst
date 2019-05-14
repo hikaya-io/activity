@@ -1,9 +1,9 @@
-.. TolaActivity documentation master file, created by
+.. Activity documentation master file, created by
    sphinx-quickstart on Tue Jan 24 14:45:55 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to TolaActivity's documentation!
+Welcome to Activity's documentation!
 ========================================
 
 .. toctree::

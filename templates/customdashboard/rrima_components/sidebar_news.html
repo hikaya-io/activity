@@ -1,5 +1,5 @@
 <div class="sidebar-pane" id="narrative-pane" style="height: 250px; overflow-y: scroll;">
-    {% for textRecord in tolaTextData %}
+    {% for textRecord in activityTextData %}
       <div class="panel-body"> <a href="/customdashboard/notebook/{{textRecord.id}}" style='float:left; color: black; '>{{textRecord.name}} </a> </div>
     {% endfor %}
 </div>
@@ -17,7 +17,7 @@
       <div class="modal-body" style='overflow-x: scroll; word-wrap: break-word; '>
               <!--populates news items of some type-->
 
-          {% for data in tolaTableData %}
+          {% for data in activitytableData %}
             <p>  {{ data.title }} </p><br>
           {% endfor %}
               

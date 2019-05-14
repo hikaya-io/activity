@@ -3,7 +3,7 @@ Indicator
 
 Endpoint
 ---------
- * “indicator”: “http://activity.toladata.io/api/indicator/”,
+ * “indicator”: “http://activity.Hikaya.io/api/indicator/”,
 
 
 This endpoint provides access to submitted indicators in JSON format.
@@ -25,7 +25,7 @@ Example
 ^^^^^^^^
 ::
 
-    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/indicator/
+    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/indicator/
 
 
 Response
@@ -34,7 +34,7 @@ Response
 
     [
       {
-        "url": "http://activity.toladata.io/api/indicator/20/",
+        "url": "http://activity.Hikaya.io/api/indicator/20/",
         "name": "Number and percent of households using a financial product or service developed through SimulaKO",
         "number": "3.3",
         "source": "DFID",
@@ -52,21 +52,21 @@ Response
         "edit_date": "2017-02-22T18:26:12Z",
         "notes": null,
         "reporting_frequency": null,
-        "sector": "http://activity.toladata.io/api/sector/4/",
+        "sector": "http://activity.Hikaya.io/api/sector/4/",
         "approved_by": null,
         "approval_submitted_by": null,
         "external_service_record": null,
         "indicator_type": [
-            "http://activity.toladata.io/api/indicatortype/1/"
+            "http://activity.Hikaya.io/api/indicatortype/1/"
         ],
         "level": [
-            "http://activity.toladata.io/api/level/3/"
+            "http://activity.Hikaya.io/api/level/3/"
         ],
         "objectives": [],
         "strategic_objectives": [],
         "disaggregation": [],
         "program": [
-            "http://activity.toladata.io/api/programs/1/"
+            "http://activity.Hikaya.io/api/programs/1/"
         ]
       },
       ...
@@ -86,7 +86,7 @@ of records and the limit parameter to limit the number of records returned.
     </pre>
 
 ::
-    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/indicator/?start=5
+    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/indicator/?start=5
     
 
 .. raw:: html
@@ -97,7 +97,7 @@ of records and the limit parameter to limit the number of records returned.
 
 ::
 
-	curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/indicator/?limit=2
+	curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/indicator/?limit=2
 
 .. raw:: html
 
@@ -107,7 +107,7 @@ of records and the limit parameter to limit the number of records returned.
 
 ::
 
-	 curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/indicator/?start=3&limit=4
+	 curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/indicator/?start=3&limit=4
 
 
 
@@ -128,7 +128,7 @@ Example
 ^^^^^^^^^
 ::
 
-       curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/indicator/?program_name=Financial Assistance to Affected Communities
+       curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/indicator/?program_name=Financial Assistance to Affected Communities
 
 
 GET JSON List of indicator end points filter by program country
@@ -148,7 +148,7 @@ Example
 ^^^^^^^^^
 ::
 
-       curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/indicator/?program_country_country=Afghanistan
+       curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/indicator/?program_country_country=Afghanistan
 
 
 Retrieve a specific Indicator
@@ -164,13 +164,13 @@ Example
 ^^^^^^^^^
 ::
 
-      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/indicator/2
+      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/indicator/2
 
 Response
 ^^^^^^^^^
 ::
   {
-    "url": "http://activity.toladata.io/api/indicator/2/",
+    "url": "http://activity.Hikaya.io/api/indicator/2/",
     "name": "Total number of male and female individuals participating in cash transfer programming (CTP)",
     "number": "1.1",
     "source": "Mercy Corps",
@@ -188,23 +188,23 @@ Response
     "edit_date": "2017-03-09T04:46:39Z",
     "notes": "",
     "reporting_frequency": null,
-    "sector": "http://activity.toladata.io/api/sector/4/",
+    "sector": "http://activity.Hikaya.io/api/sector/4/",
     "approved_by": null,
     "approval_submitted_by": null,
     "external_service_record": null,
     "indicator_type": [
-        "http://activity.toladata.io/api/indicatortype/8/"
+        "http://activity.Hikaya.io/api/indicatortype/8/"
     ],
     "level": [
-        "http://activity.toladata.io/api/level/1/"
+        "http://activity.Hikaya.io/api/level/1/"
     ],
     "objectives": [],
     "strategic_objectives": [
-        "http://activity.toladata.io/api/strategicobjective/1/"
+        "http://activity.Hikaya.io/api/strategicobjective/1/"
     ],
     "disaggregation": [],
     "program": [
-        "http://activity.toladata.io/api/programs/1/"
+        "http://activity.Hikaya.io/api/programs/1/"
     ]
   }
 
@@ -216,5 +216,5 @@ Example
 ^^^^^^^^
 ::
 
-      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/indicator/20.json?page=1&page_size=4
+      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/indicator/20.json?page=1&page_size=4
 

@@ -18,10 +18,10 @@ def home(request):
 
 def import_table(request):
     """
-    import collected data from Tola Tables
+    import collected data from Activity Tables
     """
     owner = request.user
-    service = ExternalService.objects.get(name="TolaTables")
+    service = ExternalService.objects.get(name="activitytables")
 
     # add filter to get just the users tables only
     user_filter_url = service.feed_url + "&owner__username=" + str(owner)

@@ -35,7 +35,7 @@ class ActivityTableAdmin(admin.ModelAdmin):
                     'url', 'create_date', 'edit_date')
     search_fields = ('country', 'name')
     list_filter = ('country__country',)
-    display = 'Tola Table'
+    display = 'Activity Table'
 
 
 class IndicatorType(models.Model):
@@ -134,7 +134,7 @@ class DisaggregationType(models.Model):
     country = models.ForeignKey(
         Country, null=True, blank=True, on_delete=models.SET_NULL)
     standard = models.BooleanField(
-        default=False, verbose_name="Standard (TolaData Admins Only)")
+        default=False, verbose_name="Standard (Activity Admins Only)")
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -481,7 +481,7 @@ class PeriodicTargetAdmin(admin.ModelAdmin):
 class CollectedDataManager(models.Manager):
     def get_queryset(self):
         return super(CollectedDataManager, self).get_queryset().prefetch_related('site', 'disaggregation_value')\
-            .select_related('program', 'indicator', 'agreement', 'complete', 'evidence', 'tola_table')
+            .select_related('program', 'indicator', 'agreement', 'complete', 'evidence', 'activity_table')
 
 
 class CollectedData(models.Model):
@@ -511,10 +511,10 @@ class CollectedData(models.Model):
                                  verbose_name="Evidence Document or Link", help_text=" ", on_delete=models.SET_NULL)
     approved_by = models.ForeignKey(ActivityUser, blank=True, null=True, verbose_name="Originated By",
                                     related_name="approving_data", help_text=" ", on_delete=models.SET_NULL)
-    tola_table = models.ForeignKey(
+    activity_table = models.ForeignKey(
         ActivityTable, blank=True, null=True, help_text=" ", on_delete=models.SET_NULL)
-    update_count_tola_table = models.BooleanField(
-        "Would you like to update the achieved total with the row count from TolaTables?", default=False, help_text=" ")
+    update_count_activity_table = models.BooleanField(
+        "Would you like to update the achieved total with the row count from activitytables?", default=False, help_text=" ")
     create_date = models.DateTimeField(null=True, blank=True, help_text=" ")
     edit_date = models.DateTimeField(null=True, blank=True, help_text=" ")
     site = models.ManyToManyField(SiteProfile, blank=True, help_text=" ")

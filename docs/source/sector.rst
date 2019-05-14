@@ -3,7 +3,7 @@ Sector
 
 Endpoint
 ---------
- * “sector”: “http://activity.toladata.io/api/sector/”,
+ * “sector”: “http://activity.Hikaya.io/api/sector/”,
 
 
 This endpoint provides access to submitted sectors in JSON format.
@@ -25,7 +25,7 @@ Example
 ^^^^^^^^
 ::
 
-    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/sector/
+    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/sector/
 
 
 Response
@@ -34,7 +34,7 @@ Response
 
     [
         {
-        "url": "http://activity.toladata.io/api/sector/11/",
+        "url": "http://activity.Hikaya.io/api/sector/11/",
         "sector": "Agribusiness",
         "create_date": "2015-04-30T21:08:12Z",
         "edit_date": "2016-02-01T15:03:47Z"
@@ -56,7 +56,7 @@ of records and the limit parameter to limit the number of records returned.
     </pre>
 
 ::
-    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/sector/?start=5
+    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/sector/?start=5
     
 
 .. raw:: html
@@ -67,7 +67,7 @@ of records and the limit parameter to limit the number of records returned.
 
 ::
 
-	curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/sector/?limit=2
+	curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/sector/?limit=2
 
 .. raw:: html
 
@@ -77,7 +77,7 @@ of records and the limit parameter to limit the number of records returned.
 
 ::
 
-	 curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/sector/?start=3&limit=4
+	 curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/sector/?start=3&limit=4
 
 
 Retrieve a specific Sector
@@ -93,13 +93,13 @@ Example
 ^^^^^^^^^
 ::
 
-      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/sector/22
+      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/sector/22
 
 Response
 ^^^^^^^^^
 ::
   {
-    "url": "http://activity.toladata.io/api/sector/22/",
+    "url": "http://activity.Hikaya.io/api/sector/22/",
     "sector": "Agriculture",
     "create_date": "2015-11-25T02:23:46Z",
     "edit_date": "2015-11-25T02:23:46Z"
@@ -116,5 +116,5 @@ Example
 ^^^^^^^^
 ::
 
-      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/sector.json?page=1&page_size=4
+      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/sector.json?page=1&page_size=4
 

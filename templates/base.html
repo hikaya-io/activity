@@ -50,7 +50,7 @@
     </head>
     <body>
         <!--http://getbootstrap.com/examples/sticky-footer-navbar/-->
-        <nav class="navbar navbar-default navbar-tola navbar-fixed-top" role="navigation">
+        <nav class="navbar navbar-default navbar-activity navbar-fixed-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'index' %}">
@@ -152,13 +152,13 @@
                                  <span class="glyphicon glyphicon-bookmark"></span> Bookmarks<b class="caret"></b>
                              </a>
                              <ul class="dropdown-menu" id="bookmarks">
-                                 {% if request.path in user.activity_user.tolabookmark.bookmark_url %}
+                                 {% if request.path in user.activity_user.activitybookmark.bookmark_url %}
                                     <li>This page is in your bookmarks!</li>
                                  {% else %}
                                     <li><a onClick="newBookmark('{{ request.path }}','{{ user }}')"><span class="glyphicon glyphicon-star-empty"></span> <b>Bookmark Current Page</b></a></li>
                                  {% endif %}
-                                 {% if user.activity_user.tolabookmark %}
-                                     {% for bookmark in user.activity_user.tolabookmark.all %}
+                                 {% if user.activity_user.activitybookmark %}
+                                     {% for bookmark in user.activity_user.activitybookmark.all %}
                                         <li><a href="{{ bookmark.bookmark_url }}"><span class="glyphicon glyphicon-star"></span> {{ bookmark.name }}</a></li>
                                      {% endfor %}
                                  {% endif %}
@@ -180,7 +180,7 @@
                                             </div>
                                             or
                                         {% endif %}
-                                        <a href="{% url 'login' %}">Login with Tola Account</a><br/>-->
+                                        <a href="{% url 'login' %}">Login with - Account</a><br/>-->
 
                                         <form class="form" role="form" method="post" action="{% url 'login' %}">
                                             {% csrf_token %}

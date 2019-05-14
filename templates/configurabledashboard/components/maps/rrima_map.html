@@ -8,7 +8,7 @@
       html:'<div class="map-marker"></div>',
       iconSize: [0,0]
     });
-    {% for site in tolaMapData%}
+    {% for site in activityMapData%}
         L.marker([{{ site.latitude }}, {{ site.longitude }}], {icon: countryIcon}).addTo(layeredCountries).bindPopup("" + "<b>{{ site.location_name }}</b><br><br><b>Site Contact:</b><br>{{ site.site_contact }}<br/><br><b>Programs Offered:</b><br>{{ site.site_description }}<br/>");
     {%   endfor %}
 

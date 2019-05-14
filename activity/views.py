@@ -23,7 +23,7 @@ from activity.tables import IndicatorDataTable
 from activity.util import get_country
 from activity.forms import (
     RegistrationForm, NewUserRegistrationForm,
-    NewTolaUserRegistrationForm, BookmarkForm
+    NewActivityUserRegistrationForm, BookmarkForm
 )
 
 
@@ -179,7 +179,7 @@ def index(request, selected_countries=None, id=0, sector=0):
     # Evidence and Objectives are for the global leader dashboard items and are the same every time
     count_evidence = CollectedData.objects.all().filter(indicator__isnull=False)\
         .values("indicator__program__country__country").annotate(
-        evidence_count=Count('evidence', distinct=True) + Count('tola_table', distinct=True),
+        evidence_count=Count('evidence', distinct=True) + Count('activity_table', distinct=True),
         indicator_count=Count('pk', distinct=True)).order_by('-evidence_count')
     get_objectives = CollectedData.objects.filter(
         indicator__strategic_objectives__isnull=False,
@@ -213,7 +213,7 @@ def index(request, selected_countries=None, id=0, sector=0):
         indicator__isnull=False,
         indicator__program__country__in=selected_countries)\
         .values("indicator__program__country__country")\
-        .annotate(evidence_count=Count('evidence', distinct=True) + Count('tola_table', distinct=True),
+        .annotate(evidence_count=Count('evidence', distinct=True) + Count('activity_table', distinct=True),
                   indicator_count=Count('pk', distinct=True)).order_by('-evidence_count')
     count_program = int(count_program)
     count_program_agreement = int(count_program_agreement)
@@ -293,24 +293,25 @@ def register(request):
     privacy = ActivitySites.objects.get(id=1)
     if request.method == 'POST':
         uf = NewUserRegistrationForm(request.POST)
-        tf = NewTolaUserRegistrationForm(request.POST)
+        tf = NewActivityUserRegistrationForm(request.POST)
 
         if uf.is_valid() * tf.is_valid():
             user = uf.save()
             user.groups.add(Group.objects.get(name='ViewOnly'))
 
-            tolauser = tf.save(commit=False)
-            tolauser.user = user
-            tolauser.save()
+            activityuser = tf.save(commit=False)
+            activityuser.user = user
+            activityuser.save()
             messages.error(
                 request, 'Thank you, You have been registered as a new user.', fail_silently=False)
             return HttpResponseRedirect("/")
     else:
         uf = NewUserRegistrationForm()
-        tf = NewTolaUserRegistrationForm()
+        tf = NewActivityUserRegistrationForm()
 
     return render(request, "registration/register.html", {
-        'userform': uf, 'tolaform': tf, 'helper': NewTolaUserRegistrationForm.helper, 'privacy': privacy
+        'userform': uf, 'activityform': tf, 'privacy': privacy,
+        'helper': NewActivityUserRegistrationForm.helper     
     })
 
 

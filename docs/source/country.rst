@@ -3,7 +3,7 @@ Country
 
 Endpoint
 ---------
- * “country”: “http://activity.toladata.io/api/country/”,
+ * “country”: “http://activity.Hikaya.io/api/country/”,
 
 
 This endpoint provides access to submitted countries in JSON format.
@@ -25,7 +25,7 @@ Example
 ^^^^^^^^
 ::
 
-    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/country/
+    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/country/
 
 
 Response
@@ -34,7 +34,7 @@ Response
 
     [
         {
-        "url": "http://activity.toladata.io/api/country/1/",
+        "url": "http://activity.Hikaya.io/api/country/1/",
         "country": "Afghanistan",
         "code": "AF",
         "description": "",
@@ -43,7 +43,7 @@ Response
         "zoom": 5,
         "create_date": "2015-02-05T21:21:53Z",
         "edit_date": "2015-04-14T17:09:07Z",
-        "organization": "http://activity.toladata.io/api/organization/1/"
+        "organization": "http://activity.Hikaya.io/api/organization/1/"
         },
         ...
     ]
@@ -63,7 +63,7 @@ of records and the limit parameter to limit the number of records returned.
     </pre>
 
 ::
-    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/country/?start=5
+    curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/country/?start=5
     
 
 .. raw:: html
@@ -74,7 +74,7 @@ of records and the limit parameter to limit the number of records returned.
 
 ::
 
-	curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/country/?limit=2
+	curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/country/?limit=2
 
 .. raw:: html
 
@@ -84,7 +84,7 @@ of records and the limit parameter to limit the number of records returned.
 
 ::
 
-	 curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/country/?start=3&limit=4
+	 curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/country/?start=3&limit=4
 
 
 Retrieve a specific Country
@@ -100,13 +100,13 @@ Example
 ^^^^^^^^^
 ::
 
-      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/country/2
+      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/country/2
 
 Response
 ^^^^^^^^^
 ::
   {
-    "url": "http://activity.toladata.io/api/country/2/",
+    "url": "http://activity.Hikaya.io/api/country/2/",
     "country": "Pakistan",
     "code": "PK",
     "description": "",
@@ -115,7 +115,7 @@ Response
     "zoom": 5,
     "create_date": "2015-04-14T17:12:49Z",
     "edit_date": "2015-04-14T17:12:49Z",
-    "organization": "http://activity.toladata.io/api/organization/1/"
+    "organization": "http://activity.Hikaya.io/api/organization/1/"
   }
 
 
@@ -127,5 +127,5 @@ Example
 ^^^^^^^^
 ::
 
-      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.toladata.io/api/country.json?page=1&page_size=4
+      curl -H "Authorization: Token adkai39a9sdfj239m0afi2" https://activity.Hikaya.io/api/country.json?page=1&page_size=4
 

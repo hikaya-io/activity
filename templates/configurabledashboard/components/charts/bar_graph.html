@@ -2,15 +2,15 @@
 
 {% block content %}
     <div>
-        <canvas id='{{tolaTableData.component_id}} ' style='height: 325px; width: 350px;'> </canvas>
+        <canvas id='{{activitytableData.component_id}} ' style='height: 325px; width: 350px;'> </canvas>
     </div>
 {% endblock %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}js/charts/bar_script.js"></script>
 <script>
-var componentID = {% autoescape off %}{{tolaTableData.component_id}}{% endautoescape %}
-var result = {% autoescape off %}{{tolaTableData.data_map}}{% endautoescape %}
+var componentID = {% autoescape off %}{{activitytableData.component_id}}{% endautoescape %}
+var result = {% autoescape off %}{{activitytableData.data_map}}{% endautoescape %}
 var dataLabels = result["labels"]
 var colorOption = result["colors"]
 var dataSet = result["data_set"]
