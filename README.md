@@ -14,10 +14,19 @@ Copy the activity/settings/local-sample.py to local.py and modify for your envir
 Once all your changes have been commited to the repo, and before pushing them, run:
 `. travis.sh`
 
-## To deploy locally via Docker
+## To deploy localy via Docker
 Run the following commands from the root of this repository:
-  - `docker-compose build`
-  - `docker-compose up`
+
+NB: Ensure you have docker installed on your machine
+  - `docker-compose build .`
+  # run  migrations
+  - `docker-compose run web python /code/manage.py migrate --noinput`
+  # create superuser
+  - `docker-compose run web python /code/manage.py createsuperuser`
+  # start the app
+  - `docker-compose up -d --build`
+  # open on browser
+  - `http://127.0.0.1:8000/`
 
 ## USING virtualenv
 (Install virtualenv)
@@ -50,9 +59,7 @@ $ pip install -r requirements.txt
 
 
 ## Modify the config file
-
-Edit _config/settings.secret.yml_. Find the node named, "DATABASES" and set the 
-database `PASSWORD` as appropriate. The result should resemble the following:
+Edit database settings settings/local.py
 
 ```yaml
 47 DATABASES:

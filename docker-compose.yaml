@@ -1,0 +1,33 @@
+
+version: '3.7'
+
+services:
+  db:
+    image: postgres:10.1-alpine
+    container_name: postgres_activity_ce
+    healthcheck:
+      test: 'pg_isready -h localhost -p 5432 -q -U root -d postgres'
+      interval: 3s
+      timeout: 5s
+      retries: 5
+    environment:
+      ACTIVITY_CE_DB_ENGINE: django.db.backends.postgresql
+      ACTIVITY_CE_DB_NAME: activity_ce
+      ACTIVITY_CE_DB_USER: postgres
+      ACTIVITY_CE_DB_PASSWORD: postgres
+      ACTIVITY_CE_DB_HOST: db
+      ACTIVITY_CE_DB_PORT: 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  web:
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
