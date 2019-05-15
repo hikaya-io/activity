@@ -3,8 +3,8 @@
 
 """
 import json data from API
-IMPORTANT!! you must turn off pagination for this to work from a URL and get all
-country records
+IMPORTANT!! you must turn off pagination for this to work from a URL
+and get all country records
 Install module django-extensions
 Runs twice via function calls at bottom once
 Syntax: sudo py manage.py runscript import_adminlevels
@@ -56,7 +56,8 @@ def get_all_data(get_country, file_name):
                     print(column)
 
                     try:
-                        District.objects.get(name=column, province=get_province)
+                        District.objects.get(name=column,
+                                             province=get_province)
                     except District.DoesNotExist:
                         new_district = District(
                             name=column, province=get_province)

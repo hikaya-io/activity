@@ -7,12 +7,14 @@ from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from .models import CustomDashboard, DashboardComponent, ComponentDataSource, DashboardTheme
+from .models import CustomDashboard, DashboardComponent, ComponentDataSource, \
+    DashboardTheme
 from workflow.models import Program, FormGuidance
 from .forms import (
     CustomDashboardCreateForm, CustomDashboardForm, CustomDashboardModalForm,
     CustomDashboardMapForm, DashboardThemeCreateForm, DashboardThemeForm,
-    DashboardComponentCreateForm, DashboardComponentForm, ComponentDataSourceForm,
+    DashboardComponentCreateForm, DashboardComponentForm,
+    ComponentDataSourceForm,
     ComponentDataSourceCreateForm
 )
 
@@ -45,13 +47,16 @@ class CustomDashboardList(ListView):
         countries = get_country(request.user)
 
         # retrieve projects for a program
-        # getProjects = ProjectAgreement.objects.all().filter(program__id=program__id, program__country__in=countries)
+        # getProjects = ProjectAgreement.objects.all()
+        #   .filter(program__id=program__id, program__country__in=countries)
 
         # retrieve projects for a program
-        getCustomDashboards = CustomDashboard.objects.all().filter(program=program_id)
+        get_custom_dashboards = CustomDashboard.objects.all() \
+            .filter(program=program_id)
 
-        return render(request, self.template_name, {'pk': program_id, 'getCustomDashboards': getCustomDashboards,
-                                                    'getProgram': get_program})
+        return render(request, self.template_name, {
+            'pk': program_id, 'get_custom_dashboards': get_custom_dashboards,
+            'getProgram': get_program})
 
 
 class CustomDashboardCreate(CreateView):
@@ -60,6 +65,7 @@ class CustomDashboardCreate(CreateView):
     #   """
     model = CustomDashboard
     template_name = 'configurabledashboard/dashboard/form.html'
+    guidance = None
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
@@ -67,9 +73,10 @@ class CustomDashboardCreate(CreateView):
             self.guidance = FormGuidance.objects.get(form="CustomDashboard")
         except FormGuidance.DoesNotExist:
             self.guidance = None
-        return super(CustomDashboardCreate, self).dispatch(request, *args, **kwargs)
+        return super(CustomDashboardCreate, self).dispatch(request, *args,
+                                                           **kwargs)
 
-     # add the request to the kwargs
+    # add the request to the kwargs
     def get_form_kwargs(self):
         kwargs = super(CustomDashboardCreate, self).get_form_kwargs()
         kwargs['request'] = self.request
@@ -95,11 +102,13 @@ class CustomDashboardCreate(CreateView):
         if form.is_valid():
             data = form.save(commit=False)
             form_theme = data.theme
-            getSelectedTheme = DashboardTheme.objects.all().filter(id=form_theme.id)
-            parsedLayout = json.loads(
-                getSelectedTheme[0].layout_dictionary, object_pairs_hook=OrderedDict)
+            get_selected_theme = DashboardTheme.objects.all().filter(
+                id=form_theme.id)
+            parsed_layout = json.loads(
+                get_selected_theme[0].layout_dictionary,
+                object_pairs_hook=OrderedDict)
             new_map = {}
-            for key in parsedLayout:
+            for key in parsed_layout:
                 new_map[key] = "NONE"
             data.component_map = json.dumps(new_map)
             data.save()
@@ -115,13 +124,13 @@ class CustomDashboardCreate(CreateView):
 
 
 class CustomDashboardDetail(DetailView):
-
     model = CustomDashboard
 
     def get_template_names(self):
         dashboard = CustomDashboard.objects.get(id=self.kwargs['pk'])
-        getDashboardTheme = DashboardTheme.objects.all().filter(id=dashboard.theme.id)
-        template_name = getDashboardTheme[0].theme_template
+        get_dashboard_theme = DashboardTheme.objects.all().filter(
+            id=dashboard.theme.id)
+        template_name = get_dashboard_theme[0].theme_template
         return template_name
 
     def get_context_data(self, **kwargs):
@@ -130,85 +139,102 @@ class CustomDashboardDetail(DetailView):
         context.update({'pk': pk})
 
         try:
-            getCustomDashboard = CustomDashboard.objects.get(
+            get_custom_dashboard = CustomDashboard.objects.get(
                 id=self.kwargs['pk'])
         except CustomDashboard.DoesNotExist:
-            getCustomDashboard = None
-        context.update({'getCustomDashboard': getCustomDashboard})
+            get_custom_dashboard = None
+        context.update({'get_custom_dashboard': get_custom_dashboard})
 
         try:
-            selected_theme = getCustomDashboard.theme.id
-            getDashboardTheme = DashboardTheme.objects.all().filter(id=selected_theme)
+            selected_theme = get_custom_dashboard.theme.id
+            get_dashboard_theme = DashboardTheme.objects.all().filter(
+                id=selected_theme)
         except DashboardTheme.DoesNotExist:
-            getDashboardTheme = None
-        context.update({'getDashboardTheme': getDashboardTheme})
+            get_dashboard_theme = None
+        context.update({'get_dashboard_theme': get_dashboard_theme})
 
         try:
-            getDashboardComponents = getCustomDashboard.components.all()
+            get_dashboard_components = get_custom_dashboard.components.all()
         except DashboardComponent.DoesNotExist:
-            getDashboardComponents = None
-        context.update({'getDashboardComponents': getDashboardComponents})
+            get_dashboard_components = None
+        context.update({'get_dashboard_components': get_dashboard_components})
 
         try:
-            color_selection = getCustomDashboard.color_palette
+            color_selection = get_custom_dashboard.color_palette
             if color_selection == 'bright':
-                getColorPalette = ['#82BC00', '#C8C500', '#10A400', '#CF102E', '#DB5E11', '#A40D7A', '#00AFA8',
-                                   '#1349BB', '#FFD200', '#FF7100', '#FFFD00', '#ABABAB', '#7F7F7F', '#7B5213', '#C18A34'],
+                get_color_palette = [
+                    '#82BC00', '#C8C500', '#10A400', '#CF102E',
+                    '#DB5E11', '#A40D7A', '#00AFA8',
+                    '#1349BB', '#FFD200', '#FF7100', '#FFFD00',
+                    '#ABABAB', '#7F7F7F', '#7B5213', '#C18A34'],
             else:
-                getColorPalette = ['#BAEE46', '#FDFB4A', '#4BCF3D', '#F2637A', '#FFA268', '#C451A4', '#4BC3BE',
-                                   '#5B7FCC', '#9F54CC', '#FFE464', '#FFA964', '#FFFE64', '#D7D7D7', '#7F7F7F', '#D2A868', '#FFD592']
-        except getCustomDashboard.DoesNotExist:
-            getColorPalette = None
-        context.update({'getColorPalette': getColorPalette})
+                get_color_palette = [
+                    '#BAEE46', '#FDFB4A', '#4BCF3D', '#F2637A',
+                    '#FFA268', '#C451A4', '#4BC3BE', '#FFD592'
+                    '#5B7FCC', '#9F54CC', '#FFE464', '#FFA964',
+                    '#FFFE64', '#D7D7D7', '#7F7F7F', '#D2A868',
+                   ]
+        except get_custom_dashboard.DoesNotExist:
+            get_color_palette = None
+        context.update({'get_color_palette': get_color_palette})
 
         try:
-            getComponentOrder = json.loads(getCustomDashboard.component_map)
-        except not getCustomDashboard.component_map:
-            getComponentOrder = None
-        context.update({'getComponentOrder': getComponentOrder})
+            get_component_order = json.loads(
+                get_custom_dashboard.component_map)
+        except not get_custom_dashboard.component_map:
+            get_component_order = None
+        context.update({'get_component_order': get_component_order})
         # retrieve the data source mapping of data
         try:
-            getComponentDataMaps = {}
-            for position, component_id in getComponentOrder.items():
-                # add an attribute to the getComponentDataMaps dictionary for all data from this component
+            get_component_data_maps = {}
+            for position, component_id in get_component_order.items():
+                # add an attribute to the get_component_data_maps dictionary
+                # for all data from this component
                 selected_id = int(component_id)
                 selected_component = DashboardComponent.objects.get(
                     id=selected_id)
-                getComponentDataMaps[position] = {}
-                getComponentDataMaps[position]['component_id'] = selected_id
-                getComponentDataMaps[position]['data_map'] = selected_component.data_map
-        except not getCustomDashboard.component_map:
-            getComponentDataMaps = None
-        context.update({'getComponentDataMaps': getComponentDataMaps})
+                get_component_data_maps[position] = {}
+                get_component_data_maps[position]['component_id'] = selected_id
+                get_component_data_maps[position][
+                    'data_map'] = selected_component.data_map
+        except not get_custom_dashboard.component_map:
+            get_component_data_maps = None
+        context.update({'get_component_data_maps': get_component_data_maps})
 
         # retrieve data for each componennt in data map
         try:
-            getAllComponentData = {}
+            get_all_component_data = {}
         #     #iterate through the component maps for each position on the page
-            # for position in getComponentDataMaps:
-        #         #iterate through the data sources mapped for each components and retrieve data
-        #         for mapped_item, data_source in getComponentDataMaps[position]['data_map']:
+        # for position in get_component_data_maps:
+        #         #iterate through the data sources mapped for each
+        #         components and retrieve data
+        #         for mapped_item, data_source in
+        #           get_component_data_maps[position]['data_map']:
         #             # get that DataSource by id
-        #             data_source = ComponentDataSource.objects.get(data_source)
+        #             data_source =
+        #               ComponentDataSource.objects.get(data_source)
         #             #retrieve data
         #             dataset = data_source.data_source  # do JSON request here
         #             # filter data by the key to just use subset needed
         #             filtered_data = dataset[data_source.filter_key]
-        #             getAllComponentData[position]['data_sources']['data_source.name'] = filtered_data
+        #             get_all_component_data[position]['data_sources']
+        #               ['data_source.name'] = filtered_data
         except not getDashboardComponentDataMaps:
-            getAllComponentData = None
-        context.update({'getAllComponentData': getAllComponentData})
+            get_all_component_data = None
+        context.update({'get_all_component_data': get_all_component_data})
 
         return context
+
 
 # TODO: build out function for component mapping for dashboard wizard
 
 
 # component_map):
-def custom_dashboard_update_components(AjaxableResponseMixin, pk, location, type):
+def custom_dashboard_update_components(AjaxableResponseMixin, pk, location,
+                                       type):
     # (?P<pk>[0-9]+)/(?P<location>[0-9]+)/(?P<type>[-\w]+)/$
     # form_mapping = component_map
-    mapped = false
+    mapped = False
     current_dashboard = CustomDashboard.objects.get(id=self.kwargs['pk'])
     current_map = current_dashboard.component_map  # .split("]","],")
     # for mapped_object in current_map:
@@ -222,7 +248,6 @@ def custom_dashboard_update_components(AjaxableResponseMixin, pk, location, type
 
 
 class CustomDashboardUpdate(UpdateView):
-
     model = CustomDashboard
     form_class = CustomDashboardForm
 
@@ -233,17 +258,18 @@ class CustomDashboardUpdate(UpdateView):
         except FormGuidance.DoesNotExist:
             guidance = None
 
-        return super(CustomDashboardUpdate, self).dispatch(request, *args, **kwargs)
+        return super(CustomDashboardUpdate, self).dispatch(request, *args,
+                                                           **kwargs)
 
     def get_initial(self):
-        getCustomDashboard = CustomDashboard.objects.get(id=self.kwargs['pk'])
-        getDashboardComponents = DashboardComponent.objects.all().filter(
-            componentset=getCustomDashboard)
-        getAllComponentDataSources = ComponentDataSource.objects.all()
+        get_custom_dashboard = CustomDashboard.objects.get(id=self.kwargs['pk'])
+        get_dashboard_components = DashboardComponent.objects.all().filter(
+            componentset=get_custom_dashboard)
+        get_all_component_data_sources = ComponentDataSource.objects.all()
         initial = {
-            'getCustomDashboard': getCustomDashboard,
-            'getDashboardComponents': getDashboardComponents,
-            'getAllComponentDataSources': getAllComponentDataSources,
+            'get_custom_dashboard': get_custom_dashboard,
+            'get_dashboard_components': get_dashboard_components,
+            'get_all_component_data_sources': get_all_component_data_sources,
         }
 
         return initial
@@ -277,69 +303,74 @@ class CustomDashboardUpdate(UpdateView):
         context.update({'component_type': component_type})
 
         try:
-            getCustomDashboard = CustomDashboard.objects.get(
+            get_custom_dashboard = CustomDashboard.objects.get(
                 id=self.kwargs['pk'])
         except CustomDashboard.DoesNotExist:
-            getCustomDashboard = None
-        context.update({'getCustomDashboard': getCustomDashboard})
+            get_custom_dashboard = None
+        context.update({'get_custom_dashboard': get_custom_dashboard})
 
         try:
-            selected_theme = getCustomDashboard.theme
-            getDashboardTheme = DashboardTheme.objects.all().filter(id=selected_theme.id)
+            selected_theme = get_custom_dashboard.theme
+            get_dashboard_theme = DashboardTheme.objects.all().filter(
+                id=selected_theme.id)
         except DashboardTheme.DoesNotExist:
-            getDashboardTheme = None
-        context.update({'getDashboardTheme': getDashboardTheme})
+            get_dashboard_theme = None
+        context.update({'get_dashboard_theme': get_dashboard_theme})
 
-        # This theme layout helps to map the components to their position on the page
-        # Dashboard layout should be pairs of the # position in the template (1,2,3...) and
-        # the component type that needs to be slotted into that position
+        # This theme layout helps to map the components to their position
+        # on the page
+        # Dashboard layout should be pairs of the # position in
+        # the template (1,2,3...) and the component type that needs to be
+        # slotted into that position
 
-        if getDashboardTheme:
-            getDashboardTheme[0].layout_dictionary
-            layout = getDashboardTheme[0].layout_dictionary
-            getDashboardLayoutList = json.loads(
+        if get_dashboard_theme:
+            layout = get_dashboard_theme[0].layout_dictionary
+            get_dashboard_layout_list = json.loads(
                 layout, object_pairs_hook=OrderedDict)
         else:
-            getDashboardLayoutList = None
-        context.update({'getDashboardLayoutList': getDashboardLayoutList})
+            get_dashboard_layout_list = None
+        context.update({'get_dashboard_layout_list': get_dashboard_layout_list})
 
         try:
-            getDashboardComponents = DashboardComponent.objects.all().filter(
-                componentset=getCustomDashboard)
+            get_dashboard_components = DashboardComponent.objects.all().filter(
+                componentset=get_custom_dashboard)
         except DashboardComponent.DoesNotExist:
-            getDashboardComponents = None
-        context.update({'getDashboardComponents': getDashboardComponents})
+            get_dashboard_components = None
+        context.update({'get_dashboard_components': get_dashboard_components})
 
         try:
-            getComponentOrder = json.loads(
-                getCustomDashboard.component_map, object_pairs_hook=OrderedDict)
+            get_component_order = json.loads(
+                get_custom_dashboard.component_map,
+                object_pairs_hook=OrderedDict)
         except:
-            getComponentOrder = None
-        context.update({'getComponentOrder': getComponentOrder})
+            get_component_order = None
+        context.update({'get_component_order': get_component_order})
 
         try:
-            getAllComponentMaps = []
-            for component in getDashboardComponents:
+            get_all_component_maps = []
+            for component in get_dashboard_components:
                 if component.data_map:
-                    getAllComponentMaps[component] = json.loads(
+                    get_all_component_maps[component] = json.loads(
                         component.data_map)
-        except not getDashboardComponents:
-            getAllComponentMaps = None
-        context.update({'getAllComponentMaps': getAllComponentMaps})
+        except not get_dashboard_components:
+            get_all_component_maps = None
+        context.update({'get_all_component_maps': get_all_component_maps})
 
         try:
-            getAllComponentDataSources = ComponentDataSource.objects.all()
+            get_all_component_data_sources = ComponentDataSource.objects.all()
         except ComponentDataSource.DoesNotExist:
-            getAllComponentDataSources = None
+            get_all_component_data_sources = None
         context.update(
-            {'getAllComponentDataSources': getAllComponentDataSources})
+            {'get_all_component_data_sources': get_all_component_data_sources})
 
         # try:
         #     getAllDataFilters = {}
-        #     for data_source in getAllComponentDataSources:
-        #         data_source_filters = import_data_filter_options(data_source.data_source, data_source.data_filter_key, data_source.authorization_token)
+        #     for data_source in get_all_component_data_sources:
+        #         data_source_filters = import_data_filter_options(
+        #           data_source.data_source, data_source.data_filter_key,
+        #           data_source.authorization_token)
         #         getAllDataFilters[data_source.id] = data_source_filters
-        # except not getAllComponentDataSources:
+        # except not get_all_component_data_sources:
         #     getAllDataFilters = None
         # context.update({'getAllDataFilters': getAllDataFilters})
 
@@ -363,17 +394,19 @@ class CustomDashboardUpdate(UpdateView):
 
     def form_valid(self, form):
         check_form_type = self.request.get_full_path()
-        # TODO: Once refactoring is done, revisit whether checking form type still needed
+        # TODO: Once refactoring is done, revisit
+        #  whether checking form type still needed
         # if check_form_type.startswith('/confirgureabledashboard/map'):
-        #     getCustomDashboard.component_map = form.cleaned_data['component_map']
-        #     getCustomDashboard.save()
-        # for position in getCustomDashboard.component_map:
+        #     get_custom_dashboard.component_map =
+        #       form.cleaned_data['component_map']
+        #     get_custom_dashboard.save()
+        # for position in get_custom_dashboard.component_map:
         #     mapped_position = form.component_map.0
         #     if position.0 == mapped_position:
         #         position.1 == form.component_map.1
         #         mapped = true
         # if mapped != true:
-        #     getCustomDashboard.component_map.append(form.component_map)
+        #     get_custom_dashboard.component_map.append(form.component_map)
         # else:
         form.save()
         messages.success(
@@ -382,11 +415,13 @@ class CustomDashboardUpdate(UpdateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-# TODO: build out code to import data filters for modal to select filters on wizard
+# TODO: build out code to import data filters
+#  for modal to select filters on wizard
 
 def import_data_filter_options(data_url, column_filter, authorization_token):
     """
-    For populating data filters in dropdown -- retrieve data_source using data_url
+    For populating data filters in dropdown --
+        retrieve data_source using data_url
     """
     filter_url = data_url
     headers = {'content-type': 'application/json',
@@ -408,7 +443,7 @@ class CustomDashboardDelete(AjaxableResponseMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super(CustomDashboardDelete, self).get_context_data(**kwargs)
-        getCustomDashboard = CustomDashboard.objects.all().get(
+        get_custom_dashboard = CustomDashboard.objects.all().get(
             id=self.kwargs['pk'])
         pk = self.kwargs['pk']
         context.update({'pk': self.kwargs['pk']})
@@ -425,9 +460,11 @@ class CustomDashboardDelete(AjaxableResponseMixin, DeleteView):
 
     form_class = CustomDashboardForm
 
+
 # CLASS VIEWS FOR THE THEME OBJECT
 # Note: theme_layout must be in a string/JSON format like this:
-# {"1": "context_pane","2": "content_map","3": "bar_graph","4": "sidebar_events"}
+# {"1": "context_pane","2": "content_map",
+#  "3": "bar_graph","4": "sidebar_events"}
 # ===========================================
 
 
@@ -436,13 +473,15 @@ class DashboardThemeList(ListView):
     template_name = 'configurabledashboard/themes/admin/list.html'
 
     def get(self, request, *args, **kwargs):
-        getDashboardThemes = DashboardTheme.objects.all()
-        return render(request, self.template_name, {'getDashboardThemes': getDashboardThemes})
+        get_dashboard_themes = DashboardTheme.objects.all()
+        return render(request, self.template_name,
+                      {'get_dashboard_themes': get_dashboard_themes})
 
 
 class DashboardThemeCreate(CreateView):
     model = DashboardTheme
     template_name = 'configurabledashboard/themes/admin/form.html'
+    guidance = None
 
     # add the request to the kwargs
     def get_form_kwargs(self):
@@ -456,7 +495,8 @@ class DashboardThemeCreate(CreateView):
             self.guidance = FormGuidance.objects.get(form="DashboardTheme")
         except FormGuidance.DoesNotExist:
             self.guidance = None
-        return super(DashboardThemeCreate, self).dispatch(request, *args, **kwargs)
+        return super(DashboardThemeCreate, self).dispatch(request, *args,
+                                                          **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(DashboardThemeCreate, self).get_context_data(**kwargs)
@@ -480,7 +520,8 @@ class DashboardThemeUpdate(UpdateView):
     template_name = 'configurabledashboard/themes/admin/update_form.html'
 
     def dispatch(self, request, *args, **kwargs):
-        return super(DashboardThemeUpdate, self).dispatch(request, *args, **kwargs)
+        return super(DashboardThemeUpdate, self).dispatch(request, *args,
+                                                          **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(DashboardThemeUpdate, self).get_context_data(**kwargs)
@@ -525,19 +566,18 @@ class DashboardThemeDelete(DeleteView):
         return context
 
     def form_invalid(self, form):
-
         messages.error(self.request, 'Invalid Form', fail_silently=False)
 
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-
         form.save()
 
         messages.success(self.request, 'Success, Dashboard Theme Deleted!')
         return self.render_to_response(self.get_context_data(form=form))
 
     form_class = DashboardThemeForm
+
 
 # CLASS VIEWS FOR THE DASHBOARD COMPONENT OBJECT
 # ===========================================
@@ -551,13 +591,14 @@ class DashboardComponentList(ListView):
         # retrieve program
         model = Program
         # retrieve the countries the user has data access for
-        countries = getCountry(request.user)
+        countries = get_country(request.user)
         dashboard_id = int(self.kwargs['pk'])
 
-        getDashboardListComponents = DashboardComponent.objects.all().filter(
-            componentset=dashboard_id)
+        get_dashboard_list_components = DashboardComponent.objects.all()\
+            .filter(componentset=dashboard_id)
 
-        return render(request, self.template_name, {'getDashboardListComponents': getDashboardListComponents})
+        return render(request, self.template_name, {
+            'get_dashboard_list_components': get_dashboard_list_components})
 
 
 class DashboardComponentCreate(CreateView):
@@ -577,23 +618,25 @@ class DashboardComponentCreate(CreateView):
             guidance = FormGuidance.objects.get(form="DashboardComponent")
         except FormGuidance.DoesNotExist:
             guidance = None
-        return super(DashboardComponentCreate, self).dispatch(request, *args, **kwargs)
+        return super(DashboardComponentCreate, self).dispatch(request, *args,
+                                                              **kwargs)
 
     def get_initial(self):
         initial = {
-            'getCustomDashboard': CustomDashboard.objects.get(id=self.kwargs['id']),
-            'getComponentDataSources': ComponentDataSource.objects.all(),
+            'get_custom_dashboard': CustomDashboard.objects.get(
+                id=self.kwargs['id']),
+            'get_component_data_sources': ComponentDataSource.objects.all(),
         }
 
     def get_context_data(self, **kwargs):
         context = super(DashboardComponentCreate,
                         self).get_context_data(**kwargs)
         try:
-            getCustomDashboard = CustomDashboard.objects.get(
+            get_custom_dashboard = CustomDashboard.objects.get(
                 id=self.kwargs['id'])
         except CustomDashboard.DoesNotExist:
-            getCustomDashboard = None
-        context.update({'getCustomDashboard': getCustomDashboard})
+            get_custom_dashboard = None
+        context.update({'get_custom_dashboard': get_custom_dashboard})
 
         return context
 
@@ -605,9 +648,9 @@ class DashboardComponentCreate(CreateView):
         form.save()
         context = self.get_context_data()
         messages.success(self.request, 'Success, Component Created!')
-        latestComponent = DashboardComponent.objects.latest('id')
-        getCustomDashboard = CustomDashboard.objects.get(id=self.kwargs['id'])
-        getCustomDashboard.components.add(latestComponent)
+        latest_component = DashboardComponent.objects.latest('id')
+        get_custom_dashboard = CustomDashboard.objects.get(id=self.kwargs['id'])
+        get_custom_dashboard.components.add(latest_component)
         return self.render_to_response(self.get_context_data(form=form))
 
     form_class = DashboardComponentCreateForm
@@ -619,10 +662,12 @@ class DashboardComponentUpdate(UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         # try:
-        #     guidance = FormGuidance.objects.get(form="DashboardComponentUpdate")
+        #     guidance = FormGuidance.objects.get(
+        #           form="DashboardComponentUpdate")
         # except FormGuidance.DoesNotExist:
         #     guidance = None
-        return super(DashboardComponentUpdate, self).dispatch(request, *args, **kwargs)
+        return super(DashboardComponentUpdate, self).dispatch(request, *args,
+                                                              **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(DashboardComponentUpdate,
@@ -630,33 +675,41 @@ class DashboardComponentUpdate(UpdateView):
         pk = self.kwargs['pk']
         context.update({'pk': pk})
 
-        getComponentDataSources = []
-        getComponentDataSources = ComponentDataSource.objects.all()
-        context.update({'getComponentDataSources': getComponentDataSources})
+        get_component_data_sources = []
+        get_component_data_sources = ComponentDataSource.objects.all()
+        context.update(
+            {'get_component_data_sources': get_component_data_sources})
 
-        getDashboardComponent = DashboardComponent.objects.all().get(
+        get_dashboard_component = DashboardComponent.objects.all().get(
             id=self.kwargs['pk'])
-        context.update({'getDashboardComponent': getDashboardComponent})
+        context.update({'get_dashboard_component': get_dashboard_component})
 
-        # for each component define the properties the component needs to have data mapped for by type
+        # for each component define the properties the component
+        # needs to have data mapped for by type
         # ideally this dictionary would be saved externally as a constant
-        getComponentProperties = {
+        get_component_properties = {
             'bar_graph': {'labels': '', 'data': '', 'colors': ''},
             'doughnut': {'labels': '', 'data': '', 'colors': ''},
             'line': {'labels': '', 'data': '', 'colors': ''},
             'pie': {'labels': '', 'data': '', 'colors': ''},
             'polar': {'labels': '', 'data': '', 'colors': ''},
             'radar': {'labels': '', 'data': '', 'colors': ''},
-            'sidebar_gallery': {'photo_url': '', 'photo_titles': '', 'photo_captions': '', 'photo_dates': ''},
-            'content_map': {'latitude': '', 'longitude': '', 'location_name': '', 'description': '', 'region_link': '', 'region_name': ''},
-            'region_map': {'latitude': '', 'longitude': '', 'site_contact': '', 'location_name': '', 'description': ''},
-            'sidebar_map': {'latitude': '', 'longitude': '', 'site_contact': '', 'location_name': '', 'description': ''},
+            'sidebar_gallery': {'photo_url': '', 'photo_titles': '',
+                                'photo_captions': '', 'photo_dates': ''},
+            'content_map': {'latitude': '', 'longitude': '',
+                            'location_name': '', 'description': '',
+                            'region_link': '', 'region_name': ''},
+            'region_map': {'latitude': '', 'longitude': '', 'site_contact': '',
+                           'location_name': '', 'description': ''},
+            'sidebar_map': {'latitude': '', 'longitude': '',
+                            'site_contact': '', 'location_name': '',
+                            'description': ''},
             'context_pane': {},
             'sidebar_events': {},
             'sidebar_news': {},
             'sidebar_objectives': {}
         }
-        context.update({'getComponentProperties': getComponentProperties})
+        context.update({'get_component_properties': get_component_properties})
         return context
 
     # add the request to the kwargs
@@ -709,9 +762,11 @@ class ComponentDataSourceList(ListView):
     template_name = 'configurabledashboard/datasource/list.html'
 
     def get(self, request, *args, **kwargs):
-        getComponentDataSources = ComponentDataSource.objects.all()
+        get_component_data_sources = ComponentDataSource.objects.all()
 
-        return render(request, self.template_name, {'getComponentDataSources': getComponentDataSources})
+        return render(request, self.template_name,
+                      {'get_component_data_sources': get_component_data_sources})
+
 
 # CLASS VIEWS FOR THE DATA SOURCE OBJECT
 # ===========================================
@@ -728,7 +783,8 @@ class ComponentDataSourceCreate(CreateView):
         return kwargs
 
     def dispatch(self, request, *args, **kwargs):
-        return super(ComponentDataSourceCreate, self).dispatch(request, *args, **kwargs)
+        return super(ComponentDataSourceCreate, self).dispatch(request, *args,
+                                                               **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ComponentDataSourceCreate,
@@ -754,9 +810,10 @@ class ComponentDataSourceDetail(DetailView):
     template_name = 'configurabledashboard/datasource/detail.html'
 
     def get(self, request, *args, **kwargs):
-        getComponentDataSources = ComponentDataSource.objects.all()
+        get_component_data_sources = ComponentDataSource.objects.all()
 
-        return render(request, self.template_name, {'getComponentDataSources': getComponentDataSources})
+        return render(request, self.template_name,
+                      {'get_component_data_sources': get_component_data_sources})
 
 
 class ComponentDataSourceUpdate(UpdateView):
@@ -768,12 +825,13 @@ class ComponentDataSourceUpdate(UpdateView):
             guidance = FormGuidance.objects.get(form="ComponentDataSource")
         except FormGuidance.DoesNotExist:
             guidance = None
-        return super(ComponentDataSourceUpdate, self).dispatch(request, *args, **kwargs)
+        return super(ComponentDataSourceUpdate, self).dispatch(request, *args,
+                                                               **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ComponentDataSourceUpdate,
                         self).get_context_data(**kwargs)
-        getComponentDataSource = ComponentDataSource.objects.all().get(
+        get_component_data_source = ComponentDataSource.objects.all().get(
             id=self.kwargs['pk'])
         pk = self.kwargs['pk']
         context.update({'pk': pk})
@@ -815,7 +873,7 @@ class ComponentDataSourceDelete(AjaxableResponseMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(ComponentDataSourceDelete,
                         self).get_context_data(**kwargs)
-        getDataSource = ComponentDataSource.objects.all().get(
+        get_data_source = ComponentDataSource.objects.all().get(
             id=self.kwargs['pk'])
         pk = self.kwargs['pk']
         context.update({'pk': self.kwargs['pk']})

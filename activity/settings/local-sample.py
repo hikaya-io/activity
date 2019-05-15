@@ -1,5 +1,7 @@
-"""Local settings"""
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
+"""Local settings"""
 
 from os import environ
 
@@ -22,7 +24,8 @@ def get_env_setting(setting):
 
 
 '''HOST CONFIGURATION'''
-# See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production
+# See: https://docs.djangoproject.com/en/1.5/releases/1.5/
+# #allowed-hosts-required-in-production
 ALLOWED_HOSTS = []
 '''END HOST CONFIGURATION'''
 

@@ -7,7 +7,8 @@ import time
 class TimingMiddleware(object):
     """
     Appends the X-PROCESSING_TIME_MS header to all responses.
-    This value is the total time spent processing a user request in microseconds.
+    This value is the total time spent processing a user request
+    in microseconds.
     """
     REQUEST_ATTR = '_timing_start'
     RESPONSE_HEADER = 'X-PROCESSING_TIME_MS'

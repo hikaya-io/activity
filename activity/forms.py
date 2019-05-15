@@ -20,9 +20,11 @@ class RegistrationForm(UserChangeForm):
         super(RegistrationForm, self).__init__(*args, **kwargs)
         del self.fields['password']
         print(user['username'].is_superuser)
-        # if they aren't a super user or User Admin don't let them change countries form field
-        if 'User Admin' not in user['username'].groups.values_list('name', flat=True) and \
-                not user['username'].is_superuser:
+        # if they aren't a super user or User Admin
+        # don't let them change countries form field
+        if 'User Admin' not in user['username'].groups.values_list('name',
+                                                                   flat=True) \
+                and not user['username'].is_superuser:
             self.fields['countries'].widget.attrs['disabled'] = "disabled"
             self.fields['country'].widget.attrs['disabled'] = "disabled"
 
@@ -39,16 +41,18 @@ class RegistrationForm(UserChangeForm):
     helper.error_text_inline = True
     helper.help_text_inline = True
     helper.html5_required = True
-    helper.layout = Layout(Fieldset('', 'title', 'name', 'employee_number', 'user', 'username',
-                                    'country', 'countries', 'modified_by', 'created', 'updated'),
-                           Submit('submit', 'Submit', css_class='btn-default'),
-                           Reset('reset', 'Reset', css_class='btn-warning'))
+    helper.layout = Layout(
+        Fieldset('', 'title', 'name', 'employee_number', 'user', 'username',
+                 'country', 'countries', 'modified_by', 'created', 'updated'),
+        Submit('submit', 'Submit', css_class='btn-default'),
+        Reset('reset', 'Reset', css_class='btn-warning'))
 
 
 class NewUserRegistrationForm(UserCreationForm):
     """
     Form for registering a new account.
     """
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'username']
@@ -72,6 +76,7 @@ class NewActivityUserRegistrationForm(forms.ModelForm):
     """
     Form for registering a new account.
     """
+
     class Meta:
         model = ActivityUser
         fields = ['title', 'country', 'privacy_disclaimer_accepted']
@@ -91,7 +96,7 @@ class NewActivityUserRegistrationForm(forms.ModelForm):
     helper.form_tag = False
     helper.layout = Layout(
         Fieldset('Information', 'title', 'country'),
-        Fieldset('Privacy Statement', 'privacy_disclaimer_accepted',),
+        Fieldset('Privacy Statement', 'privacy_disclaimer_accepted', ),
 
     )
 
@@ -100,6 +105,7 @@ class BookmarkForm(forms.ModelForm):
     """
     Form for registering a new account.
     """
+
     class Meta:
         model = ActivityBookmarks
         fields = ['name', 'bookmark_url']

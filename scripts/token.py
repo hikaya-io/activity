@@ -3,8 +3,8 @@
 
 """
 import json data from API
-IMPORTANT!! you must turn off pagination for this to work from a URL and get all
-country records
+IMPORTANT!! you must turn off pagination for this to work from a URL
+and get all country records
 Install module django-extensions
 Runs twice via function calls at bottom once
 """

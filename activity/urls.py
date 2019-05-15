@@ -49,7 +49,8 @@ router.register(r'village', VillageViewSet)
 router.register(r'contact', ContactViewSet)
 router.register(r'documentation', DocumentationViewSet)
 router.register(r'collecteddata', CollectedDataViewSet)
-router.register(r'activitytable', activitytableViewSet, basename='activitytable')
+router.register(r'activitytable', ActivitytableViewSet,
+                basename='activitytable')
 router.register(r'disaggregationvalue', DisaggregationValueViewSet)
 router.register(r'projectagreements', ProjectAgreementViewSet)
 router.register(r'loggedusers', LoggedUserViewSet)
@@ -63,7 +64,8 @@ router.register(r'periodictargets', PeriodicTargetReadOnlyViewSet,
 
 urlpatterns = [  # rest framework
     path('api/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-auth/', include('rest_framework.urls',
+                              namespace='rest_framework')),
     path('api-token-auth/', auth_views.obtain_auth_token),
 
     # index
@@ -100,7 +102,8 @@ urlpatterns = [  # rest framework
     path('formlibrary/', include('formlibrary.urls')),
 
     # app include of configurable dashboard urls
-    # path('configurabledashboard/', include('configurabledashboard.urls')),
+    # path('configurabledashboard/',
+    #       include('configurabledashboard.urls')),
 
     # local login
     path('login/', authviews.LoginView.as_view(), name='login'),
@@ -123,8 +126,10 @@ urlpatterns = [  # rest framework
     # Auth backend URL's
     path('', include(('django.contrib.auth.urls',
                       "django.contrib.auth"), namespace='auth')),
-    # path('', include('social.apps.django_app.urls', namespace='social')),
+    # path('',
+    #      include('social.apps.django_app.urls', namespace='social')),
     path('', include('social_django.urls', namespace='social'))
-    # path('oauth/', include('social_django.urls', namespace='social')),
+    # path('oauth/',
+    #       include('social_django.urls', namespace='social')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

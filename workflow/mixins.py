@@ -40,6 +40,7 @@ class AjaxableResponseMixin(object):
         else:
             return response
 
+
 # API Mixin
 
 

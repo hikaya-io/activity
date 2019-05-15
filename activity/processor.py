@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# add global variable for report server or not to all templates so we can hide elements
-# that aren't wanted on the report server
+# add global variable for report server or not to all templates
+# so we can hide elements that aren't wanted on the report server
 from settings.local import REPORT_SERVER
 from settings.local import OFFLINE_MODE
 from settings.local import NON_LDAP
@@ -10,12 +10,14 @@ from django.conf import settings
 
 
 def report_server_check(request):
-    return {'report_server': REPORT_SERVER, 'offline_mode': OFFLINE_MODE, 'non_ldap': NON_LDAP}
+    return {'report_server': REPORT_SERVER, 'offline_mode': OFFLINE_MODE,
+            'non_ldap': NON_LDAP}
 
 
 def google_analytics(request):
     """
-    Use the variables returned in this function to render Google Analytics Tracking Code template.
+    Use the variables returned in this function to render
+    Google Analytics Tracking Code template.
     """
 
     ga_prop_id = getattr(settings, 'GOOGLE_ANALYTICS_PROPERTY_ID', False)

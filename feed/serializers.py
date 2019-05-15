@@ -10,10 +10,12 @@ from rest_framework import serializers
 from indicators.models import (
     Indicator, ReportingFrequency, ActivityUser, IndicatorType, Objective,
     DisaggregationType, Level, ExternalService, ExternalServiceRecord,
-    StrategicObjective, CollectedData, ActivityTable, DisaggregationValue, PeriodicTarget
+    StrategicObjective, CollectedData, ActivityTable, DisaggregationValue,
+    PeriodicTarget
 )
 from workflow.models import (
-    Program, Sector, ProjectType, Office, SiteProfile, Country, ProjectComplete,
+    Program, Sector, ProjectType, Office, SiteProfile, Country,
+    ProjectComplete,
     ProjectAgreement, Stakeholder, Capacity, Evaluate, ProfileType,
     Province, District, AdminLevelThree, Village, StakeholderType,
     Contact, Documentation, LoggedUser, Checklist, Organization
@@ -22,11 +24,13 @@ from workflow.models import (
 
 class FlatJsonSerializer(PythonSerializer):
     """
-    Take a look at the django implementation as a reference if you need further customization:
+    Take a look at the django implementation as a reference
+    if you need further customization:
     https://github.com/django/django/blob/master/django/core/serializers/json.py
     Usage:
         serializer = FlatJsonSerializer()
-        json_data = serializer.serialize(<queryset>, <optional>fields=('field1', 'field2'))
+        json_data = serializer.serialize(<queryset>,
+            <optional>fields=('field1', 'field2'))
     """
     _current = None
 
@@ -54,63 +58,54 @@ class FlatJsonSerializer(PythonSerializer):
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = User
         fields = ('url', 'username', 'email', 'is_staff')
 
 
 class PeriodicTargetSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = PeriodicTarget
         fields = '__all__'
 
 
 class ProgramSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Program
         fields = '__all__'
 
 
 class SectorSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Sector
         fields = '__all__'
 
 
 class ProjectTypeSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = ProjectType
         fields = '__all__'
 
 
 class OfficeSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Office
         fields = '__all__'
 
 
 class SiteProfileSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = SiteProfile
         fields = '__all__'
 
 
 class CompleteSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = ProjectComplete
         fields = '__all__'
 
 
 class AgreementSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = ProjectAgreement
         fields = (
@@ -167,14 +162,12 @@ class AgreementSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CountrySerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Country
         fields = '__all__'
 
 
 class IndicatorSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Indicator
         fields = '__all__'
@@ -226,164 +219,142 @@ class ProgramIndicatorSerializer(serializers.ModelSerializer):
 
 
 class ReportingFrequencySerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = ReportingFrequency
         fields = '__all__'
 
 
 class ActivityUserSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = ActivityUser
         fields = '__all__'
 
 
 class IndicatorTypeSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = IndicatorType
         fields = '__all__'
 
 
 class ObjectiveSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Objective
         fields = '__all__'
 
 
 class DisaggregationTypeSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = DisaggregationType
         fields = '__all__'
 
 
 class LevelSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Level
         fields = '__all__'
 
 
 class StakeholderSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Stakeholder
         fields = '__all__'
 
 
 class ExternalServiceSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = ExternalService
         fields = '__all__'
 
 
 class ExternalServiceRecordSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = ExternalServiceRecord
         fields = '__all__'
 
 
 class StrategicObjectiveSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = StrategicObjective
         fields = '__all__'
 
 
 class StakeholderTypeSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = StakeholderType
         fields = '__all__'
 
 
 class CapacitySerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Capacity
         fields = '__all__'
 
 
 class EvaluateSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Evaluate
         fields = '__all__'
 
 
 class ProfileTypeSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = ProfileType
         fields = '__all__'
 
 
 class ProvinceSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Province
         fields = '__all__'
 
 
 class DistrictSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = District
         fields = '__all__'
 
 
 class AdminLevelThreeSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = AdminLevelThree
         fields = '__all__'
 
 
 class VillageSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Village
         fields = '__all__'
 
 
 class ContactSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Contact
         fields = '__all__'
 
 
 class DocumentationSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = Documentation
         fields = '__all__'
 
 
 class CollectedDataSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = CollectedData
         fields = '__all__'
 
 
-class activitytableSerializer(serializers.HyperlinkedModelSerializer):
-
+class ActivitytableSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ActivityTable
-        # HyperlinkedModelSerializer does not include id field by default so manually setting it
+        # HyperlinkedModelSerializer does not include id field
+        # by default so manually setting it
         fields = ('id', 'name', 'table_id', 'owner', 'remote_owner',
                   'country', 'url', 'unique_count', 'create_date', 'edit_date')
         # fields = '__all__'
 
 
 class DisaggregationValueSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = DisaggregationValue
 
