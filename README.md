@@ -65,12 +65,12 @@ Edit database settings settings/local.py
 47 DATABASES:
 48  'default': {
 49    #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-50    'ENGINE': "django.db.backends.mysql"
-51    'NAME': "activity"
-52    'USER': "root"
-53    'PASSWORD': 'password',
-54    'HOST': "localhost"
-55    'PORT': '',
+50    'ENGINE': "django.db.backends.postgresql"
+51    'NAME': "YOUR_DB_NAME"
+52    'USER': "YOUR_DB_USER"
+53    'PASSWORD': 'YOUR_DB_PASSWORD',
+54    'HOST': "YOUR_DB_HOST" # default localhost
+55    'PORT': 'YOUR_DB_PROT', # 5432 - for postgres
 ```
 * Replace user and password by your Mysql username and password 
 
