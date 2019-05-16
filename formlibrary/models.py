@@ -18,7 +18,8 @@ class TrainingAttendance(models.Model):
     program = models.ForeignKey(
         Program, null=True, blank=True, on_delete=models.SET_NULL)
     project_agreement = models.ForeignKey(
-        ProjectAgreement, null=True, blank=True, verbose_name="Project Initiation", on_delete=models.SET_NULL)
+        ProjectAgreement, null=True, blank=True,
+        verbose_name="Project Initiation", on_delete=models.SET_NULL)
     implementer = models.CharField(max_length=255, null=True, blank=True)
     reporting_period = models.CharField(max_length=255, null=True, blank=True)
     total_participants = models.IntegerField(null=True, blank=True)
@@ -71,7 +72,8 @@ class Distribution(models.Model):
     program = models.ForeignKey(
         Program, null=True, blank=True, on_delete=models.SET_NULL)
     initiation = models.ForeignKey(ProjectAgreement, null=True, blank=True,
-                                   verbose_name="Project Initiation", on_delete=models.SET_NULL)
+                                   verbose_name="Project Initiation",
+                                   on_delete=models.SET_NULL)
     office_code = models.ForeignKey(
         Office, null=True, blank=True, on_delete=models.SET_NULL)
     distribution_indicator = models.CharField(max_length=255)

@@ -49,7 +49,8 @@ class ProgramLinks(models.Model):
     program = models.ForeignKey(
         Program, blank=True, null=True, on_delete=models.SET_NULL)
     type = models.CharField("Type of Link", blank=True,
-                            null=True, max_length=255, choices=LINK_TYPE_CHOICES)
+                            null=True, max_length=255,
+                            choices=LINK_TYPE_CHOICES)
     link = models.ForeignKey(Link, max_length=200,
                              blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
@@ -66,7 +67,8 @@ class JupyterNotebooks(models.Model):
     program = models.ForeignKey(
         Program, blank=True, null=True, on_delete=models.SET_NULL)
     very_custom_dashboard = models.CharField(
-        "Specialty Custom Dashboard Links", blank=True, null=True, max_length=255)
+        "Specialty Custom Dashboard Links", blank=True, null=True,
+        max_length=255)
     file = models.FileField("HTML/Jupyter Nontebook File",
                             blank=True, null=True, upload_to="media")
     create_date = models.DateTimeField(null=True, blank=True)

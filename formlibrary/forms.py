@@ -41,8 +41,8 @@ class TrainingAttendanceForm(forms.ModelForm):
         super(TrainingAttendanceForm, self).__init__(*args, **kwargs)
 
         countries = get_country(self.request.user)
-        self.fields['project_agreement'].queryset = ProjectAgreement.objects.filter(
-            program__country__in=countries)
+        self.fields['project_agreement'].queryset = \
+            ProjectAgreement.objects.filter(program__country__in=countries)
         self.fields['program'].queryset = Program.objects.filter(
             country__in=countries)
 

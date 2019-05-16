@@ -21,7 +21,6 @@ class DatePicker(forms.DateInput):
 
 
 class FilterForm(forms.Form):
-
     country = forms.ModelChoiceField(
         queryset=Country.objects.all(),
         required=False,
@@ -50,7 +49,8 @@ class FilterForm(forms.Form):
         self.helper.form_id = "filter_form"
         self.helper.form_show_labels = False
         self.helper.layout = Layout(
-            # set custom id for country becasue of javascript reuse of default id
+            # set custom id for country becasue of javascript
+            # reuse of default id
             Field('country', css_class="input-sm", id="countries"),
             Field('program', css_class="input-sm"),
             Field('sector', css_class='input-sm'),
@@ -62,5 +62,6 @@ class FilterForm(forms.Form):
         self.helper.form_action = '/reports/report/'
         self.helper.add_input(Submit('submit', 'Submit', css_class='btn-sm'))
         self.helper.add_input(Reset(
-            'reset', 'Reset', css_id='id_search_form_reset_btn', css_class='btn-warning btn-sm'))
+            'reset', 'Reset', css_id='id_search_form_reset_btn',
+            css_class='btn-warning btn-sm'))
         super(FilterForm, self).__init__(*args, **kwargs)

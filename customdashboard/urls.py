@@ -9,12 +9,12 @@ from .views import (
 
 from django.urls import path, re_path
 
-
 # place app url patterns here
 
 urlpatterns = [
     # display public custom dashboard
-    path('program_list/<slug:pk>/', ProgramList.as_view(), name='program_list'),
+    path('program_list/<slug:pk>/', ProgramList.as_view(),
+         name='program_list'),
     path('program_dashboard/<slug:id>/<slug:public>/',
          public_dashboard, name='public_dashboard'),
     path('public/<slug:id>/', public_dashboard, name='public_dashboard'),
@@ -30,11 +30,13 @@ urlpatterns = [
     # rimma
     path('rrima/', rrima_public_dashboard, name='rrima_public_dashboard'),
 
-    # jupyternotebooks (For RIMMA now but could be used for any program as well)
+    # jupyternotebooks (For RIMMA now but could be used
+    # for any program as well)
     path('notebook/<slug:id>/', notebook, name='notebook'),
 
     # display default custom dashboard
-    path('<slug:id>/', default_custom_dashboard, name='default_custom_dashboard'),
+    path('<slug:id>/', default_custom_dashboard,
+         name='default_custom_dashboard'),
     re_path(r'^(?P<id>\w+)/([0-9]+)/$', default_custom_dashboard,
             name='default_custom_dashboard'),
 

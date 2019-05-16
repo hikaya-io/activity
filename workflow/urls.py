@@ -14,7 +14,8 @@ urlpatterns = [
     re_path(r'^dashboard/project', ProjectDash.as_view(),
             name='project_dashboard'),
     re_path(
-        r'^dashboard/(?P<pk>\w+)/(?P<status>[\w ]+)/$', ProgramDash.as_view(), name='dashboard'),
+        r'^dashboard/(?P<pk>\w+)/(?P<status>[\w ]+)/$', ProgramDash.as_view(),
+        name='dashboard'),
     re_path(r'^dashboard/(?P<pk>\w+)/$',
             ProgramDash.as_view(), name='dashboard'),
 
@@ -59,7 +60,8 @@ urlpatterns = [
             IndicatorDataBySite.as_view(), name='site_indicatordata'),
     re_path(r'^site_projectscomplete/(?P<site_id>\w+)/$',
             ProjectCompleteBySite.as_view(), name='site_projectscomplete'),
-    # re_path(r'^site_projects/(?P<site_id>\w+)/$', ProjectsBySite.as_view(), name='site_projects'),
+    # re_path(r'^site_projects/(?P<site_id>\w+)/$', ProjectsBySite.as_view(),
+    # name='site_projects'),
 
     re_path(r'^documentation_list/(?P<program>\w+)/(?P<project>\w+)/$',
             DocumentationList.as_view(), name='documentation_list'),
@@ -67,14 +69,19 @@ urlpatterns = [
             DocumentationListObjects.as_view(), name='documentation_objects'),
     re_path(r'^documentation_add', DocumentationCreate.as_view(),
             name='documentation_add'),
-    re_path(r'^documentation_agreement_list/(?P<program>\w+)/(?P<project>\w+)/$',
-            DocumentationAgreementList.as_view(), name='documentation_agreement_list'),
+    re_path(
+        r'^documentation_agreement_list/(?P<program>\w+)/(?P<project>\w+)/$',
+        DocumentationAgreementList.as_view(),
+        name='documentation_agreement_list'),
     re_path(r'^documentation_agreement_add/(?P<id>\w+)/$',
-            DocumentationAgreementCreate.as_view(), name='documentation_agreement_add'),
+            DocumentationAgreementCreate.as_view(),
+            name='documentation_agreement_add'),
     re_path(r'^documentation_agreement_update/(?P<pk>\w+)/(?P<id>\w+)/$',
-            DocumentationAgreementUpdate.as_view(), name='documentation_agreement_update'),
+            DocumentationAgreementUpdate.as_view(),
+            name='documentation_agreement_update'),
     re_path(r'^documentation_agreement_delete/(?P<pk>\w+)/$',
-            DocumentationAgreementDelete.as_view(), name='documentation_agreement_delete'),
+            DocumentationAgreementDelete.as_view(),
+            name='documentation_agreement_delete'),
     re_path(r'^documentation_update/(?P<pk>\w+)/$',
             DocumentationUpdate.as_view(), name='documentation_update'),
     re_path(r'^documentation_delete/(?P<pk>\w+)/$',
@@ -156,8 +163,9 @@ urlpatterns = [
             ChecklistItemCreate.as_view(), name='checklistitem_add'),
     re_path(r'^checklistitem_update/(?P<pk>\w+)/$',
             ChecklistItemUpdate.as_view(), name='checklistitem_update'),
-    re_path(r'^checklist_update_link/(?P<pk>\w+)/(?P<type>\w+)/(?P<value>\w+)/$',
-            checklist_update_link, name='checklist_update_link'),
+    re_path(
+        r'^checklist_update_link/(?P<pk>\w+)/(?P<type>\w+)/(?P<value>\w+)/$',
+        checklist_update_link, name='checklist_update_link'),
     re_path(r'^checklistitem_delete/(?P<pk>\w+)/$',
             ChecklistItemDelete.as_view(), name='checklistitem_delete'),
 
@@ -172,9 +180,11 @@ urlpatterns = [
 
     re_path(r'^report/export/$', Report.as_view(), name='report'),
     re_path(
-        r'^report/(?P<pk>\w+)/(?P<status>[\w ]+)/$', Report.as_view(), name='report'),
+        r'^report/(?P<pk>\w+)/(?P<status>[\w ]+)/$', Report.as_view(),
+        name='report'),
     re_path(
-        r'^report_table/(?P<pk>\w+)/(?P<status>[\w ]+)/$', ReportData.as_view(), name='report_data'),
+        r'^report_table/(?P<pk>\w+)/(?P<status>[\w ]+)/$',
+        ReportData.as_view(), name='report_data'),
     re_path(r'^export_stakeholders_list/', export_stakeholders_list,
             name='export_stakeholders_list'),
     re_path(r'^export_sites_list/', export_sites_list,

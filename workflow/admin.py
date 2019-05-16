@@ -16,7 +16,8 @@ class DocumentationResource(resources.ModelResource):
     program = fields.Field(column_name='program', attribute='program',
                            widget=ForeignKeyWidget(Program, 'name'))
     project = fields.Field(column_name='project', attribute='project',
-                           widget=ForeignKeyWidget(ProjectAgreement, 'project_name'))
+                           widget=ForeignKeyWidget(ProjectAgreement,
+                                                   'project_name'))
 
     class Meta:
         model = Documentation
@@ -36,7 +37,6 @@ class DocumentationAdmin(ImportExportModelAdmin):
 
 # Resource for CSV export
 class ProjectAgreementResource(resources.ModelResource):
-
     class Meta:
         model = ProjectAgreement
         widgets = {
@@ -69,7 +69,6 @@ class ProjectAgreementAdmin(ImportExportModelAdmin):
 
 # Resource for CSV export
 class ProjectCompleteResource(resources.ModelResource):
-
     class Meta:
         model = ProjectComplete
         widgets = {
@@ -125,9 +124,11 @@ class SiteProfileResource(resources.ModelResource):
     office = fields.Field(column_name='office', attribute='office',
                           widget=ForeignKeyWidget(Office, 'code'))
     district = fields.Field(column_name='admin level 2',
-                            attribute='district', widget=ForeignKeyWidget(District, 'name'))
+                            attribute='district',
+                            widget=ForeignKeyWidget(District, 'name'))
     province = fields.Field(column_name='admin level 1',
-                            attribute='province', widget=ForeignKeyWidget(Province, 'name'))
+                            attribute='province',
+                            widget=ForeignKeyWidget(Province, 'name'))
     admin_level_three = fields.Field(
         column_name='admin level 3', attribute='admin_level_three',
         widget=ForeignKeyWidget(AdminLevelThree, 'name'))
@@ -188,8 +189,8 @@ class ActivityUserProxyResource(resources.ModelResource):
                         'country', 'email', 'create_date')
 
 
-class ReportActivityUserProxyAdmin(ChartReportAdmin, ExportMixin, admin.ModelAdmin):
-
+class ReportActivityUserProxyAdmin(ChartReportAdmin, ExportMixin,
+                                   admin.ModelAdmin):
     resource_class = ActivityUserProxyResource
 
     def get_queryset(self, request):

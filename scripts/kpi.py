@@ -3,8 +3,8 @@
 
 """
 import json data from API
-IMPORTANT!! you must turn off pagination for this to work from a URL and get all
-country records
+IMPORTANT!! you must turn off pagination for this to work from a URL
+and get all country records
 Install module django-extensions
 Runs twice via function calls at bottom once
 """
@@ -29,6 +29,7 @@ for program in Program.objects.all():
         # get_level = Level.objects.get(name="Goal")
         get_level = Level.objects.get(name="Impact")
         Indicator.objects.all().filter(program__id=program.id,
-                                       level=get_level).update(key_performance_indicator=True)
+                                       level=get_level).update(
+            key_performance_indicator=True)
     print(program)
     print(kpi_count)

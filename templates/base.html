@@ -67,7 +67,7 @@
                 </div>
                 <div class="collapse navbar-collapse" role="navigation" id="navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        {% if report_server == True%}
+                        {% if report_server == True %}
                             {% if user.is_authenticated  %}
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
@@ -96,9 +96,9 @@
                                     <li><a href="/workflow/stakeholder_list/0/0"><span class="glyphicon glyphicon-th-list"></span> Stakeholders</a></li>
                                 </ul>
                             </li>
-
+                            {% if user.is_authenticated %}
                             <li><a href="/indicators/home/0/0/0">Indicators</a></li>
-
+                            {% endif %}
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Form Library<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
@@ -114,9 +114,11 @@
                                     <li><a href="/reports/report/"><span class="glyphicon glyphicon-list-alt"></span> Program Report</a></li>
                                     <li><a href="/customdashboard/program_list/0/"><span class="glyphicon glyphicon-list-alt"></span> Program Dashboards</a></li>
                                     <li><a href="/workflow/report/0/none"><span class="glyphicon glyphicon-list-alt"></span> Project Report</a></li>
-                                    <li><a href="/indicators/collecteddata/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Data Report</a></li>
-                                    <li><a href="/indicators/data/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Visual Report</a></li>
-                                    <li><a href="/indicators/report/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Library</a></li>
+                                    {% if user.is_authenticated %}
+                                        <li><a href="/indicators/collecteddata/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Data Report</a></li>
+                                        <li><a href="/indicators/data/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Visual Report</a></li>
+                                        <li><a href="/indicators/report/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Library</a></li>
+                                    {% endif %}
                                     <li><a href="/indicators/tvareport/"><span class="glyphicon glyphicon-list-alt"></span> Target vs Actual Report</a></li>
                                     <li><a href="/indicators/disrep/0"><span class="glyphicon glyphicon-list-alt"></span> Indicator Disaggregation Report</a></li>
                                 </ul>
@@ -233,7 +235,7 @@
             {% endif %}-->
         </div><!-- .container collapse -->
 
-        <div id = "ajaxloading" class="modal ajax_loading"></div>
+        <!--<div id = "ajaxloading" class="modal ajax_loading"></div> -->
         <div id="footer">
             <!-- Sticky Footer -->
             <div class="container">
@@ -241,7 +243,10 @@
                     {% include "links.html" %}
                 {% else %}
                     <div class="column col-xs-16 text-right">
-                        <a href="http://www.hikaya.io" class="text-muted">Hikaya</a> | <a href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE" class="text-muted">License</a>
+                        <a href="http://www.hikaya.io" class="text-muted"><b>Hikaya</b></a> |
+                        <a href="http://help.hikaya.io" class="text-muted"><b>Documentation</b></a> |
+                        <a href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE"
+                           class="text-muted"><b>License</b></a>
                     </div>
                 {% endif %}
 

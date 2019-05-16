@@ -40,7 +40,8 @@ def get_country(user):
 
 
 def email_group(country, group, link, subject, message, submiter=None):
-    # email incident to admins in each country assoicated with the projects program
+    # email incident to admins in each country assoicated
+    # with the projects program
     for single_country in country.all():
         country = Country.objects.all().filter(country=single_country)
         get_group_emails = User.objects.all().filter(

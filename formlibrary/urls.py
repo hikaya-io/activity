@@ -7,10 +7,12 @@ from django.urls import path
 # place app url patterns here
 
 urlpatterns = [
-    path('training_list/<slug:pk>/', TrainingList.as_view(), name='training_list'),
+    path('training_list/<slug:pk>/', TrainingList.as_view(),
+         name='training_list'),
     path('training_objects/<slug:program>/<slug:project>/',
          TrainingListObjects.as_view(), name='training_objects'),
-    path('training_add/<slug:id>/', TrainingCreate.as_view(), name='training_add'),
+    path('training_add/<slug:id>/', TrainingCreate.as_view(),
+         name='training_add'),
     path('training_update/<slug:pk>/',
          TrainingUpdate.as_view(), name='training_update'),
     path('training_delete/<slug:pk>/',
