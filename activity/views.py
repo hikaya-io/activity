@@ -394,11 +394,70 @@ def profile(request):
                     request, 'Your profile has been updated.',
                     fail_silently=False)
 
-        return render(request, "registration/profile.html", {
+        return render(request, 'registration/profile.html', {
             'form': form, 'helper': RegistrationForm.helper
         })
     else:
-        return HttpResponseRedirect("/accounts/register")
+        return HttpResponseRedirect('/accounts/register')
+
+
+def admin_dashboard(request):
+    """
+    Admin dashboard view
+    """
+    nav_links = [
+        {'label': 'Home', 'status': 'active', 'link': 'admin_dashboard'},
+        {'label': 'Profile Settings', 'status': '', 'link': 'admin_profile_settings'},
+        {'label': 'Default Settings', 'status': '', 'link': 'admin_default_settings'},
+        {'label': 'User Management', 'status': '', 'link': 'admin_user_management'}
+    ]
+    return render(
+        request,
+        'admin/landing_page.html',
+        {'nav_links': nav_links}
+    )
+
+
+def admin_default_settings(request):
+    nav_links = [
+        {'label': 'Home', 'status': '', 'link': 'admin_dashboard'},
+        {'label': 'Profile Settings', 'status': '', 'link': 'admin_profile_settings'},
+        {'label': 'Default Settings', 'status': 'active', 'link': 'admin_default_settings'},
+        {'label': 'User Management', 'status': '', 'link': 'admin_user_management'}
+    ]
+    return render(
+        request,
+        'admin/default_settings.html',
+        {'nav_links': nav_links}
+    )
+
+
+def admin_profile_settings(request):
+    nav_links = [
+        {'label': 'Home', 'status': '', 'link': 'admin_dashboard'},
+        {'label': 'Profile Settings', 'status': 'active', 'link': 'admin_profile_settings'},
+        {'label': 'Default Settings', 'status': '', 'link': 'admin_default_settings'},
+        {'label': 'User Management', 'status': '', 'link': 'admin_user_management'}
+    ]
+    return render(
+        request,
+        'admin/profile_settings.html',
+        {'nav_links': nav_links}
+    )
+
+
+def admin_user_management(request):
+    nav_links = [
+        {'label': 'Home', 'status': '', 'link': 'admin_dashboard'},
+        {'label': 'Profile Settings', 'status': '', 'link': 'admin_profile_settings'},
+        {'label': 'Default Settings', 'status': '', 'link': 'admin_default_settings'},
+        {'label': 'User Management', 'status': 'active', 'link': 'admin_user_management'}
+    ]
+    return render(
+        request,
+        'admin/user_management.html',
+        {'nav_links': nav_links}
+    )
 
 
 class BookmarkList(ListView):

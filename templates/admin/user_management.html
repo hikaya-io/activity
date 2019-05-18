@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block content %}
+<div class="admin-container">
+	<div class="row">
+		<div class="col-md-3">
+			{% include 'admin/sections/side-nav.html' %}
+		</div>
+		<div class="col-md-9 admin-content">
+			<div>
+				<table class="table table-striped">
+					<thead>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>User Status</th>
+						<th>Role</th>
+						<th>Date Joined</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Peter</td>
+							<td>Odeny</td>
+							<td>Active</td>
+							<td>Admin</td>
+							<td>07/08/2017</td>
+						</tr>
+						<tr>
+							<td>Henry</td>
+							<td>Ohanga</td>
+							<td>Active</td>
+							<td>Program Admin</td>
+							<td>03/07/2018</td>
+						</tr>
+						<tr>
+							<td>Another</td>
+							<td>Test</td>
+							<td>Active</td>
+							<td>Program Team</td>
+							<td>23/12/2018</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}
