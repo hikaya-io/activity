@@ -47,10 +47,11 @@
 
         {% endblock %}
 
+        <!-- #{{ user.organization.costum_color }} -->
     </head>
     <body>
         <!--http://getbootstrap.com/examples/sticky-footer-navbar/-->
-        <nav class="navbar navbar-default navbar-activity navbar-fixed-top" role="navigation">
+        <nav id="navid" class="navbar navbar-default navbar-activity navbar-fixed-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'index' %}">
@@ -206,6 +207,10 @@
                 </div><!-- .navbar-header collapse -->
             </div><!-- .container collapse -->
         </nav><!-- .navbar collapse -->
+        <script type="text/javascript">
+            var myElement = document.getElementById("navid");
+            myElement.style.backgroundColor = "#{{ user.activity_user.organization.costum_color }}";
+        </script>
         <br/>
         <div class="container" style="margin-top:5px;">
             <br/>
