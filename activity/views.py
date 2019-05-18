@@ -20,7 +20,7 @@ from workflow.models import (
     ActivitySites, ActivityBookmarks, FormGuidance
 )
 from activity.tables import IndicatorDataTable
-from activity.util import get_country
+from activity.util import get_country, get_nav_links
 from activity.forms import (
     RegistrationForm, NewUserRegistrationForm,
     NewActivityUserRegistrationForm, BookmarkForm
@@ -405,12 +405,7 @@ def admin_dashboard(request):
     """
     Admin dashboard view
     """
-    nav_links = [
-        {'label': 'Home', 'status': 'active', 'link': 'admin_dashboard'},
-        {'label': 'Profile Settings', 'status': '', 'link': 'admin_profile_settings'},
-        {'label': 'Default Settings', 'status': '', 'link': 'admin_default_settings'},
-        {'label': 'User Management', 'status': '', 'link': 'admin_user_management'}
-    ]
+    nav_links = get_nav_links('Home')
     return render(
         request,
         'admin/landing_page.html',
@@ -419,12 +414,7 @@ def admin_dashboard(request):
 
 
 def admin_default_settings(request):
-    nav_links = [
-        {'label': 'Home', 'status': '', 'link': 'admin_dashboard'},
-        {'label': 'Profile Settings', 'status': '', 'link': 'admin_profile_settings'},
-        {'label': 'Default Settings', 'status': 'active', 'link': 'admin_default_settings'},
-        {'label': 'User Management', 'status': '', 'link': 'admin_user_management'}
-    ]
+    nav_links = get_nav_links('Default Settings')
     return render(
         request,
         'admin/default_settings.html',
@@ -433,12 +423,7 @@ def admin_default_settings(request):
 
 
 def admin_profile_settings(request):
-    nav_links = [
-        {'label': 'Home', 'status': '', 'link': 'admin_dashboard'},
-        {'label': 'Profile Settings', 'status': 'active', 'link': 'admin_profile_settings'},
-        {'label': 'Default Settings', 'status': '', 'link': 'admin_default_settings'},
-        {'label': 'User Management', 'status': '', 'link': 'admin_user_management'}
-    ]
+    nav_links = get_nav_links('Profile Settings')
     return render(
         request,
         'admin/profile_settings.html',
@@ -447,12 +432,7 @@ def admin_profile_settings(request):
 
 
 def admin_user_management(request):
-    nav_links = [
-        {'label': 'Home', 'status': '', 'link': 'admin_dashboard'},
-        {'label': 'Profile Settings', 'status': '', 'link': 'admin_profile_settings'},
-        {'label': 'Default Settings', 'status': '', 'link': 'admin_default_settings'},
-        {'label': 'User Management', 'status': 'active', 'link': 'admin_user_management'}
-    ]
+    nav_links = get_nav_links('User Management')
     return render(
         request,
         'admin/user_management.html',
