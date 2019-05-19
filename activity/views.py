@@ -20,7 +20,7 @@ from workflow.models import (
     ActivitySites, ActivityBookmarks, FormGuidance
 )
 from activity.tables import IndicatorDataTable
-from activity.util import get_country
+from activity.util import get_country, get_nav_links
 from activity.forms import (
     RegistrationForm, NewUserRegistrationForm,
     NewActivityUserRegistrationForm, BookmarkForm
@@ -394,11 +394,50 @@ def profile(request):
                     request, 'Your profile has been updated.',
                     fail_silently=False)
 
-        return render(request, "registration/profile.html", {
+        return render(request, 'registration/profile.html', {
             'form': form, 'helper': RegistrationForm.helper
         })
     else:
-        return HttpResponseRedirect("/accounts/register")
+        return HttpResponseRedirect('/accounts/register')
+
+
+def admin_dashboard(request):
+    """
+    Admin dashboard view
+    """
+    nav_links = get_nav_links('Home')
+    return render(
+        request,
+        'admin/landing_page.html',
+        {'nav_links': nav_links}
+    )
+
+
+def admin_default_settings(request):
+    nav_links = get_nav_links('Default Settings')
+    return render(
+        request,
+        'admin/default_settings.html',
+        {'nav_links': nav_links}
+    )
+
+
+def admin_profile_settings(request):
+    nav_links = get_nav_links('Profile Settings')
+    return render(
+        request,
+        'admin/profile_settings.html',
+        {'nav_links': nav_links}
+    )
+
+
+def admin_user_management(request):
+    nav_links = get_nav_links('User Management')
+    return render(
+        request,
+        'admin/user_management.html',
+        {'nav_links': nav_links}
+    )
 
 
 class BookmarkList(ListView):
