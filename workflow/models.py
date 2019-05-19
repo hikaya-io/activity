@@ -24,6 +24,7 @@ except ImportError:
     from datetime import datetime as timezone
 from django.db.models import Q
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 
 
 # New user created generate a token
@@ -94,6 +95,13 @@ class Currency(models.Model):
         return self.name
 
 
+def validate_image(image):
+    file_size = image.file.size
+    limit_kb = 50
+    if file_size > limit_kb * 1024:
+        raise ValidationError("Max size of file is %s KB" % limit_kb)
+
+
 class Organization(models.Model):
     name = models.CharField("Organization Name",
                             max_length=255, blank=True, default="Hikaya")
@@ -132,6 +140,8 @@ class Organization(models.Model):
             RegexValidator(regex='^.{6}$', message='Length has to be 6',
                            code='nomatch')],
         max_length=6)
+    logo = models.ImageField(upload_to='images/', default="images/hikaya-activity-logo.png",
+        validators=[validate_image])
 
     class Meta:
         ordering = ('name',)
