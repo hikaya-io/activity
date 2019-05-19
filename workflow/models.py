@@ -72,13 +72,34 @@ class ActivitySitesAdmin(admin.ModelAdmin):
     search_fields = ('name', 'agency_name')
 
 
+class Currency(models.Model):
+    name = models.CharField("Currency Name", max_length=255)
+    symbol = models.CharField("Currency Symbol", max_length=10, blank=True)
+    code = models.CharField("Currency Code", max_length=20, blank=True)
+    create_date = models.DateTimeField(null=True, blank=True)
+    edit_date = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name_plural = "Currencies"
+
+    def save(self, *args, **kwargs):
+        if self.create_date is None:
+            self.create_date = timezone.now()
+        self.edit_date = timezone.now()
+        super(Currency, self).save()
+
+    def __unicode__(self):
+        return self.name
+
+
 class Organization(models.Model):
     name = models.CharField("Organization Name",
                             max_length=255, blank=True, default="Hikaya")
     description = models.TextField(
         "Description/Notes", max_length=765, null=True, blank=True)
     logo = models.FileField("Your Organization Logo",
-                            blank=True, null=True, upload_to="static/img/")
+                            blank=True, null=True, upload_to="media/img/")
     organization_url = models.CharField(blank=True, null=True, max_length=255)
     level_1_label = models.CharField(
         "Project/Program Organization Level 1 label", default="Program",
@@ -92,6 +113,17 @@ class Organization(models.Model):
     level_4_label = models.CharField(
         "Project/Program Organization Level 4 label", default="Activity",
         max_length=255, blank=True)
+    site_label = models.CharField('Site Organization label', default='Site', max_length=255)
+    stakeholder_label = models.CharField('Stakeholder Organization label', default='Stakeholder',
+                                         max_length=255)
+    form_label = models.CharField('Form Organization label', default='Form', max_length=255)
+    indicator_label = models.CharField('Indicator Organization label', default='Indicator',
+                                       max_length=255)
+    site_label = models.CharField('Site Organization label', default='Site', max_length=255)
+    theme_color = models.CharField('Organization theme color', default='#25ced1', max_length=50)
+    default_currency = models.ForeignKey(Currency, help_text='Organization currency', blank=True,
+                                         null=True, on_delete=models.SET_NULL)
+    default_language = models.CharField('Organization language', default='English-US', max_length=50)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -171,6 +203,8 @@ class ActivityUser(models.Model):
         on_delete=models.SET_NULL)
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
+    organization = models.ForeignKey(Organization, blank=True, null=True,
+                                     on_delete=models.SET_NULL)
     countries = models.ManyToManyField(
         Country, verbose_name="Accessible Countries", related_name='countries',
         blank=True)
@@ -368,11 +402,15 @@ class Program(models.Model):
     description = models.TextField(
         "Program Description", max_length=765, null=True, blank=True)
     sector = models.ManyToManyField(Sector, blank=True)
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
     budget_check = models.BooleanField(
         "Enable Approval Authority", default=False)
     country = models.ManyToManyField(Country)
+    organization = models.ForeignKey(Organization, help_text='Program Organization',
+                                     blank=True, null=True, on_delete=models.SET_NULL)
     user_access = models.ManyToManyField(ActivityUser, blank=True)
     public_dashboard = models.BooleanField(
         "Enable Public Dashboard", default=False)
