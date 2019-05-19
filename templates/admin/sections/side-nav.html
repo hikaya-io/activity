@@ -1,0 +1,26 @@
+<div class="side-nav">
+	<h2>Admin Dashboard</h2>
+	<div>
+		<ul class="nav nav-pills nav-stacked">
+			{% for item in nav_links %}
+			<li role="presentation" class="{{ item.status }}">
+				<a href="{% url item.link %}">
+					{% if item.label == 'Home' %}
+					<span class="glyphicon glyphicon-home"></span>
+
+					{% elif item.label == 'Profile Settings' %}
+					<i class="fa fa-user-circle-o"></i>
+
+					{% elif item.label == 'Default Settings' %}
+					<span class="glyphicon glyphicon-cog"></span>
+
+					{% elif item.label == 'User Management' %}
+					<i class="fa fa-users"></i>
+					{% endif %}
+
+					{{ item.label }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
