@@ -23,6 +23,7 @@ try:
 except ImportError:
     from datetime import datetime as timezone
 from django.db.models import Q
+from django.core.validators import RegexValidator
 
 
 # New user created generate a token
@@ -126,6 +127,11 @@ class Organization(models.Model):
     default_language = models.CharField('Organization language', default='English-US', max_length=50)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
+    theme_color = models.CharField(
+        "Organization Costum Color", default="25ced1", validators=[
+            RegexValidator(regex='^.{6}$', message='Length has to be 6',
+                           code='nomatch')],
+        max_length=6)
 
     class Meta:
         ordering = ('name',)
