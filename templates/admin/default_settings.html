@@ -1,0 +1,119 @@
+{% extends "base.html" %} {% block content %}
+<div class="admin-container">
+	<div class="row">
+		<div class="col-md-3">
+			{% include 'admin/sections/side-nav.html' %}
+		</div>
+		<div class="col-md-9 admin-content">
+			<div class="container">
+				<form class="">
+					<!-- Default Labels -->
+					<div class="panel panel-info">
+						<div class="panel-heading">Default Labels</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-6 default-setting">
+									<label for="workflowlevel1"> WorkflowLevel1: </label>
+									<input
+										type="text"
+										class="form-control"
+										placeholder="Program"
+										id="workflowlevel1"
+									/>
+								</div>
+								<div class="col-md-6">
+									<label for="workflowlevel1"> WorkflowLevel2: </label>
+									<input
+										type="text"
+										class="form-control"
+										placeholder="Project"
+										id="workflowlevel1"
+									/>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6">
+									<label for="workflowlevel1"> WorkflowLevel3: </label>
+									<input
+										type="text"
+										class="form-control"
+										placeholder="Activity"
+										id="workflowlevel1"
+									/>
+								</div>
+								<div class="col-md-6">
+									<label for="workflowlevel1"> Indicator: </label>
+									<input
+										type="text"
+										class="form-control"
+										placeholder="Indicator"
+										id="workflowlevel1"
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- End of Default Labals-->
+
+					<div class="panel panel-info">
+						<div class="panel-heading">Default Settings</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-6 default-setting">
+									<label for="workflowlevel1"> Default Currency: </label>
+									<input
+										type="text"
+										class="form-control"
+										placeholder="USD ($)"
+										id="workflowlevel1"
+									/>
+								</div>
+								<div class="col-md-6">
+									<label for="workflowlevel1"> Date Format: </label>
+									<input
+										type="text"
+										class="form-control"
+										placeholder="DD/MM/YYYY"
+										id="workflowlevel1"
+									/>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6">
+									<label for="workflowlevel1"> Default Language: </label>
+									<input
+										type="text"
+										class="form-control"
+										placeholder="English-US"
+										id="workflowlevel1"
+									/>
+								</div>
+								<div class="col-md-6">
+									<label for="workflowlevel1"> Other Setting: </label>
+									<input
+										type="text"
+										class="form-control"
+										placeholder="Indicator"
+										id="workflowlevel1"
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-actions">
+						<button class="btn btn-default">
+							<i class="fa fa-undo"></i> Discard Changes
+						</button>
+						<button class="btn btn-primary">
+							<i class="fa fa-save"></i> Save Changes
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}
