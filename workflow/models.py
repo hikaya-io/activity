@@ -95,7 +95,7 @@ class Organization(models.Model):
         max_length=255, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
-    costum_color = models.CharField(
+    theme_color = models.CharField(
         "Organization Costum Color", default="25ced1", validators=[
             RegexValidator(regex='^.{6}$', message='Length has to be 6',
                            code='nomatch')],
