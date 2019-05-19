@@ -210,6 +210,12 @@ class ReportActivityUserProxyAdmin(ChartReportAdmin, ExportMixin,
         return email
 
 
+@admin.register(Currency)
+class CurrencyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'symbol', 'code')
+    list_filter = ('name', 'code')
+
+
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Country, CountryAdmin)
 admin.site.register(Province, ProvinceAdmin)
