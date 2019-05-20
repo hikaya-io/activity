@@ -4,8 +4,13 @@
 
 <script src="{{ STATIC_URL }}js/highcharts/js/highcharts.js"></script>
 <script src="{{ STATIC_URL }}js/highcharts/js/modules/exporting.js"></script>
+<script src="{{ STATIC_URL }}js/select2.min.js"></script>
 
 <script>
+
+$(document).ready(function() {
+    $('#sectors').select2({placeholder: 'Select sectors...', allowClear: true});
+});
 
 $(function () {
     $('#container').highcharts({
@@ -505,9 +510,16 @@ $(function () {
 
                   <div class="form-group">
                         <label for="sectors">Sectors</label>
-                        <select name="sectors" id="sectors" class="form-control" multiple="true">
+                        <select name="sectors" id="sectors" class="form-control" style="width: 100%" multiple="true">
                             <option value="">A</option>
                             <option value="">B</option>
+                            <option value="">C</option>
+                            <option value="">C</option>
+                            <option value="">C</option>
+                            <option value="">C</option>
+                            <option value="">C</option>
+                            <option value="">C</option>
+                            <option value="">C</option>
                             <option value="">C</option>
                         </select>
                   </div>
