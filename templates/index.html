@@ -283,34 +283,35 @@ $(function () {
                     <h4>Hikaya-Activity Dashboard</h4>
                 </div>
 
-                <div class="col-md-6 col-md-offset-2">
+                <div class="col-md-8 text-right">
                     <div class="btn-group" role="group">
-                        <div class="btn-group">
-                            <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                {% if selected_countries_list %} {% for item in selected_countries_list %} {{ item.country }} {%endfor%}{%else%} Country {% endif %}Dashboard
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                              {%for item in countries  %}
-                                 <li><a href="/{{ item.id }}/">{{ item.country }}</a></li>
-                              {% endfor %}
-                              <li role="separator" class="divider"></li>
-                              <li><a href="/">All</a></li>
-                            </ul>
-                        </div>
-                        <div class="btn-group">
-                            <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-expanded="false">
-                            Filter by Program <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="/dashboard/{% if getFilteredName %}{{ getFilteredName.id }}{% else %}0{% endif %}/0/">-- All --</a></li>
-                                {%for program in programs%}
-                                <li class="list-group-item">
-                                    <a href="/dashboard/{{ program.id }}/{% if sector %}{{ sector }}{% else %}0{% endif %}/">{{ program.name }}</a>
-                                </li>
-                                {%endfor%}
-                            </ul>
-                        </div>
+                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {% if selected_countries_list %} {% for item in selected_countries_list %} {{ item.country }} {%endfor%}{%else%} Country {% endif %}Dashboard
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            {%for item in countries  %}
+                                <li><a href="/{{ item.id }}/">{{ item.country }}</a></li>
+                            {% endfor %}
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/">All</a></li>
+                        </ul>
+
+                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-expanded="false">
+                        Filter by Program <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="/dashboard/{% if getFilteredName %}{{ getFilteredName.id }}{% else %}0{% endif %}/0/">-- All --</a></li>
+                            {%for program in programs%}
+                            <li class="list-group-item">
+                                <a href="/dashboard/{{ program.id }}/{% if sector %}{{ sector }}{% else %}0{% endif %}/">{{ program.name }}</a>
+                            </li>
+                            {%endfor%}
+                        </ul>
+
+                        <button class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#addProgramModal">Add New
+                                Program</button>
+                            
                         {% if report_server == False%}
                           <a href="/workflow/dashboard/project/0/" class="btn btn-default btn-sm btn-success">Create a Project</a>
                         {% endif %}
@@ -319,6 +320,7 @@ $(function () {
             </div>
         </div>
     </div>
+
     <div class="row">
           <div class="col-md-4">
              {% if report_server == True%}
@@ -467,6 +469,57 @@ $(function () {
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addProgramModal" tabindex="-1" role="dialog" aria-labelledby="addProgramModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                  aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="addProgramModalLabel">Add Program</h4>
+            </div>
+            <div class="modal-body">
+              <form action="">
+                  <div class="form-group">
+                      <label for="programName">Program Name</label>
+                      <input type="text" id="programName" class="form-control">
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="form-group">
+                                <label for="startDate">Start Date</label>
+                                <input type="date" id="startDate" class="form-control" placeholder="">
+                          </div>
+                      </div>
+
+                      <div class="col-md-6">
+                            <div class="form-group">
+                                  <label for="endDate">End Date</label>
+                                  <input type="date" id="endDate" class="form-control" placeholder="">
+                            </div>
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                        <label for="sectors">Sectors</label>
+                        <select name="sectors" id="sectors" class="form-control" multiple="true">
+                            <option value="">A</option>
+                            <option value="">B</option>
+                            <option value="">C</option>
+                        </select>
+                  </div>
+                  
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
 {% endblock content %}
