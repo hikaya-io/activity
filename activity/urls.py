@@ -110,9 +110,19 @@ urlpatterns = [  # rest framework
     path('accounts/login/', authviews.LoginView.as_view(), name='login'),
     path('accounts/logout/', views.logout_view, name='logout'),
 
+    # register
+    path('accounts/register/', views.register, name='register'),
+
     # accounts
     path('accounts/profile/', views.profile, name='profile'),
-    path('accounts/register/', views.register, name='register'),
+    path('accounts/admin_dashboard/', views.admin_dashboard,
+         name='admin_dashboard'),
+    path('accounts/admin/users', views.admin_user_management,
+         name='admin_user_management'),
+    path('accounts/admin/default_settings', views.admin_default_settings,
+         name='admin_default_settings'),
+    path('accounts/admin/profile_settings', views.admin_profile_settings,
+         name='admin_profile_settings'),
 
     # bookmarks
     path('bookmark_list', BookmarkList.as_view(),

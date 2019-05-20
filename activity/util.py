@@ -124,3 +124,16 @@ def group_required(*group_names, url):
             raise PermissionDenied
         return False
     return user_passes_test(in_groups)
+
+
+def get_nav_links(nav):
+    nav_links = [
+        {'label': 'Home', 'status': '', 'link': 'admin_dashboard'},
+        {'label': 'Profile Settings', 'status': '', 'link': 'admin_profile_settings'},
+        {'label': 'Default Settings', 'status': '', 'link': 'admin_default_settings'},
+        {'label': 'User Management', 'status': '', 'link': 'admin_user_management'}
+    ]
+    for item in nav_links:
+        if item['label'] == nav:
+            item['status'] = 'active'
+    return nav_links
