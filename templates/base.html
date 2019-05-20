@@ -51,7 +51,6 @@
 
         {% endblock %}
 
-        <!-- #{{ user.organization.costum_color }} -->
     </head>
     <body>
         <!--http://getbootstrap.com/examples/sticky-footer-navbar/-->
@@ -59,10 +58,10 @@
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'index' %}">
-                        {% if not user.is_authenticated or not user.activity_user.organization %}
-                            <img style="margin-top: -5px; max-width: 140px;" src="{% static 'img/hikaya-activity-logo.png' %}" />
-                        {% else %}
+                        {% if user.is_authenticated %}
                             <img style="margin-top: -5px; max-width: 140px;" src="{{ user.activity_user.organization.logo.url }}" />
+                        {% else %}
+                            <img style="margin-top: -5px; max-width: 140px;" src="{% static 'img/hikaya-activity-logo.png' %}" />
                         {% endif %}
                     </a>
                     <!-- hamburger nav -->

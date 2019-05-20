@@ -23,7 +23,8 @@ from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links
 from activity.forms import (
     RegistrationForm, NewUserRegistrationForm,
-    NewActivityUserRegistrationForm, BookmarkForm
+    NewActivityUserRegistrationForm, BookmarkForm,
+    OrganizationEditForm
 )
 
 
@@ -384,18 +385,47 @@ def profile(request):
     """
     if request.user.is_authenticated:
         obj = get_object_or_404(ActivityUser, user=request.user)
-        form = RegistrationForm(request.POST or None, instance=obj,
+        organization = obj.organization
+        form = RegistrationForm(instance=obj,
                                 initial={'username': request.user})
+        form_orga = OrganizationEditForm(instance=organization)
 
+        try:
+            file = open(organization.logo.url)
+            file.close()
+        except FileNotFoundError:
+            setattr(organization, 'logo', 
+                organization._meta.fields[-1].default)
+            organization.save()
+            obj.organization = organization
+            obj.save()
         if request.method == 'POST':
-            if form.is_valid():
-                form.save()
-                messages.error(
-                    request, 'Your profile has been updated.',
-                    fail_silently=False)
+            if 'submit-prof' in request.POST:
+                form = RegistrationForm(request.POST, instance=obj,
+                    initial={'username': request.user})
+                if form.is_valid():
+                    user_tmp = form.save(commit=False)
+                    user_tmp = organization
+                    user_tmp.save()
+                    messages.error(
+                        request, 'Your profile has been updated.',
+                        fail_silently=False)
+            
+            if 'submit-org' in request.POST:
+                form_orga = OrganizationEditForm(request.FILES,
+                    instance=organization)
 
+                if form_orga.is_valid():
+                    organization.logo = request.FILES.get('logo')
+                    organization.save()
+                    obj.organization = organization
+                    obj.save()
+                    messages.error(
+                        request, 'Your organization logo has been updated.',
+                        fail_silently=False)
+        
         return render(request, 'registration/profile.html', {
-            'form': form, 'helper': RegistrationForm.helper
+            'form': form, 'form_orga': form_orga
         })
     else:
         return HttpResponseRedirect('/accounts/register')

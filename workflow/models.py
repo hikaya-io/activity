@@ -25,6 +25,8 @@ except ImportError:
 from django.db.models import Q
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
+from django.core.files.images import get_image_dimensions
+
 
 
 # New user created generate a token
@@ -94,12 +96,23 @@ class Currency(models.Model):
     def __unicode__(self):
         return self.name
 
+image_spec = {
+    "width": 2000,
+    "height": 500,
+    "limit_kb": 100
+}
 
-def validate_image(image):
+
+def validate_image(image, width=image_spec['width'], height=image_spec['height'],
+                   limit_kb=image_spec['limit_kb']):
     file_size = image.file.size
-    limit_kb = 50
     if file_size > limit_kb * 1024:
         raise ValidationError("Max size of file is %s KB" % limit_kb)
+    w, h = get_image_dimensions(image)
+    if w < width:
+        raise ValidationError("Min width is %s" % width)
+    if h < height:
+        raise ValidationError("Min height is %s" % height)
 
 
 class Organization(models.Model):
@@ -141,7 +154,9 @@ class Organization(models.Model):
                            code='nomatch')],
         max_length=6)
     logo = models.ImageField(upload_to='images/', default="images/hikaya-activity-logo.png",
-        validators=[validate_image])
+        validators=[validate_image], 
+        help_text="Image of minimum {} width and {} height, maximum of {} ko".format(
+            *tuple(image_spec.values())))
 
     class Meta:
         ordering = ('name',)
