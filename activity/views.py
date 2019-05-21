@@ -34,8 +34,7 @@ def index(request, selected_countries=None, id=0, sector=0):
     get count of agreements approved and total for dashboard
     """
 
-    print('SOmething')
-
+    # add program
     if request.method == 'POST' and request.is_ajax:
         data = request.POST
 
@@ -261,7 +260,6 @@ def index(request, selected_countries=None, id=0, sector=0):
         .annotate(
         indicators=Count('indicator__pk', distinct=True),
         targets=Sum('periodic_target__target'), actuals=Sum('achieved'))
-    # print("................%s................" % getObjectives.query )
     table = IndicatorDataTable(get_quantitative_data_sums)
     table.paginate(page=request.GET.get('page', 1), per_page=20)
 
@@ -325,8 +323,6 @@ def index(request, selected_countries=None, id=0, sector=0):
         evidence_adoption = yellow
     elif total_evidence_adoption_count <= total_indicator_data_count / 4:
         evidence_adoption = red
-
-    print('I am the sectors', get_sectors)
 
     return render(request, "index.html", {
         'agreement_total_count': agreement_total_count,

@@ -88,3 +88,4 @@ local.py
 .env
 db.sqlite3
 .idea/
+.vscode
