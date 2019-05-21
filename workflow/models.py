@@ -398,7 +398,7 @@ class FundCodeAdmin(admin.ModelAdmin):
 
 
 class Program(models.Model):
-    gaitid = models.CharField("ID", max_length=255, blank=True, unique=True)
+    gaitid = models.CharField("ID", max_length=255, blank=True)
     name = models.CharField("Program Name", max_length=255, blank=True)
     funding_status = models.CharField(
         "Funding Status", max_length=255, blank=True)

@@ -4,12 +4,53 @@
 
 <script src="{{ STATIC_URL }}js/highcharts/js/highcharts.js"></script>
 <script src="{{ STATIC_URL }}js/highcharts/js/modules/exporting.js"></script>
-<script src="{{ STATIC_URL }}js/select2.min.js"></script>
 
 <script>
-
-$(document).ready(function() {
+$(document).ready(() => {
     $('#sectors').select2({placeholder: 'Select sectors...', allowClear: true});
+    $('#startDate').datepicker({dateFormat: "dd.mm.yy"});
+    $('#endDate').datepicker({dateFormat: "dd.mm.yy"});
+});
+
+$(function() {
+    $('#saveProgram').click(function(e) {
+        e.preventDefault();
+        
+        const formValue = $('#addProgramForm').serializeArray();
+
+        const obj = {}
+
+        formValue.forEach(item => {
+            obj[item.name] = item.value
+        })
+
+        // set sectors and format dates
+        data = {...obj, 
+            sectors: $('#sectors').val(), 
+            start_date: moment(obj.start_date, 'DD.MM.YYYY').format(),
+            end_date: moment(obj.end_date, 'DD.MM.YYYY').format(),
+        }
+
+        $.ajax({
+            url: '/',
+            type: 'POST',
+            data,
+            success: function(resp, status) {
+                // notify success
+                toastr.success('Program was added sucessfully');
+
+                //close modal
+                $('#addProgramModal').modal('hide');
+
+                // reset form
+                $('#addProgramForm').trigger('reset');
+                $('#sectors').select('val', '').trigger('change');
+            },
+            error: function(xhr, status, error) {
+                toastr.danger('Unsuccessful');
+            }
+        })
+    });
 });
 
 $(function () {
@@ -486,49 +527,43 @@ $(function () {
               <h4 class="modal-title" id="addProgramModalLabel">Add Program</h4>
             </div>
             <div class="modal-body">
-              <form action="">
+              <form id="addProgramForm">
                   <div class="form-group">
                       <label for="programName">Program Name</label>
-                      <input type="text" id="programName" class="form-control">
+                      <input type="text" id="programName" name="program_name" class="form-control" placeholder="Program">
+                  </div>
+                  
+                  <div class="form-group">
+                        <label for="sectors">Sectors</label>
+                        <select id="sectors" class="form-control" name="sectors" style="width: 100%" multiple="multiple">
+                           {% for sector in get_all_sectors %}
+                            <option value="{{sector.id}}">{{sector.sector}}</option>
+                           {% endfor %}
+                        </select>
                   </div>
 
                   <div class="row">
-                      <div class="col-md-6">
-                          <div class="form-group">
+                    <div class="col-md-6">
+                        <div class="form-group">
                                 <label for="startDate">Start Date</label>
-                                <input type="date" id="startDate" class="form-control" placeholder="">
-                          </div>
-                      </div>
+                                <input type="" id="startDate" class="form-control" placeholder="Start Date" name="start_date">
+                        </div>
+                    </div>
 
-                      <div class="col-md-6">
+                    <div class="col-md-6">
                             <div class="form-group">
-                                  <label for="endDate">End Date</label>
-                                  <input type="date" id="endDate" class="form-control" placeholder="">
+                                <label for="endDate">End Date</label>
+                                <input type="" id="endDate" class="form-control" placeholder="End Date" name="end_date">
                             </div>
-                      </div>
-                  </div>
-
-                  <div class="form-group">
-                        <label for="sectors">Sectors</label>
-                        <select name="sectors" id="sectors" class="form-control" style="width: 100%" multiple="true">
-                            <option value="">A</option>
-                            <option value="">B</option>
-                            <option value="">C</option>
-                            <option value="">C</option>
-                            <option value="">C</option>
-                            <option value="">C</option>
-                            <option value="">C</option>
-                            <option value="">C</option>
-                            <option value="">C</option>
-                            <option value="">C</option>
-                        </select>
-                  </div>
+                    </div>
+                 </div>
+  
                   
               </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-success">Add</button>
+              <button type="submit" class="btn btn-success" id="saveProgram">Save</button>
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum, Q, Count
@@ -33,6 +33,21 @@ def index(request, selected_countries=None, id=0, sector=0):
     Home page
     get count of agreements approved and total for dashboard
     """
+
+    print('SOmething')
+
+    if request.method == 'POST' and request.is_ajax:
+        data = request.POST
+
+        program = Program.objects.create(name=data.get(
+            'program_name'), start_date=data.get('start_date'), end_date=data.get('end_date'))
+
+        sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
+        program.sector.set(sectors)
+
+        # Return a "created" (201) response code.
+        return HttpResponse(status=201, content_type="application/json")
+
     program_id = id
     user_countries = get_country(request.user)
 
@@ -51,6 +66,7 @@ def index(request, selected_countries=None, id=0, sector=0):
     get_agency_site = ActivitySites.objects.all().filter(id=1)
     get_sectors = Sector.objects.all().exclude(
         program__isnull=True).select_related()
+    get_all_sectors = Sector.objects.all()
 
     # limit the programs by the selected sector
     if int(sector) == 0:
@@ -267,8 +283,8 @@ def index(request, selected_countries=None, id=0, sector=0):
         indicator__program__country__in=selected_countries) \
         .values("indicator__program__country__country") \
         .annotate(evidence_count=Count('evidence', distinct=True) + Count(
-        'activity_table', distinct=True),
-                  indicator_count=Count('pk', distinct=True)).order_by(
+            'activity_table', distinct=True),
+        indicator_count=Count('pk', distinct=True)).order_by(
         '-evidence_count')
     count_program = int(count_program)
     count_program_agreement = int(count_program_agreement)
@@ -297,9 +313,9 @@ def index(request, selected_countries=None, id=0, sector=0):
     total_indicator_data_count = 0
     for country in count_evidence_adoption:
         total_evidence_adoption_count = total_evidence_adoption_count + \
-                                        country['evidence_count']
+            country['evidence_count']
         total_indicator_data_count = total_indicator_data_count + \
-                                     country['indicator_count']
+            country['indicator_count']
 
     if total_evidence_adoption_count >= float(
             total_indicator_data_count / 1.5):
@@ -309,6 +325,8 @@ def index(request, selected_countries=None, id=0, sector=0):
         evidence_adoption = yellow
     elif total_evidence_adoption_count <= total_indicator_data_count / 4:
         evidence_adoption = red
+
+    print('I am the sectors', get_sectors)
 
     return render(request, "index.html", {
         'agreement_total_count': agreement_total_count,
@@ -327,6 +345,7 @@ def index(request, selected_countries=None, id=0, sector=0):
         'selected_countries': selected_countries,
         'getFilteredName': get_filtered_name,
         'getSectors': get_sectors,
+        'get_all_sectors': get_all_sectors,
         'sector': sector, 'table': table,
         'getQuantitativeDataSums': get_quantitative_data_sums,
         'count_evidence': count_evidence,
