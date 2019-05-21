@@ -26,6 +26,7 @@ from activity.forms import (
     NewActivityUserRegistrationForm, BookmarkForm,
     OrganizationEditForm
 )
+from activity.settings import PROJECT_ROOT
 
 
 @login_required(login_url='/accounts/login/')
@@ -385,47 +386,18 @@ def profile(request):
     """
     if request.user.is_authenticated:
         obj = get_object_or_404(ActivityUser, user=request.user)
-        organization = obj.organization
-        form = RegistrationForm(instance=obj,
+        form = RegistrationForm(request.POST or None, instance=obj,
                                 initial={'username': request.user})
-        form_orga = OrganizationEditForm(instance=organization)
 
-        try:
-            file = open(organization.logo.url)
-            file.close()
-        except FileNotFoundError:
-            setattr(organization, 'logo', 
-                organization._meta.fields[-1].default)
-            organization.save()
-            obj.organization = organization
-            obj.save()
         if request.method == 'POST':
-            if 'submit-prof' in request.POST:
-                form = RegistrationForm(request.POST, instance=obj,
-                    initial={'username': request.user})
-                if form.is_valid():
-                    user_tmp = form.save(commit=False)
-                    user_tmp = organization
-                    user_tmp.save()
-                    messages.error(
-                        request, 'Your profile has been updated.',
-                        fail_silently=False)
-            
-            if 'submit-org' in request.POST:
-                form_orga = OrganizationEditForm(request.FILES,
-                    instance=organization)
+            if form.is_valid():
+                form.save()
+                messages.error(
+                    request, 'Your profile has been updated.',
+                    fail_silently=False)
 
-                if form_orga.is_valid():
-                    organization.logo = request.FILES.get('logo')
-                    organization.save()
-                    obj.organization = organization
-                    obj.save()
-                    messages.error(
-                        request, 'Your organization logo has been updated.',
-                        fail_silently=False)
-        
         return render(request, 'registration/profile.html', {
-            'form': form, 'form_orga': form_orga
+            'form': form, 'helper': RegistrationForm.helper
         })
     else:
         return HttpResponseRedirect('/accounts/register')
@@ -435,6 +407,7 @@ def admin_dashboard(request):
     """
     Admin dashboard view
     """
+
     nav_links = get_nav_links('Home')
     return render(
         request,
@@ -467,6 +440,42 @@ def admin_user_management(request):
         request,
         'admin/user_management.html',
         {'nav_links': nav_links}
+    )
+
+
+def admin_organization(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+    if request.method == 'POST':
+        form = OrganizationEditForm(request.FILES,
+                    instance=organization) 
+        if form.is_valid():
+
+            organization.logo = request.FILES.get('logo')
+            organization.save()
+            user.organization = organization
+            user.save()
+            messages.error(
+                request, 'Your organization logo has been updated.',
+                fail_silently=False)
+    else:
+        try:
+            file = open(PROJECT_ROOT+organization.logo.url)
+            file.close()
+        except FileNotFoundError:
+            setattr(organization, 'logo', 
+                organization._meta.fields[-1].default)
+            organization.save()
+            user.organization = organization
+            user.save()
+        form = OrganizationEditForm(instance=organization)
+
+    nav_links = get_nav_links('Edit Organization')
+    return render(
+        request,
+        'admin/organization_edit.html',
+        {'nav_links': nav_links,
+         'form': form}
     )
 
 
