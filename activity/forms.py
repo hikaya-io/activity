@@ -44,8 +44,8 @@ class RegistrationForm(UserChangeForm):
     helper.layout = Layout(
         Fieldset('', 'title', 'name', 'employee_number', 'user',
                  'country', 'countries'),
-        Submit('submit-prof', 'Submit', css_class='btn-default'),
-        Reset('reset-org', 'Reset', css_class='btn-warning'))
+        Submit('submit', 'Submit', css_class='btn-default'),
+        Reset('reset', 'Reset', css_class='btn-warning'))
 
 
 class NewUserRegistrationForm(UserCreationForm):
@@ -149,4 +149,4 @@ class OrganizationEditForm(forms.ModelForm):
     helper.html5_required = True
     helper.layout = Layout(
         Fieldset('', 'logo',),
-        Submit('submit-org', 'Submit', css_class='btn-default'))
+        Submit('submit', 'Submit', css_class='btn-default'))
