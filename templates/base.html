@@ -38,6 +38,7 @@
 
         <!-- Hosted Leaflet CSS -->
         <link rel="stylesheet" href="{% static 'css/leaflet.css' %}">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
         {% block extra_js_in_header %}
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -279,6 +280,28 @@
         <!-- Bootstrap compiled javascript plugins -->
         <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/moment.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+        <script type="text/javascript">
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+        </script>
 
         {% if offline_mode %}
             <!--- offline mode so don't try andload the external fonts -->
