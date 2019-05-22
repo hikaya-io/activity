@@ -23,10 +23,12 @@ from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links
 from activity.forms import (
     RegistrationForm, NewUserRegistrationForm,
-    NewActivityUserRegistrationForm, BookmarkForm
+    NewActivityUserRegistrationForm, BookmarkForm,
+    OrganizationEditForm
 )
 from django.forms.models import model_to_dict
 from django.core import serializers
+from activity.settings import PROJECT_ROOT
 
 
 @login_required(login_url='/accounts/login/')
@@ -35,6 +37,20 @@ def index(request, selected_countries=None, id=0, sector=0):
     Home page
     get count of agreements approved and total for dashboard
     """
+
+    # add program
+    if request.method == 'POST' and request.is_ajax:
+        data = request.POST
+
+        program = Program.objects.create(name=data.get(
+            'program_name'), start_date=data.get('start_date'), end_date=data.get('end_date'))
+
+        sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
+        program.sector.set(sectors)
+
+        # Return a "created" (201) response code.
+        return HttpResponse(status=201, content_type="application/json")
+
     program_id = id
     user_countries = get_country(request.user)
 
@@ -53,6 +69,7 @@ def index(request, selected_countries=None, id=0, sector=0):
     get_agency_site = ActivitySites.objects.all().filter(id=1)
     get_sectors = Sector.objects.all().exclude(
         program__isnull=True).select_related()
+    get_all_sectors = Sector.objects.all()
 
     # limit the programs by the selected sector
     if int(sector) == 0:
@@ -247,7 +264,6 @@ def index(request, selected_countries=None, id=0, sector=0):
         .annotate(
         indicators=Count('indicator__pk', distinct=True),
         targets=Sum('periodic_target__target'), actuals=Sum('achieved'))
-    # print("................%s................" % getObjectives.query )
     table = IndicatorDataTable(get_quantitative_data_sums)
     table.paginate(page=request.GET.get('page', 1), per_page=20)
 
@@ -269,8 +285,8 @@ def index(request, selected_countries=None, id=0, sector=0):
         indicator__program__country__in=selected_countries) \
         .values("indicator__program__country__country") \
         .annotate(evidence_count=Count('evidence', distinct=True) + Count(
-        'activity_table', distinct=True),
-                  indicator_count=Count('pk', distinct=True)).order_by(
+            'activity_table', distinct=True),
+        indicator_count=Count('pk', distinct=True)).order_by(
         '-evidence_count')
     count_program = int(count_program)
     count_program_agreement = int(count_program_agreement)
@@ -299,9 +315,9 @@ def index(request, selected_countries=None, id=0, sector=0):
     total_indicator_data_count = 0
     for country in count_evidence_adoption:
         total_evidence_adoption_count = total_evidence_adoption_count + \
-                                        country['evidence_count']
+            country['evidence_count']
         total_indicator_data_count = total_indicator_data_count + \
-                                     country['indicator_count']
+            country['indicator_count']
 
     if total_evidence_adoption_count >= float(
             total_indicator_data_count / 1.5):
@@ -329,6 +345,7 @@ def index(request, selected_countries=None, id=0, sector=0):
         'selected_countries': selected_countries,
         'getFilteredName': get_filtered_name,
         'getSectors': get_sectors,
+        'get_all_sectors': get_all_sectors,
         'sector': sector, 'table': table,
         'getQuantitativeDataSums': get_quantitative_data_sums,
         'count_evidence': count_evidence,
@@ -407,6 +424,7 @@ def admin_dashboard(request):
     """
     Admin dashboard view
     """
+
     nav_links = get_nav_links('Home')
     return render(
         request,
@@ -461,6 +479,42 @@ def admin_user_management(request):
         request,
         'admin/user_management.html',
         {'nav_links': nav_links}
+    )
+
+
+def admin_organization(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+    if request.method == 'POST':
+        form = OrganizationEditForm(request.FILES,
+                    instance=organization) 
+        if form.is_valid():
+
+            organization.logo = request.FILES.get('logo')
+            organization.save()
+            user.organization = organization
+            user.save()
+            messages.error(
+                request, 'Your organization logo has been updated.',
+                fail_silently=False)
+    else:
+        try:
+            file = open(PROJECT_ROOT+organization.logo.url)
+            file.close()
+        except FileNotFoundError:
+            setattr(organization, 'logo', 
+                organization._meta.fields[-1].default)
+            organization.save()
+            user.organization = organization
+            user.save()
+        form = OrganizationEditForm(instance=organization)
+
+    nav_links = get_nav_links('Edit Organization')
+    return render(
+        request,
+        'admin/organization_edit.html',
+        {'nav_links': nav_links,
+         'form': form}
     )
 
 

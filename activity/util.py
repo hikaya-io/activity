@@ -131,7 +131,9 @@ def get_nav_links(nav):
         {'label': 'Home', 'status': '', 'link': 'admin_dashboard'},
         {'label': 'Profile Settings', 'status': '', 'link': 'admin_profile_settings'},
         {'label': 'Configurations', 'status': '', 'link': 'configurations'},
-        {'label': 'User Management', 'status': '', 'link': 'admin_user_management'}
+        {'label': 'User Management', 'status': '', 'link': 'admin_user_management'},
+        {'label': 'Default Settings', 'status': '', 'link': 'admin_default_settings'},
+        {'label': 'Edit Organization', 'status': '', 'link': 'admin_organization'}
     ]
     for item in nav_links:
         if item['label'] == nav:

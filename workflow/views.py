@@ -151,7 +151,7 @@ class ProgramDash(ListView):
             get_dashboard = Program.objects.all().prefetch_related(
                 'agreement', 'agreement__projectcomplete',
                 'agreement__office').filter(
-                funding_status="Funded", country__in=countries) \
+                funding_status='Funded', country__in=countries) \
                 .order_by('name') \
                 .annotate(has_agreement=Count('agreement'),
                           has_complete=Count('complete'))

@@ -38,6 +38,7 @@
 
         <!-- Hosted Leaflet CSS -->
         <link rel="stylesheet" href="{% static 'css/leaflet.css' %}">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
         {% block extra_js_in_header %}
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -51,7 +52,6 @@
 
         {% endblock %}
 
-        <!-- #{{ user.organization.costum_color }} -->
     </head>
     <body>
         <!--http://getbootstrap.com/examples/sticky-footer-navbar/-->
@@ -59,7 +59,11 @@
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'index' %}">
-                        <img style="margin-top: -5px; max-width: 140px;" src="{% static 'img/hikaya-activity-logo.png' %}" />
+                        {% if user.is_authenticated %}
+                            <img style="margin-top: -5px; max-width: 140px;" src="{{ user.activity_user.organization.logo.url }}" />
+                        {% else %}
+                            <img style="margin-top: -5px; max-width: 140px;" src="{% static 'img/hikaya-activity-logo.png' %}" />
+                        {% endif %}
                     </a>
                     <!-- hamburger nav -->
                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
@@ -279,6 +283,28 @@
         <!-- Bootstrap compiled javascript plugins -->
         <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/moment.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+        <script type="text/javascript">
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+        </script>
 
         {% if offline_mode %}
             <!--- offline mode so don't try andload the external fonts -->
