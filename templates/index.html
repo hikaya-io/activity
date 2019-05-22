@@ -36,7 +36,6 @@ $(function() {
             type: 'POST',
             data,
             success: function(resp, status) {
-                console.log(resp);
                 // notify success
                 toastr.success('Program was added sucessfully', `${resp}`);
 
