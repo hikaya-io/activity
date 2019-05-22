@@ -36,21 +36,7 @@ def index(request, selected_countries=None, id=0, sector=0):
 
     # add program
     if request.method == 'POST' and request.is_ajax:
-        data = request.POST
-
-        program = Program(name=data.get(
-            'program_name'), start_date=data.get('start_date'), end_date=data.get('end_date'))
-
-        try:
-            program.save()
-
-            sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
-            program.sector.set(sectors)
-            
-            # Return a "created" (201) response code.
-            return HttpResponse(program)
-        except Exception as ex:
-            raise Exception(ex)
+        return add_program(request.POST)
 
     program_id = id
     user_countries = get_country(request.user)
@@ -458,6 +444,25 @@ def admin_user_management(request):
         'admin/user_management.html',
         {'nav_links': nav_links}
     )
+
+
+def add_program(data):
+    """ 
+    Add program
+    """
+    program = Program(name=data.get(
+        'program_name'), start_date=data.get('start_date'), end_date=data.get('end_date'))
+
+    try:
+        program.save()
+
+        sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
+        program.sector.set(sectors)
+
+        # Return a "created" (201) response code.
+        return HttpResponse(program)
+    except Exception as ex:
+        raise Exception(ex)
 
 
 class BookmarkList(ListView):
