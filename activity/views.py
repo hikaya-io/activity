@@ -23,12 +23,8 @@ from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links
 from activity.forms import (
     RegistrationForm, NewUserRegistrationForm,
-    NewActivityUserRegistrationForm, BookmarkForm,
-    OrganizationEditForm
+    NewActivityUserRegistrationForm, BookmarkForm
 )
-from django.forms.models import model_to_dict
-from django.core import serializers
-from activity.settings import PROJECT_ROOT
 
 
 @login_required(login_url='/accounts/login/')
@@ -424,7 +420,6 @@ def admin_dashboard(request):
     """
     Admin dashboard view
     """
-
     nav_links = get_nav_links('Home')
     return render(
         request,
@@ -479,42 +474,6 @@ def admin_user_management(request):
         request,
         'admin/user_management.html',
         {'nav_links': nav_links}
-    )
-
-
-def admin_organization(request):
-    user = get_object_or_404(ActivityUser, user=request.user)
-    organization = user.organization
-    if request.method == 'POST':
-        form = OrganizationEditForm(request.FILES,
-                    instance=organization) 
-        if form.is_valid():
-
-            organization.logo = request.FILES.get('logo')
-            organization.save()
-            user.organization = organization
-            user.save()
-            messages.error(
-                request, 'Your organization logo has been updated.',
-                fail_silently=False)
-    else:
-        try:
-            file = open(PROJECT_ROOT+organization.logo.url)
-            file.close()
-        except FileNotFoundError:
-            setattr(organization, 'logo', 
-                organization._meta.fields[-1].default)
-            organization.save()
-            user.organization = organization
-            user.save()
-        form = OrganizationEditForm(instance=organization)
-
-    nav_links = get_nav_links('Edit Organization')
-    return render(
-        request,
-        'admin/organization_edit.html',
-        {'nav_links': nav_links,
-         'form': form}
     )
 
 
