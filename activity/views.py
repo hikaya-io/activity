@@ -440,24 +440,6 @@ def admin_default_settings(request):
 
 
 def admin_profile_settings(request):
-    nav_links = get_nav_links('Profile Settings')
-    return render(
-        request,
-        'admin/profile_settings.html',
-        {'nav_links': nav_links}
-    )
-
-
-def admin_user_management(request):
-    nav_links = get_nav_links('User Management')
-    return render(
-        request,
-        'admin/user_management.html',
-        {'nav_links': nav_links}
-    )
-
-
-def admin_organization(request):
     user = get_object_or_404(ActivityUser, user=request.user)
     organization = user.organization
     if request.method == 'POST':
@@ -484,12 +466,21 @@ def admin_organization(request):
             user.save()
         form = OrganizationEditForm(instance=organization)
 
-    nav_links = get_nav_links('Edit Organization')
+    nav_links = get_nav_links('Profile Settings')
     return render(
         request,
-        'admin/organization_edit.html',
+        'admin/profile_settings.html',
         {'nav_links': nav_links,
          'form': form}
+    )
+
+
+def admin_user_management(request):
+    nav_links = get_nav_links('User Management')
+    return render(
+        request,
+        'admin/user_management.html',
+        {'nav_links': nav_links}
     )
 
 
