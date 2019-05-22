@@ -123,6 +123,8 @@ urlpatterns = [  # rest framework
          name='admin_default_settings'),
     path('accounts/admin/profile_settings', views.admin_profile_settings,
          name='admin_profile_settings'),
+    path('accounts/admin/edit_organization/', views.admin_organization,
+         name='admin_organization'),
 
     # bookmarks
     path('bookmark_list', BookmarkList.as_view(),
