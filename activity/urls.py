@@ -119,8 +119,6 @@ urlpatterns = [  # rest framework
          name='admin_dashboard'),
     path('accounts/admin/users', views.admin_user_management,
          name='admin_user_management'),
-    path('accounts/admin/edit_organization/', views.admin_organization,
-         name='admin_organization'),
     path('accounts/admin/default_settings', views.admin_default_settings,
          name='admin_default_settings'),
     path('accounts/admin/profile_settings', views.admin_profile_settings,
