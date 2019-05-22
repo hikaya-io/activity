@@ -36,8 +36,9 @@ $(function() {
             type: 'POST',
             data,
             success: function(resp, status) {
+                console.log(resp);
                 // notify success
-                toastr.success('Program was added sucessfully');
+                toastr.success('Program was added sucessfully', `${resp}`);
 
                 //close modal
                 $('#addProgramModal').modal('hide');
@@ -47,7 +48,7 @@ $(function() {
                 $('#sectors').select('val', '').trigger('change');
             },
             error: function(xhr, status, error) {
-                toastr.danger('Unsuccessful');
+                toastr.error(error, 'Failed');
             }
         })
     });

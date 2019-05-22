@@ -38,14 +38,21 @@ def index(request, selected_countries=None, id=0, sector=0):
     if request.method == 'POST' and request.is_ajax:
         data = request.POST
 
-        program = Program.objects.create(name=data.get(
+        print(data)
+
+        program = Program(name=data.get(
             'program_name'), start_date=data.get('start_date'), end_date=data.get('end_date'))
 
-        sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
-        program.sector.set(sectors)
+        try:
+            program.save()
 
-        # Return a "created" (201) response code.
-        return HttpResponse(status=201, content_type="application/json")
+            sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
+            program.sector.set(sectors)
+            
+            # Return a "created" (201) response code.
+            return HttpResponse(content={'success': True, 'program': program})
+        except Exception as ex:
+            raise Exception(ex)
 
     program_id = id
     user_countries = get_country(request.user)
