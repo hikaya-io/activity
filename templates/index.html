@@ -520,55 +520,55 @@ $(function () {
     <!-- Modal -->
     <div class="modal fade" id="addProgramModal" tabindex="-1" role="dialog" aria-labelledby="addProgramModalLabel">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                  aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="addProgramModalLabel">Add Program</h4>
-            </div>
-            <div class="modal-body">
-              <form id="addProgramForm">
-                  <div class="form-group">
-                      <label for="programName">Program Name</label>
-                      <input type="text" id="programName" name="program_name" class="form-control" placeholder="Program">
-                  </div>
-                  
-                  <div class="form-group">
-                        <label for="sectors">Sectors</label>
-                        <select id="sectors" class="form-control" name="sectors" style="width: 100%" multiple="multiple">
-                           {% for sector in get_all_sectors %}
-                            <option value="{{sector.id}}">{{sector.sector}}</option>
-                           {% endfor %}
-                        </select>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-6">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="addProgramModalLabel">Add Program</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="addProgramForm">
                         <div class="form-group">
-                                <label for="startDate">Start Date</label>
-                                <input type="" id="startDate" class="form-control" placeholder="Start Date" name="start_date">
+                            <label for="programName">Program Name</label>
+                            <input type="text" id="programName" name="program_name" class="form-control"
+                                placeholder="Program">
                         </div>
-                    </div>
-
-                    <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="endDate">End Date</label>
-                                <input type="" id="endDate" class="form-control" placeholder="End Date" name="end_date">
+    
+                        <div class="form-group">
+                            <label for="sectors">Sectors</label>
+                            <select id="sectors" class="form-control" name="sectors" style="width: 100%"
+                                multiple="multiple">
+                                {% for sector in get_all_sectors %}
+                                <option value="{{sector.id}}">{{sector.sector}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="startDate">Start Date</label>
+                                    <input type="" id="startDate" class="form-control" placeholder="Start Date"
+                                        name="start_date">
+                                </div>
                             </div>
-                    </div>
-                 </div>
-  
-                  
-              </form>
+    
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="endDate">End Date</label>
+                                    <input type="" id="endDate" class="form-control" placeholder="End Date" name="end_date">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success" id="saveProgram">Save</button>
+                </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-success" id="saveProgram">Save</button>
-            </div>
-          </div>
         </div>
-      </div>
-
+    </div>
 </div>
 
 {% endblock content %}
