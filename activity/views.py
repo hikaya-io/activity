@@ -26,6 +26,8 @@ from activity.forms import (
     NewActivityUserRegistrationForm, BookmarkForm
 )
 
+from django.core import serializers
+
 
 @login_required(login_url='/accounts/login/')
 def index(request, selected_countries=None, id=0, sector=0):

@@ -13,11 +13,10 @@ $('form#configForm').submit(function(e) {
 		type: 'POST',
 		data,
 		success: function(data, status) {
-			console.log('Data', data);
-			console.log('Status', status);
+			toastr.success('Admin configurations have been successfuly updated', 'Succesfully Updated')
 		},
 		error: function(xhr, desc, error) {
-			console.log(error)
+			toastr.error( 'An error occured during the operation', 'An Error occurred')
 		},
 	});
 
