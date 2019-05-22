@@ -407,13 +407,15 @@
 
     });
 </script>
-
+<div class="container">
     <div class="row">
         <div class="col-sm-3">
             <div class="panel panel-primary">
                 <div class="panel-heading"><span class="glyphicon glyphicon-filter"> </span> Filter options </div>
                 <div class="panel-body">
-                    {% crispy form form.helper %}
+                    <div class="filter-panel">
+                        {% crispy form form.helper %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -453,7 +455,7 @@
                         <div class="row" id="bar-chart" style="display: none;">
                             <h4 class="chart-title" id="bar-header"></h4>
                             <div class="canvas-container">
-                              <canvas id="kpi"></canvas>
+                                <canvas id="kpi"></canvas>
                             </div>
                             <div id="kpi-legend" class="chart-legend"></div>
                         </div>
@@ -470,4 +472,5 @@
             </div>
         </div>
     </div>
+</div>
 {% endblock content %}

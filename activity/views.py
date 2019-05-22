@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum, Q, Count
@@ -17,7 +17,7 @@ from indicators.models import CollectedData, Indicator
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, Country, ActivityUser,
-    ActivitySites, ActivityBookmarks, FormGuidance
+    ActivitySites, ActivityBookmarks, FormGuidance, Organization
 )
 from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links
@@ -25,6 +25,8 @@ from activity.forms import (
     RegistrationForm, NewUserRegistrationForm,
     NewActivityUserRegistrationForm, BookmarkForm
 )
+from django.forms.models import model_to_dict
+from django.core import serializers
 
 
 @login_required(login_url='/accounts/login/')
@@ -413,12 +415,34 @@ def admin_dashboard(request):
     )
 
 
-def admin_default_settings(request):
-    nav_links = get_nav_links('Default Settings')
+def admin_configurations(request):
+    logged_activity_user = ActivityUser.objects.get(user=request.user)
+
+    if request.method == 'POST' and request.is_ajax:
+        data = request.POST
+
+        model_updates = {
+            'level_1_label': data.get('level_1_label'),
+            'level_2_label': data.get('level_2_label'),
+            'level_3_label': data.get('level_3_label'),
+            'level_4_label': data.get('level_4_label'),
+            'stakeholder_label': data.get('stakeholder_label'),
+            'date_format': data.get('date_format'),
+            # 'default_currency': data.get('default_currency')
+        }
+        organization = Organization.objects.filter(id=logged_activity_user.organization.id)
+        updates = organization.update(**model_updates)
+        if updates:
+            organization_changes = Organization.objects.filter(
+                id=logged_activity_user.organization.id)
+            data = serializers.serialize('json', organization_changes)
+            return HttpResponse(data, content_type="application/json")
+
+    nav_links = get_nav_links('Configurations')
     return render(
         request,
         'admin/default_settings.html',
-        {'nav_links': nav_links}
+        {'nav_links': nav_links, 'organization': logged_activity_user.organization}
     )
 
 

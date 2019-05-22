@@ -1,5 +1,5 @@
 <div class="side-nav">
-	<h2>Admin Dashboard</h2>
+	<h2>{{ organization.name }} Dashboard</h2>
 	<div>
 		<ul class="nav nav-pills nav-stacked">
 			{% for item in nav_links %}
@@ -11,7 +11,7 @@
 					{% elif item.label == 'Profile Settings' %}
 					<i class="fa fa-user-circle-o"></i>
 
-					{% elif item.label == 'Default Settings' %}
+					{% elif item.label == 'Configurations' %}
 					<span class="glyphicon glyphicon-cog"></span>
 
 					{% elif item.label == 'User Management' %}
