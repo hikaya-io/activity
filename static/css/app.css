@@ -405,3 +405,7 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.filter-panel {
+  padding: 10px;
+}

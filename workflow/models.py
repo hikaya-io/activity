@@ -125,6 +125,7 @@ class Organization(models.Model):
     default_currency = models.ForeignKey(Currency, help_text='Organization currency', blank=True,
                                          null=True, on_delete=models.SET_NULL)
     default_language = models.CharField('Organization language', default='English-US', max_length=50)
+    date_format = models.CharField('Organization Date Format', default='DD.MM.YYYY', max_length=100)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
     theme_color = models.CharField(
@@ -410,8 +411,8 @@ class Program(models.Model):
     sector = models.ManyToManyField(Sector, blank=True)
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
-    create_date = models.DateTimeField(null=True, blank=True)
-    edit_date = models.DateTimeField(null=True, blank=True)
+    create_date = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    edit_date = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     budget_check = models.BooleanField(
         "Enable Approval Authority", default=False)
     country = models.ManyToManyField(Country)

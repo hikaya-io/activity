@@ -409,13 +409,16 @@
 
     });
 </script>
-
-<div class="row">
-    <div class="col-sm-3">
-        <div class="panel panel-primary">
-            <div class="panel-heading"><span class="glyphicon glyphicon-filter"> </span> Filter options </div>
-            <div class="panel-body">
-                {% crispy form form.helper %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><span class="glyphicon glyphicon-filter"> </span> Filter options </div>
+                <div class="panel-body">
+                    <div class="filter-panel">
+                        {% crispy form form.helper %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
