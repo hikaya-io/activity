@@ -7,7 +7,7 @@ from crispy_forms.layout import Layout, Submit, Reset
 from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.models import User
-from workflow.models import ActivityUser, ActivityBookmarks
+from workflow.models import ActivityUser, ActivityBookmarks, Organization
 
 
 class RegistrationForm(UserChangeForm):
@@ -127,3 +127,28 @@ class BookmarkForm(forms.ModelForm):
         Fieldset('', 'name', 'bookmark_url'),
         Submit('submit', 'Submit', css_class='btn-default'),
         Reset('reset', 'Reset', css_class='btn-warning'))
+
+
+class OrganizationEditForm(forms.ModelForm):
+    """
+    Form for changing logo via User's profile page
+    """
+    class Meta:
+        model = Organization
+        fields = ['logo', ]
+
+    def __init__(self, *args, **kwargs):
+        super(OrganizationEditForm, self).__init__(*args, **kwargs)
+
+    helper = FormHelper()
+    helper.form_method = 'post'
+    helper.form_class = 'form-horizontal'
+    helper.label_class = 'col-sm-2'
+    helper.field_class = 'col-sm-6'
+    helper.form_error_title = 'Form Errors'
+    helper.error_text_inline = True
+    helper.help_text_inline = True
+    helper.html5_required = True
+    helper.layout = Layout(
+        Fieldset('', 'logo',),
+        Submit('submit', 'Submit', css_class='btn-default'))

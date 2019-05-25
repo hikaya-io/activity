@@ -23,9 +23,10 @@ from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links
 from activity.forms import (
     RegistrationForm, NewUserRegistrationForm,
-    NewActivityUserRegistrationForm, BookmarkForm
+    NewActivityUserRegistrationForm, BookmarkForm,
+    OrganizationEditForm
 )
-
+from activity.settings import PROJECT_ROOT
 from django.core import serializers
 
 
@@ -460,11 +461,38 @@ def admin_configurations(request):
 
 
 def admin_profile_settings(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+    if request.method == 'POST':
+        form = OrganizationEditForm(request.FILES,
+                    instance=organization) 
+        if form.is_valid():
+
+            organization.logo = request.FILES.get('logo')
+            organization.save()
+            user.organization = organization
+            user.save()
+            messages.error(
+                request, 'Your organization logo has been updated.',
+                fail_silently=False)
+    else:
+        try:
+            file = open(PROJECT_ROOT+organization.logo.url)
+            file.close()
+        except FileNotFoundError:
+            setattr(organization, 'logo', 
+                organization._meta.fields[-1].default)
+            organization.save()
+            user.organization = organization
+            user.save()
+        form = OrganizationEditForm(instance=organization)
+
     nav_links = get_nav_links('Profile Settings')
     return render(
         request,
         'admin/profile_settings.html',
-        {'nav_links': nav_links}
+        {'nav_links': nav_links,
+         'form': form}
     )
 
 
