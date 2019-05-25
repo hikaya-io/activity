@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
-  <li><a href="/workflow/report/0/0/">Project Report</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
+  <li><a href="/workflow/report/0/0/">{{ user.activity_user.organization.level_2_label }} Report</a></li>
   <li class="active">Report</li>
 </ol>
 
 {% endblock bread_crumb %}
 {% load render_table from django_tables2 %}
 
-{% block page_title %}Project Report{% endblock %}
+{% block page_title %}{{ user.activity_user.organization.level_2_label }} Report{% endblock %}
 
 {% block content %}
 <ul class="nav nav-tabs">

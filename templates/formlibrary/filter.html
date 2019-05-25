@@ -1,7 +1,7 @@
 
 <div class="btn-group" role="group">
   <select id="program" class="listoption_filters">
-    <option>Program(s)</option>
+    <option>{{ user.activity_user.organization.level_1_label }}(s)</option>
     <option value="all">---ALL---</option>
     {% for program in getPrograms %}
       <option value="{{program.id}}">{{program.name}}</option>
@@ -10,6 +10,6 @@
 </div>
 <div class="btn-group" role="group">
   <select id="project" disabled="true" class="listoption_filters">
-    <option>Project(s)</option>
+    <option>{{ user.activity_user.organization.level_2_label }}(s)</option>
   </select>
 </div>

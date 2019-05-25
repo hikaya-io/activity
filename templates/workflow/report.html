@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Dashboards</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Dashboards</a></li>
   <li class="active">Reports</li>
 </ol>
 
 {% endblock bread_crumb %}
 
-{% block page_title %}Project Report{% endblock %}
+{% block page_title %}{{ user.activity_user.organization.level_2_label }} Report{% endblock %}
 
 {% block content %}
 
@@ -72,20 +72,20 @@
                     { title: "Edit", class: "noExport"},
                     { title: "PID", class: "noExport", data: "program__id" },
                     { title: "SID", class: "noExport", data: "approval"},
-                    { title: "Program", data: "program__name",
+                    { title: "{{ user.activity_user.organization.level_1_label }}", data: "program__name",
                 		"defaultContent": "<i>Not set</i>"},
-                    { title: "Project Name", data: "project_name",},
+                    { title: "{{ user.activity_user.organization.level_2_label }} Name", data: "project_name",},
                     { title: "Sites", data: "site",
                     	"defaultContent": "<i>Not set</i>"},
-                    { title: "Project Code", data: "activity_code",
+                    { title: "{{ user.activity_user.organization.level_2_label }} Code", data: "activity_code",
                 		"defaultContent": "<i>Not set</i>"},
                 	/*{ title: "Office", data: "office__name",
                 		"defaultContent": "<i>Not set</i>"},*/
-                    { title: "Project Activity", data: "project_activity",
+                    { title: "{{ user.activity_user.organization.level_4_label }}", data: "project_activity",
                 		"defaultContent": "<i>Not set</i>"},
                     { title: "Sector", data: "sector__sector",
                 	"defaultContent": "<i>Not set</i>"},
-                    { title: "Project Type", data: "project_type",
+                    { title: "{{ user.activity_user.organization.level_2_label }} Type", data: "project_type",
                         "defaultContent": "<i>Not set</i>"},
                     /*{ title: "Account Code", data: "account_code",
                         "defaultContent": "<i>Not set</i>"},*/
@@ -95,9 +95,9 @@
                     { title: "Est. By", data: "estimated_by__name",
                     	"defaultContent": "<i>Not set</i>"
                 	},
-                    { title: "Total Project Budget",data: "total_estimated_budget",
+                    { title: "Total {{ user.activity_user.organization.level_2_label }} Budget",data: "total_estimated_budget",
                     	"defaultContent": "<i>Not set</i>"},
-                    { title: "Organizations Portion of Project Budget",data: "mc_estimated_budget",
+                    { title: "Organizations Portion of {{ user.activity_user.organization.level_2_label }} Budget",data: "mc_estimated_budget",
                     	"defaultContent": "<i>Not set</i>"},
                     { title: "Total Cost",data: "total_cost",
                     	"defaultContent": "<i>Not set</i>"}
@@ -107,7 +107,7 @@
                     {
                         extend: 'csv',
                         text: 'Export to CSV',
-                        title: 'Project Report',
+                        title: '{{ user.activity_user.organization.level_2_label }} Report',
                         exportOptions: { columns: "thead th:not(.noExport)" }
                     }
                 ]

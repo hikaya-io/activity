@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block page_title %}Program Indicators{% endblock %}
+{% block page_title %}{{ user.activity_user.organization.level_1_label }} Indicators{% endblock %}
 
 {% block content %}
 <style>
@@ -57,7 +57,7 @@ function loadIndicators(program, indicator, type){
             </div>
             {% if not program.indicator_set.all %}
                 <div class='panel-body'>
-                    <h4>No Indicators have been entered for this program</h4>
+                    <h4>No Indicators have been entered for this {{ user.activity_user.organization.level_1_label }}</h4>
                     <p>Add a new indicator via the "<a href="/indicators/indicator_create/{{ program.id }}/">New Indicator</a>" button above.</p>
                 </div>
             {% else %}
@@ -71,7 +71,7 @@ function loadIndicators(program, indicator, type){
         </div>
 
     {% empty %}
-        <p>No Programs</p>
+        <p>No {{ user.activity_user.organization.level_1_label }}</p>
     {% endfor %}
 </div>
 

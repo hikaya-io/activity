@@ -4,7 +4,7 @@ Index{% endblock %} {% block content %}
 <div class="dropdown">
   {% include "workflow/filter.html" %}
   <a href="/workflow/dashboard/project/0/" class="btn btn-md btn-frozen"
-    >Create a Project</a
+    >Create a {{ user.activity_user.organization.level_2_label }}</a
   >
 
   <button
@@ -12,7 +12,7 @@ Index{% endblock %} {% block content %}
     data-toggle="modal"
     data-target="#addProgramModal"
   >
-    Add New Program
+    Add New {{ user.activity_user.organization.level_1_label }}
   </button>
 </div>
 
@@ -42,8 +42,8 @@ Index{% endblock %} {% block content %}
     <table class="table table-striped">
       <tr>
         <th>Date Created</th>
-        <th>Project Name</th>
-        <th>Project Code</th>
+        <th>{{ user.activity_user.organization.level_2_label }} Name</th>
+        <th>{{ user.activity_user.organization.level_2_label }} Code</th>
         <th>Office Code</th>
         <th>Form Version</th>
         <th>Approval Status</th>
@@ -77,7 +77,7 @@ Index{% endblock %} {% block content %}
     </table>
   </div>
   {% endif %} {% endfor %} {% else %}
-  <p>No Programs</p>
+  <p>No {{ user.activity_user.organization.level_1_label }}</p>
   {% endif %}
 </div>
 

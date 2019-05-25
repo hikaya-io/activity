@@ -42,8 +42,8 @@
             <div class="panel-body">
                 <div style="float:left;">
 
-                    <h4>Project Status {% if getFilteredName %} for <a href="/workflow/dashboard/{{ getFilteredName.id }}">{{ getFilteredName }}{% endif %} </a></h4>
-                    Number of Projects : <b>{{ getProjectsCount }}</b><br>
+                    <h4>{{ user.activity_user.organization.level_2_label }} Status {% if getFilteredName %} for <a href="/workflow/dashboard/{{ getFilteredName.id }}">{{ getFilteredName }}{% endif %} </a></h4>
+                    Number of {{ user.activity_user.organization.level_2_label }}(s) : <b>{{ getProjectsCount }}</b><br>
                     <!-- approved count-->
                     <h4> <a href="/workflow/dashboard/{{ getFilteredName.id }}/approved/"><span class="label label-success">Approved &nbsp;<span class="badge">{{ getApprovedCount }}</span></span></a>
                     <!-- awaiting approval count-->
@@ -69,7 +69,7 @@
 
                     <div class="btn-group">
                       <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                        Project Dashboard <span class="caret"></span>
+                        {{ user.activity_user.organization.level_2_label }} Dashboard <span class="caret"></span>
                       </button>
                       <ul class="dropdown-menu" role="menu">
                         <li role="presentation">
@@ -96,7 +96,7 @@
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading"><b>Project(s) Status</b> {% if getFilteredName %} for <a href="/workflow/dashboard/{{ getFilteredName.id }}">{{ getFilteredName }} </a>{% endif %}
+                <div class="panel-heading"><b>{{ user.activity_user.organization.level_2_label }}(s) Status</b> {% if getFilteredName %} for <a href="/workflow/dashboard/{{ getFilteredName.id }}">{{ getFilteredName }} </a>{% endif %}
                     </div>
                 <div class="panel-body">
                     <div class="col-md-offset-2 col-md-10">
@@ -122,7 +122,7 @@
     </div>
     <div class="col-md-12">
         <div class="panel panel-info">
-            <div class="panel-heading"><b>Project Sites</b> {% if getFilteredName %} for <a href="/workflow/dashboard/{{ getFilteredName.id }}">{{ getFilteredName }}</a> {% endif %}</div>
+            <div class="panel-heading"><b>{{ user.activity_user.organization.level_2_label }} Sites</b> {% if getFilteredName %} for <a href="/workflow/dashboard/{{ getFilteredName.id }}">{{ getFilteredName }}</a> {% endif %}</div>
             <div class="panel-body">
 
                 <style>
