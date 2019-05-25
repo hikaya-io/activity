@@ -32,6 +32,7 @@
         <!-- Custom CSS -->
         <link href="{% static 'css/app.css' %}" rel="stylesheet" type="text/css">
         <link href="{% static 'css/admin.css' %}" rel="stylesheet" type="text/css">        
+        <link href="{% static 'css/components.css' %}" rel="stylesheet" type="text/css">        
 
         <!--- Django Tables2 css -->
         <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}" />
@@ -155,6 +156,9 @@
                                 <li><a href="{% url 'admin_dashboard' %}"><span class="glyphicon glyphicon-lock"></span> Admin Dashboard</a></li>
                                 {% endif %}
                                 <li><a href="{% url 'profile' %}"><span>{{ user.activity_user.countries_list }}</span></a></li>
+                                {% if user.is_authenticated %}
+                                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                                {% endif %}
                             </ul>
                         </li><!-- .dropdown collapse -->
                         <!-- bookmarks -->

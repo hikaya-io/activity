@@ -359,7 +359,7 @@ def register(request):
     """
     Register a new User profile using built in Django Users Model
     """
-    privacy = ActivitySites.objects.get(id=1)
+    # privacy = ActivitySites.objects.get(id=1)
     if request.method == 'POST':
         uf = NewUserRegistrationForm(request.POST)
         tf = NewActivityUserRegistrationForm(request.POST)
@@ -380,9 +380,16 @@ def register(request):
         tf = NewActivityUserRegistrationForm()
 
     return render(request, "registration/register.html", {
-        'userform': uf, 'activityform': tf, 'privacy': privacy,
+        'userform': uf, 'activityform': tf,
         'helper': NewActivityUserRegistrationForm.helper
     })
+
+
+def register_organization(request):
+    if request.method == 'POST':
+        pass
+    else:
+        return render(request, 'registration/organization_register.html')
 
 
 def profile(request):

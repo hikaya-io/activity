@@ -112,6 +112,7 @@ urlpatterns = [  # rest framework
 
     # register
     path('accounts/register/', views.register, name='register'),
+    path('accounts/register/organization', views.register_organization, name='register_organization'),
 
     # accounts
     path('accounts/profile/', views.profile, name='profile'),

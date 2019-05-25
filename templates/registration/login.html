@@ -1,31 +1,69 @@
-{% extends "base.html" %}
-
-{% load crispy_forms_tags %}
-{% block title %}Login{% endblock %}
-
+{% extends "base.html" %} {% load crispy_forms_tags %} {% block title %}Login{% endblock %} 
 {% block content %}
+<div class="container auth-container">
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<h1>Login</h1>
+			<div class="btn-group btn-group-justified auth-nav" role="group" aria-label="...">
+				<div class="btn-group" role="group">
+					<a type="button" class="btn hikaya-btn-primary" href="{% url 'login' %}"> <strong>Login</strong></a>
+				</div>
+				<div class="btn-group" role="group">
+					<a type="button" class="btn hikaya-btn-default" href="{% url 'register' %}"
+						> <strong>Register</strong></a
+					>
+				</div>
+			</div>
+			<div class="panel panel-default auth-main">
+				<div class="panel-heading">
+					<strong>Fill in your details</strong>
+				</div>
+				<div class="panel-body">
+					<div class="auth-form">
+						<form action="" method="post">
+              {% csrf_token %}
+              <div class="row">
+                {{ form | crispy }}
+              </div>
+              <div class="row text-right">
+                <div class="col-md-3 col-md-offset-6">
+                  <button type="reset" class="btn btn-block hikaya-btn-cancel"> <i class="fa fa-undo"> </i> Cancel</button>
+                </div>
+                <div class="col-md-3 text-right">
+                  <button type="submit" class="btn btn-block hikaya-btn-primary"> <i class="fa fa-save"> </i> Login</button>
+                </div>
+              </div>
 
+							<!--{% if non_ldap %}
+                      <div class="social-btns">
+                           <a type="button" href="{% url 'social:begin' 'google-oauth2' %}" class="btn-floating btn-lg btn-email"><i class="fa fa-google"></i> Google</a>
+                      </div>
+                      or
+                      <a href="{% url 'register' %}">Register a new Account</a><br/>
+                    {% endif %}-->
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-1"></div>
+	</div>
 
-<div class='row container-fluid'>
-  <div class='col-sm-4 col-sm-offset-4'>
-  <h1>Login</h1>
-  <form action="" method="post">
-      {% csrf_token %}
-      {{ form|crispy }}
-      <input type="submit" class='btn btn-block btn-primary' value="login">
-
-      <!--{% if non_ldap %}
-        <div class="social-btns">
-             <a type="button" href="{% url 'social:begin' 'google-oauth2' %}" class="btn-floating btn-lg btn-email"><i class="fa fa-google"></i> Google</a>
-        </div>
-        or
-        <a href="{% url 'register' %}">Register a new Account</a><br/>
-      {% endif %}-->
+	<!-- <form action="" method="post">
+      {% csrf_token %} {% load crispy_forms_tags %}
+      {{ userform | crispy }}
+      {{ activityform | crispy }}
+      <div id="iframe">
+        <h6>Notice/Disclaimer:</h6>
   
-
-  </form>
-  </div>
-
+        <p>
+          {{ privacy.privacy_disclaimer }}
+        </p>
+      </div>
+      <br />
+      <div>
+        <input type="submit" value="Create the account" />
+      </div>
+    </form> -->
 </div>
 {% endblock %}
-
