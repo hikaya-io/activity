@@ -60,7 +60,11 @@
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'index' %}">
-                        <img style="margin-top: -5px; max-width: 140px;" src="{% static 'img/hikaya-activity-logo.png' %}" />
+                        {% if user.is_authenticated %}
+                            <img style="margin-top: -5px; max-width: 140px;" src="{{ user.activity_user.organization.logo.url }}" />
+                        {% else %}
+                            <img style="margin-top: -5px; max-width: 140px;" src="{% static 'img/hikaya-activity-logo.png' %}" />
+                        {% endif %}
                     </a>
                     <!-- hamburger nav -->
                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
