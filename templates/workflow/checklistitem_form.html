@@ -2,7 +2,7 @@
 {% block bread_crumb %}
 <div>
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
   {%  if getProgram.id %}
     <li><a href="/workflow/checklist_list/{{ getProgram.id }}/">Checklist</a></li>
   {% endif %}

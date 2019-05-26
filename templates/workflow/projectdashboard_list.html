@@ -2,23 +2,23 @@
 {% block bread_crumb %}
 <div>
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
-  <li class="active">Project Dashboard</li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
+  <li class="active">{{ user.activity_user.organization.level_2_label }} Dashboard</li>
 </ol>
 </div>
 {% endblock %}
 
-{% block page_title %}Project Dashboard{% endblock %}
+{% block page_title %}{{ user.activity_user.organization.level_2_label }} Dashboard{% endblock %}
 
 {% block content %}
 {% if project_id == 0 %}
 
     <div class="jumbotron">
-        <p>Name your new Project and associate it with a Program</p>
+        <p>Name your new {{ user.activity_user.organization.level_2_label }} and associate it with a {{ user.activity_user.organization.level_1_label }}</p>
         <form role="form" class="form-inline" action="/workflow/projectagreement_add/" method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="program">Program:</label>
+                <label for="program">{{ user.activity_user.organization.level_1_label }}:</label>
                 <select class="form-control" id="program" name="program" required="">
                     {% for item in getPrograms %}
                         <option value="{{ item.id }} ">{{ item.name|truncatechars:50 }}</option>
@@ -27,12 +27,12 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="project_name">Project Name:</label>
+                <label for="project_name">{{ user.activity_user.organization.level_2_label }} Name:</label>
                 <input type="text" name="project_name" required="" id="id_project_name" class="textinput textInput form-control" maxlength="255">
             </div>
             <div class="form-group">
                 <label for="detailed">Short Form (recommended):</label>
-                <input type="checkbox" name="short" id="id_short" checked="checked" onchange="confirmshort();"> Yes
+                <input type="checkbox" name="short" id="id_short" checked="checked" onchange="confirmshort({{ user.activity_user.organization.level_2_label }})"> Yes
             </div>
             <br/>
             <br/>
@@ -50,7 +50,7 @@
         <div class="jumbotron">
             <ul class="list-group">
                 <li class="list-group-item list-group-item-info">
-                    <h4>Project Initiation</h4>
+                    <h4>{{ user.activity_user.organization.level_2_label }} Initiation</h4>
                     <span></span>
                 </li>
 
@@ -64,7 +64,7 @@
                             <button data-toggle="tooltip" data-placement="top" title="Initiation has been approved and can no longer be edited." type="button" class="btn btn-sm btn-frozen" onclick="location.href='/workflow/projectagreement_detail/{{ getAgreement.id }}'">View Initiation</button>
                             <button data-toggle="tooltip" data-placement="top" title="Initiation has been approved and can no longer be deleted." type="button" class="btn btn-sm btn-frozen">Delete Initiation</button>
                             {% if getComplete%}
-                                <button data-toggle="tooltip" data-placement="top" title="A completion form has already been created for the project" type="button" class="btn btn-sm btn-frozen">Project Initiation</button>
+                                <button data-toggle="tooltip" data-placement="top" title="A completion form has already been created for the project" type="button" class="btn btn-sm btn-frozen">{{ user.activity_user.organization.level_2_label }} Initiation</button>
                             {% else %}
                                 <button type="button" class="btn btn-sm btn-info" onclick="location.href='/workflow/projectcomplete_add/{{ getAgreement.id }}'">Start tracking your project</button>
                             {% endif %}
@@ -147,7 +147,7 @@
 
     <div class="jumbotron">
         <h3>
-            Project Checklist
+            {{ user.activity_user.organization.level_2_label }} Checklist
         </h3>
         <table class="table table-striped">
             <tr>

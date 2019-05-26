@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 <div>
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
   <li><a href="/workflow/documentation_list/{{ getProgram.id }}">Documentations</a></li>
   <li class="active">Document</li>
 </ol>

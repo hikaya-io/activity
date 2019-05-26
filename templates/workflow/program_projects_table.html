@@ -18,6 +18,6 @@
     <td>{% if item.short %} Short {% else %} Long {% endif %}</td>
     <td>{% if item.projectcomplete %} Tracking {% if item.projectcomplete.approval  %}{{ item.projectcomplete.approval|capfirst }}{% else %}Open{% endif %}{% else %} Initiation {% if item.approval  %}{{ item.approval|capfirst }}{% else %} Open {% endif %} {% endif %}</td>
     <td>
-        <a href="/workflow/dashboard/project/{{ item.id }}" class="btn btn-xs btn-success">Project Dashboard</a>
+        <a href="/workflow/dashboard/project/{{ item.id }}" class="btn btn-xs btn-success">{{ user.activity_user.organization.level_2_label }} Dashboard</a>
     </td>
 </tr>

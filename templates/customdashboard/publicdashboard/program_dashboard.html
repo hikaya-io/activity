@@ -30,8 +30,8 @@
         <div class="tab_navs"></div>
         <ul class="nav nav-tabs">
             <li class="active"><a href="#dashboard"  data-toggle="tab"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li><a href="#projects"  data-toggle="tab"><i class="fa fa-folder-open"></i> Projects</a></li>
-            <li><a href="#indicators"  data-toggle="tab"><i class="fa fa-bars"></i> Indicators</a></li>
+            <li><a href="#projects"  data-toggle="tab"><i class="fa fa-folder-open"></i> {{ user.activity_user.organization.level_2_label }}(s)</a></li>
+            <li><a href="#indicators"  data-toggle="tab"><i class="fa fa-bars"></i> Indicator(s)</a></li>
             <li><a href="#monitoring"  data-toggle="tab"><i class="fa fa-tasks"></i> Monitoring</a></li>
             <li><a href="#i_surveys" data-toggle="tab"><i class="fa fa-list-alt"></i> Evidence</a></li>
             <li><a href="#analysis" data-toggle="tab"><i class="fa fa-list-alt"></i> Analysis</a></li>
@@ -39,9 +39,9 @@
         <div class="tab-content col-md-10 row">
             
             <div class="sidebar-pane" id="projects">
-                  <h1 class="sidebar-header">Project Status and Key Performance Indicators</h1>
+                  <h1 class="sidebar-header">{{ user.activity_user.organization.level_2_label }} Status and Key Performance Indicators</h1>
                     <br>
-                    <h4><strong>Number of Projects</strong> <span class="badge">{{ total_projects }}</span></h4>
+                    <h4><strong>Number of {{ user.activity_user.organization.level_2_label }}</strong> <span class="badge">{{ total_projects }}</span></h4>
                     <!-- approved count-->
                     <h4> <a href="/workflow/dashboard/{{ getProgram.id }}/approved/"><span class="label label-success">Approved &nbsp;<span class="badge">{{ getApprovedCount }}</span></span></a>
                     <!-- awaiting approval count-->
@@ -58,14 +58,14 @@
                             <div class="panel panel-default">
                               <div class="panel-heading">
                                 <h4 class="panel-title">
-                                  <a data-toggle="collapse" href="#collapse{{ getProgram.id }}"><b>Summary of Projects for - {% if getProgram %}{{ getProgram.name }}{% endif %}</b></a>
+                                  <a data-toggle="collapse" href="#collapse{{ getProgram.id }}"><b>Summary of {{ user.activity_user.organization.level_2_label }}(s) for - {% if getProgram %}{{ getProgram.name }}{% endif %}</b></a>
                                 </h4>
                               </div>
                               <div id="collapse{{ getProgram.id }}" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <table class="table table-striped">
                                           <tr>
-                                              <th>Activity Code</th>
+                                              <th>{{ user.activity_user.organization.level_4_label }} Code</th>
                                               <th>Title</th>
                                               <th>Status</th>
                                               <th>EXp. Start Date</th>
@@ -90,7 +90,7 @@
                         <div class="col-md-6">
                             <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <strong>Program Expenditure</strong><br>
+                                    <strong>{{ user.activity_user.organization.level_1_label }} Expenditure</strong><br>
                                     <strong>Budgets</strong> Vs <strong>Actuals</strong>
                                 </div>
 
@@ -320,7 +320,7 @@
                 <div class="row">
                     <div class="col-md-5">
                         <div class="panel panel-info">
-                            <div class="panel-heading"><strong>Project Status</strong></div>
+                            <div class="panel-heading"><strong>{{ user.activity_user.organization.level_2_label }} Status</strong></div>
                             <div class="panel-body">
                                   <div class="canvas-container-fixed">
                                     <canvas id="status"></canvas>
@@ -333,7 +333,7 @@
                     <div class="col-md-7">
                         <div class="panel panel-info">
                             <div class="panel-heading">
-                                 <strong>Project Estimates & Actual Budget</strong><br>
+                                 <strong>{{ user.activity_user.organization.level_2_label }} Estimates & Actual Budget</strong><br>
                             </div>
                             <div class="panel-body">
                                   <div class="canvas-container-dash">
@@ -352,7 +352,7 @@
                 <!-- The map -->
                 <div class="row">
                     <div class="panel panel-info">
-                        <div class="panel-heading"><b>Project Sites</b> {% if getFilteredName %} for <a href="/workflow/dashboard/{{ getFilteredName.id }}">{{ getFilteredName }}</a> {% endif %}</div>
+                        <div class="panel-heading"><b>{{ user.activity_user.organization.level_2_label }} Sites</b> {% if getFilteredName %} for <a href="/workflow/dashboard/{{ getFilteredName.id }}">{{ getFilteredName }}</a> {% endif %}</div>
                         <div class="panel-body">
 
                             <style>
