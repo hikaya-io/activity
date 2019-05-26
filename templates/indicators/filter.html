@@ -70,7 +70,7 @@
         var programDropdown = $("#id_programs_filter_dropdown");
         programDropdown.prop("selectedIndex", -1);
         programDropdown.select2({
-            placeholder: {id: -1, text: "Programs"},
+            placeholder: {id: -1, text: "{{ user.activity_user.organization.level_1_label }}(s)"},
             allowClear: false,
             dropdownAutoWidth: true,
             // width: "400px",

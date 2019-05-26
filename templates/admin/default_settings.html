@@ -5,7 +5,7 @@
 			{% include 'admin/sections/side-nav.html' %}
 		</div>
 		<div class="col-md-9 admin-content">
-			<div class="container">
+			<div>
 				<form id="configForm" class="">
 					<!-- Default Labels -->
 					<div class="panel panel-info">
@@ -42,7 +42,7 @@
 									<input
 										type="text"
 										class="form-control"
-										placeholder="Activity"
+										placeholder="Component"
 										value="{{ organization.level_3_label }}"
 										id="workflowlevel3"
 										name="level_3_label"
@@ -53,7 +53,7 @@
 									<input
 										type="text"
 										class="form-control"
-										placeholder="Component"
+										placeholder="Activity"
 										value="{{ organization.level_4_label }}"
 										id="workflowlevel4"
 										name="level_4_label"

@@ -128,7 +128,7 @@ def group_excluded(*group_names, **url):
     :return: Bool True or False is users passes test
     """
     def in_groups(u):
-        if u.is_authenticated():
+        if u.is_authenticated:
             if not bool(u.groups.filter(name__in=group_names)):
                 return True
             raise PermissionDenied

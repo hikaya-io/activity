@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
   <li><a href="/workflow/stakeholder_list/0/0/">Stakeholder List</a></li>
   <li class="active">Contact List</li>
 </ol>

@@ -59,7 +59,7 @@ $(function () {
             type: 'bar'
         },
         title: {
-            text: 'Program Projects by Status {% if get_filtered_name %} for {{ get_filtered_name }} {% endif %}</b></p>'
+            text: '{{ user.activity_user.organization.level_2_label }} by Status {% if get_filtered_name %} for {{ get_filtered_name }} {% endif %}</b></p>'
         },
         xAxis: {
             categories: ['Initiation', 'Tracking']
@@ -67,7 +67,7 @@ $(function () {
         yAxis: {
             min: 0,
             title: {
-                text: 'Number of Approved, Pending or Open Projects'
+                text: 'Number of Approved, Pending or Open {{ user.activity_user.organization.level_2_label }}'
             }
         },
         legend: {
@@ -345,7 +345,7 @@ $(function () {
                         </ul>
 
                         <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-expanded="false">
-                        Filter by Program <span class="caret"></span>
+                        Filter by {{ user.activity_user.organization.level_1_label }} <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="/dashboard/{% if get_filtered_name %}{{ get_filtered_name.id }}{% else %}0{% endif %}/0/">-- All --</a></li>
@@ -357,10 +357,10 @@ $(function () {
                         </ul>
 
                         <button class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#addProgramModal">Add New
-                                Program</button>
+                                {{ user.activity_user.organization.level_1_label }}</button>
                             
                         {% if report_server == False%}
-                          <a href="/workflow/dashboard/project/0/" class="btn btn-default btn-sm btn-success">Create a Project</a>
+                          <a href="/workflow/dashboard/project/0/" class="btn btn-default btn-sm btn-success">Create a {{ user.activity_user.organization.level_2_label }}</a>
                         {% endif %}
                     </div>
                 </div>
@@ -424,10 +424,10 @@ $(function () {
                     Strategic Objectives
                 </div>
                 <div class="panel-body">
-                {% if getObjectives %}
+                {% if get_objectives %}
                     <table class="table table-bordered table-striped" id="table-sparkline">
                         <tbody id="tbody-sparkline">
-                        {%for value in getObjectives  %}
+                        {%for value in get_objectives  %}
                             <thead>
                                 <tr class="info">
                                     <th colspan="2">{{value.indicator__strategic_objectives__name}}</th>

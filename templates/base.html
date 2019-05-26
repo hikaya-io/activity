@@ -82,8 +82,8 @@
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="/reports/report/"><span class="glyphicon glyphicon-list-alt"></span> Program Report</a></li>
-                                        <li><a href="/workflow/report/0/0"><span class="glyphicon glyphicon-list-alt"></span> Project Report</a></li>
+                                        <li><a href="/reports/report/"><span class="glyphicon glyphicon-list-alt"></span> {{ user.activity_user.organization.level_1_label }} Report</a></li>
+                                        <li><a href="/workflow/report/0/0"><span class="glyphicon glyphicon-list-alt"></span> {{ user.activity_user.organization.level_2_label }} Report</a></li>
                                         <li><a href="/indicators/collecteddata/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Data Report</a></li>
                                         <li><a href="/indicators/data/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Visual Report</a></li>
                                         <li><a href="/indicators/report/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Library</a></li>
@@ -100,7 +100,7 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Workflow<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/workflow/dashboard/0/"><span class="glyphicon glyphicon-dashboard"></span> Program Index</a></li>
+                                    <li><a href="/workflow/dashboard/0/"><span class="glyphicon glyphicon-dashboard"></span> {{ user.activity_user.organization.level_1_label }} Index</a></li>
                                     <li><a href="/workflow/documentation_list/0/0/"><span class="glyphicon glyphicon-th-list"></span> Documents</a></li>
                                     <li><a href="/workflow/siteprofile_list/0/0/"><span class="glyphicon glyphicon-th-list"></span> Sites</a></li>
                                     <li><a href="/workflow/stakeholder_list/0/0"><span class="glyphicon glyphicon-th-list"></span> Stakeholders</a></li>
@@ -121,9 +121,9 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/reports/report/"><span class="glyphicon glyphicon-list-alt"></span> Program Report</a></li>
-                                    <li><a href="/customdashboard/program_list/0/"><span class="glyphicon glyphicon-list-alt"></span> Program Dashboards</a></li>
-                                    <li><a href="/workflow/report/0/none"><span class="glyphicon glyphicon-list-alt"></span> Project Report</a></li>
+                                    <li><a href="/reports/report/"><span class="glyphicon glyphicon-list-alt"></span> {{ user.activity_user.organization.level_1_label }} Report</a></li>
+                                    <li><a href="/customdashboard/program_list/0/"><span class="glyphicon glyphicon-list-alt"></span> {{ user.activity_user.organization.level_1_label }} Dashboards</a></li>
+                                    <li><a href="/workflow/report/0/none"><span class="glyphicon glyphicon-list-alt"></span> {{ user.activity_user.organization.level_2_label }} Report</a></li>
                                     {% if user.is_authenticated %}
                                         <li><a href="/indicators/collecteddata/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Data Report</a></li>
                                         <li><a href="/indicators/data/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Visual Report</a></li>
@@ -259,7 +259,7 @@
             {% endif %}-->
         </div><!-- .container collapse -->
 
-        <!--<div id = "ajaxloading" class="modal ajax_loading"></div> -->
+        <div id = "ajaxloading" class="modal ajax_loading"></div>
         <div id="footer">
             <!-- Sticky Footer -->
             <div class="container">

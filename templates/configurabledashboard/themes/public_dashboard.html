@@ -355,11 +355,11 @@ The trend of employment in surveyed areas was such that the majority (70%) of bu
 
     <div class="col-md-12">
         <div class="row tools">
-            <h3>Project Status and Key Performance Indicators</h3>
+            <h3>{{ user.activity_user.organization.level_2_label }} Status and Key Performance Indicators</h3>
 
             <div class="list-group col-md-6">
 
-                                    <h4>What is the current project status? </h4>
+                                    <h4>What is the current {{ user.activity_user.organization.level_2_label }} Status? </h4>
 
                                     Number of Initiations : <b>{{ get_projects_count }}</b><br>
 
@@ -421,17 +421,17 @@ The trend of employment in surveyed areas was such that the majority (70%) of bu
                                   <div class="third widget doughnut">
                                       <h4>
 
-                                          Project Status
+                                          {{ user.activity_user.organization.level_2_label }} Status
                                       </h4>
                                         <div id="status-legend" class="chart-legend"></div>
                                       <div class="canvas-container-fixed">
                                           <canvas id="status"></canvas>
                                       </div>
-                                      <b>Total number of Projects:</b> ( {{ total_projects }} )
+                                      <b>Total number of {{ user.activity_user.organization.level_2_label }}:</b> ( {{ total_projects }} )
                                   </div>
                                   <div class="third widget line">
                                     <div class="chart-legend">
-                                        <h4>Program Expenditure</h4>
+                                        <h4>{{ user.activity_user.organization.level_1_label }} Expenditure</h4>
                                         <div class="canvas-container-fixed">
                                             <canvas id="expenditure_canvas"></canvas>
                                         </div>
@@ -441,7 +441,7 @@ The trend of employment in surveyed areas was such that the majority (70%) of bu
                                   <div class="third widget">
                                       <div class="chart-legend">
                                           <h4>Survey Responses</h4>
-                                          <span>How do you rate our program team ?</span>
+                                          <span>How do you rate our {{ user.activity_user.organization.level_1_label }} team ?</span>
                                       </div>
                                       <div class="canvas-container-fixed">
                                           <canvas id="surveys"></canvas>

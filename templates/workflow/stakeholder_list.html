@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
   <li class="active">Stakeholder List</li>
 </ol>
 {% endblock %}
@@ -10,7 +10,7 @@
 {% block content %}
 <div class="dropdown">
 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-    Programs
+    {{ user.activity_user.organization.level_1_label }}(s)
     <span class="caret"></span>
   </button>
 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" >

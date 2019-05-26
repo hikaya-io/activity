@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
   {% if pk %}
-    <li><a href="/workflow/dashboard/project/{{ pk }}/">Project Dashboard</a></li>
+    <li><a href="/workflow/dashboard/project/{{ pk }}/">{{ user.activity_user.organization.level_2_label }} Dashboard</a></li>
   {% endif %}
   <li class="active">Project Initiation Form</li>
 </ol>

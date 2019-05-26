@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
   {%  if project_agreement_id != '0'%}
-    <li><a href="/workflow/dashboard/project/{{ project_agreement_id }}/">Project Dashboards</a></li>
+    <li><a href="/workflow/dashboard/project/{{ project_agreement_id }}/">{{ user.activity_user.organization.level_2_label }} Dashboards</a></li>
   {% endif %}
   <li class="active">Trainings</li>
 </ol>
@@ -115,20 +115,20 @@
                 // Filter Trainings
                 if (program_id != 0 && project_id == 0) {
 
-                    $.getJSON("/formlibrary/training_objects/"+ program_id + "/0/", function(data) {  
-                        show_training_table(data['getTraining']);                                          
+                    $.getJSON("/formlibrary/training_objects/"+ program_id + "/0/", function(data) {
+                        show_training_table(data['get_training']);
                     }); 
 
                 }else if(program_id != 0 && project_id != 0){
 
-                     $.getJSON("/formlibrary/training_objects/"+ program_id +"/"+project_id+ "/", function(data) { 
-                        show_training_table(data['getTraining']);                                                                                                           
+                     $.getJSON("/formlibrary/training_objects/"+ program_id +"/"+project_id+ "/", function(data) {
+                        show_training_table(data['get_training']);
                     }); 
                 }  
                 else{
 
-                    $.getJSON("/formlibrary/training_objects/0/0/", function(data) {  
-                        show_training_table(data['getTraining']);          
+                    $.getJSON("/formlibrary/training_objects/0/0/", function(data) {
+                        show_training_table(data['get_training']);
                     });     
                 }
             } 
