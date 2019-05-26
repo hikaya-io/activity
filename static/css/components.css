@@ -1,0 +1,69 @@
+/* buttons */
+.hikaya-btn-primary {
+    background: #005d58;
+    color: #ffffff;
+}
+
+.hikaya-btn-primary:hover {
+    background-color: #008082;
+    color: #ffffff;
+}
+
+.hikaya-btn-secondary {
+    background: #01579B;
+    color: #ffffff;
+}
+
+.hikaya-btn-secondary:hover {
+    background: #80D8FF;
+    color: #000000;
+}
+
+.hikaya-btn-danger{
+    background: #DD2C00;
+    color: #ffffff;
+}
+
+.hikaya-btn-danger:hover {
+    background: #FF8A65;
+    border: 1px solid #005d58;
+    color: #000000;
+}
+
+.hikaya-btn-cancel{
+    background: #FAFAFA;
+    border: 1px solid #005d58;
+    color: #000000;
+}
+
+.hikaya-btn-cancel:hover {
+    background-color: #ffffff;
+    border: 1px solid #005d58;
+    color: #000000;
+}
+
+.hikaya-btn-default{
+    background-color: #E0F7FA;
+    color: #000000;
+}
+
+.hikaya-btn-default:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+/* enf of buttons*/
+
+/* states */
+/* .hikaya-active {
+    background-color: #01579B;
+    color: #ffffff;
+} */
+
+.hikaya-active a {
+    background-color: #01579B;
+    color: #ffffff;
+}
+.hikaya-active a:hover {
+    color: #01579B;
+}
+/* end of states */

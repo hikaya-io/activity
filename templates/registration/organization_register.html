@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container auth-container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h1>Create an Organization</h1>
+                <div class="panel panel-default auth-main">
+                    <div class="panel-heading">
+                        <strong>Fill in organization details</strong>
+                    </div>
+                    <div class="panel-body">
+                        <div class="auth-form">
+                            <form action="">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="">
+                                        <label for="org_name">Organization Name*</label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <label for="description">What do you do?</label>
+                                        <textarea name="description" id="description" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <label for="password">Activity Url</label>
+                                        <input type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="row auth-form-action text-right">
+                                    <button type="reset" class="btn btn-md hikaya-btn-cancel">
+                                        <i class="fa fa-undo"></i> Cancel
+                                    </button>
+                                    <button type="submit" class="btn btn-md hikaya-btn-primary">
+                                        <i class="fa fa-save"></i> Submit
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+        </div>    
+    </div>
+  
+{% endblock %}
