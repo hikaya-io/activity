@@ -135,5 +135,5 @@ def get_nav_links(nav):
     ]
     for item in nav_links:
         if item['label'] == nav:
-            item['status'] = 'active'
+            item['status'] = 'hikaya-active'
     return nav_links
