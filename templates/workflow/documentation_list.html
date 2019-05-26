@@ -19,7 +19,7 @@
   </button>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="program_filter(0)">{{ program.gaitid}} - {{ program.name }}</a></li>>-- All --</a></li>
-    {% for program in getPrograms %}
+    {% for program in get_programs %}
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="program_filter({{program.id}})">{{ program.gaitid}} - {{ program.name }}</a></li>
     {% endfor %}
   </ul>

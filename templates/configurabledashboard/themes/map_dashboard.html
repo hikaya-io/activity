@@ -31,7 +31,7 @@
 					<div class='panel-heading text-center soft-border-top' style='background-color: #7B5213;'></div>
 						<div class="panel-body" style="min-height: 500; max-height: 500;">
 						<span class='chart-title' style="overflow-y: scroll;">{{ table1.column_heading }}</span>
-						{% with table1 as activitytableData %}
+						{% with table1 as ActivityTableData %}
 						    {% include 'customdashboard/components/charts/bar_graph.html' %}
 						{% endwith %}
 						</div>
@@ -42,7 +42,7 @@
 					<div class='panel-heading soft-border-top' style='background-color: #7B5213;'></div>
 						<div class="panel-body" style="min-height: 500; max-height: 500;">
 						<span class='chart-title' style="overflow-y: scroll;">{{ table2.column_heading }}</span>
-						{% with table2 as activitytableData %}
+						{% with table2 as ActivityTableData %}
 						    {% include 'customdashboard/components/charts/doughnut.html' %}
 						{% endwith %}
 						</div>
@@ -53,7 +53,7 @@
 					<div class='panel-heading soft-border-top' style='background-color: #7B5213;'></div>
 						<div class="panel-body" style="min-height: 500; max-height: 500;">
 						<span class='chart-title' style="overflow-y: scroll;">{{ table3.column_heading }}</span>
-						{% with table3 as activitytableData %}
+						{% with table3 as ActivityTableData %}
 						    {% include 'customdashboard/components/charts/doughnut.html' %}
 						{% endwith %}
 						</div>

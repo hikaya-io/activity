@@ -26,7 +26,7 @@
 <link rel="borders" type="application/json" href="{{ STATIC_URL }}js/world_borders.geojson">
 
   <div class="row">
-    <h3>{% if getProgram %}{{ getProgram.name }}{% endif %}</h3>
+    <h3>{% if get_program %}{{ get_program.name }}{% endif %}</h3>
 
             
       <!-- tabs left -->
@@ -47,11 +47,11 @@
                     <br>
                     <h4><strong>Number of Initiations</strong> <span class="badge">{{ total_projects }}</span></h4>
                     <h4>
-                       <span class="label label-success">Approved &nbsp;<span class="badge">{{ getApprovedCount }}</span></span>
-                       <span class="label label-success">Awaiting Approval &nbsp;<span class="badge">{{ getAwaitingApprovalCount }}</span></span>
-                       <span class="label label-success">In Progress &nbsp;<span class="badge">{{ getRejectedCount }}</span></span>
+                       <span class="label label-success">Approved &nbsp;<span class="badge">{{ get_approved_count }}</span></span>
+                       <span class="label label-success">Awaiting Approval &nbsp;<span class="badge">{{ get_awaiting_approval_count }}</span></span>
+                       <span class="label label-success">In Progress &nbsp;<span class="badge">{{ get_rejected_count }}</span></span>
                        <span class="label label-success">New &nbsp;<span class="badge">{{ nostatus_count }}</span></span>
-                       <span class="label label-success">Rejected &nbsp;<span class="badge">{{ getInProgressCount }}</span></span>
+                       <span class="label label-success">Rejected &nbsp;<span class="badge">{{ get_in_progress_count }}</span></span>
 
                       </a>
                     </h4>  
@@ -60,10 +60,10 @@
                             <div class="panel panel-default">
                               <div class="panel-heading">
                                 <h4 class="panel-title">
-                                  <a data-toggle="collapse" href="#collapse{{ getProgram.id }}"><b>Summary of project initiations for - {% if getProgram %}{{ getProgram.name }}{% endif %}</b></a>
+                                  <a data-toggle="collapse" href="#collapse{{ get_program.id }}"><b>Summary of project initiations for - {% if get_program %}{{ get_program.name }}{% endif %}</b></a>
                                 </h4>
                               </div>
-                              <div id="collapse{{ getProgram.id }}" class="panel-collapse collapse">
+                              <div id="collapse{{ get_program.id }}" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <table class="table table-striped">
                                           <tr>
@@ -72,7 +72,7 @@
                                               <th>Status</th>
                                               <th>EXp. Start Date</th>
                                           </tr>
-                                          {% for project in getProjects|slice:"10" %}
+                                          {% for project in get_projects|slice:"10" %}
                                           <tr>
                                               <td>{{ project.activity_code }}</td>
                                               <td>{{ project.project_name }}</td>
@@ -138,19 +138,19 @@
                 <h1 class="sidebar-header">Key Performance Indicators</h1>
                     <br>
                     <h4>
-                        <strong>Number of Indicator(s)</strong> <span class="badge">{{ getIndicatorCount }}</span>
-                        <strong>With Data</strong> <span class="badge">{{ getIndicatorCountData }}</span>
-                        <strong>KPIs</strong> <span class="badge">{{ getIndicatorCountKPI }}</span>
+                        <strong>Number of Indicator(s)</strong> <span class="badge">{{ get_indicator_count }}</span>
+                        <strong>With Data</strong> <span class="badge">{{ get_indicator_countData }}</span>
+                        <strong>KPIs</strong> <span class="badge">{{ get_indicator_count_kpi }}</span>
                     </h4>
                      <!-- The table collapse panel -->
                         <div class="panel-group">
                         <div class="panel panel-default">
                           <div class="panel-heading">
                             <h4 class="panel-title">
-                              <a data-toggle="collapse" href="#indi_collapse{{ getProgram.id }}"><b>Summary of Indicators for - {% if getProgram %}{{ getProgram.name }}{% endif %}</b></a>
+                              <a data-toggle="collapse" href="#indi_collapse{{ get_program.id }}"><b>Summary of Indicators for - {% if get_program %}{{ get_program.name }}{% endif %}</b></a>
                             </h4>
                           </div>
-                          <div id="indi_collapse{{ getProgram.id }}" class="panel-collapse collapse">
+                          <div id="indi_collapse{{ get_program.id }}" class="panel-collapse collapse">
                             <div class="panel-body">
                                 <table class="table table-striped">
                                       <tr>
@@ -160,7 +160,7 @@
                                           <th>Actuals</th>
                                           <th>Date</th>
                                       </tr>
-                                      {% for indicator in getQuantitativeDataSums %}
+                                      {% for indicator in get_quantitative_data_sums %}
                                       <tr>
                                           <td>{{ indicator.indicator__number }}</td>
                                           <td>{{ indicator.indicator__name }}</td>
@@ -215,7 +215,7 @@
                 <br>
                 <div class="row">
                     <div class="panel panel-info">
-                        <div class="panel-heading"><strong>Beneficiaries for {{ getProgram.name  }} </strong></div>
+                        <div class="panel-heading"><strong>Beneficiaries for {{ get_program.name  }} </strong></div>
                         <div class="panel-body">
                             <table class="table table-striped">
                                 {% if getBeneficiaries %}
@@ -243,7 +243,7 @@
                 </div>
                 <div class="row">
                     <div class="panel panel-info">
-                        <div class="panel-heading"><strong>Trainings for {{ getProgram.name  }} </strong></div>
+                        <div class="panel-heading"><strong>Trainings for {{ get_program.name  }} </strong></div>
                         <div class="panel-body">
                             <table class="table table-striped">
                                 {% if getTrainings %}
@@ -267,16 +267,16 @@
                 </div>
                 <div class="row">
                     <div class="panel panel-info">
-                        <div class="panel-heading"><strong>Distributions for {{ getProgram.name  }} </strong></div>
+                        <div class="panel-heading"><strong>Distributions for {{ get_program.name  }} </strong></div>
                         <div class="panel-body">
                             <table class="table table-striped">
-                                {% if getDistributions %}
+                                {% if get_distributions %}
                                   <tr>
                                       <th>Date Created</th>
                                       <th>Name</th>
                                   </tr>
                                 {% endif %}
-                                 {% for item in getDistributions %}
+                                 {% for item in get_distributions %}
                                     <tr>
                                         <td>{{ item.create_date|date }} </td>
                                         <td>{{ item.distribution_name }}</td>
@@ -293,9 +293,9 @@
             <!-- End of Monitoring Contents -->
 
             <div class="sidebar-pane" id="i_surveys">
-                <h1 class="sidebar-header">{{ getProgramNarrative.narrative_title }}</h1>
+                <h1 class="sidebar-header">{{ get_program_narrative.narrative_title }}</h1>
                 <br>
-                <p>{{ getProgramNarrative.narrative }}</p>
+                <p>{{ get_program_narrative.narrative }}</p>
                 <div class="col-md-6">
                     {% for table in evidence_tables %}
                     <div class="panel panel-info">
@@ -353,7 +353,7 @@
                 <!-- The map -->
                 <div class="row">
                     <div class="panel panel-info">
-                        <div class="panel-heading"><b>Project Sites</b> {% if getFilteredName %} for <a href="/workflow/dashboard/{{ getFilteredName.id }}">{{ getFilteredName }}</a> {% endif %}</div>
+                        <div class="panel-heading"><b>Project Sites</b> {% if get_filtered_name %} for <a href="/workflow/dashboard/{{ get_filtered_name.id }}">{{ get_filtered_name }}</a> {% endif %}</div>
                         <div class="panel-body">
 
                             <style>

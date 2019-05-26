@@ -11,7 +11,7 @@
   </button>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
         <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/program_list/0">--All--</a></li>
-    {% for country in getCountry %}
+    {% for country in get_country %}
         <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/program_list/{{ country.id }}">{{ country.country}}</a></li>
     {% endfor %}
   </ul>
@@ -30,7 +30,7 @@
         <th>Public Dashboard</th>
         <th>View Dashboard</th>
     </tr>
-    {% for item in getProgram %}
+    {% for item in get_program %}
     <tr>
         <td>{{ item.create_date}}</td>
         <td>{{ item.name}}</td>

@@ -48,7 +48,7 @@
 					>-- All --</a
 				>
 			</li>
-			{% for program in getPrograms %}
+			{% for program in get_programs %}
 			<li role="presentation">
 				<a
 					data-toggle="modal"
@@ -72,8 +72,8 @@
 		</tr>
 		{% for item in getDocumentation %}
 		<tr>
-			<td>{{ item.name | truncatechars: 90 }}</td>
-			<td>{{ item.program | truncatechars: 90 }}</td>
+			<td>{{ item.name|truncatechars:90 }}</td>
+			<td>{{ item.program|truncatechars:90 }}</td>
 			<td>
 				<a
 					class="documents"

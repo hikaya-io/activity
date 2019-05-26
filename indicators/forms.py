@@ -75,7 +75,7 @@ class IndicatorForm(forms.ModelForm):
                              'strategic_objectives',
                              ),
                     HTML("""
-                        {% if getExternalServiceRecord %}
+                        {% if get_external_service_record %}
                             <div class='panel panel-default'>
                             <div class='panel-heading'>
                             External Indicator Service</div>
@@ -84,7 +84,7 @@ class IndicatorForm(forms.ModelForm):
                                         <th>Service Name</th>
                                         <th>View Guidance</th>
                                     </tr>
-                                    {% for item in getExternalServiceRecord %}
+                                    {% for item in get_external_service_record %}
                                         <tr>
                                             <td>
                                             {{ item.external_service.name }}
@@ -409,7 +409,8 @@ class CollectedDataForm(forms.ModelForm):
 
             Div(
                 HTML("""<br/>
-{% if getDisaggregationLabelStandard and not getDisaggregationValueStandard %}
+    {% if get_disaggregation_label_standard and not 
+            get_disaggregation_value_standard %}
         <div class='panel panel-default'>
             <!-- Default panel contents -->
             <div class='panel-heading'>Standard Disaggregations</div>
@@ -419,7 +420,7 @@ class CollectedDataForm(forms.ModelForm):
                 <th>Disaggregation Level</th>
                 <th>Actuals</th>
                 </tr>
-                {% for item in getDisaggregationLabelStandard %}
+                {% for item in get_disaggregation_label_standard %}
                 <tr>
                     <td>{{ item.label }}</td>
                     <td><input type="text" name="{{ item.id }}" value=""></td>
@@ -428,14 +429,14 @@ class CollectedDataForm(forms.ModelForm):
               </table>
         </div>
     {% else %}
-        {% if not getDisaggregationValueStandard %}
+        {% if not get_disaggregation_value_standard %}
             <h4>Standard Disaggregation Levels Not Entered</h4>
             <p>Standard disaggregations are entered in the administrator for 
             the entire organizations.  If you are not seeing
             any here, please contact your system administrator.</p>
         {% endif %}
     {% endif %}
-    {% if getDisaggregationLabel and not getDisaggregationValue %}
+    {% if get_disaggregation_label_standard and not get_disaggregation_value %}
         <div class='panel panel-default'>
             <!-- Default panel contents -->
             <div class='panel-heading'>New Disaggregations</div>
@@ -445,7 +446,7 @@ class CollectedDataForm(forms.ModelForm):
                 <th>Disaggregation Level</th>
                 <th>Actuals</th>
                 </tr>
-                {% for item in getDisaggregationLabel %}
+                {% for item in get_disaggregation_label %}
                 <tr>
                     <td>{{ item.label }}</td>
                     <td><input type="text" name="{{ item.id }}" value=""></td>
@@ -454,14 +455,14 @@ class CollectedDataForm(forms.ModelForm):
               </table>
         </div>
     {% else %}
-        {% if not getDisaggregationValue %}
+        {% if not get_disaggregation_value %}
             <h4>Disaggregation Levels Not Entered For This Indicator</h4>
             <a href="/indicators/indicator_update/{{ indicator_id }}">
             Add a Disaggregation</a>
         {% endif %}
     {% endif %}
 
-    {% if getDisaggregationValue %}
+    {% if get_disaggregation_value %}
         <div class='panel panel-default'>
             <!-- Default panel contents -->
             <div class='panel-heading'>Existing Disaggregations</div>
@@ -472,7 +473,7 @@ class CollectedDataForm(forms.ModelForm):
                 <th>Disaggregation Level</th>
                 <th>Actuals</th>
                 </tr>
-                {% for item in getDisaggregationValue %}
+                {% for item in get_disaggregation_value %}
                 <tr>
                     <td>{{ item.disaggregation_label.label }}</td>
                     <td><input type="text" 
@@ -485,7 +486,7 @@ class CollectedDataForm(forms.ModelForm):
         </div>
     {% endif %}
 
-    {% if getDisaggregationValueStandard %}
+    {% if get_disaggregation_value_standard %}
         <div class='panel panel-default'>
             <!-- Default panel contents -->
             <div class='panel-heading'>Existing Standard Disaggregations</div>
@@ -496,7 +497,7 @@ class CollectedDataForm(forms.ModelForm):
                 <th>Disaggregation Level</th>
                 <th>Actuals</th>
                 </tr>
-                {% for item in getDisaggregationValueStandard %}
+                {% for item in get_disaggregation_value_standard %}
                 <tr>
                     <td>{{ item.disaggregation_label.label }}</td>
                     <td><input type="text" 

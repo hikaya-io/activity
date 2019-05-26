@@ -55,9 +55,8 @@ class ComponentDataSource(models.Model):
     data_name = models.CharField(
         "Name of Source Data", max_length=255, blank=True)
     data_type = models.CharField(
-        "Data Type", max_length=200, null=True,
-         blank=True,
-         help_text="Is this data photos? Text? Numerical data?")
+        "Data Type", max_length=200, null=True, blank=True,
+        help_text="Is this data photos? Text? Numerical data?")
     data_source = models.URLField(max_length=200, null=True, blank=True)
     data_source_type = models.CharField(
         "Data Source Type", max_length=200, null=True, blank=True)

@@ -20,11 +20,11 @@
 
 <br />
 <div>
-  {% if getDashboard %} {% ifnotequal status 'none' %}
+  {% if get_dashboard %} {% ifnotequal status 'none' %}
   <p>Filtered by (Status): {{ status }}</p>
   {% endifnotequal %} {% if filtered_program %}
   <p>Filtered by (Program): {{ filtered_program }}</p>
-  {% endif %} {% for program in getDashboard %} {% if program.agreement.all %}
+  {% endif %} {% for program in get_dashboard %} {% if program.agreement.all %}
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4>

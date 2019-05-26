@@ -80,7 +80,7 @@ class ProgramList(ListView):
             program_list.append(program)
 
         return render(request, self.template_name,
-                      {'getProgram': program_list, 'getCountry': country_list,
+                      {'get_program': program_list, 'get_country': country_list,
                        'country': country})
 
 
@@ -186,10 +186,10 @@ def default_custom_dashboard(request, id=0, status=0):
                   "customdashboard/customdashboard/visual_dashboard.html",
                   {'get_site_profile': get_site_profile,
                    'get_budget_estimated': get_budget_estimated,
-                   'getQuantitativeDataSums': get_quantitative_data_sums,
+                   'get_quantitative_data_sums': get_quantitative_data_sums,
                    'country': countries,
                    'get_awaiting_approval_count': get_awaiting_approval_count,
-                   'getFilteredName': get_filtered_name,
+                   'get_filtered_name': get_filtered_name,
                    'get_projects': get_projects,
                    'get_approved_count': get_approved_count,
                    'get_rejected_count': get_rejected_count,
@@ -199,8 +199,8 @@ def default_custom_dashboard(request, id=0, status=0):
                    'selected_countries_list': selected_countries_list,
                    'get_site_profile_indicator': get_site_profile_indicator,
                    'get_project_completed': get_project_completed,
-                   'totalActuals': total_actuals,
-                   'totalTargets': total_targets,
+                   'total_actuals': total_actuals,
+                   'total_targets': total_targets,
                    'total_budgetted': total_budgetted,
                    'total_actual': total_actual})
 
@@ -346,7 +346,7 @@ def public_dashboard(request, id=0, public=0):
         'evidence_tables_count': evidence_tables_count,
         'get_quantitative_data_sums': get_quantitative_data_sums,
         'get_site_profile_indicator': get_site_profile_indicator,
-        'getSiteProfileIndicatorCount': get_site_profile_indicator.count(),
+        'get_site_profile_indicator_count': get_site_profile_indicator.count(),
         'get_beneficiaries': get_beneficiaries,
         'get_distributions': get_distributions, 'get_trainings': get_trainings,
         'get_project_completed': get_project_completed,
@@ -579,18 +579,18 @@ def rrima_public_dashboard(request, id=0):
     # retrieve program
     model = Program
     program_id = id
-    getProgram = Program.objects.all().filter(id=program_id)
+    get_program = Program.objects.all().filter(id=program_id)
 
     # retrieve the coutries the user has data access for
     countries = get_country(request.user)
 
     # retrieve projects for a program
     # .filter(program__id=1, program__country__in=1)
-    getProjects = ProjectAgreement.objects.all()
+    get_projects = ProjectAgreement.objects.all()
 
     page_text = dict()
-    page_text['pageTitle'] = "Refugee Response and Migration News"
-    page_text['projectSummary'] = {}
+    page_text['page_title'] = "Refugee Response and Migration News"
+    page_text['project_summary'] = {}
     # TODO : Change this variable 
     page_map = [
         {"latitude": 39.9334, "longitude": 32.8597, "location_name": "Ankara",
@@ -629,7 +629,7 @@ def rrima_public_dashboard(request, id=0):
          "site_description": "RRIMA (In partnership with IRC) ",
          "region_name": "Balkans"}]
     # Borrowed data for bar graph
-    colorPalettes = {
+    color_palettes = {
         'bright': ['#82BC00', '#C8C500', '#10A400', '#CF102E', '#DB5E11',
                    '#A40D7A', '#00AFA8', '#1349BB', '#FFD200 ',
                    '#FF7100', '#FFFD00', '#ABABAB', '#7F7F7F', '#7B5213',
@@ -675,7 +675,7 @@ def rrima_jupyter_view1(request, id=0):
     """
     model = Program
     program_id = 1  # id ##USE TURKEY PROGRAM ID HERE
-    # getProgram = Program.objects.all().filter(id=program_id)
+    # get_program = Program.objects.all().filter(id=program_id)
 
     # retrieve the coutries the user has data access for
     countries = get_country(request.user)

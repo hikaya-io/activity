@@ -467,7 +467,7 @@ class IndicatorUpdate(UpdateView):
         get_indicator = Indicator.objects.get(id=self.kwargs['pk'])
 
         context.update({'i_name': get_indicator.name})
-        context['programId'] = get_indicator.program.all()[0].id
+        context['program_id'] = get_indicator.program.all()[0].id
         context['periodic_targets'] = PeriodicTarget.objects\
             .filter(indicator=get_indicator)\
             .annotate(num_data=Count('collecteddata'))\
@@ -568,13 +568,14 @@ class IndicatorUpdate(UpdateView):
                 # print("i = %s............%s..........." %
                 # (i, periodic_targets) )
                 periodic_target, created = PeriodicTarget.objects\
-                    .update_or_create(
-                    indicator=indicatr, id=pk,
-                    defaults={'period': pt.get('period', ''),
-                              'target': pt.get('target', 0),
-                              'customsort': i, 'start_date': start_date,
-                              'end_date': end_date,
-                              'edit_date': timezone.now()})
+                    .update_or_create(indicator=indicatr, id=pk,
+                                      defaults=
+                                      {'period': pt.get('period', ''),
+                                       'target': pt.get('target', 0),
+                                       'customsort': i,
+                                       'start_date': start_date,
+                                       'end_date': end_date,
+                                       'edit_date': timezone.now()})
                 # print("%s|%s = %s, %s" % (created, pk, pt.get('period'),
                 # pt.get('target') ))
                 if created:
@@ -720,9 +721,9 @@ class CollectedDataCreate(CreateView):
 
         context.update({'get_disaggregation_value': get_disaggregation_value})
         context.update({'get_disaggregation_label': get_disaggregation_label})
-        context.update(
-            {'get_disaggregation_label_standard':
-                 get_disaggregation_label_standard})
+        context.update({
+            'get_disaggregation_label_standard':
+                get_disaggregation_label_standard})
         context.update({'indicator_id': self.kwargs['indicator']})
         context.update({'indicator': indicator})
         context.update({'program_id': self.kwargs['program']})
@@ -861,12 +862,12 @@ class CollectedDataUpdate(UpdateView):
             get_disaggregation_value = None
             get_disaggregation_value_standard = None
 
-        context.update(
-            {'get_disaggregation_label_standard':
-                 get_disaggregation_label_standard})
+        context.update({
+            'get_disaggregation_label_standard':
+                get_disaggregation_label_standard})
         context.update(
             {'get_disaggregation_value_standard':
-                 get_disaggregation_value_standard})
+                get_disaggregation_value_standard})
         context.update({'get_disaggregation_value': get_disaggregation_value})
         context.update({'get_disaggregation_label': get_disaggregation_label})
         context.update({'id': self.kwargs['pk']})
@@ -1061,7 +1062,7 @@ def collecteddata_import(request):
     # send the keys and vars from the json data to the template along
     # with submitted feed info and silos for new form
     return render(request, "indicators/collecteddata_import.html",
-                  {'getTables': data})
+                  {'get_tables': data})
 
 
 def service_json(request, service):
@@ -1190,7 +1191,7 @@ def indicator_report(request, program=0, indicator=0, type=0):
                   'program': program,
                   'get_programs': get_programs,
                   'get_indicator_types': get_indicator_types,
-                  'getIndicators': indicator_data,
+                  'get_indicators': indicator_data,
                   'data': data})
 
 
@@ -1198,10 +1199,10 @@ class IndicatorReport(View, AjaxableResponseMixin):
     def get(self, request, *args, **kwargs):
 
         countries = get_country(request.user)
-        getPrograms = Program.objects.all().filter(
+        get_programs = Program.objects.all().filter(
             funding_status="Funded", country__in=countries).distinct()
 
-        getIndicatorTypes = IndicatorType.objects.all()
+        get_indicator_types = IndicatorType.objects.all()
 
         program = int(self.kwargs['program'])
         indicator = int(self.kwargs['indicator'])
@@ -1249,7 +1250,7 @@ class IndicatorReport(View, AjaxableResponseMixin):
         return JsonResponse(get_indicators, safe=False)
 
 
-def programIndicatorReport(request, program=0):
+def program_indicator_report(request, program=0):
     """
     This is the GRID report or indicator plan for a program.
     Shows a simple list of indicators sorted by level
@@ -1351,7 +1352,7 @@ def indicator_data_report(request, id=0, program=0, type=0):
     # send the keys and vars from the json data to the template along
     # with submitted feed info and silos for new form
     return render(request, "indicators/data_report.html", {
-        'getQuantitativeData': queryset,
+        'get_quantitative_data': queryset,
         'countries': countries,
         'get_site_profile': get_site_profile,
         'get_programs': get_programs,
@@ -1587,8 +1588,8 @@ class DisaggregationReportMixin(object):
 
         context['program_id'] = program_id
         context['data'] = idata
-        context['getPrograms'] = programs
-        context['getIndicators'] = indicators
+        context['get_programs'] = programs
+        context['get_indicators'] = indicators
         context['program_selected'] = program_selected
         return context
 
@@ -1607,9 +1608,10 @@ class DisaggregationPrint(DisaggregationReportMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = super(DisaggregationPrint, self).get_context_data(**kwargs)
-        hmtl_string = render(request, self.template_name, {
-                             'data': context['data'],
-            'program_selected': context['program_selected']})
+        hmtl_string = render(
+            request, self.template_name, {
+                'data': context['data'],
+                'program_selected': context['program_selected']})
         pdffile = HTML(string=hmtl_string.content)
 
         result = pdffile.write_pdf(stylesheets=[CSS(
@@ -1697,11 +1699,11 @@ class TVAReport(TemplateView):
             .filter(**filters)\
             .annotate(actuals=Sum('collecteddata__achieved'))
         context['data'] = indicators
-        context['getIndicators'] = Indicator.objects.filter(
+        context['get_indicators'] = Indicator.objects.filter(
             program__country__in=countries).exclude(collecteddata__isnull=True)
-        context['getPrograms'] = Program.objects.filter(
+        context['get_programs'] = Program.objects.filter(
             funding_status="Funded", country__in=countries).distinct()
-        context['getIndicatorTypes'] = IndicatorType.objects.all()
+        context['get_indicator_types'] = IndicatorType.objects.all()
         context['program'] = program
         context['export_to_pdf_url'] = True
         return context

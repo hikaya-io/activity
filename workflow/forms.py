@@ -101,7 +101,7 @@ class BudgetForm(forms.ModelForm):
         super(BudgetForm, self).__init__(*args, **kwargs)
         self.fields['agreement'].widget = forms.HiddenInput()  # TextInput()
         self.fields['complete'].widget = forms.HiddenInput()  # TextInput()
-        # countries = getCountry(self.request.user)
+        # countries = get_country(self.request.user)
 
         # self.fields['agreement'].queryset = ProjectAgreement.objects\
         #   .filter(program__country__in = countries)
@@ -272,7 +272,7 @@ class ProjectAgreementForm(forms.ModelForm):
         <div class='panel panel-default'>
           <!-- Default panel contents -->
           <div class='panel-heading'>Components</div>
-          {% if getBenchmark %}
+          {% if get_benchmark %}
               <!-- Table -->
               <table class="table">
                 <tr>
@@ -283,7 +283,7 @@ class ProjectAgreementForm(forms.ModelForm):
                 <th>Budget</th>
                 <th>View</th>
                 </tr>
-                {% for item in getBenchmark %}
+                {% for item in get_benchmark %}
                 <tr>
                     <td>{{ item.description}}</td>
                     <td>{{ item.site }}</td>
@@ -333,14 +333,14 @@ class ProjectAgreementForm(forms.ModelForm):
           <!-- Table -->
           <table class="table" id="budget_contributions_table">
           <tbody>
-          {% if getBudget %}
+          {% if get_budget %}
                 <tr>
                 <th>Contributor</th>
                 <th>Description</th>
                 <th>Value</th>
                 <th>View</th>
                 </tr>
-                {% for item in getBudget %}
+                {% for item in get_budget %}
                 <tr>
                     <td>{{ item.contributor}}</td>
                     <td>{{ item.description_of_contribution}}</td>
@@ -392,9 +392,9 @@ class ProjectAgreementForm(forms.ModelForm):
                             HTML("""
         <div class='panel panel-default'>
             <div class='panel-heading'>Related indicators</div>
-            {% if getQuantitative %}
+            {% if get_quantitative %}
                 <table class="table">
-                    {% for item in getQuantitative %}
+                    {% for item in get_quantitative %}
                         {% ifchanged item.indicator.id %}
                             <tr>
                                 <td>
@@ -420,7 +420,7 @@ class ProjectAgreementForm(forms.ModelForm):
         <div class='panel panel-default'>
           <!-- Default panel contents -->
           <div class='panel-heading'>Monitoring</div>
-          {% if getMonitor %}
+          {% if get_monitor %}
               <!-- Table -->
               <table class="table">
                 <tr>
@@ -429,7 +429,7 @@ class ProjectAgreementForm(forms.ModelForm):
                 <th>Type</th>
                 <th>View</th>
                 </tr>
-                {% for item in getMonitor %}
+                {% for item in get_monitor %}
                 <tr>
                     <td>{{ item.responsible_person}}</td>
                     <td>{{ item.frequency}}</td>
@@ -481,7 +481,7 @@ class ProjectAgreementForm(forms.ModelForm):
         <div class='panel panel-default'>
           <!-- Default panel contents -->
           <div class='panel-heading'>Documentation</div>
-          {% if getDocuments %}
+          {% if get_documents %}
               <!-- Table -->
               <table class="table">
                 <tr>
@@ -490,7 +490,7 @@ class ProjectAgreementForm(forms.ModelForm):
                 <th>Description</th>
                 <th>&nbsp;</th>
                 </tr>
-                {% for item in getDocuments %}
+                {% for item in get_documents %}
                 <tr>
                     <td>{{ item.name}}</td>
                     <td><a href="{{ item.url}}" target="_new">{{ item.url}}</a>
@@ -717,7 +717,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         <div class='panel panel-default'>
           <!-- Default panel contents -->
           <div class='panel-heading'>Components</div>
-          {% if getBenchmark %}
+          {% if get_benchmark %}
               <!-- Table -->
               <table class="table">
                 <tr>
@@ -728,7 +728,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
                 <th>Budget</th>
                 <th>View</th>
                 </tr>
-                {% for item in getBenchmark %}
+                {% for item in get_benchmark %}
                 <tr>
                     <td>{{ item.description}}</td>
                     <td>{{ item.site }}</td>
@@ -774,14 +774,14 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
           <!-- Table -->
           <table class="table" id="budget_contributions_table">
             <tbody>
-                {% if getBudget %}
+                {% if get_budget %}
                     <tr>
                     <th>Contributor</th>
                     <th>Description</th>
                     <th>Value</th>
                     <th>View</th>
                     </tr>
-                    {% for item in getBudget %}
+                    {% for item in get_budget %}
                     <tr>
                         <td>{{ item.contributor}}</td>
                         <td>{{ item.description_of_contribution}}</td>
@@ -851,7 +851,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         <div class='panel panel-default'>
           <!-- Default panel contents -->
           <div class='panel-heading'>Documentation</div>
-          {% if getDocuments %}
+          {% if get_documents %}
               <!-- Table -->
               <table class="table">
                 <tr>
@@ -860,7 +860,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
                 <th>Description</th>
                 <th>&nbsp;</th>
                 </tr>
-                {% for item in getDocuments %}
+                {% for item in get_documents %}
                 <tr>
                     <td>{{ item.name}}</td>
                     <td><a href="{{ item.url}}" target="_new">{{ item.url}}</a>
@@ -1104,7 +1104,7 @@ class ProjectCompleteForm(forms.ModelForm):
         <div class='panel panel-default'>
           <!-- Default panel contents -->
           <div class='panel-heading'>Components</div>
-          {% if getBenchmark %}
+          {% if get_benchmark %}
               <!-- Table -->
               <table class="table">
                 <tr>
@@ -1118,7 +1118,7 @@ class ProjectCompleteForm(forms.ModelForm):
                 <th>Actual Cost</th>
                 <th>View</th>
                 </tr>
-                {% for item in getBenchmark %}
+                {% for item in get_benchmark %}
                 <tr>
                     <td>{{ item.description}}</td>
                     <td>{{ item.site }}</td>
@@ -1176,14 +1176,14 @@ class ProjectCompleteForm(forms.ModelForm):
           <!-- Table -->
           <table class="table" id="budget_contributions_table">
           <tbody>
-          {% if getBudget %}
+          {% if get_budget %}
                 <tr>
                 <th>Contributor</th>
                 <th>Description</th>
                 <th>Value</th>
                 <th>View</th>
                 </tr>
-                {% for item in getBudget %}
+                {% for item in get_budget %}
                 <tr>
                     <td>{{ item.contributor}}</td>
                     <td>{{ item.contributor_description}}</td>
@@ -1219,9 +1219,9 @@ class ProjectCompleteForm(forms.ModelForm):
                             HTML("""
         <div class='panel panel-default'>
             <div class='panel-heading'>Related indicators</div>
-            {% if getQuantitative %}
+            {% if get_quantitative %}
                 <table class="table">
-                {% for item in getQuantitative %}
+                {% for item in get_quantitative %}
                     {% ifchanged item.indicator.id %}
                         <tr>
                             <td><a href="/indicators/indicator_update/
@@ -1271,7 +1271,7 @@ class ProjectCompleteForm(forms.ModelForm):
         <div class='panel panel-default'>
           <!-- Default panel contents -->
           <div class='panel-heading'>Documentation</div>
-          {% if getDocuments %}
+          {% if get_documents %}
               <!-- Table -->
               <table class="table">
                 <tr>
@@ -1280,7 +1280,7 @@ class ProjectCompleteForm(forms.ModelForm):
                 <th>Description</th>
                 <th>&nbsp;</th>
                 </tr>
-                {% for item in getDocuments %}
+                {% for item in get_documents %}
                 <tr>
                     <td>{{ item.name}}</td>
                     <td><a href="{{ item.url}}" target="_new">{{ item.url}}</a>
@@ -1436,7 +1436,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
         <div class='panel panel-default'>
             <!-- Default panel contents -->
             <div class='panel-heading'>Components</div>
-            {% if getBenchmark %}
+            {% if get_benchmark %}
                 <table class="table">
                     <tr>
                         <th>Description</th>
@@ -1449,7 +1449,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                         <th>Actual Cost</th>
                         <th>View</th>
                     </tr>
-                    {% for item in getBenchmark %}
+                    {% for item in get_benchmark %}
                         <tr>
                             <td>{{ item.description}}</td>
                             <td>{{ item.site }}</td>
@@ -1497,14 +1497,14 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
             <div class='panel-heading'>Budget Contributions</div>
             <table class="table" id="budget_contributions_table">
                 <tbody>
-                    {% if getBudget %}
+                    {% if get_budget %}
                         <tr>
                             <th>Contributor</th>
                             <th>Description</th>
                             <th>Value</th>
                             <th>View</th>
                         </tr>
-                        {% for item in getBudget %}
+                        {% for item in get_budget %}
                             <tr>
                                 <td>{{ item.contributor}}</td>
                                 <td>{{ item.contributor_description}}</td>
@@ -1539,9 +1539,9 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                                  HTML("""
         <div class='panel panel-default'>
             <div class='panel-heading'>Related indicators</div>
-            {% if getQuantitative %}
+            {% if get_quantitative %}
                 <table class="table">
-                    {% for item in getQuantitative %}
+                    {% for item in get_quantitative %}
                         {% ifchanged item.indicator.id %}
                             <tr>
                                 <td><a 
@@ -1584,7 +1584,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                          HTML("""
         <div class='panel panel-default'>
             <div class='panel-heading'>Documentation</div>
-            {% if getDocuments %}
+            {% if get_documents %}
                 <table class="table">
                     <tr>
                         <th>Name</th>
@@ -1592,7 +1592,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                         <th>Description</th>
                         <th>&nbsp;</th>
                     </tr>
-                    {% for item in getDocuments %}
+                    {% for item in get_documents %}
                         <tr>
                             <td>{{ item.name}}</td>
                             <td><a href="{{ item.url}}" target="_new">
@@ -1767,7 +1767,7 @@ class SiteProfileForm(forms.ModelForm):
 
                   <!-- Default panel contents -->
                   <div class='panel-heading'>Projects in this Site</div>
-                    {% if getProjects %}
+                    {% if get_projects %}
                       <!-- Table -->
                       <table class="table">
                        <tr>
@@ -1777,7 +1777,7 @@ class SiteProfileForm(forms.ModelForm):
                          <th>View</th>
                        </tr>
 
-                    {% for item in getProjects %}
+                    {% for item in get_projects %}
                        <tr>
                         <td>{{ item.project_name }}</td>
                         <td>{{ item.program.name }}</td>
@@ -2018,7 +2018,7 @@ class ChecklistItemForm(forms.ModelForm):
 
         super(ChecklistItemForm, self).__init__(*args, **kwargs)
 
-        # countries = getCountry(self.request.user)
+        # countries = get_country(self.request.user)
         # override the community queryset to use request.user for country
         # self.fields['item'].queryset = ChecklistItem.objects.filter(
         # checklist__country__in=countries)

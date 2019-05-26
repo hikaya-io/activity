@@ -8,13 +8,15 @@ from indicators.models import *
 
 class Command(BaseCommand):
     help = """
-        Update lop, unit_of_measure, and baseline values of indicators based on a csv file
-        usage: sudo py -W ignore  manage.py update_indicators -f ~/country_data.csv
+        Update lop, unit_of_measure, and baseline values of indicators based 
+        on a csv file usage: sudo py -W ignore  manage.py update_indicators 
+        -f ~/country_data.csv
         """
 
     def add_arguments(self, parser):
         """
-        Help on arguments: https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser.add_argument
+        Help on arguments: https://docs.python.org/3/library/argparse.html
+        #argparse.ArgumentParser.add_argument
         """
         parser.add_argument('-f', '--file', action='store',
                             nargs='?', required=True, dest='filepath')
@@ -45,12 +47,14 @@ class Command(BaseCommand):
                     baseline = float(
                         baseline) if '.' in baseline else int(baseline)
                 except ValueError as e:
-                    if baseline and baseline.lower() == 'na' or baseline.lower() == 'n/a' or \
+                    if baseline and baseline.lower() == 'na' or \
+                            baseline.lower() == 'n/a' or \
                             baseline.lower() == 'not applicable':
                         baseline_na = True
                     else:
                         self.stdout.write(self.style.ERROR(
-                            '%s, invalid baseline (%s)' % (indicator_id, baseline)))
+                            '%s, invalid baseline (%s)' %
+                            (indicator_id, baseline)))
                         continue
 
                 try:

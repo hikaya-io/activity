@@ -3,8 +3,8 @@
 <div>
 <ol class="breadcrumb">
   <li><a href="/workflow/dashboard/0/">Program Index</a></li>
-  {%  if getProgram.id %}
-    <li><a href="/workflow/siteprofile_list/{{ getProgram.id }}/">Site Profiles</a></li>
+  {%  if get_program.id %}
+    <li><a href="/workflow/siteprofile_list/{{ get_program.id }}/">Site Profiles</a></li>
   {% else %}
     <li><a href="/workflow/siteprofile_list/0/0/">Site Profile</a></li>
   {% endif %}

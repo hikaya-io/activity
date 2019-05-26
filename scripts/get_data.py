@@ -156,8 +156,8 @@ def get_all_data(url, type, program_country):
 # TODO : Change urls or delete lines
 # get an updated json data file for the hub and update or insert new records
 print("Program")
-getCountries = Country.objects.all()
-for country in getCountries:
+get_countries = Country.objects.all()
+for country in get_countries:
     print(country.country)
     safe_country = urllib.quote_plus(country.country)
     program_url = \

@@ -72,7 +72,7 @@
               <div class="form-group">
                   <label for="service_table">Activity Tables </label>
                   <select name="service_table" id="service_table" class="form-control">
-                      {% for table in getTables %}
+                      {% for table in get_tables %}
                       <option value="{{ table.id }}"> {{ table.owner.username }} - {{ table.name }} </option>
                       {% endfor %}
                   </select>

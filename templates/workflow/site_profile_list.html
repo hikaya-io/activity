@@ -19,7 +19,7 @@
   </button>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
         <li role="presentation"><a role="menuitem" tabindex="-1" href="/workflow/siteprofile_list/0/0">-- All --</a></li>
-    {% for program in getPrograms %}
+    {% for program in get_programs %}
         <li role="presentation"><a role="menuitem" tabindex="-1" href="/workflow/siteprofile_list/{{ program.id }}/0/">{{ program.gaitid}} - {{ program.name }}</a></li>
     {% endfor %}
   </ul>
@@ -79,8 +79,8 @@
         <th>District</th>
         <th>&nbsp;</th>
     </tr>
-    {% if getSiteProfile %}
-      {% for item in getSiteProfile %}
+    {% if get_site_profile %}
+      {% for item in get_site_profile %}
 
     <tr>
         <td><a href="/workflow/siteprofile_update/{{ item.id }}">{{ item.create_date|date:"d-m-Y" }} </a></td>
@@ -114,26 +114,26 @@
  <div class="row">
     <div class="col-md-8">
         <ul class="paginate">
-            {% if getSiteProfile.has_previous %}
-                <li><a href="?page={{ getSiteProfile.previous_page_number }}"> {% trans "Previous" %} </a></li>
-                <li><a href="?page={{ getSiteProfile.previous_page_number }}"> {{getSiteProfile.previous_page_number}} </a></li>
+            {% if get_site_profile.has_previous %}
+                <li><a href="?page={{ get_site_profile.previous_page_number }}"> {% trans "Previous" %} </a></li>
+                <li><a href="?page={{ get_site_profile.previous_page_number }}"> {{get_site_profile.previous_page_number}} </a></li>
             {% endif %}
 
-            {% blocktrans with getSiteProfile.number as site_num and getSiteProfile.paginator.num_pages as num_pages %}
+            {% blocktrans with get_site_profile.number as site_num and get_site_profile.paginator.num_pages as num_pages %}
                 <li><a class="active" href=""> {{ site_num }}</a></li>
             {% endblocktrans %}
 
-            {% if getSiteProfile.has_next %}
-                <li><a href="?page={{ getSiteProfile.next_page_number }}"> {{ getSiteProfile.next_page_number }}</a></li>
+            {% if get_site_profile.has_next %}
+                <li><a href="?page={{ get_site_profile.next_page_number }}"> {{ get_site_profile.next_page_number }}</a></li>
 
-                {% ifnotequal getSiteProfile.next_page_number getSiteProfile.paginator.num_pages %}
-                    {% with getSiteProfile.paginator.num_pages as num_pages %}
+                {% ifnotequal get_site_profile.next_page_number get_site_profile.paginator.num_pages %}
+                    {% with get_site_profile.paginator.num_pages as num_pages %}
                         <li><a href="">...</a></li>
                         <li><a href="?page={{ num_pages }}"> {{ num_pages }}  </a></li>
                     {% endwith %}
                 {% endifnotequal %}
 
-                <li><a href="?page={{ getSiteProfile.next_page_number }}">{% trans "Next" %}</a></li>
+                <li><a href="?page={{ get_site_profile.next_page_number }}">{% trans "Next" %}</a></li>
             {% endif %}
         </ul>
     </div>
