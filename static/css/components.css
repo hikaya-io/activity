@@ -71,7 +71,7 @@
     color: #01579B;
 }
 
-.panel {
+.panel, .form-control {
     border-radius: 0px;
 }
 /* end of states */

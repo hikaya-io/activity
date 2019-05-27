@@ -396,8 +396,8 @@ def user_login(request):
 
         if user is not None:
             login(request, user)
-            activty_user = ActivityUser.objects.filter(user=user).first()
-            if activty_user.organization:
+            activity_user = ActivityUser.objects.filter(user=user).first()
+            if activity_user.organization:
                 return HttpResponseRedirect('/')
             else:
                 return HttpResponseRedirect('/accounts/register/organization')
