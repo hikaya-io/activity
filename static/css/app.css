@@ -454,3 +454,12 @@ input[type=number]::-webkit-outer-spin-button {
   margin-left: 10px;
 }
 /* End of auth styles */
+
+/* display and hide divs for jquery */
+.hikaya-hide {
+  display: none;
+}
+
+.hikaya-show {
+  display: block;
+}

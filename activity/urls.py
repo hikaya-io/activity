@@ -107,7 +107,7 @@ urlpatterns = [  # rest framework
 
     # local login
     path('login/', authviews.LoginView.as_view(), name='login'),
-    path('accounts/login/', authviews.LoginView.as_view(), name='login'),
+    path('accounts/login/', views.user_login, name='login'),
     path('accounts/logout/', views.logout_view, name='logout'),
 
     # register
