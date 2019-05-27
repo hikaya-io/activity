@@ -73,8 +73,9 @@ def date_handler(obj):
 
 
 def list_workflow_level1(request):
-    programs = Program.objects.all()
-    context = {'programs': programs}
+    user = ActivityUser.objects.filter(user=request.user).first()
+    programs = Program.objects.filter(organization=user.organization)
+    context = {'programs': programs,}
 
     return render(request, 'workflow/level1.html', context)
 
