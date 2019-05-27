@@ -4,7 +4,7 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
@@ -22,10 +22,7 @@ from workflow.models import (
 from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links
 from activity.forms import (
-    RegistrationForm, NewUserRegistrationForm,
-    NewActivityUserRegistrationForm, BookmarkForm,
-    OrganizationEditForm
-)
+    RegistrationForm, BookmarkForm, OrganizationEditForm)
 from activity.settings import PROJECT_ROOT
 from django.core import serializers
 
@@ -383,10 +380,31 @@ def register(request):
                 return HttpResponseRedirect("/")
 
             else:
-                return redirect('register')
+                return render(request, 'registration/register.html')
 
     else:
         return render(request, 'registration/register.html')
+
+
+def user_login(request):
+    if request.method == 'POST':
+        data = request.POST
+        username = data.get('username')
+        password = data.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            activty_user = ActivityUser.objects.filter(user=user).first()
+            if activty_user.organization:
+                return HttpResponseRedirect('/')
+            else:
+                return HttpResponseRedirect('/accounts/register/organization')
+
+        else:
+            render(request, 'registration/login.html')
+    return render(request, 'registration/login.html')
 
 
 def register_organization(request):
@@ -402,6 +420,9 @@ def register_organization(request):
 
         org = Organization.objects.create(name=name, description=description)
         if org:
+            user = ActivityUser.objects.filter(user=request.user).first()
+            user.organization = org
+            user.save()
             return redirect('admin_profile_settings')
         else:
             return redirect('register_organization')
