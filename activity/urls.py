@@ -107,7 +107,7 @@ urlpatterns = [  # rest framework
 
     # local login
     path('login/', authviews.LoginView.as_view(), name='login'),
-    path('accounts/login/', authviews.LoginView.as_view(), name='login'),
+    path('accounts/login/', views.user_login, name='login'),
     path('accounts/logout/', views.logout_view, name='logout'),
 
     # register
@@ -116,6 +116,8 @@ urlpatterns = [  # rest framework
          name='register_organization'),
 
     # accounts
+    re_path('accounts/organization/(?P<org_id>\w+)/$',
+            views.switch_organization, name='switch_organization'),
     path('accounts/profile/', views.profile, name='profile'),
     path('accounts/admin_dashboard/', views.admin_dashboard,
          name='admin_dashboard'),

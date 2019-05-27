@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% load crispy_forms_tags %} {% block title %}Login{% endblock %} 
+{% extends "base.html" %} 
+<!-- {% load crispy_forms_tags %}  -->
 {% block content %}
 <div class="container auth-container">
 	<div class="row">
@@ -6,11 +7,13 @@
 			<h1>Login</h1>
 			<div class="btn-group btn-group-justified auth-nav" role="group" aria-label="...">
 				<div class="btn-group" role="group">
-					<a type="button" class="btn hikaya-btn-primary" href="{% url 'login' %}"> <strong>Login</strong></a>
+					<a type="button" class="btn hikaya-btn-primary" href="{% url 'login' %}">
+						<strong>Login</strong></a
+					>
 				</div>
 				<div class="btn-group" role="group">
-					<a type="button" class="btn hikaya-btn-default" href="{% url 'register' %}"
-						> <strong>Register</strong></a
+					<a type="button" class="btn hikaya-btn-default" href="{% url 'register' %}">
+						<strong>Register</strong></a
 					>
 				</div>
 			</div>
@@ -20,18 +23,43 @@
 				</div>
 				<div class="panel-body">
 					<div class="auth-form">
-						<form action="" method="post">
-              {% csrf_token %}
+						<form action="/accounts/login/" method="POST">
+							{% csrf_token %}
+								<!-- {{ form | crispy }} -->
               <div class="row">
-                {{ form | crispy }}
+                <label class="control-label" for="first_name">Username</label>
+                <input
+                  type="text"
+                  id="login_username"
+                  name="username"
+                  class="form-control"
+                />
               </div>
-              <div class="row text-right">
-                <div class="col-md-3 col-md-offset-6">
-                  <button type="reset" class="btn btn-block hikaya-btn-cancel"> <i class="fa fa-undo"> </i> Cancel</button>
+
+              <div class="row">
+                <label class="control-label" for="first_name">Password</label>
+                <input
+                  type="password"
+                  id="login_password"
+                  name="password"
+                  class="form-control"
+                />
+              </div>
+							<div class="row">
+                <div class="text-right">
+                  <button type="reset" class="btn btn-md hikaya-btn-cancel">
+                    <i class="fa fa-undo"></i> Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    id="login_submit_btn"
+                    class="btn btn-md hikaya-btn-primary"
+                  >
+                    <i class="fa fa-save"></i> Submit
+                  </button>
+
                 </div>
-                <div class="col-md-3 text-right">
-                  <button type="submit" class="btn btn-block hikaya-btn-primary"> <i class="fa fa-save"> </i> Login</button>
-                </div>
+                
               </div>
 
 							<!--{% if non_ldap %}
@@ -48,22 +76,5 @@
 		</div>
 		<div class="col-md-1"></div>
 	</div>
-
-	<!-- <form action="" method="post">
-      {% csrf_token %} {% load crispy_forms_tags %}
-      {{ userform | crispy }}
-      {{ activityform | crispy }}
-      <div id="iframe">
-        <h6>Notice/Disclaimer:</h6>
-  
-        <p>
-          {{ privacy.privacy_disclaimer }}
-        </p>
-      </div>
-      <br />
-      <div>
-        <input type="submit" value="Create the account" />
-      </div>
-    </form> -->
 </div>
 {% endblock %}

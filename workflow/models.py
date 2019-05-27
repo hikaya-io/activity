@@ -247,8 +247,8 @@ class ActivityUser(models.Model):
         on_delete=models.SET_NULL)
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
-    organization = models.ForeignKey(Organization, blank=True, null=True,
-                                     on_delete=models.SET_NULL)
+    organizations = models.ManyToManyField(Organization, verbose_name='Accessible Organizations',
+                                           related_name='organization', blank=True)
     countries = models.ManyToManyField(
         Country, verbose_name="Accessible Countries", related_name='countries',
         blank=True)
@@ -268,6 +268,10 @@ class ActivityUser(models.Model):
     @property
     def countries_list(self):
         return ', '.join([x.code for x in self.countries.all()])
+
+    @property
+    def organizations_list(self):
+        return ', '.join([x.name for x in self.organizations.all()])
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):

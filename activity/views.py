@@ -4,11 +4,11 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.contrib import messages
-from django.contrib.auth import logout
-from django.contrib.auth.models import Group
+from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum, Q, Count
 
@@ -22,10 +22,7 @@ from workflow.models import (
 from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links
 from activity.forms import (
-    RegistrationForm, NewUserRegistrationForm,
-    NewActivityUserRegistrationForm, BookmarkForm,
-    OrganizationEditForm
-)
+    RegistrationForm, BookmarkForm, OrganizationEditForm)
 from activity.settings import PROJECT_ROOT
 from django.core import serializers
 
@@ -356,39 +353,88 @@ def index(request, selected_countries=None, id=0, sector=0):
     })
 
 
+def switch_organization(request, org_id):
+    organization = Organization.objects.filter(id=int(org_id)).first()
+    activity_user = ActivityUser.objects.filter(user=request.user).first()
+    activity_user.organization = organization
+    activity_user.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
 def register(request):
     """
     Register a new User profile using built in Django Users Model
     """
     # privacy = ActivitySites.objects.get(id=1)
     if request.method == 'POST':
-        uf = NewUserRegistrationForm(request.POST)
-        tf = NewActivityUserRegistrationForm(request.POST)
+        data = request.POST
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        username = data.get('username')
+        email = data.get('email_address')
+        password = data.get('password')
 
-        if uf.is_valid() * tf.is_valid():
-            user = uf.save()
-            user.groups.add(Group.objects.get(name='ViewOnly'))
+        user = User.objects.create_user(
+            first_name=first_name,
+            last_name=last_name,
+            username=username,
+            email=email,
+            password=password
+        )
 
-            activityuser = tf.save(commit=False)
-            activityuser.user = user
-            activityuser.save()
-            messages.error(
-                request, 'Thank you, You have been registered as a new user.',
-                fail_silently=False)
-            return HttpResponseRedirect("/")
+        if user:
+            activity_user = ActivityUser.objects.create(user=user)
+            if activity_user:
+                return HttpResponseRedirect("/")
+
+            else:
+                return render(request, 'registration/register.html')
+
     else:
-        uf = NewUserRegistrationForm()
-        tf = NewActivityUserRegistrationForm()
+        return render(request, 'registration/register.html')
 
-    return render(request, "registration/register.html", {
-        'userform': uf, 'activityform': tf,
-        'helper': NewActivityUserRegistrationForm.helper
-    })
+
+def user_login(request):
+    if request.method == 'POST':
+        data = request.POST
+        username = data.get('username')
+        password = data.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            activity_user = ActivityUser.objects.filter(user=user).first()
+            if activity_user.organization:
+                return HttpResponseRedirect('/')
+            else:
+                return HttpResponseRedirect('/accounts/register/organization')
+
+        else:
+            render(request, 'registration/login.html')
+    return render(request, 'registration/login.html')
 
 
 def register_organization(request):
+    """
+    register organization
+    : param request:
+    : return org profile page
+    """
     if request.method == 'POST':
-        pass
+        data = request.POST
+        name = data.get('name')
+        description = data.get('description')
+
+        org = Organization.objects.create(name=name, description=description)
+        if org:
+            user = ActivityUser.objects.filter(user=request.user).first()
+            user.organization = org
+            user.save()
+            return redirect('admin_profile_settings')
+        else:
+            return redirect('register_organization')
     else:
         return render(request, 'registration/organization_register.html')
 
