@@ -353,6 +353,15 @@ def index(request, selected_countries=None, id=0, sector=0):
     })
 
 
+def switch_organization(request, org_id):
+    organization = Organization.objects.filter(id=int(org_id)).first()
+    activity_user = ActivityUser.objects.filter(user=request.user).first()
+    activity_user.organization = organization
+    activity_user.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
 def register(request):
     """
     Register a new User profile using built in Django Users Model
