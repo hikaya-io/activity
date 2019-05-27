@@ -35,3 +35,7 @@
 .admin-main-panels {
     margin: 20px 6px;
 }
+
+.admin-form-actions {
+    padding-right: 13px;
+}
