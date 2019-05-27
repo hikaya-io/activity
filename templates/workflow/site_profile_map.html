@@ -179,14 +179,14 @@
       iconSize: [0,0]
     });
 
-    {% for item in getSiteProfile %}
+    {% for item in get_site_profile %}
         {% if item.status == 1 %}
         L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: projectIcon}).addTo(map).bindPopup("" + "<b>{{ item.country }}</b><br/>Project Site<br><a href='/workflow/siteprofile_update/{{ item.id }}'>{{ item.name }}</a> <br/>Province: {{ item.province }} <br/>District: {{ item.district }} <br/> Village: {{ item.village }} <br/> ");
         {% endif %}
     {% endfor %}
 
-    {% if getSiteProfileIndicator %}
-        {% for item in getSiteProfileIndicator %}
+    {% if get_site_profile_indicator %}
+        {% for item in get_site_profile_indicator %}
             {% if item.status == 1 %}
             L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: indicatorIcon}).addTo(map).bindPopup("" + "<b>{{ item.country }}</b><br/>Collected Indicator Data Site<br> <a href='/workflow/siteprofile_update/{{ item.id }}'>{{ item.name }}</a> <br/>Province: {{ item.province }} <br/>District: {{ item.district }} <br/> Village: {{ item.village }} <br/>");
             {% endif %}

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
   {%  if project_agreement_id != '0'%}
-    <li><a href="/workflow/dashboard/project/{{ project_agreement_id }}/">Project Dashboards</a></li>
+    <li><a href="/workflow/dashboard/project/{{ project_agreement_id }}/">{{ user.activity_user.organization.level_2_label }} Dashboards</a></li>
   {% endif %}
   <li class="active">Beneficiaries</li>
 </ol>
@@ -39,12 +39,12 @@
                     $.getJSON(url, function(models) {
                         var options = '<option value="all">Project</option>';
 
-                        if(!$.trim(models['getAgreements'])){
+                        if(!$.trim(models['get_agreements'])){
                             $("select#project").html("<option>project(s)</option>");
                             $("select#project").attr('disabled', true);
                             program_filter(program_id, 0);                            
                         }else{
-                            data = JSON.parse(models['getAgreements']);
+                            data = JSON.parse(models['get_agreements']);
                             for (var i = 0; i < data.length; i++) {
                                 options += '<option value="' + data[i]['id'] + '">' + data[i]['project_name'] + '</option>';
                             }
@@ -117,20 +117,20 @@
                 if (program_id != 0) {
 
                     $.getJSON("/formlibrary/beneficiary_objects/"+ program_id + "/0/", function(data) {  
-                        show_beneficiary_table(data['getBeneficiaries']);                                          
+                        show_beneficiary_table(data['get_beneficiaries']);
                     }); 
 
                 } else if(program_id != 0 && project_id != 0){
 
                      $.getJSON("/formlibrary/beneficiary_objects/"+ program_id +"/"+project_id+ "/", function(data) {  
-                        show_beneficiary_table(data['getBeneficiaries']);                                                                                                           
+                        show_beneficiary_table(data['get_beneficiaries']);
                     }); 
                 }
                 
                 else{
 
                     $.getJSON("/formlibrary/beneficiary_objects/0/0/", function(data) {  
-                        show_beneficiary_table(data['getBeneficiaries']);          
+                        show_beneficiary_table(data['get_beneficiaries']);
                     });     
                 }
             } 

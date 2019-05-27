@@ -59,7 +59,7 @@ $(function () {
             type: 'bar'
         },
         title: {
-            text: 'Program Projects by Status {% if getFilteredName %} for {{ getFilteredName }} {% endif %}</b></p>'
+            text: '{{ user.activity_user.organization.level_2_label }} by Status {% if get_filtered_name %} for {{ get_filtered_name }} {% endif %}</b></p>'
         },
         xAxis: {
             categories: ['Initiation', 'Tracking']
@@ -67,7 +67,7 @@ $(function () {
         yAxis: {
             min: 0,
             title: {
-                text: 'Number of Approved, Pending or Open Projects'
+                text: 'Number of Approved, Pending or Open {{ user.activity_user.organization.level_2_label }}'
             }
         },
         legend: {
@@ -120,7 +120,7 @@ $(function () {
             text: 'KPI Targets v. Actuals'
         },
         xAxis: {
-            categories: [ {% for indicator in getQuantitativeDataSums|slice:":20" %}  '{{ indicator.indicator__number }}', {% endfor %}]
+            categories: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  '{{ indicator.indicator__number }}', {% endfor %}]
         },
         yAxis: {
             min: 0,
@@ -140,10 +140,10 @@ $(function () {
         },
         series: [{
             name: 'Targets',
-            data: [ {% for indicator in getQuantitativeDataSums|slice:":20" %}  {{ indicator__lop_target }}, {% endfor %}  ]
+            data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator__lop_target }}, {% endfor %}  ]
         }, {
             name: 'Actuals',
-            data: [ {% for indicator in getQuantitativeDataSums|slice:":20" %}  {{ indicator.actuals }}, {% endfor %}   ]
+            data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator.actuals }}, {% endfor %}   ]
         }]
     });
 });
@@ -345,10 +345,10 @@ $(function () {
                         </ul>
 
                         <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-expanded="false">
-                        Filter by Program <span class="caret"></span>
+                        Filter by {{ user.activity_user.organization.level_1_label }} <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="/dashboard/{% if getFilteredName %}{{ getFilteredName.id }}{% else %}0{% endif %}/0/">-- All --</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="/dashboard/{% if get_filtered_name %}{{ get_filtered_name.id }}{% else %}0{% endif %}/0/">-- All --</a></li>
                             {%for program in programs%}
                             <li class="list-group-item">
                                 <a href="/dashboard/{{ program.id }}/{% if sector %}{{ sector }}{% else %}0{% endif %}/">{{ program.name }}</a>
@@ -356,11 +356,11 @@ $(function () {
                             {%endfor%}
                         </ul>
 
-                        <button class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#addProgramModal">Add New
-                                Program</button>
+                        <button class="btn btn-sm hikaya-btn-secondary pull-right" data-toggle="modal" data-target="#addProgramModal">Add New
+                                {{ user.activity_user.organization.level_1_label }}</button>
                             
                         {% if report_server == False%}
-                          <a href="/workflow/dashboard/project/0/" class="btn btn-default btn-sm btn-success">Create a Project</a>
+                          <a href="/workflow/dashboard/project/0/" class="btn btn-default btn-sm btn-success">Create a {{ user.activity_user.organization.level_2_label }}</a>
                         {% endif %}
                     </div>
                 </div>
@@ -424,10 +424,10 @@ $(function () {
                     Strategic Objectives
                 </div>
                 <div class="panel-body">
-                {% if getObjectives %}
+                {% if get_objectives %}
                     <table class="table table-bordered table-striped" id="table-sparkline">
                         <tbody id="tbody-sparkline">
-                        {%for value in getObjectives  %}
+                        {%for value in get_objectives  %}
                             <thead>
                                 <tr class="info">
                                     <th colspan="2">{{value.indicator__strategic_objectives__name}}</th>
@@ -482,7 +482,7 @@ $(function () {
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <p><b>Sites {% if getFilteredName %} for {{ getFilteredName }} {% endif %}</b></p>
+                    <p><b>Sites {% if get_filtered_name %} for {{ get_filtered_name }} {% endif %}</b></p>
                     <style>
                         #map { height: 350px; }
                     </style>
@@ -496,19 +496,21 @@ $(function () {
 
                 </div>
             </div>
+
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="container" style=" width: 100%; height: 400px; margin: 0 auto; float:right"></div>
+                    <div id="container" ></div>
                 </div>
             </div>
+            
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-20">
+        <div class="col-md-12">
             <div class="panel panel-info">
                 <div class="panel-heading">Indicators {% if getFilteredName %} for {{ getFilteredName }} {% endif %}</div>
-                <div id="container_column" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                <div id="container_column"></div>
                 <div class="panel-body">
                 {% load render_table from django_tables2 %}
                 {% render_table table %}
@@ -528,6 +530,7 @@ $(function () {
                 </div>
                 <div class="modal-body">
                     <form id="addProgramForm">
+                        {% csrf_token %}
                         <div class="form-group">
                             <label for="programName">Program Name</label>
                             <input type="text" id="programName" name="program_name" class="form-control"
@@ -563,8 +566,8 @@ $(function () {
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success" id="saveProgram">Save</button>
+                    <button type="button" class="btn hikaya-btn-cancel" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn hikaya-btn-primary" id="saveProgram">Save</button>
                 </div>
             </div>
         </div>

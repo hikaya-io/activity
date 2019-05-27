@@ -47,7 +47,7 @@ class CustomDashboardList(ListView):
         countries = get_country(request.user)
 
         # retrieve projects for a program
-        # getProjects = ProjectAgreement.objects.all()
+        # get_projects = ProjectAgreement.objects.all()
         #   .filter(program__id=program__id, program__country__in=countries)
 
         # retrieve projects for a program
@@ -56,7 +56,7 @@ class CustomDashboardList(ListView):
 
         return render(request, self.template_name, {
             'pk': program_id, 'get_custom_dashboards': get_custom_dashboards,
-            'getProgram': get_program})
+            'get_program': get_program})
 
 
 class CustomDashboardCreate(CreateView):
@@ -527,8 +527,8 @@ class DashboardThemeUpdate(UpdateView):
         context = super(DashboardThemeUpdate, self).get_context_data(**kwargs)
         pk = self.kwargs['pk']
         context.update({'pk': pk})
-        getComplete = DashboardTheme.objects.get(id=self.kwargs['pk'])
-        context.update({'getComplete': getComplete})
+        get_complete = DashboardTheme.objects.get(id=self.kwargs['pk'])
+        context.update({'get_complete': get_complete})
         return context
 
     # add the request to the kwargs

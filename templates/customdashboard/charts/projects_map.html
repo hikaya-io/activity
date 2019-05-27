@@ -188,17 +188,17 @@ $('a[href=#i_surveys]').on('shown.bs.tab', function(){
       iconSize: [20,20],
     });
     var project_sites = [
-    {% for item in getSiteProfile %}
+    {% for item in get_site_profile %}
         {%if item.status == 1 %}
-        L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: projectIcon}).addTo(map).bindPopup("" + "<b>{{ item.country }}</b><br/>Project Site<br><a href='/workflow/siteprofile_update/{{ item.id }}'>{{ item.name }}</a> <br/>ADM1: {{ item.province }} <br/>ADM2: {{ item.district }} <br/> ADM3: {{ item.admin_level_three }} <br/> Name: {{ item.name }} <br/> "),
+        L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: projectIcon}).addTo(map).bindPopup("" + "<b>{{ item.country }}</b><br/>{{ user.activity_user.organization.level_2_label }} Site<br><a href='/workflow/siteprofile_update/{{ item.id }}'>{{ item.name }}</a> <br/>ADM1: {{ item.province }} <br/>ADM2: {{ item.district }} <br/> ADM3: {{ item.admin_level_three }} <br/> Name: {{ item.name }} <br/> "),
         {%endif%}
     {%   endfor %}
     ];
     var projects = L.layerGroup(project_sites).addTo(map);
 
     var indicator_sites = [
-    {% if getSiteProfileIndicator %}
-        {% for item in getSiteProfileIndicator %}
+    {% if get_site_profile_indicator %}
+        {% for item in get_site_profile_indicator %}
             {%if item.status == 1 %}
             L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: indicatorIcon}).addTo(map).bindPopup("" + "<b>{{ item.country }}</b><br/>Collected Indicator Data Site<br> <a href='/workflow/siteprofile_update/{{ item.id }}'>{{ item.name }}</a> <br/>ADM1: {{ item.province }} <br/>ADM2: {{ item.district }} <br/> ADM3: {{ item.admin_level_three }} <br/> Name: {{ item.name }} <br/> "),
             {%endif%}
@@ -209,7 +209,7 @@ $('a[href=#i_surveys]').on('shown.bs.tab', function(){
 
     var overlayMaps = {
         "Indicator Data Sites": indicators,
-        "Project Sites": projects,
+        "{{ user.activity_user.organization.level_2_label }} Sites": projects,
     };
 
     L.control.layers(baseLayers,overlayMaps).addTo(map);

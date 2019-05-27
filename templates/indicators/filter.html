@@ -19,10 +19,10 @@
 <div id="id_filtersDropdown">
     <div class="row">
         <div class="col-sm-5" style="padding-right: 2px;">
-            {% if getPrograms %}
+            {% if get_programs %}
                 <select name="programs_filter" id="id_programs_filter_dropdown" class="select form-control" >
                     <option value = "0">-- All --</option>
-                {% for program in getPrograms %}
+                {% for program in get_programs %}
                     <option value="{{ program.id }}">{{ program.gaitid }} - {{ program.name|truncatechars:85 }}</option>
                 {% endfor %}
                 </select>
@@ -30,10 +30,10 @@
         </div>
 
         <div class="col-sm-5" style="padding-right: 2px; padding-left: 0px;">
-            {% if getIndicators %}
+            {% if get_indicators %}
                 <select name="indicators_filter" id="id_indicators_filter_dropdown" class="select form-control">
                     <option value = "0">-- All --</option>
-                    {% for item in getIndicators %}
+                    {% for item in get_indicators %}
                         <option value="{{ item.id }}">{{ item.number|default_if_none:'' }} - {{ item.name|truncatechars:82}} </option>
                     {% endfor %}
                 </select>
@@ -41,10 +41,10 @@
         </div>
 
         <div class="col-sm-2" style="padding-left: 0px;">
-            {%if getIndicatorTypes %}
+            {%if get_indicator_types %}
                 <select name="indicatortypes_filter" id="id_indicatortypes_filter_dropdown" class="select form-control">
                     <option value = "0">-- All --</option>
-                    {% for item in getIndicatorTypes %}
+                    {% for item in get_indicator_types %}
                     <option value="{{ item.id }}">{{ item.indicator_type }}</option>
                     {% endfor %}
                 </select>
@@ -70,7 +70,7 @@
         var programDropdown = $("#id_programs_filter_dropdown");
         programDropdown.prop("selectedIndex", -1);
         programDropdown.select2({
-            placeholder: {id: -1, text: "Programs"},
+            placeholder: {id: -1, text: "{{ user.activity_user.organization.level_1_label }}(s)"},
             allowClear: false,
             dropdownAutoWidth: true,
             // width: "400px",

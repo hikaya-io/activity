@@ -11,7 +11,7 @@
   </button>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
         <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/program_list/0">--All--</a></li>
-    {% for country in getCountry %}
+    {% for country in get_country %}
         <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/program_list/{{ country.id }}">{{ country.country}}</a></li>
     {% endfor %}
   </ul>
@@ -25,17 +25,17 @@
 <table class="table">
     <tr>
         <th>Date Created</th>
-        <th>Program Name</th>
+        <th>{{ user.activity_user.organization.level_1_label }} Name</th>
         <th>Data Complete</th>
         <th>Public Dashboard</th>
         <th>View Dashboard</th>
     </tr>
-    {% for item in getProgram %}
+    {% for item in get_program %}
     <tr>
         <td>{{ item.create_date}}</td>
         <td>{{ item.name}}</td>
         <td width="250">
-            <strong>Indicators</strong>
+            <strong>Indicator(s)</strong>
             <div class="progress">
               <div class="progress-bar progress-bar-warning" style="width: {{ item.indicator_data_percent }}%">
                 <font color="black">Data {{ item.indicator_data_percent }} %</font>
@@ -44,7 +44,7 @@
                 <font color="black">No Data {{ item.indicator_percent }} %</font>
               </div>
             </div>
-            <strong>Projects</strong>
+            <strong>{{ user.activity_user.organization.level_2_label }}(s)</strong>
             <div class="progress">
               <div class="progress-bar progress-bar-warning" style="width: {{ item.project_percent }}%">
                 <font color="black">Tracking {{ item.project_percent }} %</font>

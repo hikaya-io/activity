@@ -101,7 +101,7 @@
                     { title: "PID", class: "noExport", data: "program__id"},
                     { title: "IID", class: "noExport", data: "id"},
                     { title: "ITID", class: "noExport", data: "indicator_type__id"},
-                    { title: "Program", data: "program__name"},
+                    { title: "{{ user.activity_user.organization.level_1_label }}", data: "program__name"},
                     { title: "Indicator", data: "name",
                             "mRender": function (data, type, row) {
                                 return '<a class="collecteddata" name=' + row.id + ' href="/indicators/indicator_update/' + row.id + '/">' + row.name + '</a>';

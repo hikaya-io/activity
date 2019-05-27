@@ -118,7 +118,7 @@
                         { title: "PID", class: "noExport", data: "indicator__program__id"},
                         { title: "IID", class: "noExport", data: "indicator__id"},
                         { title: "ITID", class: "noExport", data: "indicator__indicator_type__id"},
-                        { title: "Program", data: "indicator__program__name"},
+                        { title: "{{ user.activity_user.organization.level_1_label }}", data: "indicator__program__name"},
                         { title: "Indicator", data: "name",
                                 "mRender": function (data, type, row) {
                                     return '<a class="collecteddata" name=' + row.indicator__id + ' href="/indicators/collecteddata/{{ program }}/' + row.indicator__id + '/0/">' + row.indicator__name + '</a>';

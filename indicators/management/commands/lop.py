@@ -8,11 +8,13 @@ from django.utils import timezone
 
 class Command(BaseCommand):
     help = """
-        The script will look at each indicator and check to see if there are any data records associated with it.
+        The script will look at each indicator and check to see if there are 
+        any data records associated with it.
         1. If NO, don't do anything further with this indicator.
         2. If YES, do the following:
             2.1. Set target frequency to "Life of Program only".
-            2.2. Save this target frequency even if other required fields have errors or are incomplete.
+            2.2. Save this target frequency even if other required fields 
+            have errors or are incomplete.
             2.2. Assign all data records to the Life of Program target.'
         """
 
@@ -35,10 +37,12 @@ class Command(BaseCommand):
             if collecteddata_count == 0:
                 ind.periodictarget_set.all().delete()
                 self.stdout.write(self.style.SUCCESS(
-                    "%s, only deleted periodic_targets because data count is %s" % (ind.id, collecteddata_count)))
+                    "%s, only deleted periodic_targets because data count "
+                    "is %s" % (ind.id, collecteddata_count)))
             else:
                 try:
-                    # disassociate collected_data records of this indicator with existing periodic targets
+                    # disassociate collected_data records of this indicator
+                    # with existing periodic targets
                     ind.collecteddata_set.update(periodic_target=None)
 
                     # remove all existing periodic targets
@@ -55,11 +59,13 @@ class Command(BaseCommand):
                         target=ind.lop_target,
                         create_date=timezone.now())
 
-                    # associate all collected_data records of this indicator with the newly created
+                    # associate all collected_data records of this indicator
+                    # with the newly created
                     # "Life of Program (LOP) Only" target
                     ind.collecteddata_set.update(periodic_target=lop_pt)
 
-                    # set the target_frequency of this indicator to "Life of Program (LOP) Only" target
+                    # set the target_frequency of this indicator to "Life of
+                    # Program (LOP) Only" target
                     ind.target_frequency = Indicator.LOP
                     ind.save()
 
@@ -67,7 +73,8 @@ class Command(BaseCommand):
                         '%s, Processed successfully.' % ind.id))
                 except ValueError as e:
                     self.stdout.write(self.style.ERROR(
-                        '%s, LOP [%s] is missing or not numeric.' % (ind.id, ind.lop_target)))
+                        '%s, LOP [%s] is missing or not numeric.' %
+                        (ind.id, ind.lop_target)))
                 except Exception as e:
                     self.stdout.write(self.style.ERROR(
                         "%s, Error occured: %s" % (ind.id, e)))

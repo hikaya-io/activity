@@ -65,4 +65,4 @@ def import_table(request):
 
     # send the keys and vars from the json data to the template along with
     # submitted feed info and silos for new form
-    return render(request, "tables/import.html", {'getTables': data})
+    return render(request, "tables/import.html", {'get_tables': data})

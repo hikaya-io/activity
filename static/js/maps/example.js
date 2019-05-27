@@ -1,4 +1,4 @@
-var mappingFunction = function(data, countries, getOverlayGroups, getSiteProfile, getSiteProfileIndicator, country_geojson_url){
+var mappingFunction = function(data, countries, get_overlay_groups, get_site_profile, get_site_profile_indicator, country_geojson_url){
 
     var country=[],country_lat=[],country_long=[], narrativeTitle=[], narrativeTXT=[], overlay=[];
 
@@ -10,7 +10,7 @@ var mappingFunction = function(data, countries, getOverlayGroups, getSiteProfile
     {% endfor %}
 
      //overlay groups
-     {% for group in getOverlayGroups %}
+     {% for group in get_overlay_groups %}
         var {{ group.overlay_group }} = new L.LayerGroup();
      {% endfor %}
 
@@ -35,7 +35,7 @@ var mappingFunction = function(data, countries, getOverlayGroups, getSiteProfile
         shadowSize:  [41, 41]
             });
     //partner markers
-    {% for item in getSiteProfile %}
+    {% for item in get_site_profile %}
         L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: projectIcon})
             .addTo(partners)
             .bindPopup("<b>{{ item.country }}</b>
@@ -49,9 +49,9 @@ var mappingFunction = function(data, countries, getOverlayGroups, getSiteProfile
                        );
     {% endfor %}
 
-    {% if getSiteProfileIndicator %}
+    {% if get_site_profile_indicator %}
         //indicator markers
-        {% for item in getSiteProfileIndicator %}
+        {% for item in get_site_profile_indicator %}
             L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: indicatorIcon})
                     .addTo(indicators)
                     .bindPopup("" + "<b>{{ item.country }}</b>

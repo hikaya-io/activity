@@ -6,12 +6,12 @@
 		data-toggle="dropdown"
 		aria-expanded="true"
 	>
-		Programs
+		{{ user.activity_user.organization.level_1_label }}(s)
 		<span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 		<li role="presentation"><a role="menuitem" tabindex="-1" href=" ">-- All --</a></li>
-		{% for program in getPrograms %}
+		{% for program in get_programs %}
 		<li role="presentation">
 			<a role="menuitem" tabindex="-1" onclick="program_filter({{ program.id }})">{{
 				program.name
@@ -28,7 +28,7 @@
 		data-toggle="dropdown"
 		aria-expanded="true"
 	>
-		Project Status
+		{{ user.activity_user.organization.level_2_label }} Status
 		<span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">

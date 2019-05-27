@@ -43,7 +43,7 @@ required:
 
     };
     var data = {
-        labels: [{% for indicator in getQuantitativeDataSums %}  "{{ indicator.indicator__number }}", {% endfor %} '','',"Total A & T"],
+        labels: [{% for indicator in get_quantitative_data_sums %}  "{{ indicator.indicator__number }}", {% endfor %} '','',"Total A & T"],
         datasets: [
             {
                 label: "Targeted",
@@ -51,7 +51,7 @@ required:
                 strokeColor: "rgba(220,220,220,0.8)",
                 highlightFill: "rgba(220,220,220,0.75)",
                 highlightStroke: "rgba(220,220,220,1)",
-                data : [{% for indicator in getQuantitativeDataSums %}  {{ indicator.targets }}, {% endfor %} '','', {{totalTargets.targets__sum}}]
+                data : [{% for indicator in get_quantitative_data_sums %}  {{ indicator.targets }}, {% endfor %} '','', {{total_targets.targets__sum}}]
             },
             {
                 label: "Actuals",
@@ -59,7 +59,7 @@ required:
                 strokeColor: "rgba(151,187,205,0.8)",
                 highlightFill: "rgba(151,187,205,0.75)",
                 highlightStroke: "rgba(151,187,205,1)",
-                data : [{% for indicator in getQuantitativeDataSums %}  {{ indicator.actuals }}, {% endfor %}'','',{{totalActuals.actuals__sum}}]
+                data : [{% for indicator in get_quantitative_data_sums %}  {{ indicator.actuals }}, {% endfor %}'','',{{total_actuals.actuals__sum}}]
             }
         ]
     };

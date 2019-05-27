@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
-  <li><a href="/workflow/report/0/0/">Project Report</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
+  <li><a href="/workflow/report/0/0/">{{ user.activity_user.organization.level_2_label }} Report</a></li>
   <li class="active">Report</li>
 </ol>
 
 {% endblock bread_crumb %}
 {% load render_table from django_tables2 %}
 
-{% block page_title %}Project Report{% endblock %}
+{% block page_title %}{{ user.activity_user.organization.level_2_label }} Report{% endblock %}
 
 {% block content %}
 <ul class="nav nav-tabs">
@@ -29,9 +29,9 @@
     <!-- Table -->
     <table class="table" border="1">
         <tr>
-            <th>Program</th>
-            <th>Project Initiation</th>
-            <th>Project Tracking</th>
+            <th>{{ user.activity_user.organization.level_1_label }}</th>
+            <th>{{ user.activity_user.organization.level_2_label }} Initiation</th>
+            <th>{{ user.activity_user.organization.level_2_label }} Tracking</th>
         </tr>
         <tr>
             <td>{{ complete.program }}</td>
@@ -42,9 +42,9 @@
     <br/>
     <table class="table" border="1">
         <tr>
-            <th>Project Code</th>
+            <th>{{ user.activity_user.organization.level_2_label }} Code</th>
             <th>Office</th>
-            <th>Project Name</th>
+            <th>{{ user.activity_user.organization.level_2_label }} Name</th>
         </tr>
         <tr>
             <td>{{ complete.activity_code }}</td>
@@ -106,7 +106,7 @@
             <th>Budget</th>
             <th>Cost</th>
         </tr>
-        {% for benchmark in getBenchmarks %}
+        {% for benchmark in get_benchmarks %}
         <tr>
             <td>{{ benchmark.description}}</td>
             <td>{{ benchmark.site }}</td>

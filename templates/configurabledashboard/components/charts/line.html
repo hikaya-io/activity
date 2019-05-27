@@ -2,7 +2,7 @@
 
 {% block content %}
     <div>
-        <canvas id='{{activitytableData.component_id}}' style='height: 300px'> </canvas>
+        <canvas id='{{ActivityTableData.component_id}}' style='height: 300px'> </canvas>
     </div>
 {% endblock %}
 
@@ -13,9 +13,9 @@
 <script>
 lineFunction(	
 	//pass in the table data and labels data
-	{% autoescape off %}{{activitytableData}}{% endautoescape %},
-	// {% autoescape off %}{{activitytableData.data}}{% endautoescape %}, #programmatic version for wizard
+	{% autoescape off %}{{ActivityTableData}}{% endautoescape %},
+	// {% autoescape off %}{{ActivityTableData.data}}{% endautoescape %}, #programmatic version for wizard
 	//slice off the right number of Colors to use in the chart
-	{% autoescape off %} {{colorPalettes.light}}.slice(0,({{activitytableData.data_set}}.size)) {% endautoescape %}
-	// {% autoescape off %}{{activitytableData.colors}} {% endautoescape %}, //programmatic version for wizard
+	{% autoescape off %} {{color_palettes.light}}.slice(0,({{ActivityTableData.data_set}}.size)) {% endautoescape %}
+	// {% autoescape off %}{{ActivityTableData.colors}} {% endautoescape %}, //programmatic version for wizard
 ) </script>

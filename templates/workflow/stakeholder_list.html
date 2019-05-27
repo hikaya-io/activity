@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
   <li class="active">Stakeholder List</li>
 </ol>
 {% endblock %}
@@ -10,12 +10,12 @@
 {% block content %}
 <div class="dropdown">
 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-    Programs
+    {{ user.activity_user.organization.level_1_label }}(s)
     <span class="caret"></span>
   </button>
 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" >
         <li role="presentation"><a role="menuitem" tabindex="-1" href=" ">-- All --</a></li>
-    {% for program in getPrograms %}
+    {% for program in get_programs %}
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="program_filter({{program.id}})">{{ program.gaitid}} - {{ program.name }}</a></li>
     {% endfor %}
   </ul>
@@ -108,7 +108,7 @@ function program_filter(program_id) {
         if (program_id != 0) {
 
             $.getJSON("/workflow/stakeholder_table/"+ program_id + "/0/", function(data) {
-                  show_stakeholder_table(data['getStakeholders']);
+                  show_stakeholder_table(data['get_stakeholders']);
             });
 
         }  else{
@@ -118,7 +118,7 @@ function program_filter(program_id) {
             stakeholder_id = document.URL.split('/')[6];
 
             $.getJSON("/workflow/stakeholder_table/"+ program_id + "/" + stakeholder_id + "/", function(data) {
-                  show_stakeholder_table(data['getStakeholders']);
+                  show_stakeholder_table(data['get_stakeholders']);
             });
         }
       }
