@@ -48,7 +48,7 @@
                     return false;
                 }
             );
-            var indicator_records = {{ data | safe}};
+            var indicator_records = {{ data|safe }};
             table = $('#data_table').DataTable({
                 dom: "<'row'<'col-sm-2'B><'col-sm-5'l><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 buttons: [

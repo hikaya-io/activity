@@ -60,7 +60,7 @@ urlpatterns = [
         r'^report_table/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
         IndicatorReport.as_view(), name='indicator_table'),
     re_path(r'^program_report/(?P<program>\w+)/$',
-            programIndicatorReport, name='programIndicatorReport'),
+            program_indicator_report, name='program_indicator_report'),
 
     # Indicator Data Report
     re_path(r'^data/(?P<id>\w+)/(?P<program>\w+)/(?P<type>\w+)/$',

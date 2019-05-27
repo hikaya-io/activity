@@ -121,7 +121,7 @@ class ProjectDash(ListView):
                       {'get_program': get_program,
                        'get_agreement': get_agreement,
                        'get_complete': get_complete,
-                       'getPrograms': get_programs,
+                       'get_programs': get_programs,
                        'get_document_count': get_document_count,
                        'get_checklist_count': get_checklist_count,
                        'get_community_count': get_community_count,
@@ -535,7 +535,7 @@ class ProjectAgreementDetail(DetailView):
                 agreement__id=self.kwargs['pk'])
         except Benchmarks.DoesNotExist:
             get_benchmark = None
-        context.update({'getBenchmarks': get_benchmark})
+        context.update({'get_benchmarks': get_benchmark})
 
         try:
             get_budget = Budget.objects.all().filter(
@@ -888,7 +888,7 @@ class ProjectCompleteDetail(DetailView):
         budget_contribs = Budget.objects.filter(reduce(operator.or_, q_list))
 
         context['budget_contribs'] = budget_contribs
-        context['getBenchmarks'] = get_benchmark
+        context['get_benchmarks'] = get_benchmark
 
         return context
 
@@ -1872,7 +1872,7 @@ class ContactDelete(DeleteView):
 
 class StakeholderList(ListView):
     """
-    getStakeholders
+    get_stakeholders
     """
     model = Stakeholder
     template_name = 'workflow/stakeholder_list.html'
@@ -2506,7 +2506,7 @@ class Report(View, AjaxableResponseMixin):
             get_agreements = ProjectAgreement.objects.select_related().filter(
                 program__country__in=countries)
 
-        getPrograms = Program.objects.all().filter(
+        get_programs = Program.objects.all().filter(
             funding_status="Funded", country__in=countries).distinct()
 
         filtered = ProjectAgreementFilter(request.GET, queryset=get_agreements)
@@ -2531,7 +2531,7 @@ class Report(View, AjaxableResponseMixin):
         return render(request, "workflow/report.html",
                       {'country': countries, 'form': FilterForm(),
                        'filter': filtered, 'helper': FilterForm.helper,
-                       'APPROVALS': APPROVALS, 'getPrograms': getPrograms})
+                       'APPROVALS': APPROVALS, 'get_programs': get_programs})
 
 
 class ReportData(View, AjaxableResponseMixin):

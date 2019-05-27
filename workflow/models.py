@@ -103,7 +103,8 @@ IMAGE_SPEC = {
 }
 
 
-def validate_image(image, width=IMAGE_SPEC['width'], height=IMAGE_SPEC['height'],
+def validate_image(image, width=IMAGE_SPEC['width'],
+                   height=IMAGE_SPEC['height'],
                    limit_kb=IMAGE_SPEC['limit_kb']):
     file_size = image.file.size
     if file_size > limit_kb * 1024:
@@ -135,18 +136,28 @@ class Organization(models.Model):
     level_4_label = models.CharField(
         "Project/Program Organization Level 4 label", default="Activity",
         max_length=255, blank=True)
-    site_label = models.CharField('Site Organization label', default='Site', max_length=255)
-    stakeholder_label = models.CharField('Stakeholder Organization label', default='Stakeholder',
+    site_label = models.CharField('Site Organization label', default='Site',
+                                  max_length=255)
+    stakeholder_label = models.CharField('Stakeholder Organization label',
+                                         default='Stakeholder',
                                          max_length=255)
-    form_label = models.CharField('Form Organization label', default='Form', max_length=255)
-    indicator_label = models.CharField('Indicator Organization label', default='Indicator',
+    form_label = models.CharField('Form Organization label', default='Form',
+                                  max_length=255)
+    indicator_label = models.CharField('Indicator Organization label',
+                                       default='Indicator',
                                        max_length=255)
-    site_label = models.CharField('Site Organization label', default='Site', max_length=255)
-    theme_color = models.CharField('Organization theme color', default='#25ced1', max_length=50)
-    default_currency = models.ForeignKey(Currency, help_text='Organization currency', blank=True,
-                                         null=True, on_delete=models.SET_NULL)
-    default_language = models.CharField('Organization language', default='English-US', max_length=50)
-    date_format = models.CharField('Organization Date Format', default='DD.MM.YYYY', max_length=100)
+    site_label = models.CharField('Site Organization label', default='Site',
+                                  max_length=255)
+    theme_color = models.CharField('Organization theme color',
+                                   default='#25ced1', max_length=50)
+    default_currency = models.ForeignKey(Currency,
+                                         help_text='Organization currency',
+                                         blank=True, null=True,
+                                         on_delete=models.SET_NULL)
+    default_language = models.CharField('Organization language',
+                                        default='English-US', max_length=50)
+    date_format = models.CharField('Organization Date Format',
+                                   default='DD.MM.YYYY', max_length=100)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
     theme_color = models.CharField(
@@ -154,10 +165,11 @@ class Organization(models.Model):
             RegexValidator(regex='^.{6}$', message='Length has to be 6',
                            code='nomatch')],
         max_length=6)
-    logo = models.ImageField(upload_to='images/', default="images/hikaya-activity-logo.png",
-        validators=[validate_image], 
-        help_text="Image of minimum {} width and {} height, maximum of {} ko".format(
-            *tuple(IMAGE_SPEC.values())))
+    logo = models.ImageField(
+        upload_to='images/', default="images/hikaya-activity-logo.png",
+        validators=[validate_image],
+        help_text="Image of minimum {} width and {} height, "
+                  "maximum of {} ko".format(*tuple(IMAGE_SPEC.values())))
 
     class Meta:
         ordering = ('name',)
@@ -441,8 +453,10 @@ class Program(models.Model):
     budget_check = models.BooleanField(
         "Enable Approval Authority", default=False)
     country = models.ManyToManyField(Country)
-    organization = models.ForeignKey(Organization, help_text='Program Organization',
-                                     blank=True, null=True, on_delete=models.SET_NULL)
+    organization = models.ForeignKey(Organization,
+                                     help_text='Program Organization',
+                                     blank=True, null=True,
+                                     on_delete=models.SET_NULL)
     user_access = models.ManyToManyField(ActivityUser, blank=True)
     public_dashboard = models.BooleanField(
         "Enable Public Dashboard", default=False)
@@ -1399,7 +1413,7 @@ class ProjectAgreement(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        new_name = self.office + " - " + self.project_name
+        new_name = "{} - {}".format(self.office, self.project_name)
         return new_name
 
 
@@ -1602,7 +1616,7 @@ class ProjectComplete(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        new_name = self.office + " - " + self.project_name
+        new_name = "{} - {}".format(self.office, self.project_name)
         return new_name
 
     @property

@@ -28,7 +28,7 @@
 
 <div class="wrapper">
 
-    <h3>{% if getProgram %}{{ getProgram.name }}{% endif %}</h3>
+    <h3>{% if get_program %}{{ get_program.name }}{% endif %}</h3>
     <div class="widget">
         <div id="sidebar" class="sidebar collapsed">
             <!-- Nav tabs -->
@@ -158,7 +158,7 @@ The trend of employment in surveyed areas was such that the majority (70%) of bu
             {% endfor %}
 
              //overlay groups
-             {% for group in getOverlayGroups %}
+             {% for group in get_overlay_groups %}
                 var {{ group.overlay_group }} = new L.LayerGroup();
              {% endfor %}
 
@@ -183,7 +183,7 @@ The trend of employment in surveyed areas was such that the majority (70%) of bu
                 shadowSize:  [41, 41]
             });
             //partner markers
-            {% for item in getSiteProfile %}
+            {% for item in get_site_profile %}
                 L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: projectIcon})
                     .addTo(partners)
                     .bindPopup("<b>{{ item.country }}</b>
@@ -197,9 +197,9 @@ The trend of employment in surveyed areas was such that the majority (70%) of bu
                                );
             {% endfor %}
 
-            {% if getSiteProfileIndicator %}
+            {% if get_site_profile_indicator %}
                 //indicator markers
-                {% for item in getSiteProfileIndicator %}
+                {% for item in get_site_profile_indicator %}
                     L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: indicatorIcon})
                             .addTo(indicators)
                             .bindPopup("" + "<b>{{ item.country }}</b>
@@ -361,7 +361,7 @@ The trend of employment in surveyed areas was such that the majority (70%) of bu
 
                                     <h4>What is the current {{ user.activity_user.organization.level_2_label }} Status? </h4>
 
-                                    Number of Initiations : <b>{{ getProjectsCount }}</b><br>
+                                    Number of Initiations : <b>{{ get_projects_count }}</b><br>
 
                                    <h4>
                                        <span class="label label-success">Approved &nbsp;<span class="badge">0</span></span>
@@ -398,7 +398,7 @@ The trend of employment in surveyed areas was such that the majority (70%) of bu
                           <div id="collapse2" class="panel-collapse collapse">
                               <table class="table table-striped">
                                   <tr>
-                                      <td colspan="5"><b>Summary of project initiations for - {% if getProgram %}{{ getProgram.name }}{% endif %}</b></td>
+                                      <td colspan="5"><b>Summary of project initiations for - {% if get_program %}{{ get_program.name }}{% endif %}</b></td>
                                   </tr>
                                   <tr>
                                       <th>Initiation#</th>
@@ -459,7 +459,7 @@ The trend of employment in surveyed areas was such that the majority (70%) of bu
                                         <h4>Key Performance Indicators (KPIs)</h4>
                                         <div id="kpi-legend"></div>
                                         <p><span>Targets</span> Vs <strong>Actuals</strong></p>
-                                        {% if getProgram %}{{ getProgram.name }}{% endif %}
+                                        {% if get_program %}{{ get_program.name }}{% endif %}
                                     </div>
                                     <div class="canvas-container">
                                         <canvas id="kpi"></canvas>
@@ -541,7 +541,7 @@ var kpi_options = {
     onAnimationComplete : null,
 };
 var kpi_data = {
-    labels : [{% for program in getQuantitativeDataSums %} "{{ program.indicator__number }}", {% endfor %}],
+    labels : [{% for program in get_quantitative_data_sums %} "{{ program.indicator__number }}", {% endfor %}],
     datasets : [
         {
             label: "KPI Targets",
@@ -549,7 +549,7 @@ var kpi_data = {
             strokeColor: "rgba(220,220,220,0.8)",
             highlightFill: "rgba(220,220,220,0.75)",
             highlightStroke: "rgba(220,220,220,1)",
-            data: [{% for program in getQuantitativeDataSums %} "{{ program.targets }}", {% endfor %}],
+            data: [{% for program in get_quantitative_data_sums %} "{{ program.targets }}", {% endfor %}],
             //data : [65,59,90,41,56,55,40]
         },
         {
@@ -558,7 +558,7 @@ var kpi_data = {
             strokeColor: "rgba(151,187,205,0.8)",
             highlightFill: "rgba(151,187,205,0.75)",
             highlightStroke: "rgba(151,187,205,1)",
-            data: [{% for program in getQuantitativeDataSums %} "{{ program.actuals }}", {% endfor %}],
+            data: [{% for program in get_quantitative_data_sums %} "{{ program.actuals }}", {% endfor %}],
             //data : [28,48,40,19,96,27,100]
         }
     ]
@@ -602,7 +602,7 @@ document.getElementById('kpi-legend').innerHTML = kpiChart.generateLegend();
         multiTooltipTemplate: "<%= value + ' USD' %>",
     };
     var expenditure_data = {
-        labels: [{% for project in getProjects %} {{ project.id }},{% endfor %}],
+        labels: [{% for project in get_projects %} {{ project.id }},{% endfor %}],
         datasets: [
             {
                 label: "Budgeted",
@@ -610,7 +610,7 @@ document.getElementById('kpi-legend').innerHTML = kpiChart.generateLegend();
                 strokeColor: "rgba(220,220,220,0.8)",
                 highlightFill: "rgba(220,220,220,0.75)",
                 highlightStroke: "rgba(220,220,220,1)",
-                data : [{% for project in getProjects %} {{ project.actual_budget }},{% endfor %}]
+                data : [{% for project in get_projects %} {{ project.actual_budget }},{% endfor %}]
             },
             {
                 label: "Actuals",
@@ -618,7 +618,7 @@ document.getElementById('kpi-legend').innerHTML = kpiChart.generateLegend();
                 strokeColor: "rgba(151,187,205,0.8)",
                 highlightFill: "rgba(151,187,205,0.75)",
                 highlightStroke: "rgba(151,187,205,1)",
-                data : [{% for project in getProjects %} {{ project.total_cost }},{% endfor %}]
+                data : [{% for project in get_projects %} {{ project.total_cost }},{% endfor %}]
             }
         ]
     };
@@ -629,7 +629,7 @@ document.getElementById('kpi-legend').innerHTML = kpiChart.generateLegend();
 
     //render survey_responses on radar_chart
     var survey_data = {
-        //labels : [{% for program in getQuantitativeDataSums_2 %} "{{ program.indicator__source }}", {% endfor %}],
+        //labels : [{% for program in get_quantitative_data_sums_2 %} "{{ program.indicator__source }}", {% endfor %}],
         labels : ["Helpful","Friendly","Kind","Rude","Slow","Frustrating"],
         datasets : [
             {
@@ -637,7 +637,7 @@ document.getElementById('kpi-legend').innerHTML = kpiChart.generateLegend();
                 strokeColor : "#637b85",
                 pointColor : "#dbba34",
                 pointStrokeColor : "#637b85",
-                //data : [{% for project in getProjects %} {{ project.mc_estimated_budget }},{% endfor %}]
+                //data : [{% for project in get_projects %} {{ project.mc_estimated_budget }},{% endfor %}]
                 data : [65,59,90,81,30,56]
             }
         ]

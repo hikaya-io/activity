@@ -9,12 +9,12 @@
   <script>
 
     // line chart data
-    var label_data = [{% for data in getIndicatorData %}{% if data.date_collected  %}"{{data.date_collected | date}}",{% endif %}{% endfor %}];
+    var label_data = [{% for data in get_indicator_data %}{% if data.date_collected  %}"{{data.date_collected | date}}",{% endif %}{% endfor %}];
 
     var iniData = {
       labels:[
 
-      {% for data in getIndicatorData %}
+      {% for data in get_indicator_data %}
         {% if data.date_collected  %}
          "{{data.date_collected | date}}",
         {% endif %}
@@ -30,7 +30,7 @@
         pointHighlightStroke: "#C45662",
         data:[
 
-          {% for data in getIndicatorData %}
+          {% for data in get_indicator_data %}
             {% if data.date_collected  %}
              {{data.targeted}},
             {% endif %}
@@ -46,7 +46,7 @@
         pointHighlightFill: "#fff",
         pointHighlightStroke: "#C45662",
         data:[
-          {% for data in getIndicatorData %}
+          {% for data in get_indicator_data %}
             {% if data.date_collected  %}
              {{data.achieved}},
             {% endif %}

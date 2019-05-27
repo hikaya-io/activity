@@ -35,7 +35,7 @@ var expenditure_options = {
         multiTooltipTemplate: "<%= value + ' USD' %>",
     };
     var expenditure_data = {
-        labels: [{% for project in getProjects|slice:"10" %} {{ project.id }},{% endfor %}],
+        labels: [{% for project in get_projects|slice:"10" %} {{ project.id }},{% endfor %}],
         datasets: [
             {
                 label: "Budgeted",
@@ -43,7 +43,7 @@ var expenditure_options = {
                 strokeColor: "rgba(220,220,220,0.8)",
                 highlightFill: "rgba(220,220,220,0.75)",
                 highlightStroke: "rgba(220,220,220,1)",
-                data : [{% for project in getProjects|slice:"10" %} {{ project.actual_budget }},{% endfor %}]
+                data : [{% for project in get_projects|slice:"10" %} {{ project.actual_budget }},{% endfor %}]
             },
             {
                 label: "Actuals",
@@ -51,7 +51,7 @@ var expenditure_options = {
                 strokeColor: "rgba(151,187,205,0.8)",
                 highlightFill: "rgba(151,187,205,0.75)",
                 highlightStroke: "rgba(151,187,205,1)",
-                data : [{% for project in getProjects|slice:"10" %} {{ project.total_cost }},{% endfor %}]
+                data : [{% for project in get_projects|slice:"10" %} {{ project.total_cost }},{% endfor %}]
             }
         ]
     };

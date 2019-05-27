@@ -16,19 +16,19 @@ var options = {
 };
 var data = [
     {
-    value: {{ getApprovedCount }},
+    value: {{ get_approved_count }},
     color:"#637b85",
-    label: "Approved - {{ getApprovedCount }}"
+    label: "Approved - {{ get_approved_count }}"
     },
     {
-    value : {{ getAwaitingApprovalCount }},
+    value : {{ get_awaiting_approval_count }},
     color : "#2c9c69",
-    label: "Waiting - {{ getAwaitingApprovalCount }}"
+    label: "Waiting - {{ get_awaiting_approval_count }}"
     },
     {
-    value : {{ getRejectedCount }},
+    value : {{ get_rejected_count }},
     color : "#dbba34",
-    label: "Rejected - {{ getRejectedCount }}"
+    label: "Rejected - {{ get_rejected_count }}"
     },
     {
     value : {{ nostatus_count }},
@@ -36,9 +36,9 @@ var data = [
     label: "New - {{ nostatus_count }}"
     },
     {
-    value : {{ getInProgressCount }},
+    value : {{ get_in_progress_count }},
     color : "#c62f29",
-    label: "In Progress - {{ getInProgressCount }}"
+    label: "In Progress - {{ get_in_progress_count }}"
     }
 ];
 var ctx = document.getElementById("status").getContext("2d");

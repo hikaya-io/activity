@@ -17,15 +17,15 @@
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-    {% for program in getPrograms %}
+    {% for program in get_programs %}
         <li role="presentation"><a role="menuitem" tabindex="-1" href="/workflow/projectcomplete_list/{{ program.id }}">{{ program.gaitid}} - {{ program.name }}</a></li>
     {% endfor %}
   </ul>
 </div>
 </div>
 <br/>
-{% if getProgram %}
-    <h3>{{getProgram.gaitid }} - {{ getProgram.name }}</h3>
+{% if get_program %}
+    <h3>{{get_program.gaitid }} - {{ get_program.name }}</h3>
 {% endif %}
 
  <!-- Table -->
@@ -37,7 +37,7 @@
         <th>Approval Status</th>
         <th>&nbsp;</th>
     </tr>
-    {% for item in getDashboard %}
+    {% for item in get_dashboard %}
     <tr>
         <td><a href="/workflow/projectcomplete_update/{{ item.id }}">{{ item.create_date}}</a></td>
         <td><a href="/workflow/projectcomplete_update/{{ item.id }}">{{ item.project_name}}</a></td>
