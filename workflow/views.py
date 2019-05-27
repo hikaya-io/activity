@@ -72,6 +72,12 @@ def date_handler(obj):
     return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
 
+def list_workflow_level1(request):
+    programs = Program.objects.all()
+    context = {'programs': programs}
+    
+    return render(request, 'workflow/level1.html', context)
+
 class ProjectDash(ListView):
     template_name = 'workflow/projectdashboard_list.html'
 
@@ -129,7 +135,6 @@ class ProjectDash(ListView):
                        'project_id': project_id,
                        'get_checklist': get_checklist,
                        'get_distribution_count': get_distribution_count})
-
 
 class ProgramDash(ListView):
     """

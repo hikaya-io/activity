@@ -1,0 +1,51 @@
+{% extends "base.html" %} 
+{% block content %}
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Programs</h4>
+        </div>
+    </div> 
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th class="text-right">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for program in programs %}
+                <tr>
+                    <td>{{program.name}}</td>
+                    <td>{{program.start_date}}</td>
+                    <td>{{program.end_date}}</td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-sm">Details</button>
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                            <li><a href="">Programs / Activities</a></li>
+                            <li><a href="#">Stakeeholders</a></li>
+                            <li><a href="#">Sites</a></li>
+
+                            <li role="separator" class="divider"></li>
+
+                            <li class="text-danger"><a href="/">Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock content %}

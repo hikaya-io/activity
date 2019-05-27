@@ -176,7 +176,7 @@ body.loading .ajax_loading {
   box-shadow: 2px 1px 1px #888888;
 }
 
-.map-marker.indicator {
+.map-marker .indicator {
   width: 20px;
   height: 20px;
   border-radius: 50% 50% 50% 0;
