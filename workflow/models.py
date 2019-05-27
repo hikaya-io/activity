@@ -248,7 +248,7 @@ class ActivityUser(models.Model):
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
     organizations = models.ManyToManyField(Organization, verbose_name='Accessible Organizations',
-                                           related_name='organization', blank=True, null=True)
+                                           related_name='organization', blank=True)
     countries = models.ManyToManyField(
         Country, verbose_name="Accessible Countries", related_name='countries',
         blank=True)
