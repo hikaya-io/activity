@@ -130,14 +130,14 @@ def get_all_data(get_country, file_name):
 
 # UNCOMMENT AND UPDATE TO IMPORT
 print("IMPORTING South Sudan !!!!!!")
-getCountry, created = Country.objects.get_or_create(country="Liberia")
+get_country, created = Country.objects.get_or_create(country="Liberia")
 file_name = "fixtures/Liberia_Admin.csv"
-get_all_data(getCountry, file_name)
+get_all_data(get_country, file_name)
 
 """
 print("IMPORTING Uganda !!!!!!"
-getCountry, created = Country.objects.get_or_create(country="Uganda")
+get_country, created = Country.objects.get_or_create(country="Uganda")
 file_name = "fixtures/admin-uganda.csv"
-getAllData(getCountry, file_name)
+getAllData(get_country, file_name)
 
 """

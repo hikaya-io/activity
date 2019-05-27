@@ -330,19 +330,19 @@ def index(request, selected_countries=None, id=0, sector=0):
         'complete_wait_count': complete_wait_count,
         'complete_awaiting_count': complete_awaiting_count,
         'programs': get_programs,
-        'getSiteProfile': get_site_profile,
+        'get_site_profile': get_site_profile,
         'countries': user_countries,
         'selected_countries': selected_countries,
-        'getFilteredName': get_filtered_name,
-        'getSectors': get_sectors,
+        'get_filtered_name': get_filtered_name,
+        'get_sectors': get_sectors,
         'get_all_sectors': get_all_sectors,
         'sector': sector, 'table': table,
-        'getQuantitativeDataSums': get_quantitative_data_sums,
+        'get_quantitative_data_sums': get_quantitative_data_sums,
         'count_evidence': count_evidence,
-        'getObjectives': get_objectives,
+        'get_objectives': get_objectives,
         'selected_countries_list': selected_countries_list,
-        'getSiteProfileIndicator': get_site_profile_indicator,
-        'getAgencySite': get_agency_site,
+        'get_site_profile_indicator': get_site_profile_indicator,
+        'get_agency_site': get_agency_site,
         'workflow_adoption': workflow_adoption,
         'count_program': count_program,
         'count_program_agreement': count_program_agreement,
@@ -444,7 +444,8 @@ def admin_configurations(request):
             'date_format': data.get('date_format'),
             # 'default_currency': data.get('default_currency')
         }
-        organization = Organization.objects.filter(id=logged_activity_user.organization.id)
+        organization = Organization.objects.filter(
+            id=logged_activity_user.organization.id)
         updates = organization.update(**model_updates)
         if updates:
             organization_changes = Organization.objects.filter(
@@ -456,7 +457,8 @@ def admin_configurations(request):
     return render(
         request,
         'admin/default_settings.html',
-        {'nav_links': nav_links, 'organization': logged_activity_user.organization}
+        {'nav_links': nav_links,
+         'organization': logged_activity_user.organization}
     )
 
 
@@ -465,7 +467,7 @@ def admin_profile_settings(request):
     organization = user.organization
     if request.method == 'POST':
         form = OrganizationEditForm(request.FILES,
-                    instance=organization) 
+                                    instance=organization)
         if form.is_valid():
 
             organization.logo = request.FILES.get('logo')
@@ -480,8 +482,8 @@ def admin_profile_settings(request):
             file = open(PROJECT_ROOT+organization.logo.url)
             file.close()
         except FileNotFoundError:
-            setattr(organization, 'logo', 
-                organization._meta.fields[-1].default)
+            setattr(organization, 'logo',
+                    organization._meta.fields[-1].default)
             organization.save()
             user.organization = organization
             user.save()
@@ -510,7 +512,8 @@ def add_program(data):
     Add program
     """
     program = Program(name=data.get(
-        'program_name'), start_date=data.get('start_date'), end_date=data.get('end_date'))
+        'program_name'), start_date=data.get('start_date'),
+        end_date=data.get('end_date'))
 
     try:
         program.save()
@@ -535,7 +538,7 @@ class BookmarkList(ListView):
         get_user = ActivityUser.objects.all().filter(user=request.user)
         get_bookmarks = ActivityBookmarks.objects.all().filter(user=get_user)
         return render(request, self.template_name,
-                      {'getBookmarks': get_bookmarks})
+                      {'get_bookmarks': get_bookmarks})
 
 
 class BookmarkCreate(CreateView):

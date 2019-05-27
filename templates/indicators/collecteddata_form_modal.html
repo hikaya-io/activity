@@ -26,18 +26,18 @@
                 validatePeriodicTarget();
             }
             // target_frequency is defined in the indicator_list.html file
-            var target_frequency = parseInt(`{{object.indicator.target_frequency|safe}}`);
+            var target_frequency = parseInt('{{object.indicator.target_frequency|safe}}');
             // indicator_id is defined in the indicator_list.html file.
-            // indicator_id = `{{indicator.id|safe}}`;
-            var ptlen = `{{object.indicator.periodictarget_set.all.count|safe}}`;
-            var collectedRecordId = parseInt(`{{object.id|safe}}`);
+            // indicator_id = '{{indicator.id|safe}}';
+            var ptlen = '{{object.indicator.periodictarget_set.all.count|safe}}';
+            var collectedRecordId = parseInt('{{object.id|safe}}');
 
             // if it is a new record and target_frequency is LOP_ONLY then set periodic_target to LOP_ONLY
             if (isNaN(collectedRecordId)) {
-                target_frequency = parseInt(`{{ indicator.target_frequency|safe}}`);
+                target_frequency = parseInt('{{ indicator.target_frequency|safe}}');
                 if (!isNaN(target_frequency) && target_frequency == 1) {
                     // if target_frequency is 1 (LOP_Only) then there has to be exactly one periodic_target
-                    var pt_id = parseInt(`{{ indicator.periodictarget_set.all.0.id|safe}}`);
+                    var pt_id = parseInt('{{ indicator.periodictarget_set.all.0.id|safe}}');
                     $("#id_periodic_target").val(pt_id);
                 }
                 if (target_frequency != 1 && target_frequency != 2 && target_frequency != 8) {

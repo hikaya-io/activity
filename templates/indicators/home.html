@@ -15,7 +15,7 @@
     </button>
     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
         <li role="presentation"><a role="menuitem" tabindex="-1" href="/indicators/home/0/0/0/"> -- All --</a></li>
-    {% for program in getPrograms %}
+    {% for program in get_programs %}
         <li role="presentation"><a role="menuitem" tabindex="-1" href="/indicators/home/{{ program.id }}/0/0/">{{ program.gaitid}} - {{ program.name }}</a></li>
     {% endfor %}
     </ul>
@@ -24,7 +24,7 @@
     <br/>
     <div class="jumbotron">
         <h3>Indicators</h3>
-        {% regroup getIndicators by program.gaitid as programs_by_gaitid %}
+        {% regroup get_indicators by program.gaitid as programs_by_gaitid %}
         {% for item in programs_by_gaitid %}
         <div class="jumbotron dashboard">
             <h4>{{ item.program.gaitid }} - {{ item.program.name }}</h4>

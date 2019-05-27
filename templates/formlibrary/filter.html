@@ -3,7 +3,7 @@
   <select id="program" class="listoption_filters">
     <option>{{ user.activity_user.organization.level_1_label }}(s)</option>
     <option value="all">---ALL---</option>
-    {% for program in getPrograms %}
+    {% for program in get_programs %}
       <option value="{{program.id}}">{{program.name}}</option>
     {% endfor %}
   </select>

@@ -129,9 +129,12 @@ def group_required(*group_names, url):
 def get_nav_links(nav):
     nav_links = [
         {'label': 'Home', 'status': '', 'link': 'admin_dashboard'},
-        {'label': 'Profile Settings', 'status': '', 'link': 'admin_profile_settings'},
-        {'label': 'Configurations', 'status': '', 'link': 'admin_configurations'},
-        {'label': 'User Management', 'status': '', 'link': 'admin_user_management'}
+        {'label': 'Profile Settings', 'status': '',
+         'link': 'admin_profile_settings'},
+        {'label': 'Configurations', 'status': '',
+         'link': 'admin_configurations'},
+        {'label': 'User Management', 'status': '',
+         'link': 'admin_user_management'}
     ]
     for item in nav_links:
         if item['label'] == nav:

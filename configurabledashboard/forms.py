@@ -252,7 +252,7 @@ class CustomDashboardForm(forms.ModelForm):
                     <td>{% if component.component_name %}
                             {{component.component_name}}
                         {% else %} N/A {% endif %} </td>
-                    <td>{% if component.data_reqiored %}
+                    <td>{% if component.data_required %}
                             {{component.data_required}}
                         {% else %} N/A {% endif %} </td>
                     <td><div class="form-group" style="width: 75%;"> 

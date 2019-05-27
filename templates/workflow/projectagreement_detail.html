@@ -113,7 +113,7 @@
             <th>Proposed Value of Contribution</th>
         </tr>
 
-        {% for budget in getBudget %}
+        {% for budget in get_budget %}
         <tr>
             <td>{{ budget.contributor }}</td>
             <td>{{ budget.description_of_contribution }}</td>
@@ -165,7 +165,7 @@
             <th>Targeted</th>
             <th>Indicator</th>
         </tr>
-        {% for output in getQuantitativeOutputs %}
+        {% for output in get_quantitative_outputs %}
         <tr>
             <td>{{ output.targeted }}</td>
             <td>{{ output.indicator }}</td>
@@ -181,7 +181,7 @@
             <th>Est. End Date</th>
             <th>Budget</th>
         </tr>
-        {% for benchmark in getBenchmarks %}
+        {% for benchmark in get_benchmarks %}
         <tr>
             <td>{{ benchmark.description}}</td>
             <td>{{ benchmark.site }}</td>
@@ -198,7 +198,7 @@
             <th>Responsible Person</th>
             <th>Frequency</th>
         </tr>
-        {% for monitor in getMonitor %}
+        {% for monitor in get_monitor %}
         <tr>
             <td>{{ monitor.type }}</td>
             <td>{{ monitor.responsible_person }}</td>

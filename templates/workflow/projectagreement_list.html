@@ -15,8 +15,8 @@
     {% include "workflow/filter.html" %}
 </div>
 <br/>
-{% if getProgram %}
-<h3>{{getProgram.gaitid }} - {{ getProgram.name }}</h3>
+{% if get_program %}
+<h3>{{get_program.gaitid }} - {{ get_program.name }}</h3>
 {% endif %}
 
  <!-- Table -->
@@ -29,7 +29,7 @@
         <th>In Dashboard</th>
         <th>&nbsp;</th>
     </tr>
-    {% for item in getDashboard %}
+    {% for item in get_dashboard %}
     <tr>
         <td>{% if item.approval %}{{ item.create_date}}{% else %}<a href="/workflow/projectagreement_update/{{ item.id }}">{{ item.create_date}}</a>{% endif %}</td>
         <td>{% if item.approval %} {{ item.project_name}}{% else %}<a href="/workflow/projectagreement_update/{{ item.id }}">{{ item.project_name}}</a>{% endif %}</td>

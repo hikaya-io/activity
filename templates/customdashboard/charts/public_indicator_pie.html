@@ -17,14 +17,14 @@ var options = {
 };
 var data = [
     {
-    value: {{ getApprovedCount }},
+    value: {{ get_approved_count }},
     color:"#637b85",
-    label: "Approved - {{ getIndicatorsApprovedCount }}"
+    label: "Approved - {{ get_indicators_approved_count }}"
     },
     {
-    value : {{ getInProgressCount }},
+    value : {{ get_in_progress_count }},
     color : "#c62f29",
-    label: "In Progress - {{ getIndicatorInProgressCount }}"
+    label: "In Progress - {{ get_indicator_in_progress_count }}"
     }
 ];
 var ctx = document.getElementById("ind-status").getContext("2d");

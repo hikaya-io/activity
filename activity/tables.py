@@ -39,5 +39,5 @@ class CollectedDataTable(tables.Table):
         fields = ('targeted', 'achieved', 'description', 'logframe_indicator',
                   'sector', 'community', 'agreement', 'complete')
         sequence = (
-        'targeted', 'achieved', 'description', 'logframe_indicator',
-        'sector', 'community', 'agreement', 'complete')
+            'targeted', 'achieved', 'description', 'logframe_indicator',
+            'sector', 'community', 'agreement', 'complete')

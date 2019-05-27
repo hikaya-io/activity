@@ -24,7 +24,7 @@ $(function () {
         },
 
         xAxis: {
-            categories: [ {% for indicator in getQuantitativeData %}  '{{ indicator.indicator }}', {% endfor %} ],
+            categories: [ {% for indicator in get_quantitative_data %}  '{{ indicator.indicator }}', {% endfor %} ],
             tickmarkPlacement: 'on',
             lineWidth: 0
         },
@@ -50,11 +50,11 @@ $(function () {
         series: [{
             name: 'Targets',
             // add 0 to convert to int
-            data: [ {% for indicator in getQuantitativeData %}  {{ indicator.targeted|add:"0" }}, {% endfor %}  ],
+            data: [ {% for indicator in get_quantitative_data %}  {{ indicator.targeted|add:"0" }}, {% endfor %}  ],
             pointPlacement: 'on'
         }, {
             name: 'Actuals',
-            data: [ {% for indicator in getQuantitativeData %}  {{ indicator.achieved|add:"0" }}, {% endfor %}   ],
+            data: [ {% for indicator in get_quantitative_data %}  {{ indicator.achieved|add:"0" }}, {% endfor %}   ],
             pointPlacement: 'on'
         }]
 
