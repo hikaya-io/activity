@@ -530,6 +530,7 @@ $(function () {
                 </div>
                 <div class="modal-body">
                     <form id="addProgramForm">
+                        {% csrf_token %}
                         <div class="form-group">
                             <label for="programName">Program Name</label>
                             <input type="text" id="programName" name="program_name" class="form-control"
