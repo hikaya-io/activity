@@ -397,7 +397,6 @@ def register_organization(request):
     """
     if request.method == 'POST':
         data = request.POST
-        print(data)
         name = data.get('name')
         description = data.get('description')
 
