@@ -20,6 +20,45 @@
 
       <h4 class="panel-title">Objectives</h4>
     </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Parent</th>
+          <th>Create Date</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for objective in get_all_objectives %}
+        <tr>
+          <td>{{ objective.name }}</td>
+          <td>{{ objective.parent }}</td>
+          <td>{{ objective.create_date | date }}</td>
+          <td class="text-right">
+            <!-- Action buttons -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-default"><i class="fa fa-pencil"></i> Update</button>
+              <button
+                type="button"
+                class="btn btn-default btn-sm dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li class="text-danger"><a href="#">Delete</a></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 
