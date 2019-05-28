@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 from workflow.models import (
     Program, Sector, SiteProfile, ProjectAgreement, ProjectComplete,
-    Country, Documentation, ActivityUser)
+    Country, Documentation, ActivityUser, Organization)
 
 
 class ActivityTable(models.Model):
@@ -55,9 +55,10 @@ class IndicatorTypeAdmin(admin.ModelAdmin):
 
 
 class StrategicObjective(models.Model):
-    name = models.CharField(max_length=135, blank=True)
-    country = models.ForeignKey(
-        Country, null=True, blank=True, on_delete=models.SET_NULL)
+    name = models.CharField(max_length=255, blank=False, null=False)
+    country = models.ForeignKey(Country, null=True, blank=True, on_delete=models.SET_NULL)
+    organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey('self', blank=True, null=True, related_name='children', on_delete=models.SET_NULL)
     description = models.TextField(max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
