@@ -36,7 +36,7 @@ def index(request, selected_countries=None, id=0, sector=0):
 
     # add program
     if request.method == 'POST' and request.is_ajax:
-        return add_program(request.POST)
+        return add_program(request)
 
     program_id = id
     user_countries = get_country(request.user)
@@ -553,13 +553,15 @@ def admin_user_management(request):
     )
 
 
-def add_program(data):
+def add_program(request):
     """ 
     Add program
     """
+    data = request.POST
+    activity_user = ActivityUser.objects.filter(user=request.user).first()
     program = Program(name=data.get(
         'program_name'), start_date=data.get('start_date'),
-        end_date=data.get('end_date'))
+        end_date=data.get('end_date'), organization=activity_user.organization)
 
     try:
         program.save()
