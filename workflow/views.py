@@ -2634,8 +2634,12 @@ def objectives_list(request):
     if (request.method == 'POST'):
         data = request.POST
         activity_user = ActivityUser.objects.filter(user=request.user).first()
+        parent = None
+        if data.get('parent_objective'):
+            parent = int(data.get('parent_objective'))
+
         parent_objective = StrategicObjective.objects.filter(
-            id=int(data.get('parent_objective'))).first()
+            id=parent).first()
 
         objective = StrategicObjective(
             name=data.get('objective_name'),
