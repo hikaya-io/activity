@@ -288,7 +288,7 @@ $(function () {
                 <div class="col-md-8 text-right">
                     <div class="btn-group" role="group">
                         <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            {% if selected_countries_list %} {% for item in selected_countries_list %} {{ item.country }} {%endfor%}{%else%} Country {% endif %}Dashboard
+                            {% if selected_countries_list %} {% for item in selected_countries_list %} {{ item.country }} {%endfor%}{%else%} Country {% endif %} Dashboard
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
@@ -311,7 +311,7 @@ $(function () {
                             {%endfor%}
                         </ul>
 
-                        <button class="btn btn-sm hikaya-btn-secondary pull-right" data-toggle="modal" data-target="#addProgramModal">Add New
+                        <button class="btn btn-sm hikaya-btn-secondary pull-right" data-toggle="modal" data-target="#addProgramModal"><i class="fa fa-plus"></i> Add New
                                 {{ user.activity_user.organization.level_1_label }}</button>
                             
                         {% if report_server == False%}
