@@ -8,6 +8,7 @@ from django.urls import re_path, path
 
 urlpatterns = [
     path('level1', list_workflow_level1, name='level1'),
+    path('objectives', objectives_list, name='objectives'),
     re_path(r'^dashboard/project/(?P<pk>\w+)/$',
             ProjectDash.as_view(), name='project_dashboard'),
     re_path(r'^dashboard/project/(?P<pk>\w+)$',
