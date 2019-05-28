@@ -2633,11 +2633,19 @@ def import_service(service_id=1, deserialize=True):
 def objectives_list(request):
     if (request.method == 'POST'):
         data = request.POST
-        objective = StrategicObjective(name=data.get('objective_name'), description=data.get('description'))
+        activity_user = ActivityUser.objects.filter(user=request.user).first()
+        parent_objective = StrategicObjective.objects.filter(
+            id=int(data.get('parent_objective'))).first()
+
+        objective = StrategicObjective(
+            name=data.get('objective_name'),
+            description=data.get('description'),
+            organization=activity_user.organization,
+            parent=parent_objective)
+            
         objective.save()
 
         return HttpResponseRedirect('/workflow/objectives')
-        
 
     get_all_objectives = StrategicObjective.objects.all()
 
