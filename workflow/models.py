@@ -185,7 +185,7 @@ class Organization(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        return self.name
+        return self.name or ''
 
 
 class OrganizationAdmin(admin.ModelAdmin):
@@ -222,7 +222,7 @@ class Country(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        return self.country
+        return self.country or ''
 
 
 TITLE_CHOICES = (
@@ -248,7 +248,7 @@ class ActivityUser(models.Model):
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
     organizations = models.ManyToManyField(Organization, verbose_name='Accessible Organizations',
-                                           related_name='organization', blank=True)
+                                           related_name='organization', blank=True, null=True)
     countries = models.ManyToManyField(
         Country, verbose_name="Accessible Countries", related_name='countries',
         blank=True)
@@ -263,7 +263,7 @@ class ActivityUser(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return self.name
+        return self.name or ''
 
     @property
     def countries_list(self):
@@ -368,7 +368,7 @@ class Sector(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        return self.sector
+        return self.sector or ''
 
 
 class SectorAdmin(admin.ModelAdmin):
@@ -440,7 +440,7 @@ class FundCodeAdmin(admin.ModelAdmin):
 
 
 class Program(models.Model):
-    gaitid = models.CharField("ID", max_length=255, blank=True)
+    program_uuid = models.UUIDField(editable=False, verbose_name='Program UUID', default=uuid.uuid4, unique=True)
     name = models.CharField("Program Name", max_length=255, blank=True)
     funding_status = models.CharField(
         "Funding Status", max_length=255, blank=True)
@@ -483,7 +483,7 @@ class Program(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        return self.name
+        return str(self.program_uuid)
 
 
 class ApprovalAuthority(models.Model):

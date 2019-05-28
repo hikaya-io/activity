@@ -38,6 +38,7 @@ venv/
 build/
 develop-eggs/
 dist/
+media/
 downloads/
 eggs/
 lib/
