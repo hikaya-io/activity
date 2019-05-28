@@ -75,47 +75,40 @@
                     </button>
                     <!-- end hamburger nav -->
                 </div>
+                {% if user.is_authenticated  %}
                 <div class="collapse navbar-collapse" role="navigation" id="navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        {% if report_server == True %}
-                            {% if user.is_authenticated  %}
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="/reports/report/"><span class="glyphicon glyphicon-list-alt"></span> {{ user.activity_user.organization.level_1_label }} Report</a></li>
-                                        <li><a href="/workflow/report/0/0"><span class="glyphicon glyphicon-list-alt"></span> {{ user.activity_user.organization.level_2_label }} Report</a></li>
-                                        <li><a href="/indicators/collecteddata/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Data Report</a></li>
-                                        <li><a href="/indicators/data/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Visual Report</a></li>
-                                        <li><a href="/indicators/report/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Library</a></li>
-                                    </ul>
-                                </li>
-                            {% endif %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboards<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="/customdashboard/program_list/0/"><span class="glyphicon glyphicon-check"></span> Public Dashboards</a></li>
-                                </ul>
-                            </li>
-                        {% else %}
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Workflow<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="/workflow/dashboard/0/"><span class="glyphicon glyphicon-dashboard"></span> {{ user.activity_user.organization.level_1_label }} Index</a></li>
                                     <li><a href="{% url 'level1' %}"><span class="glyphicon glyphicon-list-alt"></span> {{ user.activity_user.organization.level_1_label }}s</a></li>
-                                    <li><a href="/workflow/documentation_list/0/0/"><span class="glyphicon glyphicon-th-list"></span> Documents</a></li>
-                                    <li><a href="/workflow/siteprofile_list/0/0/"><span class="glyphicon glyphicon-th-list"></span> Sites</a></li>
-                                    <li><a href="/workflow/stakeholder_list/0/0"><span class="glyphicon glyphicon-th-list"></span> Stakeholders</a></li>
                                 </ul>
                             </li>
-                            {% if user.is_authenticated %}
                             <li><a href="/indicators/home/0/0/0">Indicators</a></li>
-                            {% endif %}
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Form Library<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="/formlibrary/training_list/0/"><span class="glyphicon glyphicon-th-list"></span> Training</a></li>
                                     <li><a href="/formlibrary/distribution_list/0/"><span class="glyphicon glyphicon-th-list"></span> Distributions</a></li>
                                     <li><a href="/formlibrary/beneficiary_list/0/"><span class="glyphicon glyphicon-th-list"></span> Beneficiaries</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Components<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/workflow/siteprofile_list/0/0/"><span class="glyphicon glyphicon-map-marker"></span> Locations(Sites)</a></li>
+                                    <li><a href="/workflow/stakeholder_list/0/0">
+                                        <i class="fa fa-users"></i> Stakeholders (Orgs)
+                                    </a></li>
+                                    <li><a href=""><span class="glyphicon glyphicon-phone-alt"></span> Contacts</a></li>
+                                    <li>
+                                        <a href="/workflow/documentation_list/0/0/">
+                                            <i class="fa fa-folder-open" aria-hidden="true"></i>
+                                            Documents
+                                        </a>
+                                    </li>
+                                    <li><a href=""><span class="glyphicon glyphicon-th-list"></span> Objectives</a></li>
                                 </ul>
                             </li>
 
@@ -125,20 +118,16 @@
                                     <li><a href="/reports/report/"><span class="glyphicon glyphicon-list-alt"></span> {{ user.activity_user.organization.level_1_label }} Report</a></li>
                                     <li><a href="/customdashboard/program_list/0/"><span class="glyphicon glyphicon-list-alt"></span> {{ user.activity_user.organization.level_1_label }} Dashboards</a></li>
                                     <li><a href="/workflow/report/0/none"><span class="glyphicon glyphicon-list-alt"></span> {{ user.activity_user.organization.level_2_label }} Report</a></li>
-                                    {% if user.is_authenticated %}
-                                        <li><a href="/indicators/collecteddata/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Data Report</a></li>
-                                        <li><a href="/indicators/data/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Visual Report</a></li>
-                                        <li><a href="/indicators/report/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Library</a></li>
-                                    {% endif %}
+                                    <li><a href="/indicators/collecteddata/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Data Report</a></li>
+                                    <li><a href="/indicators/data/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Visual Report</a></li>
+                                    <li><a href="/indicators/report/0/0/0/"><span class="glyphicon glyphicon-list-alt"></span> Indicator Library</a></li>
                                     <li><a href="/indicators/tvareport/"><span class="glyphicon glyphicon-list-alt"></span> Target vs Actual Report</a></li>
                                     <li><a href="/indicators/disrep/0"><span class="glyphicon glyphicon-list-alt"></span> Indicator Disaggregation Report</a></li>
                                 </ul>
                                 </ul>
                             </li>
-                        {% endif %}
                     </ul>
 
-                    {% if user.is_authenticated  %}
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
