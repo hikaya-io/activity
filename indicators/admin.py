@@ -88,6 +88,13 @@ class ReportingFrequencyAdmin(admin.ModelAdmin):
     display = 'Reporting Frequency'
 
 
+@admin.register(StrategicObjective)
+class StrategicObjectiveAdmin(admin.ModelAdmin):
+    list_display = ('name', 'organization', 'create_date', 'parent')
+    list_filter = ('parent', 'name', 'organization')
+    display = 'Objectives'
+
+
 admin.site.register(IndicatorType)
 admin.site.register(Indicator, IndicatorAdmin)
 admin.site.register(ReportingFrequency)
@@ -95,7 +102,6 @@ admin.site.register(DisaggregationType, DisaggregationTypeAdmin)
 admin.site.register(DisaggregationLabel, DisaggregationLabelAdmin)
 admin.site.register(CollectedData, CollectedDataAdmin)
 admin.site.register(Objective, ObjectiveAdmin)
-admin.site.register(StrategicObjective, StrategicObjectiveAdmin)
 admin.site.register(Level)
 admin.site.register(ExternalService, ExternalServiceAdmin)
 admin.site.register(ExternalServiceRecord, ExternalServiceRecordAdmin)
