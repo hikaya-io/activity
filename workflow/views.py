@@ -2630,6 +2630,10 @@ def import_service(service_id=1, deserialize=True):
     return data
 
 
+def objectives_list(request):
+    return render(request, 'components/objectives.html')
+
+
 def service_json(request, service):
     """
     For populating service indicators in dropdown
