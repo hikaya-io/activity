@@ -6,53 +6,6 @@
 <script src="{{ STATIC_URL }}js/highcharts/js/modules/exporting.js"></script>
 
 <script>
-$(document).ready(() => {
-    $('#sectors').select2({placeholder: 'Select sectors...', allowClear: true});
-    $('#startDate').datepicker({dateFormat: "dd.mm.yy"});
-    $('#endDate').datepicker({dateFormat: "dd.mm.yy"});
-});
-
-$(function() {
-    $('#saveProgram').click(function(e) {
-        e.preventDefault();
-        
-        const formValue = $('#addProgramForm').serializeArray();
-
-        const obj = {}
-
-        formValue.forEach(item => {
-            obj[item.name] = item.value
-        })
-
-        // set sectors and format dates
-        data = {...obj, 
-            sectors: $('#sectors').val(), 
-            start_date: moment(obj.start_date, 'DD.MM.YYYY').format(),
-            end_date: moment(obj.end_date, 'DD.MM.YYYY').format(),
-        }
-
-        $.ajax({
-            url: '/',
-            type: 'POST',
-            data,
-            success: function(resp, status) {
-                // notify success
-                toastr.success('Program was added sucessfully', `${resp}`);
-
-                //close modal
-                $('#addProgramModal').modal('hide');
-
-                // reset form
-                $('#addProgramForm').trigger('reset');
-                $('#sectors').select('val', '').trigger('change');
-            },
-            error: function(xhr, status, error) {
-                toastr.error(error, 'Failed');
-            }
-        })
-    });
-});
-
 $(function () {
     $('#container').highcharts({
         chart: {
@@ -519,59 +472,7 @@ $(function () {
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="addProgramModal" tabindex="-1" role="dialog" aria-labelledby="addProgramModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="addProgramModalLabel">Add Program</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="addProgramForm">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="programName">Program Name</label>
-                            <input type="text" id="programName" name="program_name" class="form-control"
-                                placeholder="Program">
-                        </div>
     
-                        <div class="form-group">
-                            <label for="sectors">Sectors</label>
-                            <select id="sectors" class="form-control" name="sectors" style="width: 100%"
-                                multiple="multiple">
-                                {% for sector in get_all_sectors %}
-                                <option value="{{sector.id}}">{{sector.sector}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-    
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="startDate">Start Date</label>
-                                    <input type="" id="startDate" class="form-control" placeholder="Start Date"
-                                        name="start_date">
-                                </div>
-                            </div>
-    
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="endDate">End Date</label>
-                                    <input type="" id="endDate" class="form-control" placeholder="End Date" name="end_date">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn hikaya-btn-cancel" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn hikaya-btn-primary" id="saveProgram">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 {% endblock content %}
