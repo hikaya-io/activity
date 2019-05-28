@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from .views import *
-from django.urls import re_path
+from django.urls import re_path, path
 
 # place app url patterns here
 
 urlpatterns = [
+    path('level1', list_workflow_level1, name='level1'),
     re_path(r'^dashboard/project/(?P<pk>\w+)/$',
             ProjectDash.as_view(), name='project_dashboard'),
     re_path(r'^dashboard/project/(?P<pk>\w+)$',
