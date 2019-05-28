@@ -13,7 +13,7 @@ from .models import (
     ProjectComplete, SiteProfile, Documentation, Monitor, Benchmarks, Budget,
     ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder,
     FormGuidance,
-    ActivityBookmarks, ActivityUser
+    ActivityBookmarks, ActivityUser, Sector
 )
 from formlibrary.models import TrainingAttendance, Distribution
 from indicators.models import CollectedData, ExternalService
@@ -75,9 +75,12 @@ def date_handler(obj):
 def list_workflow_level1(request):
     user = ActivityUser.objects.filter(user=request.user).first()
     programs = Program.objects.filter(organization=user.organization)
-    context = {'programs': programs,}
+    get_all_sectors = Sector.objects.all()
+
+    context = {'programs': programs, 'get_all_sectors': get_all_sectors}
 
     return render(request, 'workflow/level1.html', context)
+
 
 class ProjectDash(ListView):
     template_name = 'workflow/projectdashboard_list.html'
@@ -136,6 +139,7 @@ class ProjectDash(ListView):
                        'project_id': project_id,
                        'get_checklist': get_checklist,
                        'get_distribution_count': get_distribution_count})
+
 
 class ProgramDash(ListView):
     """
@@ -480,7 +484,7 @@ class ProjectAgreementUpdate(UpdateView):
                 # email the approver group so they know this was approved
                 link = "Link: " + "https://" + get_current_site(
                     self.request).name + "/workflow/projectagreement_detail/"\
-                       + str(self.kwargs['pk']) + "/"
+                    + str(self.kwargs['pk']) + "/"
                 subject = "Project Initiation Approved: " + project_name
                 message = "A new initiation was approved by " + \
                           str(self.request.user) + "\n" + "Budget Amount: "\
@@ -2054,8 +2058,8 @@ class QuantitativeOutputsCreate(AjaxableResponseMixin, CreateView):
                         self).get_context_data(**kwargs)
         is_it_project_complete_form = self.request.GET.get(
             'is_it_project_complete_form', None) or \
-                                      self.request.POST.get(
-                                          'is_it_project_complete_form', None)
+            self.request.POST.get(
+            'is_it_project_complete_form', None)
         if is_it_project_complete_form == 'true':
             get_program = Program.objects.get(complete__id=self.kwargs['id'])
         else:
@@ -2072,8 +2076,8 @@ class QuantitativeOutputsCreate(AjaxableResponseMixin, CreateView):
     def get_initial(self):
         is_it_project_complete_form = self.request.GET.get(
             'is_it_project_complete_form', None) or \
-                                      self.request.POST.get(
-                                          'is_it_project_complete_form', None)
+            self.request.POST.get(
+            'is_it_project_complete_form', None)
 
         if is_it_project_complete_form == 'true':
             get_program = Program.objects.get(complete__id=self.kwargs['id'])
@@ -2132,8 +2136,8 @@ class QuantitativeOutputsUpdate(AjaxableResponseMixin, UpdateView):
         # indicator = Indicator.objects.get(id)
         is_it_project_complete_form = self.request.GET.get(
             'is_it_project_complete_form', None) or \
-                                      self.request.POST.get(
-                                          'is_it_project_complete_form', None)
+            self.request.POST.get(
+            'is_it_project_complete_form', None)
 
         initial = {
             'program': get_program.id,

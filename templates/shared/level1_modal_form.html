@@ -44,6 +44,10 @@
           $('#sectors')
             .select('val', '')
             .trigger('change');
+          
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         },
         error: function(xhr, status, error) {
           toastr.error(error, 'Failed');

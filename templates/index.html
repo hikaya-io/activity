@@ -2,6 +2,8 @@
 
 {% block content %}
 
+{% include 'shared/level1_modal_form.html' %}
+
 <script src="{{ STATIC_URL }}js/highcharts/js/highcharts.js"></script>
 <script src="{{ STATIC_URL }}js/highcharts/js/modules/exporting.js"></script>
 
@@ -302,7 +304,7 @@ $(function () {
                         </button>
                         <ul class="dropdown-menu" role="menu">
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="/dashboard/{% if get_filtered_name %}{{ get_filtered_name.id }}{% else %}0{% endif %}/0/">-- All --</a></li>
-                            {%for program in programs%}
+                            {% for program in programs %}
                             <li class="list-group-item">
                                 <a href="/dashboard/{{ program.id }}/{% if sector %}{{ sector }}{% else %}0{% endif %}/">{{ program.name }}</a>
                             </li>
