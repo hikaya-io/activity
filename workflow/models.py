@@ -248,7 +248,7 @@ class ActivityUser(models.Model):
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
     organizations = models.ManyToManyField(Organization, verbose_name='Accessible Organizations',
-                                           related_name='organization', blank=True, null=True)
+                                           related_name='organization', blank=True)
     countries = models.ManyToManyField(
         Country, verbose_name="Accessible Countries", related_name='countries',
         blank=True)
@@ -441,7 +441,7 @@ class FundCodeAdmin(admin.ModelAdmin):
 
 class Program(models.Model):
     program_uuid = models.UUIDField(editable=False, verbose_name='Program UUID', default=uuid.uuid4, unique=True)
-    name = models.CharField("Program Name", max_length=255, blank=True)
+    name = models.CharField("Program Name", max_length=255, blank=False, null=False, default='Default Level 1')
     funding_status = models.CharField(
         "Funding Status", max_length=255, blank=True)
     cost_center = models.CharField(
@@ -456,7 +456,7 @@ class Program(models.Model):
     edit_date = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     budget_check = models.BooleanField(
         "Enable Approval Authority", default=False)
-    country = models.ManyToManyField(Country)
+    country = models.ManyToManyField(Country, blank=True)
     organization = models.ForeignKey(Organization,
                                      help_text='Program Organization',
                                      blank=True, null=True,
@@ -483,7 +483,7 @@ class Program(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        return str(self.program_uuid)
+        return str(self.name) or ''
 
 
 class ApprovalAuthority(models.Model):
