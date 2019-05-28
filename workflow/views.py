@@ -16,7 +16,7 @@ from .models import (
     ActivityBookmarks, ActivityUser, Sector
 )
 from formlibrary.models import TrainingAttendance, Distribution
-from indicators.models import CollectedData, ExternalService
+from indicators.models import CollectedData, ExternalService, StrategicObjective
 from django.utils import timezone
 
 from .forms import (
@@ -30,7 +30,7 @@ from .forms import (
 
 import pytz
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Count
@@ -2631,7 +2631,19 @@ def import_service(service_id=1, deserialize=True):
 
 
 def objectives_list(request):
-    return render(request, 'components/objectives.html')
+    if (request.method == 'POST'):
+        data = request.POST
+        objective = StrategicObjective(name=data.get('objective_name'), description=data.get('description'))
+        objective.save()
+
+        return HttpResponseRedirect('/workflow/objectives')
+        
+
+    get_all_objectives = StrategicObjective.objects.all()
+
+    context = {'get_all_objectives': get_all_objectives}
+
+    return render(request, 'components/objectives.html', context)
 
 
 def service_json(request, service):

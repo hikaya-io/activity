@@ -1,14 +1,108 @@
 {% extends "base.html" %} {% block content %}
+<script>
+  $(document).ready(() => {
+    $('#parentObjective').select2({ placeholder: 'Select parent (optional)' });
+  });
+</script>
+
 <div class="container">
-    <div class="panel panel-default">
-        <div class="panel-heading clearfix">
-            <div class="pull-right">
-                <button class="btn btn-sm hikaya-btn-secondary"><i class="fa fa-plus"></i> Add New Objective</button>
-            </div>
-    
-            <h4 class="panel-title">Objectives</h4>
-        </div>
+  <div class="panel panel-default">
+    <div class="panel-heading clearfix">
+      <div class="pull-right">
+        <button
+          class="btn btn-sm hikaya-btn-secondary"
+          data-toggle="modal"
+          data-target="#addObjectiveModal"
+        >
+          <i class="fa fa-plus"></i> Add New Objective
+        </button>
+      </div>
+
+      <h4 class="panel-title">Objectives</h4>
     </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="addObjectiveModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addProgramModalLabel"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="addProgramModalLabel">Add Objective</h4>
+      </div>
+      <form id="addObjectiveForm" action="" method="POST">
+        <div class="modal-body">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="objectiveName">Objective Name</label>
+            <input
+              type="text"
+              id="objectiveName"
+              name="objective_name"
+              class="form-control"
+              placeholder="Objective"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="parentObjective">Parent Objective</label>
+            <select
+              id="parentObjective"
+              class="form-control"
+              name="parent_objective"
+              style="width: 100%; height: 34px;"
+            >
+              <option value=""></option>
+              {% for objective in get_all_objectives %}
+              <option value="{{ objective.id }}">{{ objective.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="objectiveDescription">Description</label>
+            <textarea
+              name="description"
+              id="objectiveDescription"
+              rows="5"
+              class="form-control"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn hikaya-btn-cancel"
+            data-dismiss="modal"
+          >
+            <i class="fa fa-close"></i> Close
+          </button>
+          <button
+            type="submit"
+            class="btn hikaya-btn-primary"
+            id="saveObjective"
+          >
+            <i class="fa fa-save"></i> Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}
