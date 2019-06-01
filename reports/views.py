@@ -28,7 +28,7 @@ def make_filter(my_request):
     query_attrs['project'] = dict()
     query_attrs['indicator'] = dict()
     query_attrs['collecteddata'] = dict()
-    for param, val in my_request.items():
+    for param, val in my_request.iteritems():
         if param == 'program':
             query_attrs['program']['id__in'] = val.split(',')
             query_attrs['project']['program__id__in'] = val.split(',')
@@ -97,15 +97,13 @@ class ReportData(View, AjaxableResponseMixin):
 
     def get(self, request, *args, **kwargs):
         filter = make_filter(self.request.GET)
-        print(filter)
         program_filter = filter['program']
         project_filter = filter['project']
         indicator_filter = filter['indicator']
 
         program = Program.objects.all().filter(**program_filter).values(
-            'name', 'funding_status', 'cost_center',
+            'gaitid', 'name', 'funding_status', 'cost_center',
             'country__country', 'sector__sector')
-
         approval_count = ProjectAgreement.objects.all().filter(
             **project_filter).filter(approval='awaiting approval').count()
         approved_count = ProjectAgreement.objects.all().filter(
@@ -158,6 +156,8 @@ class ProjectReportData(View, AjaxableResponseMixin):
         filter = make_filter(self.request.GET)
         project_filter = filter['project']
         indicator_filter = filter['indicator']
+
+        print(project_filter)
 
         project = ProjectAgreement.objects.all().filter(
             **project_filter).values(
