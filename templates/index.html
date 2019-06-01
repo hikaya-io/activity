@@ -1,480 +1,554 @@
-{% extends "base.html" %}
-
-{% block content %}
-
+{% extends "base.html" %} 
+{% block content %} 
 {% include 'shared/level1_modal_form.html' %}
 
 <script src="{{ STATIC_URL }}js/highcharts/js/highcharts.js"></script>
 <script src="{{ STATIC_URL }}js/highcharts/js/modules/exporting.js"></script>
 
 <script>
-$(function () {
-    $('#container').highcharts({
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: '{{ user.activity_user.organization.level_2_label }} by Status {% if get_filtered_name %} for {{ get_filtered_name }} {% endif %}</b></p>'
-        },
-        xAxis: {
-            categories: ['Initiation', 'Tracking']
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Number of Approved, Pending or Open {{ user.activity_user.organization.level_2_label }}'
-            }
-        },
-        legend: {
-            reversed: true
-        },
-        plotOptions: {
-            series: {
-                stacking: 'normal',
-                point: {
-                    events: {
-                        click: function () {
-                            location.href = this.options.ownURL;
-                        }
-                    }
-                }
-            }
-        },
+  $(function () {
+      $('#container').highcharts({
+          chart: {
+              type: 'bar'
+          },
+          title: {
+              text: '{{ user.activity_user.organization.level_2_label }} by Status {% if get_filtered_name %} for {{ get_filtered_name }} {% endif %}</b></p>'
+          },
+          xAxis: {
+              categories: ['Initiation', 'Tracking']
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: 'Number of Approved, Pending or Open {{ user.activity_user.organization.level_2_label }}'
+              }
+          },
+          legend: {
+              reversed: true
+          },
+          plotOptions: {
+              series: {
+                  stacking: 'normal',
+                  point: {
+                      events: {
+                          click: function () {
+                              location.href = this.options.ownURL;
+                          }
+                      }
+                  }
+              }
+          },
 
-        series: [
-        {
-            name: 'Approved',
-            data: [{ y:{{ agreement_approved_count }},ownURL:'/workflow/projectagreement_list/0/none/' }, { y:{{ complete_approved_count }},ownURL:'/workflow/projectcomplete_list/0/' }],
-        },
-        {
-            name: 'Pending',
-            data: [{ y:{{ agreement_wait_count }},ownURL:'/workflow/projectagreement_list/0/none/' }, { y:{{ complete_wait_count }},ownURL:'/workflow/projectcomplete_list/0/' }],
-        },
-        {
-            name: 'Awaiting Approval',
-            data: [{ y:{{ agreement_awaiting_count }},ownURL:'/workflow/projectagreement_list/0/none/' }, { y:{{ complete_awaiting_count }},ownURL:'/workflow/projectcomplete_list/0/' }],
-        },
-        {
-            name: 'Open',
-            data: [{ y:{{ agreement_open_count }},ownURL:'/workflow/projectagreement_list/0/none/' }, { y:{{ complete_open_count }},ownURL:'/workflow/projectcomplete_list/0/' }],
-        },
+          series: [
+          {
+              name: 'Approved',
+              data: [{ y:{{ agreement_approved_count }},ownURL:'/workflow/projectagreement_list/0/none/' }, { y:{{ complete_approved_count }},ownURL:'/workflow/projectcomplete_list/0/' }],
+          },
+          {
+              name: 'Pending',
+              data: [{ y:{{ agreement_wait_count }},ownURL:'/workflow/projectagreement_list/0/none/' }, { y:{{ complete_wait_count }},ownURL:'/workflow/projectcomplete_list/0/' }],
+          },
+          {
+              name: 'Awaiting Approval',
+              data: [{ y:{{ agreement_awaiting_count }},ownURL:'/workflow/projectagreement_list/0/none/' }, { y:{{ complete_awaiting_count }},ownURL:'/workflow/projectcomplete_list/0/' }],
+          },
+          {
+              name: 'Open',
+              data: [{ y:{{ agreement_open_count }},ownURL:'/workflow/projectagreement_list/0/none/' }, { y:{{ complete_open_count }},ownURL:'/workflow/projectcomplete_list/0/' }],
+          },
 
-        ]
+          ]
 
-    });
-});
-
-
-
-$(function () {
-    $('#container_column').highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'KPI Targets v. Actuals'
-        },
-        xAxis: {
-            categories: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  '{{ indicator.indicator__number }}', {% endfor %}]
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Results'
-            }
-        },
-        tooltip: {
-            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
-            shared: true
-        },
-        plotOptions: {
-            column: {
-                pointPadding: 0.2,
-                borderWidth: 0
-            }
-        },
-        series: [{
-            name: 'Targets',
-            data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator__lop_target }}, {% endfor %}  ]
-        }, {
-            name: 'Actuals',
-            data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator.actuals }}, {% endfor %}   ]
-        }]
-    });
-});
-
-
-//SPARKLINE CHART
-$(function () {
-    /**
-     * Create a constructor for sparklines that takes some sensible defaults and merges in the individual
-     * chart options. This function is also available from the jQuery plugin as $(element).highcharts('SparkLine').
-     */
-    Highcharts.SparkLine = function (a, b, c) {
-        var hasRenderToArg = typeof a === 'string' || a.nodeName,
-            options = arguments[hasRenderToArg ? 1 : 0],
-            defaultOptions = {
-                exporting: { enabled: false },
-                chart: {
-                    renderTo: (options.chart && options.chart.renderTo) || this,
-                    backgroundColor: null,
-                    borderWidth: 0,
-                    type: 'area',
-                    margin: [2, 0, 2, 0],
-                    width: 120,
-                    height: 20,
-                    style: {
-                        overflow: 'visible'
-                    },
-                    skipClone: true
-                },
-                title: {
-                    text: ''
-                },
-                credits: {
-                    enabled: false
-                },
-                xAxis: {
-                    labels: {
-                        enabled: false
-                    },
-                    title: {
-                        text: null
-                    },
-                    startOnTick: false,
-                    endOnTick: false,
-                    tickPositions: []
-                },
-                yAxis: {
-                    endOnTick: false,
-                    startOnTick: false,
-                    labels: {
-                        enabled: false
-                    },
-                    title: {
-                        text: null
-                    },
-                    tickPositions: [0]
-                },
-                legend: {
-                    enabled: false
-                },
-                tooltip: {
-                    backgroundColor: null,
-                    borderWidth: 0,
-                    shadow: false,
-                    useHTML: true,
-                    hideDelay: 0,
-                    shared: true,
-                    padding: 0,
-                    positioner: function (w, h, point) {
-                        return { x: point.plotX - w / 2, y: point.plotY - h };
-                    }
-                },
-                plotOptions: {
-                    series: {
-                        animation: false,
-                        lineWidth: 1,
-                        shadow: false,
-                        states: {
-                            hover: {
-                                lineWidth: 1
-                            }
-                        },
-                        marker: {
-                            radius: 1,
-                            states: {
-                                hover: {
-                                    radius: 2
-                                }
-                            }
-                        },
-                        fillOpacity: 0.25
-                    },
-                    column: {
-                        negativeColor: '#910000',
-                        borderColor: 'silver'
-                    }
-                }
-            };
-
-        options = Highcharts.merge(defaultOptions, options);
-
-        return hasRenderToArg ?
-            new Highcharts.Chart(a, options, c) :
-            new Highcharts.Chart(options, b);
-    };
-
-    var start = +new Date(),
-        $tds = $('td[data-sparkline]'),
-        fullLen = $tds.length,
-        n = 0;
-
-    // Creating 153 sparkline charts is quite fast in modern browsers, but IE8 and mobile
-    // can take some seconds, so we split the input into chunks and apply them in timeouts
-    // in order avoid locking up the browser process and allow interaction.
-    function doChunk() {
-        var time = +new Date(),
-            i,
-            len = $tds.length,
-            $td,
-            stringdata,
-            arr,
-            data,
-            chart;
+      });
+  });
 
 
 
-        for (i = 0; i < len; i += 1) {
-            $td = $($tds[i]);
-            stringdata = $td.data('sparkline');
-            arr = stringdata.split('; ');
-            data = $.map(arr[0].split(', '), parseFloat);
-            chart = {};
+  $(function () {
+      $('#container_column').highcharts({
+          chart: {
+              type: 'column'
+          },
+          title: {
+              text: 'KPI Targets v. Actuals'
+          },
+          xAxis: {
+              categories: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  '{{ indicator.indicator__number }}', {% endfor %}]
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: 'Results'
+              }
+          },
+          tooltip: {
+              pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
+              shared: true
+          },
+          plotOptions: {
+              column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+              }
+          },
+          series: [{
+              name: 'Targets',
+              data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator__lop_target }}, {% endfor %}  ]
+          }, {
+              name: 'Actuals',
+              data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator.actuals }}, {% endfor %}   ]
+          }]
+      });
+  });
 
-            if (arr[1]) {
-                chart.type = arr[1];
-            }
+
+  //SPARKLINE CHART
+  $(function () {
+      /**
+       * Create a constructor for sparklines that takes some sensible defaults and merges in the individual
+       * chart options. This function is also available from the jQuery plugin as $(element).highcharts('SparkLine').
+       */
+      Highcharts.SparkLine = function (a, b, c) {
+          var hasRenderToArg = typeof a === 'string' || a.nodeName,
+              options = arguments[hasRenderToArg ? 1 : 0],
+              defaultOptions = {
+                  exporting: { enabled: false },
+                  chart: {
+                      renderTo: (options.chart && options.chart.renderTo) || this,
+                      backgroundColor: null,
+                      borderWidth: 0,
+                      type: 'area',
+                      margin: [2, 0, 2, 0],
+                      width: 120,
+                      height: 20,
+                      style: {
+                          overflow: 'visible'
+                      },
+                      skipClone: true
+                  },
+                  title: {
+                      text: ''
+                  },
+                  credits: {
+                      enabled: false
+                  },
+                  xAxis: {
+                      labels: {
+                          enabled: false
+                      },
+                      title: {
+                          text: null
+                      },
+                      startOnTick: false,
+                      endOnTick: false,
+                      tickPositions: []
+                  },
+                  yAxis: {
+                      endOnTick: false,
+                      startOnTick: false,
+                      labels: {
+                          enabled: false
+                      },
+                      title: {
+                          text: null
+                      },
+                      tickPositions: [0]
+                  },
+                  legend: {
+                      enabled: false
+                  },
+                  tooltip: {
+                      backgroundColor: null,
+                      borderWidth: 0,
+                      shadow: false,
+                      useHTML: true,
+                      hideDelay: 0,
+                      shared: true,
+                      padding: 0,
+                      positioner: function (w, h, point) {
+                          return { x: point.plotX - w / 2, y: point.plotY - h };
+                      }
+                  },
+                  plotOptions: {
+                      series: {
+                          animation: false,
+                          lineWidth: 1,
+                          shadow: false,
+                          states: {
+                              hover: {
+                                  lineWidth: 1
+                              }
+                          },
+                          marker: {
+                              radius: 1,
+                              states: {
+                                  hover: {
+                                      radius: 2
+                                  }
+                              }
+                          },
+                          fillOpacity: 0.25
+                      },
+                      column: {
+                          negativeColor: '#910000',
+                          borderColor: 'silver'
+                      }
+                  }
+              };
+
+          options = Highcharts.merge(defaultOptions, options);
+
+          return hasRenderToArg ?
+              new Highcharts.Chart(a, options, c) :
+              new Highcharts.Chart(options, b);
+      };
+
+      var start = +new Date(),
+          $tds = $('td[data-sparkline]'),
+          fullLen = $tds.length,
+          n = 0;
+
+      // Creating 153 sparkline charts is quite fast in modern browsers, but IE8 and mobile
+      // can take some seconds, so we split the input into chunks and apply them in timeouts
+      // in order avoid locking up the browser process and allow interaction.
+      function doChunk() {
+          var time = +new Date(),
+              i,
+              len = $tds.length,
+              $td,
+              stringdata,
+              arr,
+              data,
+              chart;
 
 
-            $td.highcharts('SparkLine', {
-                series: [{
-                    data: data,
-                    pointStart: 0
-                }],
-                xAxis: {
-                    categories: ['Target', 'Actuals'],
-                },
-                tooltip: {
-                    headerFormat: '<span style="font-size: 10px"> {point.key} :</span><br/>',
-                    pointFormat: '<b>{point.y}</b>'
-                },
-                chart: chart
-            });
 
-            n += 1;
+          for (i = 0; i < len; i += 1) {
+              $td = $($tds[i]);
+              stringdata = $td.data('sparkline');
+              arr = stringdata.split('; ');
+              data = $.map(arr[0].split(', '), parseFloat);
+              chart = {};
 
-            // If the process takes too much time, run a timeout to allow interaction with the browser
-            if (new Date() - time > 500) {
-                $tds.splice(0, i + 1);
-                setTimeout(doChunk, 0);
-                break;
-            }
+              if (arr[1]) {
+                  chart.type = arr[1];
+              }
 
-        }
-    }
-    doChunk();
 
-});
+              $td.highcharts('SparkLine', {
+                  series: [{
+                      data: data,
+                      pointStart: 0
+                  }],
+                  xAxis: {
+                      categories: ['Target', 'Actuals'],
+                  },
+                  tooltip: {
+                      headerFormat: '<span style="font-size: 10px"> {point.key} :</span><br/>',
+                      pointFormat: '<b>{point.y}</b>'
+                  },
+                  chart: chart
+              });
 
+              n += 1;
+
+              // If the process takes too much time, run a timeout to allow interaction with the browser
+              if (new Date() - time > 500) {
+                  $tds.splice(0, i + 1);
+                  setTimeout(doChunk, 0);
+                  break;
+              }
+
+          }
+      }
+      doChunk();
+
+  });
 </script>
 <div class="container">
-    {% for approval in user_pending_approvals %}
-        <div class="alert alert-success fade in">
-                <a class="close" data-dismiss="alert" href="#">&times;</a>
-                <p>Project Initiation, <span class="label label-success">{{approval}}</span>, is awaiting your <a href="/workflow/projectagreement_update/{{approval.id}}/#approval">approval</a></p>
+  {% for approval in user_pending_approvals %}
+  <div class="alert alert-success fade in">
+    <a class="close" data-dismiss="alert" href="#">&times;</a>
+    <p>
+      Project Initiation, <span class="label label-success">{{ approval }}</span
+      >, is awaiting your
+      <a href="/workflow/projectagreement_update/{{ approval.id }}/#approval"
+        >approval</a
+      >
+    </p>
+  </div>
+  {% endfor %}
+  <br />
+  <br />
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-4">
+          <h4 class="panel-title">Hikaya-Activity Dashboard</h4>
         </div>
-    {% endfor %}
-        <br />
-        <br />
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-md-4">
-                    <h4  class="panel-title">Hikaya-Activity Dashboard</h4>
-                </div>
+        <div class="col-md-8 text-right">
+          <div class="btn-group" role="group">
+            <button
+              class="btn btn-default btn-sm dropdown-toggle"
+              type="button"
+              id="dropdownMenu1"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true"
+            >
+              {% if selected_countries_list %} 
+              {% for item in selected_countries_list %} {{ item.country }} {% endfor %}
+              {% else %}
+              Country {% endif %} Dashboard
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              {%for item in countries %}
+              <li>
+                <a href="/{{ item.id }}/">{{ item.country }}</a>
+              </li>
+              {% endfor %}
+              <li role="separator" class="divider"></li>
+              <li><a href="/">All</a></li>
+            </ul>
 
-                <div class="col-md-8 text-right">
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            {% if selected_countries_list %} {% for item in selected_countries_list %} {{ item.country }} {%endfor%}{%else%} Country {% endif %} Dashboard
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            {%for item in countries  %}
-                                <li><a href="/{{ item.id }}/">{{ item.country }}</a></li>
-                            {% endfor %}
-                            <li role="separator" class="divider"></li>
-                            <li><a href="/">All</a></li>
-                        </ul>
+            <button
+              class="btn btn-default btn-sm dropdown-toggle"
+              type="button"
+              id="dropdownMenu3"
+              data-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Filter by {{ user.activity_user.organization.level_1_label }}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li role="presentation">
+                <a
+                  role="menuitem"
+                  tabindex="-1"
+                  href="/dashboard/{% if get_filtered_name %}{{
+                    get_filtered_name.id
+                  }}{% else %}0{% endif %}/0/"
+                  >-- All --</a
+                >
+              </li>
+              {% for program in programs %}
+              <li class="list-group-item">
+                <a
+                  href="/dashboard/{{ program.id }}/{% if sector %}{{
+                    sector
+                  }}{% else %}0{% endif %}/"
+                  >{{ program.name }}</a
+                >
+              </li>
+              {%endfor%}
+            </ul>
 
-                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-expanded="false">
-                        Filter by {{ user.activity_user.organization.level_1_label }} <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="/dashboard/{% if get_filtered_name %}{{ get_filtered_name.id }}{% else %}0{% endif %}/0/">-- All --</a></li>
-                            {% for program in programs %}
-                            <li class="list-group-item">
-                                <a href="/dashboard/{{ program.id }}/{% if sector %}{{ sector }}{% else %}0{% endif %}/">{{ program.name }}</a>
-                            </li>
-                            {%endfor%}
-                        </ul>
+            <button
+              class="btn btn-sm btn-info pull-right"
+              data-toggle="modal"
+              data-target="#addProgramModal"
+            >
+              <i class="fa fa-plus"></i> Add New
+              {{ user.activity_user.organization.level_1_label }}
+            </button>
 
-                        <button class="btn btn-sm hikaya-btn-secondary pull-right" data-toggle="modal" data-target="#addProgramModal"><i class="fa fa-plus"></i> Add New
-                                {{ user.activity_user.organization.level_1_label }}</button>
-                            
-                        {% if report_server == False%}
-                          <a href="/workflow/dashboard/project/0/" class="btn btn-default btn-sm btn-success">Create a {{ user.activity_user.organization.level_2_label }}</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-          <div class="col-md-4">
-             {% if report_server == True%}
-             <div class="panel panel-info">
-                <div class="panel-heading">
-                    Indicator Evidence Leaderboard
-                </div>
-                <div class="panel-body">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>Country</th>
-                            <th>Indicator Data</th>
-                            <th>W/Evidence</th>
-                        </tr>
-                    {%for value in count_evidence  %}
-                        <tr>
-                           <td>{{value.indicator__program__country__country}}</td>
-                           <td>{{value.indicator_count}}</td>
-                           <td>{{value.evidence_count}}</td>
-                        </tr>
-                    {%endfor%}
-                    </table>
-                </div>
-            </div>
-            {% else %}
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    Indicator Evidence
-                </div>
-                <div class="panel-body">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>Country</th>
-                            <th>Indicator Data</th>
-                            <th>W/Evidence</th>
-                        </tr>
-                    {%for value in count_evidence  %}
-                        {%for item in countries  %}
-                            {% if item.country == value.indicator__program__country__country %}
-                            <tr>
-                               <td>{{value.indicator__program__country__country}}</td>
-                               <td>{{value.indicator_count}}</td>
-                               <td>{{value.evidence_count}}</td>
-                            </tr>
-                            {% endif %}
-                        {%endfor%}
-                    {%endfor%}
-                    </table>
-                </div>
-            </div>
+            {% if report_server == False%}
+            <a
+              href="/workflow/dashboard/project/0/"
+              class="btn btn-default btn-sm btn-success"
+              >Create a {{ user.activity_user.organization.level_2_label }}</a
+            >
             {% endif %}
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    Strategic Objectives
-                </div>
-                <div class="panel-body">
-                {% if get_objectives %}
-                    <table class="table table-bordered table-striped" id="table-sparkline">
-                        <tbody id="tbody-sparkline">
-                        {%for value in get_objectives  %}
-                            <thead>
-                                <tr class="info">
-                                    <th colspan="2">{{value.indicator__strategic_objectives__name}}</th>
-                                </tr>
-                                <tr>
-                                    <th># of Indicators</th>
-                                    <th>Target/Actuals</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody-sparkline">
-                                <tr>
-                                   <th>{{value.indicators}}</th>
-                                   <td data-sparkline="{{value.targets}}, {{value.actuals}};"/>
-                                </tr>
-                            </tbody>
-                        {%endfor%}
-                    </table>
-                {% else %}
-                    <p>No indicators currently aligned with country strategic objectives.</p>
-                {% endif %}
-                 </div>
-             </div>
+          </div>
         </div>
-        {% if report_server == True%}
-        <div class="col-md-8">
-            <h2>{% for country in selected_countries_label_list %}{{ country.country }}{%endfor%} Country Rollout Report</h2>
-            <br/>
-            <table class="table striped">
-                <tr>
-                    <th>
-                        Milestones:
-                    </th>
-                    <th>
-                        <span title="Red: Requires Attention, Orange: Behind Schedule, Green: On Track">Current Adoption Status</span>
-                    </th>
-                </tr>
-                <tr>
-                    <td>Adoption of Workflow</td>
-                    <td class="status" bgcolor="{{ workflow_adoption }}">Total Programs: {{ count_program}} <br/>Using Workflow: {{ count_program_agreement }} </td>
-                </tr>
-                <tr>
-                    <td>Adoption of Indicator</td>
-                    <td class="status" bgcolor="{{ indicator_adoption }}">Total Programs: {{ count_program}} <br/>Using Indicator Plans: {{ count_indicator }} </td>
-                </tr>
-                <tr>
-                    <td>Indicators w/ Evidence</td>
-                    <td class="status" bgcolor="{{ evidence_adoption }}">Total Collected Data: {{ count_indicator_data }} <br/>Evidence: {{ count_evidence_adoption }} </td>
-                </tr>
-            </table>
-        </div>
-        {% endif %}
-        <div class="col-md-8">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <p><b>Sites {% if get_filtered_name %} for {{ get_filtered_name }} {% endif %}</b></p>
-                    <style>
-                        #map { height: 350px; }
-                    </style>
-                    <div id="map"></div>
-
-                    {% if offline_mode %}
-                        <h2>Offline (No map provided)</h2>
-                    {% else %}
-                        {% include "small_site_profile_map.html" %}
-                    {% endif %}
-
-                </div>
-            </div>
-
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div id="container" ></div>
-                </div>
-            </div>
-            
-        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-info">
-                <div class="panel-heading">Indicators {% if getFilteredName %} for {{ getFilteredName }} {% endif %}</div>
-                <div id="container_column"></div>
-                <div class="panel-body">
-                {% load render_table from django_tables2 %}
-                {% render_table table %}
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-md-4">
+      {% if report_server == True%}
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          Indicator Evidence Leaderboard
         </div>
-    </div>
+        <div class="panel-body">
+          <table class="table table-bordered">
+            <tr>
+              <th>Country</th>
+              <th>Indicator Data</th>
+              <th>W/Evidence</th>
+            </tr>
+            {%for value in count_evidence %}
+            <tr>
+              <td>{{ value.indicator__program__country__country }}</td>
+              <td>{{ value.indicator_count }}</td>
+              <td>{{ value.evidence_count }}</td>
+            </tr>
+            {%endfor%}
+          </table>
+        </div>
+      </div>
+      {% else %}
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          Indicator Evidence
+        </div>
+        <div class="panel-body">
+          <table class="table table-bordered">
+            <tr>
+              <th>Country</th>
+              <th>Indicator Data</th>
+              <th>W/Evidence</th>
+            </tr>
+            {%for value in count_evidence %} 
+            {%for item in countries %} 
+            {% if item.country == value.indicator__program__country__country %}
+            <tr>
+              <td>{{ value.indicator__program__country__country }}</td>
+              <td>{{ value.indicator_count }}</td>
+              <td>{{ value.evidence_count }}</td>
+            </tr>
+            {% endif %} 
+            {%endfor%} 
+            {%endfor%}
+          </table>
+        </div>
+      </div>
+      {% endif %}
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          Strategic Objectives
+        </div>
+        <div class="panel-body">
+          {% if get_objectives %}
+          <table
+            class="table table-bordered table-striped"
+            id="table-sparkline"
+          >
+            <tbody id="tbody-sparkline">
+              {%for value in get_objectives %}
+              <thead>
+                <tr class="info">
+                  <th colspan="2">
+                    {{ value.indicator__strategic_objectives__name }}
+                  </th>
+                </tr>
+                <tr>
+                  <th># of Indicators</th>
+                  <th>Target/Actuals</th>
+                </tr>
+              </thead>
+            </tbody>
 
-    
+            <tbody id="tbody-sparkline">
+              <tr>
+                <th>{{ value.indicators }}</th>
+                <td
+                  data-sparkline="{{ value.targets }}, {{ value.actuals }};"
+                ></td>
+              </tr>
+            </tbody>
+            {%endfor%}
+          </table>
+          {% else %}
+          <p>
+            No indicators currently aligned with country strategic objectives.
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% if report_server == True%}
+    <div class="col-md-8">
+      <h2>
+        {% for country in selected_countries_label_list %}{{
+          country.country
+        }}{%endfor%} Country Rollout Report
+      </h2>
+      <br />
+      <table class="table striped">
+        <tr>
+          <th>
+            Milestones:
+          </th>
+          <th>
+            <span
+              title="Red: Requires Attention, Orange: Behind Schedule, Green: On Track"
+              >Current Adoption Status</span
+            >
+          </th>
+        </tr>
+        <tr>
+          <td>Adoption of Workflow</td>
+          <td class="status" bgcolor="{{ workflow_adoption }}">
+            Total Programs: {{ count_program }} <br />Using Workflow:
+            {{ count_program_agreement }}
+          </td>
+        </tr>
+        <tr>
+          <td>Adoption of Indicator</td>
+          <td class="status" bgcolor="{{ indicator_adoption }}">
+            Total Programs: {{ count_program }} <br />Using Indicator Plans:
+            {{ count_indicator }}
+          </td>
+        </tr>
+        <tr>
+          <td>Indicators w/ Evidence</td>
+          <td class="status" bgcolor="{{ evidence_adoption }}">
+            Total Collected Data: {{ count_indicator_data }} <br />Evidence:
+            {{ count_evidence_adoption }}
+          </td>
+        </tr>
+      </table>
+    </div>
+    {% endif %}
+    <div class="col-md-8">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p>
+            <b
+              >Sites {% if get_filtered_name %} for {{ get_filtered_name }} {% endif %}</b
+            >
+          </p>
+          <style>
+            #map {
+              height: 350px;
+            }
+          </style>
+          <div id="map"></div>
+
+          {% if offline_mode %}
+          <h2>Offline (No map provided)</h2>
+          {% else %} {% include "small_site_profile_map.html" %} {% endif %}
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div id="container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          Indicators {% if getFilteredName %} for {{ getFilteredName }} {% endif %}
+        </div>
+        <div id="container_column"></div>
+        <div class="panel-body">
+          {% load render_table from django_tables2 %} {% render_table table %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}
