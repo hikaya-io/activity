@@ -11,8 +11,7 @@ class GoogleMapsWidget(forms.HiddenInput):
     inline in a form
     """
 
-    def render(self, name, value, country=None, attrs=None, choices=(),
-               renderer=None):
+    def render(self, name, value, country=None, attrs=None, choices=()):
 
         self.attrs['base_latitude'] = self.attrs.get(
             'base_latitude', u'34.5333')
