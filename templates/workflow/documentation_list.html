@@ -4,7 +4,11 @@
     <ol class="breadcrumb">
       <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
       {% if project_agreement_id != '0' %}
-        <li><a href="/workflow/dashboard/project/{{ project_agreement_id }}/">{{ user.activity_user.organization.level_2_label }} Dashboards</a></li>
+        <li>
+            <a href="/workflow/dashboard/project/{{ project_agreement_id }}/">
+                {{ user.activity_user.organization.level_2_label }} Dashboards
+            </a>
+        </li>
       {% endif %}
       <li class="active">Documentation List</li>
     </ol>
@@ -39,7 +43,7 @@
             </li>
         {% endfor %}
       </ul>
-        <a href="/workflow/documentation_add" class="btn btn-large hikaya-btn-secondary">
+        <a href="/workflow/documentation_add" class="btn btn-large btn-info">
             <i class="fa fa-plus"></i> New Document
         </a>
     
