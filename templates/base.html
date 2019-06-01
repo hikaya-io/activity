@@ -17,7 +17,7 @@
 
     <!-- Datatables css for HTML tables -->
     <link
-      href="{% static 'css/datatables.min.css' %}"
+      href="{% static 'DataTables/datatables.min.css' %}"
       rel="stylesheet"
       type="text/css"
     />
@@ -38,7 +38,7 @@
 
     <!-- JQuery UI CSS -->
     <link
-      href="{% static 'css/jquery-ui.min.css' %}"
+      href="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.css' %}"
       rel="stylesheet"
       type="text/css"
     />
@@ -220,27 +220,21 @@
                 <li>
                   <a href="/reports/report/"
                     ><span class="glyphicon glyphicon-list-alt"></span>
-                    {{
-                      user.activity_user.organization.level_1_label
-                    }}
+                    {{ user.activity_user.organization.level_1_label }}
                     Report</a
                   >
                 </li>
                 <li>
                   <a href="/customdashboard/program_list/0/"
                     ><span class="glyphicon glyphicon-list-alt"></span>
-                    {{
-                      user.activity_user.organization.level_1_label
-                    }}
+                    {{ user.activity_user.organization.level_1_label }}
                     Dashboards</a
                   >
                 </li>
                 <li>
                   <a href="/workflow/report/0/none"
                     ><span class="glyphicon glyphicon-list-alt"></span>
-                    {{
-                      user.activity_user.organization.level_2_label
-                    }}
+                    {{ user.activity_user.organization.level_2_label }}
                     Report</a
                   >
                 </li>
@@ -332,7 +326,8 @@
                     {{ org.name }}
                   </a>
                 </li>
-                {% endfor %} {% endif %}
+                {% endfor %} 
+                {% endif %}
               </ul>
             </li>
           </ul>
@@ -400,7 +395,8 @@
       <div>{% block bread_crumb %}{% endblock %}</div>
       <div id="alerts">
         <!-- Any messages for users -->
-        {% block messages %} {% if messages %} {% for message in messages %} 
+        {% block messages %} {% if messages %} 
+        {% for message in messages %} 
         {% if 'safe' in message.tags %}
         <div class="alert alert-{{ message.tags }}">{{ message | safe }}</div>
         {% else %}
@@ -424,8 +420,7 @@
     <div id="footer">
       <!-- Sticky Footer -->
       <div class="container">
-        {% if "links.html"|template_exists %} {% include "links.html" %} {% else
-        %}
+        {% if "links.html"|template_exists %} {% include "links.html" %} {% else %}
         <div class="column col-xs-16 text-right">
           <a href="http://www.hikaya.io" class="text-muted"><b>Hikaya</b></a> |
           <a href="http://help.hikaya.io" class="text-muted"
@@ -452,23 +447,41 @@
     <!-- data tables jquery javascript library -->
     <script
       type="text/javascript"
-      src="{% static 'js/datatables.min.js' %}"
+      src="{% static 'DataTables/datatables.min.js' %}"
     ></script>
 
     <!-- Bootstrap compiled javascript plugins -->
     <script
       type="text/javascript"
-      src="{% static 'js/bootstrap.min.js' %}"
+      src="{% static 'bootstrap/js/bootstrap.min.js' %}"
     ></script>
+
+    <!-- for select2 -->
     <script
       type="text/javascript"
       src="{{ STATIC_URL }}js/select2.min.js"
     ></script>
+
+    <!-- For date formatting -->
     <script
       type="text/javascript"
       src="{{ STATIC_URL }}js/moment.min.js"
     ></script>
+
+    <!-- for notifications -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <!-- chart.js javascript library -->
+    <script
+      type="text/javascript"
+      src="{% static 'js/chart.js@2.8.0.min.js'%}"
+    ></script>
+
+    <!-- jQuery UI (necessary for datepicker as well as dataTables library -->
+    <script
+      type="text/javascript"
+      src="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"
+    ></script>
 
     <script type="text/javascript">
       toastr.options = {
