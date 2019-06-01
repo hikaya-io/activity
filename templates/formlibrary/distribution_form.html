@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
-<ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
-  <li><a href="/formlibrary/distribution_list/0/">Distributions</a></li>
-  <li class="active">Distribution Form</li>
-</ol>
+<div class="container">
+    <ol class="breadcrumb">
+      <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
+      <li><a href="/formlibrary/distribution_list/0/">Distributions</a></li>
+      <li class="active">Distribution Form</li>
+    </ol>
+</div>
 {% endblock %}
-{% block page_title %}Distribution Form{% endblock %}
 
 {% block content %}
+<div class="container">
+    <h1>Distribution Form</h1>
     {% include "form_guidance.html" %}
     {% if form.errors %}
         <div class="help-block">
@@ -27,5 +30,6 @@
 	{% csrf_token %}
     {% load crispy_forms_tags %}
     {% crispy form %}
+</div>
 
 {% endblock content %}
