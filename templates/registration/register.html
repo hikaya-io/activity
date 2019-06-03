@@ -52,6 +52,20 @@
 										name="username"
 										class="form-control"
 									/>
+									<span id="usernameHelpBlock" class="help-block hikaya-hide">
+									</span>
+									{% if message_username %}
+										<script>
+											$('#div_username')
+												.removeClass('has-success')
+												.addClass('has-error');
+											$('#usernameHelpBlock')
+												.removeClass('hikaya-hide')
+												.addClass('hikaya-show')
+												.text('{{ message_username }}');
+										</script>
+
+									{% endif %}
 								</div>
 								<div class="col-md-6 form-group" id="div_email_address">
 									<label class="control-label" for="email_address"
@@ -67,6 +81,18 @@
 									<span id="emailHelpBlock" class="help-block hikaya-hide"
 										>Invalid email address</span
 									>
+									{% if message_email %}
+										<script>
+											$('#div_email_address')
+												.removeClass('has-success')
+												.addClass('has-error');
+											$('#emailHelpBlock')
+												.removeClass('hikaya-hide')
+												.addClass('hikaya-show')
+												.text('{{ message_email }}');
+										</script>
+
+									{% endif %}
 								</div>
 							</div>
 							<div class="row">
