@@ -13,9 +13,8 @@
 		<li role="presentation"><a role="menuitem" tabindex="-1" href=" ">-- All --</a></li>
 		{% for program in get_programs %}
 		<li role="presentation">
-			<a role="menuitem" tabindex="-1" onclick="program_filter({{ program.id }})">{{
-				program.name
-			}}</a>
+			<a role="menuitem" tabindex="-1" onclick="program_filter({{ program.id }})">
+				{{ program.name }}</a>
 		</li>
 		{% endfor %}
 	</ul>

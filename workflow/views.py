@@ -89,7 +89,8 @@ class ProjectDash(ListView):
 
         countries = get_country(request.user)
         get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries)
+            funding_status="Funded",
+            organization=request.user.activity_user.organization)
         project_id = int(self.kwargs['pk'])
 
         if project_id == 0:
@@ -155,7 +156,8 @@ class ProgramDash(ListView):
 
         countries = get_country(request.user)
         get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries).distinct()
+            funding_status="Funded",
+            organization=request.user.activity_user.organization).distinct()
         filtered_program = None
         if int(self.kwargs['pk']) == 0:
             get_dashboard = Program.objects.all().prefetch_related(
@@ -1880,6 +1882,11 @@ class ContactDelete(DeleteView):
     form_class = ContactForm
 
 
+class CountryDoesNotExist(Exception):
+    """Raised when there is no country in database"""
+    pass
+
+
 class StakeholderList(ListView):
     """
     get_stakeholders
@@ -1896,11 +1903,16 @@ class StakeholderList(ListView):
         else:
             program_id = 0
 
-        countries = get_country(request.user)
+        try:
+            countries = get_country(request.user)
+            if countries.first() is None:
+                raise CountryDoesNotExist
+        except CountryDoesNotExist:
+            print("The user has no country in database.")
+            return render(request, self.template_name)
+
         get_programs = Program.objects.all().filter(
             funding_status="Funded", country__in=countries)
-
-        countries = get_country(request.user)
 
         if program_id != 0:
             get_stakeholders = Stakeholder.objects.all().filter(
@@ -1913,11 +1925,11 @@ class StakeholderList(ListView):
         else:
             get_stakeholders = Stakeholder.objects.all().filter(
                 country__in=countries)
-
         return render(request, self.template_name,
                       {'get_stakeholders': get_stakeholders,
                        'project_agreement_id': project_agreement_id,
-                       'program_id': program_id, 'get_programs': get_programs})
+                       'program_id': program_id,
+                       'get_programs': get_programs})
 
 
 class StakeholderCreate(CreateView):
