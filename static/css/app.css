@@ -486,7 +486,14 @@ input[type=number]::-webkit-outer-spin-button {
 
 .sub-navigation-actions {
     flex: 1;
-    align-items: flex-end;
+    /* align-items: flex-end; */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.sub-nav-item {
+    display: flex;
 }
 
 .page-title {
