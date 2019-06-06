@@ -1,80 +1,89 @@
-{% extends "base.html" %} {% block content %}
-
+{% extends "base.html" %} {% block content %} 
 {% include '../shared/level1_modal_form.html' %}
 
 <script>
-$(document).ready(function(){
-  $('#level1Table').DataTable();
-})
+  $(document).ready(function() {
+    $('#level1Table').DataTable();
+  });
 </script>
 
 <div class="container">
-  <div class="panel panel-default">
-    <div class="panel-heading clearfix">
-      <div class="pull-right">
-        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#addProgramModal">
-          <i class="fa fa-plus"></i> Add New {{ request.user.activity_user.organization.level_1_label }}
-        </button>
-      </div>
-      <h4 class="panel-title">
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
         {{ request.user.activity_user.organization.level_1_label }}s
       </h4>
     </div>
-
-    <div class="panel-body">
-      <table class="table table-striped table-condensed table-bordered" id="level1Table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th class="text-right">Actions</th>
-          </tr>
-        </thead>
-    
-        <tbody>
-          {% for program in programs %}
-          <tr>
-            <td>{{ program.name }}</td> 
-            <!-- dates to be formated -->
-            <td>{{ program.start_date|date }}</td>
-            <td>{{ program.end_date|date }}</td>
-            <td class="text-right">
-              <div class="btn-group">
-                <a role="button" href="" class="btn btn-default btn-sm">Details</a>
-                <button
-                  type="button"
-                  class="btn btn-default btn-sm dropdown-toggle"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <span class="caret"></span>
-                  <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a href=""
-                      >{{ request.user.activity_user.organization.level_2_label }} /
-                      {{ request.user.activity_user.organization.level_3_label }}</a
-                    >
-                  </li>
-                  <li><a href="">Stakeholders</a></li>
-                  <li><a href="">Sites</a></li>
-    
-                  <li role="separator" class="divider"></li>
-    
-                  <li class="text-danger"><a href="/">Delete</a></li>
-                </ul>
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div class="sub-navigation-actions">
+      <!-- sample action buttons -->
+      <div class="btn-group" role="group" aria-label="">
+        <button
+          class="btn btn-info btn-sm"
+          data-toggle="modal"
+          data-target="#addProgramModal"
+        >
+          <i class="fa fa-plus"></i> Add New
+          {{ request.user.activity_user.organization.level_1_label }}
+        </button>
+      </div>
     </div>
   </div>
 
+  <table
+    class="table table-striped table-condensed table-bordered"
+    id="level1Table"
+  >
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for program in programs %}
+      <tr>
+        <td>{{ program.name }}</td>
+        <!-- dates to be formated -->
+        <td>{{ program.start_date | date }}</td>
+        <td>{{ program.end_date | date }}</td>
+        <td class="text-right">
+          <div class="btn-group">
+            <a role="button" href="" class="btn btn-default btn-sm">Details</a>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a href=""
+                  >{{ request.user.activity_user.organization.level_2_label }}
+                  /
+                  {{ request.user.activity_user.organization.level_3_label }}</a
+                >
+              </li>
+              <li><a href="">Stakeholders</a></li>
+              <li><a href="">Sites</a></li>
+
+              <li role="separator" class="divider"></li>
+
+              <li class="text-danger"><a href="/">Delete</a></li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 {% endblock content %}
