@@ -1,4 +1,11 @@
 {% extends "base.html" %} {% load mathfilters %} {% block content %}
+
+<script>
+  $(document).ready(function() {
+    $('#programsTable').DataTable();
+  });
+</script>
+
 <div class="container">
   <!-- Sub navigation -->
   <div class="sub-navigation">
@@ -51,7 +58,7 @@
         </h4>
       </div>
       <!-- Table -->
-      <table class="table table-striped">
+      <table class="table table-condensed table-striped" id="programsTable">
         <tr>
           <th>Date Created</th>
           <th>{{ user.activity_user.organization.level_2_label }} Name</th>
