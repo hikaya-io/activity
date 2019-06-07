@@ -490,10 +490,13 @@ input[type=number]::-webkit-outer-spin-button {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+
 }
 
 .sub-nav-item {
     display: flex;
+    height:35px;
+
 }
 
 .page-title {

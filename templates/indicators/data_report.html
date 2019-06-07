@@ -1,33 +1,46 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/indicators/home/0/0/0/">Indicators</a></li>
-  <li class="active">Reports</li>
 </ol>
-
-    <div class="row">
-        <div class="col-sm-12 clearfix">
-
-            <div class="pull-left">{% include "indicators/filter.html"%}</div>
-            <div class="btn-group" role="group">
-                <button class="btn btn-default {% if 'table' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/table/'" name="table">Table</button>&nbsp;
-                <button class="btn btn-default {% if 'map' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/map/'" name="map">Map</button>&nbsp;
-                <button class="btn btn-default {% if 'graph' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/graph/'" name="graph">Graph</button>
-            </div>
-        </div>
-    </div>
-
 {% endblock bread_crumb %}
 
-{% block page_title %}Indicator Report{% endblock %}
+{% block page_title %}
+<!-- Sub navigation -->
+<div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h3 class="page-title">Indicator Report</h3>
+    </div>
+    <div class="sub-navigation-actions">
+        <div class="sub-nav-item">
+              <div class="row">
+                      <div class="col-sm-12 clearfix">
 
+                          <div class="pull-left">{% include "indicators/filter.html"%}</div>
+                          <div class="btn-group" role="group">
+                              <button class="btn btn-default {% if 'table' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/table/'" name="table">Table</button>&nbsp;
+                              <button class="btn btn-default {% if 'map' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/map/'" name="map">Map</button>&nbsp;
+                              <button class="btn btn-default {% if 'graph' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/graph/'" name="graph">Graph</button>
+                          </div>
+                      </div>
+                  </div>
+                  <div style="display: none;">
+                          <span class="filter" id="indicator_filter_value"></span>
+                          <span class="filter" id="program_filter_value"></span>
+                          <span class="filter" id="type_filter_value"></span>
+                      </div>
+                    </div>
+                </div>
+{% endblock %}
+
+{% load group_tag %}
 {% block content %}
+<div>
+        <hr/>
+        </div>
 
-<div style="display: none;">
-    <span class="filter" id="indicator_filter_value"></span>
-    <span class="filter" id="program_filter_value"></span>
-    <span class="filter" id="type_filter_value"></span>
-</div>
+
+
+
 
 {% if "map" in request.get_full_path %}
     <style>
@@ -189,11 +202,10 @@
             table.draw();
         });
     </script>
-
     <div class="row">
         <div class="col-sm-12">
             <div id='data-panel' class="panel panel-primary">
-                <div class="panel-body" style="padding:15px;">
+                <div class="panel-body" style="padding:10px;">
                     <div id="program_table_div">
                         <table class="table table-bordered" id="data_table">
                         </table>
@@ -207,7 +219,8 @@
             </div>
         </div>
     </div>
+    </div>
+
 {% endif %}
-<br/>
 
 {% endblock content %}

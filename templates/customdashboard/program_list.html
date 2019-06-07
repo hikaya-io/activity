@@ -1,25 +1,38 @@
 {% extends "base.html" %}
+{% block page_title %}
+ <!-- Sub navigation -->
+      <div class="sub-navigation">
+            <div class="sub-navigation-header">
+              <h3 class="page-title">Public Dashboards</h3>
+            </div>
+            <div class="sub-navigation-actions">
+                <div class="sub-nav-item">
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                          Countries
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                              <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/program_list/0">--All--</a></li>
+                          {% for country in get_country %}
+                              <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/program_list/{{ country.id }}">{{ country.country}}</a></li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      <br/>
+                      {% if country %}
+                      <h3>{{ country }}</h3>
+                      {% endif %}
+                    </div>
 
-{% block page_title %}Public Dashboards{% endblock %}
+          </div>
 
+  {% endblock %}
 {% block content %}
+<div>
+        <hr/>
+        </div>
 
-<div class="dropdown">
-  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-    Countries
-    <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/program_list/0">--All--</a></li>
-    {% for country in get_country %}
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="/customdashboard/program_list/{{ country.id }}">{{ country.country}}</a></li>
-    {% endfor %}
-  </ul>
-</div>
-<br/>
-{% if country %}
-<h3>{{ country }}</h3>
-{% endif %}
 
  <!-- Table -->
 <table class="table">
