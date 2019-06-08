@@ -1,121 +1,142 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
 
-{% block page_title %}
-<!-- Sub navigation -->
-<div class="sub-navigation">
-        <div class="sub-navigation-header">
-          <h3 class="page-title">Indicator Targets vs Actuals Report</h3>
+<script type="text/javascript">
+  var tva_table;
+  $(document).ready(function() {
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+      var programId = $('#program_filter_value').data('programid');
+      var programIdInTable = parseInt(data[0]) || 0;
+
+      var indicatorId = $('#indicator_filter_value').data('indicatorid');
+      var indicatorIdInTable = parseInt(data[1]) || 0;
+
+      var typeId = $('#type_filter_value').data('typeid');
+      var typeIdInTable = parseInt(data[2]) || 0;
+
+      if (programId == 0) programId = undefined;
+      if (indicatorId == 0) indicatorId = undefined;
+      if (typeId == 0) typeId = undefined;
+
+      if (
+        (isNaN(programId) && isNaN(indicatorId) && isNaN(typeId)) ||
+        (isNaN(programId) && isNaN(indicatorId) && typeId == typeIdInTable) ||
+        (isNaN(programId) &&
+          indicatorId == indicatorIdInTable &&
+          isNaN(typeId)) ||
+        (isNaN(programId) &&
+          indicatorId == indicatorIdInTable &&
+          typeId == typeIdInTable) ||
+        (programId == programIdInTable &&
+          isNaN(indicatorId) &&
+          isNaN(typeId)) ||
+        (programId == programIdInTable &&
+          isNaN(indicatorId) &&
+          typeId == typeIdInTable) ||
+        (programId == programIdInTable &&
+          indicatorId == indicatorIdInTable &&
+          isNaN(typeId)) ||
+        (programId == programIdInTable &&
+          indicatorId == indicatorIdInTable &&
+          typeId == typeIdInTable)
+      ) {
+        return true; //
+      }
+      //if ((indicatorIdInTable == indicatorId)|| (indicatorId == undefined)) return true;
+      return false;
+    });
+    tva_table = $('#tva_table').DataTable({
+      dom:
+        "<'row'<'col-sm-2'B><'col-sm-5'l><'col-sm-5'f>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      buttons: [
+        {
+          extend: 'csv',
+          title: 'Target vs Actuals Report',
+          text: 'Export to CSV',
+          exportOptions: { columns: 'thead th:not(.noExport)' },
+        },
+      ],
+    });
+  });
+
+  $('#id_filtersDropdown').on(
+    'programFilterUpdated',
+    '#id_programs_filter_dropdown',
+    function(e) {
+      tva_table.draw();
+    },
+  );
+
+  $('#id_filtersDropdown').on(
+    'indicatorFilterUpdated',
+    '#id_indicators_filter_dropdown',
+    function(e) {
+      tva_table.draw();
+    },
+  );
+
+  $('#id_filtersDropdown').on(
+    'indicatorTypeFilterUpdated',
+    '#id_indicatortypes_filter_dropdown',
+    function(e) {
+      tva_table.draw();
+    },
+  );
+
+  function export_to_pdf() {
+    var programId = $('#program_filter_value').data('programid');
+    if (programId != undefined && programId > 0) {
+      window.location.href = '/indicators/tvaprint/' + programId + '/';
+    } else {
+      alert('Select a program before exporting it to PDF');
+    }
+  }
+</script>
+
+<div class="container">
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+      <div class="sub-navigation-header">
+        <h4 class="page-title">Indicator Targets vs Actuals Report</h4>
+      </div>
+      <div class="sub-navigation-actions">
+        <div class="sub-nav-item">
+          {% include "indicators/filter.html"%}
         </div>
-        <div class="sub-navigation-actions">
-            <div class="sub-nav-item">
-                    {% include "indicators/filter.html"%}
-
-{% endblock %}
-
-{% block content %}
-
-    <div id="tva_table_div" class="table-responsive">
-        <table id="tva_table" class="table table-hover table-striped table-bordered">
-            <thead>
-                <th class="noExport" style="display:none;">PID</th>
-                <th class="noExport" style="display:none;">IID</th>
-                <th class="noExport" style="display:none;">ITID</th>
-                <th>No</th>
-                <th>Indicator</th>
-                <th>Type</th>
-                <th>Level</th>
-                <th>Sector</th>
-                <th>LOP Target</th>
-                <th>Actuals</th>
-            </thead>
-            {% for row in data %}
-                <tr>
-                    <td style="display:none;">{{row.program.all.0.id}}</td>
-                    <td style="display:none;">{{row.id}}</td>
-                    <td style="display:none;">{{row.indicator_type.all.0.id}}</td>
-                    <td>{{row.number}}</td>
-                    <td>{{row.name}}</td>
-                    <td>{{row.indicator_type.all.0.indicator_type|default_if_none:''}}</td>
-                    <td>{{row.level.all.0.name}}</td>
-                    <td>{{row.sector.sector}}</td>
-                    <td>{{row.lop_target|floatformat:"-2"}}</td>
-                    <td>{{row.actuals|floatformat:"-2"|default_if_none:''}}</td>
-                </tr>
-            {% endfor %}
-        </table>
+      </div>
     </div>
-
-    <script type="text/javascript">
-        var tva_table;
-        $(document).ready(function() {
-            $.fn.dataTable.ext.search.push(
-                function( settings, data, dataIndex ) {
-                    var programId = $("#program_filter_value").data('programid');
-                    var programIdInTable = parseInt(data[0]) || 0;
-
-                    var indicatorId = $("#indicator_filter_value").data('indicatorid');
-                    var indicatorIdInTable = parseInt(data[1]) || 0;
-
-                    var typeId = $("#type_filter_value").data('typeid');
-                    var typeIdInTable = parseInt(data[2]) || 0;
-
-                    if (programId == 0) programId = undefined;
-                    if (indicatorId == 0) indicatorId = undefined;
-                    if (typeId == 0) typeId = undefined;
-
-                    if (
-                        ( isNaN(programId) && isNaN(indicatorId) && isNaN(typeId) ) ||
-                        ( isNaN(programId) && isNaN(indicatorId) && typeId == typeIdInTable) ||
-                        ( isNaN(programId) && indicatorId == indicatorIdInTable && isNaN(typeId)) ||
-                        ( isNaN(programId) && indicatorId == indicatorIdInTable && typeId == typeIdInTable) ||
-                        ( programId == programIdInTable && isNaN(indicatorId) && isNaN(typeId)) ||
-                        ( programId == programIdInTable && isNaN(indicatorId) && typeId == typeIdInTable) ||
-                        ( programId == programIdInTable && indicatorId == indicatorIdInTable && isNaN(typeId) ) ||
-                        ( programId == programIdInTable && indicatorId == indicatorIdInTable && typeId == typeIdInTable)
-                        )
-                    {
-                        return true; //
-                    }
-                    //if ((indicatorIdInTable == indicatorId)|| (indicatorId == undefined)) return true;
-                    return false;
-                }
-            );
-            tva_table = $("#tva_table").DataTable({
-                dom: "<'row'<'col-sm-2'B><'col-sm-5'l><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                buttons: [
-                    {
-                        extend: 'csv',
-                        title: 'Target vs Actuals Report',
-                        text: 'Export to CSV',
-                        exportOptions: { columns: "thead th:not(.noExport)" }
-                    }
-                ]
-            });
-        });
-
-
-        $("#id_filtersDropdown").on("programFilterUpdated", "#id_programs_filter_dropdown", function(e){
-            tva_table.draw();
-        });
-
-        $("#id_filtersDropdown").on("indicatorFilterUpdated", "#id_indicators_filter_dropdown", function(e){
-            tva_table.draw();
-        });
-
-
-        $("#id_filtersDropdown").on("indicatorTypeFilterUpdated", "#id_indicatortypes_filter_dropdown", function(e){
-            tva_table.draw();
-        });
-
-        function export_to_pdf() {
-            var programId = $("#program_filter_value").data('programid');
-            if (programId != undefined && programId > 0) {
-                window.location.href = "/indicators/tvaprint/" + programId + "/";
-            } else {
-                alert("Select a program before exporting it to PDF");
-            }
-        }
-
-    </script>
+    
+    <div id="tva_table_div" class="table-responsive">
+      <table id="tva_table" class="table table-hover table-striped table-bordered">
+        <thead>
+          <th class="noExport" style="display:none;">PID</th>
+          <th class="noExport" style="display:none;">IID</th>
+          <th class="noExport" style="display:none;">ITID</th>
+          <th>No</th>
+          <th>Indicator</th>
+          <th>Type</th>
+          <th>Level</th>
+          <th>Sector</th>
+          <th>LOP Target</th>
+          <th>Actuals</th>
+        </thead>
+        {% for row in data %}
+        <tr>
+          <td style="display:none;">{{row.program.all.0.id}}</td>
+          <td style="display:none;">{{ row.id }}</td>
+          <td style="display:none;">{{row.indicator_type.all.0.id}}</td>
+          <td>{{ row.number }}</td>
+          <td>{{ row.name }}</td>
+          <td>{{row.indicator_type.all.0.indicator_type|default_if_none:''}}</td>
+          <td>{{row.level.all.0.name}}</td>
+          <td>{{ row.sector.sector }}</td>
+          <td>{{ row.lop_target | floatformat:'-2' }}</td>
+          <td>{{ row.actuals | floatformat:'-2' | default_if_none:'' }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+</div>
 
 {% endblock content %}
