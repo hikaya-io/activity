@@ -1,80 +1,78 @@
 {% extends "base.html" %}{% load i18n %}
 {% block bread_crumb %}
 <div class="container">
+     <!-- Sub navigation -->
+     <div class="sub-navigation">
+            <div class="sub-navigation-header">
+              <h3 class="page-title">Site Profile List</h3>
+            </div>
+            <div class="sub-navigation-actions">
+                <div class="sub-nav-item">
+                        <div class="dropdown">
+                                <button
+                                  class="btn btn-default dropdown-toggle"
+                                  type="button" id="dropdownMenu1"
+                                  data-toggle="dropdown"
+                                  aria-expanded="true"
+                                  >
+                                  {{ user.activity_user.organization.level_1_label }}(s)
+                                  <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                      <li role="presentation">
+                                          <a role="menuitem" tabindex="-1" href="/workflow/siteprofile_list/0/0">
+                                              -- All --
+                                          </a>
+                                      </li>
+                                  {% for program in get_programs %}
+                                      <li role="presentation">
+                                          <a role="menuitem" tabindex="-1" href="/workflow/siteprofile_list/{{ program.id }}/0/">
+                                              {{ program.gaitid}} - {{ program.name }}
+                                          </a>
+                                      </li>
+                                  {% endfor %}
+                                </ul>
+                                  <a href="/workflow/siteprofile_add"
+                                      class="btn btn-large hikaya-btn-secondary">
+                                      <i class="fa fa-plus"></i>
+                                      New Site Profile
+                                  </a>
+                                  <a href="/workflow/export_sites_list/{{ program_id }}/" class="btn btn-sm btn-primary float-right">
+                                      <span class="glyphicon glyphicon-export"></span> Export to CSV
+                                  </a>&nbsp;
+
+                                   <!-- feature not yet enabled
+                                   <a href="/workflow/siteprofile_import" class="btn btn-large btn-info" data-toggle="modal" data-target="#importModal">Import Site Profile</a> -->
+                              </div>
+                              <br/>
+                            </div>
+
     <ol class="breadcrumb">
-        <li>
-            <a href="/workflow/dashboard/0/">
-            {{ user.activity_user.organization.level_1_label }} Index
-            </a>
-        </li>
-        {%  if project_agreement_id != 0 %}
-            <li>
-                <a href="/workflow/dashboard/project/{{ project_agreement_id }}/">
-                    {{ user.activity_user.organization.level_2_label }} Dashboards
-                </a>
-        </li>
-      {% endif %}
-      <li class="active">Site Profiles</li>
     </ol>
 </div>
 {% endblock %}
 {% load group_tag %}
 
 {% block content %}
-<div class="container">
-    <h1>Site Profile List</h1>
-    <div class="dropdown">
-      <button 
-        class="btn btn-default dropdown-toggle" 
-        type="button" id="dropdownMenu1" 
-        data-toggle="dropdown" 
-        aria-expanded="true"
-        >
-        {{ user.activity_user.organization.level_1_label }}(s)
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li role="presentation">
-                <a role="menuitem" tabindex="-1" href="/workflow/siteprofile_list/0/0">
-                    -- All --
-                </a>
-            </li>
-        {% for program in get_programs %}
-            <li role="presentation">
-                <a role="menuitem" tabindex="-1" href="/workflow/siteprofile_list/{{ program.id }}/0/">
-                    {{ program.gaitid}} - {{ program.name }}
-                </a>
-            </li>
-        {% endfor %}
-      </ul>
-        <a href="/workflow/siteprofile_add" 
-            class="btn btn-large hikaya-btn-secondary">
-            <i class="fa fa-plus"></i>
-            New Site Profile
-        </a>
-        <a href="/workflow/export_sites_list/{{ program_id }}/" class="btn btn-sm btn-primary float-right">
-            <span class="glyphicon glyphicon-export"></span> Export to CSV
-        </a>&nbsp;
-    
-         <!-- feature not yet enabled
-         <a href="/workflow/siteprofile_import" class="btn btn-large btn-info" data-toggle="modal" data-target="#importModal">Import Site Profile</a> -->
-    </div>
-    <br/>
-    
+<div>
+        <hr/>
+        </div>
+
+
     <style>
         #map { height: 480px; }
     </style>
     {% load crispy_forms_tags %}
     {% crispy form form.helper %}
     <h4>Site Profile Map and List</h4>
-    
+
     {% if offline_mode %}
         <h2>Offline (No map provided)</h2>
     {% else %}
         <div id="map"></div>
-    
+
         {% include "workflow/site_profile_map.html" %}
-    
+
         <script>
             function ZoomToCountry(region){
                 if(region == "Latin America, Caribbean, Balkans, Caucasus"){
@@ -97,7 +95,7 @@
             }
         </script>
     {% endif %}
-    
+
      <!-- Display site profiles & projects -->
     <table class="table table-striped">
         <tr>
@@ -111,7 +109,7 @@
         </tr>
         {% if get_site_profile %}
           {% for item in get_site_profile %}
-    
+
         <tr>
             <td><a href="/workflow/siteprofile_update/{{ item.id }}">{{ item.create_date|date:"d-m-Y" }} </a></td>
             <td><a href="/workflow/siteprofile_update/{{ item.id }}">{{ item.name }}</a></td>
@@ -128,10 +126,10 @@
                 <a href="/workflow/site_indicatordata/{{item.id}}/" class="btn btn-xs btn-default">Indicator Data</a>
                 <a href="/workflow/site_projectscomplete/{{item.id}}/" class="btn btn-xs btn-default">Projects</a>
             </td>
-    
+
         </tr>
-    
-    
+
+
           {% endfor %}
         {% else %}
         <tr>
@@ -139,7 +137,7 @@
         </tr>
         {% endif %}
     </table>
-    
+
     <!-- paginate site profile listing -->
      <div class="row">
         <div class="col-md-8">
@@ -148,21 +146,21 @@
                     <li><a href="?page={{ get_site_profile.previous_page_number }}"> {% trans "Previous" %} </a></li>
                     <li><a href="?page={{ get_site_profile.previous_page_number }}"> {{get_site_profile.previous_page_number}} </a></li>
                 {% endif %}
-    
+
                 {% blocktrans with get_site_profile.number as site_num and get_site_profile.paginator.num_pages as num_pages %}
                     <li><a class="active" href=""> {{ site_num }}</a></li>
                 {% endblocktrans %}
-    
+
                 {% if get_site_profile.has_next %}
                     <li><a href="?page={{ get_site_profile.next_page_number }}"> {{ get_site_profile.next_page_number }}</a></li>
-    
+
                     {% ifnotequal get_site_profile.next_page_number get_site_profile.paginator.num_pages %}
                         {% with get_site_profile.paginator.num_pages as num_pages %}
                             <li><a href="">...</a></li>
                             <li><a href="?page={{ num_pages }}"> {{ num_pages }}  </a></li>
                         {% endwith %}
                     {% endifnotequal %}
-    
+
                     <li><a href="?page={{ get_site_profile.next_page_number }}">{% trans "Next" %}</a></li>
                 {% endif %}
             </ul>
@@ -185,14 +183,14 @@
             </ul>
         </div>
     </div>
-    
+
     <!-- Modal -->
-    <div 
-        class="modal fade" 
-        id="importModal" 
-        tabindex="-1" 
-        role="dialog" 
-        aria-labelledby="myModalLabel" 
+    <div
+        class="modal fade"
+        id="importModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="myModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

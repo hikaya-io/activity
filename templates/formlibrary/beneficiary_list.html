@@ -1,75 +1,71 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <div class="container">
+     <!-- Sub navigation -->
+     <div class="sub-navigation">
+            <div class="sub-navigation-header">
+              <h3 class="page-title">Beneficiary List</h3>
+            </div>
+            <div class="sub-navigation-actions">
+                <div class="sub-nav-item">
+                        {% include "formlibrary/filter.html" %}
+                        <a href="/formlibrary/beneficiary_add/0/" class="btn btn-large btn-info">
+                            <i class="fa fa-plus"></i> New Beneficiary
+                        </a>
+                 </div>
     <ol class="breadcrumb">
-        <li><a href="/workflow/dashboard/0/">
-            {{ user.activity_user.organization.level_1_label }} Index
-        </a></li>
-      {%  if project_agreement_id != '0'%}
-        <li>
-            <a href="/workflow/dashboard/project/{{ project_agreement_id }}/">
-                {{ user.activity_user.organization.level_2_label }} Dashboards
-            </a>
-        </li>
-      {% endif %}
-      <li class="active">Beneficiaries</li>
+
     </ol>
 </div>
 {% endblock %}
 {% load group_tag %}
 
 {% block content %}
-<div class="container">
-    <h1>Beneficiary List</h1>
     <div>
-        {% include "formlibrary/filter.html" %}
-        <a href="/formlibrary/beneficiary_add/0/" class="btn btn-large btn-info">
-            <i class="fa fa-plus"></i> New Beneficiary
-        </a>
     <hr/>
     </div>
-    
+
     <!-- Table -->
     <table class="table" id="beneficiarytable">
     </table>
     <script type="text/javascript">
         $(document).ready(function() {
-    
+
             $("select#program").change(function() {
-    
+
                 if ($(this).val() == 'all') {
                         $("select#project").html("<option>project(s)</option>");
                         $("select#project").attr('disabled', true);
-    
+
                     }
-    
+
                 else {
                         program_id = $(this).val();
                         var url = "/formlibrary/getagreements/" + program_id + "/0/";
-    
+
                         $.getJSON(url, function(models) {
                             var options = '<option value="all">Project</option>';
-    
+
                             if(!$.trim(models['get_agreements'])){
                                 $("select#project").html("<option>project(s)</option>");
                                 $("select#project").attr('disabled', true);
-                                program_filter(program_id, 0);                            
+                                program_filter(program_id, 0);
                             }else{
                                 data = JSON.parse(models['get_agreements']);
                                 for (var i = 0; i < data.length; i++) {
                                     options += '<option value="' + data[i]['id'] + '">' + data[i]['project_name'] + '</option>';
                                 }
-    
+
                                 $("select#project").html(options);
                                 $("select#project option:first").attr('selected', 'selected');
                                 $("select#project").attr('disabled', false);
                                 program_filter(program_id, 0);
                             }
                         });
-    
+
                     }
             });
-    
+
             $('select#project').change(function(){
                 project_id = $(this).val();
                 program_id = $('select#program').val();
@@ -77,7 +73,7 @@
             });
           program_filter(0, 0);
         });
-    
+
          function show_beneficiary_table(beneficiary_data) {
                 beneficiary_records = JSON.parse(beneficiary_data);
                 //First destroy any old version of the table to refresh anew
@@ -85,16 +81,16 @@
                     table.destroy();
                     $('#beneficiarytable').empty();
                 };
-    
+
                 $('#beneficiarytable').on( 'page.dt', function () {
                     $('html, body').animate({
                         scrollTop: 0
                     }, 300);
                 } );
-    
-    
+
+
                 table = $('#beneficiarytable').DataTable( {
-                     "order": [], 
+                     "order": [],
                      "bFilter": false,
                      'bLengthChange': false,
                      "aoColumnDefs": [
@@ -120,34 +116,34 @@
                         }
                         ]
                 } );
-    
+
             }
-    
+
             function program_filter(program_id, project_id) {
                     // Filter Beneficiaries
                     if (program_id != 0) {
-    
-                        $.getJSON("/formlibrary/beneficiary_objects/"+ program_id + "/0/", function(data) {  
+
+                        $.getJSON("/formlibrary/beneficiary_objects/"+ program_id + "/0/", function(data) {
                             show_beneficiary_table(data['get_beneficiaries']);
-                        }); 
-    
+                        });
+
                     } else if(program_id != 0 && project_id != 0){
-    
-                         $.getJSON("/formlibrary/beneficiary_objects/"+ program_id +"/"+project_id+ "/", function(data) {  
+
+                         $.getJSON("/formlibrary/beneficiary_objects/"+ program_id +"/"+project_id+ "/", function(data) {
                             show_beneficiary_table(data['get_beneficiaries']);
-                        }); 
+                        });
                     }
-                    
+
                     else{
-    
-                        $.getJSON("/formlibrary/beneficiary_objects/0/0/", function(data) {  
+
+                        $.getJSON("/formlibrary/beneficiary_objects/0/0/", function(data) {
                             show_beneficiary_table(data['get_beneficiaries']);
-                        });     
+                        });
                     }
-                } 
-    
+                }
+
     </script>
-    
+
     <!-- Modal -->
     <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">

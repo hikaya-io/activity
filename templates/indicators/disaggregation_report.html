@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 
-{% block bread_crumb %}
-<ol class="breadcrumb">
-  <li><a href="/indicators/home/{{ get_programs.all.0.id|default:0 }}/0/0/">Indicators</a></li>
-  <li class="active">Indicator Disaggregation Report</li>
-</ol>
 {% endblock %}
 
-{% block page_title %} Indicator Disaggregation Report {% endblock %}
+{% block page_title %} <!-- Sub navigation -->
+<div class="sub-navigation">
+        <div class="sub-navigation-header">
+          <h3 class="page-title">Indicator Disaggregation Report </h3>
+        </div>
+        <div class="sub-navigation-actions">
+            <div class="sub-nav-item">
+                    {% include "indicators/filter.html"%}
+                    {% endblock %}
 
 {% block content %}
-    {% include "indicators/filter.html"%}
 
     <div id="tdisrep_table_div" class="table-responsive">
         <table id="disrep_table" class="table table-bordered">
