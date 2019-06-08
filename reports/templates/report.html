@@ -1,9 +1,10 @@
-{% extends 'base.html' %} {% load staticfiles %} {% load crispy_forms_tags %} {%
-block content %}
+{% extends 'base.html' %} {% load staticfiles %} {% load crispy_forms_tags %} 
+{% block content %}
 <h3 id="report_type"></h3>
 <link rel="stylesheet" href="{{ STATIC_URL }}css/select2.min.css" />
 <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
 <script src="{{ STATIC_URL }}publicdashboard/js/vendor/Chart.min.js"></script>
+
 <script type="text/javascript">
   $(document).ready(function() {
     $('#countries').select2({ placeholder: 'Country', allowClear: true });

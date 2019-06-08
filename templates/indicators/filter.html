@@ -1,24 +1,24 @@
-<div style="display: none;">
+<div style="display:none;">
   <span class="filter" id="indicator_filter_value"></span>
   <span class="filter" id="program_filter_value"></span>
   <span class="filter" id="type_filter_value"></span>
 </div>
 <style>
   .select2-selection__clear {
-    position: absolute !important;
-    right: 20px !important;
+    position:absolute !important;
+    right:20px !important;
   }
 
   .select2-container .select2-selection--single .select2-selection__rendered {
-    padding-right: 30px !important;
+    padding-right:30px !important;
   }
   .select2-results__options {
-    white-space: nowrap;
+    white-space:nowrap;
   }
 </style>
 <div id="id_filtersDropdown">
   <div class="row">
-    <div class="col-sm-5" style="padding-right: 2px;">
+    <div class="col-sm-5" style="padding-right:2px;">
       {% if get_programs %}
       <select
         name="programs_filter"
@@ -35,7 +35,7 @@
       {% endif %}
     </div>
 
-    <div class="col-sm-5" style="padding-right: 2px; padding-left: 0px;">
+    <div class="col-sm-5" style="padding-right:2px; padding-left:0px;">
       {% if get_indicators %}
       <select
         name="indicators_filter"
@@ -53,7 +53,7 @@
       {% endif %}
     </div>
 
-    <div class="col-sm-2" style="padding-left: 0px;">
+    <div class="col-sm-2" style="padding-left:0px;">
       {%if get_indicator_types %}
       <select
         name="indicatortypes_filter"
@@ -81,7 +81,7 @@
       {% endif %} {% if disaggregationprint_button %}
       <button
         id="export_to_pdf_button"
-        class="btn btn-default"
+        class="btn btn-sm btn-default"
         onclick="export_to_pdf()"
       >
         Export to PDF
@@ -98,15 +98,15 @@
     var programDropdown = $('#id_programs_filter_dropdown');
     programDropdown.prop('selectedIndex', -1);
     programDropdown.select2({
-      placeholder: {
-        id: -1,
-        text: '{{ user.activity_user.organization.level_1_label }}(s)',
+      placeholder:{
+        id:-1,
+        text:'{{ user.activity_user.organization.level_1_label }}(s)',
       },
-      allowClear: false,
-      dropdownAutoWidth: true,
-      // width: "400px",
-      // width: 'resolve',
-      width: '100%',
+      allowClear:false,
+      dropdownAutoWidth:true,
+      // width:"400px",
+      // width:'resolve',
+      width:'100%',
     });
     if (parseInt(programId) > 0) {
       $('#program_filter_value').data('programid', programId);
@@ -118,12 +118,12 @@
     var indicatorDropdown = $('#id_indicators_filter_dropdown');
     indicatorDropdown.prop('selectedIndex', -1);
     indicatorDropdown.select2({
-      placeholder: { id: -1, text: 'Indicators' },
-      allowClear: false,
-      dropdownAutoWidth: true,
-      // width: "400px",
-      // width: 'resolve',
-      width: '100%',
+      placeholder:{ id:-1, text:'Indicators' },
+      allowClear:false,
+      dropdownAutoWidth:true,
+      // width:"400px",
+      // width:'resolve',
+      width:'100%',
     });
     if (parseInt(indicatorId) > 0) {
       $('#indicator_filter_value').data('indicatorid', indicatorId);
@@ -136,12 +136,12 @@
     var indicatorTypeDropdown = $('#id_indicatortypes_filter_dropdown');
     indicatorTypeDropdown.prop('selectedIndex', -1);
     indicatorTypeDropdown.select2({
-      placeholder: { id: -1, text: 'Types' },
-      allowClear: false,
-      dropdownAutoWidth: true,
-      // width: "200px",
-      // width: 'resolve',
-      width: '100%',
+      placeholder:{ id:-1, text:'Types' },
+      allowClear:false,
+      dropdownAutoWidth:true,
+      // width:"200px",
+      // width:'resolve',
+      width:'100%',
     });
     if (parseInt(typeId) > 0) {
       $('#type_filter_value').data('typeid', typeId);
