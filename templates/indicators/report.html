@@ -1,158 +1,149 @@
-{% extends "base.html" %}
-{% block bread_crumb %}
+{% extends "base.html" %} 
+{% load render_table from django_tables2 %} 
+{% block content %}
 
-<ol class="breadcrumb">
+<script type="text/javascript">
+  var table;
+  $(document).ready(function(){
+      $.fn.dataTable.ext.search.push(
+          function( settings, data, dataIndex ) {
+              var programId = $("#program_filter_value").data('programid');
+              var programIdInTable = parseInt(data[1]) || 0;
 
-</ol>
+              var indicatorId = $("#indicator_filter_value").data('indicatorid');
+              var indicatorIdInTable = parseInt(data[2]) || 0;
 
-{% endblock bread_crumb %}
-{% load render_table from django_tables2 %}
+              var typeId = $("#type_filter_value").data('typeid');
+              var typeIdInTable = parseInt(data[3]) || 0;
 
-{% block page_title %}<!-- Sub navigation -->
-<div class="sub-navigation">
+              if (programId == 0) programId = undefined;
+              if (indicatorId == 0) indicatorId = undefined;
+              if (typeId == 0) typeId = undefined;
+
+              if (
+                  ( isNaN(programId) && isNaN(indicatorId) && isNaN(typeId) ) ||
+                  ( isNaN(programId) && isNaN(indicatorId) && typeId == typeIdInTable) ||
+                  ( isNaN(programId) && indicatorId == indicatorIdInTable && isNaN(typeId)) ||
+                  ( isNaN(programId) && indicatorId == indicatorIdInTable && typeId == typeIdInTable) ||
+                  ( programId == programIdInTable && isNaN(indicatorId) && isNaN(typeId)) ||
+                  ( programId == programIdInTable && isNaN(indicatorId) && typeId == typeIdInTable) ||
+                  ( programId == programIdInTable && indicatorId == indicatorIdInTable && isNaN(typeId) ) ||
+                  ( programId == programIdInTable && indicatorId == indicatorIdInTable && typeId == typeIdInTable)
+                  )
+              {
+                  return true; //
+              }
+              //if ((indicatorIdInTable == indicatorId)|| (indicatorId == undefined)) return true;
+              return false;
+          }
+      );
+      var indicator_records = {{ data|safe }};
+      table = $('#data_table').DataTable({
+          dom: "<'row'<'col-sm-2'B><'col-sm-5'l><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+          buttons: [
+              {
+                  extend: 'csv',
+                  text: 'Export to CSV',
+                  title: 'Indicator Library Report',
+                  exportOptions: { columns: "thead th:not(.noExport)" }
+              }
+          ],
+          retrieve: true,
+          data: indicator_records,
+          'columnDefs': [
+              {
+                  'targets': 0,
+                  'searchable':false,
+                  'orderable':false,
+                  'className': 'dt-body-center noExport',
+                  'render': function (data, type, row){
+                      return '<div class="btn-group btn-group-xs"><a type="button" class="btn btn-warning" href="/indicators/indicator_update/'+row.id+'">Edit</a><br><a type="button" class="btn btn-default" href="/indicators/data/'+row.id+'">View</a></div>';
+                  }
+              },
+              {
+                  "targets": [1],
+                  "visible": false,
+                  'className': 'noExport',
+              },
+              {
+                  "targets": [2],
+                  "visible": false,
+                  'className': 'noExport',
+              },{
+                  "targets": [3],
+                  "visible": false,
+                  'className': 'noExport',
+              }
+          ],
+          columns: [
+              { title: "Edit"},
+              { title: "PID", data: "program__id"},
+              { title: "IID", data: "id"},
+              { title: "ITID", data: "indicator_type__id"},
+              { title: "{{ user.activity_user.organization.level_1_label }}", data: "program__name", "defaultContent": "<i>Not set</i>"},
+              { title: "Indicator", data: "name", "defaultContent": "<i>Not set</i>",
+                  "mRender": function (data, type, row) {
+                      return '<a class="collecteddata" name=' + row.id + ' href="/indicators/indicator_update/' + row.id + '/">' + row.name + '</a>';
+                  }
+              },
+              { title: "Level", data: "level__name", "defaultContent": "<i>Not set</i>" },
+              { title: "Type", data: "indicator_type__indicator_type", "defaultContent": "<i>Not set</i>"},
+              { title: "Sector", data: "sector__sector", "defaultContent": "<i>Not set</i>"},
+              { title: "Disaggregation", data: "disaggregation__disaggregation_type", "defaultContent": "<i>Not set</i>"},
+              { title: "Method of Analysis", data: "method_of_analysis", "defaultContent": "<i>Not set</i>"},
+              { title: "source", data: "source", "defaultContent": "<i>Not set</i>"},
+              { title: "Reporting Frequency", data: "reporting_frequency__frequency", "defaultContent": "<i>Not set</i>"},
+              { title: "Baseline", data: "baseline", "defaultContent": "<i>Not set</i>"},
+              { title: "LOP Target", data: "lop_target", "defaultContent": "<i>Not set</i>"},
+              { title: "External", data: "external_service_record__external_service__name", "defaultContent": "<i>Not set</i>"},
+              { title: "Supporting Data", data: "collecteddata",
+                  "mRender": function (data, type, row) {
+                      return '<a class="collecteddata" name=' + row.id + ' href="/indicators/collecteddata/0/' + row.id + '/0/">Collected Data</a>';
+                  }
+              },
+              { title: "Key Performance Indicators",data: "key_performance_indicator", "defaultContent": "<i>Not set</i>"},
+              { title: "Means of Verification",data: "means_of_verification", "defaultContent": "<i>Not set</i>"},
+              { title: "Create Date",data: "create_date", "defaultContent": "<i>Not set</i>"},
+              { title: "Edit Date",data: "edit_date", "defaultContent": "<i>Not set</i>"}
+          ]
+      });
+  });
+
+
+
+  $("#id_filtersDropdown").on("programFilterUpdated", "#id_programs_filter_dropdown", function(e){
+      table.draw();
+  });
+
+  $("#id_filtersDropdown").on("indicatorFilterUpdated", "#id_indicators_filter_dropdown", function(e){
+      table.draw();
+  });
+
+
+  $("#id_filtersDropdown").on("indicatorTypeFilterUpdated", "#id_indicatortypes_filter_dropdown", function(e){
+      table.draw();
+  });
+</script>
+
+<div class="container">
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h3 class="page-title">Indicator Report</h3>
+      <h4 class="page-title">Indicator Report</h4>
     </div>
     <div class="sub-navigation-actions">
-        <div class="sub-nav-item">
-{% endblock %}
+      <div class="sub-nav-item">
+        {% include "indicators/filter.html"%}
+      </div>
+    </div>
+  </div>
 
-{% block content %}
-    {% include "indicators/filter.html"%}
-
-    <script type="text/javascript">
-        var table;
-        $(document).ready(function(){
-            $.fn.dataTable.ext.search.push(
-                function( settings, data, dataIndex ) {
-                    var programId = $("#program_filter_value").data('programid');
-                    var programIdInTable = parseInt(data[1]) || 0;
-
-                    var indicatorId = $("#indicator_filter_value").data('indicatorid');
-                    var indicatorIdInTable = parseInt(data[2]) || 0;
-
-                    var typeId = $("#type_filter_value").data('typeid');
-                    var typeIdInTable = parseInt(data[3]) || 0;
-
-                    if (programId == 0) programId = undefined;
-                    if (indicatorId == 0) indicatorId = undefined;
-                    if (typeId == 0) typeId = undefined;
-
-                    if (
-                        ( isNaN(programId) && isNaN(indicatorId) && isNaN(typeId) ) ||
-                        ( isNaN(programId) && isNaN(indicatorId) && typeId == typeIdInTable) ||
-                        ( isNaN(programId) && indicatorId == indicatorIdInTable && isNaN(typeId)) ||
-                        ( isNaN(programId) && indicatorId == indicatorIdInTable && typeId == typeIdInTable) ||
-                        ( programId == programIdInTable && isNaN(indicatorId) && isNaN(typeId)) ||
-                        ( programId == programIdInTable && isNaN(indicatorId) && typeId == typeIdInTable) ||
-                        ( programId == programIdInTable && indicatorId == indicatorIdInTable && isNaN(typeId) ) ||
-                        ( programId == programIdInTable && indicatorId == indicatorIdInTable && typeId == typeIdInTable)
-                        )
-                    {
-                        return true; //
-                    }
-                    //if ((indicatorIdInTable == indicatorId)|| (indicatorId == undefined)) return true;
-                    return false;
-                }
-            );
-            var indicator_records = {{ data|safe }};
-            table = $('#data_table').DataTable({
-                dom: "<'row'<'col-sm-2'B><'col-sm-5'l><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                buttons: [
-                    {
-                        extend: 'csv',
-                        text: 'Export to CSV',
-                        title: 'Indicator Library Report',
-                        exportOptions: { columns: "thead th:not(.noExport)" }
-                    }
-                ],
-                retrieve: true,
-                data: indicator_records,
-                'columnDefs': [
-                    {
-                        'targets': 0,
-                        'searchable':false,
-                        'orderable':false,
-                        'className': 'dt-body-center noExport',
-                        'render': function (data, type, row){
-                            return '<div class="btn-group btn-group-xs"><a type="button" class="btn btn-warning" href="/indicators/indicator_update/'+row.id+'">Edit</a><br><a type="button" class="btn btn-default" href="/indicators/data/'+row.id+'">View</a></div>';
-                        }
-                    },
-                    {
-                        "targets": [1],
-                        "visible": false,
-                        'className': 'noExport',
-                    },
-                    {
-                        "targets": [2],
-                        "visible": false,
-                        'className': 'noExport',
-                    },{
-                        "targets": [3],
-                        "visible": false,
-                        'className': 'noExport',
-                    }
-                ],
-                columns: [
-                    { title: "Edit"},
-                    { title: "PID", data: "program__id"},
-                    { title: "IID", data: "id"},
-                    { title: "ITID", data: "indicator_type__id"},
-                    { title: "{{ user.activity_user.organization.level_1_label }}", data: "program__name", "defaultContent": "<i>Not set</i>"},
-                    { title: "Indicator", data: "name", "defaultContent": "<i>Not set</i>",
-                        "mRender": function (data, type, row) {
-                            return '<a class="collecteddata" name=' + row.id + ' href="/indicators/indicator_update/' + row.id + '/">' + row.name + '</a>';
-                        }
-                    },
-                    { title: "Level", data: "level__name", "defaultContent": "<i>Not set</i>" },
-                    { title: "Type", data: "indicator_type__indicator_type", "defaultContent": "<i>Not set</i>"},
-                    { title: "Sector", data: "sector__sector", "defaultContent": "<i>Not set</i>"},
-                    { title: "Disaggregation", data: "disaggregation__disaggregation_type", "defaultContent": "<i>Not set</i>"},
-                    { title: "Method of Analysis", data: "method_of_analysis", "defaultContent": "<i>Not set</i>"},
-                    { title: "source", data: "source", "defaultContent": "<i>Not set</i>"},
-                    { title: "Reporting Frequency", data: "reporting_frequency__frequency", "defaultContent": "<i>Not set</i>"},
-                    { title: "Baseline", data: "baseline", "defaultContent": "<i>Not set</i>"},
-                    { title: "LOP Target", data: "lop_target", "defaultContent": "<i>Not set</i>"},
-                    { title: "External", data: "external_service_record__external_service__name", "defaultContent": "<i>Not set</i>"},
-                    { title: "Supporting Data", data: "collecteddata",
-                        "mRender": function (data, type, row) {
-                            return '<a class="collecteddata" name=' + row.id + ' href="/indicators/collecteddata/0/' + row.id + '/0/">Collected Data</a>';
-                        }
-                    },
-                    { title: "Key Performance Indicators",data: "key_performance_indicator", "defaultContent": "<i>Not set</i>"},
-                    { title: "Means of Verification",data: "means_of_verification", "defaultContent": "<i>Not set</i>"},
-                    { title: "Create Date",data: "create_date", "defaultContent": "<i>Not set</i>"},
-                    { title: "Edit Date",data: "edit_date", "defaultContent": "<i>Not set</i>"}
-                ]
-            });
-        });
-
-
-
-        $("#id_filtersDropdown").on("programFilterUpdated", "#id_programs_filter_dropdown", function(e){
-            table.draw();
-        });
-
-        $("#id_filtersDropdown").on("indicatorFilterUpdated", "#id_indicators_filter_dropdown", function(e){
-            table.draw();
-        });
-
-
-        $("#id_filtersDropdown").on("indicatorTypeFilterUpdated", "#id_indicatortypes_filter_dropdown", function(e){
-            table.draw();
-        });
-
-    </script>
-
-    <div class="table-responsive">
-        <div id="program_table_div">
-            <table class="table table-bordered" id="data_table">
-            </table>
-        </div>
-
-        <br/>
-
-        <div id="wait-animation" class="ajaxLoader" style="display: none;"></div>
+  <div class="table-responsive">
+    <div id="program_table_div">
+      <table class="table table-bordered" id="data_table"></table>
     </div>
 
+    <div id="wait-animation" class="ajaxLoader" style="display: none;"></div>
+  </div>
+</div>
 {% endblock content %}
