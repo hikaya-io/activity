@@ -495,8 +495,8 @@ input[type=number]::-webkit-outer-spin-button {
 
 .sub-nav-item {
     display: flex;
-    height:35px;
-
+    margin-left: 5px;
+    /* height:35px; */
 }
 
 .page-title {
