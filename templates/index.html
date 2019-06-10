@@ -1,5 +1,5 @@
-{% extends "base.html" %} 
-{% block content %} 
+{% extends "base.html" %} {% block content %}
+
 {% include 'shared/level1_modal_form.html' %}
 
 <script src="{{ STATIC_URL }}js/highcharts/js/highcharts.js"></script>
@@ -278,94 +278,78 @@
     </p>
   </div>
   {% endfor %}
-  <br />
-  <br />
 
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <div class="row">
-        <div class="col-md-4">
-          <h4 class="panel-title">Hikaya-Activity Dashboard</h4>
-        </div>
-
-        <div class="col-md-8 text-right">
-          <div class="btn-group" role="group">
-            <button
-              class="btn btn-default btn-sm dropdown-toggle"
-              type="button"
-              id="dropdownMenu1"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="true"
-            >
-              {% if selected_countries_list %} 
-              {% for item in selected_countries_list %} {{ item.country }} {% endfor %}
-              {% else %}
-              Country {% endif %} Dashboard
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+      <div class="sub-navigation-header">
+        <h4 class="page-title">Activity Dashboard</h4>
+      </div>
+      <div class="sub-navigation-actions">
+      <!-- sample action buttons -->
+      <div class="btn-group" role="group" aria-label="">
+        <div class="btn-group" role="group">
+          <button
+            type="button"
+            class="btn btn-sm btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            {% if selected_countries_list %}
+            {% for item in selected_countries_list %}
+            {{ item.country }} {% endfor %}
+            {% else %} Country
+            {% endif %} Dashboard
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
               {%for item in countries %}
               <li>
                 <a href="/{{ item.id }}/">{{ item.country }}</a>
               </li>
               {% endfor %}
-              <li role="separator" class="divider"></li>
-              <li><a href="/">All</a></li>
-            </ul>
 
-            <button
-              class="btn btn-default btn-sm dropdown-toggle"
-              type="button"
-              id="dropdownMenu3"
-              data-toggle="dropdown"
-              aria-expanded="false"
-            >
+              {% if countries|length > 0 %}
+              <li role="separator" class="divider"></li>
+              {% endif %}
+              <li><a href="/">-- All --</a></li>
+          </ul>
+
+        </div>
+
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Filter by {{ user.activity_user.organization.level_1_label }}
               <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" role="menu">
-              <li role="presentation">
-                <a
-                  role="menuitem"
-                  tabindex="-1"
-                  href="/dashboard/{% if get_filtered_name %}{{
+            <ul class="dropdown-menu">
+                <li>
+                  <a href="/dashboard/{% if get_filtered_name %}{{
                     get_filtered_name.id
-                  }}{% else %}0{% endif %}/0/"
-                  >-- All --</a
-                >
-              </li>
-              {% for program in programs %}
-              <li class="list-group-item">
-                <a
-                  href="/dashboard/{{ program.id }}/{% if sector %}{{
-                    sector
-                  }}{% else %}0{% endif %}/"
-                  >{{ program.name }}</a
-                >
-              </li>
-              {%endfor%}
+                  }}{% else %}0{% endif %}/0/">-- All --</a>
+                </li>
+
+                {% for program in programs %}
+                <li>
+                  <a
+                    href="/dashboard/{{ program.id }}/{% if sector %}{{sector}}{% else %}0{% endif %}/"
+                    >{{ program.name }}</a
+                  >
+                </li>
+                {% endfor %}
             </ul>
-
-            <button
-              class="btn btn-sm btn-info pull-right"
-              data-toggle="modal"
-              data-target="#addProgramModal"
-            >
-              <i class="fa fa-plus"></i> Add New
-              {{ user.activity_user.organization.level_1_label }}
-            </button>
-
-            {% if report_server == False%}
-            <a
-              href="/workflow/dashboard/project/0/"
-              class="btn btn-default btn-sm btn-success"
-              >Create a {{ user.activity_user.organization.level_2_label }}</a
-            >
-            {% endif %}
-          </div>
         </div>
+
+        <button
+          class="btn btn-sm btn-info"
+          data-toggle="modal"
+          data-target="#addProgramModal">
+          <i class="fa fa-plus"></i> Add New
+          {{ user.activity_user.organization.level_1_label }}
+       </button>
       </div>
+
+
     </div>
   </div>
 
@@ -405,16 +389,16 @@
               <th>Indicator Data</th>
               <th>W/Evidence</th>
             </tr>
-            {%for value in count_evidence %} 
-            {%for item in countries %} 
+            {%for value in count_evidence %}
+            {%for item in countries %}
             {% if item.country == value.indicator__program__country__country %}
             <tr>
               <td>{{ value.indicator__program__country__country }}</td>
               <td>{{ value.indicator_count }}</td>
               <td>{{ value.evidence_count }}</td>
             </tr>
-            {% endif %} 
-            {%endfor%} 
+            {% endif %}
+            {%endfor%}
             {%endfor%}
           </table>
         </div>
@@ -512,7 +496,8 @@
         <div class="panel-body">
           <p>
             <b
-              >Sites {% if get_filtered_name %} for {{ get_filtered_name }} {% endif %}</b
+              >Sites {% if get_filtered_name %} for {{ get_filtered_name }}
+              {% endif %}</b
             >
           </p>
           <style>
@@ -540,7 +525,8 @@
     <div class="col-md-12">
       <div class="panel panel-info">
         <div class="panel-heading">
-          Indicators {% if getFilteredName %} for {{ getFilteredName }} {% endif %}
+          Indicators {% if getFilteredName %} for {{ getFilteredName }}
+          {% endif %}
         </div>
         <div id="container_column"></div>
         <div class="panel-body">

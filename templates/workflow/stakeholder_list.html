@@ -1,147 +1,211 @@
-{% extends "base.html" %}
-{% block bread_crumb %}
+{% extends "base.html" %} {% block content %}
 <div class="container">
-    <ol class="breadcrumb">
-        <li>
-            <a href="/workflow/dashboard/0/">
-                    {{ user.activity_user.organization.level_1_label }} Index
-            </a>
-        </li>
-        <li class="active">Stakeholder List</li>
-    </ol>
-</div>
-{% endblock %}
-
-{% block content %}
-<div class="container">
-    <h1>Stakeholder List</h1>
-    <div class="dropdown">
-    <button 
-        class="btn btn-default dropdown-toggle" 
-        type="button" id="dropdownMenu1"
-        data-toggle="dropdown" 
-        aria-expanded="true"
-        >
-        {{ user.activity_user.organization.level_1_label }}(s)
-        <span class="caret"></span>
-      </button>
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" >
-            <li role="presentation"><a role="menuitem" tabindex="-1" href=" ">-- All --</a></li>
-        {% for program in get_programs %}
-            <li role="presentation">
-                <a role="menuitem" tabindex="-1" onclick="program_filter({{program.id}})">
-                    {{ program.gaitid}} - {{ program.name }}
-                </a>
-            </li>
-        {% endfor %}
-      </ul>
-    <a href="/workflow/stakeholder_add/0/" class="btn btn-large btn-info">
-        <i class="fa fa-plus"></i> New Stakeholder
-    </a> &nbsp;
-    <a 
-        href="/workflow/export_stakeholders_list/{{ program_id }}/" 
-        class="btn btn-sm btn-success float-right"
-        >
-    <span class="glyphicon glyphicon-export"></span> Export to CSV</a>&nbsp;
-    <br><br>
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">Stakeholder List</h4>
     </div>
-    <hr/><br/>
-    <h3>Stakeholder</h3>
-    
-    <!-- Table -->
-    <table class="table" id="stakeholdertable">
-    </table>
-    
-    <script type="text/javascript">
-        $(document).ready(function() {
-          program_filter(0);
-        });
-    
-         function show_stakeholder_table(stakeholder_data) {
-                console.log(stakeholder_data);
-                stakeholder_records = JSON.parse(stakeholder_data);
-                //First destroy any old version of the table to refresh anew
-                if ( $.fn.dataTable.isDataTable( '#stakeholdertable' ) ) {
-                    table.destroy();
-                    $('#stakeholdertable').empty();
-                };
-    
-                $('#stakeholdertable').on( 'page.dt', function () {
-                    $('html, body').animate({
-                        scrollTop: 0
-                    }, 300);
-                } );
-    
-                table = $('#stakeholdertable').DataTable( {
-                     "order": [],
-                     "bFilter": false,
-                     'bLengthChange': false,
-                     "aoColumnDefs": [
-                              //{ "bSortable": false, "aTargets": [ -1, 0, 1, 2, 3, 4, 5 ] }
-                               { "bSortable": false, "targets": [0, 1, 2,3,4,5] }
-                            ],
-                    retrieve: true,
-                    data: stakeholder_records,
-                    columns: [
-                        { title: "Date Created", data: "create_date",
-                            "mRender": function (data, sector, row) {
-                                    return '<a class="collecteddata" name=' + row.id + ' href="/workflow/stakeholder_update/' + row.id + '/">' + row.create_date + '</a>';
-                                },
-                            "defaultContent": "<i>Not set</i>"},
-                        { title: "Stakeholder Name", data: "name",
-                            "mRender": function (data, name, row) {
-                                    return '<a class="collecteddata" name=' + row.id + ' href="/workflow/stakeholder_update/' + row.id + '/">' + row.name + '</a>';
-                                },
-                            "defaultContent": "<i>Not set</i>"},
-                        { title: "Stakeholder Type", data: "type__name",
-                            "mRender": function (data, type, row) {
-                                    return '<a class="collecteddata" name=' + row.id + ' href="/workflow/stakeholder_update/' + row.id + '/">' + row.type__name + '</a>';
-                                },
-                            "defaultContent": "<i>Not set</i>"},
-                        { title: "Sector", data: "sector__sector",
-                                "mRender": function (data, sector, row) {
-                                    return '<a class="collecteddata" name=' + row.id + ' href="/workflow/stakeholder_update/' + row.id + '/">' + row.sectors__sector + '</a>';
-                                },
-                                "defaultContent": "<i>Not set</i>"
-                            },
-                        { title: "Contacts",
-                            "defaultContent": "<i>Not set</i>",
-                            "mRender": function (data, sector, row) {
-                                    return '<a href="/workflow/contact_list/'+row.id+'" class="btn btn-xs btn-info">Contacts</a>';
-                                },},
-                        { title: "Delete",
-                            "defaultContent": "<i>Not set</i>",
-                            "mRender": function (data, sector, row) {
-                                    return '<a href="/workflow/stakeholder_delete/'+row.id+'" class="btn btn-xs btn-danger">Delete Stakeholder</a>';
-                                },
-                            }
-                        ]
-                } );
-    
-            }
-    
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-sm btn-default dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              {{ user.activity_user.organization.level_1_label }}(s)
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="/workflow/stakeholder_list/0/0/">--All--</a></li>
+              {% for program in get_programs %}
+              <li>
+                <a href="/workflow/stakeholder_list/{{ program.id }}/0/ "
+                  >{{ program.gaitid }} - {{ program.name }}</a
+                >
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <a
+            role="button"
+            href="/workflow/stakeholder_add/0/"
+            class="btn btn-sm btn-info"
+          >
+            <i class="fa fa-plus"></i> New Stakeholder
+          </a>
+          <a
+            role="button"
+            href="/workflow/export_stakeholders_list/{{ program_id }}/"
+            class="btn btn-sm btn-success float-right"
+          >
+            <span class="glyphicon glyphicon-export"></span> Export to CSV</a
+          >&nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <table class="table" id="stakeholdertable"></table>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      program_filter(0);
+    });
+
+    function show_stakeholder_table(stakeholder_data) {
+      console.log(stakeholder_data);
+      stakeholder_records = JSON.parse(stakeholder_data);
+      //First destroy any old version of the table to refresh anew
+      if ($.fn.dataTable.isDataTable('#stakeholdertable')) {
+        table.destroy();
+        $('#stakeholdertable').empty();
+      }
+
+      $('#stakeholdertable').on('page.dt', function() {
+        $('html, body').animate(
+          {
+            scrollTop: 0,
+          },
+          300,
+        );
+      });
+
+      table = $('#stakeholdertable').DataTable({
+        order: [],
+        bFilter: false,
+        bLengthChange: false,
+        aoColumnDefs: [
+          //{ "bSortable": false, "aTargets": [ -1, 0, 1, 2, 3, 4, 5 ] }
+          { bSortable: false, targets: [0, 1, 2, 3, 4, 5] },
+        ],
+        retrieve: true,
+        data: stakeholder_records,
+        columns: [
+          {
+            title: 'Date Created',
+            data: 'create_date',
+            mRender: function(data, sector, row) {
+              return (
+                '<a class="collecteddata" name=' +
+                row.id +
+                ' href="/workflow/stakeholder_update/' +
+                row.id +
+                '/">' +
+                row.create_date +
+                '</a>'
+              );
+            },
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title: 'Stakeholder Name',
+            data: 'name',
+            mRender: function(data, name, row) {
+              return (
+                '<a class="collecteddata" name=' +
+                row.id +
+                ' href="/workflow/stakeholder_update/' +
+                row.id +
+                '/">' +
+                row.name +
+                '</a>'
+              );
+            },
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title: 'Stakeholder Type',
+            data: 'type__name',
+            mRender: function(data, type, row) {
+              return (
+                '<a class="collecteddata" name=' +
+                row.id +
+                ' href="/workflow/stakeholder_update/' +
+                row.id +
+                '/">' +
+                row.type__name +
+                '</a>'
+              );
+            },
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title: 'Sector',
+            data: 'sector__sector',
+            mRender: function(data, sector, row) {
+              return (
+                '<a class="collecteddata" name=' +
+                row.id +
+                ' href="/workflow/stakeholder_update/' +
+                row.id +
+                '/">' +
+                row.sectors__sector +
+                '</a>'
+              );
+            },
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title: 'Contacts',
+            defaultContent: '<i>Not set</i>',
+            mRender: function(data, sector, row) {
+              return (
+                '<a href="/workflow/contact_list/' +
+                row.id +
+                '" class="btn btn-xs btn-info">Contacts</a>'
+              );
+            },
+          },
+          {
+            title: 'Delete',
+            defaultContent: '<i>Not set</i>',
+            mRender: function(data, sector, row) {
+              return (
+                '<a href="/workflow/stakeholder_delete/' +
+                row.id +
+                '" class="btn btn-xs btn-danger">Delete Stakeholder</a>'
+              );
+            },
+          },
+        ],
+      });
+    }
+
     function program_filter(program_id) {
-            // get the program and indicator id from the url
-            if (program_id != 0) {
-    
-                $.getJSON("/workflow/stakeholder_table/"+ program_id + "/0/", function(data) {
-                      show_stakeholder_table(data['get_stakeholders']);
-                });
-    
-            }  else{
-    
-                program_id = document.URL.split('/')[5];
-                console.log(program_id);
-                stakeholder_id = document.URL.split('/')[6];
-    
-                $.getJSON("/workflow/stakeholder_table/"+ program_id + "/" + stakeholder_id + "/", function(data) {
-                      show_stakeholder_table(data['get_stakeholders']);
-                });
-            }
-          }
-    
-    </script>
+      // get the program and indicator id from the url
+      if (program_id != 0) {
+        $.getJSON('/workflow/stakeholder_table/' + program_id + '/0/', function(
+          data,
+        ) {
+          show_stakeholder_table(data['get_stakeholders']);
+        });
+      } else {
+        program_id = document.URL.split('/')[5];
+        console.log(program_id);
+        stakeholder_id = document.URL.split('/')[6];
+
+        $.getJSON(
+          '/workflow/stakeholder_table/' +
+            program_id +
+            '/' +
+            stakeholder_id +
+            '/',
+          function(data) {
+            show_stakeholder_table(data['get_stakeholders']);
+          },
+        );
+      }
+    }
+  </script>
 </div>
-
-
 {% endblock content %}

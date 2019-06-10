@@ -1,159 +1,199 @@
-<div style="display: none;">
-    <span class="filter" id="indicator_filter_value"></span>
-    <span class="filter" id="program_filter_value"></span>
-    <span class="filter" id="type_filter_value"></span>
+<div style="display:none;">
+  <span class="filter" id="indicator_filter_value"></span>
+  <span class="filter" id="program_filter_value"></span>
+  <span class="filter" id="type_filter_value"></span>
 </div>
 <style>
-    .select2-selection__clear {
-        position: absolute !important;
-        right: 20px !important;
-    }
+  .select2-selection__clear {
+    position:absolute !important;
+    right:20px !important;
+  }
 
-    .select2-container .select2-selection--single .select2-selection__rendered {
-        padding-right: 30px !important;
-    }
-    .select2-results__options {
-        white-space: nowrap;
-    }
+  .select2-container .select2-selection--single .select2-selection__rendered {
+    padding-right:30px !important;
+  }
+  .select2-results__options {
+    white-space:nowrap;
+  }
 </style>
 <div id="id_filtersDropdown">
-    <div class="row">
-        <div class="col-sm-5" style="padding-right: 2px;">
-            {% if get_programs %}
-                <select name="programs_filter" id="id_programs_filter_dropdown" class="select form-control" >
-                    <option value = "0">-- All --</option>
-                {% for program in get_programs %}
-                    <option value="{{ program.id }}">{{ program.gaitid }} - {{ program.name|truncatechars:85 }}</option>
-                {% endfor %}
-                </select>
-            {% endif %}
-        </div>
+  <div class="row">
+    <div class="col-sm-5" style="padding-right:2px;">
+      {% if get_programs %}
+      <select
+        name="programs_filter"
+        id="id_programs_filter_dropdown"
+        class="select form-control"
+      >
+        <option value="0">-- All --</option>
+        {% for program in get_programs %}
+        <option value="{{ program.id }}"
+          >{{ program.gaitid }} - {{ program.name | truncatechars:85 }}</option
+        >
+        {% endfor %}
+      </select>
+      {% endif %}
+    </div>
 
-        <div class="col-sm-5" style="padding-right: 2px; padding-left: 0px;">
-            {% if get_indicators %}
-                <select name="indicators_filter" id="id_indicators_filter_dropdown" class="select form-control">
-                    <option value = "0">-- All --</option>
-                    {% for item in get_indicators %}
-                        <option value="{{ item.id }}">{{ item.number|default_if_none:'' }} - {{ item.name|truncatechars:82}} </option>
-                    {% endfor %}
-                </select>
-            {% endif %}
-        </div>
+    <div class="col-sm-5" style="padding-right:2px; padding-left:0px;">
+      {% if get_indicators %}
+      <select
+        name="indicators_filter"
+        id="id_indicators_filter_dropdown"
+        class="select form-control"
+      >
+        <option value="0">-- All --</option>
+        {% for item in get_indicators %}
+        <option value="{{ item.id }}"
+          >{{ item.number | default_if_none:'' }} -
+          {{ item.name | truncatechars:82 }}
+        </option>
+        {% endfor %}
+      </select>
+      {% endif %}
+    </div>
 
-        <div class="col-sm-2" style="padding-left: 0px;">
-            {%if get_indicator_types %}
-                <select name="indicatortypes_filter" id="id_indicatortypes_filter_dropdown" class="select form-control">
-                    <option value = "0">-- All --</option>
-                    {% for item in get_indicator_types %}
-                    <option value="{{ item.id }}">{{ item.indicator_type }}</option>
-                    {% endfor %}
-                </select>
-            {% endif %}
-        </div>
+    <div class="col-sm-2" style="padding-left:0px;">
+      {%if get_indicator_types %}
+      <select
+        name="indicatortypes_filter"
+        id="id_indicatortypes_filter_dropdown"
+        class="select form-control"
+      >
+        <option value="0">-- All --</option>
+        {% for item in get_indicator_types %}
+        <option value="{{ item.id }}">{{ item.indicator_type }}</option>
+        {% endfor %}
+      </select>
+      {% endif %}
     </div>
-    <div class="row">
-        <div class="col-sm-5">
-        {% if export_to_pdf_url %}
-            <button id="export_to_pdf_button" class="btn btn-default" onclick="export_to_pdf()">Export to PDF</button>
-        {% endif %}
-        {% if disaggregationprint_button %}
-            <button id="export_to_pdf_button" class="btn btn-default" onclick="export_to_pdf()">Export to PDF</button>
-        {% endif %}
+  </div>
+  <div class="row">
+    <div class="col-sm-5">
+      {% if export_to_pdf_url %}
+      <button
+        id="export_to_pdf_button"
+        class="btn btn-sm btn-default"
+        onclick="export_to_pdf()"
+      >
+        Export to PDF
+      </button>
+      {% endif %} {% if disaggregationprint_button %}
+      <button
+        id="export_to_pdf_button"
+        class="btn btn-sm btn-default"
+        onclick="export_to_pdf()"
+      >
+        Export to PDF
+      </button>
+      {% endif %}
     </div>
-    </div>
+  </div>
 </div>
 
 <script>
-    var programId = `{{ program_id }}`;
-    var indicatorId = `{{ indicator_id }}`;
-    $(document).ready(function() {
-        var programDropdown = $("#id_programs_filter_dropdown");
-        programDropdown.prop("selectedIndex", -1);
-        programDropdown.select2({
-            placeholder: {id: -1, text: "{{ user.activity_user.organization.level_1_label }}(s)"},
-            allowClear: false,
-            dropdownAutoWidth: true,
-            // width: "400px",
-            // width: 'resolve',
-            width: '100%',
-        });
-        if (parseInt(programId) > 0 ) {
-            $("#program_filter_value").data('programid', programId);
-            // only trigger event with the namespace that Select2 is looking for
-            // so other event handlers will not be triggered.
-            programDropdown.val(programId).trigger('change.select2');
-        }
-
-        var indicatorDropdown = $("#id_indicators_filter_dropdown");
-        indicatorDropdown.prop("selectedIndex", -1);
-        indicatorDropdown.select2({
-            placeholder: {id: -1, text: "Indicators"},
-            allowClear: false,
-            dropdownAutoWidth: true,
-            // width: "400px",
-            // width: 'resolve',
-            width: '100%',
-        });
-        if (parseInt(indicatorId) > 0 ) {
-            $("#indicator_filter_value").data('indicatorid', indicatorId);
-            // only trigger event with the namespace that Select2 is looking for
-            // so other event handlers will not be triggered.
-            indicatorDropdown.val(indicatorId).trigger('change.select2');
-        }
-
-        var typeId = `{{ type_id }}`;
-        var indicatorTypeDropdown = $("#id_indicatortypes_filter_dropdown");
-        indicatorTypeDropdown.prop("selectedIndex", -1);
-        indicatorTypeDropdown.select2({
-            placeholder: {id: -1, text: "Types"},
-            allowClear: false,
-            dropdownAutoWidth: true,
-            // width: "200px",
-            // width: 'resolve',
-            width: '100%',
-        });
-        if (parseInt(typeId) > 0 ) {
-            $("#type_filter_value").data('typeid', typeId);
-            // only trigger event with the namespace that Select2 is looking for
-            // so other event handlers will not be triggered.
-            indicatorTypeDropdown.val(typeId).trigger('change.select2');
-        }
-
+  var programId = `{{ program_id }}`;
+  var indicatorId = `{{ indicator_id }}`;
+  $(document).ready(function() {
+    var programDropdown = $('#id_programs_filter_dropdown');
+    programDropdown.prop('selectedIndex', -1);
+    programDropdown.select2({
+      placeholder:{
+        id:-1,
+        text:'{{ user.activity_user.organization.level_1_label }}(s)',
+      },
+      allowClear:false,
+      dropdownAutoWidth:true,
+      // width:"400px",
+      // width:'resolve',
+      width:'100%',
     });
+    if (parseInt(programId) > 0) {
+      $('#program_filter_value').data('programid', programId);
+      // only trigger event with the namespace that Select2 is looking for
+      // so other event handlers will not be triggered.
+      programDropdown.val(programId).trigger('change.select2');
+    }
 
-
-    // watch for selection change in program dropdown
-    $("#id_programs_filter_dropdown").change(function(e){
-        var selectedValue = $("#id_programs_filter_dropdown :selected").val();
-        $("#indicator_filter_value").data('indicatorid', 0);
-        $("#program_filter_value").data('programid', selectedValue);
-        $("#id_programs_filter_dropdown").trigger("programFilterUpdated");
+    var indicatorDropdown = $('#id_indicators_filter_dropdown');
+    indicatorDropdown.prop('selectedIndex', -1);
+    indicatorDropdown.select2({
+      placeholder:{ id:-1, text:'Indicators' },
+      allowClear:false,
+      dropdownAutoWidth:true,
+      // width:"400px",
+      // width:'resolve',
+      width:'100%',
     });
+    if (parseInt(indicatorId) > 0) {
+      $('#indicator_filter_value').data('indicatorid', indicatorId);
+      // only trigger event with the namespace that Select2 is looking for
+      // so other event handlers will not be triggered.
+      indicatorDropdown.val(indicatorId).trigger('change.select2');
+    }
 
-    $("#id_programs_filter_dropdown").on("select2:select select2:unselecting", function(e) {
-        $("#program_filter_value").data('programid', 0);
-        $("#indicator_filter_value").data('indicatorid', 0);
+    var typeId = `{{ type_id }}`;
+    var indicatorTypeDropdown = $('#id_indicatortypes_filter_dropdown');
+    indicatorTypeDropdown.prop('selectedIndex', -1);
+    indicatorTypeDropdown.select2({
+      placeholder:{ id:-1, text:'Types' },
+      allowClear:false,
+      dropdownAutoWidth:true,
+      // width:"200px",
+      // width:'resolve',
+      width:'100%',
     });
+    if (parseInt(typeId) > 0) {
+      $('#type_filter_value').data('typeid', typeId);
+      // only trigger event with the namespace that Select2 is looking for
+      // so other event handlers will not be triggered.
+      indicatorTypeDropdown.val(typeId).trigger('change.select2');
+    }
+  });
 
-    // watch for selection change in indicator dropdown
-    $("#id_indicators_filter_dropdown").change(function(e){
-        var selectedValue = $("#id_indicators_filter_dropdown :selected").val();
-        $("#indicator_filter_value").data('indicatorid', selectedValue);
-        $("#id_indicators_filter_dropdown").trigger("indicatorFilterUpdated");
-    });
+  // watch for selection change in program dropdown
+  $('#id_programs_filter_dropdown').change(function(e) {
+    var selectedValue = $('#id_programs_filter_dropdown :selected').val();
+    $('#indicator_filter_value').data('indicatorid', 0);
+    $('#program_filter_value').data('programid', selectedValue);
+    $('#id_programs_filter_dropdown').trigger('programFilterUpdated');
+  });
 
-    $("#id_indicators_filter_dropdown").on("select2:select select2:unselecting", function(e) {
-        $("#indicator_filter_value").data('indicatorid', 0);
-    });
+  $('#id_programs_filter_dropdown').on(
+    'select2:select select2:unselecting',
+    function(e) {
+      $('#program_filter_value').data('programid', 0);
+      $('#indicator_filter_value').data('indicatorid', 0);
+    },
+  );
 
-    // watch for selection change indicator_type dropdown
-    $("#id_indicatortypes_filter_dropdown").change(function(e){
-        var selectedValue = $("#id_indicatortypes_filter_dropdown :selected").val();
-        $("#type_filter_value").data('typeid', selectedValue);
-        $("#id_indicatortypes_filter_dropdown").trigger("indicatorTypeFilterUpdated");
-    });
+  // watch for selection change in indicator dropdown
+  $('#id_indicators_filter_dropdown').change(function(e) {
+    var selectedValue = $('#id_indicators_filter_dropdown :selected').val();
+    $('#indicator_filter_value').data('indicatorid', selectedValue);
+    $('#id_indicators_filter_dropdown').trigger('indicatorFilterUpdated');
+  });
 
-    $("#id_indicatortypes_filter_dropdown").on("select2:select select2:unselecting", function(e) {
-        $("#type_filter_value").data('typeid', 0);
-    });
+  $('#id_indicators_filter_dropdown').on(
+    'select2:select select2:unselecting',
+    function(e) {
+      $('#indicator_filter_value').data('indicatorid', 0);
+    },
+  );
+
+  // watch for selection change indicator_type dropdown
+  $('#id_indicatortypes_filter_dropdown').change(function(e) {
+    var selectedValue = $('#id_indicatortypes_filter_dropdown :selected').val();
+    $('#type_filter_value').data('typeid', selectedValue);
+    $('#id_indicatortypes_filter_dropdown').trigger(
+      'indicatorTypeFilterUpdated',
+    );
+  });
+
+  $('#id_indicatortypes_filter_dropdown').on(
+    'select2:select select2:unselecting',
+    function(e) {
+      $('#type_filter_value').data('typeid', 0);
+    },
+  );
 </script>
