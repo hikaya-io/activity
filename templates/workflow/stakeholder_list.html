@@ -4,13 +4,13 @@
     <!-- Sub navigation -->
     <div class="sub-navigation">
             <div class="sub-navigation-header">
-              <h3 class="page-title">Stakeholder List</h3>
+              <h4 class="page-title">Stakeholder List</h4>
             </div>
             <div class="sub-navigation-actions">
                 <div class="sub-nav-item">
                         <div class="dropdown">
                                 <button
-                                    class="btn btn-default dropdown-toggle"
+                                    class="btn btn-sm btn btn-default dropdown-toggle"
                                     type="button" id="dropdownMenu1"
                                     data-toggle="dropdown"
                                     aria-expanded="true"
@@ -19,39 +19,39 @@
                                     <span class="caret"></span>
                                   </button>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" >
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" href=" ">-- All --</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="/workflow/stakeholder_list/0/0/ ">-- All --</a></li>
                                     {% for program in get_programs %}
                                         <li role="presentation">
-                                            <a role="menuitem" tabindex="-1" onclick="program_filter({{program.id}})">
+                                            <a role="menuitem" tabindex="-1"
+                                            href="/workflow/stakeholder_list/{{ program.id }}/0/ " >
                                                 {{ program.gaitid}} - {{ program.name }}
                                             </a>
                                         </li>
                                     {% endfor %}
                                   </ul>
-                                <a href="/workflow/stakeholder_add/0/" class="btn btn-large btn-info">
+                                </div>
+                                <br />
+                              </div>
+                              <div class="sub-nav-item">
+                                <div class="btn-group" role="group" aria-label="...">
+                                  <a
+                                    role="button"
+                                 href="/workflow/stakeholder_add/0/" class="btn btn-sm btn-info">
                                     <i class="fa fa-plus"></i> New Stakeholder
                                 </a> &nbsp;
                                 <a
+                                    role="button"
                                     href="/workflow/export_stakeholders_list/{{ program_id }}/"
                                     class="btn btn-sm btn-success float-right"
                                     >
                                 <span class="glyphicon glyphicon-export"></span> Export to CSV</a>&nbsp;
-                                <br><br>
-                                </div>
-                                <hr/>
-                              </div>
-
-
-    <ol class="breadcrumb">
-
-    </ol>
-</div>
-{% endblock %}
-
-{% block content %}
-<div>
-    <hr/>
-    </div>
+                            </div>
+                        </div>
+                      </div>
+                      {% endblock %} {% load group_tag %} {% block content %}
+                      <div>
+                        <hr />
+                      </div>
 
     <!-- Table -->
     <table class="table" id="stakeholdertable">
