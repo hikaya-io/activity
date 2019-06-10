@@ -11,7 +11,7 @@ body {
     /* Margin bottom by footer height */
     height: 100%;
     margin-bottom: 60px;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Lato', sans-serif !important;
 }
 
 h1,
@@ -20,7 +20,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Inconsolata', monospace;
+    font-family: 'Inconsolata', monospace !important;
 }
 
 #footer {
@@ -496,7 +496,17 @@ input[type=number]::-webkit-outer-spin-button {
 
 .sub-navigation-actions {
     flex: 1;
-    align-items: flex-end;
+    /* align-items: flex-end; */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+}
+
+.sub-nav-item {
+    display: flex;
+    margin-left: 5px;
+    /* height:35px; */
 }
 
 .page-title {

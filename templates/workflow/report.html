@@ -1,188 +1,198 @@
-{% extends "base.html" %}
-{% block bread_crumb %}
-<div class="container">
-    <ol class="breadcrumb">
-        <li>
-            <a href="/workflow/dashboard/0/">
-                {{ user.activity_user.organization.level_1_label }} Dashboards
-            </a>
-        </li>
-      <li class="active">Reports</li>
-    </ol>
-</div>
+{% extends "base.html" %} {% block content %}
+<script type="text/javascript">
+  var table;
+  $(document).ready(function() {
+    $('#data_table').css('width', '100%');
 
-{% endblock bread_crumb %}
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+      var programId = $('#program_filter_value').data('programid');
+      var programIdInTable = parseInt(data[1]) || 0;
 
-{% block content %}
-<div class="container">
-    <h1>{{ user.activity_user.organization.level_2_label }} Report</h1>
-    {% load crispy_forms_tags %}
-    {% crispy form form.helper %}
-    <script type="text/javascript">
-        var table;
-        $(document).ready(function(){
-    
-            $('#data_table').css('width', '50%');
-    
-            $.fn.dataTable.ext.search.push(
-                function( settings, data, dataIndex ) {
-                    var programId = $("#program_filter_value").data('programid');
-                    var programIdInTable = parseInt(data[1]) || 0;
-    
-                    var statusId = $("#status_filter_value").data('statusid');
-                    if (typeof statusId !== 'undefined') statusId = statusId.replace(/_/, ' ');
-                    var statusIdInTable = data[2] || 0;
-    
-                    if (programId == 0) programId = undefined;
-                    if (statusId == 0) statusId = undefined;
-    
-                    if (
-                        ( isNaN(programId) && statusId === undefined ) ||
-                        ( isNaN(programId) && statusId === statusIdInTable ) ||
-                        ( statusId === undefined && programId === programIdInTable ) ||
-                        ( statusId === statusIdInTable && programId === programIdInTable )
-                        )
-    
-                    {
-                        return true;
-                    }
-                    return false;
-                }
-            );
-            function show_agreement_table(agreements_data) {
-    
-                agreement_records = JSON.parse(agreements_data);
-                //First destroy any old version of the table to refresh anew
-                if ( $.fn.dataTable.isDataTable( '#data_table' ) ) {
-                    table.destroy();
-                    $('#data_table').empty();
-                };
-    
-                table = $('#data_table').DataTable({
-                    retrieve: true,
-                    data: agreement_records,
-                    'columnDefs': [
-                        { "visible": false, "targets": 1 },
-                        { "visible": false, "targets": 2 },
-                        {
-                            'targets': 0,
-                            'searchable':false,
-                            'orderable':false,
-                            'className': 'dt-body-center',
-                            'render': function (data, type, row){
-                                return `
+      var statusId = $('#status_filter_value').data('statusid');
+      if (typeof statusId !== 'undefined')
+        statusId = statusId.replace(/_/, ' ');
+      var statusIdInTable = data[2] || 0;
+
+      if (programId == 0) programId = undefined;
+      if (statusId == 0) statusId = undefined;
+
+      if (
+        (isNaN(programId) && statusId === undefined) ||
+        (isNaN(programId) && statusId === statusIdInTable) ||
+        (statusId === undefined && programId === programIdInTable) ||
+        (statusId === statusIdInTable && programId === programIdInTable)
+      ) {
+        return true;
+      }
+      return false;
+    });
+    function show_agreement_table(agreements_data) {
+      agreement_records = JSON.parse(agreements_data);
+      //First destroy any old version of the table to refresh anew
+      if ($.fn.dataTable.isDataTable('#data_table')) {
+        table.destroy();
+        $('#data_table').empty();
+      }
+
+      table = $('#data_table').DataTable({
+        retrieve: true,
+        data: agreement_records,
+        columnDefs: [
+          { visible: false, targets: 1 },
+          { visible: false, targets: 2 },
+          {
+            targets: 0,
+            searchable: false,
+            orderable: false,
+            className: 'dt-body-center',
+            render: function(data, type, row) {
+              return `
                                         <div class="btn-group btn-group-xs">
-                                            <a 
-                                                type="button" 
-                                                class="btn btn-warning" 
+                                            <a
+                                                type="button"
+                                                class="btn btn-warning"
                                                 href="/workflow/dashboard/project/'+row.id+'"
                                             >Edit
                                             </a><br>
-                                            <a 
-                                                type="button" 
-                                                class="btn btn-default" 
+                                            <a
+                                                type="button"
+                                                class="btn btn-default"
                                                 href="/workflow/projectagreement_detail/'+row.id+'"
                                                 >View</a></div>
                                         `;
-                        }
-                    }],
-                    columns: [
-                        { title: "Edit", class: "noExport"},
-                        { title: "PID", class: "noExport", data: "program__id" },
-                        { title: "SID", class: "noExport", data: "approval"},
-                        { title: "{{ user.activity_user.organization.level_1_label }}", data: "program__name",
-                            "defaultContent": "<i>Not set</i>"},
-                        { title: "{{ user.activity_user.organization.level_2_label }} Name", data: "project_name",},
-                        { title: "Sites", data: "site",
-                            "defaultContent": "<i>Not set</i>"},
-                        { title: "{{ user.activity_user.organization.level_2_label }} Code", data: "activity_code",
-                            "defaultContent": "<i>Not set</i>"},
-                        /*{ title: "Office", data: "office__name",
+            },
+          },
+        ],
+        columns: [
+          { title: 'Edit', class: 'noExport' },
+          { title: 'PID', class: 'noExport', data: 'program__id' },
+          { title: 'SID', class: 'noExport', data: 'approval' },
+          {
+            title: '{{ user.activity_user.organization.level_1_label }}',
+            data: 'program__name',
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title: '{{ user.activity_user.organization.level_2_label }} Name',
+            data: 'project_name',
+          },
+          {
+            title: 'Sites',
+            data: 'site',
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title: '{{ user.activity_user.organization.level_2_label }} Code',
+            data: 'activity_code',
+            defaultContent: '<i>Not set</i>',
+          },
+          /*{ title: "Office", data: "office__name",
                             "defaultContent": "<i>Not set</i>"},*/
-                        { title: "{{ user.activity_user.organization.level_4_label }}", data: "project_activity",
-                            "defaultContent": "<i>Not set</i>"},
-                        { title: "Sector", data: "sector__sector",
-                        "defaultContent": "<i>Not set</i>"},
-                        { title: "{{ user.activity_user.organization.level_2_label }} Type", data: "project_type",
-                            "defaultContent": "<i>Not set</i>"},
-                        /*{ title: "Account Code", data: "account_code",
+          {
+            title: '{{ user.activity_user.organization.level_4_label }}',
+            data: 'project_activity',
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title: 'Sector',
+            data: 'sector__sector',
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title: '{{ user.activity_user.organization.level_2_label }} Type',
+            data: 'project_type',
+            defaultContent: '<i>Not set</i>',
+          },
+          /*{ title: "Account Code", data: "account_code",
                             "defaultContent": "<i>Not set</i>"},*/
-                        /*{ title: "LIN Code", data: "lin_code",
+          /*{ title: "LIN Code", data: "lin_code",
                             "defaultContent": "<i>Not set</i>"},*/
-    
-                        { title: "Est. By", data: "estimated_by__name",
-                            "defaultContent": "<i>Not set</i>"
-                        },
-                        { title: "Total {{ user.activity_user.organization.level_2_label }} Budget",data: "total_estimated_budget",
-                            "defaultContent": "<i>Not set</i>"},
-                        { title: "Organizations Portion of {{ user.activity_user.organization.level_2_label }} Budget",data: "mc_estimated_budget",
-                            "defaultContent": "<i>Not set</i>"},
-                        { title: "Total Cost",data: "total_cost",
-                            "defaultContent": "<i>Not set</i>"}
-                    ],
-                    dom: "<'row'<'col-sm-2'B><'col-sm-5'l><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                    buttons: [
-                        {
-                            extend: 'csv',
-                            text: 'Export to CSV',
-                            title: '{{ user.activity_user.organization.level_2_label }} Report',
-                            exportOptions: { columns: "thead th:not(.noExport)" }
-                        }
-                    ]
-                } );
-            }
-    
-            function agreement_report() {
-                // get the program and indicator id from the url
-                agreement_id = document.URL.split('/')[5];
-                status_id = document.URL.split('/')[6];
-    
-                $.getJSON("/workflow/report_table/" + agreement_id + "/" + status_id + "/", function(data) {
-                    show_agreement_table(data['get_agreements']);
-                });
-            }
-            agreement_report();
-    
-    
-        });
-        function program_filter(program_id) {
-            //window.location.href = '/workflow/report/'+program_id+'/0';
-            $("#program_filter_value").data('programid', program_id);
-            table.draw();
-        }
-    
-        function status_filter(status_id) {
-            //window.location.href = '/workflow/report/0/'+status_id;
-            $("#status_filter_value").data("statusid", status_id);
-            table.draw();
-        }
-    </script>
-    <br/>
-    <div class="dropdown">
-        {% include "workflow/filter.html" %}
-    </div>
-    <div style="display: none;">
-        <span class="filter" id="status_filter_value"></span>
-        <span class="filter" id="program_filter_value"></span>
-    </div>
-    
-    
-    <br>
-    <div class="row">
-        <table 
-            class="table table-bordered" 
-            id="data_table" 
-            class="display" 
-            >
-        </table>
-    </div>
-    <!--
-    <div class="row" >
-        <button type="submit" class="btn btn-success" style="margin-top:10px" onClick="location.href='/workflow/report/0/none/?export=true&{{ request.GET.urlencode }}'">Export All</button>
-    </div>
-    -->
-    
-    <br/>
-</div>
 
+          {
+            title: 'Est. By',
+            data: 'estimated_by__name',
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title:
+              'Total {{ user.activity_user.organization.level_2_label }} Budget',
+            data: 'total_estimated_budget',
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title:
+              'Organizations Portion of {{ user.activity_user.organization.level_2_label }} Budget',
+            data: 'mc_estimated_budget',
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title: 'Total Cost',
+            data: 'total_cost',
+            defaultContent: '<i>Not set</i>',
+          },
+        ],
+        dom:
+          "<'row'<'col-sm-2'B><'col-sm-5'l><'col-sm-5'f>>" +
+          "<'row'<'col-sm-12'tr>>" +
+          "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        buttons: [
+          {
+            extend: 'csv',
+            text: 'Export to CSV',
+            title: '{{ user.activity_user.organization.level_2_label }} Report',
+            exportOptions: { columns: 'thead th:not(.noExport)' },
+          },
+        ],
+      });
+    }
+
+    function agreement_report() {
+      // get the program and indicator id from the url
+      agreement_id = document.URL.split('/')[5];
+      status_id = document.URL.split('/')[6];
+
+      $.getJSON(
+        '/workflow/report_table/' + agreement_id + '/' + status_id + '/',
+        function(data) {
+          show_agreement_table(data['get_agreements']);
+        },
+      );
+    }
+    agreement_report();
+  });
+  function program_filter(program_id) {
+    //window.location.href = '/workflow/report/'+program_id+'/0';
+    $('#program_filter_value').data('programid', program_id);
+    table.draw();
+  }
+
+  function status_filter(status_id) {
+    //window.location.href = '/workflow/report/0/'+status_id;
+    $('#status_filter_value').data('statusid', status_id);
+    table.draw();
+  }
+</script>
+
+<div class="container">
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+        {{ user.activity_user.organization.level_2_label }} Report
+      </h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        <div class="dropdown">
+          {% include "workflow/filter.html" %}
+        </div>
+        <div style="display: none;">
+          <span class="filter" id="status_filter_value"></span>
+          <span class="filter" id="program_filter_value"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <table class="table table-bordered" id="data_table"></table>
+</div>
 {% endblock content %}

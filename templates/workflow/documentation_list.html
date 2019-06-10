@@ -1,147 +1,167 @@
-{% extends "base.html" %}
-{% block bread_crumb %}
+{% extends "base.html" %} {% block content %}
 <div class="container">
-    <ol class="breadcrumb">
-      <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
-      {% if project_agreement_id != '0' %}
-        <li>
-            <a href="/workflow/dashboard/project/{{ project_agreement_id }}/">
-                {{ user.activity_user.organization.level_2_label }} Dashboards
-            </a>
-        </li>
-      {% endif %}
-      <li class="active">Documentation List</li>
-    </ol>
-</div>
-{% endblock %}
-
-{% block content %}
-<div class="container">
-    <h1>Document List</h1>
-    <div class="dropdown">
-      <button 
-        class="btn btn-default dropdown-toggle" 
-        type="button" id="dropdownMenu1" 
-        data-toggle="dropdown" 
-        aria-expanded="true"
-        >
-        {{ user.activity_user.organization.level_1_label }}(s)
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li role="presentation">
-                <a role="menuitem" tabindex="-1" onclick="program_filter(0)">
-                    {{ program.gaitid}} - {{ program.name }}
-                </a>
-            </li>
-            <li><a>-- All --</a></li>
-        {% for program in get_programs %}
-            <li role="presentation">
-                <a role="menuitem" tabindex="-1" onclick="program_filter({{program.id}})">
-                    {{ program.gaitid}} - {{ program.name }}
-                </a>
-            </li>
-        {% endfor %}
-      </ul>
-        <a href="/workflow/documentation_add" class="btn btn-large btn-info">
-            <i class="fa fa-plus"></i> New Document
-        </a>
-    
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">Documentation List</h4>
     </div>
-    <br/>
-    <!-- Table -->
-    <table class="table" id="documentationtable">
-    </table>
-    <script type="text/javascript">
-        $(document).ready(function() {
-          program_filter(0);
-        });
-    
-         function show_documentation_table(documentation_data) {
-                documentation_records = JSON.parse(documentation_data);
-                //First destroy any old version of the table to refresh anew
-                if ( $.fn.dataTable.isDataTable( '#documentationtable' ) ) {
-                    table.destroy();
-                    $('#documentationtable').empty();
-                };
-    
-                $('#documentationtable').on( 'page.dt', function () {
-                    $('html, body').animate({
-                        scrollTop: 0
-                    }, 300);
-                } );
-    
-    
-                table = $('#documentationtable').DataTable( {
-                     "order": [],
-                     "bFilter": false,
-                     'bLengthChange': false,
-                     "aoColumnDefs": [
-                               { "bSortable": false, "targets": [0, 1, 2, 3] }
-                            ],
-                    retrieve: true,
-                    data: documentation_records,
-                    columns: [
-                        { title: "Date Created", data: "create_date",
-                            "defaultContent": "<i>Not set</i>",
-                            "mRender": function (data, records, row) {
-                                    return '<a class="collecteddata" name=' + row.id + ' href="/workflow/documentation_update/'+row.id+'">' + row.create_date + '</a>';
-                                }},
-                        { title: "Document Name", data: "name",
-                            "defaultContent": "<i>Not set</i>",
-                            "mRender": function (data, narecord, row) {
-                                    return '<a class="collecteddata" name=' + row.id + ' href="/workflow/documentation_update/'+row.id+'">' + row.name + '</a>';
-                                }},
-                        { title: "Project", data: "project__project_name",
-                            "defaultContent": "<i>Not set</i>"},
-                        { title: "Delete/Update",
-                            "mRender": function (data, record, row) {
-                                    return '<a href="/workflow/documentation_update/'+row.id+'" class="btn btn-xs btn-info">Edit</a><a href="/workflow/documentation_delete/'+row.id+'" class="btn btn-xs btn-danger">Delete Document</a>';
-                                }
-                        }
-                        ]
-                } );
-    
-            }
-    
-            function program_filter(program_id) {
-                    // Filter documents
-                    console.log(program_id);
-    
-                    if (program_id != 0) {
-    
-                        $.getJSON("/workflow/documentation_objects/"+ program_id + "/0/", function(data) {
-                            show_documentation_table(data['get_documentation']);
-                        });
-    
-                    }  else{
-    
-                        program_id = document.URL.split('/')[5];
-                        project_id = document.URL.split('/')[6];
-    
-                        $.getJSON("/workflow/documentation_objects/"+program_id+"/"+project_id+"/", function(data) {
-                            show_documentation_table(data['get_documentation']);
-                        });
-                    }
-                }
-    
-    </script>
-    
-    
-    <!-- Modal -->
-    <div 
-        class="modal fade" 
-        id="importModal" 
-        tabindex="-1" 
-        role="dialog" 
-        aria-labelledby="myModalLabel" 
-        aria-hidden="true"
-        >
-        <div class="modal-dialog">
-            <div class="modal-content">
-            </div> <!-- /.modal-content -->
-        </div> <!-- /.modal-dialog -->
-    </div> <!-- /.modal -->
-</div>
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-sm btn-default dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              {{ user.activity_user.organization.level_1_label }}(s)
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">--All--</a></li>
+              {% for program in get_programs %}
+              <li>
+                <a href="#">{{ program.gaitid }} - {{ program.name }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Table -->
+  <table class="table" id="documentationtable"></table>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      program_filter(0);
+    });
+
+    function show_documentation_table(documentation_data) {
+      documentation_records = JSON.parse(documentation_data);
+      //First destroy any old version of the table to refresh anew
+      if ($.fn.dataTable.isDataTable('#documentationtable')) {
+        table.destroy();
+        $('#documentationtable').empty();
+      }
+
+      $('#documentationtable').on('page.dt', function() {
+        $('html, body').animate(
+          {
+            scrollTop: 0,
+          },
+          300,
+        );
+      });
+
+      table = $('#documentationtable').DataTable({
+        order: [],
+        bFilter: false,
+        bLengthChange: false,
+        aoColumnDefs: [{ bSortable: false, targets: [0, 1, 2, 3] }],
+        retrieve: true,
+        data: documentation_records,
+        columns: [
+          {
+            title: 'Date Created',
+            data: 'create_date',
+            defaultContent: '<i>Not set</i>',
+            mRender: function(data, records, row) {
+              return (
+                '<a class="collecteddata" name=' +
+                row.id +
+                ' href="/workflow/documentation_update/' +
+                row.id +
+                '">' +
+                row.create_date +
+                '</a>'
+              );
+            },
+          },
+          {
+            title: 'Document Name',
+            data: 'name',
+            defaultContent: '<i>Not set</i>',
+            mRender: function(data, narecord, row) {
+              return (
+                '<a class="collecteddata" name=' +
+                row.id +
+                ' href="/workflow/documentation_update/' +
+                row.id +
+                '">' +
+                row.name +
+                '</a>'
+              );
+            },
+          },
+          {
+            title: 'Project',
+            data: 'project__project_name',
+            defaultContent: '<i>Not set</i>',
+          },
+          {
+            title: 'Delete/Update',
+            mRender: function(data, record, row) {
+              return (
+                '<a href="/workflow/documentation_update/' +
+                row.id +
+                '" class="btn btn-xs btn-info">Edit</a><a href="/workflow/documentation_delete/' +
+                row.id +
+                '" class="btn btn-xs btn-danger">Delete Document</a>'
+              );
+            },
+          },
+        ],
+      });
+    }
+
+    function program_filter(program_id) {
+      // Filter documents
+      console.log(program_id);
+
+      if (program_id != 0) {
+        $.getJSON(
+          '/workflow/documentation_objects/' + program_id + '/0/',
+          function(data) {
+            show_documentation_table(data['get_documentation']);
+          },
+        );
+      } else {
+        program_id = document.URL.split('/')[5];
+        project_id = document.URL.split('/')[6];
+
+        $.getJSON(
+          '/workflow/documentation_objects/' +
+            program_id +
+            '/' +
+            project_id +
+            '/',
+          function(data) {
+            show_documentation_table(data['get_documentation']);
+          },
+        );
+      }
+    }
+  </script>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="importModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content"></div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+</div>
 {% endblock content %}

@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block content %} 
+{% extends "base.html" %} {% block content %}
 
 {% include 'shared/level1_modal_form.html' %}
 
@@ -279,12 +279,12 @@
   </div>
   {% endfor %}
 
-  <!-- Sub navigation -->
-  <div class="sub-navigation">
-    <div class="sub-navigation-header">
-      <h4 class="page-title">Activity Dashboard</h4>
-    </div>
-    <div class="sub-navigation-actions">
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+      <div class="sub-navigation-header">
+        <h4 class="page-title">Activity Dashboard</h4>
+      </div>
+      <div class="sub-navigation-actions">
       <!-- sample action buttons -->
       <div class="btn-group" role="group" aria-label="">
         <div class="btn-group" role="group">
@@ -295,10 +295,10 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            {% if selected_countries_list %} 
-            {% for item in selected_countries_list %} 
-            {{ item.country }} {% endfor %} 
-            {% else %} Country 
+            {% if selected_countries_list %}
+            {% for item in selected_countries_list %}
+            {{ item.country }} {% endfor %}
+            {% else %} Country
             {% endif %} Dashboard
             <span class="caret"></span>
           </button>
@@ -349,7 +349,7 @@
        </button>
       </div>
 
-      
+
     </div>
   </div>
 
@@ -389,16 +389,16 @@
               <th>Indicator Data</th>
               <th>W/Evidence</th>
             </tr>
-            {%for value in count_evidence %} 
-            {%for item in countries %} 
+            {%for value in count_evidence %}
+            {%for item in countries %}
             {% if item.country == value.indicator__program__country__country %}
             <tr>
               <td>{{ value.indicator__program__country__country }}</td>
               <td>{{ value.indicator_count }}</td>
               <td>{{ value.evidence_count }}</td>
             </tr>
-            {% endif %} 
-            {%endfor%} 
+            {% endif %}
+            {%endfor%}
             {%endfor%}
           </table>
         </div>
@@ -496,7 +496,7 @@
         <div class="panel-body">
           <p>
             <b
-              >Sites {% if get_filtered_name %} for {{ get_filtered_name }} 
+              >Sites {% if get_filtered_name %} for {{ get_filtered_name }}
               {% endif %}</b
             >
           </p>
@@ -525,7 +525,7 @@
     <div class="col-md-12">
       <div class="panel panel-info">
         <div class="panel-heading">
-          Indicators {% if getFilteredName %} for {{ getFilteredName }} 
+          Indicators {% if getFilteredName %} for {{ getFilteredName }}
           {% endif %}
         </div>
         <div id="container_column"></div>
