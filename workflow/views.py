@@ -1961,7 +1961,7 @@ class StakeholderCreate(CreateView):
 
     def get_initial(self):
 
-        country = get_country(self.request.user)[0]
+        country = get_country(self.request.user).first()
 
         initial = {
             'agreement': self.kwargs['id'],
@@ -2658,7 +2658,7 @@ def objectives_list(request):
             description=data.get('description'),
             organization=activity_user.organization,
             parent=parent_objective)
-            
+
         objective.save()
 
         return HttpResponseRedirect('/workflow/objectives')
