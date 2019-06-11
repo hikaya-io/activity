@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
-
 <ol class="breadcrumb">
 
 </ol>
@@ -9,6 +8,7 @@
 {% load render_table from django_tables2 %}
 
 {% block page_title %}<!-- Sub navigation -->
+<div class = "container">
 <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h3 class="page-title">Indicator Report</h3>
@@ -153,6 +153,7 @@
         <br/>
 
         <div id="wait-animation" class="ajaxLoader" style="display: none;"></div>
+    </div>
     </div>
 
 {% endblock content %}
