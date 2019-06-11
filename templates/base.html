@@ -15,6 +15,16 @@
 
     <link rel="icon" href="{% static 'img/favicon.ico' %}" />
 
+    <link
+      href="http://fonts.googleapis.com/css?family=Lato:400,700"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Datatables css for HTML tables -->
     <link
       href="{% static 'DataTables/datatables.min.css' %}"
@@ -273,12 +283,28 @@
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown-submenu">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-home"></span>
+                {{ user.activity_user.organization.name }}<b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu" id="bookmarks">
+                {% if user.activity_user.organizations %} {% for org in user.activity_user.organizations.all %}
+                <li>
+                  <a href="/accounts/organization/{{ org.id }}/">
+                    <span class="glyphicon glyphicon-triangle-right"></span>
+                    {{ org.name }}
+                  </a>
+                </li>
+                {% endfor %} {% endif %}
+              </ul>
+            </li>
+
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 {% if "demo" in request.build_absolute_uri %}
                 <span class="label label-danger">DEMO</span>
-                {% elif "127." in request.build_absolute_uri or "localhost" in
-                request.build_absolute_uri %}
+                {% elif "127." in request.build_absolute_uri or "localhost" in request.build_absolute_uri %}
                 <span class="label label-danger">LOCAL</span>
                 {% elif "dev" in request.build_absolute_uri %}
                 <span class="label label-danger">DEV</span>
@@ -309,24 +335,6 @@
                     ><span class="glyphicon glyphicon-log-out"></span> Logout</a
                   >
                 </li>
-                {% endif %}
-              </ul>
-            </li>
-            <li class="dropdown-submenu">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <span class="glyphicon glyphicon-home"></span>
-                {{ user.activity_user.organization.name }}<b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu" id="bookmarks">
-                {% if user.activity_user.organizations %} 
-                {% for org in user.activity_user.organizations.all %}
-                <li>
-                  <a href="/accounts/organization/{{ org.id }}/">
-                    <span class="glyphicon glyphicon-triangle-right"></span>
-                    {{ org.name }}
-                  </a>
-                </li>
-                {% endfor %} 
                 {% endif %}
               </ul>
             </li>
@@ -395,9 +403,7 @@
       <div>{% block bread_crumb %}{% endblock %}</div>
       <div id="alerts">
         <!-- Any messages for users -->
-        {% block messages %} {% if messages %} 
-        {% for message in messages %} 
-        {% if 'safe' in message.tags %}
+        {% block messages %} {% if messages %} {% for message in messages %} {% if 'safe' in message.tags %}
         <div class="alert alert-{{ message.tags }}">{{ message | safe }}</div>
         {% else %}
         <div class="alert alert-{{ message.tags }}">{{ message | safe }}</div>
