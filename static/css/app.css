@@ -14,15 +14,6 @@ body {
     font-family: 'Lato', sans-serif !important;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'Inconsolata', monospace !important;
-}
-
 #footer {
     position: fixed;
     bottom: 0px;
@@ -63,6 +54,8 @@ button:focus,
     /* Hikaya Brand Color: */
     background-color: #25ced1;
     border: none;
+    font-family: 'Inconsolata', monospace !important;
+    font-size: 16px;
 }
 
 .navbar-activity .navbar-nav>li>a {
@@ -84,6 +77,14 @@ button:focus,
     float: none;
 }
 
+.navbar-nav>li>.dropdown-menu {
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    font-family: 'Lato', sans-serif;
+}
+.open>.drop
+
 /* - End Bootstrap Overrides */
 
 /* Custom page CSS
@@ -103,6 +104,7 @@ body>.container {
 
 #footer>.container {
     padding: 10px;
+    font-family: 'Inconsolata', monospace !important;
 }
 
 .filter {
