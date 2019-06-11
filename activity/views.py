@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum, Q, Count
+from django.db import IntegrityError
 
 from indicators.models import CollectedData, Indicator
 
@@ -25,7 +26,6 @@ from activity.forms import (
     RegistrationForm, BookmarkForm, OrganizationEditForm)
 from activity.settings import PROJECT_ROOT
 from django.core import serializers
-# --------------------------------------
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
@@ -384,6 +384,11 @@ def activate(request, uidb64, token):
         return HttpResponse('Activation link is invalid!')
 
 
+class EmailError(Exception):
+    """Existing Email Error"""
+    pass
+
+
 def register(request):
     """
     Register a new User profile using built in Django Users Model
@@ -397,14 +402,25 @@ def register(request):
         email = data.get('email_address')
         password = data.get('password')
 
-        user = User.objects.create_user(
-            first_name=first_name,
-            last_name=last_name,
-            username=username,
-            email=email,
-            password=password,
-            is_active=False,
-        )
+        try:
+            if User.objects.filter(email=email):
+                raise EmailError
+
+            user = User.objects.create_user(
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                email=email,
+                password=password,
+                is_active=False,
+            )
+        except EmailError:
+            return render(request, 'registration/register.html',
+                          {"message_email": "email already exists !"})
+        except IntegrityError:
+            return render(request, 'registration/register.html',
+                          {"message_username": "username already exists !"})
+
         current_site = get_current_site(request)
         mail_subject = 'Activate your Activity account.'
         message = render_to_string('registration/activate_email.html', {

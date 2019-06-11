@@ -1,15 +1,38 @@
+<div class="btn-group" role="group" aria-label="...">
+  <div class="btn-group" role="group">
+    <button
+      type="button"
+      class="btn btn-sm btn-default dropdown-toggle"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      {{ user.activity_user.organization.level_1_label }}(s)
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="#all">--All--</a></li>
+      {% for program in get_programs %}
+      <li>
+        <a href="#{{ program.id }}">{{ program.name }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
 
-<div class="btn-group" role="group">
-  <select id="program" class="listoption_filters">
-    <option>{{ user.activity_user.organization.level_1_label }}(s)</option>
-    <option value="all">---ALL---</option>
-    {% for program in get_programs %}
-      <option value="{{program.id}}">{{program.name}}</option>
-    {% endfor %}
-  </select>
-</div>
-<div class="btn-group" role="group">
-  <select id="project" disabled="true" class="listoption_filters">
-    <option>{{ user.activity_user.organization.level_2_label }}(s)</option>
-  </select>
+  <div class="btn-group" role="group">
+    <button
+      type="button"
+      class="btn btn-sm btn-default dropdown-toggle"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      {{ user.activity_user.organization.level_2_label }}(s)
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="#all">--All--</a></li>
+    </ul>
+  </div>
 </div>

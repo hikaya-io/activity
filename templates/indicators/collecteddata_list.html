@@ -1,268 +1,335 @@
-{% extends "base.html" %}
-{% block bread_crumb %}
-<ol class="breadcrumb">
-  <li><a href="/indicators/home/{{ program|default_if_none:0 }}/0/0/">Indicators</a></li>
-  <li class="active">Collected Indicator Data Report</li>
-</ol>
-{% endblock %}
+{% extends "base.html" %} {% block content %}
 
+<link rel="stylesheet" href="{{ STATIC_URL }}css/select2.min.css" />
+<script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+<script src="{{ STATIC_URL }}publicdashboard/js/vendor/Chart.min.js"></script>
+<script type="text/javascript">
+  var table;
+  $(document).ready(function() {
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+      var programId = $('#program_filter_value').data('programid');
+      var programIdInTable = parseInt(data[0]) || 0;
 
+      var indicatorId = $('#indicator_filter_value').data('indicatorid');
+      var indicatorIdInTable = parseInt(data[1]) || 0;
 
+      var typeId = $('#type_filter_value').data('typeid');
+      var typeIdInTable = parseInt(data[2]) || 0;
 
-{% block page_title %}Collected Indicator Data{% endblock %}
+      if (programId == 0) programId = undefined;
+      if (indicatorId == 0) indicatorId = undefined;
+      if (typeId == 0) typeId = undefined;
 
-{% block content %}
+      if (
+        (isNaN(programId) && isNaN(indicatorId) && isNaN(typeId)) ||
+        (isNaN(programId) && isNaN(indicatorId) && typeId == typeIdInTable) ||
+        (isNaN(programId) &&
+          indicatorId == indicatorIdInTable &&
+          isNaN(typeId)) ||
+        (isNaN(programId) &&
+          indicatorId == indicatorIdInTable &&
+          typeId == typeIdInTable) ||
+        (programId == programIdInTable &&
+          isNaN(indicatorId) &&
+          isNaN(typeId)) ||
+        (programId == programIdInTable &&
+          isNaN(indicatorId) &&
+          typeId == typeIdInTable) ||
+        (programId == programIdInTable &&
+          indicatorId == indicatorIdInTable &&
+          isNaN(typeId)) ||
+        (programId == programIdInTable &&
+          indicatorId == indicatorIdInTable &&
+          typeId == typeIdInTable)
+      ) {
+        return true; //
+      }
+      //if ((indicatorIdInTable == indicatorId)|| (indicatorId == undefined)) return true;
+      return false;
+    });
 
-{% include "indicators/filter.html"%}
+    // Build a filter for start and end date from Column 8 or date collected
+    $.fn.dataTableExt.afnFiltering.push(function(oSettings, aData, iDataIndex) {
+      var start = document.getElementById('dt1').value;
+      var end = document.getElementById('dt2').value;
+      var dateCol = aData[8];
 
-    <div style="display: none;">
-        <span class="filter" id="indicator_filter_value"></span>
-        <span class="filter" id="program_filter_value"></span>
-        <span class="filter" id="type_filter_value"></span>
+      //replace the - in all strings
+      var find = '-';
+      var re = new RegExp(find, 'g');
+
+      start = start.replace(re, '');
+      end = end.replace(re, '');
+      dateCol = dateCol.replace(re, '');
+
+      if (start === '' && end === '') {
+        return true;
+      } else if (start <= dateCol && end === '') {
+        return true;
+      } else if (end >= dateCol && start === '') {
+        return true;
+      } else if (start <= dateCol && end >= dateCol) {
+        return true;
+      }
+      return false;
+    });
+
+    function show_indicator_table(indicator_data) {
+      indicator_records = JSON.parse(indicator_data);
+      //First destroy any old version of the table to refresh anew
+      if ($.fn.dataTable.isDataTable('#data_table')) {
+        table.destroy();
+        $('#data_table').empty();
+      }
+
+      table = $('#data_table').DataTable({
+        retrieve: true,
+        data: indicator_records,
+        columnDefs: [
+          { visible: false, targets: 0 },
+          { visible: false, targets: 1 },
+          { visible: false, targets: 2 },
+        ],
+        columns: [
+          {
+            title: 'PID',
+            class: 'noExport',
+            data: 'indicator__program__id',
+          },
+          { title: 'IID', class: 'noExport', data: 'indicator__id' },
+          {
+            title: 'ITID',
+            class: 'noExport',
+            data: 'indicator__indicator_type__id',
+          },
+          {
+            title: '{{ user.activity_user.organization.level_1_label }}',
+            data: 'indicator__program__name',
+          },
+          {
+            title: 'Indicator',
+            data: 'name',
+            mRender: function(data, type, row) {
+              return (
+                '<a class="collecteddata" name=' +
+                row.indicator__id +
+                ' href="/indicators/collecteddata/{{ program }}/' +
+                row.indicator__id +
+                '/0/">' +
+                row.indicator__name +
+                '</a>'
+              );
+            },
+          },
+          { title: 'Level', data: 'indicator__level__name' },
+          {
+            title: 'Type',
+            data: 'indicator__indicator_type__indicator_type',
+          },
+          { title: 'Sector', data: 'indicator__sector__sector' },
+          { title: 'Baseline', data: 'indicator__baseline' },
+          { title: 'LOP Target', data: 'indicator__lop_target' },
+          { title: 'KPI', data: 'indicator__key_performance_indicator' },
+          {
+            title: 'Date Collected',
+            data: 'date_collected',
+            mRender: function(data, type, row) {
+              var javascriptDate = new Date(row.date_collected)
+                .toISOString()
+                .slice(0, 10);
+              return "<div class='date'>" + javascriptDate + '<div>';
+            },
+          },
+          {
+            title: 'Target',
+            data: 'periodic_target',
+            mRender: function(data, type, row) {
+              var target = parseFloat(row.periodic_target)
+                .toFixed(2)
+                .replace(/[.,]00$/, '');
+              return target;
+            },
+          },
+          {
+            title: 'Actual',
+            data: 'achieved',
+            mRender: function(data, type, row) {
+              var actual = parseFloat(row.achieved)
+                .toFixed(2)
+                .replace(/[.,]00$/, '');
+              return actual;
+            },
+          },
+          //{ title: "IDs", data: "id"},
+        ],
+        dom:
+          "<'row'<'col-sm-2'B><'col-sm-5'l><'col-sm-5'f>>" +
+          "<'row'<'col-sm-12'tr>>" +
+          "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        buttons: [
+          {
+            extend: 'csv',
+            title: 'Collected Indicator Data Report',
+            text: 'Export to CSV',
+            exportOptions: { columns: 'thead th:not(.noExport)' },
+          },
+        ],
+      });
+
+      // provide export button url for indicator
+      $('#export').click(function() {
+        do_export('indicator');
+      });
+      $('.collecteddata').click(function() {
+        data_report(this.name);
+      });
+      $('#program_report').click(function() {
+        program_report(this.name);
+      });
+
+      // Listen for filter and redraw
+      $('#dt2').change(function() {
+        table.draw();
+      });
+
+      $('#dt2').change(function() {
+        table.draw();
+      });
+    }
+
+    // INDICATOR REPORT
+    function indicator_report() {
+      // get the program and indicator id from the url
+      program_id = document.URL.split('/')[5];
+      //console.log(program_id);
+      indicator_id = document.URL.split('/')[6];
+      //console.log(indicator_id);
+      type_id = document.URL.split('/')[7];
+      //console.log(type_id);
+
+      $.getJSON(
+        '/indicators/collecteddata_report_data/' +
+          program_id +
+          '/' +
+          indicator_id +
+          '/' +
+          type_id +
+          '/',
+        function(data) {
+          //console.log(data['collected']);
+          show_indicator_table(data['collected']);
+          // If the indicator id is passed then sum up for the indicator
+          if (indicator_id > 0) {
+            document.getElementById('sum1').style.display = 'block';
+            document.getElementById('sum2').style.display = 'block';
+            document.getElementById('targeted1').innerHTML =
+              data['collected_sum']['targeted__sum'];
+            document.getElementById('achieved1').innerHTML =
+              data['collected_sum']['achieved__sum'];
+            document.getElementById('targeted2').innerHTML =
+              data['collected_sum']['targeted__sum'];
+            document.getElementById('achieved2').innerHTML =
+              data['collected_sum']['achieved__sum'];
+          }
+        },
+      );
+    }
+
+    // EXPORT DATA
+    function do_export(type) {
+      // get the program and  indicator id from the url
+      program_id = document.URL.split('/')[5];
+      indicator_id = document.URL.split('/')[6];
+      type_id = document.URL.split('/')[7];
+      new_location =
+        '/indicators/collecteddata_report_data/' +
+        program_id +
+        '/' +
+        indicator_id +
+        '/' +
+        type_id +
+        '/' +
+        'export';
+      window.location.assign(new_location);
+    }
+
+    indicator_report();
+  });
+
+  $('#id_filtersDropdown').on(
+    'programFilterUpdated',
+    '#id_programs_filter_dropdown',
+    function(e) {
+      table.draw();
+    },
+  );
+
+  $('#id_filtersDropdown').on(
+    'indicatorFilterUpdated',
+    '#id_indicators_filter_dropdown',
+    function(e) {
+      table.draw();
+    },
+  );
+
+  $('#id_filtersDropdown').on(
+    'indicatorTypeFilterUpdated',
+    '#id_indicatortypes_filter_dropdown',
+    function(e) {
+      table.draw();
+    },
+  );
+</script>
+
+<div class="container">
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">Collected Indicator Data</h4>
     </div>
-
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/select2.min.css">
-    <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
-    <script src="{{ STATIC_URL }}publicdashboard/js/vendor/Chart.min.js"></script>
-    <script type="text/javascript">
-        var table;
-        $(document).ready(function() {
-
-            $.fn.dataTable.ext.search.push(
-                function( settings, data, dataIndex ) {
-                    var programId = $("#program_filter_value").data('programid');
-                    var programIdInTable = parseInt(data[0]) || 0;
-
-                    var indicatorId = $("#indicator_filter_value").data('indicatorid');
-                    var indicatorIdInTable = parseInt(data[1]) || 0;
-
-                    var typeId = $("#type_filter_value").data('typeid');
-                    var typeIdInTable = parseInt(data[2]) || 0;
-
-                    if (programId == 0) programId = undefined;
-                    if (indicatorId == 0) indicatorId = undefined;
-                    if (typeId == 0) typeId = undefined;
-
-                    if (
-                        ( isNaN(programId) && isNaN(indicatorId) && isNaN(typeId) ) ||
-                        ( isNaN(programId) && isNaN(indicatorId) && typeId == typeIdInTable) ||
-                        ( isNaN(programId) && indicatorId == indicatorIdInTable && isNaN(typeId)) ||
-                        ( isNaN(programId) && indicatorId == indicatorIdInTable && typeId == typeIdInTable) ||
-                        ( programId == programIdInTable && isNaN(indicatorId) && isNaN(typeId)) ||
-                        ( programId == programIdInTable && isNaN(indicatorId) && typeId == typeIdInTable) ||
-                        ( programId == programIdInTable && indicatorId == indicatorIdInTable && isNaN(typeId) ) ||
-                        ( programId == programIdInTable && indicatorId == indicatorIdInTable && typeId == typeIdInTable)
-                        )
-                    {
-                        return true; //
-                    }
-                    //if ((indicatorIdInTable == indicatorId)|| (indicatorId == undefined)) return true;
-                    return false;
-                }
-            );
-
-            // Build a filter for start and end date from Column 8 or date collected
-            $.fn.dataTableExt.afnFiltering.push(
-                function( oSettings, aData, iDataIndex ) {
-
-                    var start = document.getElementById('dt1').value;
-                    var end = document.getElementById('dt2').value;
-                    var dateCol = aData[8];
-
-                    //replace the - in all strings
-                    var find = '-';
-                    var re = new RegExp(find, 'g');
-
-                    start = start.replace(re,'');
-                    end = end.replace(re,'');
-                    dateCol = dateCol.replace(re,'');
-
-                    if ( start === "" && end === "" )
-                    {
-                        return true;
-                    }
-                    else if ( start <= dateCol && end === "")
-                    {
-                        return true;
-                    }
-                    else if ( end >= dateCol && start === "")
-                    {
-                        return true;
-                    }
-                    else if (start <= dateCol && end >= dateCol)
-                    {
-                        return true;
-                    }
-                    return false;
-                }
-            );
-
-            function show_indicator_table(indicator_data) {
-
-                indicator_records = JSON.parse(indicator_data);
-                //First destroy any old version of the table to refresh anew
-                if ( $.fn.dataTable.isDataTable( '#data_table' ) ) {
-                    table.destroy();
-                    $('#data_table').empty();
-                };
-
-                table = $('#data_table').DataTable( {
-                    retrieve: true,
-                    data: indicator_records,
-                    "columnDefs": [
-                        { "visible": false, "targets": 0 },
-                        { "visible": false, "targets": 1 },
-                        { "visible": false, "targets": 2 },
-                    ],
-                    columns: [
-                        { title: "PID", class: "noExport", data: "indicator__program__id"},
-                        { title: "IID", class: "noExport", data: "indicator__id"},
-                        { title: "ITID", class: "noExport", data: "indicator__indicator_type__id"},
-                        { title: "{{ user.activity_user.organization.level_1_label }}", data: "indicator__program__name"},
-                        { title: "Indicator", data: "name",
-                                "mRender": function (data, type, row) {
-                                    return '<a class="collecteddata" name=' + row.indicator__id + ' href="/indicators/collecteddata/{{ program }}/' + row.indicator__id + '/0/">' + row.indicator__name + '</a>';
-                                }
-                            },
-                        { title: "Level", data: "indicator__level__name"},
-                        { title: "Type", data: "indicator__indicator_type__indicator_type"},
-                        { title: "Sector", data: "indicator__sector__sector"},
-                        { title: "Baseline", data: "indicator__baseline"},
-                        { title: "LOP Target", data: "indicator__lop_target"},
-                        { title: "KPI",data: "indicator__key_performance_indicator"},
-                        { title: "Date Collected", data: "date_collected",
-                                "mRender": function ( data, type, row ) {
-                                var javascriptDate = new Date(row.date_collected).toISOString().slice(0, 10);
-                                return "<div class='date'>"+javascriptDate+"<div>";}},
-                        { title: "Target", data: "periodic_target",
-                            "mRender": function(data, type, row) {
-                                var target = parseFloat(row.periodic_target).toFixed(2).replace(/[.,]00$/, "");
-                                return target;
-                            }
-                        },
-                        { title: "Actual", data: "achieved",
-                            "mRender": function(data, type, row) {
-                                var actual = parseFloat(row.achieved).toFixed(2).replace(/[.,]00$/, "");
-                                return actual;
-                            }
-                        },
-                        //{ title: "IDs", data: "id"},
-                    ],
-                    dom: "<'row'<'col-sm-2'B><'col-sm-5'l><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                    buttons: [
-                        {
-                            extend: 'csv',
-                            title: 'Collected Indicator Data Report',
-                            text: 'Export to CSV',
-                            exportOptions: { columns: "thead th:not(.noExport)" }
-                        }
-                    ]
-                } );
-
-                // provide export button url for indicator
-                $('#export').click(function(){ do_export("indicator"); });
-                $('.collecteddata').click(function(){ data_report(this.name); });
-                $('#program_report').click(function(){ program_report(this.name); });
-
-                // Listen for filter and redraw
-                $('#dt2').change( function() {
-                    table.draw();
-                });
-
-                $('#dt2').change( function() {
-                    table.draw();
-                });
-
-            }
-
-
-
-            // INDICATOR REPORT
-            function indicator_report() {
-                // get the program and indicator id from the url
-                program_id = document.URL.split('/')[5];
-                //console.log(program_id);
-                indicator_id = document.URL.split('/')[6];
-                //console.log(indicator_id);
-                type_id = document.URL.split('/')[7];
-                //console.log(type_id);
-
-                $.getJSON("/indicators/collecteddata_report_data/" + program_id + "/"  + indicator_id + "/" + type_id + "/", function(data) {
-                    //console.log(data['collected']);
-                    show_indicator_table(data['collected']);
-                    // If the indicator id is passed then sum up for the indicator
-                    if (indicator_id > 0){
-                        document.getElementById("sum1").style.display = 'block';
-                        document.getElementById("sum2").style.display = 'block';
-                        document.getElementById("targeted1").innerHTML=data['collected_sum']['targeted__sum'];
-                        document.getElementById("achieved1").innerHTML=data['collected_sum']['achieved__sum'];
-                        document.getElementById("targeted2").innerHTML=data['collected_sum']['targeted__sum'];
-                        document.getElementById("achieved2").innerHTML=data['collected_sum']['achieved__sum'];
-                        }
-                });
-            }
-
-            // EXPORT DATA
-            function do_export(type) {
-                // get the program and  indicator id from the url
-                program_id = document.URL.split('/')[5];
-                indicator_id = document.URL.split('/')[6];
-                type_id = document.URL.split('/')[7];
-                new_location="/indicators/collecteddata_report_data/" + program_id + "/" + indicator_id + "/" + type_id + "/" + "export";
-                window.location.assign(new_location);
-
-            }
-
-            indicator_report();
-
-        });
-
-
-        $("#id_filtersDropdown").on("programFilterUpdated", "#id_programs_filter_dropdown", function(e){
-            table.draw();
-        });
-
-        $("#id_filtersDropdown").on("indicatorFilterUpdated", "#id_indicators_filter_dropdown", function(e){
-            table.draw();
-        });
-
-
-        $("#id_filtersDropdown").on("indicatorTypeFilterUpdated", "#id_indicatortypes_filter_dropdown", function(e){
-            table.draw();
-        });
-
-    </script>
-    <div id="sum1" style="display: none; float: right;">
-        <p>
-            <b>Targeted Total:</b> <span class="badge" id="targeted1"></span>&nbsp;
-            <b>Achieved Total:</b> <span class="badge" id="achieved1"></span>
-        </p>
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        {% include "indicators/filter.html"%}
+        <div style="display: none;">
+          <span class="filter" id="indicator_filter_value"></span>
+          <span class="filter" id="program_filter_value"></span>
+          <span class="filter" id="type_filter_value"></span>
+        </div>
+        <ol class="breadcrumb"></ol>
+      </div>
     </div>
-    <div>&nbsp;</div>
-    <div id="program_table_div">
-        <table border="2" cellspacing="5" cellpadding="5">
-            <tbody><tr>
-                <td>Start Date: </td>
-                <td><input type="text" id="dt1" class="datepicker"></td>
-            </tr>
-            <tr>
-                <td>End Date: </td>
-                <td><input type="text" id="dt2" class="datepicker"></td>
-            </tr>
-        </tbody>
-        </table>
-        <br/>
-        <table class="table table-bordered" id="data_table">
-        </table>
-    </div>
-    <div id="sum2" style="display: none; float: right;">
-        <p>
-            <b>Targeted Total:</b> <span class="badge" id="targeted2"></span>&nbsp;
-            <b>Achieved Total:</b> <span class="badge" id="achieved2"></span>
-        </p>
-    </div>
-    <br/>
-    <!-- <button type="button" class="btn btn-success" id="export">Export All</button> -->
-    <div id="wait-animation" class="ajaxLoader" style="display: none;"></div>
-
+  </div>
+  <div id="sum1" style="display: none; float: right;">
+    <p>
+      <b>Targeted Total:</b> <span class="badge" id="targeted1"></span>&nbsp;
+      <b>Achieved Total:</b> <span class="badge" id="achieved1"></span>
+    </p>
+  </div>
+  <div>&nbsp;</div>
+  <div id="program_table_div">
+    <table border="2" cellspacing="5" cellpadding="5">
+      <tbody>
+        <tr>
+          <td>Start Date:</td>
+          <td><input type="text" id="dt1" class="datepicker" /></td>
+        </tr>
+        <tr>
+          <td>End Date:</td>
+          <td><input type="text" id="dt2" class="datepicker" /></td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <table class="table table-bordered" id="data_table"></table>
+  </div>
+  <div id="sum2" style="display: none; float: right;">
+    <p>
+      <b>Targeted Total:</b> <span class="badge" id="targeted2"></span>&nbsp;
+      <b>Achieved Total:</b> <span class="badge" id="achieved2"></span>
+    </p>
+  </div>
+  <br />
+  <!-- <button type="button" class="btn btn-success" id="export">Export All</button> -->
+  <div id="wait-animation" class="ajaxLoader" style="display: none;"></div>
+</div>
 {% endblock content %}
