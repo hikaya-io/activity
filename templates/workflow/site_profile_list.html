@@ -201,7 +201,7 @@
             >
           </li>
 
-          {% ifnotequal get_site_profile.next_page_number get_site_profile.paginator.num_pages %} 
+          {% ifnotequal get_site_profile.next_page_number get_site_profile.paginator.num_pages %}
           {% with get_site_profile.paginator.num_pages as num_pages %}
           <li><a href="">...</a></li>
           <li>

@@ -133,20 +133,20 @@ class CustomDashboardForm(forms.ModelForm):
             <tr>
                 <td>{{ get_custom_dashboard.dashboard_name }}</td>
                 <td>{{ get_custom_dashboard.dashboard_description }}</td>
-                <td> {% if get_custom_dashboard.is_public == 1 %} Yes 
+                <td> {% if get_custom_dashboard.is_public == 1 %} Yes
                      {% else %} No {% endif %}</td>
                 <td>{{ get_custom_dashboard.theme }}</td>
                 <td>{{ get_custom_dashboard.program }}</td>
-                <td> <a class="dashboards" data-toggle="modal" 
-                data-target="#myModal" 
+                <td> <a class="dashboards" data-toggle="modal"
+                data-target="#myModal"
                 href='/configurabledashboard/edit/{{pk}}'>Edit</a> </td>
             </tr>
           </table>
-          <a class="dashboard_components btn btn-primary" 
+          <a class="dashboard_components btn btn-info"
             data-target="#add-components" data-toggle="tab">
-                Next Step: Add Components</a>      
-          <a class="dashboards btn btn-link" style='float: right;' 
-          href='/configurabledashboard/delete/{{pk}}' 
+                Next Step: Add Components</a>
+          <a class="dashboards btn btn-link" style='float: right;'
+          href='/configurabledashboard/delete/{{pk}}'
                 data-toggle="modal" data-target="#myModal">
                     Cancel / Return to Menu</a>
       {% endif %}
@@ -161,7 +161,7 @@ class CustomDashboardForm(forms.ModelForm):
             {% if get_custom_dashboard.theme == 'test_theme' %}
                 Layout Image for Test Theme Goes Here<br><br>
             {% elif get_custom_dashboard.theme %}
-                Layout Image for your Theme Goes Here: 
+                Layout Image for your Theme Goes Here:
                     {{get_custom_dashboard.theme}}<br><br>
             {% endif %}
         <div class='panel panel-default'>
@@ -178,12 +178,12 @@ class CustomDashboardForm(forms.ModelForm):
                         <tr>
                             <td> {{key}} </td>
                             <td> {{value}} </td>
-                            <td> {{get_custom_dashboard.componentset}} 
-                                <div class="form-group"> 
+                            <td> {{get_custom_dashboard.componentset}}
+                                <div class="form-group">
                                     <select class="form-control" id="sel1">
                             {% for component in get_dashboard_components %}
                                 {% if component.component_type == value %}
-                                    <option value={{component.id}}> 
+                                    <option value={{component.id}}>
                                     {{component.component_name}} </option>
                                 {% endif %}
                             {% empty %}
@@ -193,8 +193,8 @@ class CustomDashboardForm(forms.ModelForm):
                                 </div>
                             </td>
                             <td></td>
-                            <td><a class="dashboards" data-toggle="modal" 
-                                    data-target="#myModal" 
+                            <td><a class="dashboards" data-toggle="modal"
+                                    data-target="#myModal"
     href='/configurabledashboard/component_add/{{get_custom_dashboard.id}}/'>
     New</a></td>
                         </tr>
@@ -203,16 +203,16 @@ class CustomDashboardForm(forms.ModelForm):
             <div>
             <div class="panel panel-footer">
             Don't see a component or need to edit an existing component?<br>
-                <a class="dashboards" data-toggle="modal" 
-                    data-target="#myModal" 
-                        href='/configurabledashboard/component/{{pk}}'> 
+                <a class="dashboards" data-toggle="modal"
+                    data-target="#myModal"
+                        href='/configurabledashboard/component/{{pk}}'>
                             View Component Inventory </a></td>
             </div>
         </div>
     </div>
     </div>
         <div>
-            <a class="btn btn-primary" 
+            <a class="btn btn-info"
                 data-target="#add-dashboard-data-sources" data-toggle="tab">
                     Next Step: Add Data Sources</a>
         </div>
@@ -232,7 +232,7 @@ class CustomDashboardForm(forms.ModelForm):
         <div class='panel panel-default'>
             <div class='panel panel-body'>
                 <table class="table">
-                    <tr> 
+                    <tr>
                         <th>Position</th>
                         <th>Component Type</th>
                         <th>Component Name</th>
@@ -255,13 +255,13 @@ class CustomDashboardForm(forms.ModelForm):
                     <td>{% if component.data_required %}
                             {{component.data_required}}
                         {% else %} N/A {% endif %} </td>
-                    <td><div class="form-group" style="width: 75%;"> 
+                    <td><div class="form-group" style="width: 75%;">
                             <select class="form-control" id="sel2">
                                 <option value="external"> External </option>
                                 <option value="internal"> Internal </option>
                             </select>
                         </div></td>
-                    <td> <div class="form-group"> 
+                    <td> <div class="form-group">
                             <select class="form-control" id="sel3">
                                     <option value=0> None </option>
                                     {% for data in get_data_sources %}
@@ -273,29 +273,29 @@ class CustomDashboardForm(forms.ModelForm):
                         </div>
                     </td>
                     <td></td>
-                    <td><a class="dashboards" data-toggle="modal" 
-                        data-target="#myModal" 
+                    <td><a class="dashboards" data-toggle="modal"
+                        data-target="#myModal"
                             href='configurabledashboard/data_add/'> New </a>
                             </td>
                     {% for component in get_custom_dashboard.components.all %}
                         <td>{{component.component_name}}</td>
                         <td>{{component.data_required}} </td>
-                        <td><a class="dashboards" data-toggle="modal" 
-                        data-target="#myModal" 
+                        <td><a class="dashboards" data-toggle="modal"
+                        data-target="#myModal"
                                 href='configurabledashboard/component/{{pk}}/'>
                                     View</a></td>
-                        <td>{% if component.data_sources %} Yes 
-                            {% else %} 
+                        <td>{% if component.data_sources %} Yes
+                            {% else %}
                             No
                             {% endif %}
-                        </td>  
-                        <td> <a class="dashboards" data-toggle="modal" 
-                        data-target="#myModal" 
-                                href='configurabledashboard/data_add/'> 
+                        </td>
+                        <td> <a class="dashboards" data-toggle="modal"
+                        data-target="#myModal"
+                                href='configurabledashboard/data_add/'>
                                     New </a></td>
 
                     {% endfor %}
-                    
+
                 </tr>
             {% endfor %}
         {% else %}
@@ -312,17 +312,17 @@ class CustomDashboardForm(forms.ModelForm):
         {% endif %}
                 </table>
             <div>
-            <div class="panel panel-footer">Don't see your data source or 
+            <div class="panel panel-footer">Don't see your data source or
                 need to edit an existing data source?<br>
-                <a class="dashboards" data-toggle="modal" data-target="#myModal" 
-                        href='../../custom_dashboard/data/{{pk}}/'> 
+                <a class="dashboards" data-toggle="modal" data-target="#myModal"
+                        href='../../custom_dashboard/data/{{pk}}/'>
                             View All Data Sources</a></td>
             </div>
         </div>
     </div>
     </div>
         <div>
-            <a class="btn btn-primary" data-target="#assign-data" 
+            <a class="btn btn-primary" data-target="#assign-data"
                 data-toggle="tab">Next Step: Assign Data Values</a>
         </div>
     </div>
@@ -354,14 +354,14 @@ class CustomDashboardForm(forms.ModelForm):
                             {% endfor %}
                             </select>
                         {% endif %}
-                    </td>  
-                </tr>  
-                {% endfor %}               
+                    </td>
+                </tr>
+                {% endfor %}
             </tr>
             {% endfor %}
         </table>
         <div class="panel-footer">
-        <a class="btn btn-primary" data-target="#preview-submit" 
+        <a class="btn btn-success" data-target="#preview-submit"
             data-toggle="tab">Next Step: Preview & Submit</a>
         </div>
     </div>
@@ -370,8 +370,8 @@ class CustomDashboardForm(forms.ModelForm):
                                                  HTML("""
     <div class='panel panel-body'>
         {% if get_custom_dashboard %}
-            <a class="btn btn-info" data-toggle="modal" 
-                data-target="#myPreviewModal" aria-hidden="true" 
+            <a class="btn btn-info" data-toggle="modal"
+                data-target="#myPreviewModal" aria-hidden="true"
                     href="/workflow/custom_dashboard_preview/{{ pk }}">
                         Preview Dashboard</a>
         {% else %}
@@ -385,7 +385,7 @@ class CustomDashboardForm(forms.ModelForm):
                 <div class="modal-header"></div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" 
+                    <button type="button" class="btn btn-default"
                         data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -393,7 +393,7 @@ class CustomDashboardForm(forms.ModelForm):
     </div>
     """)),
                     FormActions(Submit('submit', 'Save',
-                                       css_class='btn-default'),
+                                       css_class='btn-success'),
                                 Reset('reset', 'Reset',
                                       css_class='btn-warning')))),
             HTML("""<br/>"""),

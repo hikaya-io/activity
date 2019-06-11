@@ -16,9 +16,9 @@
 
                           <div class="pull-left">{% include "indicators/filter.html"%}</div>
                           <div class="btn-group" role="group">
-                              <button class="btn btn-default {% if 'table' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/table/'" name="table">Table</button>&nbsp;
-                              <button class="btn btn-default {% if 'map' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/map/'" name="map">Map</button>&nbsp;
-                              <button class="btn btn-default {% if 'graph' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/graph/'" name="graph">Graph</button>
+                              <button class="btn btn-primary {% if 'table' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/table/'" name="table">Table</button>&nbsp;
+                              <button class="btn btn-primary {% if 'map' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/map/'" name="map">Map</button>&nbsp;
+                              <button class="btn btn-primary {% if 'graph' in request.get_full_path %} active{%endif%}" onClick="location.href='/indicators/data/{{ id }}/{{ program }}/{{ type }}/graph/'" name="graph">Graph</button>
                           </div>
                       </div>
                   </div>

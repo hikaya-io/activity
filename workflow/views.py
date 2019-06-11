@@ -2658,7 +2658,7 @@ def objectives_list(request):
             description=data.get('description'),
             organization=activity_user.organization,
             parent=parent_objective)
-            
+
         objective.save()
 
         return HttpResponseRedirect('/workflow/objectives')
