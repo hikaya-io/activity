@@ -52,6 +52,12 @@
       href="{% static 'jstree/dist/themes/default/style.min.css' %}"
     />
 
+    <!-- hierachy chart -->
+    <link
+      rel="stylesheet"
+      href="{% static 'hierachy_chart/jquery.orgchart.css' %}"
+    />
+
     <!-- JQuery UI CSS -->
     <link
       href="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.css' %}"
@@ -295,8 +301,7 @@
                 {{ user.activity_user.organization.name }}<b class="caret"></b>
               </a>
               <ul class="dropdown-menu" id="bookmarks">
-                {% if user.activity_user.organizations %} 
-                {% for org in user.activity_user.organizations.all %}
+                {% if user.activity_user.organizations %} {% for org in user.activity_user.organizations.all %}
                 <li>
                   <a href="/accounts/organization/{{ org.id }}/">
                     <span class="glyphicon glyphicon-triangle-right"></span>
@@ -410,8 +415,7 @@
       <div>{% block bread_crumb %}{% endblock %}</div>
       <div id="alerts">
         <!-- Any messages for users -->
-        {% block messages %} {% if messages %} {% for message in messages %} 
-        {% if 'safe' in message.tags %}
+        {% block messages %} {% if messages %} {% for message in messages %} {% if 'safe' in message.tags %}
         <div class="alert alert-{{ message.tags }}">{{ message | safe }}</div>
         {% else %}
         <div class="alert alert-{{ message.tags }}">{{ message | safe }}</div>
@@ -493,6 +497,9 @@
 
     <!-- jsTree -->
     <script src="{% static 'jstree/dist/jstree.min.js' %}"></script>
+
+    <!-- hierachy chart -->
+    <script src="{% static 'hierachy_chart/jquery.orgchart.js' %}"></script>
 
     <script type="text/javascript">
       toastr.options = {
