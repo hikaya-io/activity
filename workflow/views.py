@@ -2658,7 +2658,7 @@ def objectives_list(request):
             description=data.get('description'),
             organization=activity_user.organization,
             parent=parent_objective)
-            
+
         objective.save()
 
         return HttpResponseRedirect('/workflow/objectives')
@@ -2668,6 +2668,12 @@ def objectives_list(request):
     context = {'get_all_objectives': get_all_objectives}
 
     return render(request, 'components/objectives.html', context)
+
+
+def objectives_tree(request):
+    get_all_objectives = StrategicObjective.objects.all()
+    context = {'get_all_objectives': get_all_objectives}
+    return render(request, 'components/objectives-tree.html', context)
 
 
 def service_json(request, service):
