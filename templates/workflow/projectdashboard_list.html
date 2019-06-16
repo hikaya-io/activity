@@ -1,18 +1,22 @@
 {% extends "base.html" %}
-{% block bread_crumb %}
-<div>
-<ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
-  <li class="active">{{ user.activity_user.organization.level_2_label }} Dashboard</li>
-</ol>
-</div>
-{% endblock %}
 
-{% block page_title %}{{ user.activity_user.organization.level_2_label }} Dashboard{% endblock %}
+{% block page_title %}
+<div class ="container">
+        <!-- Sub navigation -->
+        <div class="sub-navigation">
+              <div class="sub-navigation-header">
+                <h4 class="page-title">{{ user.activity_user.organization.level_2_label }} Dashboard</h4>
+                      </div>
+                      <div class="sub-navigation-actions">
+                    <div class="sub-nav-item">
+                 </div>
+             {% endblock %}
+             </div>
+
 
 {% block content %}
 {% if project_id == 0 %}
-
+<div class ="container">
     <div class="jumbotron">
         <p>Name your new {{ user.activity_user.organization.level_2_label }} and associate it with a {{ user.activity_user.organization.level_1_label }}</p>
         <form role="form" class="form-inline" action="/workflow/projectagreement_add/" method="post">
@@ -41,6 +45,7 @@
             </div>
         </form>
     </div>
+        </div>
 
 {% else %}
     <br/>
