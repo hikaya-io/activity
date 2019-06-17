@@ -102,10 +102,10 @@ button:focus,
 
 .dropdown-bubble .dropdown-menu {
     margin-top: 1.5em;
-  }
-  
-  .dropdown-bubble .dropdown-menu:before,
-  .dropdown-bubble .dropdown-menu:after{
+}
+
+.dropdown-bubble .dropdown-menu:before,
+.dropdown-bubble .dropdown-menu:after {
     content: ' ';
     display: block;
     border-style: solid;
@@ -113,17 +113,17 @@ button:focus,
     border-color: transparent;
     position: absolute;
     right: 1em;
-  }
-  
-  .dropdown-bubble .dropdown-menu:before {
+}
+
+.dropdown-bubble .dropdown-menu:before {
     top: -.8em;
-    border-bottom-color: rgba(0,0,0,0.5);
-  }
-  
-  .dropdown-bubble .dropdown-menu:after {
+    border-bottom-color: rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-bubble .dropdown-menu:after {
     top: -.7em;
-      border-bottom-color: #fff;
-  }
+    border-bottom-color: #fff;
+}
 
 .navbar-activity .navbar-nav>li#user-initial>a:hover,
 .navbar-activity .navbar-nav>li#user-initial>a:focus {
@@ -131,7 +131,28 @@ button:focus,
     border-radius: 50%;
     width: 45px;
     height: 45px;
+    border-bottom: none;
+    color: #fff
+}
 
+.navbar-brand>img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.navbar-brand {
+    padding: 0px;
+}
+
+.navbar-activity .navbar-nav>li>a:hover,
+.navbar-activity .navbar-nav>li>a:focus,
+.navbar-activity .navbar-nav>li.active>a,
+.navbar-activity .navbar-nav>li.active>a:hover,
+.navbar-activity .navbar-nav>li.active>a:focus,
+.navbar-activity .navbar-nav .dropdown.open a.dropdown-toggle {
+    background: none;
+    color: #000000;
+    border-bottom: 2px solid #25ced1;
 }
 
 .open>.drop
@@ -141,10 +162,16 @@ button:focus,
 -------------------------------------------------- */
 /* Not required for template or sticky footer method. */
 
+nav>div>.container {
+    padding-right: 30px;
+    padding-left: 30px;
+}
 
 body>.container {
     height: 100%;
     margin-top: 40px;
+    /* padding-right: 0px;
+    padding-left: 0px; */
 }
 
 .alert {

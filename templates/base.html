@@ -117,11 +117,10 @@
       role="navigation"
     >
       <div class="container">
-        <div class="navbar-header">
-          <!-- <a class="navbar-brand" href="{% url 'index' %}">
+        <div class="">
+          <a class="navbar-brand" href="{% url 'index' %}">
             {% if user.is_authenticated %}
             <img
-              style="margin-top: -5px; max-width: 140px;"
               src="{{ user.activity_user.organization.logo.url }}"
             />
             {% else %}
@@ -130,7 +129,7 @@
               src="{% static 'img/hikaya-activity-logo.png' %}"
             />
             {% endif %}
-          </a> -->
+          </a>
           <!-- hamburger nav -->
           <button
             type="button"
@@ -171,7 +170,7 @@
                 </li>
               </ul>
             </li>
-            <li><a href="/indicators/home/0/0/0">Indicators</a></li>
+            <li class="{{ active }}"><a href="/indicators/home/0/0/0">Indicators</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                 >Form Library<b class="caret"></b
@@ -416,7 +415,7 @@
     <br />
     <div class="" style="margin-top:5px;">
       <br />
-      <div>{% block bread_crumb %}{% endblock %}</div>
+      <!-- <div>{% block bread_crumb %}{% endblock %}</div> -->
       <div id="alerts">
         <!-- Any messages for users -->
         {% block messages %} {% if messages %} {% for message in messages %} {% if 'safe' in message.tags %}
@@ -427,11 +426,9 @@
         <br />
         {% endif %} {% endblock messages %}
       </div>
-      <!-- Page title  -->
-      <h2>{% block page_title %}{% endblock %}</h2>
 
       <!-- Main body content -->
-      <p>{% block content %}{% endblock %}</p>
+      {% block content %}{% endblock %}
       <!--{% if not user.is_authenticated  %}
                 <a href="{% url "social:begin" "google-oauth2" %}">Google+</a>
             {% endif %}-->
