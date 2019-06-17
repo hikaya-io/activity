@@ -3,34 +3,6 @@
 <script src="{% static 'hierachy_chart/jquery-1.11.1.min.js' %}"></script>
 <script src="{% static 'hierachy_chart/jquery.orgchart.js' %}"></script>
 
-<script type="text/javascript">
-  let chartData = '{{objectives_as_json}}';
-  $(document).ready(function() {
-    /**
-     * @see https://www.jqueryscript.net/chart-graph/Create-An-Editable-Organization-Chart-with-jQuery-orgChart-Plugin.html
-     */
-    $('#objectivesChart').orgChart({
-      data: chartData, // your data
-
-      showControls: false, // display add or remove node button.
-
-      allowEdit: false, // click the node's title to edit
-
-      onAddNode: function(node) {},
-
-      onDeleteNode: function(node) {},
-
-      onClickNode: function(node) {},
-
-      newNodeText: 'Add Child', // text of add button
-    });
-  });
-</script>
-
-<pre>
-    {{ objectives_as_json }}
-</pre>
-
 <div class="container">
   <!-- Sub navigation -->
   <div class="sub-navigation">
@@ -78,3 +50,19 @@
 </div>
 
 {% endblock %}
+
+<script type="text/javascript">
+  let chartData = '{{objectives_as_json}}';
+
+  $(function() {
+    let org_chart = $('#objectivesChart').orgChart({
+      data: chartData, // your data
+      showControls: true, // display add or remove node button.
+      allowEdit: true, // click the node's title to edit
+      onAddNode: function(node) {},
+      onDeleteNode: function(node) {},
+      onClickNode: function(node) {},
+      newNodeText: 'Add Child', // text of add button
+    });
+  });
+</script>

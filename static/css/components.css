@@ -1,8 +1,3 @@
-/* buttons */
-.btn {
-    border-radius: 0px;
-}
-
 .hikaya-btn-primary {
     background: #005d58;
     color: #ffffff;
@@ -70,8 +65,3 @@
 .hikaya-active a:hover {
     color: #01579B;
 }
-
-.panel, .form-control, .select2 {
-    border-radius: 0px !important;
-}
-/* end of states */

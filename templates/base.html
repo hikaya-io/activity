@@ -118,7 +118,7 @@
     >
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="{% url 'index' %}">
+          <!-- <a class="navbar-brand" href="{% url 'index' %}">
             {% if user.is_authenticated %}
             <img
               style="margin-top: -5px; max-width: 140px;"
@@ -130,7 +130,7 @@
               src="{% static 'img/hikaya-activity-logo.png' %}"
             />
             {% endif %}
-          </a>
+          </a> -->
           <!-- hamburger nav -->
           <button
             type="button"
@@ -406,8 +406,11 @@
     <!-- .navbar collapse -->
     <script type="text/javascript">
       var myElement = document.getElementById('navid');
+      // myElement.style.backgroundColor =
+      //   '#{{ user.activity_user.organization.theme_color }}';
+
       myElement.style.backgroundColor =
-        '#{{ user.activity_user.organization.theme_color }}';
+        '#fff';
     </script>
     <br />
     <div class="" style="margin-top:5px;">

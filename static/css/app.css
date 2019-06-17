@@ -12,6 +12,7 @@ body {
     height: 100%;
     margin-bottom: 60px;
     font-family: 'Lato', sans-serif !important;
+    background-color: #f5f5f5;
 }
 
 #footer {
@@ -52,14 +53,15 @@ button:focus,
 
 .navbar-activity {
     /* Hikaya Brand Color: */
-    background-color: #25ced1;
+    background-color: #fff;
     border: none;
+    color: #737581;
     font-family: 'Inconsolata', monospace !important;
     font-size: 16px;
 }
 
 .navbar-activity .navbar-nav>li>a {
-    color: #fff;
+    color: #737581;
 }
 
 .navbar-activity .navbar-nav>li>a:hover,
@@ -83,8 +85,8 @@ button:focus,
     border-top-right-radius: 0;
     font-family: 'Lato', sans-serif;
 }
-.open>.drop
 
+.open>.drop
 /* - End Bootstrap Overrides */
 
 /* Custom page CSS
@@ -480,12 +482,13 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* Sub navigation*/
 .sub-navigation {
-    background: #f5f5f5;
+    background: #fff;
+    /*#dfdfdf; */
     display: flex;
     height: 51px;
     width: 100%;
     margin: 15px 0px;
-    padding: 0px 15px;
+    padding: 0px 10px;
 }
 
 .sub-navigation-header,
@@ -517,4 +520,52 @@ input[type=number]::-webkit-outer-spin-button {
 
 .mb-3 {
     margin-bottom: 3px;
+}
+
+.pagination>.active>a {
+    background-color: #25ced1;
+    border-color: #25ced1;
+}
+
+.pagination>li>a {
+    color: #25ced1;
+}
+
+.dataTables_wrapper {
+    background-color: #fff;
+    padding: 10px;
+}
+
+.text-danger {
+    color: #a94442 !important;
+    border-color: #a94442;
+}
+
+.btn-primary {
+    background-color: #25CED1;
+    border-color: #25CED1;
+}
+
+.btn-info {
+    background-color: #ff8360;
+    border-color: #ff8360;
+}
+
+.btn-success {
+    background-color: #2ac27f;
+    border-color: #2ac27f;
+}
+
+.btn-danger {
+    background-color: #e52c2c;
+    border-color: #e52c2c;
+}
+
+.btn-warning {
+    background-color: #ffbe0b;
+    border-color: #ffbe0b;
+}
+
+.table {
+    border-bottom: 2px solid #9b9b9b
 }
