@@ -13,6 +13,9 @@ body {
     margin-bottom: 60px;
     font-family: 'Lato', sans-serif !important;
     background-color: #f5f5f5;
+    font-size: 16px;
+    color: #737581;
+    font-weight: 100;
 }
 
 #footer {
@@ -57,7 +60,7 @@ button:focus,
     border: none;
     color: #737581;
     font-family: 'Inconsolata', monospace !important;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .navbar-activity .navbar-nav>li>a {
@@ -566,6 +569,11 @@ input[type=number]::-webkit-outer-spin-button {
     border-color: #ffbe0b;
 }
 
-.table {
-    border-bottom: 2px solid #9b9b9b
+.table>tbody>tr>td {
+    border-top: none;
+    border-bottom: 1px solid #dddddd
+}
+
+.table>tbody>tr>td {
+    vertical-align: middle;
 }
