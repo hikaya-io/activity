@@ -569,9 +569,8 @@ input[type=number]::-webkit-outer-spin-button {
     border-color: #ffbe0b;
 }
 
-.table>tbody>tr>td {
-    border-top: none;
-    border-bottom: 1px solid #dddddd
+.table>tbody>tr:last-child>td {
+    border-bottom: 1px solid #dddddd !important; 
 }
 
 .table>tbody>tr>td {
