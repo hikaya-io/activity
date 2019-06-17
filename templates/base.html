@@ -312,9 +312,9 @@
               </ul>
             </li>
 
-            <li class="dropdown">
+            <li class="dropdown text-center dropdown-bubble" id="user-initial">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                {% if "demo" in request.build_absolute_uri %}
+                <!-- {% if "demo" in request.build_absolute_uri %}
                 <span class="label label-danger">DEMO</span>
                 {% elif "127." in request.build_absolute_uri or "localhost" in request.build_absolute_uri %}
                 <span class="label label-danger">LOCAL</span>
@@ -323,8 +323,8 @@
                 {% elif "report" in request.build_absolute_uri %}
                 <span class="label label-info">REPORT</span>
                 {% endif %}
-                <span class="glyphicon glyphicon-user"></span>
-                {{ user.activity_user.name }} <b class="caret"></b>
+                <span class="glyphicon glyphicon-user"></span> -->
+                {{ user.activity_user.name | make_list | first }}
               </a>
 
               <ul class="dropdown-menu">
@@ -342,8 +342,9 @@
                   >
                 </li>
                 {% endif %} {% if user.is_authenticated %}
+                <li class="divider"></li>
                 <li>
-                  <a href="{% url 'logout' %}"
+                  <a href="{% url 'logout' %}" class="text-danger"
                     ><span class="glyphicon glyphicon-log-out"></span> Logout</a
                   >
                 </li>

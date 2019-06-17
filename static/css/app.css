@@ -89,6 +89,51 @@ button:focus,
     font-family: 'Lato', sans-serif;
 }
 
+#user-initial {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    background: #dfdfdf;
+    margin-top: 2.5px;
+    margin-bottom: 2.5px;
+    margin-left: 10px;
+    font-weight: 900;
+}
+
+.dropdown-bubble .dropdown-menu {
+    margin-top: 1.5em;
+  }
+  
+  .dropdown-bubble .dropdown-menu:before,
+  .dropdown-bubble .dropdown-menu:after{
+    content: ' ';
+    display: block;
+    border-style: solid;
+    border-width: 0 .5em .8em .5em;
+    border-color: transparent;
+    position: absolute;
+    right: 1em;
+  }
+  
+  .dropdown-bubble .dropdown-menu:before {
+    top: -.8em;
+    border-bottom-color: rgba(0,0,0,0.5);
+  }
+  
+  .dropdown-bubble .dropdown-menu:after {
+    top: -.7em;
+      border-bottom-color: #fff;
+  }
+
+.navbar-activity .navbar-nav>li#user-initial>a:hover,
+.navbar-activity .navbar-nav>li#user-initial>a:focus {
+    background-color: #8d8d8d;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+
+}
+
 .open>.drop
 /* - End Bootstrap Overrides */
 
