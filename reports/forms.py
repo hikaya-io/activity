@@ -60,7 +60,7 @@ class FilterForm(forms.Form):
         )
         self.helper.form_method = 'get'
         self.helper.form_action = '/reports/report/'
-        self.helper.add_input(Submit('submit', 'Submit', css_class='btn-sm'))
+        self.helper.add_input(Submit('submit', 'Submit', css_class='btn-success btn-sm'))
         self.helper.add_input(Reset(
             'reset', 'Reset', css_id='id_search_form_reset_btn',
             css_class='btn-warning btn-sm'))

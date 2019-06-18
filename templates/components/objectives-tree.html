@@ -1,0 +1,68 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<script src="{% static 'hierachy_chart/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'hierachy_chart/jquery.orgchart.js' %}"></script>
+
+<div class="container">
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+        Objectives
+      </h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <!-- sample action buttons -->
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="">
+          <a
+            role="button"
+            class="btn btn-sm btn-default"
+            href="{% url 'objectives' %}"
+          >
+            <i class="fa fa-list"></i> List
+          </a>
+
+          <a
+            role="button"
+            class="btn btn-sm btn-default disabled"
+            href="{% url 'objectives-tree' %}"
+          >
+            <i class="fa fa-sitemap"></i> Tree
+          </a>
+        </div>
+      </div>
+
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="">
+          <button
+            class="btn btn-sm hikaya-btn-secondary"
+            data-toggle="modal"
+            data-target="#addObjectiveModal"
+          >
+            <i class="fa fa-plus"></i> Add New Objective
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="objectivesChart"></div>
+</div>
+
+{% endblock %}
+
+<script type="text/javascript">
+  let chartData = '{{objectives_as_json}}';
+
+  $(function() {
+    let org_chart = $('#objectivesChart').orgChart({
+      data: chartData, // your data
+      showControls: true, // display add or remove node button.
+      allowEdit: true, // click the node's title to edit
+      onAddNode: function(node) {},
+      onDeleteNode: function(node) {},
+      onClickNode: function(node) {},
+      newNodeText: 'Add Child', // text of add button
+    });
+  });
+</script>

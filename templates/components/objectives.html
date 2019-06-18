@@ -11,19 +11,37 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {{ request.user.activity_user.organization.level_1_label }}s
+        Objectives
       </h4>
     </div>
     <div class="sub-navigation-actions">
       <!-- sample action buttons -->
-      <div class="btn-group" role="group" aria-label="">
-        <button
-          class="btn btn-sm hikaya-btn-secondary"
-          data-toggle="modal"
-          data-target="#addObjectiveModal"
-        >
-          <i class="fa fa-plus"></i> Add New Objective
-        </button>
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="">
+          <a role="button" class="btn btn-sm btn-default disabled">
+            <i class="fa fa-list"></i> List
+          </a>
+
+          <a
+            role="button"
+            class="btn btn-sm btn-default"
+            href="{% url 'objectives-tree' %}"
+          >
+            <i class="fa fa-sitemap"></i> Tree
+          </a>
+        </div>
+      </div>
+
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="">
+          <button
+            class="btn btn-sm btn-info"
+            data-toggle="modal"
+            data-target="#addObjectiveModal"
+          >
+            <i class="fa fa-plus"></i> Add New Objective
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -141,7 +159,7 @@
           </button>
           <button
             type="submit"
-            class="btn hikaya-btn-primary"
+            class="btn btn-success"
             id="saveObjective"
           >
             <i class="fa fa-save"></i> Save

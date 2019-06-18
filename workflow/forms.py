@@ -290,11 +290,11 @@ class ProjectAgreementForm(forms.ModelForm):
                     <td>{{ item.est_start_date|date:"m-d-Y" }}</td>
                     <td>{{ item.est_end_date|date:"m-d-Y" }}</td>
                     <td>{{ item.budget }}</td>
-                    <td><a class="benchmarks" data-toggle="modal" 
-                    data-target="#myModal" 
+                    <td><a class="benchmarks" data-toggle="modal"
+                    data-target="#myModal"
                     href='/workflow/benchmark_update/{{ item.id }}/'>
-                    Edit</a> | <a class="benchmarks" 
-                        href='/workflow/benchmark_delete/{{ item.id }}/' 
+                    Edit</a> | <a class="benchmarks"
+                        href='/workflow/benchmark_delete/{{ item.id }}/'
                         data-toggle="modal" data-target="#myModal">
                         Delete</a></td>
                 </tr>
@@ -302,7 +302,7 @@ class ProjectAgreementForm(forms.ModelForm):
               </table>
           {% endif %}
           <div class="panel-footer">
-            <a class="benchmarks" data-toggle="modal" data-target="#myModal" 
+            <a class="benchmarks" data-toggle="modal" data-target="#myModal"
             href="/workflow/benchmark_add/{{ pk }}">
                 Add Component</a>
           </div>
@@ -345,11 +345,11 @@ class ProjectAgreementForm(forms.ModelForm):
                     <td>{{ item.contributor}}</td>
                     <td>{{ item.description_of_contribution}}</td>
                     <td>{{ item.proposed_value}}</td>
-                    <td><a class="output" data-toggle="modal" 
-                    data-target="#myModal" 
+                    <td><a class="output" data-toggle="modal"
+                    data-target="#myModal"
                     href='/workflow/budget_update/{{ item.id }}/'>
-                    Edit</a> | <a class="output" 
-                    href='/workflow/budget_delete/{{ item.id }}/' 
+                    Edit</a> | <a class="output"
+                    href='/workflow/budget_delete/{{ item.id }}/'
                     data-toggle="modal" data-target="#myModal" >Delete</a>
                 </tr>
                 {% endfor %}
@@ -358,7 +358,7 @@ class ProjectAgreementForm(forms.ModelForm):
           </tbody>
           </table>
           <div class="panel-footer">
-            <a class="output" data-toggle="modal" data-target="#myModal" 
+            <a class="output" data-toggle="modal" data-target="#myModal"
             href="/workflow/budget_add/{{ pk }}">
             Add Budget Contribution</a>
           </div>
@@ -434,18 +434,18 @@ class ProjectAgreementForm(forms.ModelForm):
                     <td>{{ item.responsible_person}}</td>
                     <td>{{ item.frequency}}</td>
                     <td>{{ item.type}}</td>
-                    <td><a class="monitoring" data-toggle="modal" 
-                    data-target="#myModal" 
+                    <td><a class="monitoring" data-toggle="modal"
+                    data-target="#myModal"
                     href='/workflow/monitor_update/{{ item.id }}/'>
-                    Edit</a> | <a class="monitoring" 
-                    href='/workflow/monitor_delete/{{ item.id }}/' 
+                    Edit</a> | <a class="monitoring"
+                    href='/workflow/monitor_delete/{{ item.id }}/'
                     data-toggle="modal" data-target="#myModal">Delete</a>
                 </tr>
                 {% endfor %}
               </table>
           {% endif %}
           <div class="panel-footer">
-            <a class="monitoring" data-toggle="modal" data-target="#myModal" 
+            <a class="monitoring" data-toggle="modal" data-target="#myModal"
             href="/workflow/monitor_add/{{ pk }}">
                 Add Monitoring Data</a>
           </div>
@@ -496,13 +496,13 @@ class ProjectAgreementForm(forms.ModelForm):
                     <td><a href="{{ item.url}}" target="_new">{{ item.url}}</a>
                     </td>
                     <td>{{ item.description}}</td>
-                    <td><a class="monitoring" data-toggle="modal" 
-                    data-target="#myModal" 
+                    <td><a class="monitoring" data-toggle="modal"
+                    data-target="#myModal"
                     href='/workflow/documentation_agreement_update/
-                    {{ item.id }}/{{ pk }}/'>Edit</a> | 
-                        <a class="monitoring" 
+                    {{ item.id }}/{{ pk }}/'>Edit</a> |
+                        <a class="monitoring"
                         href='/workflow/documentation_agreement_delete/
-                        {{ item.id }}/' 
+                        {{ item.id }}/'
                             data-toggle="modal" data-target="#myModal">
                             Delete</a>
                 </tr>
@@ -511,7 +511,7 @@ class ProjectAgreementForm(forms.ModelForm):
           {% endif %}
           <div class="panel-footer">
             <a onclick="newPopup('/workflow/documentation_list/0/{{ pk }}',
-            'Add New Documentation'); return false;" 
+            'Add New Documentation'); return false;"
                 href="#" class="btn btn-sm btn-info">Add New Documentation</a>
           </div>
         </div>
@@ -735,11 +735,11 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
                     <td>{{ item.est_start_date|date:"m-d-Y" }}</td>
                     <td>{{ item.est_end_date|date:"m-d-Y" }}</td>
                     <td>{{ item.budget }}</td>
-                    <td><a class="benchmarks" data-toggle="modal" 
-                    data-target="#myModal" 
+                    <td><a class="benchmarks" data-toggle="modal"
+                    data-target="#myModal"
                     href='/workflow/benchmark_update/{{ item.id }}/'>
-                    Edit</a> | <a class="benchmarks" 
-                    href='/workflow/benchmark_delete/{{ item.id }}/' 
+                    Edit</a> | <a class="benchmarks"
+                    href='/workflow/benchmark_delete/{{ item.id }}/'
                     data-toggle="modal" data-target="#myModal">
                     Delete</a></td>
                 </tr>
@@ -747,7 +747,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
               </table>
           {% endif %}
           <div class="panel-footer">
-            <a class="benchmarks" data-toggle="modal" data-target="#myModal" 
+            <a class="benchmarks" data-toggle="modal" data-target="#myModal"
             href="/workflow/benchmark_add/{{ pk }}">
             Add Component</a>
           </div>
@@ -787,7 +787,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
                         <td>{{ item.description_of_contribution}}</td>
                         <td>{{ item.proposed_value}}</td>
                         <td><a class="output" href='/workflow/budget_update/
-                        {{ item.id }}/'>Edit</a> | 
+                        {{ item.id }}/'>Edit</a> |
                             <a class="output" href='/workflow/budget_delete/
                             {{ item.id }}/'>Delete</a>
                     </tr>
@@ -796,7 +796,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
             </tbody>
           </table>
           <div class="panel-footer">
-            <a class="output" data-toggle="modal" data-target="#myModal" 
+            <a class="output" data-toggle="modal" data-target="#myModal"
             href="/workflow/budget_add/{{ pk }}">
                 Add Budget Contribution</a>
           </div>
@@ -836,7 +836,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
             ),
 
             FormActions(
-                Submit('submit', 'Save', css_class='btn-default'),
+                Submit('submit', 'Save', css_class='btn-success'),
                 Reset('reset', 'Reset', css_class='btn-warning')
             ),
 
@@ -866,13 +866,13 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
                     <td><a href="{{ item.url}}" target="_new">{{ item.url}}</a>
                     </td>
                     <td>{{ item.description}}</td>
-                    <td><a class="monitoring" data-toggle="modal" 
-                    data-target="#myModal" 
+                    <td><a class="monitoring" data-toggle="modal"
+                    data-target="#myModal"
                     href='/workflow/documentation_agreement_update/
-                    {{ item.id }}/{{ pk }}/'>Edit</a> | 
-                    <a class="monitoring" 
+                    {{ item.id }}/{{ pk }}/'>Edit</a> |
+                    <a class="monitoring"
                     href='/workflow/documentation_agreement_delete/
-                    {{ item.id }}/' 
+                    {{ item.id }}/'
                     data-toggle="modal" data-target="#myModal">Delete</a>
                 </tr>
                 {% endfor %}
@@ -880,7 +880,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
           {% endif %}
           <div class="panel-footer">
             <a onclick="newPopup('/workflow/documentation_list/0/{{ pk }}',
-            'Add New Documentation'); return false;" 
+            'Add New Documentation'); return false;"
             href="#" class="btn btn-sm btn-info">Add New Documentation</a>
           </div>
         </div>
@@ -1000,7 +1000,7 @@ class ProjectCompleteCreateForm(forms.ModelForm):
                     ),
             ),
             FormActions(
-                Submit('submit', 'Save', css_class='btn-default')
+                Submit('submit', 'Save', css_class='btn-success')
             ),
         )
         super(ProjectCompleteCreateForm, self).__init__(*args, **kwargs)
@@ -1128,19 +1128,19 @@ class ProjectCompleteForm(forms.ModelForm):
                     <td>{{ item.actual_end_date|date:"m-d-Y"}}</td>
                     <td>{{ item.budget}}</td>
                     <td>{{ item.cost}}</td>
-                    <td><a class="benchmarks" data-toggle="modal" 
-                    data-target="#myModal" 
+                    <td><a class="benchmarks" data-toggle="modal"
+                    data-target="#myModal"
                     href='/workflow/benchmark_complete_update/{{ item.id }}/'>
-                    Edit</a> | 
-                    <a class="benchmarks" 
-                    href='/workflow/benchmark_complete_delete/{{ item.id }}/' 
+                    Edit</a> |
+                    <a class="benchmarks"
+                    href='/workflow/benchmark_complete_delete/{{ item.id }}/'
                     data-toggle="modal" data-target="#myModal">Delete</a></td>
                 </tr>
                 {% endfor %}
               </table>
           {% endif %}
           <div class="panel-footer">
-            <a class="benchmarks" data-toggle="modal" data-target="#myModal" 
+            <a class="benchmarks" data-toggle="modal" data-target="#myModal"
             href="/workflow/benchmark_complete_add/
             {{ id }}/?is_it_project_complete_form=true">Add Component</a>
           </div>
@@ -1188,11 +1188,11 @@ class ProjectCompleteForm(forms.ModelForm):
                     <td>{{ item.contributor}}</td>
                     <td>{{ item.contributor_description}}</td>
                     <td>{{ item.proposed_value}}</td>
-                    <td><a class="output" data-toggle="modal" 
-                    data-target="#myModal" 
+                    <td><a class="output" data-toggle="modal"
+                    data-target="#myModal"
                     href='/workflow/budget_update/{{ item.id }}/'>View
-                    </a> | <a class="output" 
-                    href='/workflow/budget_delete/{{ item.id }}/' 
+                    </a> | <a class="output"
+                    href='/workflow/budget_delete/{{ item.id }}/'
                     data-toggle="modal" data-target="#myModal" >Delete</a>
                 </tr>
                 {% endfor %}
@@ -1200,7 +1200,7 @@ class ProjectCompleteForm(forms.ModelForm):
           </tbody>
           </table>
           <div class="panel-footer">
-            <a class="output" data-toggle="modal" data-target="#myModal" 
+            <a class="output" data-toggle="modal" data-target="#myModal"
             href="/workflow/budget_add/
             {{ id }}/?is_it_project_complete_form=true">
             Add Budget Contribution</a>
@@ -1256,7 +1256,7 @@ class ProjectCompleteForm(forms.ModelForm):
             ),
 
             FormActions(
-                Submit('submit', 'Save', css_class='btn-default'),
+                Submit('submit', 'Save', css_class='btn-success'),
                 Reset('reset', 'Reset', css_class='btn-warning')
             ),
 
@@ -1286,13 +1286,13 @@ class ProjectCompleteForm(forms.ModelForm):
                     <td><a href="{{ item.url}}" target="_new">{{ item.url}}</a>
                     </td>
                     <td>{{ item.description}}</td>
-                    <td><a class="monitoring" data-toggle="modal" 
-                    data-target="#myModal" 
+                    <td><a class="monitoring" data-toggle="modal"
+                    data-target="#myModal"
                     href='/workflow/documentation_agreement_update/
-                    {{ item.id }}/{{ pk }}/'>Edit</a> | 
+                    {{ item.id }}/{{ pk }}/'>Edit</a> |
                     <a class="monitoring"
                      href='/workflow/documentation_agreement_delete/
-                     {{ item.id }}/' 
+                     {{ item.id }}/'
                     data-toggle="modal" data-target="#myModal">Delete</a>
                 </tr>
                 {% endfor %}
@@ -1300,7 +1300,7 @@ class ProjectCompleteForm(forms.ModelForm):
           {% endif %}
           <div class="panel-footer">
             <a onclick="newPopup('/workflow/documentation_list/0/{{ id }}',
-            'Add New Documentation'); 
+            'Add New Documentation');
             return false;" href="#" class="btn btn-sm btn-info">
             Add New Documentation</a>
           </div>
@@ -1459,13 +1459,13 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                             <td>{{ item.actual_end_date|date:"m-d-Y"}}</td>
                             <td>{{ item.budget}}</td>
                             <td>{{ item.cost}}</td>
-                            <td><a class="benchmarks" data-toggle="modal" 
-                            data-target="#myModal" 
+                            <td><a class="benchmarks" data-toggle="modal"
+                            data-target="#myModal"
                             href='/workflow/benchmark_complete_update/
-                            {{ item.id }}/'>Edit</a> | 
-                            <a class="benchmarks" 
+                            {{ item.id }}/'>Edit</a> |
+                            <a class="benchmarks"
                             href='/workflow/benchmark_complete_delete/
-                            {{ item.id }}/' 
+                            {{ item.id }}/'
                             data-toggle="modal" data-target="#myModal">
                             Delete</a></td>
                         </tr>
@@ -1473,8 +1473,8 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                 </table>
             {% endif %}
             <div class="panel-footer">
-                <a class="benchmarks" data-toggle="modal" 
-                data-target="#myModal" 
+                <a class="benchmarks" data-toggle="modal"
+                data-target="#myModal"
                 href="/workflow/benchmark_complete_add/
                 {{ id }}/?is_it_project_complete_form=true" id="btn_bench">
                 Add Component</a>
@@ -1509,12 +1509,12 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                                 <td>{{ item.contributor}}</td>
                                 <td>{{ item.contributor_description}}</td>
                                 <td>{{ item.proposed_value}}</td>
-                                <td><a class="output" data-toggle="modal" 
-                                data-target="#myModal" 
+                                <td><a class="output" data-toggle="modal"
+                                data-target="#myModal"
                                 href='/workflow/budget_update/{{ item.id }}/'>
-                                View</a> | 
-                                <a class="output" 
-                                href='/workflow/budget_delete/{{ item.id }}/' 
+                                View</a> |
+                                <a class="output"
+                                href='/workflow/budget_delete/{{ item.id }}/'
                                 data-toggle="modal" data-target="#myModal" >
                                 Delete</a>
                             </tr>
@@ -1523,7 +1523,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                 </tbody>
             </table>
             <div class="panel-footer">
-                <a class="output" data-toggle="modal" data-target="#myModal" 
+                <a class="output" data-toggle="modal" data-target="#myModal"
                 href="/workflow/budget_add/
                 {{ pk }}/?is_it_project_complete_form=true">
                 Add Budget Contribution</a>
@@ -1544,7 +1544,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                     {% for item in get_quantitative %}
                         {% ifchanged item.indicator.id %}
                             <tr>
-                                <td><a 
+                                <td><a
                                 href="/indicators/indicator_update/
                                 {{ item.indicator_id }}">
                                 {{ item.indicator}}<a/></td>
@@ -1575,7 +1575,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                     ),
             ),
             FormActions(
-                Submit('submit', 'Save', css_class='btn-default'),
+                Submit('submit', 'Save', css_class='btn-success'),
                 Reset('reset', 'Reset', css_class='btn-warning')
             ),
             HTML("""<br/>"""),
@@ -1598,12 +1598,12 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                             <td><a href="{{ item.url}}" target="_new">
                             {{ item.url}}</a></td>
                             <td>{{ item.description}}</td>
-                            <td><a class="monitoring" data-toggle="modal" 
-                            data-target="#myModal" 
+                            <td><a class="monitoring" data-toggle="modal"
+                            data-target="#myModal"
                             href='/workflow/documentation_agreement_update/
-                            {{ item.id }}/{{ pk }}/'>Edit</a> | 
+                            {{ item.id }}/{{ pk }}/'>Edit</a> |
                             <a class="monitoring" href='/workflow/
-                            documentation_agreement_delete/{{ item.id }}/' 
+                            documentation_agreement_delete/{{ item.id }}/'
                             data-toggle="modal" data-target="#myModal">
                             Delete</a>
                         </tr>
@@ -1612,7 +1612,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
             {% endif %}
             <div class="panel-footer">
                 <a onclick="newPopup('/workflow/documentation_list/0/{{ id }}',
-                'Add New Documentation'); return false;" 
+                'Add New Documentation'); return false;"
                 href="#" class="btn btn-sm btn-info">Add New Documentation</a>
             </div>
         </div>
@@ -1835,7 +1835,7 @@ class DocumentationForm(forms.ModelForm):
             'project', 'program',
 
             FormActions(
-                Submit('submit', 'Save', css_class='btn-default'),
+                Submit('submit', 'Save', css_class='btn-success'),
                 Reset('reset', 'Reset', css_class='btn-warning')
             )
         )
@@ -1889,7 +1889,7 @@ class QuantitativeOutputsForm(forms.ModelForm):
             <label for="id_pt" class="control-label col-sm-2">
             Periodic Target</label>
              <div class="controls col-sm-6">
-                <select name="periodic_target_dropdown" 
+                <select name="periodic_target_dropdown"
                 class="select form-control" id="id_periodic_target_dropdown">
                     <option value="">---------</option>
                     %s
@@ -2014,7 +2014,7 @@ class ChecklistItemForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save'))
+        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
 
         super(ChecklistItemForm, self).__init__(*args, **kwargs)
 
@@ -2039,7 +2039,7 @@ class ContactForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save'))
+        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
 
         super(ContactForm, self).__init__(*args, **kwargs)
 
@@ -2068,7 +2068,7 @@ class StakeholderForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save'))
+        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
         pkval = kwargs['instance'].pk if kwargs['instance'] else 0
         self.helper.layout = Layout(
 
@@ -2119,7 +2119,7 @@ class FilterForm(forms.Form):
     helper.form_method = 'get'
     helper.form_class = 'form-inline'
     helper.layout = Layout(FieldWithButtons('search', StrictButton(
-        'Submit', type='submit', css_class='btn-primary')))
+        'Submit', type='submit', css_class='btn-success')))
 
 
 class ProjectCompleteTable(forms.ModelForm):

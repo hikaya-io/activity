@@ -1,6 +1,10 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
+<script>
+  $(document).ready(function() {
+    $('#programListTable').DataTable();
+  });
+</script>
 <!-- Sub navigation -->
 <div class="container">
   <div class="sub-navigation">
@@ -9,133 +13,116 @@
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
-        <div class="dropdown">
-          <button
-            class="btn btn-default btn-sm dropdown-toggle"
-            type="button"
-            id="dropdownMenu1"
-            data-toggle="dropdown"
-            aria-expanded="true"
-          >
-            Countries
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li role="presentation">
-              <a
-                role="menuitem"
-                tabindex="-1"
-                href="/customdashboard/program_list/0"
-                >--All--</a
-              >
-            </li>
-            {% for country in get_country %}
-            <li role="presentation">
-              <a
-                role="menuitem"
-                tabindex="-1"
-                href="/customdashboard/program_list/{{ country.id }}"
-                >{{ country.country }}</a
-              >
-            </li>
-            {% endfor %}
-          </ul>
+        <div class="btn-group" role="group" aria-label="...">
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-sm btn-default dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Countries
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">--All--</a></li>
+              {% for country in get_country %}
+              <li>
+                <a href="/customdashboard/program_list/{{ country.id }}">{{
+                  country.country
+                }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
-        <br />
-        {% if country %}
-        <h3>{{ country }}</h3>
-        {% endif %}
       </div>
     </div>
   </div>
 
-    <!-- Table -->
-    <table class="table">
-      <tr>
-        <th>Date Created</th>
-        <th>{{ user.activity_user.organization.level_1_label }} Name</th>
-        <th>Data Complete</th>
-        <th>Public Dashboard</th>
-        <th>View Dashboard</th>
-      </tr>
-      {% for item in get_program %}
-      <tr>
-        <td>{{ item.create_date }}</td>
-        <td>{{ item.name }}</td>
-        <td width="250">
-          <strong>Indicator(s)</strong>
-          <div class="progress">
-            <div
-              class="progress-bar progress-bar-warning"
-              style="width: {{ item.indicator_data_percent }}%"
-            >
-              <font color="black"
-                >Data {{ item.indicator_data_percent }} %</font
-              >
-            </div>
-            <div
-              class="progress-bar progress-bar-success"
-              style="width: {{ item.indicator_percent }}%"
-            >
-              <font color="black">No Data {{ item.indicator_percent }} %</font>
-            </div>
+  <!-- Table -->
+  <table class="table table-condensed" id="programListTable">
+    <tr>
+      <th>Date Created</th>
+      <th>{{ user.activity_user.organization.level_1_label }} Name</th>
+      <th>Data Complete</th>
+      <th>Public Dashboard</th>
+      <th>View Dashboard</th>
+    </tr>
+    {% for item in get_program %}
+    <tr>
+      <td>{{ item.create_date }}</td>
+      <td>{{ item.name }}</td>
+      <td width="250">
+        <strong>Indicator(s)</strong>
+        <div class="progress">
+          <div
+            class="progress-bar progress-bar-warning"
+            style="width: {{ item.indicator_data_percent }}%"
+          >
+            <font color="black">Data {{ item.indicator_data_percent }} %</font>
           </div>
-          <strong
-            >{{ user.activity_user.organization.level_2_label }}(s)</strong
+          <div
+            class="progress-bar progress-bar-success"
+            style="width: {{ item.indicator_percent }}%"
           >
-          <div class="progress">
-            <div
-              class="progress-bar progress-bar-warning"
-              style="width: {{ item.project_percent }}%"
-            >
-              <font color="black">Tracking {{ item.project_percent }} %</font>
-            </div>
-            <div
-              class="progress-bar progress-bar-info"
-              style="width: {{ item.project_agreement_percent }}%"
-            >
-              <font color="black"
-                >Initiation {{ item.project_agreement_percent }} %</font
-              >
-            </div>
+            <font color="black">No Data {{ item.indicator_percent }} %</font>
           </div>
-        </td>
-        <td>
-          {% if item.public_dashboard %}<a
-            href="/customdashboard/program_dashboard/{{ item.id }}/1/"
-            >Public</a
+        </div>
+        <strong>{{ user.activity_user.organization.level_2_label }}(s)</strong>
+        <div class="progress">
+          <div
+            class="progress-bar progress-bar-warning"
+            style="width: {{ item.project_percent }}%"
           >
-          {% else %} N/A {% endif %}
-        </td>
-        <td>
-          <a href="/customdashboard/program_dashboard/{{ item.id }}/0/"
-            >Internal</a
+            <font color="black">Tracking {{ item.project_percent }} %</font>
+          </div>
+          <div
+            class="progress-bar progress-bar-info"
+            style="width: {{ item.project_agreement_percent }}%"
           >
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="4">No dashboards yet.</td>
-      </tr>
-      {% endfor %}
-    </table>
+            <font color="black"
+              >Initiation {{ item.project_agreement_percent }} %</font
+            >
+          </div>
+        </div>
+      </td>
+      <td>
+        {% if item.public_dashboard %}<a
+          href="/customdashboard/program_dashboard/{{ item.id }}/1/"
+          >Public</a
+        >
+        {% else %} N/A {% endif %}
+      </td>
+      <td>
+        <a href="/customdashboard/program_dashboard/{{ item.id }}/0/"
+          >Internal</a
+        >
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5">No dashboards yet.</td>
+    </tr>
+    {% endfor %}
+  </table>
 
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="importModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="myModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content"></div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="importModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content"></div>
+      <!-- /.modal-content -->
     </div>
-    <!-- /.modal -->
-    {% endblock content %}
+    <!-- /.modal-dialog -->
   </div>
+  <!-- /.modal -->
 </div>
+{% endblock content %}
