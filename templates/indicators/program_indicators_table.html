@@ -1,42 +1,79 @@
-<table class="table table-striped hiddenTable">
-    <tr>
-        <th id="id_indicator_type_col_header">Indicator Type</th>
-        <th id="id_indicator_level_col_header">Indicator Level</th>
-        <th id="id_indicator_name_col_header">Indicator Name</th>
-        <th id="id_indicator_number_col_header">Indicator Number</th>
-        <th id="id_indicator_sector_col_header">Sector</th>
-        <th id="id_indicator_buttons_col_header">&nbsp;</th>
-    </tr>
-    {% for indicator in indicators %}
-    <tr id = "id_indicator_{{ indicator.id }}" {% if indicator.just_created %} style="background-color: lightyellow;" {% endif %} >
-        <td id="id_indicator_type_{{ indicator.id }}">{{ indicator.indicator_types}}</td>
-        <td id="id_indicator_level_{{ indicator.id }}">{{ indicator.levels }}</td>
-        <td id="id_indicator_name_{{ indicator.id }}">
-            <a href="/indicators/indicator_update/{{ indicator.id }}" class="indicator-link"> {{ indicator.name}} </a>
-            {% if indicator.key_performance_indicator %}
-                <span class="badge">KPI</span>
-            {% endif %}
-        </td>
-        <td id="id_indicator_number_{{ indicator.id }}">{{ indicator.number|default_if_none:''}}</td>
-        <td id="id_indicator_sector_{{ indicator.id }}">{{ indicator.sector|default_if_none:''}}</td>
-        <td id="id_indicator_buttons_{{ indicator.id }}"width="150">
-            <span class="btn-group" role="group">
-                <a href="/indicators/indicator_update/{{ indicator.id }}" class="btn btn-xs btn-info indicator-link">Edit</a>
-                <a id="id_indicator_data_count_btn_{{ indicator.id }}" onclick="loadCollected({{ indicator.id }}, {{ program_id }})"
-                    class="btn btn-xs btn-success"
-                    data-toggle="collapse"
-                    data-target="#hidden-indicator-{{ indicator.id }}">Data {{ indicator.data_count }} </a>
-                <a href="/indicators/indicator_delete/{{ indicator.id }}" class="btn btn-xs btn-danger">Delete</a>
-            </span>
-        </td>
-    </tr>
-    <tr class="hiddenRow">
-        <td colspan="7">
-            <div id="hidden-indicator-{{ indicator.id }}" class="accordian-body collapse">
-                <!-- Table -->
-                {% include "indicators/collected_data_table.html" %}
-            </div>
-        </td>
-    </tr>
-    {% endfor %}
+<script>
+    $(document).ready(function() {
+        $('#programIndicatorsTable').DataTable();
+    })
+</script>
+
+<table class="table table-condensed table-striped hiddenTable" id="programIndicatorsTable">
+  <tr>
+    <th id="id_indicator_type_col_header">Indicator Type</th>
+    <th id="id_indicator_level_col_header">Indicator Level</th>
+    <th id="id_indicator_name_col_header">Indicator Name</th>
+    <th id="id_indicator_number_col_header">Indicator Number</th>
+    <th id="id_indicator_sector_col_header">Sector</th>
+    <th id="id_indicator_buttons_col_header">&nbsp;</th>
+  </tr>
+  {% for indicator in indicators %}
+  <tr
+    id="id_indicator_{{ indicator.id }}"
+    {% if indicator.just_created %}
+    style="background-color: lightyellow;"
+    {% endif %}
+  >
+    <td id="id_indicator_type_{{ indicator.id }}">
+      {{ indicator.indicator_types }}
+    </td>
+    <td id="id_indicator_level_{{ indicator.id }}">{{ indicator.levels }}</td>
+    <td id="id_indicator_name_{{ indicator.id }}">
+      <a
+        href="/indicators/indicator_update/{{ indicator.id }}"
+        class="indicator-link"
+      >
+        {{ indicator.name }}
+      </a>
+      {% if indicator.key_performance_indicator %}
+      <span class="badge">KPI</span>
+      {% endif %}
+    </td>
+    <td id="id_indicator_number_{{ indicator.id }}">
+      {{ indicator.number | default_if_none: '' }}
+    </td>
+    <td id="id_indicator_sector_{{ indicator.id }}">
+      {{ indicator.sector | default_if_none: '' }}
+    </td>
+    <td id="id_indicator_buttons_{{ indicator.id }}" width="150">
+      <span class="btn-group" role="group">
+        <a
+          href="/indicators/indicator_update/{{ indicator.id }}"
+          class="btn btn-xs btn-info indicator-link"
+          >Edit</a
+        >
+        <a
+          id="id_indicator_data_count_btn_{{ indicator.id }}"
+          onclick="loadCollected({{ indicator.id }}, {{ program_id }})"
+          class="btn btn-xs btn-success"
+          data-toggle="collapse"
+          data-target="#hidden-indicator-{{ indicator.id }}"
+          >Data {{ indicator.data_count }}
+        </a>
+        <a
+          href="/indicators/indicator_delete/{{ indicator.id }}"
+          class="btn btn-xs btn-danger"
+          >Delete</a
+        >
+      </span>
+    </td>
+  </tr>
+  <tr class="hiddenRow">
+    <td colspan="7">
+      <div
+        id="hidden-indicator-{{ indicator.id }}"
+        class="accordian-body collapse"
+      >
+        <!-- Table -->
+        {% include "indicators/collected_data_table.html" %}
+      </div>
+    </td>
+  </tr>
+  {% endfor %}
 </table>

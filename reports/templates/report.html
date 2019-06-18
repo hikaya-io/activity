@@ -1,479 +1,587 @@
-{% extends 'base.html' %}
-{% load staticfiles %}
-{% load crispy_forms_tags %}
-
+{% extends 'base.html' %} {% load staticfiles %} {% load crispy_forms_tags %} 
 {% block content %}
 <h3 id="report_type"></h3>
-<link rel="stylesheet" href="{{ STATIC_URL }}css/select2.min.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}css/select2.min.css" />
 <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
 <script src="{{ STATIC_URL }}publicdashboard/js/vendor/Chart.min.js"></script>
+
 <script type="text/javascript">
-
-    $(document).ready(function () {
-        $("#countries").select2({ placeholder: "Country", allowClear: true });
-        $("#id_sector").select2({ placeholder: "Sector", allowClear: true, });
-        $("#id_program").select2({ placeholder: "{{ user.activity_user.organization.level_1_label }}", allowClear: true, });
-        $('.dateinput').datepicker({ dateFormat: 'yyyy-mm-dd', });
-
-        //Show the program table
-        function show_program_table(program_data, filters) {
-            myRecords = JSON.parse(program_data);
-            //First destroy any old version of the table to refresh anew
-            if ($.fn.dataTable.isDataTable('#data_table')) {
-                table.destroy();
-                $('#data_table').empty();
-            };
-            table = $('#data_table').DataTable({
-                retrieve: true,
-                data: myRecords,
-                columns: [
-                    { title: "Sector", data: "sector__sector" },
-                    { title: "Name", data: "name" },
-                    { title: "Country", data: "country__country" },
-                    { title: "Cost Center", data: "cost_center" },
-                    { title: "Funding Status", data: "funding_status" }
-                ]
-            });
-
-            // provide export url and filters for program
-            $('#export').click(function () { do_export(filters, "program"); });
-
-        }
-
-        function show_indicator_table(indicator_data, filters) {
-
-            indicator_records = JSON.parse(indicator_data);
-            //First destroy any old version of the table to refresh anew
-            if ($.fn.dataTable.isDataTable('#data_table')) {
-                table.destroy();
-                $('#data_table').empty();
-            };
-
-            //go back to a program report if clicks
-            $("#id_search_form_reset_btn").on('click', function () {
-                program_report(filters);
-            });
-
-            table = $('#data_table').DataTable({
-                retrieve: true,
-                data: indicator_records,
-                columns: [
-                    {
-                        title: "Program", data: "program__name",
-                        "mRender": function (data, type, row) {
-                            return '<a id="program_report" name=' + row.program__id + '>' + data + '</a>';
-                        }
-                    },
-                    { title: "Indicator", data: "name" },
-                    { title: "Level", data: "level__name" },
-                    { title: "Type", data: "indicator_type__indicator_type" },
-                    { title: "Sector", data: "sector__sector" },
-                    {
-                        title: "Supporting Data", data: "collecteddata",
-                        "mRender": function (data, type, row) {
-                            return '<a class="collecteddata" name=' + row.id + '>Collected Data</a>';
-                        }
-                    },
-                    { title: "KPI", data: "key_performance_indicator" }
-                ]
-            });
-
-            // provide export button url for indicator
-            $('#export').click(function () { do_export(filters, "indicator"); });
-            $('.collecteddata').click(function () { data_report(filters, this.name); });
-            $('#program_report').click(function () { program_report(filters, this.name); });
-
-        }
-
-
-        function show_collecteddata_table(collecteddata_data, filters) {
-
-            collecteddata_records = JSON.parse(collecteddata_data);
-            //First destroy any old version of the table to refresh anew
-            if ($.fn.dataTable.isDataTable('#data_table')) {
-                table.destroy();
-                $('#data_table').empty();
-            };
-
-            //go back to a program report if clicks
-            $("#id_search_form_reset_btn").on('click', function () {
-                program_report(filters);
-            });
-
-            table = $('#data_table').DataTable({
-                retrieve: true,
-                data: collecteddata_records,
-                columns: [
-                    { title: "{{ user.activity_user.organization.level_1_label }}", data: "indicator__program__name" },
-                    { title: "Indicator Num.", data: "indicator__number" },
-                    { title: "Indicator", data: "indicator__name" },
-                    { title: "Targets", data: "targeted" },
-                    { title: "Actuals", data: "achieved" },
-                ]
-            });
-
-            // provide export button url for indicator
-            $('#export').click(function () { do_export(filters, "collecteddata"); });
-
-        }
-
-
-        function show_project_table(project_data, filters) {
-
-            project_records = JSON.parse(project_data);
-            //First destroy any old version of the table to refresh anew
-            if ($.fn.dataTable.isDataTable('#data_table')) {
-                table.destroy();
-                $('#data_table').empty();
-            };
-
-            table = $('#data_table').DataTable({
-                retrieve: true,
-                data: project_records,
-                columns: [
-                    { title: "{{ user.activity_user.organization.level_1_label }}", data: "program__name" },
-                    { title: "{{ user.activity_user.organization.level_2_label }}", data: "project_name" },
-                    { title: "{{ user.activity_user.organization.level_4_label }} Code", data: "activity_code" },
-                    { title: "Type", data: "project_type__name" },
-                    { title: "Sector", data: "sector__sector" },
-                    { title: "Budget", data: "total_estimated_budget" },
-                    { title: "Status", data: "approval" }
-                ]
-            });
-
-            // provide export button url for project
-            $('#export').click(function () { do_export(filters, "project"); });
-
-        }
-
-        function show_program_charts(project_count, approval_count, approved_count, inprogress_count, rejected_count, nostatus_count, filters) {
-            document.getElementById('doughnut1-header').innerHTML = "{{ user.activity_user.organization.level_2_label }} Status";
-            //render project_status in a doughnut chart
-            var status_options = {
-                // single tooltip
-                tooltipTemplate: "<%=label + ' Projects' %>",
-                percentageInnerCutout: 60,
-                tooltipFontSize: 10,
-            };
-            var status_data = [
-                {
-                    value: approved_count,
-                    color: "#637b85",
-                    label: "Approved " + approved_count
-                },
-                {
-                    value: approval_count,
-                    color: "#2c9c69",
-                    label: "Waiting " + approval_count
-                },
-                {
-                    value: rejected_count,
-                    color: "#dbba34",
-                    label: "Rejected " + rejected_count
-                },
-                {
-                    value: inprogress_count,
-                    color: "#c62f29",
-                    label: "In Progress " + inprogress_count
-                },
-                {
-                    value: nostatus_count,
-                    color: "#ccffcc",
-                    label: "New " + nostatus_count
-                }
-            ];
-            var ctx = document.getElementById("doughnut1").getContext("2d");
-            var statusChart = new Chart(ctx).Doughnut(status_data, status_options);
-            document.getElementById('doughnut1-legend').innerHTML = statusChart.generateLegend();
-
-            $("#doughnut1").click(
-                function (evt) {
-                    var activePoints = statusChart.getSegmentsAtEvent(evt);
-                    // add evidence filter if they clicked on that
-                    if (activePoints[0].label.indexOf("Approved") > -1) {
-                        filters.approval = "approved"
-                    } else if (activePoints[0].label.indexOf("In Progress") > -1) {
-                        filters.approval = "in progress"
-                    } else if (activePoints[0].label.indexOf("Waiting ") > -1) {
-                        filters.approval = "awaiting approval"
-                    } else if (activePoints[0].label.indexOf("New ") > -1) {
-                        filters.approval = "new"
-                    }
-                    project_report(filters);
-                }
-            );
-        };
-
-        function show_indicator_charts(indicator_count, data_count, filters) {
-            document.getElementById('doughnut2-header').innerHTML = "Indicator Chart";
-            //render indicator data in a doughnut chart
-            var indicator_options = {
-                // single tooltip
-                tooltipTemplate: "<%=label%>",
-                percentageInnerCutout: 60,
-                tooltipFontSize: 10,
-            };
-
-            var indicator_data = [
-                {
-                    value: indicator_count,
-                    color: "#637b85",
-                    label: "Indicators " + indicator_count
-                },
-                {
-                    value: data_count,
-                    color: "#2c9c69",
-                    label: "With Supporting Data " + data_count
-                },
-            ];
-            var ctx = document.getElementById("doughnut2").getContext("2d");
-            var indicatorChart = new Chart(ctx).Doughnut(indicator_data, indicator_options);
-            document.getElementById('doughnut2-legend').innerHTML = indicatorChart.generateLegend();
-
-            $("#doughnut2").click(
-                function (evt) {
-                    var activePoints = indicatorChart.getSegmentsAtEvent(evt);
-                    // add evidence filter if they clicked on that
-                    if (activePoints[0].label.indexOf("With Supporting Data") > -1) {
-                        filters.collecteddata__isnull = "False";
-                    } else if (activePoints[0].label.indexOf("Indicators") > -1) {
-                        filters.collecteddata__isnull = "True";
-                    }
-                    //console.log("filters:" + JSON.stringify(filters));
-                    indicator_report(filters);
-                }
-            );
-        };
-
-        function show_collecteddata_charts(data, filters) {
-            document.getElementById('bar-header').innerHTML = "Collected Data Chart";
-
-            var obj = JSON.parse(data);
-
-            var labels = [];
-            var targeted = [];
-            var achieved = [];
-            for (i = 0; i < obj.length; i++) {
-                labels.push(obj[i].indicator__number);
-                targeted.push(obj[i].targeted);
-                achieved.push(obj[i].achieved);
-            }
-
-            //console.log(labels);
-            //console.log(targeted);
-            //console.log(achieved);
-
-            //KPI JSON data object
-            var kpi_options = {
-                maintainAspectRatio: false,
-                responsive: true,
-                scaleOverlay: false,
-            };
-            var kpi_data = {
-                labels: labels,
-                datasets: [
-                    {
-                        label: "Targets",
-                        fillColor: "rgba(220,220,220,0.5)",
-                        strokeColor: "rgba(220,220,220,0.8)",
-                        highlightFill: "rgba(220,220,220,0.75)",
-                        highlightStroke: "rgba(220,220,220,1)",
-                        data: targeted,
-                    },
-                    {
-                        label: "Actuals",
-                        fillColor: "rgba(151,187,205,0.5)",
-                        strokeColor: "rgba(151,187,205,0.8)",
-                        highlightFill: "rgba(151,187,205,0.75)",
-                        highlightStroke: "rgba(151,187,205,1)",
-                        data: achieved,
-                    }
-                ]
-            }
-            //retrieve kpi_canvas, pass the kpi_JSON into a Line_chart
-            var ctx = document.getElementById("kpi").getContext("2d");
-            var kpiChart = new Chart(ctx).Bar(kpi_data, kpi_options);
-            document.getElementById('kpi-legend').innerHTML = kpiChart.generateLegend();
-
-        };
-
-        // PROGRAM REPORT
-        function program_report(filters) {
-            document.getElementById('report_type').innerHTML = "{{ user.activity_user.organization.level_1_label }} Report";
-            $("#bar-chart").hide();
-            $("#doughnut-chart").show();
-            $.getJSON("/reports/report_data/", filters, function (data) {
-                //console.log(filters);
-                show_program_table(data['program'], filters);
-                show_program_charts(data['project_count'], data['approval_count'], data['approved_count'], data['inprogress_count'], data['rejected_count'], data['nostatus_count'], filters);
-                show_indicator_charts(data['indicator_count'], data['data_count'], filters);
-
-            });
-        }
-
-        // INDICATOR REPORT
-        function indicator_report(filters) {
-            document.getElementById('report_type').innerHTML = "Indicator Report";
-            $("#bar-chart").hide();
-            $("#doughnut-chart").hide();
-            $.getJSON("/reports/report_data/indicator/", filters, function (data) {
-                //console.log(filters);
-                show_indicator_table(data['indicator'], filters);
-            });
-        }
-
-        // DATA REPORT
-        function data_report(filters, indicator) {
-            if (indicator) {
-                filters.indicator__id = indicator
-            }
-            document.getElementById('report_type').innerHTML = "Indicator Data Report";
-            $("#bar-chart").show();
-            $("#doughnut-chart").hide();
-            $.getJSON("/reports/report_data/collecteddata/", filters, function (data) {
-                //console.log(filters);
-                show_collecteddata_table(data['collecteddata'], filters);
-                show_collecteddata_charts(data['collecteddata'], filters);
-            });
-        }
-
-        // PROJECT REPORT
-        function project_report(filters) {
-            document.getElementById('report_type').innerHTML = "{{ user.activity_user.organization.level_2_label }} Report";
-            $("#bar-chart").hide();
-            $("#doughnut-chart").show();
-            $.getJSON("/reports/report_data/project/", filters, function (data) {
-                //console.log(filters);
-                show_project_table(data['project'], filters);
-                show_program_charts(data['project_count'], data['approval_count'], data['approved_count'], data['inprogress_count'], data['rejected_count'], data['nostatus_count'], filters);
-                show_indicator_charts(data['indicator_count'], data['data_count'], filters);
-            });
-        }
-
-        // EXPORT DATA
-        function do_export(filters, type) {
-            var param_filters = jQuery.param(filters);
-            if (type == "project") {
-                new_location = '/reports/report_data/project?export=true&' + param_filters;
-            } else if (type == "indicator") {
-                new_location = '/reports/report_data/indicator?export=true&' + param_filters;
-            } else if (type == "collecteddata") {
-                new_location = '/reports/report_data/collecteddata?export=true&' + param_filters;
-            } else {
-                new_location = '/reports/report_data?export=true&' + param_filters;
-            }
-
-            window.location.assign(new_location);
-
-        }
-
-
-        // Upon search form submission, format filter values so Django understands it.
-        $('#filter_form').on('submit', function (e) {
-            //show panels for data after submit
-            $("#welcome-panel").hide();
-            $('#data-panel').removeClass('hidden');
-            $("#data-panel").show();
-            $("#export").show();
-
-            e.preventDefault();
-            var filters = {};
-            $('#filter_form *').filter(':input').each(function () {
-                if (this.name != 'submit' && this.name != 'reset' && this.value && this.name != '') {
-                    var values_array = new Array($(this).val());
-                    filters[this.name] = values_array.join(",");
-                }
-
-            });
-
-
-            if (document.getElementById('report_type').innerHTML.valueOf == "{{ user.activity_user.organization.level_1_label }} Report") {
-                // first time do the program report
-                program_report(filters);
-            } else if (document.getElementById('report_type').innerHTML.valueOf == "Indicator Report") {
-                // first time do the program report
-                indicator_report(filters);
-            } else if (document.getElementById('report_type').innerHTML.valueOf == "Collected Data Report") {
-                // first time do the program report
-                collecteddata_report(filters);
-            } else {
-                // first time do the program report
-                program_report(filters);
-            }
-        });
-
-        // full page reset of filters
-        $('#id_search_form_reset_btn').click(function () {
-            location.reload();
-        });
-
+  $(document).ready(function() {
+    $('#countries').select2({ placeholder: 'Country', allowClear: true });
+    $('#id_sector').select2({ placeholder: 'Sector', allowClear: true });
+    $('#id_program').select2({
+      placeholder: '{{ user.activity_user.organization.level_1_label }}',
+      allowClear: true,
     });
-</script>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="panel panel-primary">
-                <div class="panel-heading"><span class="glyphicon glyphicon-filter"> </span> Filter options </div>
-                <div class="panel-body">
-                    <div class="filter-panel">
-                        {% crispy form form.helper %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-9">
-        <div id='welcome-panel' class="panel panel-success">
-            <div class="panel-heading"> {{ user.activity_user.organization.level_1_label }} Filter Reports</div>
-            <div class="panel-body" id="welcome" style="padding:5px;"> Filter your search in the panel on the left to
-                see results.</div>
-        </div>
-        <div id='data-panel' class="panel panel-primary" style="display: none;">
-            <div class="panel-heading"></div>
-            <div class="panel-body" style="padding:15px;">
-                <div id="program_chart">
-                    <div class="row" id="doughnut-chart">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <h4 class="chart-title" id="doughnut1-header"></h4>
-                                <div class="col-md-7">
-                                    <canvas id="doughnut1" width="200" height="200"></canvas>
-                                </div>
-                                <div class="col-md-3">
-                                    <div id="doughnut1-legend" class="chart-legend"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row">
-                                <h4 class="chart-title" id="doughnut2-header"></h4>
-                                <div class="col-md-7">
-                                    <canvas id="doughnut2" width="200" height="200"></canvas>
-                                </div>
-                                <div class="col-md-3">
-                                    <div id="doughnut2-legend" class="chart-legend"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" id="bar-chart" style="display: none;">
-                        <h4 class="chart-title" id="bar-header"></h4>
-                        <div class="canvas-container">
-                            <canvas id="kpi"></canvas>
-                        </div>
-                        <div id="kpi-legend" class="chart-legend"></div>
-                    </div>
-                </div>
-                <div id="program_table_div">
-                    <table class="table table-bordered" id="data_table">
-                    </table>
+    $('.dateinput').datepicker({ dateFormat: 'yyyy-mm-dd' });
 
-                </div>
-                <br />
-                <button type="button" class="btn btn-success" id="export" style="display: none;">Export All</button>
-                <div id="wait-animation" class="ajaxLoader" style="display: none;"></div>
-            </div>
-        </div>
+    //Show the program table
+    function show_program_table(program_data, filters) {
+      myRecords = JSON.parse(program_data);
+      //First destroy any old version of the table to refresh anew
+      if ($.fn.dataTable.isDataTable('#data_table')) {
+        table.destroy();
+        $('#data_table').empty();
+      }
+      table = $('#data_table').DataTable({
+        retrieve: true,
+        data: myRecords,
+        columns: [
+          { title: 'Sector', data: 'sector__sector' },
+          { title: 'Name', data: 'name' },
+          { title: 'Country', data: 'country__country' },
+          { title: 'Cost Center', data: 'cost_center' },
+          { title: 'Funding Status', data: 'funding_status' },
+        ],
+      });
+
+      // provide export url and filters for program
+      $('#export').click(function() {
+        do_export(filters, 'program');
+      });
+    }
+
+    function show_indicator_table(indicator_data, filters) {
+      indicator_records = JSON.parse(indicator_data);
+      //First destroy any old version of the table to refresh anew
+      if ($.fn.dataTable.isDataTable('#data_table')) {
+        table.destroy();
+        $('#data_table').empty();
+      }
+
+      //go back to a program report if clicks
+      $('#id_search_form_reset_btn').on('click', function() {
+        program_report(filters);
+      });
+
+      table = $('#data_table').DataTable({
+        retrieve: true,
+        data: indicator_records,
+        columns: [
+          {
+            title: 'Program',
+            data: 'program__name',
+            mRender: function(data, type, row) {
+              return (
+                '<a id="program_report" name=' +
+                row.program__id +
+                '>' +
+                data +
+                '</a>'
+              );
+            },
+          },
+          { title: 'Indicator', data: 'name' },
+          { title: 'Level', data: 'level__name' },
+          { title: 'Type', data: 'indicator_type__indicator_type' },
+          { title: 'Sector', data: 'sector__sector' },
+          {
+            title: 'Supporting Data',
+            data: 'collecteddata',
+            mRender: function(data, type, row) {
+              return (
+                '<a class="collecteddata" name=' +
+                row.id +
+                '>Collected Data</a>'
+              );
+            },
+          },
+          { title: 'KPI', data: 'key_performance_indicator' },
+        ],
+      });
+
+      // provide export button url for indicator
+      $('#export').click(function() {
+        do_export(filters, 'indicator');
+      });
+      $('.collecteddata').click(function() {
+        data_report(filters, this.name);
+      });
+      $('#program_report').click(function() {
+        program_report(filters, this.name);
+      });
+    }
+
+    function show_collecteddata_table(collecteddata_data, filters) {
+      collecteddata_records = JSON.parse(collecteddata_data);
+      //First destroy any old version of the table to refresh anew
+      if ($.fn.dataTable.isDataTable('#data_table')) {
+        table.destroy();
+        $('#data_table').empty();
+      }
+
+      //go back to a program report if clicks
+      $('#id_search_form_reset_btn').on('click', function() {
+        program_report(filters);
+      });
+
+      table = $('#data_table').DataTable({
+        retrieve: true,
+        data: collecteddata_records,
+        columns: [
+          {
+            title: '{{ user.activity_user.organization.level_1_label }}',
+            data: 'indicator__program__name',
+          },
+          { title: 'Indicator Num.', data: 'indicator__number' },
+          { title: 'Indicator', data: 'indicator__name' },
+          { title: 'Targets', data: 'targeted' },
+          { title: 'Actuals', data: 'achieved' },
+        ],
+      });
+
+      // provide export button url for indicator
+      $('#export').click(function() {
+        do_export(filters, 'collecteddata');
+      });
+    }
+
+    function show_project_table(project_data, filters) {
+      project_records = JSON.parse(project_data);
+      //First destroy any old version of the table to refresh anew
+      if ($.fn.dataTable.isDataTable('#data_table')) {
+        table.destroy();
+        $('#data_table').empty();
+      }
+
+      table = $('#data_table').DataTable({
+        retrieve: true,
+        data: project_records,
+        columns: [
+          {
+            title: '{{ user.activity_user.organization.level_1_label }}',
+            data: 'program__name',
+          },
+          {
+            title: '{{ user.activity_user.organization.level_2_label }}',
+            data: 'project_name',
+          },
+          {
+            title: '{{ user.activity_user.organization.level_4_label }} Code',
+            data: 'activity_code',
+          },
+          { title: 'Type', data: 'project_type__name' },
+          { title: 'Sector', data: 'sector__sector' },
+          { title: 'Budget', data: 'total_estimated_budget' },
+          { title: 'Status', data: 'approval' },
+        ],
+      });
+
+      // provide export button url for project
+      $('#export').click(function() {
+        do_export(filters, 'project');
+      });
+    }
+
+    function show_program_charts(
+      project_count,
+      approval_count,
+      approved_count,
+      inprogress_count,
+      rejected_count,
+      nostatus_count,
+      filters,
+    ) {
+      document.getElementById('doughnut1-header').innerHTML =
+        '{{ user.activity_user.organization.level_2_label }} Status';
+      //render project_status in a doughnut chart
+      var status_options = {
+        // single tooltip
+        tooltipTemplate: "<%=label + ' Projects' %>",
+        percentageInnerCutout: 60,
+        tooltipFontSize: 10,
+      };
+      var status_data = [
+        {
+          value: approved_count,
+          color: '#637b85',
+          label: 'Approved ' + approved_count,
+        },
+        {
+          value: approval_count,
+          color: '#2c9c69',
+          label: 'Waiting ' + approval_count,
+        },
+        {
+          value: rejected_count,
+          color: '#dbba34',
+          label: 'Rejected ' + rejected_count,
+        },
+        {
+          value: inprogress_count,
+          color: '#c62f29',
+          label: 'In Progress ' + inprogress_count,
+        },
+        {
+          value: nostatus_count,
+          color: '#ccffcc',
+          label: 'New ' + nostatus_count,
+        },
+      ];
+      var ctx = document.getElementById('doughnut1').getContext('2d');
+      var statusChart = new Chart(ctx).Doughnut(status_data, status_options);
+      document.getElementById(
+        'doughnut1-legend',
+      ).innerHTML = statusChart.generateLegend();
+
+      $('#doughnut1').click(function(evt) {
+        var activePoints = statusChart.getSegmentsAtEvent(evt);
+        // add evidence filter if they clicked on that
+        if (activePoints[0].label.indexOf('Approved') > -1) {
+          filters.approval = 'approved';
+        } else if (activePoints[0].label.indexOf('In Progress') > -1) {
+          filters.approval = 'in progress';
+        } else if (activePoints[0].label.indexOf('Waiting ') > -1) {
+          filters.approval = 'awaiting approval';
+        } else if (activePoints[0].label.indexOf('New ') > -1) {
+          filters.approval = 'new';
+        }
+        project_report(filters);
+      });
+    }
+
+    function show_indicator_charts(indicator_count, data_count, filters) {
+      document.getElementById('doughnut2-header').innerHTML = 'Indicator Chart';
+      //render indicator data in a doughnut chart
+      var indicator_options = {
+        // single tooltip
+        tooltipTemplate: '<%=label%>',
+        percentageInnerCutout: 60,
+        tooltipFontSize: 10,
+      };
+
+      var indicator_data = [
+        {
+          value: indicator_count,
+          color: '#637b85',
+          label: 'Indicators ' + indicator_count,
+        },
+        {
+          value: data_count,
+          color: '#2c9c69',
+          label: 'With Supporting Data ' + data_count,
+        },
+      ];
+      var ctx = document.getElementById('doughnut2').getContext('2d');
+      var indicatorChart = new Chart(ctx).Doughnut(
+        indicator_data,
+        indicator_options,
+      );
+      document.getElementById(
+        'doughnut2-legend',
+      ).innerHTML = indicatorChart.generateLegend();
+
+      $('#doughnut2').click(function(evt) {
+        var activePoints = indicatorChart.getSegmentsAtEvent(evt);
+        // add evidence filter if they clicked on that
+        if (activePoints[0].label.indexOf('With Supporting Data') > -1) {
+          filters.collecteddata__isnull = 'False';
+        } else if (activePoints[0].label.indexOf('Indicators') > -1) {
+          filters.collecteddata__isnull = 'True';
+        }
+        //console.log("filters:" + JSON.stringify(filters));
+        indicator_report(filters);
+      });
+    }
+
+    function show_collecteddata_charts(data, filters) {
+      document.getElementById('bar-header').innerHTML = 'Collected Data Chart';
+
+      var obj = JSON.parse(data);
+
+      var labels = [];
+      var targeted = [];
+      var achieved = [];
+      for (i = 0; i < obj.length; i++) {
+        labels.push(obj[i].indicator__number);
+        targeted.push(obj[i].targeted);
+        achieved.push(obj[i].achieved);
+      }
+
+      //console.log(labels);
+      //console.log(targeted);
+      //console.log(achieved);
+
+      //KPI JSON data object
+      var kpi_options = {
+        maintainAspectRatio: false,
+        responsive: true,
+        scaleOverlay: false,
+      };
+      var kpi_data = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Targets',
+            fillColor: 'rgba(220,220,220,0.5)',
+            strokeColor: 'rgba(220,220,220,0.8)',
+            highlightFill: 'rgba(220,220,220,0.75)',
+            highlightStroke: 'rgba(220,220,220,1)',
+            data: targeted,
+          },
+          {
+            label: 'Actuals',
+            fillColor: 'rgba(151,187,205,0.5)',
+            strokeColor: 'rgba(151,187,205,0.8)',
+            highlightFill: 'rgba(151,187,205,0.75)',
+            highlightStroke: 'rgba(151,187,205,1)',
+            data: achieved,
+          },
+        ],
+      };
+      //retrieve kpi_canvas, pass the kpi_JSON into a Line_chart
+      var ctx = document.getElementById('kpi').getContext('2d');
+      var kpiChart = new Chart(ctx).Bar(kpi_data, kpi_options);
+      document.getElementById(
+        'kpi-legend',
+      ).innerHTML = kpiChart.generateLegend();
+    }
+
+    // PROGRAM REPORT
+    function program_report(filters) {
+      document.getElementById('report_type').innerHTML =
+        '{{ user.activity_user.organization.level_1_label }} Report';
+      $('#bar-chart').hide();
+      $('#doughnut-chart').show();
+      $.getJSON('/reports/report_data/', filters, function(data) {
+        //console.log(filters);
+        show_program_table(data['program'], filters);
+        show_program_charts(
+          data['project_count'],
+          data['approval_count'],
+          data['approved_count'],
+          data['inprogress_count'],
+          data['rejected_count'],
+          data['nostatus_count'],
+          filters,
+        );
+        show_indicator_charts(
+          data['indicator_count'],
+          data['data_count'],
+          filters,
+        );
+      });
+    }
+
+    // INDICATOR REPORT
+    function indicator_report(filters) {
+      document.getElementById('report_type').innerHTML = 'Indicator Report';
+      $('#bar-chart').hide();
+      $('#doughnut-chart').hide();
+      $.getJSON('/reports/report_data/indicator/', filters, function(data) {
+        //console.log(filters);
+        show_indicator_table(data['indicator'], filters);
+      });
+    }
+
+    // DATA REPORT
+    function data_report(filters, indicator) {
+      if (indicator) {
+        filters.indicator__id = indicator;
+      }
+      document.getElementById('report_type').innerHTML =
+        'Indicator Data Report';
+      $('#bar-chart').show();
+      $('#doughnut-chart').hide();
+      $.getJSON('/reports/report_data/collecteddata/', filters, function(data) {
+        //console.log(filters);
+        show_collecteddata_table(data['collecteddata'], filters);
+        show_collecteddata_charts(data['collecteddata'], filters);
+      });
+    }
+
+    // PROJECT REPORT
+    function project_report(filters) {
+      document.getElementById('report_type').innerHTML =
+        '{{ user.activity_user.organization.level_2_label }} Report';
+      $('#bar-chart').hide();
+      $('#doughnut-chart').show();
+      $.getJSON('/reports/report_data/project/', filters, function(data) {
+        //console.log(filters);
+        show_project_table(data['project'], filters);
+        show_program_charts(
+          data['project_count'],
+          data['approval_count'],
+          data['approved_count'],
+          data['inprogress_count'],
+          data['rejected_count'],
+          data['nostatus_count'],
+          filters,
+        );
+        show_indicator_charts(
+          data['indicator_count'],
+          data['data_count'],
+          filters,
+        );
+      });
+    }
+
+    // EXPORT DATA
+    function do_export(filters, type) {
+      var param_filters = jQuery.param(filters);
+      if (type == 'project') {
+        new_location =
+          '/reports/report_data/project?export=true&' + param_filters;
+      } else if (type == 'indicator') {
+        new_location =
+          '/reports/report_data/indicator?export=true&' + param_filters;
+      } else if (type == 'collecteddata') {
+        new_location =
+          '/reports/report_data/collecteddata?export=true&' + param_filters;
+      } else {
+        new_location = '/reports/report_data?export=true&' + param_filters;
+      }
+
+      window.location.assign(new_location);
+    }
+
+    // Upon search form submission, format filter values so Django understands it.
+    $('#filter_form').on('submit', function(e) {
+      //show panels for data after submit
+      $('#welcome-panel').hide();
+      $('#data-panel').removeClass('hidden');
+      $('#data-panel').show();
+      $('#export').show();
+
+      e.preventDefault();
+      var filters = {};
+      $('#filter_form *')
+        .filter(':input')
+        .each(function() {
+          if (
+            this.name != 'submit' &&
+            this.name != 'reset' &&
+            this.value &&
+            this.name != ''
+          ) {
+            var values_array = new Array($(this).val());
+            filters[this.name] = values_array.join(',');
+          }
+        });
+
+      if (
+        document.getElementById('report_type').innerHTML.valueOf ==
+        '{{ user.activity_user.organization.level_1_label }} Report'
+      ) {
+        // first time do the program report
+        program_report(filters);
+      } else if (
+        document.getElementById('report_type').innerHTML.valueOf ==
+        'Indicator Report'
+      ) {
+        // first time do the program report
+        indicator_report(filters);
+      } else if (
+        document.getElementById('report_type').innerHTML.valueOf ==
+        'Collected Data Report'
+      ) {
+        // first time do the program report
+        collecteddata_report(filters);
+      } else {
+        // first time do the program report
+        program_report(filters);
+      }
+    });
+
+    // full page reset of filters
+    $('#id_search_form_reset_btn').click(function() {
+      location.reload();
+    });
+  });
+</script>
+
+<div class="container">
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+        {{ request.user.activity_user.organization.level_1_label }} Reports
+      </h4>
     </div>
+    <div class="sub-navigation-actions">
+      <!-- sample action buttons -->
+      <div class="btn-group" role="group" aria-label=""></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <span class="glyphicon glyphicon-filter"> </span> Filter options
+        </div>
+        <div class="panel-body">
+          <div class="filter-panel">
+            {% crispy form form.helper %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-9">
+    <div id="welcome-panel" class="panel panel-success">
+      <div class="panel-heading">
+        {{ user.activity_user.organization.level_1_label }} Filter Reports
+      </div>
+      <div class="panel-body" id="welcome" style="padding:5px;">
+        Filter your search in the panel on the left to see results.
+      </div>
+    </div>
+    <div id="data-panel" class="panel panel-primary" style="display: none;">
+      <div class="panel-heading"></div>
+      <div class="panel-body" style="padding:15px;">
+        <div id="program_chart">
+          <div class="row" id="doughnut-chart">
+            <div class="col-md-6">
+              <div class="row">
+                <h4 class="chart-title" id="doughnut1-header"></h4>
+                <div class="col-md-7">
+                  <canvas id="doughnut1" width="200" height="200"></canvas>
+                </div>
+                <div class="col-md-3">
+                  <div id="doughnut1-legend" class="chart-legend"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <h4 class="chart-title" id="doughnut2-header"></h4>
+                <div class="col-md-7">
+                  <canvas id="doughnut2" width="200" height="200"></canvas>
+                </div>
+                <div class="col-md-3">
+                  <div id="doughnut2-legend" class="chart-legend"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" id="bar-chart" style="display: none;">
+            <h4 class="chart-title" id="bar-header"></h4>
+            <div class="canvas-container">
+              <canvas id="kpi"></canvas>
+            </div>
+            <div id="kpi-legend" class="chart-legend"></div>
+          </div>
+        </div>
+        <div id="program_table_div">
+          <table class="table table-bordered" id="data_table"></table>
+        </div>
+        <br />
+        <button
+          type="button"
+          class="btn btn-success"
+          id="export"
+          style="display: none;"
+        >
+          Export All
+        </button>
+        <div
+          id="wait-animation"
+          class="ajaxLoader"
+          style="display: none;"
+        ></div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock content %}

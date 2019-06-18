@@ -2670,6 +2670,27 @@ def objectives_list(request):
     return render(request, 'components/objectives.html', context)
 
 
+def objectives_tree(request):
+    get_all_objectives = StrategicObjective.objects.all()
+
+    objectives_as_json = [{'id': 0, 'name': 'Strategic Objectives'}]
+
+    for objective in get_all_objectives:
+        data = {'id': objective.id, 'name': objective.name}
+
+        if objective.parent is None:
+            data['parent'] = 0
+        else:
+            data['parent'] = objective.parent.id
+
+        objectives_as_json.append(data)
+
+    context = {'get_all_objectives': get_all_objectives,
+               'objectives_as_json': objectives_as_json}
+
+    return render(request, 'components/objectives-tree.html', context)
+
+
 def service_json(request, service):
     """
     For populating service indicators in dropdown

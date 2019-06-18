@@ -2,30 +2,42 @@
 <!-- {% load crispy_forms_tags %}  -->
 {% block content %}
 <div class="container auth-container">
-	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
-			<h1>Login</h1>
-			<div class="btn-group btn-group-justified auth-nav" role="group" aria-label="...">
-				<div class="btn-group" role="group">
-					<a type="button" class="btn hikaya-btn-primary" href="{% url 'login' %}">
-						<strong>Login</strong></a
-					>
-				</div>
-				<div class="btn-group" role="group">
-					<a type="button" class="btn hikaya-btn-default" href="{% url 'register' %}">
-						<strong>Register</strong></a
-					>
-				</div>
-			</div>
-			<div class="panel panel-default auth-main">
-				<div class="panel-heading">
-					<strong>Fill in your details</strong>
-				</div>
-				<div class="panel-body">
-					<div class="auth-form">
-						<form action="/accounts/login/" method="POST">
-							{% csrf_token %}
-								<!-- {{ form | crispy }} -->
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <h1>Login</h1>
+      <div
+        class="btn-group btn-group-justified auth-nav"
+        role="group"
+        aria-label="..."
+      >
+        <div class="btn-group" role="group">
+          <a
+            type="button"
+            class="btn btn-sm btn-primary"
+            href="{% url 'login' %}"
+          >
+            <strong>Login</strong></a
+          >
+        </div>
+        <div class="btn-group" role="group">
+          <a
+            type="button"
+            class="btn btn-sm btn-default"
+            href="{% url 'register' %}"
+          >
+            <strong>Register</strong></a
+          >
+        </div>
+      </div>
+      <div class="panel panel-default auth-main">
+        <div class="panel-heading">
+          <strong>Fill in your details</strong>
+        </div>
+        <div class="panel-body">
+          <div class="auth-form">
+            <form action="/accounts/login/" method="POST">
+              {% csrf_token %}
+              <!-- {{ form | crispy }} -->
               <div class="row">
                 <label class="control-label" for="first_name">Username</label>
                 <input
@@ -45,7 +57,7 @@
                   class="form-control"
                 />
               </div>
-							<div class="row">
+              <div class="row">
                 <div class="text-right">
                   <button type="reset" class="btn btn-md hikaya-btn-cancel">
                     <i class="fa fa-undo"></i> Cancel
@@ -57,24 +69,22 @@
                   >
                     <i class="fa fa-save"></i> Submit
                   </button>
-
                 </div>
-
               </div>
 
-							<!--{% if non_ldap %}
+              <!--{% if non_ldap %}
                       <div class="social-btns">
                            <a type="button" href="{% url 'social:begin' 'google-oauth2' %}" class="btn-floating btn-lg btn-email"><i class="fa fa-google"></i> Google</a>
                       </div>
                       or
                       <a href="{% url 'register' %}">Register a new Account</a><br/>
                     {% endif %}-->
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-1"></div>
-	</div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1"></div>
+  </div>
 </div>
 {% endblock %}

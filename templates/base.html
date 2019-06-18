@@ -15,6 +15,16 @@
 
     <link rel="icon" href="{% static 'img/favicon.ico' %}" />
 
+    <link
+      href="http://fonts.googleapis.com/css?family=Lato:400,700"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Datatables css for HTML tables -->
     <link
       href="{% static 'DataTables/datatables.min.css' %}"
@@ -34,6 +44,18 @@
       href="{% static 'css/font-awesome-4.7.0/css/font-awesome.min.css' %}"
       rel="stylesheet"
       type="text/css"
+    />
+
+    <!-- jsTree -->
+    <link
+      rel="stylesheet"
+      href="{% static 'jstree/dist/themes/default/style.min.css' %}"
+    />
+
+    <!-- hierachy chart -->
+    <link
+      rel="stylesheet"
+      href="{% static 'hierachy_chart/jquery.orgchart.css' %}"
     />
 
     <!-- JQuery UI CSS -->
@@ -95,11 +117,10 @@
       role="navigation"
     >
       <div class="container">
-        <div class="navbar-header">
+        <div class="">
           <a class="navbar-brand" href="{% url 'index' %}">
             {% if user.is_authenticated %}
             <img
-              style="margin-top: -5px; max-width: 140px;"
               src="{{ user.activity_user.organization.logo.url }}"
             />
             {% else %}
@@ -149,7 +170,7 @@
                 </li>
               </ul>
             </li>
-            <li><a href="/indicators/home/0/0/0">Indicators</a></li>
+            <li class="{{ active }}"><a href="/indicators/home/0/0/0">Indicators</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                 >Form Library<b class="caret"></b
@@ -273,20 +294,36 @@
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
+            <li class="dropdown-submenu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                {% if "demo" in request.build_absolute_uri %}
+                <span class="glyphicon glyphicon-home"></span>
+                {{ user.activity_user.organization.name }}<b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu" id="bookmarks">
+                {% if user.activity_user.organizations %} {% for org in user.activity_user.organizations.all %}
+                <li>
+                  <a href="/accounts/organization/{{ org.id }}/">
+                    <span class="glyphicon glyphicon-triangle-right"></span>
+                    {{ org.name }}
+                  </a>
+                </li>
+                {% endfor %} {% endif %}
+              </ul>
+            </li>
+
+            <li class="dropdown text-center dropdown-bubble" id="user-initial">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <!-- {% if "demo" in request.build_absolute_uri %}
                 <span class="label label-danger">DEMO</span>
-                {% elif "127." in request.build_absolute_uri or "localhost" in
-                request.build_absolute_uri %}
+                {% elif "127." in request.build_absolute_uri or "localhost" in request.build_absolute_uri %}
                 <span class="label label-danger">LOCAL</span>
                 {% elif "dev" in request.build_absolute_uri %}
                 <span class="label label-danger">DEV</span>
                 {% elif "report" in request.build_absolute_uri %}
                 <span class="label label-info">REPORT</span>
                 {% endif %}
-                <span class="glyphicon glyphicon-user"></span>
-                {{ user.activity_user.name }} <b class="caret"></b>
+                <span class="glyphicon glyphicon-user"></span> -->
+                {{ user.activity_user.name | make_list | first }}
               </a>
 
               <ul class="dropdown-menu">
@@ -304,29 +341,12 @@
                   >
                 </li>
                 {% endif %} {% if user.is_authenticated %}
+                <li class="divider"></li>
                 <li>
-                  <a href="{% url 'logout' %}"
+                  <a href="{% url 'logout' %}" class="text-danger"
                     ><span class="glyphicon glyphicon-log-out"></span> Logout</a
                   >
                 </li>
-                {% endif %}
-              </ul>
-            </li>
-            <li class="dropdown-submenu">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <span class="glyphicon glyphicon-home"></span>
-                {{ user.activity_user.organization.name }}<b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu" id="bookmarks">
-                {% if user.activity_user.organizations %} 
-                {% for org in user.activity_user.organizations.all %}
-                <li>
-                  <a href="/accounts/organization/{{ org.id }}/">
-                    <span class="glyphicon glyphicon-triangle-right"></span>
-                    {{ org.name }}
-                  </a>
-                </li>
-                {% endfor %} 
                 {% endif %}
               </ul>
             </li>
@@ -386,18 +406,19 @@
     <!-- .navbar collapse -->
     <script type="text/javascript">
       var myElement = document.getElementById('navid');
+      // myElement.style.backgroundColor =
+      //   '#{{ user.activity_user.organization.theme_color }}';
+
       myElement.style.backgroundColor =
-        '#{{ user.activity_user.organization.theme_color }}';
+        '#fff';
     </script>
     <br />
     <div class="" style="margin-top:5px;">
       <br />
-      <div>{% block bread_crumb %}{% endblock %}</div>
+      <!-- <div>{% block bread_crumb %}{% endblock %}</div> -->
       <div id="alerts">
         <!-- Any messages for users -->
-        {% block messages %} {% if messages %} 
-        {% for message in messages %} 
-        {% if 'safe' in message.tags %}
+        {% block messages %} {% if messages %} {% for message in messages %} {% if 'safe' in message.tags %}
         <div class="alert alert-{{ message.tags }}">{{ message | safe }}</div>
         {% else %}
         <div class="alert alert-{{ message.tags }}">{{ message | safe }}</div>
@@ -405,11 +426,9 @@
         <br />
         {% endif %} {% endblock messages %}
       </div>
-      <!-- Page title  -->
-      <h2>{% block page_title %}{% endblock %}</h2>
 
       <!-- Main body content -->
-      <p>{% block content %}{% endblock %}</p>
+      {% block content %}{% endblock %}
       <!--{% if not user.is_authenticated  %}
                 <a href="{% url "social:begin" "google-oauth2" %}">Google+</a>
             {% endif %}-->
@@ -437,12 +456,6 @@
       </div>
     </div>
     <!-- .footer collapse -->
-
-    <!-- jQuery UI (necessary for datepicker as well as dataTables library -->
-    <script
-      type="text/javascript"
-      src="{% static 'js/jquery-ui.min.js' %}"
-    ></script>
 
     <!-- data tables jquery javascript library -->
     <script
@@ -482,6 +495,12 @@
       type="text/javascript"
       src="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"
     ></script>
+
+    <!-- jsTree -->
+    <script src="{% static 'jstree/dist/jstree.min.js' %}"></script>
+
+    <!-- hierachy chart -->
+    <script src="{% static 'hierachy_chart/jquery.orgchart.js' %}"></script>
 
     <script type="text/javascript">
       toastr.options = {
