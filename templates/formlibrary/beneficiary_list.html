@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block bread_crumb %}
+{% extends "base.html" %} {% block content %} {% load group_tag %}
+
 <div class="container">
   <!-- Sub navigation -->
   <div class="sub-navigation">
@@ -16,10 +17,7 @@
         </a>
       </div>
     </div>
-    {% endblock %} {% load group_tag %} {% block content %}
-    <div>
-      <hr />
-    </div>
+  </div>
 
     <!-- Table -->
     <table class="table" id="beneficiarytable"></table>
@@ -182,5 +180,5 @@
     </div>
     <!-- /.modal -->
   </div>
-  {% endblock content %}
 </div>
+{% endblock content %}

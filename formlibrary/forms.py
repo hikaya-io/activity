@@ -36,7 +36,7 @@ class TrainingAttendanceForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save'))
+        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
 
         super(TrainingAttendanceForm, self).__init__(*args, **kwargs)
 
@@ -67,7 +67,7 @@ class DistributionForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save'))
+        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
 
         super(DistributionForm, self).__init__(*args, **kwargs)
 
@@ -98,7 +98,7 @@ class BeneficiaryForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save'))
+        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
 
         super(BeneficiaryForm, self).__init__(*args, **kwargs)
 

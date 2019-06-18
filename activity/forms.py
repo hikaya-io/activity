@@ -44,7 +44,7 @@ class RegistrationForm(UserChangeForm):
     helper.layout = Layout(
         Fieldset('', 'title', 'name', 'employee_number', 'user', 'username',
                  'country', 'countries', 'modified_by', 'created', 'updated'),
-        Submit('submit', 'Submit', css_class='btn-default'),
+        Submit('submit', 'Submit', css_class='btn-success'),
         Reset('reset', 'Reset', css_class='btn-warning'))
 
 
@@ -125,7 +125,7 @@ class BookmarkForm(forms.ModelForm):
     helper.form_tag = True
     helper.layout = Layout(
         Fieldset('', 'name', 'bookmark_url'),
-        Submit('submit', 'Submit', css_class='btn-default'),
+        Submit('submit', 'Submit', css_class='btn-success'),
         Reset('reset', 'Reset', css_class='btn-warning'))
 
 
@@ -151,4 +151,4 @@ class OrganizationEditForm(forms.ModelForm):
     helper.html5_required = True
     helper.layout = Layout(
         Fieldset('', 'logo',),
-        Submit('submit', 'Submit', css_class='btn-default'))
+        Submit('submit', 'Submit', css_class='btn-success'))
