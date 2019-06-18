@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block bread_crumb %}
+{% extends "base.html" %} {% load group_tag %} {% block content %}
+
 <div class="container">
   <!-- Sub navigation -->
   <div class="sub-navigation">
@@ -9,31 +10,10 @@
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
         {% include "formlibrary/filter.html" %}
-        <!-- <a
-          role="button"
-          href="/formlibrary/training_add/0/"
-          class="btn btn-sm btn-info"
-        >
-          <i class="fa fa-plus"></i> New Training
-        </a>
-        <a
-          href="/formlibrary/training_import"
-          class="btn btn-sm btn-success"
-          data-toggle="modal"
-          data-target="#importModal"
-        >
-          <span class="glyphicon glyphicon-import"></span> Import Training
-        </a> -->
       </div>
 
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
-          <a
-            role="button"
-            href="/formlibrary/training_add/0/"
-            class="btn btn-sm btn-info"
-            ><i class="fa fa-plus"></i> New Training</a
-          >
           <a
             role="button"
             class="btn btn-sm btn-success"
@@ -41,175 +21,179 @@
             data-target="#importModal"
             ><span class="glyphicon glyphicon-import"></span> Import Training</a
           >
+
+          <a
+            role="button"
+            href="/formlibrary/training_add/0/"
+            class="btn btn-sm btn-info"
+            ><i class="fa fa-plus"></i> New Training</a
+          >
         </div>
       </div>
     </div>
-    {% endblock %} {% load group_tag %} {% block content %}
-    <div>
-      <hr />
-    </div>
+  </div>
 
-    <!-- Table -->
-    <table class="table" id="trainingtable"></table>
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $('select#program').change(function() {
-          if ($(this).val() == 'all') {
-            $('select#project').html('<option>project(s)</option>');
-            $('select#project').attr('disabled', true);
-          } else {
-            var url = '/formlibrary/getagreements/' + $(this).val() + '/0/';
-            program_id = $(this).val();
-            $.getJSON(url, function(models) {
-              var options = '<option value="all">Project</option>';
-
-              if (!$.trim(models['get_agreements'])) {
-                $('select#project').html('<option>project(s)</option>');
-                $('select#project').attr('disabled', true);
-                program_filter(program_id, 0);
-              } else {
-                data = JSON.parse(models['get_agreements']);
-                for (var i = 0; i < data.length; i++) {
-                  options +=
-                    '<option value="' +
-                    data[i]['id'] +
-                    '">' +
-                    data[i]['project_name'] +
-                    '</option>';
-                }
-
-                $('select#project').html(options);
-                $('select#project option:first').attr('selected', 'selected');
-                $('select#project').attr('disabled', false);
-                program_filter(program_id, 0);
-              }
-            });
-          }
-        });
-
-        $('select#project').change(function() {
-          project_id = $(this).val();
-          program_id = $('select#program').val();
-          program_filter(program_id, project_id);
-        });
-        program_filter(0, 0);
-      });
-
-      function show_training_table(training_data) {
-        training_records = JSON.parse(training_data);
-        //First destroy any old version of the table to refresh anew
-        if ($.fn.dataTable.isDataTable('#trainingtable')) {
-          table.destroy();
-          $('#trainingtable').empty();
-        }
-
-        $('#trainingtable').on('page.dt', function() {
-          $('html, body').animate(
-            {
-              scrollTop: 0,
-            },
-            300,
-          );
-        });
-
-        table = $('#trainingtable').DataTable({
-          order: [],
-          bFilter: false,
-          bLengthChange: false,
-          aoColumnDefs: [{ bSortable: false, targets: [0, 1, 2] }],
-          retrieve: true,
-          data: training_records,
-          columns: [
-            {
-              title: 'Date Created',
-              data: 'create_date',
-              defaultContent: '<i>Not set</i>',
-              mRender: function(data, record, row) {
-                return (
-                  '<a class="collecteddata" name=' +
-                  row.id +
-                  ' href="#">' +
-                  row.create_date +
-                  '</a>'
-                );
-              },
-            },
-            {
-              title: 'Training Name',
-              data: 'training_name',
-              defaultContent: '<i>Not set</i>',
-              mRender: function(data, record, row) {
-                return (
-                  '<a class="collecteddata" name=' +
-                  row.id +
-                  ' href="#">' +
-                  row.training_name +
-                  '</a>'
-                );
-              },
-            },
-            {
-              title: 'Beneficiaries/Update/Delete/ ',
-              mRender: function(data, record, row) {
-                return (
-                  '<a href="/formlibrary/beneficiary_list/' +
-                  row.id +
-                  '" class="btn btn-xs btn-info">Beneficiaries</a><a href="/formlibrary/training_update/' +
-                  row.id +
-                  '" class="btn btn-xs btn-warning">Update Training</a><a href="/formlibrary/training_delete/' +
-                  row.id +
-                  '" class="btn btn-xs btn-danger">Delete Training</a>'
-                );
-              },
-            },
-          ],
-        });
-      }
-
-      function program_filter(program_id, project_id) {
-        // Filter Trainings
-        if (program_id != 0 && project_id == 0) {
-          $.getJSON(
-            '/formlibrary/training_objects/' + program_id + '/0/',
-            function(data) {
-              show_training_table(data['get_training']);
-            },
-          );
-        } else if (program_id != 0 && project_id != 0) {
-          $.getJSON(
-            '/formlibrary/training_objects/' +
-              program_id +
-              '/' +
-              project_id +
-              '/',
-            function(data) {
-              show_training_table(data['get_training']);
-            },
-          );
+  <!-- Table -->
+  <table class="table" id="trainingtable"></table>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('select#program').change(function() {
+        if ($(this).val() == 'all') {
+          $('select#project').html('<option>project(s)</option>');
+          $('select#project').attr('disabled', true);
         } else {
-          $.getJSON('/formlibrary/training_objects/0/0/', function(data) {
-            show_training_table(data['get_training']);
+          var url = '/formlibrary/getagreements/' + $(this).val() + '/0/';
+          program_id = $(this).val();
+          $.getJSON(url, function(models) {
+            var options = '<option value="all">Project</option>';
+
+            if (!$.trim(models['get_agreements'])) {
+              $('select#project').html('<option>project(s)</option>');
+              $('select#project').attr('disabled', true);
+              program_filter(program_id, 0);
+            } else {
+              data = JSON.parse(models['get_agreements']);
+              for (var i = 0; i < data.length; i++) {
+                options +=
+                  '<option value="' +
+                  data[i]['id'] +
+                  '">' +
+                  data[i]['project_name'] +
+                  '</option>';
+              }
+
+              $('select#project').html(options);
+              $('select#project option:first').attr('selected', 'selected');
+              $('select#project').attr('disabled', false);
+              program_filter(program_id, 0);
+            }
           });
         }
-      }
-    </script>
+      });
 
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="importModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="myModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content"></div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
+      $('select#project').change(function() {
+        project_id = $(this).val();
+        program_id = $('select#program').val();
+        program_filter(program_id, project_id);
+      });
+      program_filter(0, 0);
+    });
+
+    function show_training_table(training_data) {
+      training_records = JSON.parse(training_data);
+      //First destroy any old version of the table to refresh anew
+      if ($.fn.dataTable.isDataTable('#trainingtable')) {
+        table.destroy();
+        $('#trainingtable').empty();
+      }
+
+      $('#trainingtable').on('page.dt', function() {
+        $('html, body').animate(
+          {
+            scrollTop: 0,
+          },
+          300,
+        );
+      });
+
+      table = $('#trainingtable').DataTable({
+        order: [],
+        bFilter: false,
+        bLengthChange: false,
+        aoColumnDefs: [{ bSortable: false, targets: [0, 1, 2] }],
+        retrieve: true,
+        data: training_records,
+        columns: [
+          {
+            title: 'Date Created',
+            data: 'create_date',
+            defaultContent: '<i>Not set</i>',
+            mRender: function(data, record, row) {
+              return (
+                '<a class="collecteddata" name=' +
+                row.id +
+                ' href="#">' +
+                row.create_date +
+                '</a>'
+              );
+            },
+          },
+          {
+            title: 'Training Name',
+            data: 'training_name',
+            defaultContent: '<i>Not set</i>',
+            mRender: function(data, record, row) {
+              return (
+                '<a class="collecteddata" name=' +
+                row.id +
+                ' href="#">' +
+                row.training_name +
+                '</a>'
+              );
+            },
+          },
+          {
+            title: 'Beneficiaries/Update/Delete/ ',
+            mRender: function(data, record, row) {
+              return (
+                '<a href="/formlibrary/beneficiary_list/' +
+                row.id +
+                '" class="btn btn-xs btn-info">Beneficiaries</a><a href="/formlibrary/training_update/' +
+                row.id +
+                '" class="btn btn-xs btn-warning">Update Training</a><a href="/formlibrary/training_delete/' +
+                row.id +
+                '" class="btn btn-xs btn-danger">Delete Training</a>'
+              );
+            },
+          },
+        ],
+      });
+    }
+
+    function program_filter(program_id, project_id) {
+      // Filter Trainings
+      if (program_id != 0 && project_id == 0) {
+        $.getJSON(
+          '/formlibrary/training_objects/' + program_id + '/0/',
+          function(data) {
+            show_training_table(data['get_training']);
+          },
+        );
+      } else if (program_id != 0 && project_id != 0) {
+        $.getJSON(
+          '/formlibrary/training_objects/' +
+            program_id +
+            '/' +
+            project_id +
+            '/',
+          function(data) {
+            show_training_table(data['get_training']);
+          },
+        );
+      } else {
+        $.getJSON('/formlibrary/training_objects/0/0/', function(data) {
+          show_training_table(data['get_training']);
+        });
+      }
+    }
+  </script>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="importModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content"></div>
+      <!-- /.modal-content -->
     </div>
-    <!-- /.modal -->
+    <!-- /.modal-dialog -->
   </div>
-  {% endblock content %}
+  <!-- /.modal -->
 </div>
+
+{% endblock content %}

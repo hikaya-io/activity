@@ -40,7 +40,7 @@
     <p>Filtered by (Status): {{ status }}</p>
     {% endifnotequal %} {% if filtered_program %}
     <p>Filtered by (Program): {{ filtered_program }}</p>
-    {% endif %} {% for program in get_dashboard %} 
+    {% endif %} {% for program in get_dashboard %}
     {% if program.agreement.all %}
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -69,42 +69,42 @@
           <th>&nbsp;</th>
         </tr>
 
-        {% if status == "in_progress" %} 
-        {% for item in program.agreement.get_inprogress %} 
-        {% include "workflow/program_projects_table.html" %} 
+        {% if status == "in_progress" %}
+        {% for item in program.agreement.get_inprogress %}
+        {% include "workflow/program_projects_table.html" %}
         {% empty %}
         <li class="list-group-item">No in progress projects.</li>
-        {% endfor %} {% elif status == "approved" %} 
-        {% for item in program.agreement.get_approved %} 
+        {% endfor %} {% elif status == "approved" %}
+        {% for item in program.agreement.get_approved %}
         {% include "workflow/program_projects_table.html" %} {% empty %}
         <li class="list-group-item">No approved projects yet.</li>
-        {% endfor %} {% elif status == "awaiting_approval" %} 
-        {% for item in program.agreement.get_awaiting_approval %} 
-        
-        {% include "workflow/program_projects_table.html" %} 
+        {% endfor %} {% elif status == "awaiting_approval" %}
+        {% for item in program.agreement.get_awaiting_approval %}
+
+        {% include "workflow/program_projects_table.html" %}
         {% empty %}
         <li class="list-group-item">No projects awaiting approval.</li>
-        {% endfor %} 
-        {% elif status == "rejected" %} 
-        {% for item in program.agreement.get_rejected %} 
-        
+        {% endfor %}
+        {% elif status == "rejected" %}
+        {% for item in program.agreement.get_rejected %}
+
         {% include "workflow/program_projects_table.html" %} {% empty %}
         <li class="list-group-item">No rejected projects.</li>
-        {% endfor %} {% elif status == "new" %} 
-        {% for item in program.agreement.get_new %} 
+        {% endfor %} {% elif status == "new" %}
+        {% for item in program.agreement.get_new %}
         {% include "workflow/program_projects_table.html" %} {% empty %}
         <li class="list-group-item">No New projects.</li>
-        {% endfor %} 
-        {% else %} 
-        {% for item in program.agreement.all %} 
+        {% endfor %}
+        {% else %}
+        {% for item in program.agreement.all %}
         {% include "workflow/program_projects_table.html" %} {% empty %}
         <li class="list-group-item">No projects yet.</li>
-        {% endfor %} 
+        {% endfor %}
         {% endif %}
       </table>
     </div>
-    {% endif %} 
-    {% endfor %} 
+    {% endif %}
+    {% endfor %}
     {% else %}
     <p>No {{ user.activity_user.organization.level_1_label }}</p>
     {% endif %}

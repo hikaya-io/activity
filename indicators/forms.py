@@ -89,7 +89,7 @@ class IndicatorForm(forms.ModelForm):
                                             <td>
                                             {{ item.external_service.name }}
                                             </td>
-                                            <td><a target="_new" 
+                                            <td><a target="_new"
                                             href='{{ item.full_url }}'>View</a>
                                         </tr>
                                     {% endfor %}
@@ -119,9 +119,9 @@ class IndicatorForm(forms.ModelForm):
                              HTML("""
     <div id="div_id_create_targets_btn" class="form-group">
         <div class="controls col-sm-offset-4 col-sm-6">
-            <button type="button" id="id_create_targets_btn" 
+            <button type="button" id="id_create_targets_btn"
             class="btn btn-primary">Create targets</button>
-            <button type="button" id="id_delete_targets_btn" 
+            <button type="button" id="id_delete_targets_btn"
             class="btn btn-link">Remove all targets</button>
         </div>
     </div>
@@ -130,90 +130,90 @@ class IndicatorForm(forms.ModelForm):
                              HTML("""
     <div id="id_div_periodic_tables_placeholder">
     {% if periodic_targets and indicator.target_frequency != 1%}
-        <div class="container-fluid" style="background-color: #F5F5F5; 
+        <div class="container-fluid" style="background-color: #F5F5F5;
         margin: 0px -30px 0px -30px;">
             <div class="row">
-                <div class="col-sm-offset-2 col-sm-8" 
+                <div class="col-sm-offset-2 col-sm-8"
                 style="padding-left: 1px; margin-top: 30px;">
                     <h4>{{ indicator.get_target_frequency_label }} targets</h4>
                 </div>
             </div>
             <div class="row">
-                <div id="periodic-targets-tablediv" 
+                <div id="periodic-targets-tablediv"
                 class="col-sm-offset-2 col-sm-8">
-                    <table class="table table-condensed" 
+                    <table class="table table-condensed"
                     id="periodic_targets_table" style="margin-bottom: 1px;">
                         <tbody>
                             {% for pt in periodic_targets %}
-                                <tr id="{{pt.pk}}" 
-                                data-collected-count="{{pt.num_data}}" 
+                                <tr id="{{pt.pk}}"
+                                data-collected-count="{{pt.num_data}}"
                                 class="periodic-target">
-                                    <td style="width:50px; 
+                                    <td style="width:50px;
                                     vertical-align: middle; border: none;">
-            <a href="{% url 'pt_delete' pt.id %}" id="deleteLastPT" 
-            class="detelebtn" style="text-align: center; 
-                margin: 3px 10px 0px 10px; color:red; 
-                display:{% if forloop.last and indicator.target_frequency != 2 
+            <a href="{% url 'pt_delete' pt.id %}" id="deleteLastPT"
+            class="detelebtn" style="text-align: center;
+                margin: 3px 10px 0px 10px; color:red;
+                display:{% if forloop.last and indicator.target_frequency != 2
                     or indicator.target_frequency == 8 %}
                 block{% else %}none{% endif %}">
                     <span class="glyphicon glyphicon-remove"></span>
             </a>
                                     </td>
-                                    <td style="padding:1px; border:none; 
+                                    <td style="padding:1px; border:none;
                                     vertical-align:middle;">
                                     {% if indicator.target_frequency == 8 %}
                                         <div class="controls border-1px">
-                                            <input type="text" 
-                                            name="{{ pt.period }}" 
-                                            value="{{ pt.period }}" 
-                                                class="form-control 
+                                            <input type="text"
+                                            name="{{ pt.period }}"
+                                            value="{{ pt.period }}"
+                                                class="form-control
                                                 input-text">
-                                            <span style="margin:0px;" 
+                                            <span style="margin:0px;"
                                             class="help-block"> </span>
                                         </div>
                                     {% else %}
                                         <div style="line-height:1;">
                                         <strong>{{ pt.period }}</strong>
                                         </div>
-                                        <div style="line-height:1; 
+                                        <div style="line-height:1;
                                         margin-top:3px;">
-                                        {{ pt.start_date_formatted }} 
-                                        {% if pt.start_date %} - 
-                                        {% endif %} 
+                                        {{ pt.start_date_formatted }}
+                                        {% if pt.start_date %} -
+                                        {% endif %}
                                         {{ pt.end_date_formatted }}</div>
                                     {% endif %}
                                     </td>
-                                    <td align="right" style="padding:1px; 
-                                    border:none; vertical-align: middle; 
+                                    <td align="right" style="padding:1px;
+                                    border:none; vertical-align: middle;
                                         width: 150px">
                                             <div class="controls border-1px">
-                                                <input type="number" 
-                                                id="pt-{{ pt.id }}" 
-                                                name="{{ pt.period }}" 
-                                    value="{{ pt.target|floatformat:"-2" }}" 
-                                    data-start-date=    
-                                "{{pt.start_date|date:"M d, Y"|default:''}}" 
+                                                <input type="number"
+                                                id="pt-{{ pt.id }}"
+                                                name="{{ pt.period }}"
+                                    value="{{ pt.target|floatformat:"-2" }}"
+                                    data-start-date=
+                                "{{pt.start_date|date:"M d, Y"|default:''}}"
                                     data-end-date=
-                                    "{{pt.end_date|date:"M d, Y"|default:''}}" 
-                                    placeholder="Enter target" 
+                                    "{{pt.end_date|date:"M d, Y"|default:''}}"
+                                    placeholder="Enter target"
                                     class="form-control input-value">
-                                    <span id="hint_id_pt_{{pt.pk}}" 
-                                    style="margin:0px;" class="help-block"> 
+                                    <span id="hint_id_pt_{{pt.pk}}"
+                                    style="margin:0px;" class="help-block">
                                                 </span>
                                             </div>
                                     </td>
                                 </tr>
                                 {% if forloop.last %}
                                     <tr id="pt_sum_targets">
-                                        <td class="pt-delete-row" 
+                                        <td class="pt-delete-row"
                                         style="border: none;">
                                         </td>
-                                        <td align="left" 
-                                        style="padding-left:0px; border:none; 
+                                        <td align="left"
+                                        style="padding-left:0px; border:none;
                                         vertical-align: middle;">
                                             <strong>Sum of targets</strong>
                                         </td>
-                                        <td align="right" style="border:none; 
+                                        <td align="right" style="border:none;
                                         vertical-align: middle;">
                                     <div style="margin: 5px 10px;">
                                         <strong><span id="id_span_targets_sum">
@@ -225,15 +225,15 @@ class IndicatorForm(forms.ModelForm):
                                 {% endif %}
                             {% endfor %}
                             <tr style="background-color:#F5F5F5">
-                                <td class="pt-delete-row" 
+                                <td class="pt-delete-row"
                                 style="border: none;">
                                 </td>
-                                <td align="left" style="padding-left:0px; 
+                                <td align="left" style="padding-left:0px;
                                 border:none; vertical-align: middle;">
                                     <strong>Life of Program (LoP) target
                                     </strong>
                                 </td>
-                                <td align="right" style="border:none; 
+                                <td align="right" style="border:none;
                                 vertical-align: middle;">
                             <div style="margin: 5px 10px;">
                                 <strong>
@@ -245,7 +245,7 @@ class IndicatorForm(forms.ModelForm):
                         </tbody>
                         <tfoot>
                             <tr style="background-color:#F5F5F5">
-                                <td colspan="3" style="color:red; padding: 0px" 
+                                <td colspan="3" style="color:red; padding: 0px"
                                 id="id_pt_errors"></td>
                             </tr>
                         </tfoot>
@@ -254,11 +254,11 @@ class IndicatorForm(forms.ModelForm):
             </div>
             {% if indicator.target_frequency != 2 %}
                 <div class="row">
-                    <div class="col-sm-offset-2 col-sm-8" 
-                    style="padding-left: 1px; margin-top:10px; 
+                    <div class="col-sm-offset-2 col-sm-8"
+                    style="padding-left: 1px; margin-top:10px;
                     margin-bottom:40px;">
-                        <a href="#" id="addNewPeriodicTarget" 
-                        style="padding-left: 1px;" 
+                        <a href="#" id="addNewPeriodicTarget"
+                        style="padding-left: 1px;"
                         class="button btn-lg btn-link">
                         <span class=" glyphicon glyphicon-plus-sign"></span>
                          Add a target</a>
@@ -400,8 +400,8 @@ class CollectedDataForm(forms.ModelForm):
             Fieldset('Evidence',
                      'complete', 'evidence', 'activity_table',
                      'update_count_activity_table',
-                     HTML("""<a class="output" data-toggle="modal" 
-                     data-target="#activitytablemodal" 
+                     HTML("""<a class="output" data-toggle="modal"
+                     data-target="#activitytablemodal"
                      href="/indicators/collecteddata_import/">
                      Import Evidence From Activity Tables</a>"""),
 
@@ -409,7 +409,7 @@ class CollectedDataForm(forms.ModelForm):
 
             Div(
                 HTML("""<br/>
-    {% if get_disaggregation_label_standard and not 
+    {% if get_disaggregation_label_standard and not
             get_disaggregation_value_standard %}
         <div class='panel panel-default'>
             <!-- Default panel contents -->
@@ -431,7 +431,7 @@ class CollectedDataForm(forms.ModelForm):
     {% else %}
         {% if not get_disaggregation_value_standard %}
             <h4>Standard Disaggregation Levels Not Entered</h4>
-            <p>Standard disaggregations are entered in the administrator for 
+            <p>Standard disaggregations are entered in the administrator for
             the entire organizations.  If you are not seeing
             any here, please contact your system administrator.</p>
         {% endif %}
@@ -476,8 +476,8 @@ class CollectedDataForm(forms.ModelForm):
                 {% for item in get_disaggregation_value %}
                 <tr>
                     <td>{{ item.disaggregation_label.label }}</td>
-                    <td><input type="text" 
-                    name="{{ item.disaggregation_label.id }}" 
+                    <td><input type="text"
+                    name="{{ item.disaggregation_label.id }}"
                     value="{{ item.value }}"></td>
                 </tr>
                 {% endfor %}
@@ -500,8 +500,8 @@ class CollectedDataForm(forms.ModelForm):
                 {% for item in get_disaggregation_value_standard %}
                 <tr>
                     <td>{{ item.disaggregation_label.label }}</td>
-                    <td><input type="text" 
-                    name="{{ item.disaggregation_label.id }}" 
+                    <td><input type="text"
+                    name="{{ item.disaggregation_label.id }}"
                     value="{{ item.value }}"></td>
                 </tr>
                 {% endfor %}
@@ -512,7 +512,7 @@ class CollectedDataForm(forms.ModelForm):
                 """)),
             HTML("""<br/>"""),
             FormActions(
-                Submit('submit', 'Save', css_class='btn-default'),
+                Submit('submit', 'Save', css_class='btn-success'),
                 Reset('reset', 'Reset', css_class='btn-warning')
             )
         )
