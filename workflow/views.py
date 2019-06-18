@@ -1961,7 +1961,7 @@ class StakeholderCreate(CreateView):
 
     def get_initial(self):
 
-        country = get_country(self.request.user)[0]
+        country = get_country(self.request.user).first()
 
         initial = {
             'agreement': self.kwargs['id'],
