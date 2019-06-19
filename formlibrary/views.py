@@ -45,7 +45,8 @@ class TrainingList(ListView):
         return render(request, self.template_name,
                       {'get_training': get_training,
                        'project_agreement_id': project_agreement_id,
-                       'get_programs': get_programs})
+                       'get_programs': get_programs,
+                       'active': ['forms', 'training_list']})
 
 
 class TrainingCreate(CreateView):
@@ -173,7 +174,7 @@ class BeneficiaryList(ListView):
         return render(request, self.template_name,
                       {'get_beneficiaries': get_beneficiaries,
                        'project_agreement_id': project_agreement_id,
-                       'get_programs': get_programs})
+                       'get_programs': get_programs, 'active': ['forms', 'beneficiary_list']})
 
 
 class BeneficiaryCreate(CreateView):
@@ -305,7 +306,7 @@ class DistributionList(ListView):
 
         return render(request, self.template_name,
                       {'get_distribution': get_distribution,
-                       'program_id': program_id, 'get_programs': get_programs})
+                       'program_id': program_id, 'get_programs': get_programs, 'active': ['forms', 'distribution_list']})
 
 
 class DistributionCreate(CreateView):

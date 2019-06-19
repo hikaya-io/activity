@@ -77,7 +77,8 @@ def list_workflow_level1(request):
     programs = Program.objects.filter(organization=user.organization)
     get_all_sectors = Sector.objects.all()
 
-    context = {'programs': programs, 'get_all_sectors': get_all_sectors}
+    context = {'programs': programs,
+               'get_all_sectors': get_all_sectors, 'active': ['workflow']}
 
     return render(request, 'workflow/level1.html', context)
 
@@ -199,7 +200,8 @@ class ProgramDash(ListView):
                        'APPROVALS': APPROVALS,
                        'program_id': self.kwargs['pk'],
                        'status': status,
-                       'filtered_program': filtered_program})
+                       'filtered_program': filtered_program,
+                       'active': ['workflow']})
 
 
 class ProjectAgreementList(ListView):
@@ -1348,7 +1350,7 @@ class SiteProfileList(ListView):
                        'project_agreement_id': activity_id,
                        'country': countries,
                        'get_programs': get_programs, 'form': FilterForm(),
-                       'helper': FilterForm.helper})
+                       'helper': FilterForm.helper, 'active': ['components']})
 
 
 class SiteProfileReport(ListView):
@@ -1929,7 +1931,8 @@ class StakeholderList(ListView):
                       {'get_stakeholders': get_stakeholders,
                        'project_agreement_id': project_agreement_id,
                        'program_id': program_id,
-                       'get_programs': get_programs})
+                       'get_programs': get_programs, 
+                       'active': ['components']})
 
 
 class StakeholderCreate(CreateView):
@@ -2665,7 +2668,7 @@ def objectives_list(request):
 
     get_all_objectives = StrategicObjective.objects.all()
 
-    context = {'get_all_objectives': get_all_objectives}
+    context = {'get_all_objectives': get_all_objectives, 'active': ['components']}
 
     return render(request, 'components/objectives.html', context)
 

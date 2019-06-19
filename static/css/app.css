@@ -54,8 +54,7 @@ button:focus,
     margin-top: 10px;
 }
 
-.navbar-activity {
-    /* Hikaya Brand Color: */
+.navbar-default {
     background-color: #fff;
     border: none;
     color: #737581;
@@ -63,21 +62,21 @@ button:focus,
     font-size: 18px;
 }
 
-.navbar-activity .navbar-nav>li>a {
+.navbar-default .navbar-nav>li>a {
     color: #737581;
 }
 
-.navbar-activity .navbar-nav>li>a:hover,
-.navbar-activity .navbar-nav>li>a:focus,
-.navbar-activity .navbar-nav>li.active>a,
-.navbar-activity .navbar-nav>li.active>a:hover,
-.navbar-activity .navbar-nav>li.active>a:focus,
-.navbar-activity .navbar-nav .dropdown.open a.dropdown-toggle {
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus,
+.navbar-default .navbar-nav>li.active>a,
+.navbar-default .navbar-nav>li.active>a:hover,
+.navbar-default .navbar-nav>li.active>a:focus,
+.navbar-default .navbar-nav .dropdown.open a.dropdown-toggle {
     color: #fff;
     background-color: rgba(0, 0, 0, .15);
 }
 
-.navbar-activity .navbar-nav .navbar-collapse {
+.navbar-default .navbar-nav .navbar-collapse {
     clear: both;
     float: none;
 }
@@ -98,6 +97,7 @@ button:focus,
     margin-bottom: 2.5px;
     margin-left: 10px;
     font-weight: 900;
+    margin-right: 15px;
 }
 
 .dropdown-bubble .dropdown-menu {
@@ -115,6 +115,11 @@ button:focus,
     right: 1em;
 }
 
+#login-dropdown {
+    min-width: 320px;
+    padding: 16px;
+}
+
 .dropdown-bubble .dropdown-menu:before {
     top: -.8em;
     border-bottom-color: rgba(0, 0, 0, 0.5);
@@ -125,8 +130,8 @@ button:focus,
     border-bottom-color: #fff;
 }
 
-.navbar-activity .navbar-nav>li#user-initial>a:hover,
-.navbar-activity .navbar-nav>li#user-initial>a:focus {
+.navbar-default .navbar-nav>li#user-initial>a:hover,
+.navbar-default .navbar-nav>li#user-initial>a:focus {
     background-color: #8d8d8d;
     border-radius: 50%;
     width: 45px;
@@ -135,24 +140,25 @@ button:focus,
     color: #fff
 }
 
-.navbar-brand>img {
-    max-width: 100%;
-    max-height: 100%;
+.navbar-default .navbar-nav>li>a:hover {
+    border-bottom: 2px solid #9b9b9b;
 }
 
-.navbar-brand {
-    padding: 0px;
-}
-
-.navbar-activity .navbar-nav>li>a:hover,
-.navbar-activity .navbar-nav>li>a:focus,
-.navbar-activity .navbar-nav>li.active>a,
-.navbar-activity .navbar-nav>li.active>a:hover,
-.navbar-activity .navbar-nav>li.active>a:focus,
-.navbar-activity .navbar-nav .dropdown.open a.dropdown-toggle {
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus,
+.navbar-default .navbar-nav>li.active>a,
+.navbar-default .navbar-nav>li.active>a:hover,
+.navbar-default .navbar-nav>li.active>a:focus,
+.navbar-default .navbar-nav .dropdown.open a.dropdown-toggle {
     background: none;
     color: #000000;
     border-bottom: 2px solid #25ced1;
+}
+
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus,
+.navbar-default .navbar-nav .dropdown.open a.dropdown-toggle {
+    border-bottom: 2px solid #9b9b9b;
 }
 
 .open>.drop
@@ -170,8 +176,6 @@ nav>div>.container {
 body>.container {
     height: 100%;
     margin-top: 40px;
-    /* padding-right: 0px;
-    padding-left: 0px; */
 }
 
 .alert {

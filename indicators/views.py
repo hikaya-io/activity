@@ -183,7 +183,8 @@ class IndicatorList(ListView):
             'program_id': program_id,
             'indicator_id': indicator_id,
             'type_id': type_id,
-            'programs': programs})
+            'programs': programs,
+            'active': ['indicators']})
 
 
 def import_indicator(service=1, deserialize=True):
