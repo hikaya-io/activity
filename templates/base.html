@@ -286,28 +286,6 @@
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-                <a href="#username-controls"
-                class="dropdown-toggle"
-                data-toggle="dropdown"
-                role="button"
-                aria-haspopup="true"
-                aria-expanded="false"
-                ><i class="fa fa-home"></i>
-                {{ user.activity_user.organization.name }} <i class="fa fa-angle-down"></i></b>
-              </a>
-              <ul class="dropdown-menu" id="bookmarks">
-                {% if user.activity_user.organizations %} 
-                {% for org in user.activity_user.organizations.all %}
-                <li>
-                  <a href="/accounts/organization/{{ org.id }}/">
-                    <i class="fa fa-angle-right"></i> {{ org.name }}
-                  </a>
-                </li>
-                {% endfor %} {% endif %}
-              </ul>
-            </li>
-
             <li class="dropdown  dropdown-bubble text-center" id="user-initial">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     {{ user.activity_user.name | make_list | first }}
@@ -325,7 +303,19 @@
                         >Admin Dashboard</a
                       >
                     </li>
-                    {% endif %} {% if user.is_authenticated %}
+                    {% endif %} 
+                    {% if user.is_authenticated %}
+                    {% if user.activity_user.organizations %} 
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Organizations</li>
+                    {% for org in user.activity_user.organizations.all %}
+                    <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
+                      <a href="/accounts/organization/{{ org.id }}/">
+                      {{ org.name }}
+                      </a>
+                    </li>
+                    {% endfor %} 
+                    {% endif %}
                     <li class="divider"></li>
                     <li>
                       <a href="{% url 'logout' %}" class="text-danger"

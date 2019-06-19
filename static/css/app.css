@@ -24,8 +24,8 @@ body {
     width: 100%;
     /* Set the fixed height of the footer here */
     height: 40px;
-    border-top: 1px solid #f5f5f5;
-    background-color: #dfdfdf;
+    border-top: 1px solid #f6f6f6;
+    background-color: #f5f5f5;
     vertical-align: top;
     color: rgb(50, 50, 50);
 }
@@ -62,6 +62,10 @@ button:focus,
     font-size: 18px;
 }
 
+.navbar-nav>li#user-initial>a {
+    padding: 0px;
+}
+
 .navbar-default .navbar-nav>li>a {
     color: #737581;
 }
@@ -90,14 +94,17 @@ button:focus,
 
 #user-initial {
     border-radius: 50%;
-    width: 45px;
-    height: 45px;
+    width: 35px;
+    height: 35px;
     background: #dfdfdf;
-    margin-top: 2.5px;
-    margin-bottom: 2.5px;
+    margin-top: 7.5px;
+    margin-bottom: 7.5px;
     margin-left: 10px;
     font-weight: 900;
     margin-right: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .dropdown-bubble .dropdown-menu {
@@ -112,7 +119,7 @@ button:focus,
     border-width: 0 .5em .8em .5em;
     border-color: transparent;
     position: absolute;
-    right: 1em;
+    right: 10px;
 }
 
 #login-dropdown {
@@ -134,10 +141,13 @@ button:focus,
 .navbar-default .navbar-nav>li#user-initial>a:focus {
     background-color: #8d8d8d;
     border-radius: 50%;
-    width: 45px;
-    height: 45px;
+    width: 35px;
+    height: 35px;
     border-bottom: none;
-    color: #fff
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .navbar-default .navbar-nav>li>a:hover {
