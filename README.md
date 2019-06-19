@@ -7,9 +7,6 @@ We are developing a tool for humanitarians to manage project activities and indi
 * where you work?
 * how do my outputs align with my overall project goal?
 
-Activity functionality http://www.github.com/hikaya-io/Activity-CE is intended to allow importing
-and exporting of project specific data from 3rd party data sources or excel files.
-
 ## Configuration
 Copy the activity/settings/local-sample.py to local.py and modify for your environment.
 
