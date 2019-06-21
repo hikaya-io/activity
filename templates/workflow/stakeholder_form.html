@@ -1,7 +1,6 @@
 {% extends "base.html" %}
-{% block bread_crumb %}
-{% endblock %}
-{% block page_title %}
+{% block content %}
+
 <div class="container">
         <!-- Sub navigation -->
         <div class="sub-navigation">
@@ -12,12 +11,9 @@
           <div class="sub-navigation-actions">
             <div class="sub-nav-item">
          <span style="float: right;"><a onclick="newPopup('https://docs.google.com/document/d/1fX8hC-UxEd1YcXbf7gIkh5WH_ZPQYuhMB9q4uJNmMec/','Form Help/Guidance'); return false;" href="#" class="btn btn-sm btn-info">Form Help/Guidance</a></span>
-
-
-                {% endblock %}
-
-
-{% block content %}
+</div>
+</div>
+</div>
 
     <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
     <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
@@ -51,6 +47,6 @@
 	{% csrf_token %}
     {% load crispy_forms_tags %}
     {% crispy form %}
+</div>
 
 {% endblock content %}
-</div>
