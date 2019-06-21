@@ -6,6 +6,11 @@
   }
 </style>
 <script>
+  $(document).ready(() => {
+    $('#indicatorWorkflowLevel1').select2({
+      theme: "bootstrap"
+    });
+  })
   /*
    *  Load the collected data for an indicator on the results page
    */
@@ -73,7 +78,7 @@
               aria-haspopup="true"
               aria-expanded="false"
             >
-            {{ user.activity_user.organization.level_1_label }}
+              {{ user.activity_user.organization.level_1_label }}
               <i class="fa fa-angle-down"></i>
             </button>
             <ul class="dropdown-menu">
@@ -86,7 +91,13 @@
 
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
-          <button class="btn btn-sm btn-info"><i class="fa fa-plus"></i> Add Indicator</button>
+          <button
+            class="btn btn-sm btn-info"
+            data-toggle="modal"
+            data-target="#addIndicatorModal"
+          >
+            <i class="fa fa-plus"></i> Add Indicator
+          </button>
         </div>
       </div>
     </div>
@@ -238,6 +249,60 @@
   >
     <div class="modal-dialog">
       <div class="modal-content"></div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+  <!-- Modal for captring data -->
+  <div
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    id="addIndicatorModal"
+    aria-labelledby="addIndicatorModal"
+  >
+    <div class="modal-dialog modal-md" role="form">
+      <div class="modal-content">
+        <form action="">
+          <div class="modal-header">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">
+              <i class="fa fa-bar-chart-o"></i> New Indicator
+            </h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="indicatorName">Indicator Name</label>
+              <input type="text" class="form-control" name="indicator_name" id="indicatorName">
+            </div>
+
+            <div class="form-group">
+              <label for="indicatorWorkflowLevel1">{{ user.activity_user.organization.level_1_label }}</label>
+              <select name="workflowlevel1" id="indicatorWorkflowLevel1" class="form-control">
+                <option value="">A</option>
+                <option value="">A</option>
+                <option value="">A</option>
+                <option value="">A</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
       <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
@@ -428,7 +493,6 @@
       }
     };
   </script>
-  {% include 'indicators/indicator_form_common_js.html' %} 
-  {% include 'indicators/collecteddata_form_common_js.html' %}
+  {% include 'indicators/indicator_form_common_js.html' %} {% include 'indicators/collecteddata_form_common_js.html' %}
 </div>
 {% endblock content %}

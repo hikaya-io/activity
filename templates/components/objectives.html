@@ -2,7 +2,10 @@
 
 <script>
   $(document).ready(() => {
-    $('#parentObjective').select2({ placeholder: 'Select parent (optional)' });
+    $('#parentObjective').select2({
+      placeholder: 'Select parent (optional)',
+      theme: 'bootstrap',
+    });
     $('#objectivesTable').DataTable();
   });
 </script>
@@ -66,7 +69,7 @@
           <!-- Action buttons -->
           <div class="btn-group">
             <button type="button" class="btn btn-sm btn-default">
-              <i class="fa fa-pencil"></i> Update
+              Details
             </button>
             <button
               type="button"
@@ -158,11 +161,7 @@
           >
             <i class="fa fa-close"></i> Close
           </button>
-          <button
-            type="submit"
-            class="btn btn-success"
-            id="saveObjective"
-          >
+          <button type="submit" class="btn btn-success" id="saveObjective">
             <i class="fa fa-save"></i> Save
           </button>
         </div>
