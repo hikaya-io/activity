@@ -2566,7 +2566,6 @@ class ReportData(View, AjaxableResponseMixin):
     """
 
     def get(self, request, *args, **kwargs):
-
         organization = request.user.activity_user.organization
         filters = {}
         if int(self.kwargs['pk']) != 0:
