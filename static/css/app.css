@@ -56,10 +56,16 @@ button:focus,
 
 .navbar-default {
     background-color: #fff;
-    border: none;
     color: #737581;
     font-family: 'Inconsolata', monospace !important;
     font-size: 18px;
+}
+
+.navbar-brand>img {
+    display: block;
+    max-height: 52px;
+    margin-top: -15px;
+    height: 52px;
 }
 
 .navbar-nav>li#user-initial>a {

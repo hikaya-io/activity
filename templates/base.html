@@ -131,11 +131,11 @@
           </button>
           {% if user.is_authenticated %}
             <a class="navbar-brand" href="{% url 'index' %}">
-              <img style="max-width: 140px; margin-top: -5px;" src="{{ user.activity_user.organization.logo.url }}">
+              <img src="{{ user.activity_user.organization.logo.url }}">
             </a>
           {% else %}
             <a class="navbar-brand" href="{% url 'index' %}">
-              <img style="max-width: 140px; margin-top: -5px;" src="{% static 'img/hikaya-activity-logo.png' %}">
+              <img src="{% static 'img/hikaya-activity-logo.png' %}">
             </a>
           {% endif %}
         </div>
