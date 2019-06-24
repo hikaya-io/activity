@@ -148,11 +148,12 @@ class IndicatorList(ListView):
 
         # countries = get_country(request.user)
         countries = request.user.activity_user.countries.all()
+        organization = request.user.activity_user.organization
         get_programs = Program.objects.filter(
-            funding_status="Funded", country__in=countries).distinct()
+            funding_status="Funded", organization=organization)
         # .exclude(collecteddata__isnull=True)
         get_indicators = Indicator.objects.filter(
-            program__country__in=countries)
+            program__organization=organization)
         get_indicator_types = IndicatorType.objects.all()
 
         program_id = int(self.kwargs['program'])
@@ -172,7 +173,7 @@ class IndicatorList(ListView):
             filters['indicator'] = indicator_id
 
         programs = Program.objects.prefetch_related('indicator_set')\
-            .filter(funding_status="Funded", country__in=countries)\
+            .filter(funding_status="Funded", organization=organization)\
             .filter(**filters).order_by('name')\
             .annotate(indicator_count=Count('indicator'))
 
@@ -183,7 +184,8 @@ class IndicatorList(ListView):
             'program_id': program_id,
             'indicator_id': indicator_id,
             'type_id': type_id,
-            'programs': programs})
+            'programs': programs,
+            'active': ['indicators']})
 
 
 def import_indicator(service=1, deserialize=True):
@@ -220,8 +222,9 @@ def indicator_create(request, id=0):
     get_countries = Country.objects.all()
     countries = get_country(request.user)
     country_id = Country.objects.get(country=countries[0]).id
+    organization = request.user.activity_user.organization
     get_programs = Program.objects.all().filter(
-        funding_status="Funded", country__in=countries).distinct()
+        funding_status="Funded", organization=organization)
     get_services = ExternalService.objects.all()
     program_id = id
 
@@ -229,7 +232,6 @@ def indicator_create(request, id=0):
         # set vars from form and get values from user
 
         type = IndicatorType.objects.get(indicator_type="custom")
-        country = Country.objects.get(id=request.POST['country'])
         program = Program.objects.get(id=request.POST['program'])
         service = request.POST['services']
         level = Level.objects.all()[0]
@@ -1155,9 +1157,9 @@ def tool(request):
 
 # REPORT VIEWS
 def indicator_report(request, program=0, indicator=0, type=0):
-    countries = request.user.activity_user.countries.all()
+    organization = request.user.activity_user.organization
     get_programs = Program.objects.filter(
-        funding_status="Funded", country__in=countries).distinct()
+        funding_status="Funded", organization=organization)
     get_indicator_types = IndicatorType.objects.all()
 
     filters = {}
@@ -1168,7 +1170,7 @@ def indicator_report(request, program=0, indicator=0, type=0):
     if int(indicator) != 0:
         filters['id'] = indicator
 
-    filters['program__country__in'] = countries
+    filters['program__organization'] = organization
 
     indicator_data = Indicator.objects.filter(**filters)\
         .prefetch_related('sector')\
@@ -1198,9 +1200,9 @@ def indicator_report(request, program=0, indicator=0, type=0):
 class IndicatorReport(View, AjaxableResponseMixin):
     def get(self, request, *args, **kwargs):
 
-        countries = get_country(request.user)
+        organization = request.user.activity_user.organization
         get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries).distinct()
+            funding_status="Funded", organization=organization)
 
         get_indicator_types = IndicatorType.objects.all()
 
@@ -1216,7 +1218,7 @@ class IndicatorReport(View, AjaxableResponseMixin):
         if indicator != 0:
             filters['id'] = indicator
         if program == 0 and type == 0:
-            filters['program__country__in'] = countries
+            filters['program__organization'] = organization
 
         get_indicators = Indicator.objects.filter(**filters)\
             .prefetch_related('sector')\
@@ -1261,9 +1263,9 @@ def program_indicator_report(request, program=0):
     :return:
     """
     program = int(program)
-    countries = get_country(request.user)
+    organization = request.user.activity_user.organization
     get_programs = Program.objects.all().filter(
-        funding_status="Funded", country__in=countries).distinct()
+        funding_status="Funded", organization=organization)
     get_indicators = Indicator.objects.all().filter(
         program__id=program).select_related().order_by('level', 'number')
     get_program = Program.objects.get(id=program)
@@ -1294,10 +1296,11 @@ def program_indicator_report(request, program=0):
 
 def indicator_data_report(request, id=0, program=0, type=0):
     countries = request.user.activity_user.countries.all()
+    organization = request.user.activity_user.organization
     get_programs = Program.objects.all().filter(
-        funding_status="Funded", country__in=countries).distinct()
+        funding_status="Funded", organization=organization)
     get_indicators = Indicator.objects.select_related().filter(
-        program__country__in=countries)
+        program__organization=organization)
     get_indicator_types = IndicatorType.objects.all()
     indicator_name = None
     program_name = None
@@ -1305,14 +1308,14 @@ def indicator_data_report(request, id=0, program=0, type=0):
     q = {'indicator__id__isnull': False}
 
     get_site_profile = SiteProfile.objects\
-        .filter(projectagreement__program__country__in=countries)\
+        .filter(projectagreement__program__organization=organization)\
         .select_related('country', 'district', 'province')
 
     if int(id) != 0:
         indicator_name = Indicator.objects.get(id=id).name
         q['indicator__id'] = id
     else:
-        q['indicator__program__country__in'] = countries
+        q['indicator__program__organization'] = organization
 
     if int(program) != 0:
         get_site_profile = SiteProfile.objects\
@@ -1403,9 +1406,10 @@ class IndicatorReportData(View, AjaxableResponseMixin):
             }
             q.update(s)
 
-        countries = get_country(request.user)
+        organization = request.user.activity_user.organization
 
-        indicator = Indicator.objects.filter(program__country__in=countries)\
+        indicator = Indicator.objects.filter(
+            program__organization=organization)\
             .filter(**q).values(
             'id', 'program__name', 'baseline', 'level__name', 'lop_target',
             'program__id', 'external_service_record__external_service__name',
@@ -1414,10 +1418,10 @@ class IndicatorReportData(View, AjaxableResponseMixin):
             'sector__sector').order_by('create_date')
 
         indicator_count = Indicator.objects.all()\
-            .filter(program__country__in=countries).filter(**q).filter(
+            .filter(program__organization=organization).filter(**q).filter(
             collecteddata__isnull=True).distinct().count()
         indicator_data_count = Indicator.objects.all()\
-            .filter(program__country__in=countries).filter(**q).filter(
+            .filter(program__organization=organization).filter(**q).filter(
             collecteddata__isnull=False).distinct().count()
 
         indicator_serialized = json.dumps(list(indicator))
@@ -1452,7 +1456,8 @@ class CollectedDataReportData(View, AjaxableResponseMixin):
 
     def get(self, request, *args, **kwargs):
 
-        countries = get_country(request.user)
+        organization = request.user.activity_user.organization
+
         program = kwargs['program']
         indicator = kwargs['indicator']
         type = kwargs['type']
@@ -1481,7 +1486,7 @@ class CollectedDataReportData(View, AjaxableResponseMixin):
             'evidence', 'indicator', 'program',
             'indicator__objectives',
             'indicator__strategic_objectives')\
-            .filter(program__country__in=countries).filter(
+            .filter(program__organization=organization).filter(
             **q).order_by('indicator__program__name', 'indicator__number')\
             .values(
             'id', 'indicator__id', 'indicator__name',
@@ -1496,7 +1501,7 @@ class CollectedDataReportData(View, AjaxableResponseMixin):
 
         collected_sum = CollectedData.objects\
             .select_related('periodic_target')\
-            .filter(program__country__in=countries).filter(**q)\
+            .filter(program__organization=organization).filter(**q)\
             .aggregate(Sum('periodic_target__target'), Sum('achieved'))
 
         # datetime encoding breaks without using this
@@ -1526,10 +1531,11 @@ class DisaggregationReportMixin(object):
         context = super(DisaggregationReportMixin,
                         self).get_context_data(**kwargs)
 
-        countries = get_country(self.request.user)
+        organization = self.request.user.activity_user.organization
         programs = Program.objects.filter(
-            funding_status="Funded", country__in=countries).distinct()
-        indicators = Indicator.objects.filter(program__country__in=countries)
+            funding_status="Funded", organization=organization)
+        indicators = Indicator.objects.filter(
+            program__organization=organization)
 
         program_id = int(kwargs.get('program', 0))
         program_selected = None
@@ -1677,8 +1683,8 @@ class TVAReport(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TVAReport, self).get_context_data(**kwargs)
-        countries = get_country(self.request.user)
-        filters = {'program__country__in': countries}
+        organization = self.request.user.activity_user.organization
+        filters = {'program__organization': organization}
         program = Program.objects.filter(
             id=kwargs.get('program', None)).first()
         indicator_type = IndicatorType.objects.filter(
@@ -1700,9 +1706,9 @@ class TVAReport(TemplateView):
             .annotate(actuals=Sum('collecteddata__achieved'))
         context['data'] = indicators
         context['get_indicators'] = Indicator.objects.filter(
-            program__country__in=countries).exclude(collecteddata__isnull=True)
+            program__organization=organization)
         context['get_programs'] = Program.objects.filter(
-            funding_status="Funded", country__in=countries).distinct()
+            funding_status="Funded", organization=organization)
         context['get_indicator_types'] = IndicatorType.objects.all()
         context['program'] = program
         context['export_to_pdf_url'] = True
@@ -1727,10 +1733,11 @@ class CollectedDataList(ListView):
     def get(self, request, *args, **kwargs):
 
         countries = get_country(request.user)
+        organization = request.user.activity_user.organization
         get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries).distinct()
+            funding_status="Funded", organization=organization)
         get_indicators = Indicator.objects.all()\
-            .filter(program__country__in=countries).exclude(
+            .filter(program__organization=organization).exclude(
             collecteddata__isnull=True)
         get_indicator_types = IndicatorType.objects.all()
         program = self.kwargs['program']
@@ -1773,7 +1780,7 @@ class CollectedDataList(ListView):
             .prefetch_related('evidence', 'indicator', 'program',
                               'indicator__objectives',
                               'indicator__strategic_objectives').filter(
-            program__country__in=countries).filter(
+            program__organization=organization).filter(
             **q).order_by(
             'indicator__program__name',
             'indicator__number').values(
@@ -1823,10 +1830,10 @@ class IndicatorExport(View):
         if int(kwargs['program']) == 0:
             del kwargs['program']
 
-        countries = get_country(request.user)
+        organization = request.user.activity_user.organization
 
         queryset = Indicator.objects.filter(
-            **kwargs).filter(program__country__in=countries)
+            **kwargs).filter(program__organization=organization)
 
         indicator = IndicatorResource().export(queryset)
         response = HttpResponse(
@@ -1852,10 +1859,10 @@ class IndicatorDataExport(View):
             kwargs['indicator__indicator_type__id'] = kwargs['type']
             del kwargs['type']
 
-        countries = get_country(request.user)
+        organization = request.user.activity_user.organization
 
         queryset = CollectedData.objects.filter(
-            **kwargs).filter(indicator__program__country__in=countries)
+            **kwargs).filter(indicator__program__organization=organization)
         dataset = CollectedDataResource().export(queryset)
         response = HttpResponse(
             dataset.csv, content_type='application/ms-excel')

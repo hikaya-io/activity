@@ -11,7 +11,7 @@
     />
     <meta name="author" content="Hikaya" />
 
-    <title>{% block title %} Activity CE {% endblock %}</title>
+    <title>{% block title %} {{user.activity_user.organization.name}} / Activity-CE {% endblock %}</title>
 
     <link rel="icon" href="{% static 'img/favicon.ico' %}" />
 
@@ -48,7 +48,7 @@
 
     <!-- jsTree -->
     <link
-      rel="stylesheet"
+      rel="styleshee"
       href="{% static 'jstree/dist/themes/default/style.min.css' %}"
     />
 
@@ -94,6 +94,8 @@
       href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"
     />
 
+    <link rel="stylesheet" href="{% static 'select2-bootstrap-theme/dist/select2-bootstrap.min.css' %}">
+
     {% block extra_js_in_header %}
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script
@@ -109,258 +111,231 @@
 
     {% endblock %}
   </head>
+
   <body>
-    <!--http://getbootstrap.com/examples/sticky-footer-navbar/-->
-    <nav
-      id="navid"
-      class="navbar navbar-default navbar-activity navbar-fixed-top"
-      role="navigation"
-    >
+    <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
-        <div class="">
-          <a class="navbar-brand" href="{% url 'index' %}">
-            {% if user.is_authenticated %}
-            <img
-              src="{{ user.activity_user.organization.logo.url }}"
-            />
-            {% else %}
-            <img
-              style="margin-top: -5px; max-width: 140px;"
-              src="{% static 'img/hikaya-activity-logo.png' %}"
-            />
-            {% endif %}
-          </a>
-          <!-- hamburger nav -->
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
           <button
             type="button"
             class="navbar-toggle collapsed"
             data-toggle="collapse"
-            data-target="#navbar-collapse-1"
+            data-target="#activity-navbar-collapse"
+            aria-expanded="false"
           >
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <!-- end hamburger nav -->
+          <a class="navbar-brand" href="{% url 'index' %}"><b class="">Activity-CE</b></a>
         </div>
-        {% if user.is_authenticated %}
-        <div
-          class="collapse navbar-collapse"
-          role="navigation"
-          id="navbar-collapse-1"
-        >
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="activity-navbar-collapse">
+          {% if user.is_authenticated %}
           <ul class="nav navbar-nav">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                >Workflow<b class="caret"></b
+            <li class="dropdown {% if 'workflow' in active %} active {% endif %}">
+              <a
+                href="#"
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >Workflow <i class="fa fa-angle-down" aria-hidden="true"></i
               ></a>
               <ul class="dropdown-menu">
                 <li>
                   <a href="/workflow/level2/0/"
-                    ><span class="glyphicon glyphicon-dashboard"></span>
-                    {{ user.activity_user.organization.level_1_label }} Index</a
+                    >{{ user.activity_user.organization.level_1_label }} Index</a
                   >
                 </li>
                 <li>
                   <a href="{% url 'level1' %}"
-                    ><span class="glyphicon glyphicon-list-alt"></span>
-                    {{ user.activity_user.organization.level_1_label }}s</a
+                    >{{ user.activity_user.organization.level_1_label }}s</a
                   >
                 </li>
               </ul>
             </li>
-            <li class="{{ active }}"><a href="/indicators/home/0/0/0">Indicators</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                >Form Library<b class="caret"></b
+
+            <li class="{% if 'indicators' in active %} active {% endif %}">
+              <a href="/indicators/home/0/0/0">Indicators <span class="sr-only">(current)</span></a>
+            </li>
+
+            <li class="dropdown {% if 'forms' in active %} active {% endif %}">
+              <a
+                href="#"
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >Form Library <i class="fa fa-angle-down"></i
               ></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/formlibrary/training_list/0/"
-                    ><span class="glyphicon glyphicon-th-list"></span>
-                    Training</a
-                  >
+                  <a href="/formlibrary/training_list/0/"> Training</a>
                 </li>
                 <li>
-                  <a href="/formlibrary/distribution_list/0/"
-                    ><span class="glyphicon glyphicon-th-list"></span>
-                    Distributions</a
-                  >
+                  <a href="/formlibrary/distribution_list/0/"> Distributions</a>
                 </li>
                 <li>
-                  <a href="/formlibrary/beneficiary_list/0/"
-                    ><span class="glyphicon glyphicon-th-list"></span>
-                    Beneficiaries</a
-                  >
+                  <a href="/formlibrary/beneficiary_list/0/"> Beneficiaries</a>
                 </li>
               </ul>
             </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                >Components<b class="caret"></b
+
+            <li class="dropdown {% if 'components' in active %} active {% endif %}">
+              <a
+                href="#"
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >Components <i class="fa fa-angle-down"></i
               ></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/workflow/siteprofile_list/0/0/"
-                    ><span class="glyphicon glyphicon-map-marker"></span>
-                    Locations(Sites)</a
+                  <a href="/workflow/siteprofile_list/0/0/">
+                    Locations (Sites)</a
                   >
                 </li>
                 <li>
                   <a href="/workflow/stakeholder_list/0/0">
-                    <i class="fa fa-users"></i> Stakeholders (Orgs)
+                    Stakeholders (Orgs)
                   </a>
                 </li>
                 <li>
-                  <a href=""
-                    ><span class="glyphicon glyphicon-phone-alt"></span>
-                    Contacts</a
-                  >
+                  <a href=""> Contacts</a>
                 </li>
                 <li>
                   <a href="/workflow/documentation_list/0/0/">
-                    <i class="fa fa-folder-open" aria-hidden="true"></i>
                     Documents
                   </a>
                 </li>
                 <li>
-                  <a href="{% url 'objectives' %}"
-                    ><span class="glyphicon glyphicon-th-list"></span>
-                    Objectives</a
-                  >
+                  <a href="{% url 'objectives' %}"> Objectives</a>
                 </li>
               </ul>
             </li>
 
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                >Reports<b class="caret"></b
-              ></a>
+            <li class="dropdown {% if 'reports' in active %} active {% endif %}">
+              <a
+                href="#"
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >Reports <i class="fa fa-angle-down"></i></a>
               <ul class="dropdown-menu">
-                <li>
-                  <a href="/reports/report/"
-                    ><span class="glyphicon glyphicon-list-alt"></span>
-                    {{ user.activity_user.organization.level_1_label }}
-                    Report</a
-                  >
-                </li>
-                <li>
-                  <a href="/customdashboard/program_list/0/"
-                    ><span class="glyphicon glyphicon-list-alt"></span>
-                    {{ user.activity_user.organization.level_1_label }}
-                    Dashboards</a
-                  >
-                </li>
-                <li>
-                  <a href="/workflow/report/0/none"
-                    ><span class="glyphicon glyphicon-list-alt"></span>
-                    {{ user.activity_user.organization.level_2_label }}
-                    Report</a
-                  >
-                </li>
-                <li>
-                  <a href="/indicators/collecteddata/0/0/0/"
-                    ><span class="glyphicon glyphicon-list-alt"></span>
-                    Indicator Data Report</a
-                  >
-                </li>
-                <li>
-                  <a href="/indicators/data/0/0/0/"
-                    ><span class="glyphicon glyphicon-list-alt"></span>
-                    Indicator Visual Report</a
-                  >
-                </li>
-                <li>
-                  <a href="/indicators/report/0/0/0/"
-                    ><span class="glyphicon glyphicon-list-alt"></span>
-                    Indicator Library</a
-                  >
-                </li>
-                <li>
-                  <a href="/indicators/tvareport/"
-                    ><span class="glyphicon glyphicon-list-alt"></span> Target
-                    vs Actual Report</a
-                  >
-                </li>
-                <li>
-                  <a href="/indicators/disrep/0"
-                    ><span class="glyphicon glyphicon-list-alt"></span>
-                    Indicator Disaggregation Report</a
-                  >
-                </li>
+                  <li>
+                      <a href="/reports/report/"
+                        >
+                        {{ user.activity_user.organization.level_1_label }}
+                        Report</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/customdashboard/program_list/0/"
+                        >
+                        {{ user.activity_user.organization.level_1_label }}
+                        Dashboards</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/workflow/report/0/none"
+                        >
+                        {{ user.activity_user.organization.level_2_label }}
+                        Report</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/indicators/collecteddata/0/0/0/"
+                        >
+                        Indicator Data Report</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/indicators/data/0/0/0/"
+                        >
+                        Indicator Visual Report</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/indicators/report/0/0/0/"
+                        >
+                        Indicator Library</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/indicators/tvareport/"
+                        > Target
+                        vs Actual Report</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/indicators/disrep/0"
+                        >
+                        Indicator Disaggregation Report</a
+                      >
+                    </li>
               </ul>
             </li>
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown-submenu">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <span class="glyphicon glyphicon-home"></span>
-                {{ user.activity_user.organization.name }}<b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu" id="bookmarks">
-                {% if user.activity_user.organizations %} {% for org in user.activity_user.organizations.all %}
-                <li>
-                  <a href="/accounts/organization/{{ org.id }}/">
-                    <span class="glyphicon glyphicon-triangle-right"></span>
-                    {{ org.name }}
+            <li class="dropdown  dropdown-bubble text-center" id="user-initial">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    {{ user.activity_user.name | make_list | first }}
                   </a>
-                </li>
-                {% endfor %} {% endif %}
-              </ul>
-            </li>
-
-            <li class="dropdown text-center dropdown-bubble" id="user-initial">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <!-- {% if "demo" in request.build_absolute_uri %}
-                <span class="label label-danger">DEMO</span>
-                {% elif "127." in request.build_absolute_uri or "localhost" in request.build_absolute_uri %}
-                <span class="label label-danger">LOCAL</span>
-                {% elif "dev" in request.build_absolute_uri %}
-                <span class="label label-danger">DEV</span>
-                {% elif "report" in request.build_absolute_uri %}
-                <span class="label label-info">REPORT</span>
-                {% endif %}
-                <span class="glyphicon glyphicon-user"></span> -->
-                {{ user.activity_user.name | make_list | first }}
-              </a>
-
-              <ul class="dropdown-menu">
-                <!-- <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-lock"></span> Logout</a></li> -->
-                <li>
-                  <a href="{% url 'profile' %}"
-                    ><span class="glyphicon glyphicon-user"></span> Profile</a
-                  >
-                </li>
-                {% if user.is_superuser %}
-                <li>
-                  <a href="{% url 'admin_dashboard' %}"
-                    ><span class="glyphicon glyphicon-lock"></span> Admin
-                    Dashboard</a
-                  >
-                </li>
-                {% endif %} {% if user.is_authenticated %}
-                <li class="divider"></li>
-                <li>
-                  <a href="{% url 'logout' %}" class="text-danger"
-                    ><span class="glyphicon glyphicon-log-out"></span> Logout</a
-                  >
-                </li>
-                {% endif %}
-              </ul>
+    
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a href="{% url 'profile' %}"
+                        >Profile</a
+                      >
+                    </li>
+                    {% if user.is_superuser %}
+                    <li>
+                      <a href="{% url 'admin_dashboard' %}"
+                        >Admin Dashboard</a
+                      >
+                    </li>
+                    {% endif %} 
+                    {% if user.is_authenticated %}
+                    {% if user.activity_user.organizations %} 
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Organizations</li>
+                    {% for org in user.activity_user.organizations.all %}
+                    <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
+                      <a href="/accounts/organization/{{ org.id }}/">
+                      {{ org.name }}
+                      </a>
+                    </li>
+                    {% endfor %} 
+                    {% endif %}
+                    <li class="divider"></li>
+                    <li>
+                      <a href="{% url 'logout' %}" class="text-danger"
+                        >Logout</a
+                      >
+                    </li>
+                    {% endif %}
+                  </ul>  
             </li>
           </ul>
           {% else %}
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                ><span class="glyphicon glyphicon-user"></span> Login
-                <b class="caret"></b
-              ></a>
-              <ul class="dropdown-menu">
-                <li>
-                  <div class="navbar-text">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                  >Login <i class="fa fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu" id="login-dropdown">
+                  <li>
                     <form
                       class="form"
                       role="form"
@@ -387,30 +362,32 @@
                           class="form-control"
                         />
                       </div>
-                      <button type="submit" class="btn btn-success">
-                        Sign in
-                      </button>
+
+                      <div class="text-right">
+                        <button type="submit" class="btn btn-success">
+                          Sign in
+                        </button>
+                      </div>
                     </form>
-                  </div>
-                </li>
-              </ul>
-            </li>
-            <!-- .dropdown collapse -->
+                  </li>
+                </ul>
+              </li>
+              <!-- .dropdown collapse -->
           </ul>
           {% endif %}
         </div>
-        <!-- .navbar-header collapse -->
+        <!-- /.navbar-collapse -->
       </div>
-      <!-- .container collapse -->
+      <!-- /.container-fluid -->
     </nav>
+
     <!-- .navbar collapse -->
     <script type="text/javascript">
       var myElement = document.getElementById('navid');
       // myElement.style.backgroundColor =
       //   '#{{ user.activity_user.organization.theme_color }}';
 
-      myElement.style.backgroundColor =
-        '#fff';
+      myElement.style.backgroundColor = '#fff';
     </script>
     <br />
     <div class="" style="margin-top:5px;">
@@ -418,7 +395,8 @@
       <!-- <div>{% block bread_crumb %}{% endblock %}</div> -->
       <div id="alerts">
         <!-- Any messages for users -->
-        {% block messages %} {% if messages %} {% for message in messages %} {% if 'safe' in message.tags %}
+        {% block messages %} {% if messages %} {% for message in messages %} 
+        {% if 'safe' in message.tags %}
         <div class="alert alert-{{ message.tags }}">{{ message | safe }}</div>
         {% else %}
         <div class="alert alert-{{ message.tags }}">{{ message | safe }}</div>
@@ -428,7 +406,7 @@
       </div>
 
       <!-- Main body content -->
-      {% block content %}{% endblock %}
+      {% block content %} {% endblock %}
       <!--{% if not user.is_authenticated  %}
                 <a href="{% url "social:begin" "google-oauth2" %}">Google+</a>
             {% endif %}-->
@@ -439,7 +417,8 @@
     <div id="footer">
       <!-- Sticky Footer -->
       <div class="container">
-        {% if "links.html"|template_exists %} {% include "links.html" %} {% else %}
+        {% if "links.html"|template_exists %} {% include "links.html" %} 
+        {% else %}
         <div class="column col-xs-16 text-right">
           <a href="http://www.hikaya.io" class="text-muted"><b>Hikaya</b></a> |
           <a href="http://help.hikaya.io" class="text-muted"

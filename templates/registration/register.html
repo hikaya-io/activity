@@ -1,5 +1,4 @@
-{% extends "base.html" %} {% block title %} Create an account {% endblock %} 
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container auth-container">
   <div class="row">
     <div class="col-md-10 col-md-offset-1">
@@ -12,7 +11,7 @@
         <div class="btn-group" role="group">
           <a
             type="button"
-            class="btn hikaya-btn-default"
+            class="btn btn-default btn-sm"
             href="{% url 'login' %}"
             ><strong>Login</strong></a
           >
@@ -20,7 +19,7 @@
         <div class="btn-group" role="group">
           <a
             type="button"
-            class="btn hikaya-btn-primary"
+            class="btn btn-primary btn-sm"
             href="{% url 'register' %}"
             ><strong>Register</strong></a
           >
@@ -136,16 +135,16 @@
                   <span id="confirmPasswordHelpBlock" class="help-block"></span>
                 </div>
               </div>
-              <div class="row auth-form-action text-right">
-                <button type="reset" class="btn btn-md hikaya-btn-cancel">
-                  <i class="fa fa-undo"></i> Cancel
+              <div class="form-group text-right">
+                <button type="reset" class="btn btn-md btn-default">
+                  Cancel
                 </button>
                 <button
                   type="submit"
                   id="register_submit_btn"
-                  class="btn btn-md hikaya-btn-primary"
+                  class="btn btn-md btn-primary"
                 >
-                  <i class="fa fa-save"></i> Submit
+                  Submit
                 </button>
               </div>
             </form>
@@ -155,23 +154,6 @@
     </div>
     <div class="col-md-1"></div>
   </div>
-
-  <!-- <form action="" method="post">
-		{% csrf_token %} {% load crispy_forms_tags %}
-		{{ userform | crispy }}
-		{{ activityform | crispy }}
-		<div id="iframe">
-			<h6>Notice/Disclaimer:</h6>
-
-			<p>
-				{{ privacy.privacy_disclaimer }}
-			</p>
-		</div>
-		<br />
-		<div>
-			<input type="submit" value="Create the account" />
-		</div>
-	</form> -->
 </div>
 {% endblock %} {% block extra_js_in_body %}
 <script
