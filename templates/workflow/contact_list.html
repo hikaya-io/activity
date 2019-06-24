@@ -1,34 +1,62 @@
-{% extends "base.html" %}
-{% block bread_crumb %}
-<ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
-  <li><a href="/workflow/stakeholder_list/0/0/">Stakeholder List</a></li>
-  <li class="active">Contact List</li>
-</ol>
-{% endblock %}
-{% block page_title %}Contact List{% endblock %}
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">Contacts</h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        <div>
+          <a
+            href="/workflow/contact_add/{{ get_stakeholder.pk }}/0/"
+            class="btn btn-sm btn-primary"
+            >New Contact</a
+          >
+          &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
 
-{% block content %}
-<div>
-<a href="/workflow/contact_add/{{get_stakeholder.pk}}/0/" class="btn btn-large btn-success">New Contact</a> &nbsp;
-<hr/>
-<br/>
-</div>
-<h3>Contacts</h3>
+  {% if get_stakeholder %}
+  <p>Filtered by Stakeholder: [{{ get_stakeholder.name }}]</p>
+  {% endif %}
 
-{% if get_stakeholder %}
-    <p>Filtered by Stakeholder: [{{ get_stakeholder.name }}]</p>
-{% endif %}
-
-<ul class="list-group">
-{% for item in getContacts %}
-	  {% if item.contact %}
-    	<li class="list-group-item"><b><a href="/workflow/contact_update/{{get_stakeholder.pk}}/{{ item.contact.id }}">{{ item.contact.create_date|date }}&nbsp; - &nbsp; {{ item.contact.name }}</a></b> &nbsp;&nbsp;<a href="/workflow/contact_delete/{{ item.contact.id }}" class="btn-xs btn-danger">Delete Contact</a></li>
+  <ul class="list-group">
+    {% for item in getContacts %} {% if item.contact %}
+    <li class="list-group-item">
+      <b
+        ><a
+          href="/workflow/contact_update/{{ get_stakeholder.pk }}/{{
+            item.contact.id
+          }}"
+          >{{ item.contact.create_date | date }}&nbsp; - &nbsp;
+          {{ item.contact.name }}</a
+        ></b
+      >
+      &nbsp;&nbsp;<a
+        href="/workflow/contact_delete/{{ item.contact.id }}"
+        class="btn-xs btn-danger"
+        >Delete Contact</a
+      >
+    </li>
     {% else %}
-    	<li class="list-group-item"><b><a href="/workflow/contact_update/{{ item.id }}">{{ item.create_date|date }}&nbsp; - &nbsp; {{ item.name }}</a></b> &nbsp;&nbsp;<a href="/workflow/contact_delete/{{ item.id }}" class="btn-xs btn-danger">Delete Contact</a></li>
-    {% endif %}
-{% empty %}
+    <li class="list-group-item">
+      <b
+        ><a href="/workflow/contact_update/{{ item.id }}"
+          >{{ item.create_date | date }}&nbsp; - &nbsp; {{ item.name }}</a
+        ></b
+      >
+      &nbsp;&nbsp;<a
+        href="/workflow/contact_delete/{{ item.id }}"
+        class="btn-xs btn-danger"
+        >Delete Contact</a
+      >
+    </li>
+    {% endif %} {% empty %}
     <li class="list-group-item">No contacts yet.</li>
-{% endfor %}
-</ul>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock content %}
