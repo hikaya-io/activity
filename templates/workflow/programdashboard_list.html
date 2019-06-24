@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% load mathfilters %} {% block content %}
+{% include '../workflow/projectdashboard_list.html' %}
 
 <script>
   $(document).ready(function() {
@@ -23,16 +24,29 @@
       <div class="sub-nav-item">
         <!-- sample action buttons -->
         <div class="btn-group" role="group" aria-label="">
-          <a
-            role="button"
-            href="/workflow/dashboard/project/0/"
-            class="btn btn-sm btn-info"
-            >Create a {{ user.activity_user.organization.level_2_label }}</a
+            <button
+            class="btn btn-info btn-sm"
+            data-toggle="modal"
+            data-target="#addProjectModal"
           >
+            <i class="fa fa-plus"></i> Create New
+            {{ request.user.activity_user.organization.level_2_label }}
+          </button>
         </div>
       </div>
     </div>
   </div>
+  <table
+  class="table"
+  id="programsTable"
+>
+  <thead>
+    <tr>
+      <th>Program</th>
+      <th>Project</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
 
   <br />
   <div>
@@ -58,7 +72,10 @@
         </h4>
       </div>
       <!-- Table -->
-      <table class="table table-condensed table-striped" id="programsTable">
+
+      <table class="table table-condensed table-striped"
+      id="programsTable">
+      <thead>
         <tr>
           <th>Date Created</th>
           <th>{{ user.activity_user.organization.level_2_label }} Name</th>
@@ -68,6 +85,7 @@
           <th>Approval Status</th>
           <th>&nbsp;</th>
         </tr>
+        </thead>
 
         {% if status == "in_progress" %}
         {% for item in program.agreement.get_inprogress %}

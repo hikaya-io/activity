@@ -8,18 +8,19 @@ from django.urls import re_path, path
 
 urlpatterns = [
     path('level1', list_workflow_level1, name='level1'),
+    #path('level2', list_workflow_level2, name='level2'),
     path('objectives', objectives_list, name='objectives'),
     path('objectives/tree', objectives_tree, name='objectives-tree'),
-    re_path(r'^dashboard/project/(?P<pk>\w+)/$',
+    re_path(r'^level2/project/(?P<pk>\w+)/$',
             ProjectDash.as_view(), name='project_dashboard'),
-    re_path(r'^dashboard/project/(?P<pk>\w+)$',
+    re_path(r'^level2/project/(?P<pk>\w+)$',
             ProjectDash.as_view(), name='project_dashboard'),
-    re_path(r'^dashboard/project', ProjectDash.as_view(),
+    re_path(r'^level2/project', ProjectDash.as_view(),
             name='project_dashboard'),
     re_path(
-        r'^dashboard/(?P<pk>\w+)/(?P<status>[\w ]+)/$', ProgramDash.as_view(),
+        r'^level2/(?P<pk>\w+)/(?P<status>[\w ]+)/$', ProgramDash.as_view(),
         name='dashboard'),
-    re_path(r'^dashboard/(?P<pk>\w+)/$',
+    re_path(r'^level2/(?P<pk>\w+)/$',
             ProgramDash.as_view(), name='dashboard'),
 
     re_path(r'^projectagreement_list/(?P<pk>\w+)/(?P<status>[\w ]+)/$',
