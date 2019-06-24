@@ -63,9 +63,9 @@ button:focus,
 
 .navbar-brand>img {
     display: block;
-    max-height: 52px;
+    max-height: 50px;
     margin-top: -15px;
-    height: 52px;
+    height: 50px;
 }
 
 .navbar-nav>li#user-initial>a {
