@@ -2529,11 +2529,11 @@ class Report(View, AjaxableResponseMixin):
             get_agreements = ProjectAgreement.objects.all().filter(
                 approval=self.kwargs['status'])
         else:
-            get_agreements = ProjectAgreement.objects.filter(
+            get_agreements = ProjectAgreement.objects.select_related().filter(
                 program__organization=organization)
 
         get_programs = Program.objects.all().filter(
-            funding_status="Funded", organization=organization).distinct()
+            funding_status="Funded", organization=organization)
 
         filtered = ProjectAgreementFilter(request.GET, queryset=get_agreements)
         table = ProjectAgreementTable(filtered.queryset)
