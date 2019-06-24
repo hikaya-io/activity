@@ -1,20 +1,19 @@
 {% extends "base.html" %}
-{% block bread_crumb %}
-<ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
-  <li><a href="/workflow/stakeholder_list/0/0/">Stakeholder List</a></li>
-  <li class="active">Contact List</li>
-</ol>
-{% endblock %}
-{% block page_title %}Contact List{% endblock %}
-
 {% block content %}
-<div>
-<a href="/workflow/contact_add/{{get_stakeholder.pk}}/0/" class="btn btn-large btn-success">New Contact</a> &nbsp;
-<hr/>
-<br/>
+<div class="container">
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+      <div class="sub-navigation-header">
+        <h4 class="page-title">Contacts</h4>
+      </div>
+      <div class="sub-navigation-actions">
+        <div class="sub-nav-item">
+        <div>
+        <a href="/workflow/contact_add/{{get_stakeholder.pk}}/0/" class="btn btn-sm btn-primary">New Contact</a> &nbsp;
 </div>
-<h3>Contacts</h3>
+</div>
+</div>
+</div>
 
 {% if get_stakeholder %}
     <p>Filtered by Stakeholder: [{{ get_stakeholder.name }}]</p>
@@ -31,4 +30,5 @@
     <li class="list-group-item">No contacts yet.</li>
 {% endfor %}
 </ul>
+</div>
 {% endblock content %}
