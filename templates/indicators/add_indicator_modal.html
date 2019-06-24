@@ -1,0 +1,74 @@
+<!-- Modal for captring data -->
+<div
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  id="addIndicatorModal"
+  aria-labelledby="addIndicatorModal"
+>
+  <div class="modal-dialog modal-md" role="form">
+    <div class="modal-content">
+      <form action="">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">
+            <i class="fa fa-bar-chart-o"></i> New Indicator
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="indicatorName">Indicator Name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="indicator_name"
+              id="indicatorName"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="indicatorWorkflowLevel1">
+              {{ user.activity_user.organization.level_1_label }}</label
+            >
+            <select
+              name="workflowlevel1"
+              id="indicatorWorkflowLevel1"
+              class="form-control"
+            >
+              <option value="a">A</option>
+              <option value="b">B</option>
+              <option value="c">C</option>
+              <option value="d">D</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<script>
+ $(document).ready(() => {
+    $('#indicatorWorkflowLevel1').select2({
+      theme: 'bootstrap',
+      placeholder: 'Select...'
+    });
+  })
+</script>
