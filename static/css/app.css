@@ -63,9 +63,9 @@ button:focus,
 
 .navbar-brand>img {
     display: block;
+    margin-top: -5px;
     max-height: 50px;
-    margin-top: -15px;
-    height: 50px;
+    max-width: 140px;
 }
 
 .navbar-nav>li#user-initial>a {
@@ -202,6 +202,11 @@ body>.container {
 #footer>.container {
     padding: 10px;
     font-family: 'Inconsolata', monospace !important;
+}
+
+#footer-icon {
+    width: 15px;
+    margin-top: -3px;
 }
 
 .filter {
