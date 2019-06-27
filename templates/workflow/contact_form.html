@@ -1,20 +1,43 @@
 {% extends "base.html" %}
-{% block bread_crumb %}
-<div>
-<ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
-  <li><a href="/workflow/stakeholder_list/0/0/">Stakeholder List</a></li>
-  <li><a href="/workflow/contact_list/{{stakeholder_id}}/">Contact List</a></li>
-  <li class="active">Contact Form</li>
-</ol>
-</div>
-{% endblock %}
-{% block page_title %}Contact Form{% endblock %}
-
-
 {% block content %}
+<div class="container">
+
+<div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">Contact Form</h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        <div>
     {% include "form_guidance.html" %}
-    {% if form.errors %}
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <div class="modal fade"
+  id="addContactModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addContactModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="addContactModalLabel">Contact Form</h4>
+      </div>
+      <div class="modal-body">
+        <form id="addContactForm">
+          {% csrf_token %}
+          {% if form.errors %}
         <div class="help-block">
         {% for field in form %}
             {% for error in field.errors %}
@@ -31,5 +54,20 @@
 	{% csrf_token %}
     {% load crispy_forms_tags %}
     {% crispy form %}
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn hikaya-btn-cancel"
+          data-dismiss="modal"
+        >
+          <i class="fa fa-close"></i> Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+    </div>
 
 {% endblock content %}
