@@ -165,8 +165,7 @@ class BeneficiaryList(ListView):
 
         if int(self.kwargs['pk']) == 0:
             get_beneficiaries = Beneficiary.objects.all().filter(
-                Q(training__program__organization=organization)
-                | Q(distribution__program__organization=organization))
+                program__in=get_programs)
         else:
             get_beneficiaries = Beneficiary.objects.all().filter(
                 training__id=self.kwargs['pk'])
@@ -194,8 +193,11 @@ class BeneficiaryCreate(CreateView):
             request, *args, **kwargs)
 
     def get_initial(self):
+        organization = self.request.user.activity_user.organization
         initial = {
-            'training': self.kwargs['id'],
+            # 'training': self.kwargs['id'],
+            "program": Program.objects.filter(
+                organization=organization).first()
         }
 
         return initial
@@ -453,12 +455,11 @@ class BeneficiaryListObjects(View, AjaxableResponseMixin):
 
         program_id = int(self.kwargs['program'])
         project_id = int(self.kwargs['project'])
-        countries = get_country(request.user)
+        organization = self.request.user.activity_user.organization
 
         if program_id == 0:
             get_beneficiaries = Beneficiary.objects.all().filter(
-                Q(training__program__country__in=countries)
-                | Q(distribution__program__country__in=countries))\
+                Q(program__organization=organization))\
                 .values('id', 'beneficiary_name', 'create_date')
         elif program_id != 0 and project_id == 0:
             get_beneficiaries = Beneficiary.objects.all().filter(
