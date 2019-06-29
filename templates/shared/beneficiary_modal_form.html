@@ -1,0 +1,146 @@
+<script>
+  $(document).ready(() => {
+    $('#id_program').select2({
+      theme: 'bootstrap',
+      placeholder: 'Select program...',
+      allowClear: true,
+    });
+  });
+
+  $(function() {
+    $('#saveBeneficiary').click(function(e) {
+      e.preventDefault();
+
+      const formValue = $('#addBeneficiaryForm').serializeArray();
+
+      const obj = {};
+
+      formValue.forEach(item => {
+        obj[item.name] = item.value;
+      });
+
+      // set enteries
+      data = {
+        ...obj,
+        id_program: $('#id_program').val(),
+        age: $('#age').val(),
+        gender: $('#gender').val(),
+      };
+
+      $.ajax({
+        url: '/formlibrary/beneficiary_add/0/',
+        type: 'POST',
+        data,
+        success: function(resp, status) {
+          // notify success
+          toastr.success('Beneficiary was added sucessfully', `${resp}`);
+
+          //close modal
+          $('#addBeneficiaryModal').modal('hide');
+
+          // reset form
+          $('#addBeneficiaryForm').trigger('reset');
+          $('#id_program')
+            .select('val', '')
+            .trigger('change');
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        },
+        error: function(xhr, status, error) {
+          toastr.error(error, 'Failed');
+        },
+      });
+    });
+  });
+</script>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="addBeneficiaryModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addBeneficiaryModalLabel"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="addBenerficiaryModalLabel">Add Beneficiary</h4>
+      </div>
+      <div class="modal-body">
+        <form id="addBeneficiaryForm">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="beneficiaryName">Beneficiary Name</label>
+            <input
+              type="text"
+              id="beneficiaryName"
+              name="beneficiary_name"
+              class="form-control"
+              placeholder="Beneficiary"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input
+              type="text"
+              id="age"
+              name="age"
+              class="form-control"
+              placeholder="Age"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <input
+              type="text"
+              id="gender"
+              name="gender"
+              class="form-control"
+              placeholder="Gender"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="id_program">Program</label>
+            <select
+              id="id_program"
+              class="selectmultiple form-control"
+              style="width: 100%"
+              name="program"
+              multiple>
+              {% for program in get_programs %}
+              <option value="{{ program.id }}">{{ program.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn hikaya-btn-cancel"
+          data-dismiss="modal"
+        >
+          <i class="fa fa-close"></i> Close
+        </button>
+        <button type="submit" class="btn btn-success" id="saveBeneficiary">
+          <i class="fa fa-save"></i> Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
