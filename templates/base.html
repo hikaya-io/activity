@@ -11,7 +11,7 @@
     />
     <meta name="author" content="Hikaya" />
 
-    <title>{% block title %} {{user.activity_user.organization.name}} / Activity-CE {% endblock %}</title>
+    <title>{% block title %} {{ user.activity_user.organization.name }} / Activity-CE {% endblock %}</title>
 
     <link rel="icon" href="{% static 'img/favicon.ico' %}" />
 
@@ -129,7 +129,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{% url 'index' %}"><b class="">Activity-CE</b></a>
+          {% if user.is_authenticated  and user.activity_user.organization.logo.url %}
+            <a class="navbar-brand" href="{% url 'index' %}">
+              <img src="/media/images/download-solid.svg" alt="Activity">
+            </a>
+          {% else %}
+            <a class="navbar-brand" href="{% url 'index' %}">
+              <b>Activity</b>
+            </a>
+          {% endif %}
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -148,7 +156,7 @@
               ></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/workflow/level2/0/"
+                  <a href="/workflow/dashboard/0/"
                     >{{ user.activity_user.organization.level_1_label }} Index</a
                   >
                 </li>
@@ -176,13 +184,13 @@
               ></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/formlibrary/training_list/0/"> Training</a>
+                  <a href="/formlibrary/training_list/0/">Training</a>
                 </li>
                 <li>
-                  <a href="/formlibrary/distribution_list/0/"> Distributions</a>
+                  <a href="/formlibrary/distribution_list/0/">Distributions</a>
                 </li>
                 <li>
-                  <a href="/formlibrary/beneficiary_list/0/"> Beneficiaries</a>
+                  <a href="/formlibrary/beneficiary_list/0/">Beneficiaries</a>
                 </li>
               </ul>
             </li>
@@ -419,17 +427,27 @@
       <div class="container">
         {% if "links.html"|template_exists %} {% include "links.html" %} 
         {% else %}
-        <div class="column col-xs-16 text-right">
-          <a href="http://www.hikaya.io" class="text-muted"><b>Hikaya</b></a> |
-          <a href="http://help.hikaya.io" class="text-muted"
-            ><b>Documentation</b></a
-          >
-          |
-          <a
-            href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE"
-            class="text-muted"
-            ><b>License</b></a
-          >
+        <div class="footer-items">
+          <div class="footer-logo">
+            <a href="{% url 'index' %}"><img
+              id="footer-icon"
+              src="{% static 'img/icon-hikaya-gray.png' %}"></a
+            >
+          </div>
+
+          <div class="footer-links">
+            <a href="http://www.hikaya.io" class="text-muted"><b>Hikaya</b></a> |
+            <a href="http://help.hikaya.io" class="text-muted"
+              ><b>Documentation</b></a
+            >
+            |
+            <a
+              href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE"
+              class="text-muted"
+              ><b>License</b></a
+            >
+          </div>
+
         </div>
         {% endif %}
       </div>
