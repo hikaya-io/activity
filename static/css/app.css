@@ -96,8 +96,8 @@ button:focus,
 }
 
 .navbar-brand>img {
-    max-height: 40px;
-    height: 40px;
+    max-height: 35px;
+    height: 35px;
 }
 
 .navbar-nav>li#user-initial>a {
