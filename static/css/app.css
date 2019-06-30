@@ -19,39 +19,16 @@ body {
 }
 
 #footer {
-    display: flex;
     position: fixed;
     bottom: 0px;
     width: 100%;
+    /* Set the fixed height of the footer here */
     height: 40px;
     border-top: 1px solid #f6f6f6;
     background-color: #f5f5f5;
     vertical-align: top;
     color: rgb(50, 50, 50);
 }
-
-.footer-items {
-    display: flex;
-}
-
-.footer-links {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.footer-links>a {
-    margin: 0px 10px;
-}
-
-.footer-links>a:last-child {
-    margin-right: 0px;
-}
-
-.footer-logo {
-    align-self: flex-start;
-}
-
 
 
 /* Bootstrap Overrides */
@@ -79,25 +56,10 @@ button:focus,
 
 .navbar-default {
     background-color: #fff;
+    border: none;
     color: #737581;
     font-family: 'Inconsolata', monospace !important;
     font-size: 18px;
-}
-
-.navbar-brand {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0px 15px 0px 0px;
-}
-
-.navbar>.container .navbar-brand {
-    margin-left: 0px;
-}
-
-.navbar-brand>img {
-    max-height: 40px;
-    height: 40px;
 }
 
 .navbar-nav>li#user-initial>a {
@@ -232,14 +194,8 @@ body>.container {
 }
 
 #footer>.container {
+    padding: 10px;
     font-family: 'Inconsolata', monospace !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-#footer-icon {
-    height: 24px;
 }
 
 .filter {
