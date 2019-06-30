@@ -11,6 +11,8 @@ urlpatterns = [
     #path('level2', list_workflow_level2, name='level2'),
     path('objectives', objectives_list, name='objectives'),
     path('objectives/tree', objectives_tree, name='objectives-tree'),
+    path('level2/add', add_level2, name='add-level2'),
+
     re_path(r'^level2/project/(?P<pk>\w+)/$',
             ProjectDash.as_view(), name='project_dashboard'),
     re_path(r'^level2/project/(?P<pk>\w+)$',

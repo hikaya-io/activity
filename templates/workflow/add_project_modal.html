@@ -1,24 +1,50 @@
 <script>
   $(document).ready(() => {
     $('#program').select2({
-      placeholder: 'Select program..',
+      placeholder: 'Select program...',
       theme: 'bootstrap',
     });
+  });
 
-    $.ajax({
-      url: '/',
-      type: 'POST',
-      data,
-      success: function(resp, status) {
-        // notify success
-        toastr.success('Project was added successfully', `${resp}`);
+  $(() => {
+    $('#submitProject').click(e => {
+      e.preventDefault();
 
-        //close modal
-        $('#addProjectModal').modal('hide');
+      const formValue = $('#addProjectForm').serializeArray();
 
-        // reset form
-        $('#addProjectForm').trigger('reset');
-      },
+      const obj = {};
+
+      formValue.forEach(item => {
+        obj[item.name] = item.value;
+      });
+
+      const data = {...obj, program: $('#program').val()}
+
+      $.ajax({
+        url: '{% url "add-level2" %}',
+        type: 'POST',
+        data,
+        success: function(resp, status) {
+          // notify success
+          toastr.success('Project was added sucessfully', `${resp}`);
+
+          //close modal
+          $('#addProjectModal').modal('hide');
+
+          // reset form
+          $('#addProjectForm').trigger('reset');
+          $('#program')
+            .select('val', '')
+            .trigger('change');
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        },
+        error: function(xhr, status, error) {
+          toastr.error(error, 'Failed');
+        },
+      });
     });
   });
 </script>
@@ -46,6 +72,7 @@
           Create WorkflowLevel2
         </h4>
       </div>
+
       <form id="addProjectForm" action="" method="POST">
         <div class="modal-body">
           {% csrf_token %}
@@ -55,11 +82,11 @@
               class="form-control"
               id="program"
               name="program"
-              required=""
+              required
             >
               <option value=""></option>
 
-              {% for item in getPrograms %}
+              {% for item in get_programs %}
               <option value="{{ item.id }} ">{{ item.name | truncatechars:50 }}</option>
               {% endfor %}
             </select>
@@ -79,13 +106,10 @@
         </div>
 
         <div class="modal-footer">
-          <button
-            type="reset"
-            class="btn btn-default"
-            data-dismiss="modal"
-          >Close
+          <button type="reset" class="btn btn-default" data-dismiss="modal">
+            Close
           </button>
-          <button type="submit" class="btn btn-primary" id="SubmitProject">
+          <button type="submit" class="btn btn-primary" id="submitProject">
             Submit
           </button>
         </div>
