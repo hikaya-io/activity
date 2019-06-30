@@ -1,6 +1,11 @@
 {% extends "base.html" %} {% block content %}
 {% include '../workflow/contact_form.html' %}
 
+<script>
+  $(document).ready(function() {
+    $('#ContactTable').DataTable();
+  });
+</script>
 <div class="container">
   <!-- Sub navigation -->
   <div class="sub-navigation">
@@ -57,5 +62,22 @@
     <li class="list-group-item">No contacts yet.</li>
     {% endfor %}
   </ul>
+
+<!--Table-->
+<table
+    class="table"
+    id="ContactTable"
+  >
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>City</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Address</th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+
 </div>
 {% endblock content %}
