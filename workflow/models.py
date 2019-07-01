@@ -166,7 +166,8 @@ class Organization(models.Model):
                            code='nomatch')],
         max_length=6)
     logo = models.ImageField(
-        upload_to='images/', default="images/hikaya-activity-logo.png",
+        "Your Organization logo",
+        upload_to='images/', blank=True,
         validators=[validate_image],
         help_text="Image of minimum {} width and {} height, "
                   "maximum of {} ko".format(*tuple(IMAGE_SPEC.values())))
