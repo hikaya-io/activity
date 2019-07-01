@@ -131,7 +131,7 @@
           </button>
           {% if user.is_authenticated  and user.activity_user.organization.logo.url %}
             <a class="navbar-brand" href="{% url 'index' %}">
-              <img src="/media/images/download-solid.svg" alt="Activity">
+              <img src="{{ user.activity_user.organization.logo.url }}" alt="Activity">
             </a>
           {% else %}
             <a class="navbar-brand" href="{% url 'index' %}">
@@ -157,7 +157,7 @@
               <ul class="dropdown-menu">
                 <li>
                   <a href="/workflow/dashboard/0/"
-                    >{{ user.activity_user.organization.level_1_label }} Index {{ user.activity_user.organization.logo.url }}</a
+                    >{{ user.activity_user.organization.level_1_label }} Index</a
                   >
                 </li>
                 <li>
