@@ -121,6 +121,8 @@ class Organization(models.Model):
                             max_length=255, blank=True, default="Hikaya")
     description = models.TextField(
         "Description/Notes", max_length=765, null=True, blank=True)
+    logo = models.FileField("Your Organization Logo",
+                            blank=True, null=True, upload_to="media/img/")
     organization_url = models.CharField(blank=True, null=True, max_length=255)
     level_1_label = models.CharField(
         "Project/Program Organization Level 1 label", default="Program",
@@ -164,7 +166,7 @@ class Organization(models.Model):
                            code='nomatch')],
         max_length=6)
     logo = models.ImageField(
-        upload_to='images/', null=True,
+        upload_to='images/', default="images/hikaya-activity-logo.png",
         validators=[validate_image],
         help_text="Image of minimum {} width and {} height, "
                   "maximum of {} ko".format(*tuple(IMAGE_SPEC.values())))
