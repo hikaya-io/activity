@@ -1,3 +1,16 @@
+<script>
+  $(document).ready(() => {
+    $('#indicatorWorkflowLevel1').select2({
+      theme: 'bootstrap',
+      placeholder: 'Select...',
+    });
+  });
+
+  $(() => {
+    $('').click()
+  })
+</script>
+
 <!-- Modal for captring data -->
 <div
   class="modal fade"
@@ -42,10 +55,12 @@
               id="indicatorWorkflowLevel1"
               class="form-control"
             >
-              <option value="a">A</option>
-              <option value="b">B</option>
-              <option value="c">C</option>
-              <option value="d">D</option>
+              <option value=""></option>
+              {% for program in get_programs %}
+              {% if program.name %}
+              <option value="{{ program.id }}">{{ program.name }}</option>
+              {% endif %}
+              {% endfor %}
             </select>
           </div>
         </div>
@@ -53,7 +68,7 @@
           <button type="button" class="btn btn-default" data-dismiss="modal">
             Close
           </button>
-          <button type="submit" class="btn btn-primary">Save changes</button>
+          <button type="submit" class="btn btn-primary">Add Indicator</button>
         </div>
       </form>
     </div>
@@ -62,13 +77,3 @@
   <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-
-
-<script>
- $(document).ready(() => {
-    $('#indicatorWorkflowLevel1').select2({
-      theme: 'bootstrap',
-      placeholder: 'Select...'
-    });
-  })
-</script>
