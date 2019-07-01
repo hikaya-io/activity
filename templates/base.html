@@ -156,13 +156,14 @@
               ></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/workflow/dashboard/0/"
-                    >{{ user.activity_user.organization.level_1_label }} Index</a
-                  >
-                </li>
-                <li>
                   <a href="{% url 'level1' %}"
                     >{{ user.activity_user.organization.level_1_label }}s</a
+                  >
+                </li>
+
+                <li>
+                  <a href="/workflow/level2/0/"
+                    >{{ user.activity_user.organization.level_2_label }}s</a
                   >
                 </li>
               </ul>
