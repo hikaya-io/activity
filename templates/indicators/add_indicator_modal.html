@@ -7,8 +7,42 @@
   });
 
   $(() => {
-    $('').click()
-  })
+    $('#createNewIndicator').click(() => {
+      const formValue = $('#addIndicatorForm').serializeArray();
+
+      const indicator = {};
+
+      formValue.forEach(item => {
+        indicator[item.name] = item.value;
+      });
+
+      $.ajax({
+        url: "{% url 'add-indicator' %}",
+        type: 'POST',
+        data: indicator,
+        success: function(resp, status) {
+          // notify success
+          toastr.success('Indicator was added sucessfully', `${resp}`);
+
+          //close modal
+          $('#addIndicatorModal').modal('hide');
+
+          // reset form
+          $('#addIndicatorForm').trigger('reset');
+          $('#sectors')
+            .select('val', '')
+            .trigger('change');
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        },
+        error: function(xhr, status, error) {
+          toastr.error(error, 'Failed');
+        },
+      });
+    });
+  });
 </script>
 
 <!-- Modal for captring data -->
@@ -21,7 +55,8 @@
 >
   <div class="modal-dialog modal-md" role="form">
     <div class="modal-content">
-      <form action="">
+      <form id="addIndicatorForm">
+        {% csrf_token %}
         <div class="modal-header">
           <button
             type="button"
@@ -43,6 +78,8 @@
               class="form-control"
               name="indicator_name"
               id="indicatorName"
+              autocomplete="off"
+              placeholder="Indicator Name"
             />
           </div>
 
@@ -56,11 +93,9 @@
               class="form-control"
             >
               <option value=""></option>
-              {% for program in get_programs %}
-              {% if program.name %}
+              {% for program in get_programs %} {% if program.name %}
               <option value="{{ program.id }}">{{ program.name }}</option>
-              {% endif %}
-              {% endfor %}
+              {% endif %} {% endfor %}
             </select>
           </div>
         </div>
@@ -68,7 +103,9 @@
           <button type="button" class="btn btn-default" data-dismiss="modal">
             Close
           </button>
-          <button type="submit" class="btn btn-primary">Add Indicator</button>
+          <button id="createNewIndicator" type="button" class="btn btn-primary">
+            Add Indicator
+          </button>
         </div>
       </form>
     </div>

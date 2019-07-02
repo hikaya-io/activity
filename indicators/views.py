@@ -1890,3 +1890,16 @@ def const_table_det_url(url):
     new_url = str(root)+'://'+str(org_host)+'/silo_detail/'+str(s[3])+'/'
 
     return new_url
+
+
+def add_indicator(request):
+    data = request.POST
+    program = Program.objects.get(id=data.get('workflowlevel1'))
+
+    indicator = Indicator.objects.create(name=data.get('indicator_name'))
+    indicator.program.add(program)
+
+    if indicator.id:
+        return HttpResponse({'success': False})
+
+    return HttpResponse({'success': True})
