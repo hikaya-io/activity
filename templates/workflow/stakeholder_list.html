@@ -1,4 +1,6 @@
 {% extends "base.html" %} {% block content %}
+{% include '../workflow/stakeholder_form.html' %}
+
 <div class="container">
   <!-- Sub navigation -->
   <div class="sub-navigation">
@@ -32,13 +34,12 @@
           </div>
         </div>
       </div>
-
-      <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
           <a
             role="button"
-            href="/workflow/stakeholder_add/0/"
             class="btn btn-sm btn-info"
+            data-toggle="modal"
+            data-target="#addstakeholderModal"
           >
             <i class="fa fa-plus"></i> New Stakeholder
           </a>
@@ -52,7 +53,6 @@
         </div>
       </div>
     </div>
-  </div>
 
   <!-- Table -->
   <table class="table" id="stakeholdertable"></table>
