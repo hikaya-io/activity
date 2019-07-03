@@ -112,7 +112,7 @@
     {% endblock %}
   </head>
 
-  <body>
+  <body style="margin-top: 50px">
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -398,10 +398,17 @@
 
       myElement.style.backgroundColor = '#fff';
     </script>
-    <br />
-    <div class="" style="margin-top:5px;">
-      <br />
-      <!-- <div>{% block bread_crumb %}{% endblock %}</div> -->
+
+      <div class="container">
+        {% block breadcrumbs %}
+        <ul class="breadcrumb">
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'index' %}">Test</a></li>
+            <li><a href="{% url 'index' %}">Test Another</a></li>
+        </ul>
+        {% endblock %}
+      </div>
+      
       <div id="alerts">
         <!-- Any messages for users -->
         {% block messages %} {% if messages %} {% for message in messages %} 
@@ -419,7 +426,6 @@
       <!--{% if not user.is_authenticated  %}
                 <a href="{% url "social:begin" "google-oauth2" %}">Google+</a>
             {% endif %}-->
-    </div>
     <!-- .container collapse -->
 
     <div id="ajaxloading" class="modal ajax_loading"></div>
