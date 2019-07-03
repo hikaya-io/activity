@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from django.urls import re_path
+from django.urls import re_path, path
 from .views import *
 
 urlpatterns = [
@@ -10,6 +10,8 @@ urlpatterns = [
     # Home
     re_path(r'^home/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
             IndicatorList.as_view(), name='indicator_list'),
+
+    path('add-indicator', add_indicator, name='add-indicator'),
 
     # Indicator Form
     re_path(r'^indicator_list/(?P<pk>\w+)/$',

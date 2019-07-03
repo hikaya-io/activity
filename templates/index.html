@@ -265,6 +265,12 @@
   });
 </script>
 <div class="container">
+  {% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li class="active">Home Dashboard</li>
+    </ul>
+  {% endblock %}
+
   {% for approval in user_pending_approvals %}
   <div class="alert alert-success fade in">
     <a class="close" data-dismiss="alert" href="#">&times;</a>
