@@ -575,15 +575,6 @@ def admin_profile_settings(request):
                 request, 'Your organization logo has been updated.',
                 fail_silently=False)
     else:
-        try:
-            file = open(PROJECT_ROOT+organization.logo.url)
-            file.close()
-        except FileNotFoundError:
-            setattr(organization, 'logo',
-                    organization._meta.fields[-1].default)
-            organization.save()
-            user.organization = organization
-            user.save()
         form = OrganizationEditForm(instance=organization)
 
     nav_links = get_nav_links('Profile Settings')
