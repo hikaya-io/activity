@@ -8,6 +8,12 @@
 </script>
 
 <div class="container">
+  {% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li><a href="/workflow/dashboard/0/">Home</a></li>
+      <li class="active">{{ request.user.activity_user.organization.level_1_label }}s</li>
+    </ul>
+  {% endblock %}
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
