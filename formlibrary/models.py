@@ -167,6 +167,10 @@ class Beneficiary(models.Model):
 
     # displayed in admin templates
     def __str__(self):
+        # TODO : Keep or delete this check, it helps avoiding getting
+        #  error when deleting a beneficiary
+        if self.beneficiary_name is None:
+            return "NULL"
         return self.beneficiary_name
 
 
