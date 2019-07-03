@@ -95,6 +95,13 @@
 </script>
 
 <div class="container">
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+      <li class="active">Indicator Targets vs Actuals Report</li>
+    </ul>
+    {% endblock %}
+
     <!-- Sub navigation -->
     <div class="sub-navigation">
       <div class="sub-navigation-header">

@@ -2,10 +2,17 @@
 {% load group_tag %} {% block content %}
 
 <div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li class="active">Indicator Reports</li>
+  </ul>
+  {% endblock %}
+
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h3 class="page-title">Indicator Report</h3>
+      <h4 class="page-title">Indicator Report</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
@@ -312,7 +319,6 @@
     <div class="row">
       <div class="col-sm-12">
         <div id="data-panel" class="">
-          <div class="panel-body" style="padding:10px;">
             <div id="program_table_div">
               <table class="table table-bordered" id="data_table"></table>
             </div>
@@ -325,7 +331,6 @@
               class="ajaxLoader"
               style="display: none;"
             ></div>
-          </div>
         </div>
       </div>
     </div>
