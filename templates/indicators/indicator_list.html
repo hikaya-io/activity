@@ -49,6 +49,13 @@
 </script>
 
 <div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li class="active">{{ user.activity_user.organization.indicator_label }}s</li>
+  </ul>
+  {% endblock %}
+
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">

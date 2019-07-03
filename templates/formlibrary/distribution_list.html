@@ -1,5 +1,12 @@
 {% extends "base.html" %} {% load group_tag %} {% block content %}
 <div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li class="active">Distribution</li>
+  </ul>
+  {% endblock %}
+
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
