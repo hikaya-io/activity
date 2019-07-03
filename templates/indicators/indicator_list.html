@@ -1,7 +1,10 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} {% block content %} 
 {% include './add_indicator_modal.html' %}
 
 <script>
+  $(document).ready(() => {
+    $('#indicatorsTable').DataTable();
+  })
   /*
    *  Load the collected data for an indicator on the results page
    */
@@ -76,12 +79,17 @@
               aria-haspopup="true"
               aria-expanded="false"
             >
-              {{ user.activity_user.organization.level_1_label }}
+              Filter by {{ user.activity_user.organization.level_1_label }}
               <i class="fa fa-angle-down"></i>
             </button>
             <ul class="dropdown-menu">
-              <li><a href="#">Dropdown link</a></li>
-              <li><a href="#">Dropdown link</a></li>
+              <li><a href="#">-- All --</a></li>
+              <li class="divider"></li>
+              {% for program in get_programs %} {% if program.name %}
+              <li>
+                <a href="#">{{ program.name }}</a>
+              </li>
+              {% endif %} {% endfor %}
             </ul>
           </div>
         </div>
@@ -101,67 +109,28 @@
     </div>
   </div>
 
-  <div id="toplevel_div">
-    <!-- Default panel contents -->
-    {% for program in programs %}
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4>
-          {{ program.name | truncatechars:85 }}
-          <span style="float: right;" class="btn-group" role="group">
-            <a
-              href="/indicators/indicator_create/{{ program.id }}/"
-              class="btn btn-xs btn-success"
-              >New Indicator</a
-            >
-            <a
-              href="/indicators/program_report/{{ program.id }}/"
-              class="btn btn-xs btn-info"
-              >Grid/Print Report</a
-            >
-          </span>
-        </h4>
-      </div>
-      {% if not program.indicator_set.all %}
-      <div class="panel-body">
-        <h4>
-          No Indicators have been entered for this
-          {{ user.activity_user.organization.level_1_label }}
-        </h4>
-        <p>
-          Add a new indicator via the "<a
-            href="/indicators/indicator_create/{{ program.id }}/"
-            >New Indicator</a
-          >" button above.
-        </p>
-      </div>
-      {% else %}
-      <div class="panel-body">
-        <a
-          id="id_btnOpenindicatorsForProgramId_{{ program.id }}"
-          onclick="loadIndicators({{ program.id }}, {{ indicator_id }}, {{
-            type_id
-          }})"
-          class="btn btn-sm btn-success"
-          data-toggle="collapse"
-          data-target="#hidden-{{ program.id }}"
-          >{{ program.indicator_count }} Indicators
-        </a>
-      </div>
-      <div id="hidden-{{ program.id }}" class="accordian-body collapse">
-        {% include "indicators/program_indicators_table.html" %}
-      </div>
-      {% endif %}
-    </div>
-
-    {% empty %}
-    <p>No {{ user.activity_user.organization.level_1_label }}</p>
-    {% endfor %}
-  </div>
-
-  <!--
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#indicator_modal_div">Large modal</button>
-    -->
+  <table class="table" id="indicatorsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Level</th>
+        <th>Target</th>
+        <th>Actual</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for indicator in get_indicators %}
+      <tr>
+        <td>{{ indicator.name }}</td>
+        <td>
+          {{indicator.programs}}
+        </td>
+        <td>{{ indicator.target }}</td>
+        <td>{{ indicator.actual }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
   <div
     class="modal fade"
@@ -437,6 +406,7 @@
       }
     };
   </script>
-  {% include 'indicators/indicator_form_common_js.html' %} {% include 'indicators/collecteddata_form_common_js.html' %}
+  {% include 'indicators/indicator_form_common_js.html' %} 
+  {% include 'indicators/collecteddata_form_common_js.html' %}
 </div>
 {% endblock content %}
