@@ -151,13 +151,12 @@ class ProgramDash(ListView):
     :param status: approval status of project
     :return:
     """
-    template_name = 'workflow/programdashboard_list.html'
+    template_name = 'workflow/projectdashboard_list.html'
 
     def get(self, request, *args, **kwargs):
 
         countries = get_country(request.user)
         get_programs = Program.objects.all().filter(
-            funding_status="Funded",
             organization=request.user.activity_user.organization).distinct()
         filtered_program = None
         if int(self.kwargs['pk']) == 0:
@@ -1931,7 +1930,7 @@ class StakeholderList(ListView):
                       {'get_stakeholders': get_stakeholders,
                        'project_agreement_id': project_agreement_id,
                        'program_id': program_id,
-                       'get_programs': get_programs, 
+                       'get_programs': get_programs,
                        'active': ['components']})
 
 
@@ -2668,7 +2667,8 @@ def objectives_list(request):
 
     get_all_objectives = StrategicObjective.objects.all()
 
-    context = {'get_all_objectives': get_all_objectives, 'active': ['components']}
+    context = {'get_all_objectives': get_all_objectives,
+               'active': ['components']}
 
     return render(request, 'components/objectives.html', context)
 
@@ -2876,3 +2876,16 @@ class DocumentationListObjects(View, AjaxableResponseMixin):
         final_dict = {'get_documentation': get_documentation}
 
         return JsonResponse(final_dict, safe=False)
+
+
+def add_level2(request):
+    data = request.POST
+    program = Program.objects.get(id=data.get('program'))
+
+    level2 = ProjectAgreement(project_name=data.get(
+        'project_name'), program=program)
+
+    if level2.save():
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})

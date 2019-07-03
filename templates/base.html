@@ -129,7 +129,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{% url 'index' %}"><b class="">Activity-CE</b></a>
+          {% if user.is_authenticated  and user.activity_user.organization.logo.url %}
+            <a class="navbar-brand" href="{% url 'index' %}">
+              <img src="{{ user.activity_user.organization.logo.url }}" alt="Activity">
+            </a>
+          {% else %}
+            <a class="navbar-brand" href="{% url 'index' %}">
+              <b>Activity</b>
+            </a>
+          {% endif %}
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -148,13 +156,14 @@
               ></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/workflow/dashboard/0/"
-                    >{{ user.activity_user.organization.level_1_label }} Index</a
-                  >
-                </li>
-                <li>
                   <a href="{% url 'level1' %}"
                     >{{ user.activity_user.organization.level_1_label }}s</a
+                  >
+                </li>
+
+                <li>
+                  <a href="/workflow/level2/0/"
+                    >{{ user.activity_user.organization.level_2_label }}s</a
                   >
                 </li>
               </ul>
