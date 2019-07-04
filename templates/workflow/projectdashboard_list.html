@@ -1,381 +1,147 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} {% load mathfilters %} {% block content %}
+{% include './add_project_modal.html' %}
+
+<script>
+  $(document).ready(function() {
+    $('#programsTable').DataTable();
+  });
+</script>
+
 <div class="container">
+  {% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+      <li class="active">{{ request.user.activity_user.organization.level_2_label }}s</li>
+    </ul>
+  {% endblock %}
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {{ user.activity_user.organization.level_2_label }} Dashboard
+        Program Index
       </h4>
     </div>
+
     <div class="sub-navigation-actions">
-      <div class="sub-nav-item"></div>
+      <div class="sub-nav-item">
+        {% include "workflow/filter.html" %}
+      </div>
+
+      <div class="sub-nav-item">
+        <!-- sample action buttons -->
+        <div class="btn-group" role="group" aria-label="">
+            <button
+            class="btn btn-info btn-sm"
+            data-toggle="modal"
+            data-target="#addProjectModal"
+          >
+            <i class="fa fa-plus"></i> Create New
+            {{ request.user.activity_user.organization.level_2_label }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
+  <table
+  class="table"
+  id="programsTable"
+>
+  <thead>
+    <tr>
+      <th>Program</th>
+      <th>Project</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
 
-  {% if project_id == 0 %}
-    <div class="jumbotron">
-      <p>
-        Name your new {{ user.activity_user.organization.level_2_label }} and
-        associate it with a
-        {{ user.activity_user.organization.level_1_label }}
-      </p>
-      <form
-        role="form"
-        class="form-inline"
-        action="/workflow/projectagreement_add/"
-        method="post"
-      >
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="program"
-            >{{ user.activity_user.organization.level_1_label }}:</label
-          >
-          <select class="form-control" id="program" name="program" required="">
-            {% for item in get_programs %}
-            <option value="{{ item.id }} ">{{
-              item.name | truncatechars: 50
-            }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="project_name"
-            >{{ user.activity_user.organization.level_2_label }} Name:</label
-          >
-          <input
-            type="text"
-            name="project_name"
-            required=""
-            id="id_project_name"
-            class="textinput textInput form-control"
-            maxlength="255"
-          />
-        </div>
-        <div class="form-group">
-          <label for="detailed">Short Form (recommended):</label>
-          <input
-            type="checkbox"
-            name="short"
-            id="id_short"
-            checked="checked"
-            onchange="confirmshort({{
-              user.activity_user.organization.level_2_label
-            }})"
-          />
-          Yes
-        </div>
-        <br />
-        <br />
-        <div class="form-group">
-          <button type="submit" class="btn btn-success">Submit</button>
-        </div>
-      </form>
-    </div>
-
-  {% else %}
   <br />
-  <ul class="list-group">
-    <h3>
-      {{ get_program.name | truncatechars: 70
-      }}<span style="float: right;"
-        ><a
-          href="/workflow/projectagreement_detail/{{ get_agreement.id }}/"
-          class="btn btn-sm btn-info"
-          >Print View</a
-        ></span
-      >
-    </h3>
-    {% if get_agreement %}
-    <div class="jumbotron">
-      <ul class="list-group">
-        <li class="list-group-item list-group-item-info">
-          <h4>
-            {{ user.activity_user.organization.level_2_label }} Initiation
-          </h4>
-          <span></span>
-        </li>
+  <div>
+    {% if get_dashboard %} {% ifnotequal status 'none' %}
+    <p>Filtered by (Status): {{ status }}</p>
+    {% endifnotequal %} {% if filtered_program %}
+    <p>Filtered by (Program): {{ filtered_program }}</p>
+    {% endif %} {% for program in get_dashboard %}
+    {% if program.agreement.all %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4>
+          {{ program.name | truncatechars:80 }}
 
-        <li class="list-group-item">
-          <b>Name: </b>{{ get_agreement.project_name }}<br />
-          <b>Project Code: </b>{{ get_agreement.activity_code }}<br />
-          <b>Created:</b>
-          <span class="date-badge">{{ get_agreement.create_date | date }}</span>
-          <b>Edited:</b>
-          <span class="date-badge">{{ get_agreement.edit_date | date }}</span>
-        </li>
-        <li class="list-group-item">
-          <div class="btn-group" role="group" aria-label="...">
-            {% if get_agreement.approval == "approved" %}
-            <button
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Initiation has been approved and can no longer be edited."
-              type="button"
-              class="btn btn-sm btn-frozen"
-              onclick="location.href='/workflow/projectagreement_detail/{{
-                get_agreement.id
-              }}'"
+          <span class="float: right">
+            <a
+              href="/customdashboard/{{ program.id }}/"
+              class="btn btn-xs btn-info"
+              style="float:right;"
+              >Dashboard Visualization</a
             >
-              View Initiation
-            </button>
-            <button
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Initiation has been approved and can no longer be deleted."
-              type="button"
-              class="btn btn-sm btn-frozen"
-            >
-              Delete Initiation
-            </button>
-            {% if get_complete%}
-            <button
-              data-toggle="tooltip"
-              data-placement="top"
-              title="A completion form has already been created for the project"
-              type="button"
-              class="btn btn-sm btn-frozen"
-            >
-              {{ user.activity_user.organization.level_2_label }} Initiation
-            </button>
-            {% else %}
-            <button
-              type="button"
-              class="btn btn-sm btn-info"
-              onclick="location.href='/workflow/projectcomplete_add/{{
-                get_agreement.id
-              }}'"
-            >
-              Start tracking your project
-            </button>
-            {% endif %} {% else %}
-            <button
-              type="button"
-              class="btn btn-sm btn-warning"
-              onclick="location.href='/workflow/projectagreement_update/{{
-                get_agreement.id
-              }}'"
-            >
-              Update Initiation
-            </button>
-            <button
-              type="button"
-              class="btn btn-sm btn-danger"
-              onclick="location.href='/workflow/projectagreement_delete/{{
-                get_agreement.id
-              }}'"
-            >
-              Delete Initiation
-            </button>
-            <button
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Once Approved you will be able to click here and start tracking the project"
-              type="button"
-              class="btn btn-sm btn-frozen"
-            >
-              Start tracking your project
-            </button>
-            {% endif %}
-          </div>
-        </li>
-        <li class="list-group-item">
-          {% if get_agreement.approval == "approved" %}
-          <button class="btn btn-success" type="button">
-            Approved
-          </button>
-          {% else %}
-          <button
-            class="btn btn-primary"
-            type="button"
-            onclick="location.href='/workflow/projectagreement_update/{{
-              get_agreement.id
-            }}'"
-          >
-            {% if get_agreement.approval %}
-            {{ get_agreement.approval | title }}
-            {% else %} Open {% endif %}
-          </button>
-          {% endif %}
-        </li>
-      </ul>
-      {% endif %} {% if get_complete %}
-      <ul class="list-group">
-        <li class="list-group-item list-group-item-info">
-          <h4>Project Tracking</h4>
-        </li>
-        <li class="list-group-item">
-          <b>Name: </b>{{ get_complete.project_name }}<br />
-          <b>Project Code: </b>{{ get_complete.activity_code }}<br />
-          <b>Created:</b>
-          <span class="date-badge">{{ get_complete.create_date | date }}</span>
-          <b>Edited:</b>
-          <span class="date-badge">{{ get_complete.edit_date | date }}</span>
-        </li>
-        <li class="list-group-item">
-          <div class="btn-group" role="group" aria-label="...">
-            <button
-              type="button"
-              class="btn btn-sm btn-warning"
-              onclick="location.href='/workflow/projectcomplete_update/{{
-                get_complete.id
-              }}'"
-            >
-              Update Tracking
-            </button>
-            <button
-              type="button"
-              class="btn btn-sm btn-danger"
-              onclick="location.href='/workflow/projectcomplete_delete/{{
-                get_complete.id
-              }}'"
-            >
-              Delete Tracking
-            </button>
-          </div>
-        </li>
-        <li class="list-group-item">
-          {% if get_complete.approval == "approved" %}
-          <button class="btn btn-success" type="button">
-            Approved
-          </button>
-          {% else %}
-          <button
-            class="btn btn-primary"
-            type="button"
-            onclick="location.href='/workflow/projectcomplete_update/{{
-              get_complete.id
-            }}'"
-          >
-            {% if get_complete.approval %}
-            {{ get_complete.approval | title }}
-            {% else %} Open {% endif %}
-          </button>
-          {% endif %}
-        </li>
-      </ul>
-      {% endif %}
-      <button
-        class="btn btn-primary"
-        type="button"
-        onclick="location.href='/workflow/documentation_list/0/{{
-          get_agreement.id
-        }}'"
-      >
-        Documents <span class="badge">{{ get_document_count }}</span>
-      </button>
-      <button
-        class="btn btn-primary"
-        type="button"
-        onclick="location.href='/workflow/siteprofile_list/0/{{
-          get_agreement.id
-        }}'"
-      >
-        Sites <span class="badge">{{ get_community_count }}</span>
-      </button>
-      <button
-        class="btn btn-primary"
-        type="button"
-        onclick="location.href='/formlibrary/training_list/{{
-          get_agreement.id
-        }}'"
-      >
-        Training <span class="badge">{{ get_training_count }}</span>
-      </button>
-      <button
-        class="btn btn-primary"
-        type="button"
-        onclick="location.href='/formlibrary/distribution_list/{{
-          get_program.id
-        }}'"
-      >
-        Distributions <span class="badge">{{ get_distribution_count }}</span>
-      </button>
-      <button
-        class="btn btn-primary"
-        type="button"
-        onclick="location.href='/workflow/checklistitem_list/{{
-          get_agreement.id
-        }}'"
-      >
-        Checklist <span class="badge">{{ get_checklist_count }}</span>
-      </button>
-      <button
-        class="btn btn-primary"
-        type="button"
-        onclick="location.href='/workflow/stakeholder_list/0/{{
-          get_agreement.id
-        }}'"
-      >
-        Stakeholders <span class="badge">{{ get_stakeholderCount }}</span>
-      </button>
+          </span>
+        </h4>
+      </div>
+      <!-- Table -->
+
+      <table class="table table-condensed table-striped"
+      id="programsTable">
+      <thead>
+        <tr>
+          <th>Date Created</th>
+          <th>{{ user.activity_user.organization.level_2_label }} Name</th>
+          <th>{{ user.activity_user.organization.level_2_label }} Code</th>
+          <th>Office Code</th>
+          <th>Form Version</th>
+          <th>Approval Status</th>
+          <th>&nbsp;</th>
+        </tr>
+        </thead>
+
+        {% if status == "in_progress" %}
+        {% for item in program.agreement.get_inprogress %}
+        {% include "workflow/program_projects_table.html" %}
+        {% empty %}
+        <li class="list-group-item">No in progress projects.</li>
+        {% endfor %} {% elif status == "approved" %}
+        {% for item in program.agreement.get_approved %}
+        {% include "workflow/program_projects_table.html" %} {% empty %}
+        <li class="list-group-item">No approved projects yet.</li>
+        {% endfor %} {% elif status == "awaiting_approval" %}
+        {% for item in program.agreement.get_awaiting_approval %}
+
+        {% include "workflow/program_projects_table.html" %}
+        {% empty %}
+        <li class="list-group-item">No projects awaiting approval.</li>
+        {% endfor %}
+        {% elif status == "rejected" %}
+        {% for item in program.agreement.get_rejected %}
+
+        {% include "workflow/program_projects_table.html" %} {% empty %}
+        <li class="list-group-item">No rejected projects.</li>
+        {% endfor %} {% elif status == "new" %}
+        {% for item in program.agreement.get_new %}
+        {% include "workflow/program_projects_table.html" %} {% empty %}
+        <li class="list-group-item">No New projects.</li>
+        {% endfor %}
+        {% else %}
+        {% for item in program.agreement.all %}
+        {% include "workflow/program_projects_table.html" %} {% empty %}
+        <li class="list-group-item">No projects yet.</li>
+        {% endfor %}
+        {% endif %}
     </div>
-  </ul>
-
-  <div class="jumbotron">
-    <h3>{{ user.activity_user.organization.level_2_label }} Checklist</h3>
-    <table class="table table-striped">
-      <tr>
-        <th>Checklist Item</th>
-        <th>Is In the File?</th>
-        <th>Not Applicable?</th>
-      </tr>
-
-      {% for item in getChecklist %}
-      <tr>
-        <td>
-          {{ item.item }}
-        </td>
-        <td>
-          {% if item.in_file == True%}
-          <a onclick="tasklistChange('{{ item.id }}','in_file','0')"
-            ><span
-              id="in_file_{{ item.id }}"
-              class="glyphicon glyphicon-check"
-            ></span></a
-          >{% else %}<a onclick="tasklistChange('{{ item.id }}','in_file','1')"
-            ><span
-              id="in_file_{{ item.id }}"
-              class="glyphicon glyphicon-unchecked"
-            ></span></a
-          >{% endif %}
-        </td>
-        <td>
-          {% if item.not_applicable == True%}
-          <a onclick="tasklistChange('{{ item.id }}','not_applicable','0')"
-            ><span
-              id="not_applicable_{{ item.id }}"
-              class="glyphicon glyphicon-check"
-            ></span></a
-          >{% else %}<a
-            onclick="tasklistChange('{{ item.id }}','not_applicable','1')"
-            ><span
-              id="not_applicable_{{ item.id }}"
-              class="glyphicon glyphicon-unchecked"
-            ></span></a
-          >{% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    <p>No {{ user.activity_user.organization.level_1_label }}</p>
+    {% endif %}
   </div>
+</table>
 
-  {% endif %}
+  <script type="text/javascript">
+    function program_filter(program_id) {
+      window.location.href = '/workflow/dashboard/' + program_id + '/none';
+    }
 
-  <!-- Modal -->
-  <div
-    class="modal fade"
-    id="importModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="myModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content"></div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-  </div>
-  <!-- /.modal -->
+    function status_filter(status) {
+      window.location.href = '/workflow/dashboard/0/' + status;
+    }
+  </script>
 </div>
 {% endblock content %}
