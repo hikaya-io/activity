@@ -18,7 +18,7 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        Program Index
+        {{ request.user.activity_user.organization.level_1_label }} Index
       </h4>
     </div>
 
@@ -31,7 +31,7 @@
         <!-- sample action buttons -->
         <div class="btn-group" role="group" aria-label="">
             <button
-            class="btn btn-info btn-sm"
+            class="btn btn-primary btn-sm"
             data-toggle="modal"
             data-target="#addProjectModal"
           >
