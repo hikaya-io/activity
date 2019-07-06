@@ -428,19 +428,29 @@
     <div id="footer">
       <!-- Sticky Footer -->
       <div class="container">
-        {% if "links.html"|template_exists %} {% include "links.html" %} 
+        {% if "links.html"|template_exists %} {% include "links.html" %}
         {% else %}
-        <div class="column col-xs-16 text-right">
-          <a href="http://www.hikaya.io" class="text-muted"><b>Hikaya</b></a> |
-          <a href="http://help.hikaya.io" class="text-muted"
-            ><b>Documentation</b></a
-          >
-          |
-          <a
-            href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE"
-            class="text-muted"
-            ><b>License</b></a
-          >
+        <div class="footer-items">
+          <div class="footer-logo">
+            <a href="{% url 'index' %}"><img
+              id="footer-icon"
+              src="{% static 'img/icon-hikaya-gray.png' %}"></a
+            >
+          </div>
+
+          <div class="footer-links">
+            <a href="http://www.hikaya.io" class="text-muted"><b>Hikaya</b></a> |
+            <a href="http://help.hikaya.io" class="text-muted"
+              ><b>Documentation</b></a
+            >
+            |
+            <a
+              href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE"
+              class="text-muted"
+              ><b>License</b></a
+            >
+          </div>
+
         </div>
         {% endif %}
       </div>

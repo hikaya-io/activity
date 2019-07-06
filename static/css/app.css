@@ -19,6 +19,7 @@ body {
 }
 
 #footer {
+    display: flex;
     position: fixed;
     bottom: 0px;
     width: 100%;
@@ -30,6 +31,31 @@ body {
     color: rgb(50, 50, 50);
 }
 
+.footer-items {
+    display: flex;
+}
+
+.footer-links {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.footer-links>a {
+    margin: 0px 10px;
+}
+
+.footer-links>a:last-child {
+    margin-right: 0px;
+}
+
+.footer-logo {
+    align-self: flex-start;
+}
+
+#footer-icon {
+    height: 24px;
+}
 
 /* Bootstrap Overrides */
 @media print {
@@ -222,9 +248,12 @@ nav>div>.container {
     margin-bottom: -20px;
 }
 
+
 #footer>.container {
-    padding: 10px;
     font-family: 'Inconsolata', monospace !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .filter {
