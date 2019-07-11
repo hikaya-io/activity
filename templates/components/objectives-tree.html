@@ -4,6 +4,14 @@
 <script src="{% static 'hierachy_chart/jquery.orgchart.js' %}"></script>
 
 <div class="container">
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+      <li class="active">Objectives</li>
+      <li class="active">Objectives-tree</li>
+
+    </ul>
+    {% endblock %}
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
