@@ -149,8 +149,7 @@ class IndicatorList(ListView):
         # countries = get_country(request.user)
         countries = request.user.activity_user.countries.all()
         organization = request.user.activity_user.organization
-        get_programs = Program.objects.filter(
-            funding_status="Funded", organization=organization)
+        get_programs = Program.objects.filter(organization=organization)
         # .exclude(collecteddata__isnull=True)
         get_indicators = Indicator.objects.filter(
             program__organization=organization)
@@ -571,13 +570,12 @@ class IndicatorUpdate(UpdateView):
                 # (i, periodic_targets) )
                 periodic_target, created = PeriodicTarget.objects\
                     .update_or_create(indicator=indicatr, id=pk,
-                                      defaults=
-                                      {'period': pt.get('period', ''),
-                                       'target': pt.get('target', 0),
-                                       'customsort': i,
-                                       'start_date': start_date,
-                                       'end_date': end_date,
-                                       'edit_date': timezone.now()})
+                                      defaults={'period': pt.get('period', ''),
+                                                'target': pt.get('target', 0),
+                                                'customsort': i,
+                                                'start_date': start_date,
+                                                'end_date': end_date,
+                                                'edit_date': timezone.now()})
                 # print("%s|%s = %s, %s" % (created, pk, pt.get('period'),
                 # pt.get('target') ))
                 if created:
@@ -758,8 +756,7 @@ class CollectedDataCreate(CreateView):
 
     def form_valid(self, form):
         disaggregation_labels = DisaggregationLabel.objects.filter(
-            Q(disaggregation_type__indicator__id=
-              self.request.POST['indicator']) |
+            Q(disaggregation_type__indicator__id=self.request.POST['indicator']) |
             Q(disaggregation_type__standard=True))
 
         # update the count with the value of Table unique count
@@ -852,8 +849,8 @@ class CollectedDataUpdate(UpdateView):
 
         try:
             get_disaggregation_value = DisaggregationValue.objects.all()\
-                    .filter(collecteddata=self.kwargs['pk'])\
-                    .exclude(
+                .filter(collecteddata=self.kwargs['pk'])\
+                .exclude(
                 disaggregation_label__disaggregation_type__standard=True)
             get_disaggregation_value_standard = \
                 DisaggregationValue.objects.all().filter(
@@ -900,8 +897,7 @@ class CollectedDataUpdate(UpdateView):
         get_collected_data = CollectedData.objects.get(id=self.kwargs['pk'])
         get_disaggregation_label = DisaggregationLabel.objects.all()\
             .filter(
-            Q(disaggregation_type__indicator__id=
-              self.request.POST['indicator']) |
+            Q(disaggregation_type__indicator__id=self.request.POST['indicator']) |
             Q(disaggregation_type__standard=True)).distinct()
 
         get_indicator = CollectedData.objects.get(id=self.kwargs['pk'])
@@ -1492,12 +1488,12 @@ class CollectedDataReportData(View, AjaxableResponseMixin):
             'id', 'indicator__id', 'indicator__name',
             'indicator__program__id', 'indicator__program__name',
             'indicator__indicator_type__indicator_type',
-            'indicator__indicator_type__id','indicator__level__name',
+            'indicator__indicator_type__id', 'indicator__level__name',
             'indicator__sector__sector', 'date_collected',
             'indicator__baseline', 'indicator__lop_target',
             'indicator__key_performance_indicator',
             'indicator__external_service_record__external_service__name',
-            'evidence','activity_table', 'periodic_target', 'achieved')
+            'evidence', 'activity_table', 'periodic_target', 'achieved')
 
         collected_sum = CollectedData.objects\
             .select_related('periodic_target')\
@@ -1894,3 +1890,16 @@ def const_table_det_url(url):
     new_url = str(root)+'://'+str(org_host)+'/silo_detail/'+str(s[3])+'/'
 
     return new_url
+
+
+def add_indicator(request):
+    data = request.POST
+    program = Program.objects.get(id=data.get('workflowlevel1'))
+
+    indicator = Indicator.objects.create(name=data.get('indicator_name'))
+    indicator.program.add(program)
+
+    if indicator.id:
+        return HttpResponse({'success': False})
+
+    return HttpResponse({'success': True})
