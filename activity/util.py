@@ -2,7 +2,7 @@ import unicodedata
 import json
 import requests
 
-from workflow.models import Country, ActivityUser, ActivitySites
+from workflow.models import Country, ActivityUser, ActivitySites, Organization
 from django.contrib.auth.models import User
 from django.core.mail import mail_admins, EmailMessage
 from django.core.exceptions import PermissionDenied
@@ -37,6 +37,18 @@ def get_country(user):
     get_countries = Country.objects.all().filter(id__in=user_countries)
 
     return get_countries
+
+
+def get_organizations(user):
+    """
+    Returns the object the view is displaying.
+    """
+    user_organizations = ActivityUser.objects.all().filter(
+        user__id=user.id).values('organizations')
+
+    get_user_organizations = Organization.objects.all().filter(id__in=user_organizations)
+
+    return get_user_organizations
 
 
 def email_group(country, group, link, subject, message, submiter=None):
