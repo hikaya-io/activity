@@ -19,17 +19,15 @@
       $.ajax({
         url: '/workflow/contact_add/0/0',
         type: 'POST',
-        data,
+        data: obj,
         success: function(resp, status) {
           // notify success
-          toastr.success('Contact was added sucessfully', `${resp}`);
+          toastr.success('Contact was added sucessfully');
           //close modal
           $('#addContactModal').modal('hide');
           // reset form
           $('#addContactForm').trigger('reset');
-          $('#Contact')
-            .select('val', '')
-            .trigger('change');
+
           setTimeout(() => {
             window.location.reload();
           }, 2000);
