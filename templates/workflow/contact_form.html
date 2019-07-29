@@ -1,45 +1,48 @@
 <script>
-    $(document).ready(() => {
-      $('#Contact').select2({
-        placeholder: 'Select program...',
-        theme: 'bootstrap',
-      });
+  $(document).ready(() => {
+    $('#Contact').select2({
+      placeholder: 'Select program...',
+      theme: 'bootstrap',
     });
-    $(() => {
-      $('#submitProject').click(e => {
-        e.preventDefault();
-        const formValue = $('#addContactForm').serializeArray();
-        const obj = {};
-        formValue.forEach(item => {
-          obj[item.name] = item.value;
-        });
-        const data = {...obj, program: $('#Contact').val()}
-        $.ajax({
-          url: 'workflow/contact_add/0/0',
-          type: 'POST',
-          data,
-          success: function(resp, status) {
-            // notify success
-            toastr.success('Contact was added sucessfully', `${resp}`);
-            //close modal
-            $('#addContactModal').modal('hide');
-            // reset form
-            $('#addContactForm').trigger('reset');
-            $('#Contact')
-              .select('val', '')
-              .trigger('change');
-            setTimeout(() => {
-              window.location.reload();
-            }, 2000);
-          },
-          error: function(xhr, status, error) {
-            toastr.error(error, 'Failed');
-          },
-        });
+  });
+  $(() => {
+    $('#saveContact').click(e => {
+      e.preventDefault();
+      const formValue = $('#addContactForm').serializeArray();
+      const obj = {};
+      formValue.forEach(item => {
+        obj[item.name] = item.value;
       });
-    });
-  </script>
 
+      console.log(obj);
+
+      $.ajax({
+        url: '/workflow/contact_add/0/0',
+        type: 'POST',
+        data,
+        success: function(resp, status) {
+          // notify success
+          toastr.success('Contact was added sucessfully', `${resp}`);
+          //close modal
+          $('#addContactModal').modal('hide');
+          // reset form
+          $('#addContactForm').trigger('reset');
+          $('#Contact')
+            .select('val', '')
+            .trigger('change');
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        },
+        error: function(xhr, status, error) {
+          toastr.error(error, 'Failed');
+        },
+      });
+    });
+  });
+</script>
+
+<form id="addContactForm">
   <!-- Modal -->
   <div
     class="modal fade"
@@ -62,64 +65,61 @@
           <h4 class="modal-title" id="addContactModalLabel">Add Contact</h4>
         </div>
         <div class="modal-body">
-          <form id="addContactForm">
-            {% csrf_token %}
-            <div class="form-group">
-              <label for="Name">Name</label>
-              <input
-                type="text"
-                id="Name"
-                name="Name"
-                class="form-control"
-                placeholder="Contact"
-              />
-            </div>
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-control"
+              placeholder="Contact"
+            />
+          </div>
 
-            <div class="form-group">
-              <label for="city">City</label>
-              <input
-                type="text"
-                id="city"
-                name="city"
-                class="form-control"
-                placeholder="city"
-              />
-            </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              class="form-control"
+              placeholder="City"
+            />
+          </div>
 
-            <div class="form-group">
-              <label for="Phonenumber">Phone Number</label>
-              <input
-                type="text"
-                id="Phonenumber"
-                name="Phonenumber"
-                class="form-control"
-                placeholder="Phonenumber"
-              />
-            </div>
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input
+              type="text"
+              id="phoneNumber"
+              name="phone_number"
+              class="form-control"
+              placeholder="Phone Number"
+            />
+          </div>
 
-            <div class="form-group">
-                <label for="Email">Email</label>
-                <input
-                  type="text"
-                  id="Email"
-                  name="Email"
-                  class="form-control"
-                  placeholder="Email"
-                />
-              </div>
+          <div class="form-group">
+            <label for="Email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control"
+              placeholder="Email"
+            />
+          </div>
 
-              <div class="form-group">
-                  <label for="Address">Address</label>
-                  <input
-                    type="text"
-                    id="Address"
-                    name="Address"
-                    class="form-control"
-                    placeholder="Address"
-                  />
-                </div>
-
-          </form>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              class="form-control"
+              placeholder="Address"
+            />
+          </div>
         </div>
         <div class="modal-footer">
           <button
@@ -129,10 +129,11 @@
           >
             <i class="fa fa-close"></i> Close
           </button>
-          <button type="submit" class="btn btn-success" id="saveContact">
+          <button type="button" class="btn btn-success" id="saveContact">
             <i class="fa fa-save"></i> Save
           </button>
         </div>
       </div>
     </div>
   </div>
+</form>
