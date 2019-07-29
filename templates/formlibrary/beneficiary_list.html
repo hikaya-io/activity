@@ -1,6 +1,14 @@
 {% extends "base.html" %} {% block content %} {% load group_tag %}
+{% include '../shared/beneficiary_modal_form.html' %}
 
 <div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li class="active">Beneficiaries</li>
+  </ul>
+  {% endblock %}
+
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
@@ -12,9 +20,16 @@
       </div>
 
       <div class="sub-nav-item">
-        <a href="/formlibrary/beneficiary_add/0/" class="btn btn-sm btn-info">
+      <!-- sample action buttons -->
+      <div class="btn-group" role="group" aria-label="">
+        <button
+          class="btn btn-info btn-sm"
+          data-toggle="modal"
+          data-target="#addBeneficiaryModal"
+        >
           <i class="fa fa-plus"></i> New Beneficiary
-        </a>
+        </button>
+      </div>
       </div>
     </div>
   </div>

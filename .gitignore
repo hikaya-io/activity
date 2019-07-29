@@ -90,3 +90,4 @@ local.py
 db.sqlite3
 .idea/
 .vscode
+.history/

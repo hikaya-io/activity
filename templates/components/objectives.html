@@ -11,6 +11,13 @@
 </script>
 
 <div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li class="active">Objectives</li>
+  </ul>
+  {% endblock %}
+
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
@@ -39,11 +46,11 @@
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="">
           <button
-            class="btn btn-sm btn-info"
+            class="btn btn-sm btn-primary"
             data-toggle="modal"
             data-target="#addObjectiveModal"
           >
-            <i class="fa fa-plus"></i> Add New Objective
+           Add New Objective
           </button>
         </div>
       </div>

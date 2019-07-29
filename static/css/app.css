@@ -51,7 +51,21 @@ button:focus,
 }
 
 .breadcrumb {
-    margin-top: 10px;
+    margin-top: 12px;
+    margin-bottom: 8px;
+    list-style: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    padding: 8px 8px 8px 0px;
+}
+
+.breadcrumb a {
+    color: #25ced1;
+}
+
+.breadcrumb>li+li:before {
+    content: "\203A";
+    font-weight: 900;
 }
 
 .navbar-default {
@@ -106,6 +120,10 @@ button:focus,
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     font-family: 'Lato', sans-serif;
+}
+
+.dropdown-menu>.active>a {
+    background: #25ced1;
 }
 
 #user-initial {
@@ -199,11 +217,6 @@ nav>div>.container {
     padding-left: 30px;
 }
 
-body>.container {
-    height: 100%;
-    margin-top: 40px;
-}
-
 .alert {
     margin-top: 40px;
     margin-bottom: -20px;
@@ -241,6 +254,27 @@ body>.container {
     text-align: center;
     background-color: lightgoldenrodyellow;
     border-radius: 5px
+}
+
+.close {
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 0px;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+}
+
+.actions>span {
+    cursor: pointer;
+}
+
+.modal-header .close {
+    width: 30px;
+    background: #808080;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
 }
 
 .jumbotron.dashboard {
@@ -588,11 +622,10 @@ input[type=number]::-webkit-outer-spin-button {
 /* Sub navigation*/
 .sub-navigation {
     background: #fff;
-    /*#dfdfdf; */
     display: flex;
     height: 51px;
     width: 100%;
-    margin: 15px 0px;
+    margin-bottom: 16px;
     padding: 0px 10px;
 }
 

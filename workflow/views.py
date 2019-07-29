@@ -49,7 +49,7 @@ from django.views.generic.detail import View
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.decorators import method_decorator
 from activity.util import get_country, email_group, group_excluded, \
-    group_required
+    group_required, get_organizations
 from .mixins import AjaxableResponseMixin
 from .export import ProjectAgreementResource, StakeholderResource, \
     SiteProfileResource
@@ -155,15 +155,17 @@ class ProgramDash(ListView):
 
     def get(self, request, *args, **kwargs):
 
-        countries = get_country(request.user)
+        organizations = get_organizations(request.user)
         get_programs = Program.objects.all().filter(
             organization=request.user.activity_user.organization).distinct()
+        get_projects = ProjectAgreement.objects.filter(
+            program__organization = request.user.activity_user.organization
+        )
         filtered_program = None
         if int(self.kwargs['pk']) == 0:
             get_dashboard = Program.objects.all().prefetch_related(
                 'agreement', 'agreement__projectcomplete',
-                'agreement__office').filter(
-                funding_status='Funded', country__in=countries) \
+                'agreement__office').filter(organization__in=organizations) \
                 .order_by('name') \
                 .annotate(has_agreement=Count('agreement'),
                           has_complete=Count('complete'))
@@ -172,7 +174,7 @@ class ProgramDash(ListView):
                 .prefetch_related('agreement', 'agreement__projectcomplete',
                                   'agreement__office').filter(
                 id=self.kwargs['pk'], funding_status="Funded",
-                country__in=countries).order_by('name')
+                organization__in=organizations).order_by('name')
             filtered_program = Program.objects.only(
                 'name').get(pk=self.kwargs['pk']).name
 
@@ -198,6 +200,7 @@ class ProgramDash(ListView):
                        'get_programs': get_programs,
                        'APPROVALS': APPROVALS,
                        'program_id': self.kwargs['pk'],
+                       'get_projects': get_projects,
                        'status': status,
                        'filtered_program': filtered_program,
                        'active': ['workflow']})
@@ -2880,7 +2883,7 @@ class DocumentationListObjects(View, AjaxableResponseMixin):
 
 def add_level2(request):
     data = request.POST
-    program = Program.objects.get(id=data.get('program'))
+    program = Program.objects.get(id=int(data.get('program')))
 
     level2 = ProjectAgreement(project_name=data.get(
         'project_name'), program=program)

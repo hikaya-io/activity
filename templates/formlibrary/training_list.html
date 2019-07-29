@@ -1,6 +1,13 @@
 {% extends "base.html" %} {% load group_tag %} {% block content %}
 
 <div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li class="active">Training</li>
+  </ul>
+  {% endblock %}
+
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
@@ -16,7 +23,7 @@
         <div class="btn-group" role="group" aria-label="...">
           <a
             role="button"
-            class="btn btn-sm btn-success"
+            class="btn btn-sm btn-default"
             data-toggle="modal"
             data-target="#importModal"
             ><span class="glyphicon glyphicon-import"></span> Import Training</a
@@ -25,7 +32,7 @@
           <a
             role="button"
             href="/formlibrary/training_add/0/"
-            class="btn btn-sm btn-info"
+            class="btn btn-sm btn-primary"
             ><i class="fa fa-plus"></i> New Training</a
           >
         </div>

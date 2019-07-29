@@ -8,6 +8,14 @@
 </script>
 
 <div class="container">
+  
+  {% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li><a href="/">Home Dashboard</a></li>
+      <li class="active">{{ request.user.activity_user.organization.level_1_label }}s</li>
+    </ul>
+  {% endblock %}
+
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
@@ -19,7 +27,7 @@
       <!-- sample action buttons -->
       <div class="btn-group" role="group" aria-label="">
         <button
-          class="btn btn-info btn-sm"
+          class="btn btn-primary btn-sm"
           data-toggle="modal"
           data-target="#addProgramModal"
         >
