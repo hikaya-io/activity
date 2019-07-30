@@ -159,7 +159,7 @@ class ProgramDash(ListView):
         get_programs = Program.objects.all().filter(
             organization=request.user.activity_user.organization).distinct()
         get_projects = ProjectAgreement.objects.filter(
-            program__organization = request.user.activity_user.organization
+            program__organization=request.user.activity_user.organization
         )
         filtered_program = None
         if int(self.kwargs['pk']) == 0:
@@ -1749,29 +1749,13 @@ class ContactList(ListView):
     template_name = 'workflow/contact_list.html'
 
     def get(self, request, *args, **kwargs):
+        user = ActivityUser.objects.filter(user=request.user).first()
 
-        stakeholder_id = self.kwargs['pk']
-        get_stakeholder = None
+        get_contacts = Contact.objects.filter(organization=user.organization)
 
-        try:
-            get_stakeholder = Stakeholder.objects.get(id=stakeholder_id)
-
-        except Exception as e:
-            pass
-
-        if int(self.kwargs['pk']) == 0:
-            countries = get_country(request.user)
-            get_contacts = Contact.objects.all().filter(country__in=countries)
-
-        else:
-            # get_contacts = Contact.objects.all().filter(
-            # stakeholder__projectagreement=project_agreement_id)
-            get_contacts = Stakeholder.contact.through.objects.filter(
-                stakeholder_id=stakeholder_id)
-
-        return render(request, self.template_name,
-                      {'get_contacts': get_contacts,
-                       'get_stakeholder': get_stakeholder})
+        return render(request, self.template_name, {
+            'get_contacts': get_contacts
+        })
 
 
 class ContactCreate(CreateView):
@@ -2894,6 +2878,15 @@ def add_level2(request):
     return HttpResponse({'success': False})
 
 
+def add_contact(request):
+    data = request.POST
 
-def add_contact(request): 
-    data = request.p
+    user = ActivityUser.objects.filter(user=request.user).first()
+
+    contact = Contact(name=data.get('name'), city=data.get('city'), address=data.get(
+        'address'), phone=data.get('phone_number'), organization=user.organization)
+
+    if contact.save():
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})

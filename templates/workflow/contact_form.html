@@ -17,7 +17,7 @@
       console.log(obj);
 
       $.ajax({
-        url: '/workflow/contact_add/0/0',
+        url: "{% url 'add-contact' %}",
         type: 'POST',
         data: obj,
         success: function(resp, status) {
