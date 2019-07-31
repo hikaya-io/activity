@@ -98,7 +98,7 @@
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
           <button
-            class="btn btn-sm btn-info"
+            class="btn btn-sm btn-primary"
             data-toggle="modal"
             data-target="#addIndicatorModal"
           >
@@ -127,6 +127,32 @@
         </td>
         <td>{{ indicator.target }}</td>
         <td>{{ indicator.actual }}</td>
+        <td class="text-right">
+          <div class="btn-group">
+            <a role="button" href="" class="btn btn-default btn-sm">Details</a>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="">Objectives</a></li>
+              <li><a href="">Levels</a></li>
+              <li><a href="">Sectors</a></li>
+              <li><a href="">Disaggregations</a></li>
+
+              <li role="separator" class="divider"></li>
+
+              <li><a class="text-danger" href="">Edit</a></li>
+              <li><a class="text-danger" href="">Delete</a></li>
+            </ul>
+          </div>
+        </td>
       </tr>
       {% endfor %}
     </tbody>

@@ -99,7 +99,6 @@
               id="sectors"
               class="form-control"
               name="sectors"
-              style="width: 100%"
               multiple="multiple"
             >
               {% for sector in get_all_sectors %}
@@ -113,11 +112,12 @@
               <div class="form-group">
                 <label for="startDate">Start Date</label>
                 <input
-                  type=""
+                  type="text"
                   id="startDate"
                   class="form-control"
                   placeholder="Start Date"
                   name="start_date"
+                  autocomplete="off"
                 />
               </div>
             </div>
@@ -126,11 +126,12 @@
               <div class="form-group">
                 <label for="endDate">End Date</label>
                 <input
-                  type=""
+                  type="text"
                   id="endDate"
                   class="form-control"
                   placeholder="End Date"
                   name="end_date"
+                  autocomplete="off"
                 />
               </div>
             </div>
@@ -140,13 +141,13 @@
       <div class="modal-footer">
         <button
           type="button"
-          class="btn hikaya-btn-cancel"
+          class="btn btn-default"
           data-dismiss="modal"
         >
-          <i class="fa fa-close"></i> Close
+          Close
         </button>
         <button type="submit" class="btn btn-success" id="saveProgram">
-          <i class="fa fa-save"></i> Save
+          Save
         </button>
       </div>
     </div>
