@@ -159,7 +159,7 @@ class ProgramDash(ListView):
         get_programs = Program.objects.all().filter(
             organization=request.user.activity_user.organization).distinct()
         get_projects = ProjectAgreement.objects.filter(
-            program__organization = request.user.activity_user.organization
+            program__organization=request.user.activity_user.organization
         )
         filtered_program = None
         if int(self.kwargs['pk']) == 0:
@@ -413,7 +413,7 @@ class ProjectAgreementUpdate(UpdateView):
 
         try:
             get_budget = Budget.objects.all().filter(
-                agreement__id=self.kwargs['pk'])\
+                agreement__id=self.kwargs['pk']) \
                 .order_by('description_of_contribution')
         except Budget.DoesNotExist:
             get_budget = None
@@ -489,11 +489,11 @@ class ProjectAgreementUpdate(UpdateView):
             if form.instance.approval == 'approved':
                 # email the approver group so they know this was approved
                 link = "Link: " + "https://" + get_current_site(
-                    self.request).name + "/workflow/projectagreement_detail/"\
-                    + str(self.kwargs['pk']) + "/"
+                    self.request).name + "/workflow/projectagreement_detail/" \
+                       + str(self.kwargs['pk']) + "/"
                 subject = "Project Initiation Approved: " + project_name
                 message = "A new initiation was approved by " + \
-                          str(self.request.user) + "\n" + "Budget Amount: "\
+                          str(self.request.user) + "\n" + "Budget Amount: " \
                           + str(form.instance.total_estimated_budget) + "\n"
                 get_submiter = User.objects.get(username=self.request.user)
                 email_group(submiter=get_submiter.email, country=country,
@@ -510,7 +510,7 @@ class ProjectAgreementUpdate(UpdateView):
             link = "Link: " + "https://" + get_current_site(
                 self.request).name + "/workflow/projectagreement_detail/" + str(
                 self.kwargs['pk']) + "/"
-            subject = "Project Initiation Waiting for Approval: " +\
+            subject = "Project Initiation Waiting for Approval: " + \
                       project_name
             message = "A new initiation was submitted for approval by " + \
                       str(self.request.user) + "\n" + "Budget Amount: " + \
@@ -955,22 +955,11 @@ class DocumentationList(ListView):
 
         project_agreement_id = self.kwargs['project']
         countries = get_country(request.user)
-        get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries)
+        user = ActivityUser.objects.filter(user=request.user).first()
+        get_programs = Program.objects.all().filter(organization=user.organization)
 
-        if int(self.kwargs['program']) != 0 & int(self.kwargs['project']) == 0:
-            get_documentation = Documentation.objects.all().prefetch_related(
-                'program', 'project').filter(
-                program__id=self.kwargs['program'])
-        elif int(self.kwargs['project']) != 0:
-            get_documentation = Documentation.objects.all().prefetch_related(
-                'program', 'project').filter(
-                project__id=self.kwargs['project'])
-        else:
-            countries = get_country(request.user)
-            get_documentation = Documentation.objects.all().prefetch_related(
-                'program', 'project', 'project__office').filter(
-                program__country__in=countries)
+        get_documentation = Documentation.objects.filter(program__organization=user.organization).select_related(
+            'program')
 
         return render(request, self.template_name,
                       {'get_programs': get_programs,
@@ -1370,7 +1359,7 @@ class SiteProfileReport(ListView):
             get_site_profile = SiteProfile.objects.all().prefetch_related(
                 'country', 'district', 'province').filter(
                 country__in=countries).filter(status=1)
-            get_site_profile_indicator = SiteProfile.objects.all()\
+            get_site_profile_indicator = SiteProfile.objects.all() \
                 .prefetch_related('country', 'district', 'province').filter(
                 Q(collecteddata__program__country__in=countries)).filter(
                 status=1)
@@ -2075,8 +2064,8 @@ class QuantitativeOutputsCreate(AjaxableResponseMixin, CreateView):
                         self).get_context_data(**kwargs)
         is_it_project_complete_form = self.request.GET.get(
             'is_it_project_complete_form', None) or \
-            self.request.POST.get(
-            'is_it_project_complete_form', None)
+                                      self.request.POST.get(
+                                          'is_it_project_complete_form', None)
         if is_it_project_complete_form == 'true':
             get_program = Program.objects.get(complete__id=self.kwargs['id'])
         else:
@@ -2093,8 +2082,8 @@ class QuantitativeOutputsCreate(AjaxableResponseMixin, CreateView):
     def get_initial(self):
         is_it_project_complete_form = self.request.GET.get(
             'is_it_project_complete_form', None) or \
-            self.request.POST.get(
-            'is_it_project_complete_form', None)
+                                      self.request.POST.get(
+                                          'is_it_project_complete_form', None)
 
         if is_it_project_complete_form == 'true':
             get_program = Program.objects.get(complete__id=self.kwargs['id'])
@@ -2153,8 +2142,8 @@ class QuantitativeOutputsUpdate(AjaxableResponseMixin, UpdateView):
         # indicator = Indicator.objects.get(id)
         is_it_project_complete_form = self.request.GET.get(
             'is_it_project_complete_form', None) or \
-            self.request.POST.get(
-            'is_it_project_complete_form', None)
+                                      self.request.POST.get(
+                                          'is_it_project_complete_form', None)
 
         initial = {
             'program': get_program.id,
@@ -2889,6 +2878,18 @@ def add_level2(request):
         'project_name'), program=program)
 
     if level2.save():
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})
+
+
+def add_documentation(request):
+    data = request.POST
+    program = Program.objects.get(id=int(data.get('program')))
+
+    documentation = Documentation(name=data.get('name'), url=data.get('url'), program=program)
+
+    if documentation.save():
         return HttpResponse({'success': True})
 
     return HttpResponse({'success': False})
