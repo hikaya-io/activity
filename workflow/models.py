@@ -387,6 +387,8 @@ class Contact(models.Model):
     phone = models.CharField("Phone", max_length=255, blank=True, null=True)
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
+    organization = models.ForeignKey(
+        Organization, blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -441,8 +443,10 @@ class FundCodeAdmin(admin.ModelAdmin):
 
 
 class Program(models.Model):
-    program_uuid = models.UUIDField(editable=False, verbose_name='Program UUID', default=uuid.uuid4, unique=True)
-    name = models.CharField("Program Name", max_length=255, blank=False, null=False, default='Default Level 1')
+    program_uuid = models.UUIDField(
+        editable=False, verbose_name='Program UUID', default=uuid.uuid4, unique=True)
+    name = models.CharField("Program Name", max_length=255,
+                            blank=False, null=False, default='Default Level 1')
     funding_status = models.CharField(
         "Funding Status", max_length=255, blank=True)
     cost_center = models.CharField(
@@ -453,7 +457,8 @@ class Program(models.Model):
     sector = models.ManyToManyField(Sector, blank=True)
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
-    create_date = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    create_date = models.DateTimeField(
+        null=True, blank=True, auto_now_add=True)
     edit_date = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     budget_check = models.BooleanField(
         "Enable Approval Authority", default=False)
@@ -514,7 +519,7 @@ class ApprovalAuthority(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.approval_user.user.first_name + " " + \
-               self.approval_user.user.last_name
+            self.approval_user.user.last_name
 
 
 class Province(models.Model):
@@ -853,8 +858,7 @@ class SiteProfile(models.Model):
                                   related_name="comm_estimate",
                                   on_delete=models.SET_NULL)
     location_verified_by = models.ForeignKey(ActivityUser,
-                                             help_text=
-                                             'This should be GIS Manager',
+                                             help_text='This should be GIS Manager',
                                              blank=True,
                                              null=True,
                                              related_name="comm_gis",

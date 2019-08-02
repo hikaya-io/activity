@@ -490,7 +490,7 @@ class ProjectAgreementUpdate(UpdateView):
                 # email the approver group so they know this was approved
                 link = "Link: " + "https://" + get_current_site(
                     self.request).name + "/workflow/projectagreement_detail/" \
-                       + str(self.kwargs['pk']) + "/"
+                    + str(self.kwargs['pk']) + "/"
                 subject = "Project Initiation Approved: " + project_name
                 message = "A new initiation was approved by " + \
                           str(self.request.user) + "\n" + "Budget Amount: " \
@@ -1738,29 +1738,13 @@ class ContactList(ListView):
     template_name = 'workflow/contact_list.html'
 
     def get(self, request, *args, **kwargs):
+        user = ActivityUser.objects.filter(user=request.user).first()
 
-        stakeholder_id = self.kwargs['pk']
-        get_stakeholder = None
+        get_contacts = Contact.objects.filter(organization=user.organization)
 
-        try:
-            get_stakeholder = Stakeholder.objects.get(id=stakeholder_id)
-
-        except Exception as e:
-            pass
-
-        if int(self.kwargs['pk']) == 0:
-            countries = get_country(request.user)
-            get_contacts = Contact.objects.all().filter(country__in=countries)
-
-        else:
-            # get_contacts = Contact.objects.all().filter(
-            # stakeholder__projectagreement=project_agreement_id)
-            get_contacts = Stakeholder.contact.through.objects.filter(
-                stakeholder_id=stakeholder_id)
-
-        return render(request, self.template_name,
-                      {'get_contacts': get_contacts,
-                       'get_stakeholder': get_stakeholder})
+        return render(request, self.template_name, {
+            'get_contacts': get_contacts
+        })
 
 
 class ContactCreate(CreateView):
@@ -2064,8 +2048,8 @@ class QuantitativeOutputsCreate(AjaxableResponseMixin, CreateView):
                         self).get_context_data(**kwargs)
         is_it_project_complete_form = self.request.GET.get(
             'is_it_project_complete_form', None) or \
-                                      self.request.POST.get(
-                                          'is_it_project_complete_form', None)
+            self.request.POST.get(
+            'is_it_project_complete_form', None)
         if is_it_project_complete_form == 'true':
             get_program = Program.objects.get(complete__id=self.kwargs['id'])
         else:
@@ -2082,8 +2066,8 @@ class QuantitativeOutputsCreate(AjaxableResponseMixin, CreateView):
     def get_initial(self):
         is_it_project_complete_form = self.request.GET.get(
             'is_it_project_complete_form', None) or \
-                                      self.request.POST.get(
-                                          'is_it_project_complete_form', None)
+            self.request.POST.get(
+            'is_it_project_complete_form', None)
 
         if is_it_project_complete_form == 'true':
             get_program = Program.objects.get(complete__id=self.kwargs['id'])
@@ -2142,8 +2126,8 @@ class QuantitativeOutputsUpdate(AjaxableResponseMixin, UpdateView):
         # indicator = Indicator.objects.get(id)
         is_it_project_complete_form = self.request.GET.get(
             'is_it_project_complete_form', None) or \
-                                      self.request.POST.get(
-                                          'is_it_project_complete_form', None)
+            self.request.POST.get(
+            'is_it_project_complete_form', None)
 
         initial = {
             'program': get_program.id,
@@ -2887,9 +2871,24 @@ def add_documentation(request):
     data = request.POST
     program = Program.objects.get(id=int(data.get('program')))
 
-    documentation = Documentation(name=data.get('name'), url=data.get('url'), program=program)
+    documentation = Documentation(name=data.get(
+        'name'), url=data.get('url'), program=program)
 
     if documentation.save():
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})
+
+
+def add_contact(request):
+    data = request.POST
+
+    user = ActivityUser.objects.filter(user=request.user).first()
+
+    contact = Contact(name=data.get('name'), city=data.get('city'), address=data.get(
+        'address'), phone=data.get('phone_number'), organization=user.organization)
+
+    if contact.save():
         return HttpResponse({'success': True})
 
     return HttpResponse({'success': False})
