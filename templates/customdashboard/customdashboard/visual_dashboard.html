@@ -1,20 +1,39 @@
 {% extends "base.html" %} {% block content %}
 
 <div class="container">
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li><a href="/">Home Dashboard</a></li>
+        <li><a href="/workflow/level2/0/">Projects</a></li>
+        <li class="active">Status</li>
+    </ul>
+    {% endblock %}    
+
+    <!-- Sub navigation -->
+  <div class="sub-navigation">
+        <div class="sub-navigation-header">
+          <h4 class="page-title">
+            {{ user.activity_user.organization.level_2_label }} Status 
+            {% if get_filtered_name %} for
+                {{ get_filtered_name }}
+            {% endif %}
+          </h4>
+        </div>
+        <div class="sub-navigation-actions">
+          <!-- sample action buttons -->
+          <div class="btn-group" role="group" aria-label="">
+          </div>
+        </div>
+      </div>
+    
+
   <div class="panel panel-info">
     <div class="panel-body">
       <div style="float:left;">
-        <h4>
-          {{ user.activity_user.organization.level_2_label }} Status 
-          {% if get_filtered_name %} for
-          <a href="/workflow/dashboard/{{ get_filtered_name.id }}"
-            >{{ get_filtered_name }}
-          </a>
-          {% endif %}
-        </h4>
         Number of {{ user.activity_user.organization.level_2_label }}(s):
         <b>{{ get_projects_count }}</b
         ><br />
+
         <!-- approved count-->
         <h4>
           <a href="/workflow/dashboard/{{ get_filtered_name.id }}/approved/"
