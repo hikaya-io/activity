@@ -1,108 +1,161 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <div class="container">
-        <div class="panel panel-info">
-            <div class="panel-body">
-                <div style="float:left;">
-    
-                    <h4>{{ user.activity_user.organization.level_2_label }} Status {% if get_filtered_name %} for <a href="/workflow/dashboard/{{ get_filtered_name.id }}">{{ get_filtered_name }}{% endif %} </a></h4>
-                    Number of {{ user.activity_user.organization.level_2_label }}(s) : <b>{{ get_projects_count }}</b><br>
-                    <!-- approved count-->
-                    <h4> <a href="/workflow/dashboard/{{ get_filtered_name.id }}/approved/"><span class="label label-success">Approved &nbsp;<span class="badge">{{ get_approved_count }}</span></span></a>
-                    <!-- awaiting approval count-->
-                    <a href="/workflow/dashboard/{{ get_filtered_name.id }}/awaiting_approval/"><span class="label label-success">Awaiting Approval &nbsp;<span class="badge">{{ get_awaiting_approval_count }}</span></span></a>
-                    <!-- in progress count-->
-                    <a href="/workflow/dashboard/{{ get_filtered_name.id }}/in_progress/"><span class="label label-success">In Progress &nbsp;<span class="badge">{{ get_in_progress_count }}</span></span></a>
-                    <!-- in progress count-->
-                    <a href="/workflow/dashboard/{{ get_filtered_name.id }}/new/"><span class="label label-success">New &nbsp;<span class="badge">{{ nostatus_count }}</span></span></a>
-                    <!-- rejected count-->
-                    <a href="/workflow/dashboard/{{ get_filtered_name.id }}/rejected/"><span class="label label-success">Rejected &nbsp;<span class="badge">{{ get_rejected_count }}</span></span></a></h4>
-    
-                </div>
-    
-            </div>
-        </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-    
-                    <!-- show project filter - 'All Projects', 'Approved', 'Rejected', 'In Progress', 'Archived' -->
-    
-                    <div class="btn-group">
-                      <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                        {{ user.activity_user.organization.level_2_label }} Dashboard <span class="caret"></span>
-                      </button>
-                      <ul class="dropdown-menu" role="menu">
-                        <li role="presentation">
-                         {% for project in get_projects %}
-                            <li class="list-group-item">
-                                <a href="/workflow/dashboard/project/{{ project.id }}/">{{ project.project_name }}</a>
-                            </li>
-                         {%endfor%}
-                        </li>
-                      </ul>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div id="indicator" style=" width: 100%; height: 460px; margin: 0 auto; float:right">
-                        <div style="width: 100%">
-                        <canvas id="program_chart" height="200" width="300"></canvas>
-                        <div id="program-legend" class="chart-legend"></div>
-    
-                        </div>
-    
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading"><b>{{ user.activity_user.organization.level_2_label }}(s) Status</b> {% if get_filtered_name %} for <a href="/workflow/dashboard/{{ get_filtered_name.id }}">{{ get_filtered_name }} </a>{% endif %}
-                    </div>
-                <div class="panel-body">
-                    <div class="col-md-offset-2 col-md-10">
-                        <canvas id="status" height="280"></canvas>
-                        <div id="status-legend" class="chart-legend"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-        <div class="col-md-12">
-            <div class="panel panel-info">
-                <div class="panel-heading"><b>KPI Target vs Actuals</b> {% if get_filtered_name %} for <a href="/workflow/dashboard/{{ get_filtered_name.id }}">{{ get_filtered_name }} </a>{% endif %}
-                </div>
-                <div class="panel-body">
-                    <div id="budget">
-                        <canvas id="expenditure_canvas" height="300" width="200"></canvas>
-                        <div id="exp-legend" class="chart-legend"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="panel panel-info">
+    <div class="panel-body">
+      <div style="float:left;">
+        <h4>
+          {{ user.activity_user.organization.level_2_label }} Status 
+          {% if get_filtered_name %} for
+          <a href="/workflow/dashboard/{{ get_filtered_name.id }}"
+            >{{ get_filtered_name }}
+          </a>
+          {% endif %}
+        </h4>
+        Number of {{ user.activity_user.organization.level_2_label }}(s):
+        <b>{{ get_projects_count }}</b
+        ><br />
+        <!-- approved count-->
+        <h4>
+          <a href="/workflow/dashboard/{{ get_filtered_name.id }}/approved/"
+            ><span class="label label-success"
+              >Approved &nbsp;<span class="badge">
+                  {{ get_approved_count }}</span></span
+            ></a
+          >
+          <!-- awaiting approval count-->
+          <a
+            href="/workflow/dashboard/{{
+              get_filtered_name.id
+            }}/awaiting_approval/"
+            ><span class="label label-success"
+              >Awaiting Approval &nbsp;<span class="badge">
+                  {{ get_awaiting_approval_count }}</span></span
+            ></a
+          >
+          <!-- in progress count-->
+          <a href="/workflow/dashboard/{{ get_filtered_name.id }}/in_progress/"
+            ><span class="label label-success"
+              >In Progress &nbsp;<span class="badge">{{ get_in_progress_count }}</span></span
+            ></a
+          >
+          <!-- in progress count-->
+          <a href="/workflow/dashboard/{{ get_filtered_name.id }}/new/"
+            ><span class="label label-success"
+              >New &nbsp;<span class="badge">{{ nostatus_count }}</span></span
+            ></a
+          >
+          <!-- rejected count-->
+          <a href="/workflow/dashboard/{{ get_filtered_name.id }}/rejected/"
+            ><span class="label label-success"
+              >Rejected &nbsp;<span class="badge">
+                  {{ get_rejected_count }}</span></span
+            ></a
+          >
+        </h4>
+      </div>
     </div>
-    <div class="">
-        <div class="panel panel-info">
-            <div class="panel-heading"><b>{{ user.activity_user.organization.level_2_label }} Sites</b> {% if get_filtered_name %} for <a href="/workflow/dashboard/{{ get_filtered_name.id }}">{{ get_filtered_name }}</a> {% endif %}</div>
-            <div class="panel-body">
-    
-                <style>
-                    #map { height: 350px; }
-                </style>
-                <div id="map"></div>
-    
-                {% include "small_site_profile_map.html" %}
-    
-            </div>
-        </div>
-    </div>
-    <div>{% include "customdashboard/charts/doughnut.html" %}</div>
-    <div>{% include "customdashboard/charts/bar_graph.html" %}</div>
-    <div>{% include "customdashboard/charts/polar.html" %}</div>
-    <div>{% include "customdashboard/charts/horizontal_bar_graph.html" %}</div>
-</div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <!-- show project filter - 'All Projects', 'Approved', 'Rejected', 'In Progress', 'Archived' -->
 
+          <div class="btn-group">
+            <button
+              class="btn btn-default btn-sm dropdown-toggle"
+              type="button"
+              data-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {{ user.activity_user.organization.level_2_label }} Dashboard
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              {% for project in get_projects %}
+              <li role="presentation" class="list-group-item">
+                <a href="/workflow/dashboard/project/{{ project.id }}/">{{
+                  project.project_name
+                }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div
+            id="indicator"
+            style=" width: 100%; height: 460px; margin: 0 auto; float:right"
+          >
+            <div style="width: 100%">
+              <canvas id="program_chart" height="200" width="300"></canvas>
+              <div id="program-legend" class="chart-legend"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <b>{{ user.activity_user.organization.level_2_label }}(s) Status</b>
+          {% if get_filtered_name %} for
+          <a href="/workflow/dashboard/{{ get_filtered_name.id }}"
+            >{{ get_filtered_name }} </a
+          >{% endif %}
+        </div>
+        <div class="panel-body">
+          <div class="col-md-offset-2 col-md-10">
+            <canvas id="status" height="280"></canvas>
+            <div id="status-legend" class="chart-legend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <b>KPI Target vs Actuals</b> {% if get_filtered_name %} for
+          <a href="/workflow/dashboard/{{ get_filtered_name.id }}"
+            >{{ get_filtered_name }} </a
+          >{% endif %}
+        </div>
+        <div class="panel-body">
+          <div id="budget">
+            <canvas id="expenditure_canvas" height="300" width="200"></canvas>
+            <div id="exp-legend" class="chart-legend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <b>{{ user.activity_user.organization.level_2_label }} Sites</b> 
+        {% if get_filtered_name %} for
+        <a href="/workflow/dashboard/{{ get_filtered_name.id }}">
+            {{ get_filtered_name }}</a>
+        {% endif %}
+      </div>
+      <div class="panel-body">
+        <style>
+          #map {
+            height: 350px;
+          }
+        </style>
+        <div id="map"></div>
+
+        {% include "small_site_profile_map.html" %}
+      </div>
+    </div>
+  </div>
+  <div>{% include "customdashboard/charts/doughnut.html" %}</div>
+  <div>{% include "customdashboard/charts/bar_graph.html" %}</div>
+  <div>{% include "customdashboard/charts/polar.html" %}</div>
+  <div>{% include "customdashboard/charts/horizontal_bar_graph.html" %}</div>
+</div>
 
 {% endblock content %}
