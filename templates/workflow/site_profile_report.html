@@ -1,41 +1,57 @@
 {% extends "base.html" %}
-{% block bread_crumb %}
-<ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
-  <li><a href="/workflow/report/0/0/">{{ user.activity_user.organization.level_2_label }} Report</a></li>
-  <li class="active">Report</li>
-</ol>
-
-{% endblock bread_crumb %}
 {% load render_table from django_tables2 %}
 
-{% block page_title %}{{ user.activity_user.organization.level_2_label }} Report{% endblock %}
-
 {% block content %}
-<ul class="nav nav-tabs">
-  <li role="presentation"><a href="/workflow/projectagreement_detail/{{ id }}/">Initiation</a></li>
-  <li role="presentation"><a href="/workflow/projectcomplete_detail/{{ id }}/">Tracking</a></li>
-  <li role="presentation" class="active"><a href="/workflow/siteprofile_report/{{ id }}/">Sites</a></li>
-</ul>
-<h3>{{ proposal.project_name }}</h3>
-<style>
-    #map { height: 480px; }
-</style>
+<div class="container">
+    {% block breadcrumbs %}
+        <ul class="breadcrumb">
+        <li><a href="/">Home Dashboard</a></li>
+        <li><a href="/workflow/report/0/0/">{{ user.activity_user.organization.level_2_label }} Report</a></li>
+        <li class="active">Sites</li>
+        </ul>
+    {% endblock %}
 
-<p><b>{{ country.country }} Sites</b></p>
-<div id="map"></div>
-
-{% include "workflow/site_profile_map.html" %}
-
-<ul class="list-group">
-{% for item in get_site_profile %}
-    <li class="list-group-item"><b>{{ item.create_date|date }} - {{ item.name }}</b>
-    <div class="btn-group align-right" role="group" aria-label="...">
-        <a href="/workflow/siteprofile_update/{{ item.id }}" class="btn btn-xs btn-warning">Update Sites</a>
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+        <div class="sub-navigation-header">
+            <h4 class="page-title">
+                Sites
+            </h4>
+            </div>
+            <div class="sub-navigation-actions">
+            <!-- sample action buttons -->
+            <div class="btn-group" role="group" aria-label="">
+                
+            </div>
+        </div>
     </div>
-    </li>
-{% empty %}
-    <li class="list-group-item">No sites yet.</li>
-{% endfor %}
-</ul>
+
+
+    <ul class="nav nav-tabs">
+      <li role="presentation"><a href="/workflow/projectagreement_detail/{{ id }}/">Initiation</a></li>
+      <li role="presentation"><a href="/workflow/projectcomplete_detail/{{ id }}/">Tracking</a></li>
+      <li role="presentation" class="active"><a href="/workflow/siteprofile_report/{{ id }}/">Sites</a></li>
+    </ul>
+    <h3>{{ proposal.project_name }}</h3>
+    <style>
+        #map { height: 480px; }
+    </style>
+    
+    <p><b>{{ country.country }} Sites</b></p>
+    <div id="map"></div>
+    
+    {% include "workflow/site_profile_map.html" %}
+    
+    <ul class="list-group">
+    {% for item in get_site_profile %}
+        <li class="list-group-item"><b>{{ item.create_date|date }} - {{ item.name }}</b>
+        <div class="btn-group align-right" role="group" aria-label="...">
+            <a href="/workflow/siteprofile_update/{{ item.id }}" class="btn btn-xs btn-warning">Update Sites</a>
+        </div>
+        </li>
+    {% empty %}
+        <li class="list-group-item">No sites yet.</li>
+    {% endfor %}
+    </ul>
+</div>
 {% endblock content %}
