@@ -1,47 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="Survery Dashboard">
-    <meta name="author" content=Hikaya"">
-    <title>Hikaya Rollout Dashboard</title>
 
-    <!-- Bootstrap core CSS -->
-    <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.png" type="image/png"/>
-
-    <!-- Bootstrap -->
-    <link href="{{ STATIC_URL}}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-
-    <!-- Custom styles for this template -->
-    <link href="{{ STATIC_URL}}css/activity-dashboard.css" rel="stylesheet" type="text/css" />
-    <link href="{{ STATIC_URL}}css/app.css" rel="stylesheet" type="text/css" />
-    <!-- JQuery UI CSS -->
-    <link href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.10.4.min.css" rel="stylesheet" type="text/css" />
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.11.1.min.js"></script>
-    <script src="{{ STATIC_URL }}publicdashboard/js/vendor/Chart.min.js"></script>
-    <link rel="borders" type="application/json" href="{{ STATIC_URL }}js/world_borders.geojson">
-    <!-- Hosted Leaflet -->
-    <script src="{{ STATIC_URL }}js/leaflet.js"></script>
-    <script src="{{ STATIC_URL }}js/Chart.HorizontalBar.js"></script>
-    <!--- Hosted Leaflet CSS -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/leaflet.css"/>
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-    <div class="row">
+<div class="container">
         <div class="panel panel-info">
             <div class="panel-body">
                 <div style="float:left;">
-
+    
                     <h4>{{ user.activity_user.organization.level_2_label }} Status {% if get_filtered_name %} for <a href="/workflow/dashboard/{{ get_filtered_name.id }}">{{ get_filtered_name }}{% endif %} </a></h4>
                     Number of {{ user.activity_user.organization.level_2_label }}(s) : <b>{{ get_projects_count }}</b><br>
                     <!-- approved count-->
@@ -54,19 +18,18 @@
                     <a href="/workflow/dashboard/{{ get_filtered_name.id }}/new/"><span class="label label-success">New &nbsp;<span class="badge">{{ nostatus_count }}</span></span></a>
                     <!-- rejected count-->
                     <a href="/workflow/dashboard/{{ get_filtered_name.id }}/rejected/"><span class="label label-success">Rejected &nbsp;<span class="badge">{{ get_rejected_count }}</span></span></a></h4>
-
+    
                 </div>
-
+    
             </div>
         </div>
-    </div>
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-info">
                 <div class="panel-heading">
-
+    
                     <!-- show project filter - 'All Projects', 'Approved', 'Rejected', 'In Progress', 'Archived' -->
-
+    
                     <div class="btn-group">
                       <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
                         {{ user.activity_user.organization.level_2_label }} Dashboard <span class="caret"></span>
@@ -87,9 +50,9 @@
                         <div style="width: 100%">
                         <canvas id="program_chart" height="200" width="300"></canvas>
                         <div id="program-legend" class="chart-legend"></div>
-
+    
                         </div>
-
+    
                     </div>
                 </div>
             </div>
@@ -106,7 +69,7 @@
                 </div>
             </div>
         </div>
-
+    
         <div class="col-md-12">
             <div class="panel panel-info">
                 <div class="panel-heading"><b>KPI Target vs Actuals</b> {% if get_filtered_name %} for <a href="/workflow/dashboard/{{ get_filtered_name.id }}">{{ get_filtered_name }} </a>{% endif %}
@@ -120,18 +83,18 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12">
+    <div class="">
         <div class="panel panel-info">
             <div class="panel-heading"><b>{{ user.activity_user.organization.level_2_label }} Sites</b> {% if get_filtered_name %} for <a href="/workflow/dashboard/{{ get_filtered_name.id }}">{{ get_filtered_name }}</a> {% endif %}</div>
             <div class="panel-body">
-
+    
                 <style>
                     #map { height: 350px; }
                 </style>
                 <div id="map"></div>
-
+    
                 {% include "small_site_profile_map.html" %}
-
+    
             </div>
         </div>
     </div>
@@ -139,5 +102,7 @@
     <div>{% include "customdashboard/charts/bar_graph.html" %}</div>
     <div>{% include "customdashboard/charts/polar.html" %}</div>
     <div>{% include "customdashboard/charts/horizontal_bar_graph.html" %}</div>
+</div>
+
 
 {% endblock content %}
