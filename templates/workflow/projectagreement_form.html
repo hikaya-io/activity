@@ -1,75 +1,95 @@
 {% extends "base.html" %}
-{% block bread_crumb %}
-<ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
-  {% if pk %}
-    <li><a href="/workflow/dashboard/project/{{ pk }}/">{{ user.activity_user.organization.level_2_label }} Dashboard</a></li>
-  {% endif %}
-  <li class="active">Project Initiation Form</li>
-</ol>
-{% endblock %}
+{% block content %}
 
 {% block extra_js_in_body %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
-    <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
+<script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+<link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
 
-    <script type="text/javascript">
-        //Searchable select option for service indicator
-        $(document).ready(function() {
-            /* add select2 js library to the indicator select box */
-            $("#id_site").select2();
-            $("#id_stakeholder").select2();
+<script type="text/javascript">
+  //Searchable select option for service indicator
+  $(document).ready(function() {
+    /* add select2 js library to the indicator select box */
+    $('#id_site').select2();
+    $('#id_stakeholder').select2();
 
-            $("#myModal").on('hidden.bs.modal', function () {
-                // destroy the modal content so that it is not cached and
-                $(this).data('bs.modal', null);
-            });
-        });
+    $('#myModal').on('hidden.bs.modal', function() {
+      // destroy the modal content so that it is not cached and
+      $(this).data('bs.modal', null);
+    });
+  });
 
-        $("#budget_contributions_table").on("click", ".output", function(e){
-            e.preventDefault();
-            var url = $(this).attr("href");
-            $("#myModalContent").empty();
-            $("#myModalContent").load(url);
-            $("#myModal").modal('show');
-        });
-    </script>
+  $('#budget_contributions_table').on('click', '.output', function(e) {
+    e.preventDefault();
+    var url = $(this).attr('href');
+    $('#myModalContent').empty();
+    $('#myModalContent').load(url);
+    $('#myModal').modal('show');
+  });
+</script>
 
 {% endblock %}
 
-{% block page_title %}Project Initiation Form{% endblock %}
-{% block content %}
-    {% if p_agreement%}
-        <h4>{{p_agreement|truncatechars:150}}</h4>
-    {% endif %}
-    {% include "form_guidance.html" %}
-    {% if form.errors %}
-        <div class="help-block">
-        {% for field in form %}
-            {% for error in field.errors %}
-                    <strong><i>{{ field.label }}</i> - {{ error|escape }}</strong>&nbsp;
-            {% endfor %}
-        {% endfor %}
-        </div>
-        {% for error in form.non_field_errors %}
-            <div class="alert alert-error">
-                <strong>{{ error|escape }}</strong>
-            </div>
-        {% endfor %}
-    {% endif %}
-    {% load crispy_forms_tags %}
-    <form class="form-horizontal" method="post" enctype="multipart/form-data" name="most" id="agreement">
-    {% crispy form %}
-    </form>
 
-    <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" id="myModalContent">
 
-        </div>
+<div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="/">Home Dashboard</a></li>
+    {% if pk %}
+    <li>
+      <a href="/workflow/dashboard/project/{{ pk }}/"
+        >{{ user.activity_user.organization.level_2_label }} Dashboard</a
+      >
+    </li>
+    {% endif %}
+    <li class="active">Project Initiation Form</li>
+  </ul>
+  {% endblock %}
+
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+        Project Initiation Form | 
+        {% if p_agreement%}
+        {{ p_agreement | truncatechars:150 }}
+        {% endif %} 
+      </h4>
     </div>
+    <div class="sub-navigation-actions">
+      <!-- sample action buttons -->
+      <div class="btn-group" role="group" aria-label=""></div>
+    </div>
+  </div>
+  
+  {% include "form_guidance.html" %} 
+  
+  {% if form.errors %}
+      <div class="help-block">
+      {% for field in form %} 
+          {% for error in field.errors %}
+          <strong
+              ><i>{{ field.label }}</i> - {{ error | escape }}</strong
+          >&nbsp; 
+          {% endfor %} 
+      {% endfor %}
+      </div>
+  
+      {% for error in form.non_field_errors %}
+      <div class="alert alert-error">
+      <strong>{{ error | escape }}</strong>
+      </div>
+      {% endfor %} 
+  {% endif %} 
+  {% load crispy_forms_tags %}
+  <form
+    class="form-horizontal"
+    method="post"
+    enctype="multipart/form-data"
+    name="most"
+    id="agreement"
+  >
+    {% crispy form %}
+  </form>
 </div>
-
-    <!--- my end form -->
 {% endblock content %}
