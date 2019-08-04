@@ -1,6 +1,8 @@
 
 <tr>
-    <td>{{ project.project_name }}</td>
+    <td>
+      <a href="">{{ project.project_name }}</a>
+    </td>
     <td>{{ project.project_name }}</td>
     <td>{{ project.create_date|date:"d-m-Y" }}</td>
     <td>{% if item.short %} Short {% else %} Long {% endif %}</td>
@@ -22,7 +24,7 @@
         {% endif %}</td>
     <td class="text-right">
         <div class="btn-group">
-          <a role="button" href="" class="btn btn-default btn-sm">Details</a>
+          <a role="button" href="" class="btn btn-default btn-sm">More</a>
           <button
             type="button"
             class="btn btn-default btn-sm dropdown-toggle"
