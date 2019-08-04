@@ -24,7 +24,7 @@ urlpatterns = [
     re_path(
         r'^level2/(?P<pk>\w+)/(?P<status>[\w ]+)/$', ProgramDash.as_view(),
         name='dashboard'),
-    re_path(r'^level2/(?P<pk>\w+)/$',
+    re_path(r'^level2/(?P<program>\w+)/(?P<status>[\w ]+)/$',
             ProgramDash.as_view(), name='dashboard'),
 
     re_path(r'^projectagreement_list/(?P<pk>\w+)/(?P<status>[\w ]+)/$',

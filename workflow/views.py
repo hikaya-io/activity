@@ -158,9 +158,6 @@ class ProgramDash(ListView):
         organizations = get_organizations(request.user)
         get_programs = Program.objects.all().filter(
             organization=request.user.activity_user.organization).distinct()
-        get_projects = ProjectAgreement.objects.filter(
-            program__organization=request.user.activity_user.organization
-        )
         filtered_program = None
         if int(self.kwargs['pk']) == 0:
             get_dashboard = Program.objects.all().prefetch_related(
@@ -169,14 +166,20 @@ class ProgramDash(ListView):
                 .order_by('name') \
                 .annotate(has_agreement=Count('agreement'),
                           has_complete=Count('complete'))
+            get_projects = ProjectAgreement.objects.filter(
+                program__organization=request.user.activity_user.organization)
         else:
             get_dashboard = Program.objects.all() \
                 .prefetch_related('agreement', 'agreement__projectcomplete',
                                   'agreement__office').filter(
                 id=self.kwargs['pk'], funding_status="Funded",
                 organization__in=organizations).order_by('name')
-            filtered_program = Program.objects.only(
-                'name').get(pk=self.kwargs['pk']).name
+
+            filtered_program = Program.objects.get(pk=self.kwargs['pk'])
+
+            get_projects = ProjectAgreement.objects.filter(
+                program__organization=request.user.activity_user.organization,
+                program__id=self.kwargs['pk'],)
 
         if self.kwargs.get('status', None):
 
@@ -185,13 +188,19 @@ class ProgramDash(ListView):
                 get_dashboard.filter(
                     Q(agreement__approval=self.kwargs['status']) |
                     Q(agreement__approval=None))
+                get_projects.filter(
+                    Q(approval=self.kwargs['status']) |
+                    Q(approval=None))
 
             elif status == "new":
                 get_dashboard.filter(
-                    Q(Q(agreement__approval=None) | Q(agreement__approval="")))
+                    Q(Q(agreement__approval=None) | Q(agreement__approval='')))
+
+                get_projects.filter(Q(approval='') | Q(approval=None))
 
             else:
                 get_dashboard.filter(agreement__approval=self.kwargs['status'])
+                get_projects.filter(approval=self.kwargs['status'])
         else:
             status = None
 
