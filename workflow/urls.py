@@ -14,6 +14,7 @@ urlpatterns = [
     path('level2/add', add_level2, name='add-level2'),
     path('documentation/add', add_documentation, name='add-documentation'),
     path('contact/add', add_contact, name='add-contact'),
+    path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
 
     re_path(r'^level2/project/(?P<pk>\w+)/$',
             ProjectDash.as_view(), name='project_dashboard'),

@@ -2881,3 +2881,24 @@ def add_contact(request):
         return HttpResponse({'success': True})
 
     return HttpResponse({'success': False})
+
+
+def add_stakeholder(request):
+    data = request.POST
+
+    user = ActivityUser.objects.filter(user=request.user).first()
+
+    stakeholder_type_id = None
+
+    try:
+        stakeholder_type_id = int(data.get('stakeholder_type'), 10)
+    except:
+        pass
+
+    stakeholder = Stakeholder(name=data.get(
+        'stakeholder_name'), type=stakeholder_type_id, organization=user.organization, stakeholder_register=False)
+
+    if stakeholder.save():
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})

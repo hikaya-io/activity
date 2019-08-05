@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block content %}
-{% include '../workflow/stakeholder_form.html' %}
+{% extends "base.html" %} {% block content %} 
+{% include './modals/add_stakeholder_modal.html' %}
 
 <div class="container">
   {% block breadcrumbs %}
@@ -46,27 +46,25 @@
         <div class="btn-group" role="group" aria-label="...">
           <a
             role="button"
-            class="btn btn-sm btn-info"
-            data-toggle="modal"
-            data-target="#addstakeholderModal"
+            class="btn btn-sm btn-info  disabled"
             href="/workflow/export_stakeholders_list/{{ program_id }}/"
             class="btn btn-sm btn-default"
           >
             Export to CSV</a
           >
-          
+
           <a
             role="button"
-            href="/workflow/stakeholder_add/0/"
             class="btn btn-sm btn-primary"
+            data-toggle="modal"
+            data-target="#addStakeholderModal"
           >
             New Stakeholder
           </a>
-          
         </div>
       </div>
-      </div>
     </div>
+  </div>
 
   <!-- Table -->
   <table class="table" id="stakeholdertable"></table>
