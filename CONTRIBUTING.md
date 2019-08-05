@@ -34,10 +34,10 @@ If you don't see your idea listed, and you think it fits into the goals of this 
 
 ## Contribution review process
 
-This repo is currently maintained by @glind and @mahmoodkhan, who have commit access. They will likely review your contribution. If you haven't heard from anyone in 10 days, feel free to bump the thread or @-mention a maintainer to review your contribution.
+This repo is currently maintained by Hikaya, who have commit access. They will likely review your contribution. If you haven't heard from anyone in 10 days, feel free to bump the thread or @-mention a maintainer to review your contribution.
 
 ## Community
 
-Discussions about Activity and activitytables take place in the Issues sections for each repo, as well as http://hikaya-io.slack.com. Anybody is welcome to join these conversations.
+Discussions about Activity and Tables take place in the Issues sections for each repo, as well as http://hikaya-io.slack.com. Anybody is welcome to join these conversations.
 
 Wherever possible, do not take these conversations to private channels, including contacting the maintainers directly. Keeping communication public means everybody can benefit and learn from the conversation.

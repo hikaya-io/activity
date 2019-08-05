@@ -38,6 +38,7 @@ venv/
 build/
 develop-eggs/
 dist/
+media/
 downloads/
 eggs/
 lib/
@@ -88,3 +89,5 @@ local.py
 .env
 db.sqlite3
 .idea/
+.vscode
+.history/

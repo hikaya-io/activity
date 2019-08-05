@@ -18,21 +18,26 @@ class IndicatorResource(resources.ModelResource):
     strategic_objective = ManyToManyWidget(
         StrategicObjective, separator=" | ", field="strategic_objective")
     level = ManyToManyWidget(Level, separator=" | ", field="level")
-    reporting_frequency = fields.Field(column_name='reporting_frequency',
-                                       attribute='reporting_frequency',
-                                       widget=ForeignKeyWidget(ReportingFrequency, 'frequency'))
+    reporting_frequency = fields.Field(
+        column_name='reporting_frequency',
+        attribute='reporting_frequency',
+        widget=ForeignKeyWidget(ReportingFrequency, 'frequency'))
     sector = fields.Field(column_name='sector', attribute='sector',
                           widget=ForeignKeyWidget(Sector, 'sector'))
     program = ManyToManyWidget(Program, separator=" | ", field="name")
 
     class Meta:
         model = Indicator
-        fields = ('id', 'indicator_type', 'level', 'objective', 'strategic_objective', 'name', 'number',
-                  'source', 'definition', 'justification', 'unit_of_measure', 'baseline', 'lop_target',
-                  'rationale_for_target', 'means_of_verification', 'data_collection_method',
-                  'data_collection_frequency', 'data_points', 'responsible_person', 'method_of_analysis',
-                  'information_use', 'reporting_frequency', 'quality_assurance', 'data_issues', 'indicator_changes',
-                  'comments', 'disaggregation', 'sector', 'program', 'key_performance_indicator')
+        fields = (
+            'id', 'indicator_type', 'level', 'objective',
+            'strategic_objective', 'name', 'number', 'source', 'definition',
+            'justification', 'unit_of_measure', 'baseline', 'lop_target',
+            'rationale_for_target', 'means_of_verification',
+            'data_collection_method', 'data_collection_frequency',
+            'data_points', 'responsible_person', 'method_of_analysis',
+            'information_use', 'reporting_frequency', 'quality_assurance',
+            'data_issues', 'indicator_changes', 'comments', 'disaggregation',
+            'sector', 'program', 'key_performance_indicator')
 
 
 class IndicatorAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
@@ -47,14 +52,14 @@ class IndicatorAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     pass
 
 
-class activitytableResource(resources.ModelResource):
+class ActivityTableResource(resources.ModelResource):
 
     class Meta:
         model = ActivityTable
         fields = ('id', 'name', 'table_id', 'owner', 'remote_owner', 'url')
 
 
-class activitytableAdmin(ImportExportModelAdmin):
+class ActivityTableAdmin(ImportExportModelAdmin):
     list_display = ('name', 'owner', 'url', 'create_date', 'edit_date')
     search_fields = ('country__country', 'name')
     list_filter = ('country__country',)
@@ -83,6 +88,13 @@ class ReportingFrequencyAdmin(admin.ModelAdmin):
     display = 'Reporting Frequency'
 
 
+@admin.register(StrategicObjective)
+class StrategicObjectiveAdmin(admin.ModelAdmin):
+    list_display = ('name', 'organization', 'create_date', 'parent')
+    list_filter = ('parent', 'name', 'organization')
+    display = 'Objectives'
+
+
 admin.site.register(IndicatorType)
 admin.site.register(Indicator, IndicatorAdmin)
 admin.site.register(ReportingFrequency)
@@ -90,10 +102,9 @@ admin.site.register(DisaggregationType, DisaggregationTypeAdmin)
 admin.site.register(DisaggregationLabel, DisaggregationLabelAdmin)
 admin.site.register(CollectedData, CollectedDataAdmin)
 admin.site.register(Objective, ObjectiveAdmin)
-admin.site.register(StrategicObjective, StrategicObjectiveAdmin)
 admin.site.register(Level)
 admin.site.register(ExternalService, ExternalServiceAdmin)
 admin.site.register(ExternalServiceRecord, ExternalServiceRecordAdmin)
-admin.site.register(ActivityTable, activitytableAdmin)
+admin.site.register(ActivityTable, ActivityTableAdmin)
 admin.site.register(DataCollectionFrequency)
 admin.site.register(PeriodicTarget, PeriodicTargetAdmin)

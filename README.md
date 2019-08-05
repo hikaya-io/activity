@@ -1,11 +1,11 @@
 Activity [![Build Status](https://travis-ci.org/hikaya/Activity-CE.svg?branch=master)](https://travis-ci.org/hikaya/Activity-CE)
 ====
 
-Activity includes a set of forms and reports for managing project activities for a Program.  It includes workflow for approving and completing projects as well as sharing the output data.
-
-
-Activity functionality http://www.github.com/hikaya/Activity-CE is intended to allow importing
-and exporting of project specific data from 3rd party data sources or excel files.
+We are developing a tool for humanitarians to manage project activities and indicator results across their programs, including approval workflows and reporting and visualizations. Our goal is to help organizations answer common questions such as:
+* who are funding your projects?
+* who you work with?
+* where you work?
+* how do my outputs align with my overall project goal?
 
 ## Configuration
 Copy the activity/settings/local-sample.py to local.py and modify for your environment.

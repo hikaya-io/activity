@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from os.path import join, normpath
 from base import *
 
@@ -16,7 +19,7 @@ DATABASES = {
 """Development settings and globals."""
 
 
-#from mongoengine import connect
+# from mongoengine import connect
 
 # MANAGER CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
@@ -53,7 +56,7 @@ EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = 'test@test.com'
 SERVER_EMAIL = "test@test.com"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#DEFAULT_TO_EMAIL = 'to email'
+# DEFAULT_TO_EMAIL = 'to email'
 
 # END EMAIL SETTINGS
 
@@ -64,7 +67,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # END DATABASE CONFIGURATION
 
-########## GOOGLE CLIENT CONFIG ###########
+# ######### GOOGLE CLIENT CONFIG ###########
 GOOGLE_STEP2_URI = ''
 GOOGLE_CLIENT_ID = ''
 GOOGLE_CLIENT_SECRET = ''

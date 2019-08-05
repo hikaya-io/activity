@@ -5,6 +5,7 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.conf import settings
 from importlib import import_module
+import logging
 
 SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
@@ -12,7 +13,8 @@ SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 @receiver(user_logged_in)
 def sig_user_logged_in(sender, user, request, **kwargs):
     # get user profile data to set session vars
-    # user_profile = UserProfile.objects.all().filter(user=request.user).values('country')
+    # user_profile = UserProfile.objects.all()\
+    #   .filter(user=request.user).values('country')
     # request.session['country'] = user_profile.country
 
     logger = logging.getLogger(__name__)

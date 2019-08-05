@@ -1,0 +1,41 @@
+.admin-container {
+    padding-right: 35px;
+    padding-left: 20px;
+    min-height: 85vh;
+
+}
+.side-nav {
+    padding: 8px 10px;
+    background-color: #DCDCDC;
+    min-height: 85vh;
+}
+
+.admin-content {
+    padding: 15px 25px;
+    background: #F5F5F5;
+    min-height: 85vh;
+}
+
+.default-setting {
+    margin-bottom: 10px;
+}
+
+.dashboard-summaries {
+    background: #FFFFFF;
+    margin-left:33px;
+    line-height: 10px;
+}
+
+.dashboard-summaries i {
+    font-size: 38px;
+    margin-top: 15px;
+    color: rgb(37, 206, 209);
+}
+
+.admin-main-panels {
+    margin: 20px 6px;
+}
+
+.admin-form-actions {
+    padding-right: 13px;
+}

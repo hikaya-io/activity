@@ -18,7 +18,7 @@
 
     <div class="modal-body">
         <form action="/data_delete/{{ pk }}/" id="dataSourceDeleteForm" method="post">{% csrf_token %}
-            <p>Are you sure you want to delete "{{ getDataSource.data_name }}"?</p>
+            <p>Are you sure you want to delete "{{ get_data_source.data_name }}"?</p>
             <input type="submit" value="Confirm" />
         </form>
     </div>

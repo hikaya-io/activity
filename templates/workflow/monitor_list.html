@@ -2,7 +2,7 @@
 {% block bread_crumb %}
 <ol class="breadcrumb">
   <li><a href="/workflow/dashboard/0/">Program Dashboards</a></li>
-  <li><a href="/workflow/dashboard/project/{{ project_proposal_id }}/">Project Dashboards</a></li>
+  <li><a href="/workflow/dashboard/project/{{ project_proposal_id }}/">{{ user.activity_user.organization.level_2_label }} Dashboards</a></li>
   <li class="active">Monitoring and Benchmarks</li>
 </ol>
 {% endblock %}
@@ -17,7 +17,7 @@
 </div>
 <h3>Monitoring Data</h3>
 <ul class="list-group">
-{% for item in getMonitorData %}
+{% for item in get_monitor_data %}
     <li class="list-group-item"><b><a href="/workflow/monitor_update/{{ item.id }}">{{ item.create_date|date }} - {{ item.name }}</a></b> &nbsp;<a href="/workflow/monitor_delete/{{ item.id }}" class="btn-xs btn-danger">Delete Data</a></li>
 {% empty %}
     <li class="list-group-item">No data yet.</li>
@@ -26,7 +26,7 @@
 <br/>
 <h3>Benchmark Data</h3>
 <ul class="list-group">
-{% for item in getBenchmarkData %}
+{% for item in get_benchmark_data %}
     <li class="list-group-item"><b><a href="/workflow/benchmark_update/{{ item.id }}">{{ item.create_date|date }} - {{ item.name }}</a></b> &nbsp;<a href="/workflow/benchmark_delete/{{ item.id }}" class="btn-xs btn-danger">Delete Data</a></li>
 {% empty %}
     <li class="list-group-item">No data yet.</li>

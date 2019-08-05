@@ -48,17 +48,21 @@ def import_table(request):
             url = item['data']
             remote_owner = item['owner']['username']
 
-        check_for_existence = ActivityTable.objects.all().filter(name=name, owner=owner)
+        check_for_existence = ActivityTable.objects.all()\
+            .filter(name=name, owner=owner)
         if check_for_existence:
             message = "error"
         else:
             create_table = ActivityTable.objects.create(
-                name=name, owner=owner, remote_owner=remote_owner, table_id=id, url=url)
+                name=name, owner=owner, remote_owner=remote_owner,
+                table_id=id, url=url)
             create_table.save()
             message = "success"
 
         # send result back as json
-        return HttpResponse(json.dumps(message), content_type='application/json')
+        return HttpResponse(json.dumps(message),
+                            content_type='application/json')
 
-    # send the keys and vars from the json data to the template along with submitted feed info and silos for new form
-    return render(request, "tables/import.html", {'getTables': data})
+    # send the keys and vars from the json data to the template along with
+    # submitted feed info and silos for new form
+    return render(request, "tables/import.html", {'get_tables': data})

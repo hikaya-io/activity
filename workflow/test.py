@@ -29,7 +29,8 @@ class SiteProfileTestCase(TestCase):
         new_office.save()
         get_office = Office.objects.get(name="testoffice")
         new_community = SiteProfile.objects.create(
-            name="testcommunity", country=get_country, office=get_office, province=get_province)
+            name="testcommunity", country=get_country, office=get_office,
+            province=get_province)
         new_community.save()
 
     def test_community_exists(self):
@@ -64,29 +65,35 @@ class AgreementTestCase(TestCase):
         new_office.save()
         get_office = Office.objects.get(name="testoffice")
         new_community = SiteProfile.objects.create(
-            name="testcommunity", country=get_country, office=get_office, province=get_province)
+            name="testcommunity", country=get_country, office=get_office,
+            province=get_province)
         new_community.save()
         get_community = SiteProfile.objects.get(name="testcommunity")
         # load from fixtures
         get_project_type = ProjectType.objects.get(id='1')
         get_sector = Sector.objects.get(id='2')
-        new_agreement = ProjectAgreement.objects.create(program=get_program, project_name="testproject",
-                                                        project_type=get_project_type, activity_code="111222",
-                                                        office=get_office, sector=get_sector)
+        new_agreement = ProjectAgreement.objects.create(
+            program=get_program,
+            project_name="testproject",
+            project_type=get_project_type, activity_code="111222",
+            office=get_office, sector=get_sector)
         new_agreement.save()
         new_agreement.site.add(get_community)
 
         new_benchmarks = Benchmarks.objects.create(
-            percent_complete="1234", percent_cumulative="14", agreement=new_agreement)
+            percent_complete="1234", percent_cumulative="14",
+            agreement=new_agreement)
         new_benchmarks.save()
 
         new_budget = Budget.objects.create(
-            contributor="testbudget", description_of_contribution="new_province", proposed_value="24",
+            contributor="testbudget",
+            description_of_contribution="new_province", proposed_value="24",
             agreement=new_agreement)
         new_budget.save()
 
         new_monitor = Monitor.objects.create(
-            responsible_person="testmonitor", frequency="freq", type="24", agreement=new_agreement)
+            responsible_person="testmonitor", frequency="freq", type="24",
+            agreement=new_agreement)
         new_monitor.save()
 
     def test_agreement_exists(self):
@@ -138,22 +145,26 @@ class CompleteTestCase(TestCase):
         new_office.save()
         get_office = Office.objects.get(name="testoffice")
         new_community = SiteProfile.objects.create(
-            name="testcommunity", country=get_country, office=get_office, province=get_province)
+            name="testcommunity", country=get_country, office=get_office,
+            province=get_province)
         new_community.save()
         get_community = SiteProfile.objects.get(name="testcommunity")
         # load from fixtures
         get_project_type = ProjectType.objects.get(id='1')
         get_sector = Sector.objects.get(id='2')
-        new_agreement = ProjectAgreement.objects.create(program=get_program, project_name="testproject",
-                                                        project_type=get_project_type, activity_code="111222",
-                                                        office=get_office, sector=get_sector)
+        new_agreement = ProjectAgreement.objects.create(
+            program=get_program,
+            project_name="testproject",
+            project_type=get_project_type, activity_code="111222",
+            office=get_office, sector=get_sector)
         new_agreement.save()
         new_agreement.site.add(get_community)
         get_agreement = ProjectAgreement.objects.get(
             project_name="testproject")
-        new_complete = ProjectComplete.objects.create(program=get_program, project_name="testproject",
-                                                      activity_code="111222", office=get_office, on_time=True,
-                                                      community_handover=1, project_agreement=get_agreement)
+        new_complete = ProjectComplete.objects.create(
+            program=get_program, project_name="testproject",
+            activity_code="111222", office=get_office, on_time=True,
+            community_handover=1, project_agreement=get_agreement)
         new_complete.save()
 
     def test_complete_exists(self):

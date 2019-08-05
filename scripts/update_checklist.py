@@ -3,8 +3,8 @@
 
 """
 import json data from API
-IMPORTANT!! you must turn off pagination for this to work from a URL and get all
-country records
+IMPORTANT!! you must turn off pagination for this to work from a URL
+and get all country records
 Install module django-extensions
 Runs twice via function calls at bottom once
 """
@@ -30,7 +30,8 @@ def get_all_data():
             get_checklist.save()
 
             update_items(get_checklist)
-        # if it does update the items in the checklist to include all the new globals
+        # if it does update the items in the checklist to include all
+        # the new globals
         update_items(get_checklist)
         print(item)
 

@@ -2,7 +2,7 @@
 $('a[href=#i_surveys]').on('shown.bs.tab', function(){
 //render survey_responses on radar_chart
     var survey_data = {
-        //labels : [{% for program in getQuantitativeDataSums_2 %} "{{ program.indicator__source }}", {% endfor %}],
+        //labels : [{% for program in get_quantitative_data_sums_2 %} "{{ program.indicator__source }}", {% endfor %}],
         labels : ["Helpful","Friendly","Kind","Rude","Slow","Frustrating"],
         datasets : [
             {
@@ -10,7 +10,7 @@ $('a[href=#i_surveys]').on('shown.bs.tab', function(){
                 strokeColor : "#637b85",
                 pointColor : "#dbba34",
                 pointStrokeColor : "#637b85",
-                //data : [{% for project in getProjects %} {{ project.mc_estimated_budget }},{% endfor %}]
+                //data : [{% for project in get_projects %} {{ project.mc_estimated_budget }},{% endfor %}]
                 data : [65,59,90,81,30,56]
             }
         ]

@@ -2,8 +2,8 @@
 {% block bread_crumb %}
 <div>
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
-  <li class="active">Project Initiation</li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
+  <li class="active">{{ user.activity_user.organization.level_2_label }} Initiation</li>
 </ol>
 </div>
 {% endblock %}
@@ -15,21 +15,21 @@
     {% include "workflow/filter.html" %}
 </div>
 <br/>
-{% if getProgram %}
-<h3>{{getProgram.gaitid }} - {{ getProgram.name }}</h3>
+{% if get_program %}
+<h3>{{get_program.gaitid }} - {{ get_program.name }}</h3>
 {% endif %}
 
  <!-- Table -->
 <table class="table">
     <tr>
         <th>Date Created</th>
-        <th>Project Name</th>
-        <th>Activity Code</th>
+        <th>{{ user.activity_user.organization.level_2_label }} Name</th>
+        <th>{{ user.activity_user.organization.level_4_label }} Code</th>
         <th>Approval Status</th>
         <th>In Dashboard</th>
         <th>&nbsp;</th>
     </tr>
-    {% for item in getDashboard %}
+    {% for item in get_dashboard %}
     <tr>
         <td>{% if item.approval %}{{ item.create_date}}{% else %}<a href="/workflow/projectagreement_update/{{ item.id }}">{{ item.create_date}}</a>{% endif %}</td>
         <td>{% if item.approval %} {{ item.project_name}}{% else %}<a href="/workflow/projectagreement_update/{{ item.id }}">{{ item.project_name}}</a>{% endif %}</td>
@@ -37,7 +37,7 @@
         <td>{% if item.approval %} {{ item.approval}} {% else %} Open {% endif %}</td>
         <td>{{ item.dashboard_name }}</td>
         <td>
-            <a href="/workflow/dashboard/project/{{ item.id }}" class="btn btn-xs btn-success">Project Dashboard</a>
+            <a href="/workflow/dashboard/project/{{ item.id }}" class="btn btn-xs btn-success">{{ user.activity_user.organization.level_2_label }} Dashboard</a>
             <a href="/workflow/projectagreement_delete/{{ item.id }}" class="btn btn-xs btn-danger">Delete Initiation</a>
         </td>
     </tr>

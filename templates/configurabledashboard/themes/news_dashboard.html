@@ -30,7 +30,7 @@
 						<div class='panel panel-info borderless soft-border-full' style="float: left;">							
 							<div class="panel-body">
 								<!-- TODO: update this once data source logic is in place-->
-								{% with getComponentDataMaps.1.data_map as activityTextData %}
+								{% with get_component_data_maps.1.data_map as activityTextData %}
 									<!-- TODO: replace this with a lookup template for the component -->
 								    {% include 'configurabledashboard/components/narratives/context_pane.html' %}					   
 								{% endwith %}
@@ -41,7 +41,7 @@
 						<div class='panel panel-info borderless soft-border-full' style="float: left;">
 							<div class="panel-body" style='overflow-y: scroll;' >
 								<!-- TODO: update this once data source logic is in place-->
-								{% with getComponentDataMaps.3 as activitytableData %}
+								{% with get_component_data_maps.3 as ActivityTableData %}
 										<!-- TODO: replace this with a lookup template for the component -->
 								    {% include 'configurabledashboard/components/charts/bar_graph.html' %}
 								{% endwith %} 
@@ -55,7 +55,7 @@
 							<div class='panel-heading borderless soft-border-top' style='background-color: #7B5213;'><span class='title-white'> PROGRAM MAP </span></div>
 								<div class="panel-body" style="height: 300;">
 								<!-- TODO: update this once data source logic is in place-->
-								{% with getComponentDataMaps.2.data_map as activityMapData %}
+								{% with get_component_data_maps.2.data_map as activityMapData %}
 									<!-- TODO: replace this with a lookup template for the component -->
 								    {% include 'configurabledashboard/components/maps/content_map.html' %}
 								    

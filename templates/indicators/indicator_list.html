@@ -1,281 +1,438 @@
-{% extends "base.html" %}
-{% block page_title %}Program Indicators{% endblock %}
+{% extends "base.html" %} {% block content %} 
+{% include './add_indicator_modal.html' %}
 
-{% block content %}
-<style>
-#div_id_baseline_na {
-    padding-top: 0;
-    margin-top: 10px;
-}
-</style>
 <script>
-/*
-*  Load the collected data for an indicator on the results page
-*/
-function loadCollected(indicator,program){
-    var url = '/indicators/collected_data_table/' + indicator + '/' + program + '/';
+  $(document).ready(() => {
+    $('#indicatorsTable').DataTable();
+  })
+  /*
+   *  Load the collected data for an indicator on the results page
+   */
+  function loadCollected(indicator, program) {
+    var url =
+      '/indicators/collected_data_table/' + indicator + '/' + program + '/';
     var div_name = '#hidden-indicator-' + indicator;
     $(div_name).empty();
-    $.get(url, function(data){
-        $(div_name).html(data);
-        $("body").removeClass("modal-open");
+    $.get(url, function(data) {
+      $(div_name).html(data);
+      $('body').removeClass('modal-open');
     });
-};
+  }
 
-/*
-*  Load the collected data for an indicator on the results page
-*/
-function loadIndicators(program, indicator, type){
+  /*
+   *  Load the collected data for an indicator on the results page
+   */
+  function loadIndicators(program, indicator, type) {
     var program;
-    $.get('/indicators/program_indicators/' + program + '/' + indicator + '/' + type + '/', function(data){
+    $.get(
+      '/indicators/program_indicators/' +
+        program +
+        '/' +
+        indicator +
+        '/' +
+        type +
+        '/',
+      function(data) {
         $('#hidden-' + program).html(data);
-        $("body").removeClass("modal-open");
-      });
-    $('#hidden-' + program).on('shown', function () {
-       $(".icon-chevron-down").removeClass("icon-chevron-down").addClass("icon-chevron-up");
+        $('body').removeClass('modal-open');
+      },
+    );
+    $('#hidden-' + program).on('shown', function() {
+      $('.icon-chevron-down')
+        .removeClass('icon-chevron-down')
+        .addClass('icon-chevron-up');
     });
 
-    $('#hidden-' + program).on('hidden', function () {
-       $(".icon-chevron-up").removeClass("icon-chevron-up").addClass("icon-chevron-down");
+    $('#hidden-' + program).on('hidden', function() {
+      $('.icon-chevron-up')
+        .removeClass('icon-chevron-up')
+        .addClass('icon-chevron-down');
     });
-};
+  }
 </script>
 
-{% include "indicators/filter.html"%}
-<br>
-<div id="toplevel_div">
-<!-- Default panel contents -->
-    {% for program in programs %}
-        <div class='panel panel-default'>
-            <div class='panel-heading'>
-                <h4>{{ program.name|truncatechars:85 }}
-                    <span style="float: right;" class="btn-group" role="group">
-                        <a href="/indicators/indicator_create/{{ program.id }}/" class="btn btn-xs btn-success">New Indicator</a>
-                        <a href="/indicators/program_report/{{ program.id }}/" class="btn btn-xs btn-info">Grid/Print Report</a>
-                    </span>
-                </h4>
-            </div>
-            {% if not program.indicator_set.all %}
-                <div class='panel-body'>
-                    <h4>No Indicators have been entered for this program</h4>
-                    <p>Add a new indicator via the "<a href="/indicators/indicator_create/{{ program.id }}/">New Indicator</a>" button above.</p>
-                </div>
-            {% else %}
-                <div class='panel-body'>
-                    <a id="id_btnOpenindicatorsForProgramId_{{ program.id}}" onclick="loadIndicators({{ program.id }}, {{ indicator_id }}, {{ type_id }})" class="btn btn-sm btn-success" data-toggle="collapse" data-target="#hidden-{{ program.id }}">{{ program.indicator_count }} Indicators </a>
-                </div>
-                <div id="hidden-{{ program.id }}" class="accordian-body collapse">
-                    {% include "indicators/program_indicators_table.html" %}
-                </div>
-            {% endif %}
+<div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li class="active">{{ user.activity_user.organization.indicator_label }}s</li>
+  </ul>
+  {% endblock %}
+
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+        {{ user.activity_user.organization.level_1_label }} Indicators
+      </h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <!-- sample action buttons -->
+      <div class="sub-nav-item">
+        <!-- filters -->
+        <div class="btn-group" role="group" aria-label="...">
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-sm btn-default dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Filter by {{ user.activity_user.organization.level_1_label }}
+              <i class="fa fa-angle-down"></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">-- All --</a></li>
+              <li class="divider"></li>
+              {% for program in get_programs %} {% if program.name %}
+              <li>
+                <a href="#">{{ program.name }}</a>
+              </li>
+              {% endif %} {% endfor %}
+            </ul>
+          </div>
         </div>
+      </div>
 
-    {% empty %}
-        <p>No Programs</p>
-    {% endfor %}
-</div>
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <button
+            class="btn btn-sm btn-primary"
+            data-toggle="modal"
+            data-target="#addIndicatorModal"
+          >
+            <i class="fa fa-plus"></i> Add Indicator
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<!--
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#indicator_modal_div">Large modal</button>
--->
+  <table class="table" id="indicatorsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Level</th>
+        <th>Target</th>
+        <th>Actual</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for indicator in get_indicators %}
+      <tr>
+        <td>{{ indicator.name }}</td>
+        <td>
+          {{indicator.programs}}
+        </td>
+        <td>{{ indicator.target }}</td>
+        <td>{{ indicator.actual }}</td>
+        <td class="text-right">
+          <div class="btn-group">
+            <a role="button" href="" class="btn btn-default btn-sm">Details</a>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="">Objectives</a></li>
+              <li><a href="">Levels</a></li>
+              <li><a href="">Sectors</a></li>
+              <li><a href="">Disaggregations</a></li>
 
-<div class="modal fade" role="dialog" id="conform_modal_div" aria-labelledby="mySmallModalLabel">
+              <li role="separator" class="divider"></li>
+
+              <li><a class="text-danger" href="">Edit</a></li>
+              <li><a class="text-danger" href="">Delete</a></li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div
+    class="modal fade"
+    role="dialog"
+    id="conform_modal_div"
+    aria-labelledby="mySmallModalLabel"
+  >
     <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Warning</h4>
-            </div>
-            <div class="modal-body" id="confirm_modal_body">
-                Are you sure?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="modal-btn-yes">Yes</button>
-                <button type="button" class="btn btn-primary" id="modal-btn-no">No</button>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">Warning</h4>
         </div>
-    </div>
-</div>
-
-
-<div id="indicator_modal_div" class="modal fade" role="dialog" aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content" id="indicator_modal_content">
-
-        </div> <!-- modal content -->
-    </div>
-</div>
-
-
-<div id="indicator_collecteddata_div" class="modal fade" role="dialog" aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content" id="indicator_collecteddata_content">
-            <div class="modal-body" id="indicator_modal_body" style="padding-top:10px">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <span id = "modalmessages"></span>
-                <div id="indicator_collected_data_modal_content"></div>
-            </div>
+        <div class="modal-body" id="confirm_modal_body">
+          Are you sure?
         </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" id="modal-btn-yes">
+            Yes
+          </button>
+          <button type="button" class="btn btn-primary" id="modal-btn-no">
+            No
+          </button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
+  <div
+    id="indicator_modal_div"
+    class="modal fade"
+    role="dialog"
+    aria-labelledby="myLargeModalLabel"
+  >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content" id="indicator_modal_content"></div>
+      <!-- modal content -->
+    </div>
+  </div>
 
-<!-- Modal -->
-<div class="modal fade" id="activitytablemodal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div
+    id="indicator_collecteddata_div"
+    class="modal fade"
+    role="dialog"
+    aria-labelledby="myLargeModalLabel"
+  >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content" id="indicator_collecteddata_content">
+        <div
+          class="modal-body"
+          id="indicator_modal_body"
+          style="padding-top:10px"
+        >
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <span id="modalmessages"></span>
+          <div id="indicator_collected_data_modal_content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="activitytablemodal"
+    role="dialog"
+    aria-labelledby="myModalLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
-        <div class="modal-content">
-        </div> <!-- /.modal-content -->
-    </div> <!-- /.modal-dialog -->
-</div> <!-- /.modal -->
+      <div class="modal-content"></div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
 
-<script type="text/javascript">
-    $("#indicator_collecteddata_div").on("click", "#targetsTabLink", function(e){
-        e.preventDefault();
-        $("#indicator_modal_content").empty();
-        $("#modalmessages").empty();
-        var url = $(e.target).parent().attr('href');
-        $("#indicator_collecteddata_div").modal('hide');
-        $("#indicator_modal_content").load(url+"?modal=1&targetsonly=true");
-        $("#indicator_modal_div").modal('show');
+  <script type="text/javascript">
+    $('#indicator_collecteddata_div').on('click', '#targetsTabLink', function(
+      e,
+    ) {
+      e.preventDefault();
+      $('#indicator_modal_content').empty();
+      $('#modalmessages').empty();
+      var url = $(e.target)
+        .parent()
+        .attr('href');
+      $('#indicator_collecteddata_div').modal('hide');
+      $('#indicator_modal_content').load(url + '?modal=1&targetsonly=true');
+      $('#indicator_modal_div').modal('show');
     });
 
-    $("#indicator_modal_div").on("click", "#backToCollectedDataLink", function(e){
-        e.preventDefault();
-        $("#indicator_modal_div").modal('hide');
-        $("#indicator_modal_content").empty();
-        $("#modalmessages").empty();
-        $("#indicator_collecteddata_div").modal('show');
-        // var url = '/indicators/periodic_target_generate/2470/?existingTargetsOnly=true';
-        var url = $(e.target).attr('href') + '?existingTargetsOnly=true';
-        $.getJSON(url, function( data ) {
-            $("#id_periodic_target").children('option:not(:first)').remove();
-            $.each(data, function(index, pt) {
-                $("#id_periodic_target")
-                    .append($("<option></option>")
-                    .attr("value", pt.id)
-                    .text(pt.period + " (" + formatDate(pt.start_date) + " - " +  formatDate(pt.end_date) + ")"));
-            });
-            $("#id_periodic_target").trigger('change');
+    $('#indicator_modal_div').on('click', '#backToCollectedDataLink', function(
+      e,
+    ) {
+      e.preventDefault();
+      $('#indicator_modal_div').modal('hide');
+      $('#indicator_modal_content').empty();
+      $('#modalmessages').empty();
+      $('#indicator_collecteddata_div').modal('show');
+      // var url = '/indicators/periodic_target_generate/2470/?existingTargetsOnly=true';
+      var url = $(e.target).attr('href') + '?existingTargetsOnly=true';
+      $.getJSON(url, function(data) {
+        $('#id_periodic_target')
+          .children('option:not(:first)')
+          .remove();
+        $.each(data, function(index, pt) {
+          $('#id_periodic_target').append(
+            $('<option></option>')
+              .attr('value', pt.id)
+              .text(
+                pt.period +
+                  ' (' +
+                  formatDate(pt.start_date) +
+                  ' - ' +
+                  formatDate(pt.end_date) +
+                  ')',
+              ),
+          );
         });
+        $('#id_periodic_target').trigger('change');
+      });
     });
 
+    $('#indicator_modal_div').on('hide.bs.modal', function(e) {
+      try {
+        var form = $(this).find('form');
+        var program_id = parseInt(
+          $(this)
+            .find('form #id_program')
+            .val()[0],
+        );
+        var form_action = form.attr('action').split('/');
+        var indicator_id = parseInt(form_action[form_action.length - 2]);
 
-    $('#indicator_modal_div').on('hide.bs.modal', function (e) {
-        try {
-            var form = $(this).find('form');
-            var program_id = parseInt($(this).find('form #id_program').val()[0]);
-            var form_action = form.attr('action').split('/');
-            var indicator_id = parseInt(form_action[form_action.length -2]);
+        var targetsactive = $(this)
+          .find('#indicator_modal_body')
+          .data('targetsactive');
+        var indicatorchanged = form.data('indicatorchanged');
 
-            var targetsactive = $(this).find("#indicator_modal_body").data("targetsactive");
-            var indicatorchanged = form.data('indicatorchanged');
-
-
-
-            if (form.data('update_indicator_row') == 1) {
-                var indicator_type = form.find("#id_indicator_type option:selected").text();
-                var indicator_level = '';
-                form.find("#id_level option:selected").each(function() {
-                    indicator_level += $(this).text() + ', ';
-                });
-                var indicator_name = form.find("#id_name").val();
-                var indicator_number = form.find("#id_number").val();
-                var indicator_sector = form.find("#id_sector option:selected").text();
-                $("#id_indicator_type_" + indicator_id).text(indicator_type);
-                $("#id_indicator_level_" + indicator_id).text(indicator_level.trim().slice(0, -1));
-                $("#id_indicator_name_" + indicator_id + " a").text(indicator_name);
-                $("#id_indicator_number_" + indicator_id).text(indicator_number);
-                $("#id_indicator_sector_" + indicator_id).text(indicator_sector);
-            }
-
-            if (targetsactive == 'true' || indicatorchanged == true) {
-                loadCollected(indicator_id, program_id);
-                // $("#hidden-indicator-"+indicator_id).collapse('show');
-            }
-        } catch (err){
-            console.log(err);
+        if (form.data('update_indicator_row') == 1) {
+          var indicator_type = form
+            .find('#id_indicator_type option:selected')
+            .text();
+          var indicator_level = '';
+          form.find('#id_level option:selected').each(function() {
+            indicator_level += $(this).text() + ', ';
+          });
+          var indicator_name = form.find('#id_name').val();
+          var indicator_number = form.find('#id_number').val();
+          var indicator_sector = form.find('#id_sector option:selected').text();
+          $('#id_indicator_type_' + indicator_id).text(indicator_type);
+          $('#id_indicator_level_' + indicator_id).text(
+            indicator_level.trim().slice(0, -1),
+          );
+          $('#id_indicator_name_' + indicator_id + ' a').text(indicator_name);
+          $('#id_indicator_number_' + indicator_id).text(indicator_number);
+          $('#id_indicator_sector_' + indicator_id).text(indicator_sector);
         }
+
+        if (targetsactive == 'true' || indicatorchanged == true) {
+          loadCollected(indicator_id, program_id);
+          // $("#hidden-indicator-"+indicator_id).collapse('show');
+        }
+      } catch (err) {
+        console.log(err);
+      }
     });
 
-
-    $('#indicator_collecteddata_div').on('hide.bs.modal', function (e) {
-        var recordchanged = $(this).find('form').data('recordchanged');
-        if (recordchanged == true) {
-            var program_id = $(this).find('form #id_program').val();
-            var indicator_id = $(this).find('form #id_indicator').val();
-            loadCollected(indicator_id, program_id);
-        }
-    })
+    $('#indicator_collecteddata_div').on('hide.bs.modal', function(e) {
+      var recordchanged = $(this)
+        .find('form')
+        .data('recordchanged');
+      if (recordchanged == true) {
+        var program_id = $(this)
+          .find('form #id_program')
+          .val();
+        var indicator_id = $(this)
+          .find('form #id_indicator')
+          .val();
+        loadCollected(indicator_id, program_id);
+      }
+    });
 
     // Open the CollectDataUpdate form in a modal
-    $("#toplevel_div").on("click", ".collecteddata-link", function(e) {
-        e.preventDefault();
-        var url = $(this).attr("href");
-        url += "?modal=1";
-        $("#indicator_modal_content").empty();
-        $("#modalmessages").empty();
+    $('#toplevel_div').on('click', '.collecteddata-link', function(e) {
+      e.preventDefault();
+      var url = $(this).attr('href');
+      url += '?modal=1';
+      $('#indicator_modal_content').empty();
+      $('#modalmessages').empty();
 
-        $("#indicator_collected_data_modal_content").load(url);
-        $("#indicator_collecteddata_div").modal('show');
+      $('#indicator_collected_data_modal_content').load(url);
+      $('#indicator_collecteddata_div').modal('show');
     });
-
 
     // Open the IndicatorUpdate Form in a modal
-    $("#toplevel_div").on("click", ".indicator-link", function(e) {
-        e.preventDefault();
-        var url = $(this).attr("href");
-        url += "?modal=1";
-        var tab = $(this).data("tab");
-        if (tab && tab != '' && tab != undefined && tab != 'undefined') {
-            url += "&targetsactive=true";
-        }
-        $("#indicator_modal_content").empty();
-        $("#modalmessages").empty();
+    $('#toplevel_div').on('click', '.indicator-link', function(e) {
+      e.preventDefault();
+      var url = $(this).attr('href');
+      url += '?modal=1';
+      var tab = $(this).data('tab');
+      if (tab && tab != '' && tab != undefined && tab != 'undefined') {
+        url += '&targetsactive=true';
+      }
+      $('#indicator_modal_content').empty();
+      $('#modalmessages').empty();
 
-        $("#indicator_modal_content").load(url);
-        $("#indicator_modal_div").modal('show');
-
+      $('#indicator_modal_content').load(url);
+      $('#indicator_modal_div').modal('show');
     });
-
 
     function getUrl() {
-        var programId = $("#program_filter_value").data('programid');
-        var indicatorId = $("#indicator_filter_value").data('indicatorid');
-        var typeId = $("#type_filter_value").data('typeid');
-        var url = '/indicators/home/';
+      var programId = $('#program_filter_value').data('programid');
+      var indicatorId = $('#indicator_filter_value').data('indicatorid');
+      var typeId = $('#type_filter_value').data('typeid');
+      var url = '/indicators/home/';
 
-        url += (parseInt(programId) >= 0 ? programId : 0) + '/';
-        url += (parseInt(indicatorId) >= 0 ? indicatorId : 0) + '/';
-        url += (parseInt(typeId) >= 0 ? typeId : 0 ) + '/';
-        return url;
+      url += (parseInt(programId) >= 0 ? programId : 0) + '/';
+      url += (parseInt(indicatorId) >= 0 ? indicatorId : 0) + '/';
+      url += (parseInt(typeId) >= 0 ? typeId : 0) + '/';
+      return url;
     }
-    $("#id_filtersDropdown").on("programFilterUpdated", "#id_programs_filter_dropdown", function(e){
+    $('#id_filtersDropdown').on(
+      'programFilterUpdated',
+      '#id_programs_filter_dropdown',
+      function(e) {
         var url = getUrl();
         window.location.href = url;
-    });
+      },
+    );
 
-    $("#id_filtersDropdown").on("indicatorFilterUpdated", "#id_indicators_filter_dropdown", function(e){
+    $('#id_filtersDropdown').on(
+      'indicatorFilterUpdated',
+      '#id_indicators_filter_dropdown',
+      function(e) {
         var url = getUrl();
-        sessionStorage.setItem("openProgram", "true");
+        sessionStorage.setItem('openProgram', 'true');
         window.location.href = url;
-    });
+      },
+    );
 
-
-    $("#id_filtersDropdown").on("indicatorTypeFilterUpdated", "#id_indicatortypes_filter_dropdown", function(e){
+    $('#id_filtersDropdown').on(
+      'indicatorTypeFilterUpdated',
+      '#id_indicatortypes_filter_dropdown',
+      function(e) {
         var url = getUrl();
         window.location.href = url;
-    });
+      },
+    );
 
     window.onload = function() {
-        var programId = `{{ programs.0.id }}`;
+      var programId = `{{ programs.0.id }}`;
 
-        if (sessionStorage.getItem('openProgram')) {
-            sessionStorage.removeItem("openProgram");
-            loadIndicators(programId, indicatorId, 0);
-            $("#hidden-"+programId).collapse('show');
-        }
-    }
- </script>
-{% include 'indicators/indicator_form_common_js.html' %}
-{% include 'indicators/collecteddata_form_common_js.html' %}
+      if (sessionStorage.getItem('openProgram')) {
+        sessionStorage.removeItem('openProgram');
+        loadIndicators(programId, indicatorId, 0);
+        $('#hidden-' + programId).collapse('show');
+      }
+    };
+  </script>
+  {% include 'indicators/indicator_form_common_js.html' %} 
+  {% include 'indicators/collecteddata_form_common_js.html' %}
+</div>
 {% endblock content %}

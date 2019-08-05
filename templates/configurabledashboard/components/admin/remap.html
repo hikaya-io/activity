@@ -13,10 +13,10 @@
     </div>
     <div class="modal-body">
         {% load crispy_forms_tags %}
-        <div>Currently mapped component: {{getCustomDashboard.component_map}}</div>
+        <div>Currently mapped component: {{get_custom_dashboard.component_map}}</div>
         <form class="form-horizontal" method="post" id="componentMapForm" action="{{ request.get_full_path }}"">
             <select id="id_component_map" name="component_map" class="form-control" >
-                {% for component in getDashboardComponents %}
+                {% for component in get_dashboard_components %}
                     {% if component.component_type in request.get_full_path %}
                         <option value="{{component.id}}">{{component.component_name}}</option>
                     {% endif %}

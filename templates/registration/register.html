@@ -1,42 +1,163 @@
-{% extends "base.html" %}
-
-{% block title %}Create an account{% endblock %}
-
-{% block content %}
-  <h1>Create an account</h1>
-
-    {% if form.errors %}
-        {% for field in form %}
-            {% for error in field.errors %}
-                <div class="alert alert-error">
-                    <strong>{{ error|escape }}</strong>
+{% extends "base.html" %} {% block content %}
+<div class="container auth-container">
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <h1>Create an account</h1>
+      <div
+        class="btn-group btn-group-justified auth-nav"
+        role="group"
+        aria-label="..."
+      >
+        <div class="btn-group" role="group">
+          <a
+            type="button"
+            class="btn btn-default btn-sm"
+            href="{% url 'login' %}"
+            ><strong>Login</strong></a
+          >
+        </div>
+        <div class="btn-group" role="group">
+          <a
+            type="button"
+            class="btn btn-primary btn-sm"
+            href="{% url 'register' %}"
+            ><strong>Register</strong></a
+          >
+        </div>
+      </div>
+      <div class="panel panel-default auth-main">
+        <div class="panel-heading">
+          <strong
+            >Fill in your details (mandatory fields are marked with *)</strong
+          >
+        </div>
+        <div class="panel-body">
+          <div class="auth-form">
+            <form action="/accounts/register/" method="POST">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-md-6 form-group" id="div_first_name">
+                  <label class="control-label" for="first_name"
+                    >First Name</label
+                  >
+                  <input
+                    type="text"
+                    id="register_first_name"
+                    name="first_name"
+                    class="form-control"
+                  />
                 </div>
-            {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-            <div class="alert alert-error">
-                <strong>{{ error|escape }}</strong>
-            </div>
-        {% endfor %}
-    {% endif %}
+                <div class="col-md-6 form-group" id="div_last_name">
+                  <label class="control-label" for="last_name">Last Name</label>
+                  <input
+                    type="text"
+                    id="register_last_name"
+                    name="last_name"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 form-group" id="div_username">
+                  <label class="control-label" for="username">Username*</label>
+                  <input
+                    type="text"
+                    id="register_username"
+                    name="username"
+                    class="form-control"
+                  />
+                  <span id="usernameHelpBlock" class="help-block hikaya-hide">
+                  </span>
+                  {% if message_username %}
+                  <script>
+                    $('#div_username')
+                      .removeClass('has-success')
+                      .addClass('has-error');
+                    $('#usernameHelpBlock')
+                      .removeClass('hikaya-hide')
+                      .addClass('hikaya-show')
+                      .text('{{ message_username }}');
+                  </script>
 
+                  {% endif %}
+                </div>
+                <div class="col-md-6 form-group" id="div_email_address">
+                  <label class="control-label" for="email_address"
+                    >Email Address*</label
+                  >
+                  <input
+                    type="text"
+                    id="register_email_address"
+                    name="email_address"
+                    class="form-control"
+                    aria-describedby="emailHelpBlock"
+                  />
+                  <span id="emailHelpBlock" class="help-block hikaya-hide"
+                    >Invalid email address</span
+                  >
+                  {% if message_email %}
+                  <script>
+                    $('#div_email_address')
+                      .removeClass('has-success')
+                      .addClass('has-error');
+                    $('#emailHelpBlock')
+                      .removeClass('hikaya-hide')
+                      .addClass('hikaya-show')
+                      .text('{{ message_email }}');
+                  </script>
 
-  <form action="" method="post">
-      {% csrf_token %}
-      {% load crispy_forms_tags %}
-      {{ userform|crispy }}
-      {{ activityform|crispy }}
-      <div id="iframe">
-      <h6>Notice/Disclaimer:</h6>
-
-          <p>
-            {{ privacy.privacy_disclaimer }}
-          </p>
-
+                  {% endif %}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 form-group" id="div_password">
+                  <label class="control-label" for="password">Password*</label>
+                  <input
+                    type="password"
+                    id="register_password"
+                    name="password"
+                    class="form-control"
+                    aria-describedby="passwordHelpBlock"
+                  />
+                  <span id="passwordHelpBlock" class="help-block"></span>
+                </div>
+                <div class="col-md-6 form-group" id="div_confirm_password">
+                  <label class="control-label" for="confirm_password"
+                    >Confirm Password*</label
+                  >
+                  <input
+                    type="password"
+                    id="register_confirm_password"
+                    name="confirm_password"
+                    class="form-control"
+                    aria-describedby="confirmPasswordHelpBlock"
+                  />
+                  <span id="confirmPasswordHelpBlock" class="help-block"></span>
+                </div>
+              </div>
+              <div class="form-group text-right">
+                <button type="reset" class="btn btn-md btn-default">
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  id="register_submit_btn"
+                  class="btn btn-md btn-primary"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
-        <br/>
-      <div>
-      <input type="submit" value="Create the account">
-      </div>
-  </form>
-{% endblock %}
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>
+{% endblock %} {% block extra_js_in_body %}
+<script
+  type="text/javascript"
+  src="{{ STATIC_URL }}js/auth/user_register.js"
+></script>
+{% endblock extra_js_in_body %}

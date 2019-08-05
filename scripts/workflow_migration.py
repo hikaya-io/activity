@@ -63,16 +63,22 @@ def run():
             # Renaming model from 'Foo' to 'Bar'
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "RENAME TABLE activitydb_beneficiary TO formlibrary_beneficiary")
+                    "RENAME TABLE activitydb_beneficiary "
+                    "TO formlibrary_beneficiary")
                 cursor.execute(
-                    "RENAME TABLE activitydb_beneficiary_distribution TO formlibrary_beneficiary_distribution")
+                    "RENAME TABLE activitydb_beneficiary_distribution "
+                    "TO formlibrary_beneficiary_distribution")
                 cursor.execute(
-                    "RENAME TABLE activitydb_beneficiary_program TO formlibrary_beneficiary_program")
+                    "RENAME TABLE activitydb_beneficiary_program "
+                    "TO formlibrary_beneficiary_program")
                 cursor.execute(
-                    "RENAME TABLE activitydb_beneficiary_training TO formlibrary_beneficiary_training")
+                    "RENAME TABLE activitydb_beneficiary_training "
+                    "TO formlibrary_beneficiary_training")
                 cursor.execute(
-                    "RENAME TABLE activitydb_trainingattendance TO formlibrary_trainingattendance")
+                    "RENAME TABLE activitydb_trainingattendance "
+                    "TO formlibrary_trainingattendance")
                 cursor.execute(
-                    "RENAME TABLE activitydb_distribution TO formlibrary_distribution")
+                    "RENAME TABLE activitydb_distribution "
+                    "TO formlibrary_distribution")
         except:
             "Table Already Exists"

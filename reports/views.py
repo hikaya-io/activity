@@ -28,12 +28,13 @@ def make_filter(my_request):
     query_attrs['project'] = dict()
     query_attrs['indicator'] = dict()
     query_attrs['collecteddata'] = dict()
-    for param, val in my_request.iteritems():
+    for param, val in my_request.items():
         if param == 'program':
             query_attrs['program']['id__in'] = val.split(',')
             query_attrs['project']['program__id__in'] = val.split(',')
             query_attrs['indicator']['program__id__in'] = val.split(',')
-            query_attrs['collecteddata']['indicator__program__id__in'] = val.split(
+            query_attrs['collecteddata'][
+                'indicator__program__id__in'] = val.split(
                 ',')
         elif param == 'sector':
             query_attrs['program']['sector__in'] = val.split(',')
@@ -95,14 +96,16 @@ class ReportData(View, AjaxableResponseMixin):
     """
 
     def get(self, request, *args, **kwargs):
-
         filter = make_filter(self.request.GET)
+        print(filter)
         program_filter = filter['program']
         project_filter = filter['project']
         indicator_filter = filter['indicator']
 
         program = Program.objects.all().filter(**program_filter).values(
-            'gaitid', 'name', 'funding_status', 'cost_center', 'country__country', 'sector__sector')
+            'name', 'funding_status', 'cost_center',
+            'country__country', 'sector__sector')
+
         approval_count = ProjectAgreement.objects.all().filter(
             **project_filter).filter(approval='awaiting approval').count()
         approved_count = ProjectAgreement.objects.all().filter(
@@ -112,7 +115,8 @@ class ReportData(View, AjaxableResponseMixin):
         inprogress_count = ProjectAgreement.objects.all().filter(
             **project_filter).filter(approval='in progress').count()
         nostatus_count = ProjectAgreement.objects.all().filter(
-            **project_filter).filter(Q(Q(approval=None) | Q(approval=""))).count()
+            **project_filter).filter(
+            Q(Q(approval=None) | Q(approval=""))).count()
 
         indicator_count = Indicator.objects.all().filter(
             **indicator_filter).filter(collecteddata__isnull=True).count()
@@ -137,7 +141,9 @@ class ReportData(View, AjaxableResponseMixin):
             program_dataset = ProgramResource().export(program_export)
             response = HttpResponse(
                 program_dataset.csv, content_type='application/ms-excel')
-            response['Content-Disposition'] = 'attachment; filename=program_data.csv'
+            response[
+                'Content-Disposition'] = \
+                'attachment; filename=program_data.csv'
             return response
 
         return JsonResponse(final_dict, safe=False)
@@ -153,22 +159,27 @@ class ProjectReportData(View, AjaxableResponseMixin):
         project_filter = filter['project']
         indicator_filter = filter['indicator']
 
-        print(project_filter)
-
-        project = ProjectAgreement.objects.all().filter(**project_filter).values(
+        project = ProjectAgreement.objects.all().filter(
+            **project_filter).values(
             'program__name', 'project_name',
             'activity_code', 'project_type__name',
             'sector__sector', 'total_estimated_budget', 'approval')
-        approval_count = ProjectAgreement.objects.all().filter(**project_filter).filter(
-            program__funding_status="Funded", approval='awaiting approval').count()
+        approval_count = ProjectAgreement.objects.all().filter(
+            **project_filter).filter(
+            program__funding_status="Funded",
+            approval='awaiting approval').count()
         approved_count = ProjectAgreement.objects.all().filter(
-            **project_filter).filter(program__funding_status="Funded", approval='approved').count()
+            **project_filter).filter(program__funding_status="Funded",
+                                     approval='approved').count()
         rejected_count = ProjectAgreement.objects.all().filter(
-            **project_filter).filter(program__funding_status="Funded", approval='rejected').count()
+            **project_filter).filter(program__funding_status="Funded",
+                                     approval='rejected').count()
         inprogress_count = ProjectAgreement.objects.all().filter(
-            **project_filter).filter(program__funding_status="Funded", approval='in progress').count()
+            **project_filter).filter(program__funding_status="Funded",
+                                     approval='in progress').count()
         nostatus_count = ProjectAgreement.objects.all().filter(
-            **project_filter).filter(Q(Q(approval=None) | Q(approval=""))).count()
+            **project_filter).filter(
+            Q(Q(approval=None) | Q(approval=""))).count()
         indicator_count = Indicator.objects.all().filter(
             **indicator_filter).filter(collecteddata__isnull=True).count()
         indicator_data_count = Indicator.objects.all().filter(
@@ -188,11 +199,14 @@ class ProjectReportData(View, AjaxableResponseMixin):
         }
 
         if request.GET.get('export'):
-            project_export = ProjectAgreement.objects.all().filter(**project_filter)
+            project_export = ProjectAgreement.objects.all().filter(
+                **project_filter)
             dataset = ProjectAgreementResource().export(project_export)
             response = HttpResponse(
                 dataset.csv, content_type='application/ms-excel')
-            response['Content-Disposition'] = 'attachment; filename=project_data.csv'
+            response[
+                'Content-Disposition'] = \
+                'attachment; filename=project_data.csv'
             return response
 
         return JsonResponse(final_dict, safe=False)
@@ -204,13 +218,14 @@ class IndicatorReportData(View, AjaxableResponseMixin):
     """
 
     def get(self, request, *args, **kwargs):
-
         filter = make_filter(self.request.GET)
         indicator_filter = filter['indicator']
 
         indicator = Indicator.objects.all().filter(**indicator_filter).values(
-            'id', 'program__name', 'program__id', 'name', 'indicator_type__indicator_type',
-            'sector__sector', 'strategic_objectives', 'level__name', 'lop_target',
+            'id', 'program__name', 'program__id', 'name',
+            'indicator_type__indicator_type',
+            'sector__sector', 'strategic_objectives', 'level__name',
+            'lop_target',
             'collecteddata', 'key_performance_indicator')
         indicator_count = Indicator.objects.all().filter(
             **indicator_filter).filter(collecteddata__isnull=True).count()
@@ -229,11 +244,14 @@ class IndicatorReportData(View, AjaxableResponseMixin):
         }
 
         if request.GET.get('export'):
-            indicator_export = Indicator.objects.all().filter(**indicator_filter)
+            indicator_export = Indicator.objects.all().filter(
+                **indicator_filter)
             dataset = IndicatorResource().export(indicator_export)
             response = HttpResponse(
                 dataset.csv, content_type='application/ms-excel')
-            response['Content-Disposition'] = 'attachment; filename=indicator_data.csv'
+            response[
+                'Content-Disposition'] = \
+                'attachment; filename=indicator_data.csv'
             return response
 
         return JsonResponse(final_dict, safe=False)
@@ -245,12 +263,13 @@ class CollectedDataReportData(View, AjaxableResponseMixin):
     """
 
     def get(self, request, *args, **kwargs):
-
         filter = make_filter(self.request.GET)
         collecteddata_filter = filter['collecteddata']
 
-        collecteddata = CollectedData.objects.all().filter(**collecteddata_filter).values(
-            'indicator__program__name', 'indicator__name', 'indicator__number', 'targeted', 'achieved')
+        collecteddata = CollectedData.objects.all().filter(
+            **collecteddata_filter).values(
+            'indicator__program__name', 'indicator__name', 'indicator__number',
+            'targeted', 'achieved')
 
         collecteddata_serialized = json.dumps(list(collecteddata))
 
@@ -258,15 +277,19 @@ class CollectedDataReportData(View, AjaxableResponseMixin):
         print(collecteddata.query)
 
         final_dict = {
-            'criteria': collecteddata_filter, 'collecteddata': collecteddata_serialized,
+            'criteria': collecteddata_filter,
+            'collecteddata': collecteddata_serialized,
         }
 
         if request.GET.get('export'):
-            collecteddata_export = CollectedData.objects.all().filter(**collecteddata_filter)
+            collecteddata_export = CollectedData.objects.all().filter(
+                **collecteddata_filter)
             dataset = CollectedDataResource().export(collecteddata_export)
             response = HttpResponse(
                 dataset.csv, content_type='application/ms-excel')
-            response['Content-Disposition'] = 'attachment; filename=collecteddata_data.csv'
+            response[
+                'Content-Disposition'] = \
+                'attachment; filename=collecteddata_data.csv'
             return response
 
         return JsonResponse(final_dict, safe=False)

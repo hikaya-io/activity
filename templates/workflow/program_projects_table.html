@@ -1,23 +1,75 @@
+
 <tr>
-    <td>{{ item.create_date|date:"d-m-Y" }}</td>
-    <td> {{ item.project_name }} <br/>
-        {% if item.approval == "approved" %}
-          <a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-lock"></span>Initiation Form</a>
-        {% else %}
-          <a class="btn btn-xs btn-default" href="/workflow/projectagreement_update/{{ item.id }}">Initiation Form</a>
-        {% endif%}
-        {% if item.projectcomplete %}
-          <a class="btn btn-xs btn-default" href="/workflow/projectcomplete_update/{{ item.projectcomplete.id }}">Tracking Form</a>
-        {% else %}
-          <a class="btn btn-xs btn-default"><span class="glyphicon glyphicon-lock"></span>Tracking Form</a>
-        {% endif%}
-        <a href="/workflow/projectagreement_detail/{{ item.id }}" class="btn btn-xs btn-default">Print View</a>
-    </td>
-    <td>{{ item.activity_code }}</td>
-    <td>{{ item.office }} </td>
-    <td>{% if item.short %} Short {% else %} Long {% endif %}</td>
-    <td>{% if item.projectcomplete %} Tracking {% if item.projectcomplete.approval  %}{{ item.projectcomplete.approval|capfirst }}{% else %}Open{% endif %}{% else %} Initiation {% if item.approval  %}{{ item.approval|capfirst }}{% else %} Open {% endif %} {% endif %}</td>
     <td>
-        <a href="/workflow/dashboard/project/{{ item.id }}" class="btn btn-xs btn-success">Project Dashboard</a>
+      <a href="">{{ project.project_name }}</a>
+    </td>
+    <td>{{ project.project_name }}</td>
+    <td>{{ project.create_date|date:"d-m-Y" }}</td>
+    <td>{% if item.short %} Short {% else %} Long {% endif %}</td>
+    <td>
+        {% if item.projectcomplete %} 
+          Tracking 
+          {% if item.projectcomplete.approval  %}
+            {{ item.projectcomplete.approval|capfirst }}
+          {% else %}
+            Open
+          {% endif %}
+        {% else %} 
+          Initiation 
+          {% if item.approval  %}
+            {{ item.approval|capfirst }}
+          {% else %} 
+            Open 
+          {% endif %} 
+        {% endif %}</td>
+    <td class="text-right">
+        <div class="btn-group">
+          <a role="button" href="" class="btn btn-default btn-sm">More</a>
+          <button
+            type="button"
+            class="btn btn-default btn-sm dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              {% if project.approval == "approved" %}
+                <a><span class="glyphicon glyphicon-lock"></span> Project Initiation</a>
+              {% else %}
+                <a href="/workflow/projectagreement_update/{{ project.id }}">Project Initiation</a>
+              {% endif%}
+            </li>
+            <li>
+              {% if item.projectcomplete %}
+                <a  href="/workflow/projectcomplete_update/{{ project.projectcomplete.id }}">
+                  Project Tracking
+                </a>
+              {% else %}
+                <a><span class="glyphicon glyphicon-lock"></span> Project Tracking</a>
+              {% endif%}
+            </li>
+            <li><a href="">Sites</a></li>
+            <li><a href="">Stakeholders</a></li>
+            <li><a href="">Checklist</a></li>
+            <li role="separator" class="divider"></li>
+            <li>
+                <a href="/workflow/projectagreement_detail/{{ project.id }}">Print View</a>
+            </li>
+            <!-- <li>
+                <a href="/workflow/level2/project/{{ project.id }}">
+                  {{ user.activity_user.organization.level_2_label }} Dashboard
+                </a>
+            </li> -->
+
+            <li role="separator" class="divider"></li>
+
+            <li><a class="text-danger" href="">Edit</a></li>
+            <li><a class="text-danger" href="">Delete</a></li>
+          </ul>
+        </div>
     </td>
 </tr>

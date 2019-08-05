@@ -36,13 +36,13 @@ class TrainingAttendanceForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save'))
+        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
 
         super(TrainingAttendanceForm, self).__init__(*args, **kwargs)
 
         countries = get_country(self.request.user)
-        self.fields['project_agreement'].queryset = ProjectAgreement.objects.filter(
-            program__country__in=countries)
+        self.fields['project_agreement'].queryset = \
+            ProjectAgreement.objects.filter(program__country__in=countries)
         self.fields['program'].queryset = Program.objects.filter(
             country__in=countries)
 
@@ -67,7 +67,7 @@ class DistributionForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save'))
+        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
 
         super(DistributionForm, self).__init__(*args, **kwargs)
 
@@ -98,16 +98,18 @@ class BeneficiaryForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save'))
+        self.helper.add_input(Submit('submit', 'Save',
+                                     css_class='btn-success'))
 
         super(BeneficiaryForm, self).__init__(*args, **kwargs)
 
+        organization = self.request.user.activity_user.organization
         countries = get_country(self.request.user)
         self.fields['training'].queryset = TrainingAttendance.objects.filter(
-            program__country__in=countries)
-        self.fields['training'].queryset = TrainingAttendance.objects.filter(
-            program__country__in=countries)
+            program__organization=organization)
+        self.fields['program'].queryset = Program.objects.filter(
+            organization=organization)
         self.fields['distribution'].queryset = Distribution.objects.filter(
-            program__country__in=countries)
+            program__organization=organization)
         self.fields['site'].queryset = SiteProfile.objects.filter(
             country__in=countries)

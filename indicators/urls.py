@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from django.urls import re_path
+from django.urls import re_path, path
 from .views import *
 
 urlpatterns = [
@@ -10,6 +10,8 @@ urlpatterns = [
     # Home
     re_path(r'^home/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
             IndicatorList.as_view(), name='indicator_list'),
+
+    path('add-indicator', add_indicator, name='add-indicator'),
 
     # Indicator Form
     re_path(r'^indicator_list/(?P<pk>\w+)/$',
@@ -27,12 +29,14 @@ urlpatterns = [
             PeriodicTargetDeleteView.as_view(), name='pt_delete'),
     re_path(r'^periodic_target_generate/(?P<indicator>\w+)/$',
             PeriodicTargetView.as_view(), name='pt_generate'),
-    re_path(r'^periodic_target_deleteall/(?P<indicator>\w+)/(?P<deleteall>\w+)/$',
-            PeriodicTargetView.as_view(), name='pt_deleteall'),
+    re_path(
+        r'^periodic_target_deleteall/(?P<indicator>\w+)/(?P<deleteall>\w+)/$',
+        PeriodicTargetView.as_view(), name='pt_deleteall'),
 
     # Collected Data List
-    re_path(r'^collecteddata/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
-            CollectedDataList.as_view(), name='collecteddata_list'),
+    re_path(
+        r'^collecteddata/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
+        CollectedDataList.as_view(), name='collecteddata_list'),
     re_path(r'^collecteddata_add/(?P<program>\w+)/(?P<indicator>\w+)/$',
             CollectedDataCreate.as_view(), name='collecteddata_add'),
     re_path(r'^collecteddata_import/$', collecteddata_import,
@@ -54,10 +58,11 @@ urlpatterns = [
             DisaggregationReport.as_view(), name='disrep'),
     re_path(r'^disrepprint/(?P<program>\w+)/$',
             DisaggregationPrint.as_view(), name='disrepprint'),
-    re_path(r'^report_table/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
-            IndicatorReport.as_view(), name='indicator_table'),
+    re_path(
+        r'^report_table/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
+        IndicatorReport.as_view(), name='indicator_table'),
     re_path(r'^program_report/(?P<program>\w+)/$',
-            programIndicatorReport, name='programIndicatorReport'),
+            program_indicator_report, name='program_indicator_report'),
 
     # Indicator Data Report
     re_path(r'^data/(?P<id>\w+)/(?P<program>\w+)/(?P<type>\w+)/$',
@@ -78,18 +83,26 @@ urlpatterns = [
     # ajax calls
     re_path(r'^service/(?P<service>[-\w]+)/service_json/',
             service_json, name='service_json'),
-    re_path(r'^collected_data_table/(?P<indicator>[-\w]+)/(?P<program>[-\w]+)/',
-            collected_data_json, name='collected_data_json'),
-    re_path(r'^program_indicators/(?P<program>[-\w]+)/(?P<indicator>[-\w]+)/(?P<type>[-\w]+)',
-            program_indicators_json, name='program_indicators_json'),
+    re_path(
+        r'^collected_data_table/(?P<indicator>[-\w]+)/(?P<program>[-\w]+)/',
+        collected_data_json, name='collected_data_json'),
+    re_path(
+        r'^program_indicators/(?P<program>[-\w]+)/'
+        r'(?P<indicator>[-\w]+)/(?P<type>[-\w]+)',
+        program_indicators_json, name='program_indicators_json'),
     re_path(r'^report_data/(?P<id>\w+)/(?P<program>\w+)/(?P<type>\w+)/$',
             IndicatorReportData.as_view(), name='indicator_report_data'),
-    re_path(r'^report_data/(?P<id>\w+)/(?P<program>\w+)/(?P<indicator_type>\w+)/export/$',
-            IndicatorExport.as_view(), name='indicator_export'),
-    re_path(r'^collecteddata_report_data/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
-            CollectedDataReportData.as_view(), name='collecteddata_report_data'),
-    re_path(r'^collecteddata_report_data/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/export/$',
-            IndicatorDataExport.as_view(), name='collecteddata_report_data'),
-
+    re_path(
+        r'^report_data/(?P<id>\w+)/(?P<program>\w+)/'
+        r'(?P<indicator_type>\w+)/export/$',
+        IndicatorExport.as_view(), name='indicator_export'),
+    re_path(
+        r'^collecteddata_report_data/(?P<program>\w+)/'
+        r'(?P<indicator>\w+)/(?P<type>\w+)/$',
+        CollectedDataReportData.as_view(), name='collecteddata_report_data'),
+    re_path(
+        r'^collecteddata_report_data/(?P<program>\w+)/'
+        r'(?P<indicator>\w+)/(?P<type>\w+)/export/$',
+        IndicatorDataExport.as_view(), name='collecteddata_report_data'),
 
 ]

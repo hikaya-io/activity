@@ -3,8 +3,8 @@
 
 """
 import json data from API
-IMPORTANT!! you must turn off pagination for this to work from a URL and get all
-country records
+IMPORTANT!! you must turn off pagination for this to work from a URL
+and get all country records
 Install module django-extensions
 Runs twice via function calls at bottom once
 """
@@ -43,7 +43,8 @@ def get_all_data(url, type, program_country):
         save_keys = keys_to_sql
         keys_to_sql = ", ".join(map(str, keys_to_sql))
 
-        query = "INSERT INTO activitydb_country (country,code) VALUES ('%s','%s')" % (
+        query = "INSERT INTO activitydb_country (country,code) " \
+                "VALUES ('%s','%s')" % (
             vars_to_sql[0], vars_to_sql[1])
         print(query)
 
@@ -56,7 +57,8 @@ def get_all_data(url, type, program_country):
             value = 1
             country = vars_to_sql[0]
             if type == "country":
-                query_update = "UPDATE activitydb_country set country = %s where lower(%(type)s) = '%s'" % (
+                query_update = "UPDATE activitydb_country set country = %s " \
+                               "where lower(%(type)s) = '%s'" % (
                     column, value, country.lower())
             try:
                 cursor.execute(query_update)
@@ -88,7 +90,8 @@ def get_all_data(url, type, program_country):
 
         latest = Program.objects.latest('id')
 
-        query2 = "INSERT INTO activitydb_program_country (country_id,program_id) VALUES (%s,%s)" % (
+        query2 = "INSERT INTO activitydb_program_country " \
+                 "(country_id,program_id) VALUES (%s,%s)" % (
             program_country, latest.id)
 
         print(query2)
@@ -109,8 +112,8 @@ def get_all_data(url, type, program_country):
                 new_value = new_value.encode('ascii', 'ignore')
             except Exception as err:
                 sys.stderr.write('ERROR: %s\n' % str(err))
-            #print(new_key
-            #print(new_value
+            # print(new_key)
+            # print(new_valu)e
             if type == "Country":
                 if new_value:
                     # country or region related columns only
@@ -123,7 +126,8 @@ def get_all_data(url, type, program_country):
             elif type == "Program":
                 if new_value:
                     # country or region related columns only
-                    if new_key in ('gaitid', 'funding_status', 'granttitle', 'cost_center'):
+                    if new_key in ('gaitid', 'funding_status', 'granttitle',
+                                   'cost_center'):
                         # change iso_code to code for DB table
                         if new_key == 'granttitle':
                             new_key = 'name'
@@ -148,19 +152,17 @@ def get_all_data(url, type, program_country):
         elif type == "Program":
             save_programs(keys_to_sql, vars_to_sql, program_country)
 
-# get an updated json data file for the hub and update or insert new records
-# print("Country"
-# getAll_data("https://mcapi.mercycorps.org/authoritativecountry/?gait=True&format=json", "Country")
 
 # TODO : Change urls or delete lines
 # get an updated json data file for the hub and update or insert new records
 print("Program")
-getCountries = Country.objects.all()
-for country in getCountries:
+get_countries = Country.objects.all()
+for country in get_countries:
     print(country.country)
     safe_country = urllib.quote_plus(country.country)
-    program_url = "http://mcapi.mercycorps.org/gaitprogram/?country=%s&format=json" % (
-        safe_country)
+    program_url = \
+        "http://mcapi.mercycorps.org/gaitprogram/?country=%s&format=json" % (
+            safe_country)
     print(program_url)
     get_all_data(program_url, "Program", int(country.id))
 

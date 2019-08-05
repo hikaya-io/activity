@@ -1,17 +1,19 @@
 {% extends "base.html" %}
-{% block bread_crumb %}
-<div>
-<ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
-  <li><a href="/workflow/stakeholder_list/0/0/">Stakeholder List</a></li>
-  <li class="active">Stakeholder Form</li>
-</ol>
-</div>
-{% endblock %}
-{% block page_title %}Stakeholder Form{% endblock %}
-
-
 {% block content %}
+
+<div class="container">
+        <!-- Sub navigation -->
+        <div class="sub-navigation">
+          <div class="sub-navigation-header">
+            <h4 class="page-title">Stakeholder Form</h4>
+          </div>
+
+          <div class="sub-navigation-actions">
+            <div class="sub-nav-item">
+         <span style="float: right;"><a onclick="newPopup('https://docs.google.com/document/d/1fX8hC-UxEd1YcXbf7gIkh5WH_ZPQYuhMB9q4uJNmMec/','Form Help/Guidance'); return false;" href="#" class="btn btn-sm btn-info">Form Help/Guidance</a></span>
+</div>
+</div>
+</div>
 
     <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
     <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
@@ -27,7 +29,6 @@
 
     </script>
 
-    <span style="float: right;"><a onclick="newPopup('https://docs.google.com/document/d/1fX8hC-UxEd1YcXbf7gIkh5WH_ZPQYuhMB9q4uJNmMec/','Form Help/Guidance'); return false;" href="#" class="btn btn-sm btn-info">Form Help/Guidance</a></span>
     {% if form.errors %}
         {% include "form_guidance.html" %}
         <div class="help-block">
@@ -46,5 +47,6 @@
 	{% csrf_token %}
     {% load crispy_forms_tags %}
     {% crispy form %}
+</div>
 
 {% endblock content %}

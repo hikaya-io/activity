@@ -59,10 +59,11 @@ class PogramIndicatorReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
-        queryset = Program.objects.prefetch_related('indicator_set',
-                                                    'indicator_set__indicator_type',
-                                                    'indicator_set__sector', 'indicator_set__level',
-                                                    'indicator_set__collecteddata_set').all()
+        queryset = Program.objects.prefetch_related(
+            'indicator_set',
+            'indicator_set__indicator_type',
+            'indicator_set__sector', 'indicator_set__level',
+            'indicator_set__collecteddata_set').all()
         return queryset
 
 # API Classes
@@ -216,7 +217,8 @@ class IndicatorViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         user_countries = get_country(request.user)
-        queryset = Indicator.objects.all().filter(program__country__in=user_countries)
+        queryset = Indicator.objects.all().filter(
+            program__country__in=user_countries)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -452,7 +454,7 @@ class CollectedDataViewSet(viewsets.ModelViewSet):
     pagination_class = SmallResultsSetPagination
 
 
-class activitytableViewSet(viewsets.ModelViewSet):
+class ActivitytableViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
@@ -474,7 +476,7 @@ class activitytableViewSet(viewsets.ModelViewSet):
     filter_fields = ('table_id', 'country__country',
                      'collecteddata__indicator__program__name')
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-    serializer_class = activitytableSerializer
+    serializer_class = ActivitytableSerializer
     pagination_class = StandardResultsSetPagination
 
 
@@ -486,7 +488,8 @@ class DisaggregationValueViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         user_countries = get_country(request.user)
-        queryset = DisaggregationValue.objects.all().filter(country__in=user_countries)
+        queryset = DisaggregationValue.objects.all().filter(
+            country__in=user_countries)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 

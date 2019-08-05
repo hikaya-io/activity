@@ -1,0 +1,70 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container auth-container">
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<h1>Create an Organization</h1>
+			<div class="panel panel-default auth-main">
+				<div class="panel-heading">
+					<strong>Fill in organization details</strong>
+					<span>(mandatory fields are marked with *)</span>
+				</div>
+				<div class="panel-body">
+					<div class="auth-form">
+						<form action="/accounts/register/organization" method="POST">
+							{% csrf_token %}
+							<div class="row">
+								<div class="form-group" id="div_org_name">
+									<label class="control-label" for="name">Organization Name*</label>
+									<input
+										type="text"
+										id="org_name"
+										name="name"
+										class="form-control"
+									/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="">
+									<label for="description">What do you do?</label>
+									<textarea
+										name="description"
+										id="description"
+										rows="3"
+										class="form-control"
+									></textarea>
+								</div>
+							</div>
+							<div class="row">
+								<div class="">
+									<label for="password">Activity Url</label>
+									<input
+                                        type="text"
+                                        id="org_url"
+										class="form-control"
+										disabled
+									/>
+								</div>
+							</div>
+							<div class="row">
+                                <div class="text-right">
+                                    <button type="reset" class="btn btn-md hikaya-btn-cancel">
+                                        <i class="fa fa-undo"></i> Cancel
+                                    </button>
+                                    <button id="orgFormSubmitBtn"  type="submit" class="btn btn-success" disabled>
+                                        <i class="fa fa-save"></i> Submit
+                                    </button>
+                                </div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-1"></div>
+	</div>
+</div>
+
+{% endblock %}
+{% block extra_js_in_body %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/auth/org_register.js"></script>
+{% endblock extra_js_in_body %}

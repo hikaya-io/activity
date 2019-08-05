@@ -16,7 +16,9 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         """
-        Help on arguments: https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser.add_argument
+        Help on arguments:
+        https://docs.python.org/3/library/argparse.html
+            #argparse.ArgumentParser.add_argument
         """
         parser.add_argument('-f', '--file', action='store',
                             nargs='?', required=True, dest='filepath')
@@ -58,7 +60,8 @@ class Command(BaseCommand):
                     country = Country.objects.get(country=country_name)
                 except Country.DoesNotExist:
                     self.stdout.write(self.style.ERROR(
-                        '%s, country not found (%s)' % (site_name, country_name)))
+                        '%s, country not found (%s)' % (
+                            site_name, country_name)))
                     continue
 
                 try:
@@ -67,11 +70,13 @@ class Command(BaseCommand):
                         name=office_name, province__in=provinces)
                 except Office.DoesNotExist:
                     self.stdout.write(self.style.WARNING(
-                        '%s, invalid office_name = %s' % (site_name, office_name)))
+                        '%s, invalid office_name = %s' % (
+                            site_name, office_name)))
                     office = None
                 except Office.MultipleObjectsReturned:
                     self.stdout.write(self.style.WARNING(
-                        '%s, multiple offices with the same name = %s' % (site_name, office_name)))
+                        '%s, multiple offices with the same name = %s' % (
+                            site_name, office_name)))
                     office = None
 
                 try:
@@ -84,14 +89,16 @@ class Command(BaseCommand):
                     province = Province.objects.get(name=province_name)
                 except Province.DoesNotExist:
                     self.stdout.write(self.style.ERROR(
-                        '%s, province not found (%s)' % (site_name, province_name)))
+                        '%s, province not found (%s)' % (
+                            site_name, province_name)))
                     continue
 
                 try:
                     district = District.objects.get(name=district_name)
                 except District.DoesNotExist:
                     self.stdout.write(self.style.ERROR(
-                        '%s, district not found (%s)' % (site_name, district_name)))
+                        '%s, district not found (%s)' % (
+                            site_name, district_name)))
                     continue
 
                 try:
@@ -112,13 +119,17 @@ class Command(BaseCommand):
                     site, created = SiteProfile.objects.update_or_create(
                         name=site_name,
                         defaults={
-                            'type': profile_type, 'office': office, 'contact_leader': contact,
-                            'latitude': lat, 'longitude': lon, 'country': country, 'province': province,
+                            'type': profile_type, 'office': office,
+                            'contact_leader': contact,
+                            'latitude': lat, 'longitude': lon,
+                            'country': country, 'province': province,
                             'district': district, 'create_date': timezone.now()
                         })
                     self.stdout.write(self.style.SUCCESS(
-                        '%s site_profile created(%s) successfully!' % (site_name, created)))
+                        '%s site_profile created(%s) successfully!' % (
+                            site_name, created)))
                 except Exception as e:
                     self.stdout.write(self.style.ERROR(
-                        '%s, could not update or create site_profile %s ' % (site_name, e)))
+                        '%s, could not update or create site_profile %s ' % (
+                            site_name, e)))
                     continue

@@ -24,7 +24,7 @@
 <h3>Current Dashboards</h3>
 
 <table class="table">
-    {% if getCustomDashboards %}
+    {% if get_custom_dashboards %}
     <tr>
         <th>Date Created</th>
         <th>Dashboard Name</th>
@@ -35,7 +35,7 @@
         <th>&nbsp;</th>
     </tr>
     {% endif %}
-    {% for dashboard in getCustomDashboards %}
+    {% for dashboard in get_custom_dashboards %}
     <tr>
        <td>{{ dashboard.create_date }}</td>       
        <td>{{ dashboard.dashboard_name }}</td>

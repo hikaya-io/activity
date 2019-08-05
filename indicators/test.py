@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 from django.test import TestCase
-from indicators.models import Indicator, IndicatorType, DisaggregationType, ReportingFrequency, CollectedData
+from indicators.models import Indicator, IndicatorType, DisaggregationType, \
+    ReportingFrequency, CollectedData
 from workflow.models import Program, Country, Organization
 from django.contrib.auth.models import User
 
 
 class IndicatorTestCase(TestCase):
-
     fixtures = ['fixtures/organization.json', 'fixtures/country.json']
 
     def setUp(self):
@@ -40,8 +40,13 @@ class IndicatorTestCase(TestCase):
             'john', 'lennon@thebeatles.com', 'johnpassword')
         user.save()
         get_user = User.objects.get(username='john')
-        new_indicator = Indicator.objects.create(name="testindicator", number="1.2.3", source="testing",
-                                                 baseline="10", lop_target="10", reporting_frequency=get_frequency)
+        new_indicator = Indicator.objects.create(
+            name="testindicator",
+            number="1.2.3",
+            source="testing",
+            baseline="10",
+            lop_target="10",
+            reporting_frequency=get_frequency)
         new_indicator.save()
         new_indicator.disaggregation.add(get_disaggregation)
         new_indicator.indicator_type.add(get_indicator_type)
@@ -49,7 +54,8 @@ class IndicatorTestCase(TestCase):
 
         get_indicator = Indicator.objects.get(name="testindicator")
         new_collected = CollectedData.objects.create(
-            achieved="20", description="somevaluecollected", indicator=get_indicator)
+            achieved="20", description="somevaluecollected",
+            indicator=get_indicator)
         new_collected.save()
 
     def test_indicator_exists(self):
