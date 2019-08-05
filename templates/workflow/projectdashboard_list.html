@@ -42,109 +42,59 @@
       </div>
     </div>
   </div>
+  <div>
+    {% if filtered_program %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>
+                Filtered by (Program): {{ filtered_program.name | truncatechars:80 }}
+
+              <span class="float: right">
+                <a
+                  href="/customdashboard/{{ filtered_program.id }}/"
+                  class="btn btn-xs btn-info"
+                  style="float:right;"
+                  >Dashboard Visualization</a
+                >
+              </span>
+            </h4>
+          </div>
+          <!-- Table -->
+        </div>
+    {% endif %} 
+    {% ifnotequal status 'none' %}
+      <p>Filtered by (Status): {{ status }}</p>
+    {% endifnotequal %} 
+  </div>
   <table
   class="table"
   id="programsTable"
->
+  >
   <thead>
     <tr>
-      <th>Program</th>
-      <th>Project</th>
+      <th>{{ user.activity_user.organization.level_2_label }} Name</th>
+      <th>{{ user.activity_user.organization.level_2_label }} Code</th>
+      <th>Date Created</th>
+      <th>Form Version</th>
+      <th>Approval Status</th>
       <th>Actions</th>
     </tr>
   </thead>
-
-  <br />
-  <div>
-    {% if get_dashboard %} 
-      {% ifnotequal status 'none' %}
-        <p>Filtered by (Status): {{ status }}</p>
-      {% endifnotequal %} 
-      {% if filtered_program %}
-        <p>Filtered by (Program): {{ filtered_program }}</p>
-      {% endif %} 
-      {% for program in get_dashboard %}
-        {% if program.agreement.all %}
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4>
-                {{ program.name | truncatechars:80 }}
-
-                <span class="float: right">
-                  <a
-                    href="/customdashboard/{{ program.id }}/"
-                    class="btn btn-xs btn-info"
-                    style="float:right;"
-                    >Dashboard Visualization</a
-                  >
-                </span>
-              </h4>
-            </div>
-            <!-- Table -->
-
-            <table class="table table-condensed table-striped"
-            id="programsTable">
-            <thead>
-              <tr>
-                <th>Date Created</th>
-                <th>{{ user.activity_user.organization.level_2_label }} Name</th>
-                <th>{{ user.activity_user.organization.level_2_label }} Code</th>
-                <th>Office Code</th>
-                <th>Form Version</th>
-                <th>Approval Status</th>
-                <th>&nbsp;</th>
-              </tr>
-              </thead>
-
-              {% if status == "in_progress" %}
-                {% for item in program.agreement.get_inprogress %}
-                  {% include "workflow/program_projects_table.html" %}
-                {% empty %}
-                  <li class="list-group-item">No in progress projects.</li>
-                {% endfor %} 
-              {% elif status == "approved" %}
-                {% for item in program.agreement.get_approved %}
-                  {% include "workflow/program_projects_table.html" %} {% empty %}
-                  <li class="list-group-item">No approved projects yet.</li>
-                {% endfor %} 
-              {% elif status == "awaiting_approval" %}
-                {% for item in program.agreement.get_awaiting_approval %}
-                {% include "workflow/program_projects_table.html" %}
-                {% empty %}
-                <li class="list-group-item">No projects awaiting approval.</li>
-                {% endfor %}
-              {% elif status == "rejected" %}
-                {% for item in program.agreement.get_rejected %}
-                {% include "workflow/program_projects_table.html" %} {% empty %}
-                <li class="list-group-item">No rejected projects.</li>
-                {% endfor %} 
-              {% elif status == "new" %}
-                {% for item in program.agreement.get_new %}
-                  {% include "workflow/program_projects_table.html" %} {% empty %}
-                  <li class="list-group-item">No New projects.</li>
-                {% endfor %}
-            {% else %}
-              {% for item in program.agreement.all %}
-                {% include "workflow/program_projects_table.html" %} {% empty %}
-                <li class="list-group-item">No projects yet.</li>
-              {% endfor %}
-            {% endif %}
-          </div>
-        {% endif %}
-      {% endfor %}
-    {% else %}
-      <p>No {{ user.activity_user.organization.level_1_label }}</p>
-    {% endif %}
-  </div>
-</table>
+  <tbody>
+    {% for project in get_projects %}
+        {% include "workflow/program_projects_table.html" %}
+    {% endfor %}
+  </tbody>
+  </table>
+  <table>
 
   <script type="text/javascript">
     function program_filter(program_id) {
-      window.location.href = '/workflow/dashboard/' + program_id + '/none';
+      window.location.href = '/workflow/level2/' + program_id + '/{{status}}';
     }
 
     function status_filter(status) {
-      window.location.href = '/workflow/dashboard/0/' + status;
+      window.location.href = '/workflow/level2/{{filtered_program.id}}/' + status;
     }
   </script>
 </div>

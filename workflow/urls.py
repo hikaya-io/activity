@@ -12,6 +12,8 @@ urlpatterns = [
     path('objectives', objectives_list, name='objectives'),
     path('objectives/tree', objectives_tree, name='objectives-tree'),
     path('level2/add', add_level2, name='add-level2'),
+    path('documentation/add', add_documentation, name='add-documentation'),
+    path('contact/add', add_contact, name='add-contact'),
 
     re_path(r'^level2/project/(?P<pk>\w+)/$',
             ProjectDash.as_view(), name='project_dashboard'),
@@ -19,10 +21,7 @@ urlpatterns = [
             ProjectDash.as_view(), name='project_dashboard'),
     re_path(r'^level2/project', ProjectDash.as_view(),
             name='project_dashboard'),
-    re_path(
-        r'^level2/(?P<pk>\w+)/(?P<status>[\w ]+)/$', ProgramDash.as_view(),
-        name='dashboard'),
-    re_path(r'^level2/(?P<pk>\w+)/$',
+    re_path(r'^level2/(?P<program>\w+)/(?P<status>[\w ]+)/$',
             ProgramDash.as_view(), name='dashboard'),
 
     re_path(r'^projectagreement_list/(?P<pk>\w+)/(?P<status>[\w ]+)/$',
