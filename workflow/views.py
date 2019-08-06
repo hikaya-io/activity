@@ -24,7 +24,7 @@ from .forms import (
     ProjectAgreementCreateForm,
     ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
     DocumentationForm, SiteProfileForm, MonitorForm, BenchmarkForm, BudgetForm,
-    FilterForm,
+    FilterForm, ProgramForm,
     QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm
 )
 
@@ -81,6 +81,25 @@ def list_workflow_level1(request):
                'get_all_sectors': get_all_sectors, 'active': ['workflow']}
 
     return render(request, 'workflow/level1.html', context)
+
+
+class ProgramUpdate(UpdateView):
+    model = Program
+    # fields = '__all__'
+    template_name_suffix = '_update_form'
+    success_url = '/workflow/level1'
+    form_class = ProgramForm
+
+    # add the request to the kwargs
+    def get_form_kwargs(self):
+        kwargs = super(ProgramUpdate, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(ProgramUpdate, self).get_context_data(**kwargs)
+        context['current_program'] = self.get_object()
+        return context
 
 
 class ProjectDash(ListView):
@@ -192,6 +211,7 @@ class ProgramDash(ListView):
                           'get_projects': get_projects,
                           'status': status,
                           'filtered_program': filtered_program,
+                          'active': ['workflow'],
                       })
 
 
