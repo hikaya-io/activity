@@ -12,7 +12,7 @@ from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
     Benchmarks, Monitor, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector, FundCode, Country
+    ActivityUser, Contact, Sector, FundCode
 )
 from indicators.models import CollectedData, Indicator, PeriodicTarget
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK

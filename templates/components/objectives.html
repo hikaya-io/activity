@@ -69,14 +69,14 @@
     <tbody>
       {% for objective in get_all_objectives %}
       <tr>
-        <td>{{ objective.name }}</td>
+        <td><a href="/indicators/objectives/edit/{{objective.id}}/">{{ objective.name }}</a></td>
         <td>{{ objective.parent }}</td>
         <td>{{ objective.create_date | date }}</td>
         <td class="text-right">
           <!-- Action buttons -->
           <div class="btn-group">
             <button type="button" class="btn btn-sm btn-default">
-              Details
+              More
             </button>
             <button
               type="button"
@@ -89,6 +89,7 @@
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <ul class="dropdown-menu">
+              <li class="text-danger"><a href="/indicators/objectives/edit/{{objective.id}}/">Edit</a></li>
               <li class="text-danger"><a href="#">Delete</a></li>
             </ul>
           </div>

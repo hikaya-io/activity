@@ -10,11 +10,11 @@ import re
 
 from .export import IndicatorResource, CollectedDataResource
 from .tables import IndicatorDataTable
-from .forms import IndicatorForm, CollectedDataForm
+from .forms import IndicatorForm, CollectedDataForm, StrategicObjectiveForm
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
     CollectedData, IndicatorType, Level, ExternalServiceRecord,
-    ExternalService, ActivityTable
+    ExternalService, ActivityTable, StrategicObjective
 )
 
 from django.db.models import Count, Sum, Min, Q
@@ -1903,3 +1903,22 @@ def add_indicator(request):
         return HttpResponse({'success': False})
 
     return HttpResponse({'success': True})
+
+
+class StrategicObjectiveUpdateView(UpdateView):
+    model = StrategicObjective
+    template_name_suffix = '_update_form'
+    success_url = '/workflow/objectives'
+    form_class = StrategicObjectiveForm
+
+    # add the request to the kwargs
+    def get_form_kwargs(self):
+        kwargs = super(StrategicObjectiveUpdateView, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        kwargs['current_objective'] = self.get_object()
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(StrategicObjectiveUpdateView, self).get_context_data(**kwargs)
+        context['current_objective'] = self.get_object()
+        return context

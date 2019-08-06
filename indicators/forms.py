@@ -569,3 +569,41 @@ class CollectedDataForm(forms.ModelForm):
         self.fields['periodic_target'].label = 'Measure against target*'
         self.fields['achieved'].label = 'Actual value'
         self.fields['date_collected'].help_text = ' '
+
+
+class StrategicObjectiveForm(forms.ModelForm):
+    class Meta:
+        model = StrategicObjective
+        exclude = ('create_date', 'edit_date')
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        self.current_objective = kwargs.pop('current_objective')
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.error_text_inline = True
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+        self.helper.form_tag = True
+        self.helper.layout = Layout(
+            Row(
+                Column('name', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('parent', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+
+            Row(
+                Column('description', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+            Submit('submit', 'Discard Changes', css_class='btn btn-md btn-default'),
+            Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
+        )
+        super(StrategicObjectiveForm, self).__init__(*args, **kwargs)
+        self.fields['parent'].queryset = StrategicObjective.objects.\
+            filter(organization=self.request.user.activity_user.organization).\
+            exclude(pk=self.current_objective.id)
