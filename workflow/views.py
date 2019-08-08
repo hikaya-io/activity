@@ -83,6 +83,17 @@ def list_workflow_level1(request):
     return render(request, 'workflow/level1.html', context)
 
 
+def level1_delete(request, pk):
+    """
+    Delete program
+    :param pk:
+    :return:
+    """
+    program = Program.objects.get(pk=int(pk))
+    program.delete()
+    return redirect('/workflow/level1')
+
+
 class ProgramUpdate(UpdateView):
     model = Program
     # fields = '__all__'

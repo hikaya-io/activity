@@ -8,7 +8,7 @@ from django.urls import re_path, path
 
 urlpatterns = [
     path('level1', list_workflow_level1, name='level1'),
-    #path('level2', list_workflow_level2, name='level2'),
+    path('level1_delete/<slug:pk>/', level1_delete, name='level1_delete'),
     path('objectives', objectives_list, name='objectives'),
     path('objectives/tree', objectives_tree, name='objectives-tree'),
     path('level2/add', add_level2, name='add-level2'),

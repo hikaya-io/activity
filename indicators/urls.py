@@ -108,5 +108,7 @@ urlpatterns = [
     # objectives
     re_path(r'^objectives/edit/(?P<pk>\w+)/$',
             StrategicObjectiveUpdateView.as_view(),
-            name='update_strategic_objective')
+            name='update_strategic_objective'),
+    re_path(r'^objectives/objective_delete/(?P<pk>\w+)/$',
+            objective_delete, name='objective_delete')
 ]

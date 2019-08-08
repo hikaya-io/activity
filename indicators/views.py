@@ -29,7 +29,7 @@ from django.contrib import messages
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.exceptions import PermissionDenied
 from django.core import serializers
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.http import HttpResponse
 from django_tables2 import RequestConfig
 
@@ -1922,3 +1922,15 @@ class StrategicObjectiveUpdateView(UpdateView):
         context = super(StrategicObjectiveUpdateView, self).get_context_data(**kwargs)
         context['current_objective'] = self.get_object()
         return context
+
+
+def objective_delete(request, pk):
+    """
+    Delete strategic objective
+    :param request:
+    :param pk:
+    :return:
+    """
+    objective = StrategicObjective.objects.get(pk=int(pk))
+    objective.delete()
+    return redirect('/workflow/objectives')

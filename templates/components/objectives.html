@@ -90,10 +90,20 @@
             </button>
             <ul class="dropdown-menu">
               <li class="text-danger"><a href="/indicators/objectives/edit/{{objective.id}}/">Edit</a></li>
-              <li class="text-danger"><a href="#">Delete</a></li>
+              <li class="text-danger">
+                  <a
+									href="#deleteObjectiveModal{{ objective.id }}"
+									data-toggle="modal"
+									onclick="setItemToDelete({{ objective.id }})"
+									data-target="#deleteObjectiveModal{{ objective.id }}"
+								>
+									Delete
+								</a>
+              </li>
             </ul>
           </div>
         </td>
+        {% include 'components/objective_delete_confirm_modal.html'%}
       </tr>
       {% endfor %}
     </tbody>
