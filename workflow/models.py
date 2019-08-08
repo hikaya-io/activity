@@ -1051,8 +1051,10 @@ class Stakeholder(models.Model):
     contact = models.ManyToManyField(Contact, max_length=255, blank=True)
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
+    organization = models.ForeignKey(
+        Organization, blank=True, null=True, on_delete=models.SET_NULL)
     # sector = models.ForeignKey(Sector, blank=True, null=True,
-    # related_name='sects')
+    # related_name='sectors')
     sectors = models.ManyToManyField(Sector, blank=True)
     stakeholder_register = models.BooleanField(
         "Has this partner been added to stakeholder register?")

@@ -1,0 +1,146 @@
+<script>
+  $(document).ready(() => {
+    $('#sectors').select2({
+      theme: 'bootstrap',
+      placeholder: 'Select sectors...',
+      allowClear: true,
+      multiple: true,
+      dropdownParent: $('#addStakeholderModal'),
+    });
+
+    $('#stakeholderType').select2({
+      theme: 'bootstrap',
+      placeholder: 'Select stakeholder type',
+      dropdownParent: $('#addStakeholderModal'),
+    });
+  });
+
+  $(function() {
+    $('#saveStakeholder').click(function(e) {
+      const formValue = $('#addStakeholderForm').serializeArray();
+
+      const obj = {};
+
+      formValue.forEach(item => {
+        obj[item.name] = item.value;
+      });
+
+      console.log(obj);
+
+      // set sectors and format dates
+      data = {
+        ...obj,
+        sectors: $('#sectors').val(),
+        start_date: moment(obj.start_date, 'DD.MM.YYYY').format(),
+      };
+
+      $.ajax({
+        url: '{% url "add-stakeholder" %}',
+        type: 'POST',
+        data,
+        success: function(resp, status) {
+          // notify success
+          toastr.success('Stakeholder was added successfully', `${resp}`);
+
+          //close modal
+          $('#addStakeholderModal').modal('hide');
+
+          // reset form
+          $('#addStakeholderForm').trigger('reset');
+          $('#sectors')
+            .select('val', '')
+            .trigger('change');
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        },
+        error: function(xhr, status, error) {
+          toastr.error(error, 'Failed');
+        },
+      });
+    });
+  });
+</script>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="addStakeholderModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addStakeholderModalLabel"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form id="addStakeholderForm">
+        {% csrf_token %}
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="addStakeholderModalLabel">
+            Add Stakeholder
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="stakeholderName">Name</label>
+            <input
+              type="text"
+              id="stakeholderName"
+              name="stakeholder_name"
+              class="form-control"
+              placeholder="Name of the stakeholder"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="stakeholdertype">Stakeholder Type</label>
+            <select
+              name="stakeholder_type"
+              id="stakeholderType"
+              class="form-control"
+            >
+              <option value=""></option>
+              {% for stakeholder_type in get_stakeholder_types %}
+              <option value="{{ stakeholder_type.id }}">
+                {{ stakeholder_type.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="sectors">Sectors</label>
+            <select
+              id="sectors"
+              class="form-control"
+              name="sectors"
+              autocomplete="off"
+              multiple="multiple"
+            >
+              {% for sector in get_sectors %}
+              <option value="{{ sector.id }}">{{ sector.sector }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" class="btn btn-success" id="saveStakeholder">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

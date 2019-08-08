@@ -600,8 +600,8 @@ class StrategicObjectiveForm(forms.ModelForm):
                 Column('description', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
-            Submit('submit', 'Discard Changes', css_class='btn btn-md btn-default'),
-            Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
+            Reset('reset', 'Discard Changes', css_class='btn-md btn-default'),
+            Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
         )
         super(StrategicObjectiveForm, self).__init__(*args, **kwargs)
         self.fields['parent'].queryset = StrategicObjective.objects.\
