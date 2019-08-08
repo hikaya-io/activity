@@ -67,10 +67,10 @@
                 </li>
                 <li class="text-danger">
                     <a 
-                      href="#deleteItemModal" 
+                      href="#deleteItemModal{{distribution.id}}" 
                       data-toggle="modal" 
                       onclick="setItemToDelete({{distribution.id}})"
-                      data-target="#deleteItemModal">
+                      data-target="#deleteItemModal{{distribution.id}}">
                       Delete
                     </a>
                 </li>
@@ -81,7 +81,7 @@
         </tr>
         {% endfor %}
       </tbody>
-    </table>
+  </table>
   <!-- <table class="table" id="distributiontable"></table> -->
   <script type="text/javascript">
     $(document).ready(function() {
@@ -128,75 +128,6 @@
       program_filter(0, 0);
     });
 
-    function show_training_table(distribution_data) {
-      distribution_records = JSON.parse(distribution_data);
-      //First destroy any old version of the table to refresh anew
-      if ($.fn.dataTable.isDataTable('#distributiontable')) {
-        table.destroy();
-        $('#distributiontable').empty();
-      }
-
-      $('#distributiontable').on('page.dt', function() {
-        $('html, body').animate(
-          {
-            scrollTop: 0,
-          },
-          300,
-        );
-      });
-
-      table = $('#distributiontable').DataTable({
-        order: [],
-        bFilter: false,
-        bLengthChange: false,
-        aoColumnDefs: [{ bSortable: false, targets: [0, 1, 2] }],
-        retrieve: true,
-        data: distribution_records,
-        columns: [
-          {
-            title: 'Date Created',
-            data: 'create_date',
-            defaultContent: '<i>Not set</i>',
-            mRender: function(data, record, row) {
-              return (
-                '<a class="collecteddata" name=' +
-                row.id +
-                ' href="#">' +
-                row.create_date +
-                '</a>'
-              );
-            },
-          },
-          {
-            title: 'Training Name',
-            data: 'distribution_name',
-            defaultContent: '<i>Not set</i>',
-            mRender: function(data, record, row) {
-              return (
-                '<a class="collecteddata" name=' +
-                row.id +
-                ' href="#">' +
-                row.distribution_name +
-                '</a>'
-              );
-            },
-          },
-          {
-            title: 'Update/Delete/ ',
-            mRender: function(data, record, row) {
-              return (
-                '<a href="/formlibrary/distribution_update/' +
-                row.id +
-                '" class="btn btn-xs btn-warning">Update Distribution</a><a href="/formlibrary/distribution_delete/' +
-                row.id +
-                '" class="btn btn-xs btn-danger">Delete Distribution</a>'
-              );
-            },
-          },
-        ],
-      });
-    }
-
     function program_filter(program_id, project_id) {
       // Filter distributions
 
@@ -225,22 +156,4 @@
       }
     }
   </script>
-
-  <!-- Modal -->
-  <div
-    class="modal fade"
-    id="importModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="myModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content"></div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-  </div>
-  <!-- /.modal -->
-</div>
 {% endblock content %}

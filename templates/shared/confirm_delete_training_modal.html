@@ -1,6 +1,6 @@
 <div
 	class="modal fade"
-	id="deleteItemModal{{distribution.id}}"
+	id="deleteItemModal{{training.id}}"
 	tabindex="-1"
 	role="dialog"
 	aria-labelledby="deleteItemModalLabel"
@@ -15,12 +15,12 @@
 			</div>
 			<div class="modal-body">
 				<p>
-					Are you sure you want to delete "<strong>{{ distribution.distribution_name }}"</strong>
+					Are you sure you want to delete "<strong>{{ training.training_name }}"</strong>
 				</p>
 				<div class="text-right">
 					<button 
 						type="submit"
-						class="btn" 
+						class="btn btn-secondary" 
 						onclick="deleteCancel()">
 						Cancel
 					</button>
@@ -28,7 +28,7 @@
 						type="submit"
 						class="btn btn-danger"
 						onclick="deleteItem()"
-						id="deleteItem{{ distribution.id }}"
+						id="deleteItem{{ training.id }}"
 					>
 						Delete
 					</button>
@@ -54,7 +54,7 @@
 	function deleteItem() {
 		toastr.success('You have successfully delete this Item');
 		setTimeout(() => {
-			window.location.href = `/formlibrary/distribution_delete/${itemId}/`;
+			window.location.href = `/formlibrary/training_delete/${itemId}/`;
 		}, 2000);
 	}
 

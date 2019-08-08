@@ -15,8 +15,8 @@ urlpatterns = [
          name='training_add'),
     path('training_update/<slug:pk>/',
          TrainingUpdate.as_view(), name='training_update'),
-    path('training_delete/<slug:pk>/',
-         TrainingDelete.as_view(), name='training_delete'),
+    path('training_delete/<slug:pk>/', delete_training,
+         name='training_delete'),
 
     path('beneficiary_list/<slug:pk>/',
          BeneficiaryList.as_view(), name='beneficiary_list'),

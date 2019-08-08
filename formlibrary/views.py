@@ -21,6 +21,7 @@ from django.views.generic.detail import View
 from .mixins import AjaxableResponseMixin
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+from django.forms.models import model_to_dict
 
 
 class TrainingList(ListView):
@@ -33,21 +34,21 @@ class TrainingList(ListView):
     def get(self, request, *args, **kwargs):
 
         project_agreement_id = self.kwargs['pk']
-        countries = get_country(request.user)
         get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries).distinct()
+            organization=request.user.activity_user.organization).distinct()
         if int(self.kwargs['pk']) == 0:
             get_training = TrainingAttendance.objects.all().filter(
-                program__country__in=countries)
+                program__organization=request.user.activity_user.organization)
         else:
             get_training = TrainingAttendance.objects.all().filter(
                 project_agreement_id=self.kwargs['pk'])
 
-        return render(request, self.template_name,
-                      {'get_training': get_training,
-                       'project_agreement_id': project_agreement_id,
-                       'get_programs': get_programs,
-                       'active': ['forms', 'training_list']})
+        return render(request, self.template_name, {
+            'get_training': get_training,
+            'project_agreement_id': project_agreement_id,
+            'get_programs': get_programs,
+            'active': ['forms', 'training_list']
+        })
 
 
 class TrainingCreate(CreateView):
@@ -56,6 +57,7 @@ class TrainingCreate(CreateView):
     """
     model = TrainingAttendance
     guidance = None
+
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -69,6 +71,11 @@ class TrainingCreate(CreateView):
         kwargs = super(TrainingCreate, self).get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(TrainingCreate, self).get_context_data(**kwargs)
+        context['form_title'] = 'Training Attendance Create Form'
+        return context
 
     def get_initial(self):
         initial = {
@@ -86,8 +93,7 @@ class TrainingCreate(CreateView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Success, Training Created!')
-        latest = TrainingAttendance.objects.latest('id')
-        redirect_url = '/formlibrary/training_update/' + str(latest.id)
+        redirect_url = '/formlibrary/training_list/0/'
         return HttpResponseRedirect(redirect_url)
 
     form_class = TrainingAttendanceForm
@@ -98,7 +104,9 @@ class TrainingUpdate(UpdateView):
     Training Form
     """
     model = TrainingAttendance
+    success_url = '/formlibrary/training_list/0/'
     guidance = None
+
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -120,8 +128,13 @@ class TrainingUpdate(UpdateView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Success, Training Updated!')
+        redirect_url = '/formlibrary/training_list/0/'
+        return HttpResponseRedirect(redirect_url)
 
-        return self.render_to_response(self.get_context_data(form=form))
+    def get_context_data(self, **kwargs):
+        context = super(TrainingUpdate, self).get_context_data(**kwargs)
+        context['form_title'] = 'Training Attendance Update Form'
+        return context
 
     form_class = TrainingAttendanceForm
 
@@ -148,6 +161,15 @@ class TrainingDelete(DeleteView):
         return self.render_to_response(self.get_context_data(form=form))
 
     form_class = TrainingAttendanceForm
+
+
+def delete_training(request, pk):
+    """
+    Delete distribution
+    """
+    distribution = TrainingAttendance.objects.get(pk=int(pk))
+    distribution.delete()
+    return redirect('/formlibrary/training_list/0/')
 
 
 class BeneficiaryList(ListView):
@@ -231,6 +253,7 @@ class BeneficiaryUpdate(UpdateView):
     """
     model = Beneficiary
     guidance = None
+
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -255,7 +278,6 @@ class BeneficiaryUpdate(UpdateView):
         messages.success(self.request, 'Success, Beneficiary Updated!')
 
         return self.render_to_response(self.get_context_data(form=form))
-
     form_class = BeneficiaryForm
 
 
@@ -360,6 +382,10 @@ class DistributionCreate(CreateView):
         redirect_url = '/formlibrary/distribution_list/0/'
         return HttpResponseRedirect(redirect_url)
 
+    def get_context_data(self, **kwargs):
+        context = super(DistributionCreate, self).get_context_data(**kwargs)
+        context['form_title'] = 'Distribution Create Form'
+        return context
     form_class = DistributionForm
 
 
@@ -390,46 +416,23 @@ class DistributionUpdate(UpdateView):
         messages.error(self.request, 'Invalid Form', fail_silently=False)
         return self.render_to_response(self.get_context_data(form=form))
 
-    # def form_valid(self, form):
-    #     form.save()
-    #     messages.success(self.request, 'Success, Distribution Updated!')
-    #
-    #     return self.render_to_response(self.get_context_data(form=form))
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Success, Distribution Updated!')
+        redirect_url = '/formlibrary/distribution_list/0/'
+        return redirect(redirect_url)
 
+    def get_context_data(self, **kwargs):
+        context = super(DistributionUpdate, self).get_context_data(**kwargs)
+        context['form_title'] = 'Distribution Update Form'
+        return context
     form_class = DistributionForm
 
 
-class DistributionDelete(DeleteView):
-    """
-    Distribution Delete
-    """
-    model = Distribution
-    success_url = '/formlibrary/distribution_list/0/'
-
-    def delete(self, request, *args, **kwargs):
-        obj = self.get_object()
-        messages.success(self.request, self.success_message % obj.__dict__)
-        return super(DistributionDelete, self).delete(request, *args, **kwargs)
-    #
-    # def form_invalid(self, form):
-    #
-    #     messages.error(self.request, 'Invalid Form', fail_silently=False)
-    #
-    #     return self.render_to_response(self.get_context_data(form=form))
-    #
-    # def form_valid(self, form):
-    #
-    #     form.save()
-    #
-    #     messages.success(self.request, 'Success, Distribution Deleted!')
-    #     return self.render_to_response(self.get_context_data(form=form))
-    #
-    # form_class = DistributionForm
-
-# Ajax views for ajax filters and paginators
-
-
 def delete_distribution(request, pk):
+    """
+    Delete distribution
+    """
     distribution = Distribution.objects.get(pk=int(pk))
     distribution.delete()
     return redirect('/formlibrary/distribution_list/0/')
@@ -441,7 +444,6 @@ class TrainingListObjects(View, AjaxableResponseMixin):
 
         program_id = int(self.kwargs['program'])
         project_id = int(self.kwargs['project'])
-        print(project_id)
         countries = get_country(request.user)
         if int(self.kwargs['program']) == 0:
             get_training = TrainingAttendance.objects.all().filter(
