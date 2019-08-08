@@ -12,7 +12,7 @@ from .models import (
     Program, Country, Province, AdminLevelThree, District, ProjectAgreement,
     ProjectComplete, SiteProfile, Documentation, Monitor, Benchmarks, Budget,
     ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder,
-    FormGuidance,
+    FormGuidance, StakeholderType,
     ActivityBookmarks, ActivityUser, Sector
 )
 from formlibrary.models import TrainingAttendance, Distribution
@@ -1882,41 +1882,16 @@ class StakeholderList(ListView):
 
     def get(self, request, *args, **kwargs):
         # Check for project filter
-        project_agreement_id = self.kwargs['pk']
-        # Check for program filter
-        if self.kwargs['program_id']:
-            program_id = int(self.kwargs['program_id'])
-        else:
-            program_id = 0
+        # project_agreement_id = self.kwargs['pk']
 
-        try:
-            countries = get_country(request.user)
-            if countries.first() is None:
-                raise CountryDoesNotExist
-        except CountryDoesNotExist:
-            print("The user has no country in database.")
-            return render(request, self.template_name)
+        get_stakeholders = Stakeholder.objects.all().filter(
+            organization=self.request.user.activity_user.organization)
 
-        get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries)
-
-        if program_id != 0:
-            get_stakeholders = Stakeholder.objects.all().filter(
-                projectagreement__program__id=program_id).distinct()
-
-        elif int(self.kwargs['pk']) != 0:
-            get_stakeholders = Stakeholder.objects.all().filter(
-                projectagreement=self.kwargs['pk']).distinct()
-
-        else:
-            get_stakeholders = Stakeholder.objects.all().filter(
-                country__in=countries)
         return render(request, self.template_name,
                       {'get_stakeholders': get_stakeholders,
-                       'project_agreement_id': project_agreement_id,
-                       'program_id': program_id,
-                       'get_programs': get_programs,
-                       'active': ['components']})
+                       'get_stakeholder_types': StakeholderType.objects.all(),
+                       'get_sectors': Sector.objects.all(),
+                       'active': ['components', 'stakeholders']})
 
 
 class StakeholderCreate(CreateView):
@@ -2898,6 +2873,26 @@ def add_contact(request):
         'address'), phone=data.get('phone_number'), organization=user.organization)
 
     if contact.save():
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})
+
+
+def add_stakeholder(request):
+    data = request.POST
+
+    user = ActivityUser.objects.filter(user=request.user).first()
+
+    stakeholder_type_id = int(data.get('stakeholder_type', None), 10)
+    sector_ids = list(map(int, data.getlist('sectors[]', [])))
+
+    stakeholder = Stakeholder(name=data.get(
+        'stakeholder_name'), type_id=stakeholder_type_id, organization=user.organization, stakeholder_register=False)
+    stakeholder.save()
+
+    if stakeholder.id:
+        sectors = Sector.objects.filter(id__in=sector_ids)
+        stakeholder.sectors.set(sectors)
         return HttpResponse({'success': True})
 
     return HttpResponse({'success': False})
