@@ -5,6 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from .models import TrainingAttendance, Beneficiary, Distribution
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 
 from .forms import TrainingAttendanceForm, BeneficiaryForm, DistributionForm
 from workflow.models import FormGuidance, Program, ProjectAgreement
@@ -302,14 +303,18 @@ class DistributionList(ListView):
 
         if int(self.kwargs['pk']) == 0:
             get_distribution = Distribution.objects.all().filter(
-                program__country__in=countries)
+                program__organization=request.user.activity_user.organization
+            )
         else:
             get_distribution = Distribution.objects.all().filter(
                 program_id=self.kwargs['pk'])
 
-        return render(request, self.template_name,
-                      {'get_distribution': get_distribution,
-                       'program_id': program_id, 'get_programs': get_programs, 'active': ['forms', 'distribution_list']})
+        return render(request, self.template_name, {
+                          'get_distribution': get_distribution,
+                          'program_id': program_id,
+                          'get_programs': get_programs,
+                          'active': ['forms', 'distribution_list']
+                      })
 
 
 class DistributionCreate(CreateView):
@@ -318,6 +323,8 @@ class DistributionCreate(CreateView):
     """
     model = Distribution
     guidance = None
+    success_url = '/formlibrary/distribution_list/0/'
+
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -350,7 +357,7 @@ class DistributionCreate(CreateView):
         form.save()
         messages.success(self.request, 'Success, Distribution Created!')
         latest = Distribution.objects.latest('id')
-        redirect_url = '/formlibrary/distribution_update/' + str(latest.id)
+        redirect_url = '/formlibrary/distribution_list/0/'
         return HttpResponseRedirect(redirect_url)
 
     form_class = DistributionForm
@@ -361,7 +368,9 @@ class DistributionUpdate(UpdateView):
     Distribution Form
     """
     model = Distribution
+    success_url = '/formlibrary/distribution_list/0/'
     guidance = None
+
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -381,11 +390,11 @@ class DistributionUpdate(UpdateView):
         messages.error(self.request, 'Invalid Form', fail_silently=False)
         return self.render_to_response(self.get_context_data(form=form))
 
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Distribution Updated!')
-
-        return self.render_to_response(self.get_context_data(form=form))
+    # def form_valid(self, form):
+    #     form.save()
+    #     messages.success(self.request, 'Success, Distribution Updated!')
+    #
+    #     return self.render_to_response(self.get_context_data(form=form))
 
     form_class = DistributionForm
 
@@ -396,24 +405,34 @@ class DistributionDelete(DeleteView):
     """
     model = Distribution
     success_url = '/formlibrary/distribution_list/0/'
-    template_name = 'formlibrary/distribution_confirm_delete.html'
 
-    def form_invalid(self, form):
-
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-
-        form.save()
-
-        messages.success(self.request, 'Success, Distribution Deleted!')
-        return self.render_to_response(self.get_context_data(form=form))
-
-    form_class = DistributionForm
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        messages.success(self.request, self.success_message % obj.__dict__)
+        return super(DistributionDelete, self).delete(request, *args, **kwargs)
+    #
+    # def form_invalid(self, form):
+    #
+    #     messages.error(self.request, 'Invalid Form', fail_silently=False)
+    #
+    #     return self.render_to_response(self.get_context_data(form=form))
+    #
+    # def form_valid(self, form):
+    #
+    #     form.save()
+    #
+    #     messages.success(self.request, 'Success, Distribution Deleted!')
+    #     return self.render_to_response(self.get_context_data(form=form))
+    #
+    # form_class = DistributionForm
 
 # Ajax views for ajax filters and paginators
+
+
+def delete_distribution(request, pk):
+    distribution = Distribution.objects.get(pk=int(pk))
+    distribution.delete()
+    return redirect('/formlibrary/distribution_list/0/')
 
 
 class TrainingListObjects(View, AjaxableResponseMixin):
@@ -485,11 +504,10 @@ class DistributionListObjects(View, AjaxableResponseMixin):
 
         program_id = int(self.kwargs['program'])
         project_id = int(self.kwargs['project'])
-        countries = get_country(request.user)
         if program_id == 0:
             get_distribution = Distribution.objects.all().filter(
-                program__country__in=countries).values(
-                'id', 'distribution_name', 'create_date', 'program')
+                program__organization=request.user.activity_user.organization).\
+                values('id', 'distribution_name', 'create_date', 'program')
         elif program_id != 0 and project_id == 0:
             get_distribution = Distribution.objects.all().filter(
                 program_id=program_id).values(

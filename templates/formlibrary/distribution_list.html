@@ -25,9 +25,67 @@
     </div>
   </div>
   <!-- Table -->
-  <table class="table" id="distributiontable"></table>
+
+  <table class="table" id="distributionTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Start DAte</th>
+          <th>End Date</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for distribution in get_distribution %}
+        <tr>
+          <td>
+            <a href="/formlibrary/distribution_update/{{distribution.id}}/">
+              {{ distribution.distribution_name }}
+            </a>
+          </td>
+          <td>{{ distribution.start_date | date }}</td>
+          <td>{{ distribution.end_date | date }}</td>
+          <td class="text-right">
+            <!-- Action buttons -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-default">
+                More
+              </button>
+              <button
+                type="button"
+                class="btn btn-default btn-sm dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li class="text-danger">
+                  <a href="/formlibrary/distribution_update/{{distribution.id}}/">Edit</a>
+                </li>
+                <li class="text-danger">
+                    <a 
+                      href="#deleteItemModal" 
+                      data-toggle="modal" 
+                      onclick="setItemToDelete({{distribution.id}})"
+                      data-target="#deleteItemModal">
+                      Delete
+                    </a>
+                </li>
+              </ul>
+            </div>
+          </td>
+          {% include 'shared/confirm_delete_distribution_modal.html' %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  <!-- <table class="table" id="distributiontable"></table> -->
   <script type="text/javascript">
     $(document).ready(function() {
+      $('#distributionTable').DataTable();
       $('select#program').change(function() {
         if ($(this).val() == 'all') {
           $('select#project').html('<option>Project(s)</option>');

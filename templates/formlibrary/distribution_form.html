@@ -1,18 +1,6 @@
 {% extends "base.html" %}
-{% block bread_crumb %}
-<div class="container">
-    <ol class="breadcrumb">
-      <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
-      <li><a href="/formlibrary/distribution_list/0/">Distributions</a></li>
-      <li class="active">Distribution Form</li>
-    </ol>
-</div>
-{% endblock %}
-
 {% block content %}
 <div class="container">
-    <h1>Distribution Form</h1>
-    {% include "form_guidance.html" %}
     {% if form.errors %}
         <div class="help-block">
             {% for field in form %}
@@ -27,6 +15,37 @@
             </div>
         {% endfor %}
     {% endif %}
+
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li><a href="/formlibrary/distribution_list/0/">Distribution List</a></li>
+      <li class="active">Add Distribution</li>
+    </ul>
+    {% endblock %}
+
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+        <div class="sub-navigation-header">
+        <h4 class="page-title">
+            Distribution Form
+        </h4>
+        </div>
+        <div class="sub-navigation-actions">
+            {% include "form_guidance.html" %}
+        <!-- sample action buttons -->
+        <!-- <div class="btn-group" role="group" aria-label="">
+            <button
+            class="btn btn-primary btn-sm"
+            data-toggle="modal"
+            data-target="#addProgramModal"
+            >
+            <i class="fa fa-plus"></i> Add New
+            {{ request.user.activity_user.organization.level_1_label }}
+            </button>
+        </div> -->
+        </div>
+    </div>
+
 	{% csrf_token %}
     {% load crispy_forms_tags %}
     {% crispy form %}

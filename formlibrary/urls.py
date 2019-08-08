@@ -37,8 +37,8 @@ urlpatterns = [
          DistributionCreate.as_view(), name='distribution_add'),
     path('distribution_update/<slug:pk>/',
          DistributionUpdate.as_view(), name='distribution_update'),
-    path('distribution_delete/<slug:pk>/',
-         DistributionDelete.as_view(), name='distribution_delete'),
+    path('distribution_delete/<slug:pk>/', delete_distribution,
+         name='distribution_delete'),
 
     path('getagreements/<slug:program>/<slug:project>/',
          GetAgreements.as_view(), name='getagreements'),
