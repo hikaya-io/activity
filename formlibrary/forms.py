@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Row, Column
+from crispy_forms.layout import Submit, Layout, Row, Column, Reset
 from django import forms
 from .models import TrainingAttendance, Distribution, Beneficiary
 from workflow.models import Program, ProjectAgreement, Office, Province, SiteProfile
@@ -20,6 +20,8 @@ class DatePicker(forms.DateInput):
 
 
 class TrainingAttendanceForm(forms.ModelForm):
+    start_date = forms.DateField(widget=DatePicker.DateInput(), required=False)
+    end_date = forms.DateField(widget=DatePicker.DateInput(), required=False)
 
     class Meta:
         model = TrainingAttendance
@@ -29,22 +31,75 @@ class TrainingAttendanceForm(forms.ModelForm):
         self.helper = FormHelper()
         self.request = kwargs.pop('request')
         self.helper.form_method = 'post'
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-2'
-        self.helper.field_class = 'col-sm-6'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
+        self.helper.layout = Layout(
+            'training_name',
+            Row(
+                Column('trainer_name', css_class='form-group col-md-6 mb-0'),
+                Column('trainer_contact_num', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('program', css_class='form-group col-md-6 mb-0'),
+                Column('project_agreement', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('training_duration', css_class='form-group col-md-6 mb-0'),
+                Column('reporting_period', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+
+            Row(
+                Column('form_filled_by', css_class='form-group col-md-6 mb-0'),
+                Column('form_filled_by_contact_num', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('start_date', css_class='form-group col-md-6 mb-0'),
+                Column('end_date', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('implementer', css_class='form-group col-md-4 mb-0'),
+                Column('location', css_class='form-group col-md-4 mb-0'),
+                Column('community', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('total_participants', css_class='form-group col-md-4 mb-0'),
+                Column('total_male', css_class='form-group col-md-4 mb-0'),
+                Column('total_female', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('total_age_0_14_male', css_class='form-group col-md-6 mb-0'),
+                Column('total_age_0_14_female', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('total_age_15_24_male', css_class='form-group col-md-6 mb-0'),
+                Column('total_age_15_24_female', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('total_age_25_59_male', css_class='form-group col-md-6 mb-0'),
+                Column('total_age_25_59_female', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Reset('reset', 'Discard Changes', css_class='btn-md btn-default'),
+            Submit('submit', 'Save Changes', css_class='btn-md btn-success'), )
 
         super(TrainingAttendanceForm, self).__init__(*args, **kwargs)
 
-        countries = get_country(self.request.user)
         self.fields['project_agreement'].queryset = \
-            ProjectAgreement.objects.filter(program__country__in=countries)
+            ProjectAgreement.objects.filter(
+                program__organization=self.request.user.activity_user.organization)
         self.fields['program'].queryset = Program.objects.filter(
-            country__in=countries)
+            organization=self.request.user.activity_user.organization)
 
 
 class DistributionForm(forms.ModelForm):
@@ -143,7 +198,7 @@ class DistributionForm(forms.ModelForm):
                 Column('form_verified_date', css_class='form-group col-md-3 mb-0'),
                 css_class='form-row'
             ),
-            Submit('submit', 'Discard Changes', css_class='btn btn-md btn-default'),
+            Reset('reset', 'Discard Changes', css_class='btn btn-md btn-default'),
             Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
         )
 

@@ -2630,7 +2630,7 @@ def import_service(service_id=1, deserialize=True):
 
 
 def objectives_list(request):
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         data = request.POST
         activity_user = ActivityUser.objects.filter(user=request.user).first()
         parent = None
