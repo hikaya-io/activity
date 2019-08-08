@@ -63,6 +63,7 @@ router.register(r'periodictargets', PeriodicTargetReadOnlyViewSet,
 
 
 urlpatterns = [  # rest framework
+    re_path(r'^select2/', include('django_select2.urls')),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls',
                               namespace='rest_framework')),

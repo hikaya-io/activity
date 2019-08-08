@@ -1,0 +1,27 @@
+{% extends "base.html" %} {% block content %} {% load crispy_forms_tags %}
+<div class="container">
+	{% block breadcrumbs %}
+	<ul class="breadcrumb">
+		<li><a href="/">Home Dashboard</a></li>
+		<li class="active">
+			<a href="/workflow/level1"> 
+				{{ request.user.activity_user.organization.level_1_label }}s
+			</a>
+		</li>
+		<li class="active">{{ current_program.name }}</li>
+	</ul>
+	{% endblock %}
+
+	<!-- Sub navigation -->
+	<div class="sub-navigation">
+		<div class="sub-navigation-header">
+			<h4 class="page-title">
+				{{ request.user.activity_user.organization.level_1_label }} Edit Form
+			</h4>
+		</div>
+	</div>
+	<div>
+		{% block editform %} {% crispy form %} {% endblock editform %}
+	</div>
+</div>
+{% endblock content %}

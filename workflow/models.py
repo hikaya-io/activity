@@ -450,7 +450,7 @@ class Program(models.Model):
     funding_status = models.CharField(
         "Funding Status", max_length=255, blank=True)
     cost_center = models.CharField(
-        "Fund Code", max_length=255, blank=True, null=True)
+        "Cost Center", max_length=255, blank=True, null=True)
     fund_code = models.ManyToManyField(FundCode, blank=True)
     description = models.TextField(
         "Program Description", max_length=765, null=True, blank=True)

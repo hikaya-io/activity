@@ -16,6 +16,8 @@ urlpatterns = [
     path('contact/add', add_contact, name='add-contact'),
     path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
 
+    re_path('level1/edit/(?P<pk>\w+)/$', ProgramUpdate.as_view(),
+            name='level1_edit'),
     re_path(r'^level2/project/(?P<pk>\w+)/$',
             ProjectDash.as_view(), name='project_dashboard'),
     re_path(r'^level2/project/(?P<pk>\w+)$',
@@ -25,7 +27,7 @@ urlpatterns = [
     re_path(r'^level2/(?P<program>\w+)/(?P<status>[\w ]+)/$',
             ProgramDash.as_view(), name='dashboard'),
 
-    re_path(r'^projectagreement_list/(?P<pk>\w+)/(?P<status>[\w ]+)/$',
+    re_path(r'^(?P<pk>\w+)/$',
             ProjectAgreementList.as_view(), name='projectagreement_list'),
     re_path(r'^projectagreement_add/$',
             ProjectAgreementCreate.as_view(), name='projectagreement_add'),

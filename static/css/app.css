@@ -721,3 +721,7 @@ input[type=number]::-webkit-outer-spin-button {
 .select2-container .select2-selection__rendered>*:first-child.select2-search--inline .select2-search__field {
     width: 100% !important;
 }
+
+.modal-header .close {
+    flex-direction: column;
+}

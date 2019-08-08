@@ -55,7 +55,7 @@
       {% for program in programs %}
       <tr>
         <td>
-          <a href="">{{ program.name }}</a>
+          <a href="/workflow/level1/edit/{{program.id}}/">{{ program.name }}</a>
         </td>
         <!-- dates to be formated -->
         <td>{{ program.start_date | date }}</td>
@@ -85,7 +85,7 @@
 
               <li role="separator" class="divider"></li>
 
-              <li><a class="text-danger" href="/">Edit</a></li>
+              <li><a class="text-danger" href="/workflow/level1/edit/{{program.id}}/">Edit</a></li>
               <li><a class="text-danger" href="/">Delete</a></li>
             </ul>
           </div>
