@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block content %} 
-{% include './modals/add_stakeholder_modal.html' %}
+{% extends "base.html" %} {% block content %} {% include
+'./modals/add_stakeholder_modal.html' %}
 
 <script>
   $(document).ready(() => {
@@ -97,7 +97,27 @@
           <span class="badge badge-default">{{ sector.sector }}</span>
           {% endfor %}
         </td>
-        <td></td>
+        <td class="text-right">
+          <!-- Split button -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-xs">Actions</button>
+            <button
+              type="button"
+              class="btn btn-default btn-xs dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">Edit</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#" class="text-danger">Delete</a></li>
+            </ul>
+          </div>
+        </td>
       </tr>
       {% endif %} {% endfor %}
     </tbody>
