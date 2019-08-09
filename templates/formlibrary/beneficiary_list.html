@@ -1,70 +1,91 @@
-{% extends "base.html" %} {% block content %}
-    {% load group_tag %}
-    {% include './beneficiary_modal_form.html' %}
+{% extends "base.html" %} {% block content %} {% load group_tag %} 
+{% include './beneficiary_modal_form.html' %}
 
-    <div class="container">
-        {% block breadcrumbs %}
-            <ul class="breadcrumb">
-                <li><a href="{% url 'index' %}">Home Dashboard</a></li>
-                <li class="active">Beneficiaries</li>
-            </ul>
-        {% endblock %}
+<div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li class="active">Beneficiaries</li>
+  </ul>
+  {% endblock %}
 
-        <!-- Sub navigation -->
-        <div class="sub-navigation">
-            <div class="sub-navigation-header">
-                <h4 class="page-title">Beneficiary List</h4>
-            </div>
-            <div class="sub-navigation-actions">
-                <div class="sub-nav-item">
-                    {% include "formlibrary/filter.html" %}
-                </div>
-
-                <div class="sub-nav-item">
-                    <!-- sample action buttons -->
-                    <div class="btn-group" role="group" aria-label="">
-                        <button
-                                class="btn btn-info btn-sm"
-                                data-toggle="modal"
-                                data-target="#addBeneficiaryModal"
-                        >
-                            <i class="fa fa-plus"></i> New Beneficiary
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Table -->
-        <table class="table" id="beneficiarytable">
-            <thead>
-            <tr>
-                <th>Date created</th>
-                <th>Beneficiary Name</th>
-                <th>Update/Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for beneficiary in get_beneficiaries %}
-                <tr>
-                    <td>{{ beneficiary.create_date|date:'m-d-Y' }}</td>
-                    <td>{{ beneficiary.beneficiary_name }}</td>
-                    <td>
-                        <a class="btn btn-warning btn-xs" href="/formlibrary/beneficiary_update/{{ beneficiary.id }}">
-                            Update Beneficiary
-                        </a>
-                        <a class="btn btn-danger btn-xs" href="/formlibrary/beneficairy_delete/{{ beneficiary.id }}">
-                            Delete Beneficiary
-                        </a>
-                    </td>
-
-                </tr>
-            {% empty %}
-                <tr class="text-center">
-                    <td colspan="5">No data available in table</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">Beneficiaries</h4>
     </div>
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        {% include "formlibrary/filter.html" %}
+      </div>
+
+      <div class="sub-nav-item">
+        <!-- sample action buttons -->
+        <div class="btn-group" role="group" aria-label="">
+          <button
+            class="btn btn-primary btn-sm"
+            data-toggle="modal"
+            data-target="#addBeneficiaryModal"
+          >
+            <i class="fa fa-plus"></i> New Beneficiary
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <table class="table" id="beneficiarytable">
+    <thead>
+      <tr>
+        <th>Beneficiary Name</th>
+        <th>Date created</th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for beneficiary in get_beneficiaries %}
+      <tr>
+        <td>{{ beneficiary.beneficiary_name }}</td>
+        <td>{{ beneficiary.create_date | date:'m-d-Y' }}</td>
+        <td class="text-right">
+          <!-- Split button -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm">Actions</button>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="/formlibrary/beneficiary_update/{{ beneficiary.id }}"
+                  >Update</a
+                >
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a
+                  href="/formlibrary/beneficairy_delete/{{ beneficiary.id }}"
+                  class="text-danger"
+                  >Delete</a
+                >
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr class="text-center">
+        <td colspan="5">No data available in table</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock content %}
