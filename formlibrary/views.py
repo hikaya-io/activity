@@ -327,19 +327,12 @@ class DistributionList(ListView):
             get_distribution = Distribution.objects.all().filter(
                 program_id=self.kwargs['pk'])
 
-<<<<<<< HEAD
-        return render(request, self.template_name,
-                      {'get_distribution': get_distribution,
-                       'program_id': program_id, 'get_programs': get_programs,
-                       'active': ['forms', 'distribution_list']})
-=======
         return render(request, self.template_name, {
                           'get_distribution': get_distribution,
                           'program_id': program_id,
                           'get_programs': get_programs,
                           'active': ['forms', 'distribution_list']
                       })
->>>>>>> b6d73069e5f16a741c8ab51c8b71386c12b2ed6a
 
 
 class DistributionCreate(CreateView):
@@ -348,10 +341,7 @@ class DistributionCreate(CreateView):
     """
     model = Distribution
     guidance = None
-<<<<<<< HEAD
-=======
     success_url = '/formlibrary/distribution_list/0/'
->>>>>>> b6d73069e5f16a741c8ab51c8b71386c12b2ed6a
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
@@ -439,31 +429,9 @@ def delete_distribution(request, pk):
     """
     Delete distribution
     """
-<<<<<<< HEAD
-    model = Distribution
-    success_url = '/formlibrary/distribution_list/0/'
-    template_name = 'formlibrary/distribution_confirm_delete.html'
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-
-        messages.success(self.request, 'Success, Distribution Deleted!')
-        return self.render_to_response(self.get_context_data(form=form))
-
-    form_class = DistributionForm
-
-
-# Ajax views for ajax filters and paginators
-=======
     distribution = Distribution.objects.get(pk=int(pk))
     distribution.delete()
     return redirect('/formlibrary/distribution_list/0/')
->>>>>>> b6d73069e5f16a741c8ab51c8b71386c12b2ed6a
 
 
 class TrainingListObjects(View, AjaxableResponseMixin):
