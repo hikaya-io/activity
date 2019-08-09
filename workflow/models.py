@@ -244,7 +244,7 @@ class ActivityUser(models.Model):
         User, unique=True, related_name='activity_user',
         on_delete=models.CASCADE)
     organization = models.ForeignKey(
-        Organization, default=1, blank=True, null=True,
+        Organization, default=1, blank=True, null=True, verbose_name='Active Organization',
         on_delete=models.SET_NULL)
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)

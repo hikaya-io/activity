@@ -5,42 +5,110 @@
 			{% include 'admin/sections/side-nav.html' %}
 		</div>
 		<div class="col-md-9 admin-content">
+			{% block breadcrumbs %}
+			<ul class="breadcrumb">
+				<li><a href="/">Home Dashboard</a></li>
+				<li class="active">{{ request.user.activity_user.organization.level_1_label }}s</li>
+			</ul>
+			{% endblock %}
+
+			<!-- Sub navigation -->
+			<div class="sub-navigation">
+				<div class="sub-navigation-header">
+					<h4 class="page-title">
+						{{ request.user.activity_user.organization.level_1_label }}s
+					</h4>
+				</div>
+				<div class="sub-navigation-actions">
+					<div class="sub-nav-item">
+						{% include "admin/user_filter.html" %}
+					</div>
+				</div>
+			</div>
 			<div>
-				<table class="table table-striped">
+				<table class="table" id="userTable">
 					<thead>
-						<th>First Name</th>
-						<th>Last Name</th>
-						<th>User Status</th>
-						<th>Role</th>
-						<th>Date Joined</th>
+						<tr>
+							<th>First Name</th>
+							<th>Last Name</th>
+							<th>Is Active</th>
+							<th>Role</th>
+							<th>Date Joined</th>
+							<th>Actions</th>
+						</tr>
 					</thead>
 					<tbody>
+						{% for user in users%}
 						<tr>
-							<td>Peter</td>
-							<td>Odeny</td>
-							<td>Active</td>
-							<td>Admin</td>
-							<td>07/08/2017</td>
+							<td>{{ user.user.first_name }}</td>
+							<td>{{ user.user.last_name }}</td>
+							<td>{{ user.user.is_active }}</td>
+							<td>
+								{% if user.user.is_superuser %} Org Admin {% else%}
+								{{ user.user.groups.all.0}}
+								{% endif %}
+							</td>
+							<td>{{ user.create_date }}</td>
+							<td class="text-right">
+								<!-- Action buttons -->
+								<div class="btn-group">
+									<button type="button" class="btn btn-sm btn-default">
+										More
+									</button>
+									<button
+										type="button"
+										class="btn btn-default btn-sm dropdown-toggle"
+										data-toggle="dropdown"
+										aria-haspopup="true"
+										aria-expanded="false"
+									>
+										<span class="caret"></span>
+										<span class="sr-only">Toggle Dropdown</span>
+									</button>
+									<ul class="dropdown-menu">
+										<li class="text-danger">
+											<a
+												href="/accounts/admin/users/edit/{{user.id}}/"
+												>Edit</a
+											>
+										</li>
+										<li>
+											{% if user.user.is_active %}
+												<a 
+													href="/accounts/admin/users/updatestatus/{{user.user.id}}/deactivate/">
+													Deativate
+												</a>
+											{% else %}
+												<a 
+													href="/accounts/admin/users/updatestatus/{{user.user.id}}/activate/">
+													Activate
+												</a>
+											{% endif %}
+										</li>
+										<li class="text-danger">
+											<a
+												href="#deleteItemModal{{ user.id }}"
+												data-toggle="modal"
+												onclick="setItemToDelete({{ user.id }})"
+												data-target="#deleteItemModal{{ user.id }}"
+											>
+												Delete
+											</a>
+										</li>
+									</ul>
+								</div>
+							</td>
 						</tr>
-						<tr>
-							<td>Henry</td>
-							<td>Ohanga</td>
-							<td>Active</td>
-							<td>Program Admin</td>
-							<td>03/07/2018</td>
-						</tr>
-						<tr>
-							<td>Another</td>
-							<td>Test</td>
-							<td>Active</td>
-							<td>Program Team</td>
-							<td>23/12/2018</td>
-						</tr>
+						{% endfor %}
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 </div>
-
+<script>
+	$(document).ready(() => {
+		$('#userTable').DataTable();
+	});
+</script>
 {% endblock content %}

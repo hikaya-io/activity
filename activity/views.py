@@ -32,6 +32,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
+from django.forms.models import model_to_dict
 
 
 @login_required(login_url='/accounts/login/')
@@ -493,7 +494,7 @@ def register_organization(request):
 def profile(request):
     """
     Update a User profile using built in Django Users Model if the user
-    is logged in otherwise redirect them to registration version
+    is logged in otherwise redirect them to registration page
     """
     if request.user.is_authenticated:
         obj = get_object_or_404(ActivityUser, user=request.user)
@@ -588,11 +589,56 @@ def admin_profile_settings(request):
 
 def admin_user_management(request):
     nav_links = get_nav_links('User Management')
+    users = ActivityUser.objects.filter(organization=request.user.activity_user.organization)
     return render(
         request,
         'admin/user_management.html',
-        {'nav_links': nav_links}
+        {'nav_links': nav_links, 'users': users}
     )
+
+
+def admin_user_edit(request, pk):
+    """
+    Edit user
+    :param request:
+    :param pk:
+    :return:
+    """
+    nav_links = get_nav_links('User Management')
+    obj = get_object_or_404(ActivityUser, pk=int(pk))
+    form = RegistrationForm(request.POST or None, instance=obj,
+                            initial={'username': request.user})
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.error(
+                request, 'Your profile has been updated.',
+                fail_silently=False)
+            return redirect('/accounts/admin/users')
+    return render(request, 'admin/user_update_form.html', {
+        'form': form,
+        'helper': RegistrationForm.helper,
+        'nav_links': nav_links
+    })
+
+
+def activate_deactivate_user(request, pk, status):
+    """
+    Deactivate or Activate Users
+    :param request:
+    :param pk:
+    :param state:
+    :return:
+    """
+    user = get_object_or_404(User, pk=pk)
+
+    if status == 'activate':
+        user.is_active = True
+    else:
+        user.is_active = False
+    user.save()
+    return redirect('/accounts/admin/users')
 
 
 def add_program(request):
