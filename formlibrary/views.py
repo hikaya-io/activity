@@ -5,6 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from .models import TrainingAttendance, Beneficiary, Distribution
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 
 from .forms import TrainingAttendanceForm, BeneficiaryForm, DistributionForm
 from workflow.models import FormGuidance, Program, ProjectAgreement
@@ -20,6 +21,7 @@ from django.views.generic.detail import View
 from .mixins import AjaxableResponseMixin
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+from django.forms.models import model_to_dict
 
 
 class TrainingList(ListView):
@@ -32,21 +34,21 @@ class TrainingList(ListView):
     def get(self, request, *args, **kwargs):
 
         project_agreement_id = self.kwargs['pk']
-        countries = get_country(request.user)
         get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries).distinct()
+            organization=request.user.activity_user.organization).distinct()
         if int(self.kwargs['pk']) == 0:
             get_training = TrainingAttendance.objects.all().filter(
-                program__country__in=countries)
+                program__organization=request.user.activity_user.organization)
         else:
             get_training = TrainingAttendance.objects.all().filter(
                 project_agreement_id=self.kwargs['pk'])
 
-        return render(request, self.template_name,
-                      {'get_training': get_training,
-                       'project_agreement_id': project_agreement_id,
-                       'get_programs': get_programs,
-                       'active': ['forms', 'training_list']})
+        return render(request, self.template_name, {
+            'get_training': get_training,
+            'project_agreement_id': project_agreement_id,
+            'get_programs': get_programs,
+            'active': ['forms', 'training_list']
+        })
 
 
 class TrainingCreate(CreateView):
@@ -55,6 +57,7 @@ class TrainingCreate(CreateView):
     """
     model = TrainingAttendance
     guidance = None
+
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -68,6 +71,11 @@ class TrainingCreate(CreateView):
         kwargs = super(TrainingCreate, self).get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(TrainingCreate, self).get_context_data(**kwargs)
+        context['form_title'] = 'Training Attendance Create Form'
+        return context
 
     def get_initial(self):
         initial = {
@@ -85,8 +93,7 @@ class TrainingCreate(CreateView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Success, Training Created!')
-        latest = TrainingAttendance.objects.latest('id')
-        redirect_url = '/formlibrary/training_update/' + str(latest.id)
+        redirect_url = '/formlibrary/training_list/0/'
         return HttpResponseRedirect(redirect_url)
 
     form_class = TrainingAttendanceForm
@@ -97,6 +104,7 @@ class TrainingUpdate(UpdateView):
     Training Form
     """
     model = TrainingAttendance
+    success_url = '/formlibrary/training_list/0/'
     guidance = None
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
@@ -120,8 +128,13 @@ class TrainingUpdate(UpdateView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Success, Training Updated!')
+        redirect_url = '/formlibrary/training_list/0/'
+        return HttpResponseRedirect(redirect_url)
 
-        return self.render_to_response(self.get_context_data(form=form))
+    def get_context_data(self, **kwargs):
+        context = super(TrainingUpdate, self).get_context_data(**kwargs)
+        context['form_title'] = 'Training Attendance Update Form'
+        return context
 
     form_class = TrainingAttendanceForm
 
@@ -146,6 +159,15 @@ class TrainingDelete(DeleteView):
         return self.render_to_response(self.get_context_data(form=form))
 
     form_class = TrainingAttendanceForm
+
+
+def delete_training(request, pk):
+    """
+    Delete distribution
+    """
+    distribution = TrainingAttendance.objects.get(pk=int(pk))
+    distribution.delete()
+    return redirect('/formlibrary/training_list/0/')
 
 
 class BeneficiaryList(ListView):
@@ -254,7 +276,6 @@ class BeneficiaryUpdate(UpdateView):
         messages.success(self.request, 'Success, Beneficiary Updated!')
 
         return self.render_to_response(self.get_context_data(form=form))
-
     form_class = BeneficiaryForm
 
 
@@ -300,15 +321,25 @@ class DistributionList(ListView):
 
         if int(self.kwargs['pk']) == 0:
             get_distribution = Distribution.objects.all().filter(
-                program__country__in=countries)
+                program__organization=request.user.activity_user.organization
+            )
         else:
             get_distribution = Distribution.objects.all().filter(
                 program_id=self.kwargs['pk'])
 
+<<<<<<< HEAD
         return render(request, self.template_name,
                       {'get_distribution': get_distribution,
                        'program_id': program_id, 'get_programs': get_programs,
                        'active': ['forms', 'distribution_list']})
+=======
+        return render(request, self.template_name, {
+                          'get_distribution': get_distribution,
+                          'program_id': program_id,
+                          'get_programs': get_programs,
+                          'active': ['forms', 'distribution_list']
+                      })
+>>>>>>> b6d73069e5f16a741c8ab51c8b71386c12b2ed6a
 
 
 class DistributionCreate(CreateView):
@@ -317,6 +348,10 @@ class DistributionCreate(CreateView):
     """
     model = Distribution
     guidance = None
+<<<<<<< HEAD
+=======
+    success_url = '/formlibrary/distribution_list/0/'
+>>>>>>> b6d73069e5f16a741c8ab51c8b71386c12b2ed6a
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
@@ -350,9 +385,13 @@ class DistributionCreate(CreateView):
         form.save()
         messages.success(self.request, 'Success, Distribution Created!')
         latest = Distribution.objects.latest('id')
-        redirect_url = '/formlibrary/distribution_update/' + str(latest.id)
+        redirect_url = '/formlibrary/distribution_list/0/'
         return HttpResponseRedirect(redirect_url)
 
+    def get_context_data(self, **kwargs):
+        context = super(DistributionCreate, self).get_context_data(**kwargs)
+        context['form_title'] = 'Distribution Create Form'
+        return context
     form_class = DistributionForm
 
 
@@ -361,6 +400,7 @@ class DistributionUpdate(UpdateView):
     Distribution Form
     """
     model = Distribution
+    success_url = '/formlibrary/distribution_list/0/'
     guidance = None
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
@@ -385,16 +425,21 @@ class DistributionUpdate(UpdateView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Success, Distribution Updated!')
+        redirect_url = '/formlibrary/distribution_list/0/'
+        return redirect(redirect_url)
 
-        return self.render_to_response(self.get_context_data(form=form))
-
+    def get_context_data(self, **kwargs):
+        context = super(DistributionUpdate, self).get_context_data(**kwargs)
+        context['form_title'] = 'Distribution Update Form'
+        return context
     form_class = DistributionForm
 
 
-class DistributionDelete(DeleteView):
+def delete_distribution(request, pk):
     """
-    Distribution Delete
+    Delete distribution
     """
+<<<<<<< HEAD
     model = Distribution
     success_url = '/formlibrary/distribution_list/0/'
     template_name = 'formlibrary/distribution_confirm_delete.html'
@@ -414,6 +459,11 @@ class DistributionDelete(DeleteView):
 
 
 # Ajax views for ajax filters and paginators
+=======
+    distribution = Distribution.objects.get(pk=int(pk))
+    distribution.delete()
+    return redirect('/formlibrary/distribution_list/0/')
+>>>>>>> b6d73069e5f16a741c8ab51c8b71386c12b2ed6a
 
 
 class TrainingListObjects(View, AjaxableResponseMixin):
@@ -422,7 +472,6 @@ class TrainingListObjects(View, AjaxableResponseMixin):
 
         program_id = int(self.kwargs['program'])
         project_id = int(self.kwargs['project'])
-        print(project_id)
         countries = get_country(request.user)
         if int(self.kwargs['program']) == 0:
             get_training = TrainingAttendance.objects.all().filter(
@@ -485,11 +534,10 @@ class DistributionListObjects(View, AjaxableResponseMixin):
 
         program_id = int(self.kwargs['program'])
         project_id = int(self.kwargs['project'])
-        countries = get_country(request.user)
         if program_id == 0:
             get_distribution = Distribution.objects.all().filter(
-                program__country__in=countries).values(
-                'id', 'distribution_name', 'create_date', 'program')
+                program__organization=request.user.activity_user.organization).\
+                values('id', 'distribution_name', 'create_date', 'program')
         elif program_id != 0 and project_id == 0:
             get_distribution = Distribution.objects.all().filter(
                 program_id=program_id).values(

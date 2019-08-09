@@ -250,6 +250,7 @@ THIRD_PARTY_APPS = (
     'ckeditor_uploader',
     'simplejson',
     'simple_history',
+    'django_select2'
 )
 
 # Apps specific for this project go here.
@@ -367,7 +368,9 @@ LOGGING = {
 WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
 # END WSGI CONFIGURATION
 
+# CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap', 'uni_form', 'bootstrap3', 'bootstrap4', 'materialize_css_forms', )
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
 
 # Report Builder
 # REPORT_BUILDER_INCLUDE = []

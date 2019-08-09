@@ -15,8 +15,8 @@ urlpatterns = [
          name='training_add'),
     path('training_update/<slug:pk>/',
          TrainingUpdate.as_view(), name='training_update'),
-    path('training_delete/<slug:pk>/',
-         TrainingDelete.as_view(), name='training_delete'),
+    path('training_delete/<slug:pk>/', delete_training,
+         name='training_delete'),
 
     path('beneficiary_list/<slug:pk>/',
          BeneficiaryList.as_view(), name='beneficiary_list'),
@@ -37,8 +37,8 @@ urlpatterns = [
          DistributionCreate.as_view(), name='distribution_add'),
     path('distribution_update/<slug:pk>/',
          DistributionUpdate.as_view(), name='distribution_update'),
-    path('distribution_delete/<slug:pk>/',
-         DistributionDelete.as_view(), name='distribution_delete'),
+    path('distribution_delete/<slug:pk>/', delete_distribution,
+         name='distribution_delete'),
 
     path('getagreements/<slug:program>/<slug:project>/',
          GetAgreements.as_view(), name='getagreements'),
