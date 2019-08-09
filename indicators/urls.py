@@ -105,4 +105,10 @@ urlpatterns = [
         r'(?P<indicator>\w+)/(?P<type>\w+)/export/$',
         IndicatorDataExport.as_view(), name='collecteddata_report_data'),
 
+    # objectives
+    re_path(r'^objectives/edit/(?P<pk>\w+)/$',
+            StrategicObjectiveUpdateView.as_view(),
+            name='update_strategic_objective'),
+    re_path(r'^objectives/objective_delete/(?P<pk>\w+)/$',
+            objective_delete, name='objective_delete')
 ]

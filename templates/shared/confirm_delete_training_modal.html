@@ -1,0 +1,68 @@
+<div
+	class="modal fade"
+	id="deleteItemModal{{training.id}}"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="deleteItemModalLabel"
+>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="addBenerficiaryModalLabel">Confirm Delete</h4>
+			</div>
+			<div class="modal-body">
+				<p>
+					Are you sure you want to delete "<strong>{{ training.training_name }}"</strong>
+				</p>
+				<div class="text-right">
+					<button 
+						type="submit"
+						class="btn btn-secondary" 
+						onclick="deleteCancel()">
+						Cancel
+					</button>
+					<button
+						type="submit"
+						class="btn btn-danger"
+						onclick="deleteItem()"
+						id="deleteItem{{ training.id }}"
+					>
+						Delete
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	var itemId;
+	var activeButton;
+	/**
+	 * Set the Item to delete
+	 **/
+	function setItemToDelete(id) {
+		itemId = id;
+	}
+
+	/**
+	 * Redirect to the page to delete the item
+	 **/
+	function deleteItem() {
+		toastr.success('You have successfully delete this Item');
+		setTimeout(() => {
+			window.location.href = `/formlibrary/training_delete/${itemId}/`;
+		}, 2000);
+	}
+
+	/**
+	 * reload the page to close the modal
+	 **/
+	function deleteCancel() {
+		window.location.reload();
+	}
+	$(document).ready(() => {});
+</script>

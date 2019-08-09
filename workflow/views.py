@@ -12,7 +12,7 @@ from .models import (
     Program, Country, Province, AdminLevelThree, District, ProjectAgreement,
     ProjectComplete, SiteProfile, Documentation, Monitor, Benchmarks, Budget,
     ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder,
-    FormGuidance,
+    FormGuidance, StakeholderType,
     ActivityBookmarks, ActivityUser, Sector
 )
 from formlibrary.models import TrainingAttendance, Distribution
@@ -24,7 +24,7 @@ from .forms import (
     ProjectAgreementCreateForm,
     ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
     DocumentationForm, SiteProfileForm, MonitorForm, BenchmarkForm, BudgetForm,
-    FilterForm,
+    FilterForm, ProgramForm,
     QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm
 )
 
@@ -81,6 +81,36 @@ def list_workflow_level1(request):
                'get_all_sectors': get_all_sectors, 'active': ['workflow']}
 
     return render(request, 'workflow/level1.html', context)
+
+
+def level1_delete(request, pk):
+    """
+    Delete program
+    :param pk:
+    :return:
+    """
+    program = Program.objects.get(pk=int(pk))
+    program.delete()
+    return redirect('/workflow/level1')
+
+
+class ProgramUpdate(UpdateView):
+    model = Program
+    # fields = '__all__'
+    template_name_suffix = '_update_form'
+    success_url = '/workflow/level1'
+    form_class = ProgramForm
+
+    # add the request to the kwargs
+    def get_form_kwargs(self):
+        kwargs = super(ProgramUpdate, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(ProgramUpdate, self).get_context_data(**kwargs)
+        context['current_program'] = self.get_object()
+        return context
 
 
 class ProjectDash(ListView):
@@ -155,55 +185,45 @@ class ProgramDash(ListView):
 
     def get(self, request, *args, **kwargs):
 
-        organizations = get_organizations(request.user)
         get_programs = Program.objects.all().filter(
             organization=request.user.activity_user.organization).distinct()
-        get_projects = ProjectAgreement.objects.filter(
-            program__organization = request.user.activity_user.organization
-        )
         filtered_program = None
-        if int(self.kwargs['pk']) == 0:
-            get_dashboard = Program.objects.all().prefetch_related(
-                'agreement', 'agreement__projectcomplete',
-                'agreement__office').filter(organization__in=organizations) \
-                .order_by('name') \
-                .annotate(has_agreement=Count('agreement'),
-                          has_complete=Count('complete'))
+        if int(self.kwargs['program']) == 0:
+            get_projects = ProjectAgreement.objects.filter(
+                program__organization=request.user.activity_user.organization)
         else:
-            get_dashboard = Program.objects.all() \
-                .prefetch_related('agreement', 'agreement__projectcomplete',
-                                  'agreement__office').filter(
-                id=self.kwargs['pk'], funding_status="Funded",
-                organization__in=organizations).order_by('name')
-            filtered_program = Program.objects.only(
-                'name').get(pk=self.kwargs['pk']).name
+            filtered_program = Program.objects.get(pk=self.kwargs['program'])
+
+            get_projects = ProjectAgreement.objects.filter(
+                program__organization=request.user.activity_user.organization,
+                program__id=self.kwargs['program'])
 
         if self.kwargs.get('status', None):
 
             status = self.kwargs['status']
-            if status == "in_progress":
-                get_dashboard.filter(
-                    Q(agreement__approval=self.kwargs['status']) |
-                    Q(agreement__approval=None))
+            if status == 'in_progress':
+                get_projects.filter(
+                    Q(approval=self.kwargs['status']) |
+                    Q(approval=None))
 
-            elif status == "new":
-                get_dashboard.filter(
-                    Q(Q(agreement__approval=None) | Q(agreement__approval="")))
+            elif status == 'new':
+
+                get_projects.filter(Q(approval='') | Q(approval=None))
 
             else:
-                get_dashboard.filter(agreement__approval=self.kwargs['status'])
+                get_projects.filter(approval=status)
         else:
             status = None
 
         return render(request, self.template_name,
-                      {'get_dashboard': get_dashboard,
-                       'get_programs': get_programs,
-                       'APPROVALS': APPROVALS,
-                       'program_id': self.kwargs['pk'],
-                       'get_projects': get_projects,
-                       'status': status,
-                       'filtered_program': filtered_program,
-                       'active': ['workflow']})
+                      {
+                          'get_programs': get_programs,
+                          'APPROVALS': APPROVALS,
+                          'get_projects': get_projects,
+                          'status': status,
+                          'filtered_program': filtered_program,
+                          'active': ['workflow'],
+                      })
 
 
 class ProjectAgreementList(ListView):
@@ -413,7 +433,7 @@ class ProjectAgreementUpdate(UpdateView):
 
         try:
             get_budget = Budget.objects.all().filter(
-                agreement__id=self.kwargs['pk'])\
+                agreement__id=self.kwargs['pk']) \
                 .order_by('description_of_contribution')
         except Budget.DoesNotExist:
             get_budget = None
@@ -489,11 +509,11 @@ class ProjectAgreementUpdate(UpdateView):
             if form.instance.approval == 'approved':
                 # email the approver group so they know this was approved
                 link = "Link: " + "https://" + get_current_site(
-                    self.request).name + "/workflow/projectagreement_detail/"\
+                    self.request).name + "/workflow/projectagreement_detail/" \
                     + str(self.kwargs['pk']) + "/"
                 subject = "Project Initiation Approved: " + project_name
                 message = "A new initiation was approved by " + \
-                          str(self.request.user) + "\n" + "Budget Amount: "\
+                          str(self.request.user) + "\n" + "Budget Amount: " \
                           + str(form.instance.total_estimated_budget) + "\n"
                 get_submiter = User.objects.get(username=self.request.user)
                 email_group(submiter=get_submiter.email, country=country,
@@ -510,7 +530,7 @@ class ProjectAgreementUpdate(UpdateView):
             link = "Link: " + "https://" + get_current_site(
                 self.request).name + "/workflow/projectagreement_detail/" + str(
                 self.kwargs['pk']) + "/"
-            subject = "Project Initiation Waiting for Approval: " +\
+            subject = "Project Initiation Waiting for Approval: " + \
                       project_name
             message = "A new initiation was submitted for approval by " + \
                       str(self.request.user) + "\n" + "Budget Amount: " + \
@@ -955,22 +975,11 @@ class DocumentationList(ListView):
 
         project_agreement_id = self.kwargs['project']
         countries = get_country(request.user)
-        get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries)
+        user = ActivityUser.objects.filter(user=request.user).first()
+        get_programs = Program.objects.all().filter(organization=user.organization)
 
-        if int(self.kwargs['program']) != 0 & int(self.kwargs['project']) == 0:
-            get_documentation = Documentation.objects.all().prefetch_related(
-                'program', 'project').filter(
-                program__id=self.kwargs['program'])
-        elif int(self.kwargs['project']) != 0:
-            get_documentation = Documentation.objects.all().prefetch_related(
-                'program', 'project').filter(
-                project__id=self.kwargs['project'])
-        else:
-            countries = get_country(request.user)
-            get_documentation = Documentation.objects.all().prefetch_related(
-                'program', 'project', 'project__office').filter(
-                program__country__in=countries)
+        get_documentation = Documentation.objects.filter(program__organization=user.organization).select_related(
+            'program')
 
         return render(request, self.template_name,
                       {'get_programs': get_programs,
@@ -1370,7 +1379,7 @@ class SiteProfileReport(ListView):
             get_site_profile = SiteProfile.objects.all().prefetch_related(
                 'country', 'district', 'province').filter(
                 country__in=countries).filter(status=1)
-            get_site_profile_indicator = SiteProfile.objects.all()\
+            get_site_profile_indicator = SiteProfile.objects.all() \
                 .prefetch_related('country', 'district', 'province').filter(
                 Q(collecteddata__program__country__in=countries)).filter(
                 status=1)
@@ -1749,29 +1758,13 @@ class ContactList(ListView):
     template_name = 'workflow/contact_list.html'
 
     def get(self, request, *args, **kwargs):
+        user = ActivityUser.objects.filter(user=request.user).first()
 
-        stakeholder_id = self.kwargs['pk']
-        get_stakeholder = None
+        get_contacts = Contact.objects.filter(organization=user.organization)
 
-        try:
-            get_stakeholder = Stakeholder.objects.get(id=stakeholder_id)
-
-        except Exception as e:
-            pass
-
-        if int(self.kwargs['pk']) == 0:
-            countries = get_country(request.user)
-            get_contacts = Contact.objects.all().filter(country__in=countries)
-
-        else:
-            # get_contacts = Contact.objects.all().filter(
-            # stakeholder__projectagreement=project_agreement_id)
-            get_contacts = Stakeholder.contact.through.objects.filter(
-                stakeholder_id=stakeholder_id)
-
-        return render(request, self.template_name,
-                      {'get_contacts': get_contacts,
-                       'get_stakeholder': get_stakeholder})
+        return render(request, self.template_name, {
+            'get_contacts': get_contacts
+        })
 
 
 class ContactCreate(CreateView):
@@ -1900,41 +1893,16 @@ class StakeholderList(ListView):
 
     def get(self, request, *args, **kwargs):
         # Check for project filter
-        project_agreement_id = self.kwargs['pk']
-        # Check for program filter
-        if self.kwargs['program_id']:
-            program_id = int(self.kwargs['program_id'])
-        else:
-            program_id = 0
+        # project_agreement_id = self.kwargs['pk']
 
-        try:
-            countries = get_country(request.user)
-            if countries.first() is None:
-                raise CountryDoesNotExist
-        except CountryDoesNotExist:
-            print("The user has no country in database.")
-            return render(request, self.template_name)
+        get_stakeholders = Stakeholder.objects.all().filter(
+            organization=self.request.user.activity_user.organization)
 
-        get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries)
-
-        if program_id != 0:
-            get_stakeholders = Stakeholder.objects.all().filter(
-                projectagreement__program__id=program_id).distinct()
-
-        elif int(self.kwargs['pk']) != 0:
-            get_stakeholders = Stakeholder.objects.all().filter(
-                projectagreement=self.kwargs['pk']).distinct()
-
-        else:
-            get_stakeholders = Stakeholder.objects.all().filter(
-                country__in=countries)
         return render(request, self.template_name,
                       {'get_stakeholders': get_stakeholders,
-                       'project_agreement_id': project_agreement_id,
-                       'program_id': program_id,
-                       'get_programs': get_programs,
-                       'active': ['components']})
+                       'get_stakeholder_types': StakeholderType.objects.all(),
+                       'get_sectors': Sector.objects.all(),
+                       'active': ['components', 'stakeholders']})
 
 
 class StakeholderCreate(CreateView):
@@ -2648,7 +2616,7 @@ def import_service(service_id=1, deserialize=True):
 
 
 def objectives_list(request):
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         data = request.POST
         activity_user = ActivityUser.objects.filter(user=request.user).first()
         parent = None
@@ -2889,6 +2857,53 @@ def add_level2(request):
         'project_name'), program=program)
 
     if level2.save():
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})
+
+
+def add_documentation(request):
+    data = request.POST
+    program = Program.objects.get(id=int(data.get('program')))
+
+    documentation = Documentation(name=data.get(
+        'name'), url=data.get('url'), program=program)
+
+    if documentation.save():
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})
+
+
+def add_contact(request):
+    data = request.POST
+
+    user = ActivityUser.objects.filter(user=request.user).first()
+
+    contact = Contact(name=data.get('name'), city=data.get('city'), address=data.get(
+        'address'), phone=data.get('phone_number'), organization=user.organization)
+
+    if contact.save():
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})
+
+
+def add_stakeholder(request):
+    data = request.POST
+
+    user = ActivityUser.objects.filter(user=request.user).first()
+
+    stakeholder_type_id = int(data.get('stakeholder_type', None), 10)
+    sector_ids = list(map(int, data.getlist('sectors[]', [])))
+
+    stakeholder = Stakeholder(name=data.get(
+        'stakeholder_name'), type_id=stakeholder_type_id, organization=user.organization, stakeholder_register=False)
+    stakeholder.save()
+
+    if stakeholder.id:
+        sectors = Sector.objects.filter(id__in=sector_ids)
+        stakeholder.sectors.set(sectors)
         return HttpResponse({'success': True})
 
     return HttpResponse({'success': False})

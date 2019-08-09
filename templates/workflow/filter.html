@@ -19,7 +19,7 @@
         <a
           role="menuitem"
           tabindex="-1"
-          onclick="program_filter({{ program.id }})"
+          onclick="program_filter({{ program.id}})"
         >
           {{ program.name }}</a
         >
@@ -41,7 +41,7 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-	  <li> <a role="menuitem" tabindex="-1" href="/workflow/dashboard/0">-- All --</a</li>
+	  <li> <a role="menuitem" tabindex="-1" href="/workflow/dashboard/0">-- All --</a></li>
 	
 		{% for status in APPROVALS %}
 		<li>

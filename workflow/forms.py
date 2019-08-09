@@ -12,11 +12,12 @@ from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
     Benchmarks, Monitor, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector
+    ActivityUser, Contact, Sector, FundCode
 )
 from indicators.models import CollectedData, Indicator, PeriodicTarget
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
 from activity.util import get_country
+from django_select2.forms import Select2MultipleWidget
 
 # Global for approvals
 APPROVALS = (
@@ -110,6 +111,82 @@ class BudgetForm(forms.ModelForm):
         # Commit is already set to false
         obj = super(BudgetForm, self).save(*args, **kwargs)
         return obj
+
+
+class ProgramForm(forms.ModelForm):
+    class Meta:
+        model = Program
+        fields = '__all__'
+        exclude = ('create_date', 'edit_date', 'program_uuid', 'organization', 'country')
+
+    start_date = forms.DateTimeField(widget=DatePicker.DateInput(), required=False)
+    end_date = forms.DateTimeField(widget=DatePicker.DateInput(), required=False)
+    sector = forms.ModelMultipleChoiceField(
+        queryset=Sector.objects.all(),
+        widget=Select2MultipleWidget,
+        required=False
+    )
+    fund_code = forms.ModelMultipleChoiceField(
+        queryset=FundCode.objects.all(),
+        widget=Select2MultipleWidget,
+        required=False
+    )
+    user_access = forms.ModelMultipleChoiceField(
+        queryset=ActivityUser.objects.all(),
+        widget=Select2MultipleWidget,
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.error_text_inline = True
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+        self.helper.form_tag = True
+        self.helper.layout = Layout(
+            'name',
+            'description',
+            Row(
+                Column('start_date', css_class='form-group col-md-6 mb-0'),
+                Column('end_date', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('sector', css_class='form-group col-md-6 mb-0'),
+                Column('user_access', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('funding_status', css_class='form-group col-md-4 mb-0'),
+                Column('cost_center', css_class='form-group col-md-4 mb-0'),
+                Column('fund_code', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+
+            Row(
+                Column('budget_check', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('public_dashboard', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+            Row(css_class='form-row'),
+            Submit('submit', 'Discard Changes', css_class='btn btn-md btn-default'),
+            Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
+
+        )
+
+        super(ProgramForm, self).__init__(*args, **kwargs)
+
+        self.fields['user_access'].queryset = ActivityUser.objects.\
+            filter(organization=self.request.user.activity_user.organization)
+
+        self.fields['sector'].queryset = Sector.objects.all()
+            # filter(organization=self.request.user.activity_user.organization)
 
 
 class ProjectAgreementCreateForm(forms.ModelForm):
