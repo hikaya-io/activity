@@ -90,12 +90,14 @@
             </button>
             <ul class="dropdown-menu">
               <li class="text-danger"><a href="/indicators/objectives/edit/{{objective.id}}/">Edit</a></li>
-              <li class="text-danger">
+              <li role="separator" class="divider"></li>
+              <li>
                   <a
 									href="#deleteObjectiveModal{{ objective.id }}"
 									data-toggle="modal"
 									onclick="setItemToDelete({{ objective.id }})"
-									data-target="#deleteObjectiveModal{{ objective.id }}"
+                  data-target="#deleteObjectiveModal{{ objective.id }}"
+                  class="text-danger"
 								>
 									Delete
 								</a>
@@ -174,13 +176,13 @@
         <div class="modal-footer">
           <button
             type="button"
-            class="btn hikaya-btn-cancel"
+            class="btn btn-default"
             data-dismiss="modal"
           >
-            <i class="fa fa-close"></i> Close
+            Close
           </button>
           <button type="submit" class="btn btn-success" id="saveObjective">
-            <i class="fa fa-save"></i> Save
+            Save
           </button>
         </div>
       </form>
