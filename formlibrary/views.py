@@ -148,13 +148,11 @@ class TrainingDelete(DeleteView):
     template_name = 'formlibrary/training_confirm_delete.html'
 
     def form_invalid(self, form):
-
         messages.error(self.request, 'Invalid Form', fail_silently=False)
 
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-
         form.save()
 
         messages.success(self.request, 'Success, Training Deleted!')
@@ -183,8 +181,7 @@ class BeneficiaryList(ListView):
 
         project_agreement_id = self.kwargs['pk']
         organization = request.user.activity_user.organization
-        get_programs = Program.objects.all().filter(
-            funding_status="Funded", organization=organization).distinct()
+        get_programs = Program.objects.all().filter(organization=organization).distinct()
 
         if int(self.kwargs['pk']) == 0:
             get_beneficiaries = Beneficiary.objects.all().filter(
@@ -206,6 +203,7 @@ class BeneficiaryCreate(CreateView):
     """
     model = Beneficiary
     guidance = None
+
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -294,13 +292,11 @@ class BeneficiaryDelete(DeleteView):
             request, *args, **kwargs)
 
     def form_invalid(self, form):
-
         messages.error(self.request, 'Invalid Form', fail_silently=False)
 
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-
         form.save()
 
         messages.success(self.request, 'Success, Beneficiary Deleted!')
@@ -480,7 +476,7 @@ class BeneficiaryListObjects(View, AjaxableResponseMixin):
 
         if program_id == 0:
             get_beneficiaries = Beneficiary.objects.all().filter(
-                Q(program__organization=organization))\
+                Q(program__organization=organization)) \
                 .values('id', 'beneficiary_name', 'create_date')
         elif program_id != 0 and project_id == 0:
             get_beneficiaries = Beneficiary.objects.all().filter(
