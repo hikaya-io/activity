@@ -40,10 +40,66 @@
     </div>
   </div>
 
+  <table class="table" id="trainingTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for training in get_training %}
+        <tr>
+          <td>
+            <a href="/formlibrary/training_update/{{training.id}}/">
+              {{ training.training_name }}
+            </a>
+          </td>
+          <td>{{ training.start_date }}</td>
+          <td>{{ training.end_date  }}</td>
+          <td class="text-right">
+            <!-- Action buttons -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-default">
+                More
+              </button>
+              <button
+                type="button"
+                class="btn btn-default btn-sm dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li class="text-danger">
+                  <a href="/formlibrary/training_update/{{training.id}}/">Edit</a>
+                </li>
+                <li class="text-danger">
+                    <a 
+                      href="#deleteItemModal{{training.id}}" 
+                      data-toggle="modal" 
+                      onclick="setItemToDelete({{training.id}})"
+                      data-target="#deleteItemModal{{training.id}}">
+                      Delete
+                    </a>
+                </li>
+              </ul>
+            </div>
+          </td>
+          {% include 'shared/confirm_delete_training_modal.html' %}
+        </tr>
+        {% endfor %}
+      </tbody>
+  </table>
   <!-- Table -->
-  <table class="table" id="trainingtable"></table>
   <script type="text/javascript">
     $(document).ready(function() {
+      $('#trainingTable').dataTable();
       $('select#program').change(function() {
         if ($(this).val() == 'all') {
           $('select#project').html('<option>project(s)</option>');

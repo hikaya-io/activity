@@ -8,13 +8,16 @@ from django.urls import re_path, path
 
 urlpatterns = [
     path('level1', list_workflow_level1, name='level1'),
-    #path('level2', list_workflow_level2, name='level2'),
+    path('level1_delete/<slug:pk>/', level1_delete, name='level1_delete'),
     path('objectives', objectives_list, name='objectives'),
     path('objectives/tree', objectives_tree, name='objectives-tree'),
     path('level2/add', add_level2, name='add-level2'),
     path('documentation/add', add_documentation, name='add-documentation'),
     path('contact/add', add_contact, name='add-contact'),
+    path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
 
+    re_path('level1/edit/(?P<pk>\w+)/$', ProgramUpdate.as_view(),
+            name='level1_edit'),
     re_path(r'^level2/project/(?P<pk>\w+)/$',
             ProjectDash.as_view(), name='project_dashboard'),
     re_path(r'^level2/project/(?P<pk>\w+)$',
@@ -24,7 +27,7 @@ urlpatterns = [
     re_path(r'^level2/(?P<program>\w+)/(?P<status>[\w ]+)/$',
             ProgramDash.as_view(), name='dashboard'),
 
-    re_path(r'^projectagreement_list/(?P<pk>\w+)/(?P<status>[\w ]+)/$',
+    re_path(r'^(?P<pk>\w+)/$',
             ProjectAgreementList.as_view(), name='projectagreement_list'),
     re_path(r'^projectagreement_add/$',
             ProjectAgreementCreate.as_view(), name='projectagreement_add'),

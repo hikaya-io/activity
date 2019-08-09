@@ -450,7 +450,7 @@ class Program(models.Model):
     funding_status = models.CharField(
         "Funding Status", max_length=255, blank=True)
     cost_center = models.CharField(
-        "Fund Code", max_length=255, blank=True, null=True)
+        "Cost Center", max_length=255, blank=True, null=True)
     fund_code = models.ManyToManyField(FundCode, blank=True)
     description = models.TextField(
         "Program Description", max_length=765, null=True, blank=True)
@@ -1051,8 +1051,10 @@ class Stakeholder(models.Model):
     contact = models.ManyToManyField(Contact, max_length=255, blank=True)
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
+    organization = models.ForeignKey(
+        Organization, blank=True, null=True, on_delete=models.SET_NULL)
     # sector = models.ForeignKey(Sector, blank=True, null=True,
-    # related_name='sects')
+    # related_name='sectors')
     sectors = models.ManyToManyField(Sector, blank=True)
     stakeholder_register = models.BooleanField(
         "Has this partner been added to stakeholder register?")
