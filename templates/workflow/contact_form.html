@@ -1,10 +1,7 @@
 <script>
   $(document).ready(() => {
-    $('#Contact').select2({
-      placeholder: 'Select program...',
-      theme: 'bootstrap',
-    });
   });
+  
   $(() => {
     $('#saveContact').click(e => {
       e.preventDefault();
@@ -71,7 +68,7 @@
               id="name"
               name="name"
               class="form-control"
-              placeholder="Contact"
+              placeholder="Name"
             />
           </div>
 
@@ -121,7 +118,7 @@
         <div class="modal-footer">
           <button
             type="button"
-            class="btn hikaya-btn-cancel"
+            class="btn btn-default"
             data-dismiss="modal"
           >
             Close

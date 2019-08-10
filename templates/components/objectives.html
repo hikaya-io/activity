@@ -5,6 +5,7 @@
     $('#parentObjective').select2({
       placeholder: 'Select parent (optional)',
       theme: 'bootstrap',
+      dropdownParent: $('#addObjectiveModal'),
     });
     $('#objectivesTable').DataTable();
   });
@@ -50,7 +51,7 @@
             data-toggle="modal"
             data-target="#addObjectiveModal"
           >
-           Add New Objective
+           <i class="fa fa-plus"></i> Add Objective
           </button>
         </div>
       </div>
@@ -63,7 +64,7 @@
         <th>Name</th>
         <th>Parent</th>
         <th>Create Date</th>
-        <th class="text-right">Actions</th>
+        <th class="text-right"></th>
       </tr>
     </thead>
     <tbody>
@@ -75,7 +76,7 @@
         <td class="text-right">
           <!-- Action buttons -->
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-default">
+            <button type="button" class="btn btn-sm btn-default disabled">
               More
             </button>
             <button
