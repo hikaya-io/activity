@@ -181,7 +181,7 @@ class BeneficiaryList(ListView):
 
         project_agreement_id = self.kwargs['pk']
         organization = request.user.activity_user.organization
-        get_programs = Program.objects.all().filter(organization=organization).distinct()
+        get_programs = Program.objects.all().filter(organization=organization)
 
         if int(self.kwargs['pk']) == 0:
             get_beneficiaries = Beneficiary.objects.all().filter(
@@ -328,11 +328,11 @@ class DistributionList(ListView):
                 program_id=self.kwargs['pk'])
 
         return render(request, self.template_name, {
-                          'get_distribution': get_distribution,
-                          'program_id': program_id,
-                          'get_programs': get_programs,
-                          'active': ['forms', 'distribution_list']
-                      })
+            'get_distribution': get_distribution,
+            'program_id': program_id,
+            'get_programs': get_programs,
+            'active': ['forms', 'distribution_list']
+        })
 
 
 class DistributionCreate(CreateView):
