@@ -4,7 +4,7 @@
 		<ul class="nav nav-pills nav-stacked">
 			{% for item in nav_links %}
 			<li role="presentation" class="{{ item.status }}">
-				<a href="{% url item.link %}">
+				<a href="{{item.link}}">
 					{% if item.label == 'Home' %}
 					<span class="glyphicon glyphicon-home"></span>
 

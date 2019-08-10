@@ -5,7 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
@@ -587,13 +587,21 @@ def admin_profile_settings(request):
     )
 
 
-def admin_user_management(request):
+def admin_user_management(request, role, status):
     nav_links = get_nav_links('User Management')
-    users = ActivityUser.objects.filter(organization=request.user.activity_user.organization)
+    users = ActivityUser.objects.filter(
+        organization=request.user.activity_user.organization)
+    groups = Group.objects.all().distinct('name')
+    if role != 'all':
+        users = users.filter(user__groups__id__icontains=int(role))
+    if status != 'all':
+        status = True if status == 'active' else False
+        users = users.filter(user__is_active=status)
+
     return render(
         request,
         'admin/user_management.html',
-        {'nav_links': nav_links, 'users': users}
+        {'nav_links': nav_links, 'users': users, 'groups': groups}
     )
 
 
@@ -615,7 +623,7 @@ def admin_user_edit(request, pk):
             messages.error(
                 request, 'Your profile has been updated.',
                 fail_silently=False)
-            return redirect('/accounts/admin/users')
+            return redirect('/accounts/admin/users/all/all/')
     return render(request, 'admin/user_update_form.html', {
         'form': form,
         'helper': RegistrationForm.helper,
@@ -638,7 +646,7 @@ def activate_deactivate_user(request, pk, status):
     else:
         user.is_active = False
     user.save()
-    return redirect('/accounts/admin/users')
+    return redirect('/accounts/admin/users/all/all/')
 
 
 def add_program(request):
