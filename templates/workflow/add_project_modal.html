@@ -3,6 +3,7 @@
     $('#program').select2({
       placeholder: 'Select program...',
       theme: 'bootstrap',
+      dropdownParent: $('#addProjectModal')
     });
   });
 
@@ -69,28 +70,13 @@
           <span aria-hidden="true">&times;</span>
         </button>
         <h4 class="modal-title" id="addProjectModalLabel">
-          Create WorkflowLevel2
+          Create {{ request.user.activity_user.organization.level_2_label }}
         </h4>
       </div>
 
       <form id="addProjectForm" action="" method="POST">
         <div class="modal-body">
           {% csrf_token %}
-          <div class="form-group">
-            <label for="program">Program</label>
-            <select
-              class="form-control"
-              id="program"
-              name="program"
-              required
-            >
-              <option value=""></option>
-
-              {% for item in get_programs %}
-              <option value="{{ item.id }} ">{{ item.name | truncatechars:50 }}</option>
-              {% endfor %}
-            </select>
-          </div>
 
           <div class="form-group">
             <label for="project_name">Project Name</label>
@@ -102,6 +88,21 @@
               class="textinput textInput form-control"
               maxlength="255"
             />
+          </div>
+
+          <div class="form-group">
+            <label for="program">Program</label>
+            <select
+              class="form-control"
+              id="program"
+              name="program"
+              required
+            >
+              <option value=""></option>
+              {% for item in get_programs %} {% if item.name %}
+              <option value="{{ item.id }} ">{{ item.name | truncatechars:50 }}</option>
+              {% endif %}{% endfor %}
+            </select>
           </div>
         </div>
 

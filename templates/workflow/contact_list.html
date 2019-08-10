@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} {% block content %} 
 {% include './contact_form.html' %}
 
 <script>
@@ -21,21 +21,21 @@
       <h4 class="page-title">Contacts</h4>
     </div>
     <div class="sub-navigation-actions">
-        <div>
-          <button class="btn btn-sm btn-primary"
-            data-toggle="modal"
-            data-target="#addContactModal"
-            > <i class="fa fa-plus"></i> New Contact </button>
-          &nbsp;
-        </div>
+      <div>
+        <button
+          class="btn btn-sm btn-primary"
+          data-toggle="modal"
+          data-target="#addContactModal"
+        >
+          <i class="fa fa-plus"></i> New Contact
+        </button>
+        &nbsp;
       </div>
     </div>
+  </div>
 
-<!--Table-->
-<table
-    class="table"
-    id="ContactTable"
-  >
+  <!--Table-->
+  <table class="table" id="ContactTable">
     <thead>
       <tr>
         <th>Name</th>
@@ -50,17 +50,38 @@
     <tbody>
       {% for contact in get_contacts %}
       <tr>
-        <td>{{contact.name}}</td>
-        <td>{{contact.city}}</td>
-        <td>{{contact.email}}</td>
-        <td>{{contact.phone}}</td>
-        <td>{{contact.address}}</td>
-        <td></td>
+        <td>{{ contact.name }}</td>
+        <td>{{ contact.city }}</td>
+        <td>{{ contact.email }}</td>
+        <td>{{ contact.phone }}</td>
+        <td>{{ contact.address }}</td>
+        <td class="text-right">
+          <!-- Split button -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm disabled">
+              Actions
+            </button>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">Edit</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a class="text-danger" href="#">Delete</a></li>
+            </ul>
+          </div>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
 
+    {% endblock content %}
+  </table>
 </div>
-{% endblock content %}
-
-{% include '' %}

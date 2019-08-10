@@ -116,6 +116,7 @@
         <th>Level</th>
         <th>Target</th>
         <th>Actual</th>
+        <th class="text-right">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -129,7 +130,7 @@
         <td>{{ indicator.actual }}</td>
         <td class="text-right">
           <div class="btn-group">
-            <a role="button" href="" class="btn btn-default btn-sm">Details</a>
+            <a role="button" href="" class="btn btn-default btn-sm disabled">More</a>
             <button
               type="button"
               class="btn btn-default btn-sm dropdown-toggle"
@@ -148,7 +149,10 @@
 
               <li role="separator" class="divider"></li>
 
-              <li><a class="text-danger" href="">Edit</a></li>
+              <li><a class="" href="">Edit</a></li>
+
+              <li role="separator" class="divider"></li>
+
               <li><a class="text-danger" href="">Delete</a></li>
             </ul>
           </div>
