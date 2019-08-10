@@ -984,7 +984,8 @@ class DocumentationList(ListView):
         return render(request, self.template_name,
                       {'get_programs': get_programs,
                        'get_documentation': get_documentation,
-                       'project_agreement_id': project_agreement_id})
+                       'project_agreement_id': project_agreement_id,
+                       'active': ['components', 'documents']})
 
 
 class DocumentationAgreementList(AjaxableResponseMixin, CreateView):
@@ -1198,6 +1199,12 @@ class DocumentationUpdate(UpdateView):
             self.guidance = None
         return super(DocumentationUpdate, self).dispatch(request, *args,
                                                          **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(DocumentationUpdate, self).get_context_data(**kwargs)
+        context.update({'active': ['components', 'documents']})
+
+        return context
 
     # add the request to the kwargs
     def get_form_kwargs(self):
