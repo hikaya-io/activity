@@ -1,6 +1,12 @@
 {% extends "base.html" %} {% block content %} {% load group_tag %} 
 {% include './beneficiary_modal_form.html' %}
 
+<script>
+    $(document).ready(() => {
+        $('#beneficiariesTable').DataTable();
+    })
+</script>
+
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
@@ -35,10 +41,12 @@
   </div>
 
   <!-- Table -->
-  <table class="table" id="beneficiarytable">
+  <table class="table" id="beneficiariesTable">
     <thead>
       <tr>
         <th>Beneficiary Name</th>
+        <th>Gender</th>
+        <th>Age</th>
         <th>Date created</th>
         <th class="text-right">Actions</th>
       </tr>
@@ -47,6 +55,8 @@
       {% for beneficiary in get_beneficiaries %}
       <tr>
         <td>{{ beneficiary.beneficiary_name }}</td>
+        <td>{{ beneficiary.gender }}</td>
+        <td>{{ beneficiary.age }}</td>
         <td>{{ beneficiary.create_date | date:'m-d-Y' }}</td>
         <td class="text-right">
           <!-- Split button -->
