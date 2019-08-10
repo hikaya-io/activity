@@ -63,7 +63,6 @@ urlpatterns = [
             SiteProfileUpdate.as_view(), name='siteprofile_update'),
     re_path(r'^siteprofile_delete/(?P<pk>\w+)/$',
             SiteProfileDelete.as_view(), name='siteprofile_delete'),
-
     re_path(r'^site_indicatordata/(?P<site_id>\w+)/$',
             IndicatorDataBySite.as_view(), name='site_indicatordata'),
     re_path(r'^site_projectscomplete/(?P<site_id>\w+)/$',

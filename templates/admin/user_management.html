@@ -48,7 +48,7 @@
 								{{ user.user.groups.all.0}}
 								{% endif %}
 							</td>
-							<td>{{ user.create_date }}</td>
+							<td>{{ user.create_date | date:"DATE_FORMAT" }}</td>
 							<td class="text-right">
 								<!-- Action buttons -->
 								<div class="btn-group">
@@ -68,19 +68,19 @@
 									<ul class="dropdown-menu">
 										<li class="text-danger">
 											<a
-												href="/accounts/admin/users/edit/{{user.id}}/"
+												href="/accounts/admin/user/edit/{{user.id}}/"
 												>Edit</a
 											>
 										</li>
 										<li>
 											{% if user.user.is_active %}
 												<a 
-													href="/accounts/admin/users/updatestatus/{{user.user.id}}/deactivate/">
+													href="/accounts/admin/user/updatestatus/{{user.user.id}}/deactivate/">
 													Deativate
 												</a>
 											{% else %}
 												<a 
-													href="/accounts/admin/users/updatestatus/{{user.user.id}}/activate/">
+													href="/accounts/admin/user/updatestatus/{{user.user.id}}/activate/">
 													Activate
 												</a>
 											{% endif %}

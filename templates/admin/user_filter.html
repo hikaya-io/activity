@@ -11,9 +11,10 @@
 			<span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
-			<li><a href="#all">--All--</a></li>
-			<li><a href="">Org Admin</a></li>
-			<li><a href="">View Only</a></li>
+            <li><a href="/accounts/admin/users/all/all/">--All--</a></li>
+            {% for group in groups %}
+                <li><a href="/accounts/admin/users/{{group.id}}/all/">{{group.name}}</a></li>
+            {% endfor %}
 		</ul>
 	</div>
 
@@ -29,9 +30,9 @@
 			<span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
-            <li><a href="#all">--All--</a></li>
-            <li><a href="">Active</a></li>
-            <li><a href="">Inactive</a></li>
+            <li><a href="/accounts/admin/users/all/all/">--All--</a></li>
+            <li><a href="/accounts/admin/users/all/active/">Active</a></li>
+            <li><a href="/accounts/admin/users/all/inactive/">Inactive</a></li>
 		</ul>
 	</div>
 </div>

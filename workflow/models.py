@@ -822,6 +822,7 @@ class SiteProfile(models.Model):
         null=True, blank=True)
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
+    organizations = models.ManyToManyField(Organization, blank=True, related_name='organizations')
     province = models.ForeignKey(Province,
                                  verbose_name="Administrative Level 1",
                                  null=True, blank=True,
