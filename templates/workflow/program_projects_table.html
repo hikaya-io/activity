@@ -3,7 +3,7 @@
     <td>
       <a href="">{{ project.project_name }}</a>
     </td>
-    <td>{{ project.project_name }}</td>
+    <td>{{ project.cod_num }}</td>
     <td>{{ project.create_date|date:"d-m-Y" }}</td>
     <td>{% if item.short %} Short {% else %} Long {% endif %}</td>
     <td>
@@ -38,7 +38,7 @@
           <ul class="dropdown-menu">
             <li>
               {% if project.approval == "approved" %}
-                <a><span class="glyphicon glyphicon-lock"></span> Project Initiation</a>
+                <a>Project Initiation</a>
               {% else %}
                 <a href="/workflow/projectagreement_update/{{ project.id }}">Project Initiation</a>
               {% endif%}
@@ -49,7 +49,7 @@
                   Project Tracking
                 </a>
               {% else %}
-                <a><span class="glyphicon glyphicon-lock"></span> Project Tracking</a>
+                <a>Project Tracking</a>
               {% endif%}
             </li>
             <li><a href="">Sites</a></li>
