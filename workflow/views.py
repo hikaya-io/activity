@@ -1296,7 +1296,7 @@ class SiteProfileList(ListView):
 
         countries = get_country(request.user)
         get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries)
+            organization=request.user.activity_user.organization)
 
         # this date, 3 months ago, a site is considered inactive
         inactive_site = pytz.UTC.localize(
