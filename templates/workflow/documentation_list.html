@@ -70,7 +70,7 @@
     <tbody>
       {% for document in get_documentation %}
       <tr>
-        <td>{{ document.name }}</td>
+        <td><a href="{% url 'documentation_update' pk=document.id %}">{{ document.name }}</a></td>
         <td>{{ document.program.name }}</td>
         <td>
           <a href="{{ document.url }}" target="_blank">
