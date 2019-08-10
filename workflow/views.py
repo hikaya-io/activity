@@ -1298,6 +1298,9 @@ class SiteProfileList(ListView):
         get_programs = Program.objects.all().filter(
             organization=request.user.activity_user.organization)
 
+        get_projects = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization)
+
         # this date, 3 months ago, a site is considered inactive
         inactive_site = pytz.UTC.localize(
             datetime.now()) - relativedelta(months=3)
@@ -1316,7 +1319,8 @@ class SiteProfileList(ListView):
         else:
             get_site_profile = SiteProfile.objects.all().prefetch_related(
                 'country', 'district', 'province').filter(
-                country__in=countries).distinct()
+                organizations=request.user.activity_user.organization
+            ).distinct()
         if request.method == "GET" and "search" in request.GET:
             """
              fields = ('name', 'office')
@@ -1343,25 +1347,19 @@ class SiteProfileList(ListView):
         if user_list:
             default_list = int(user_list)
 
-        paginator = Paginator(get_site_profile, default_list)
-
-        page = request.GET.get('page')
-
-        try:
-            get_site_profile = paginator.page(page)
-        except PageNotAnInteger:
-            get_site_profile = paginator.page(1)
-        except EmptyPage:
-            get_site_profile = paginator.page(paginator.num_pages)
-
         return render(request, self.template_name,
-                      {'inactive_site': inactive_site,
-                       'default_list': default_list,
-                       'get_site_profile': get_site_profile,
-                       'project_agreement_id': activity_id,
-                       'country': countries,
-                       'get_programs': get_programs, 'form': FilterForm(),
-                       'helper': FilterForm.helper, 'active': ['components']})
+                      {
+                          'inactive_site': inactive_site,
+                          'default_list': default_list,
+                          'get_site_profile': get_site_profile,
+                          'project_agreement_id': activity_id,
+                          'country': countries,
+                          'get_programs': get_programs,
+                          'get_projects': get_projects,
+                          'form': FilterForm(),
+                          'helper': FilterForm.helper,
+                          'active': ['components']
+                       })
 
 
 class SiteProfileReport(ListView):

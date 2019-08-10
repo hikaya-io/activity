@@ -42,7 +42,13 @@
 						<tr>
 							<td>{{ user.user.first_name }}</td>
 							<td>{{ user.user.last_name }}</td>
-							<td>{{ user.user.is_active }}</td>
+							<td>
+								{%if user.user.is_active %}
+									<span class="badge">Active</span>
+								{% else %}
+									<span class="badge">In-Active</span>
+								{% endif %}
+							</td>
 							<td>
 								{% if user.user.is_superuser %} Org Admin {% else%}
 								{{ user.user.groups.all.0}}
