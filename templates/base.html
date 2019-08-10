@@ -405,13 +405,19 @@
       myElement.style.backgroundColor = '#fff';
     </script>
       
-      <div id="alerts">
+      <div id="alerts" class="container">
         <!-- Any messages for users -->
         {% block messages %} {% if messages %} {% for message in messages %} 
         {% if 'safe' in message.tags %}
-        <div class="alert alert-{{ message.tags }}">{{ message | safe }}</div>
+        <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{ message | safe }}
+        </div>
         {% else %}
-        <div class="alert alert-{{ message.tags }}">{{ message | safe }}</div>
+        <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{ message | safe }}
+        </div>
         {% endif %} {% endfor %}
         <br />
         {% endif %} {% endblock messages %}

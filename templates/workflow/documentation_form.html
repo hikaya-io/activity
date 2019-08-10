@@ -1,21 +1,18 @@
 {% extends "base.html" %}
-<div class="container">
-  <ol class="breadcrumb">
-    <li>
-      <a href="/workflow/dashboard/0/"
-        >{{ user.activity_user.organization.level_1_label }} Index</a
-      >
-    </li>
-    <li>
-      <a href="/workflow/documentation_list/{{ get_program.id }}"
-        >Documentations</a
-      >
-    </li>
-    <li class="active">Document</li>
-  </ol>
-</div>
-
 {% block content %}
+
+<script>
+    $(document).ready(() => {
+        $('#id_program').select2({
+            theme: 'bootstrap',
+        })
+
+        $('#id_project').select2({
+            theme: 'bootstrap',
+        })
+    })
+</script>
+
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">

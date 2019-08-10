@@ -1902,22 +1902,7 @@ class DocumentationForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        # self.helper.layout = Layout(
 
-        #     HTML("""<br/>"""),
-
-        #     'name', FieldWithButtons('url',
-        #                              StrictButton("gdrive", css_class="btn-default",
-        #                                           onclick="onApiLoad();")),
-        #     Field(
-        #         'description', rows="3", css_class='input-xlarge'),
-        #     'project', 'program',
-
-        #     FormActions(
-        #         Submit('submit', 'Save', css_class='btn-success'),
-        #         Reset('reset', 'Reset', css_class='btn-warning')
-        #     )
-        # )
         self.helper.layout = Layout(
             Row(
                 Column('name', css_class='form-group col-md-6 mb-0'),
@@ -1938,11 +1923,10 @@ class DocumentationForm(forms.ModelForm):
         super(DocumentationForm, self).__init__(*args, **kwargs)
 
         # override the program queryset to use request.user for country
-        countries = get_country(self.request.user)
         self.fields['project'].queryset = ProjectAgreement.objects.filter(
-            program__country__in=countries)
+            program__organization=self.request.user.activity_user.organization)
         self.fields['program'].queryset = Program.objects.filter(
-            country__in=countries)
+            organization=self.request.user.activity_user.organization).exclude(name__exact='')
 
 
 class QuantitativeOutputsForm(forms.ModelForm):
