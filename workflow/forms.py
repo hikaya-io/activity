@@ -117,10 +117,13 @@ class ProgramForm(forms.ModelForm):
     class Meta:
         model = Program
         fields = '__all__'
-        exclude = ('create_date', 'edit_date', 'program_uuid', 'organization', 'country')
+        exclude = ('create_date', 'edit_date',
+                   'program_uuid', 'organization', 'country')
 
-    start_date = forms.DateTimeField(widget=DatePicker.DateInput(), required=False)
-    end_date = forms.DateTimeField(widget=DatePicker.DateInput(), required=False)
+    start_date = forms.DateTimeField(
+        widget=DatePicker.DateInput(), required=False)
+    end_date = forms.DateTimeField(
+        widget=DatePicker.DateInput(), required=False)
     sector = forms.ModelMultipleChoiceField(
         queryset=Sector.objects.all(),
         widget=Select2MultipleWidget,
@@ -175,8 +178,10 @@ class ProgramForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(css_class='form-row'),
-            Submit('submit', 'Discard Changes', css_class='btn btn-md btn-default'),
-            Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
+            Submit('submit', 'Discard Changes',
+                   css_class='btn btn-md btn-default'),
+            Submit('submit', 'Save Changes',
+                   css_class='btn btn-md btn-success'),
 
         )
 
@@ -186,7 +191,7 @@ class ProgramForm(forms.ModelForm):
             filter(organization=self.request.user.activity_user.organization)
 
         self.fields['sector'].queryset = Sector.objects.all()
-            # filter(organization=self.request.user.activity_user.organization)
+        # filter(organization=self.request.user.activity_user.organization)
 
 
 class ProjectAgreementCreateForm(forms.ModelForm):
@@ -1094,9 +1099,9 @@ class ProjectCompleteCreateForm(forms.ModelForm):
         self.fields['program'].widget = forms.HiddenInput()
         self.fields['program2'].label = "Program"
         self.fields['project_agreement2'].initial = "%s - %s" % (
-        kwargs['initial'].get(
-            'office'),
-        kwargs['initial'].get('project_name', 'No project name'))
+            kwargs['initial'].get(
+                'office'),
+            kwargs['initial'].get('project_name', 'No project name'))
         self.fields['project_agreement2'].label = "Project Initiation"
         self.fields['project_agreement'].widget = forms.HiddenInput()
         # override the office queryset to use request.user for country
@@ -1893,28 +1898,41 @@ class DocumentationForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.request = kwargs.pop('request')
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-2'
-        self.helper.field_class = 'col-sm-6'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
+        # self.helper.layout = Layout(
+
+        #     HTML("""<br/>"""),
+
+        #     'name', FieldWithButtons('url',
+        #                              StrictButton("gdrive", css_class="btn-default",
+        #                                           onclick="onApiLoad();")),
+        #     Field(
+        #         'description', rows="3", css_class='input-xlarge'),
+        #     'project', 'program',
+
+        #     FormActions(
+        #         Submit('submit', 'Save', css_class='btn-success'),
+        #         Reset('reset', 'Reset', css_class='btn-warning')
+        #     )
+        # )
         self.helper.layout = Layout(
+            Row(
+                Column('name', css_class='form-group col-md-6 mb-0'),
+                Column('url', css_class='form-group col-md-6 mb-0'),
+                css_class="form-row"
+            ),
+            'description',
+            Row(
+                Column('program', css_class='form-group col-md-6 mb-0'),
+                Column('project', css_class='form-group col-md-6 mb-0'),
+                css_class="form-row"
+            ),
+            Reset('reset', 'Discard Changes', css_class='btn-md btn-default'),
+            Submit('submit', 'Save Changes', css_class='btn-md btn-success')
 
-            HTML("""<br/>"""),
-
-            'name', FieldWithButtons('url',
-                                     StrictButton("gdrive",
-                                                  onclick="onApiLoad();")),
-            Field(
-                'description', rows="3", css_class='input-xlarge'),
-            'project', 'program',
-
-            FormActions(
-                Submit('submit', 'Save', css_class='btn-success'),
-                Reset('reset', 'Reset', css_class='btn-warning')
-            )
         )
 
         super(DocumentationForm, self).__init__(*args, **kwargs)
@@ -2091,7 +2109,8 @@ class ChecklistItemForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
+        self.helper.add_input(
+            Submit('submit', 'Save', css_class='btn-success'))
 
         super(ChecklistItemForm, self).__init__(*args, **kwargs)
 
@@ -2116,7 +2135,8 @@ class ContactForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
+        self.helper.add_input(
+            Submit('submit', 'Save', css_class='btn-success'))
 
         super(ContactForm, self).__init__(*args, **kwargs)
 
@@ -2145,7 +2165,8 @@ class StakeholderForm(forms.ModelForm):
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save', css_class='btn-success'))
+        self.helper.add_input(
+            Submit('submit', 'Save', css_class='btn-success'))
         pkval = kwargs['instance'].pk if kwargs['instance'] else 0
         self.helper.layout = Layout(
 
