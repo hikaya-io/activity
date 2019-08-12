@@ -150,7 +150,7 @@ class Beneficiary(models.Model):
     site = models.ForeignKey(SiteProfile, null=True,
                              blank=True, on_delete=models.SET_NULL)
     signature = models.BooleanField(default=True)
-    remarks = models.CharField(max_length=255, null=True, blank=True)
+    remarks = models.TextField(max_length=550, null=True, blank=True)
     program = models.ManyToManyField(Program, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)

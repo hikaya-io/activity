@@ -7,7 +7,7 @@ from django.urls import path
 # place app url patterns here
 
 urlpatterns = [
-    path('training_list/<slug:pk>/', TrainingList.as_view(),
+    path('training_list/<slug:program>/<slug:project>/', TrainingList.as_view(),
          name='training_list'),
     path('training_objects/<slug:program>/<slug:project>/',
          TrainingListObjects.as_view(), name='training_objects'),
@@ -18,7 +18,7 @@ urlpatterns = [
     path('training_delete/<slug:pk>/', delete_training,
          name='training_delete'),
 
-    path('beneficiary_list/<slug:pk>/',
+    path('beneficiary_list/<slug:program>/<slug:training>/',
          BeneficiaryList.as_view(), name='beneficiary_list'),
     path('beneficiary_objects/<slug:program>/<slug:project>/',
          BeneficiaryListObjects.as_view(), name='beneficiary_objects'),
@@ -27,9 +27,9 @@ urlpatterns = [
     path('beneficiary_update/<slug:pk>/',
          BeneficiaryUpdate.as_view(), name='beneficiary_update'),
     path('beneficiary_delete/<slug:pk>/',
-         BeneficiaryDelete.as_view(), name='beneficiary_delete'),
+         delete_beneficiary, name='beneficiary_delete'),
 
-    path('distribution_list/<slug:pk>/',
+    path('distribution_list/<slug:program>/<slug:project>/',
          DistributionList.as_view(), name='distribution_list'),
     path('distribution_objects/<slug:program>/<slug:project>/',
          DistributionListObjects.as_view(), name='distribution_list'),

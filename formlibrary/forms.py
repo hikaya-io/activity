@@ -8,6 +8,7 @@ from .models import TrainingAttendance, Distribution, Beneficiary
 from workflow.models import Program, ProjectAgreement, Office, Province, SiteProfile
 from functools import partial
 from activity.util import get_country
+from django_select2.forms import Select2MultipleWidget
 
 
 class DatePicker(forms.DateInput):
@@ -213,6 +214,24 @@ class DistributionForm(forms.ModelForm):
 
 
 class BeneficiaryForm(forms.ModelForm):
+    training = forms.ModelMultipleChoiceField(
+        queryset=TrainingAttendance.objects.all(),
+        widget=Select2MultipleWidget,
+        required=False
+    )
+
+    distribution = forms.ModelMultipleChoiceField(
+        queryset=Distribution.objects.all(),
+        widget=Select2MultipleWidget,
+        required=False
+    )
+
+    program = forms.ModelMultipleChoiceField(
+        queryset=Program.objects.all(),
+        widget=Select2MultipleWidget,
+        required=False
+    )
+
     class Meta:
         model = Beneficiary
         exclude = ['create_date', 'edit_date']
@@ -221,15 +240,32 @@ class BeneficiaryForm(forms.ModelForm):
         self.helper = FormHelper()
         self.request = kwargs.pop('request')
         self.helper.form_method = 'post'
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-2'
-        self.helper.field_class = 'col-sm-6'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(Submit('submit', 'Save',
-                                     css_class='btn-success'))
+        self.helper.layout = Layout(
+            'beneficiary_name',
+            'father_name',
+            Row(
+                Column('training', css_class='form-group col-md-6 mb-0'),
+                Column('distribution', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('age', css_class='form-group col-md-6 mb-0'),
+                Column('gender', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('site', css_class='form-group col-md-6 mb-0'),
+                Column('program', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            'remarks',
+            Reset('reset', 'Discard Changes', css_class='btn btn-md btn-default'),
+            Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
+        )
 
         super(BeneficiaryForm, self).__init__(*args, **kwargs)
 

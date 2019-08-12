@@ -11,15 +11,16 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-      <li><a href="#all">--All--</a></li>
+      <li><a href="/formlibrary/{{form_component}}/0/0/">--All--</a></li>
       {% for program in get_programs %}
       <li>
-        <a href="#{{ program.id }}">{{ program.name }}</a>
+        <a href="/formlibrary/{{form_component}}/{{ program.id }}/0/">{{ program.name }}</a>
       </li>
       {% endfor %}
     </ul>
   </div>
 
+  {% ifnotequal form_component 'beneficiary_list' %}
   <div class="btn-group" role="group">
     <button
       type="button"
@@ -32,7 +33,36 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-      <li><a href="#all">--All--</a></li>
+      <li><a href="/formlibrary/{{form_component}}/0/0/">--All--</a></li>
+      {% for project in get_projects %}
+      <li>
+        <a href="/formlibrary/{{form_component}}/0/{{project.id}}/">{{ project.project_name }}</a>
+      </li>
+      {% endfor %}
     </ul>
   </div>
+  {% endifnotequal %}
+
+  {% ifequal form_component 'beneficiary_list' %}
+  <div class="btn-group" role="group">
+      <button
+        type="button"
+        class="btn btn-sm btn-default dropdown-toggle"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        Training(s)
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="/formlibrary/{{form_component}}/0/0/">--All--</a></li>
+        {% for training in get_training %}
+        <li>
+          <a href="/formlibrary/{{form_component}}/0/{{training.id}}/">{{ training.training_name }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+  </div>
+  {% endifequal %}
 </div>

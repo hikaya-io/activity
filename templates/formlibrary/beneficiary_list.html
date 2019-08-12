@@ -54,14 +54,18 @@
     <tbody>
       {% for beneficiary in get_beneficiaries %}
       <tr>
-        <td>{{ beneficiary.beneficiary_name }}</td>
+        <td>
+          <a href="/formlibrary/beneficiary_update/{{ beneficiary.id }}">
+            {{ beneficiary.beneficiary_name }}
+          </a>
+        </td>
         <td>{{ beneficiary.gender }}</td>
         <td>{{ beneficiary.age }}</td>
         <td>{{ beneficiary.create_date | date:'m-d-Y' }}</td>
         <td class="text-right">
           <!-- Split button -->
           <div class="btn-group">
-            <button type="button" class="btn btn-default btn-sm disabled">Actions</button>
+            <button type="button" class="btn btn-default btn-sm disabled">More</button>
             <button
               type="button"
               class="btn btn-default btn-sm dropdown-toggle"
@@ -75,24 +79,23 @@
             <ul class="dropdown-menu">
               <li>
                 <a href="/formlibrary/beneficiary_update/{{ beneficiary.id }}"
-                  >Update</a
+                  >Edit</a
                 >
               </li>
-              <li role="separator" class="divider"></li>
               <li>
-                <a
-                  href="/formlibrary/beneficairy_delete/{{ beneficiary.id }}"
+                  <a
                   class="text-danger"
-                  >Delete</a
-                >
+                  href="#deleteItemModal{{beneficiary.id}}" 
+                  data-toggle="modal" 
+                  onclick="setItemToDelete({{beneficiary.id}})"
+                  data-target="#deleteItemModal{{beneficiary.id}}">
+                  Delete
+                </a>
               </li>
             </ul>
           </div>
         </td>
-      </tr>
-      {% empty %}
-      <tr class="text-center">
-        <td colspan="5">No data available in table</td>
+        {% include 'formlibrary/beneficiary_confirm_delete.html'%}
       </tr>
       {% endfor %}
     </tbody>
