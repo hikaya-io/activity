@@ -25,6 +25,7 @@ APPROVALS = (
     ('awaiting approval', 'awaiting approval'),
     ('approved', 'approved'),
     ('rejected', 'rejected'),
+    ('new', 'New'),
 )
 
 # Global for Budget Variance

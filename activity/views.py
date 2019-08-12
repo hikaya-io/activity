@@ -32,7 +32,15 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from django.forms.models import model_to_dict
+# from django.forms.models import model_to_dict
+
+APPROVALS = (
+    ('in_progress', 'In Progress'),
+    ('awaiting_approval', 'Awaiting Approval'),
+    ('approved', 'Approved'),
+    ('rejected', 'Rejected'),
+    ('new', 'New'),
+)
 
 
 @login_required(login_url='/accounts/login/')

@@ -27,6 +27,13 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
 
+APPROVALS = (
+    ('in progress', 'in progress'),
+    ('awaiting approval', 'awaiting approval'),
+    ('approved', 'approved'),
+    ('rejected', 'rejected'),
+)
+
 
 # New user created generate a token
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -1343,8 +1350,8 @@ class ProjectAgreement(models.Model):
         Capacity, verbose_name="Sustainability Plan", blank=True)
     evaluate = models.ManyToManyField(Evaluate, blank=True)
     approval = models.CharField(
-        "Approval Status", default="in progress", max_length=255, blank=True,
-        null=True)
+        "Approval Status", choices=APPROVALS, default='New',
+        max_length=255, blank=True, null=True)
     approved_by = models.ForeignKey(ActivityUser, blank=True, null=True,
                                     related_name="approving_agreement",
                                     verbose_name="Request approval",

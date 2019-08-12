@@ -90,11 +90,11 @@
 
   <script type="text/javascript">
     function program_filter(program_id) {
-      window.location.href = '/workflow/level2/' + program_id + '/{{status}}';
+      window.location.href = '/workflow/level2/list/' + program_id + '/none/';
     }
 
     function status_filter(status) {
-      window.location.href = '/workflow/level2/{{filtered_program.id}}/' + status;
+      window.location.href = '/workflow/level2/list/0/' + status + '/';
     }
   </script>
 </div>

@@ -61,10 +61,11 @@ from django.core.serializers.json import DjangoJSONEncoder
 logger = logging.getLogger(__name__)
 
 APPROVALS = (
-    ('in_progress', 'in progress'),
-    ('awaiting_approval', 'awaiting approval'),
-    ('approved', 'approved'),
-    ('rejected', 'rejected'),
+    ('in_progress', 'In Progress'),
+    ('awaiting_approval', 'Awaiting Approval'),
+    ('approved', 'Approved'),
+    ('rejected', 'Rejected'),
+    ('new', 'New'),
 )
 
 
@@ -188,6 +189,7 @@ class ProgramDash(ListView):
         get_programs = Program.objects.all().filter(
             organization=request.user.activity_user.organization).distinct()
         filtered_program = None
+        status = None
         if int(self.kwargs['program']) == 0:
             get_projects = ProjectAgreement.objects.filter(
                 program__organization=request.user.activity_user.organization)
@@ -199,21 +201,20 @@ class ProgramDash(ListView):
                 program__id=self.kwargs['program'])
 
         if self.kwargs.get('status', None):
-
             status = self.kwargs['status']
-            if status == 'in_progress':
-                get_projects.filter(
-                    Q(approval=self.kwargs['status']) |
-                    Q(approval=None))
+            if status != 'none':
+                if status == 'in_progress':
+                    get_projects = get_projects.filter(
+                        Q(approval=self.kwargs['status']) |
+                        Q(approval=None))
 
-            elif status == 'new':
+                elif status == 'new':
 
-                get_projects.filter(Q(approval='') | Q(approval=None))
+                    get_projects = get_projects.filter(Q(approval='') | Q(approval=None))
 
-            else:
-                get_projects.filter(approval=status)
-        else:
-            status = None
+                else:
+                    get_projects = get_projects.filter(approval=status)
+                    print('console.log', status)
 
         return render(request, self.template_name,
                       {

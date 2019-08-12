@@ -727,6 +727,10 @@ input[type=number]::-webkit-outer-spin-button {
     align-items: center;
 }
 
+/* li.disabled {
+    pointer-events: none;
+  } */
+
 /**
 * Maps
 **/

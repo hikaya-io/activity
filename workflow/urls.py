@@ -22,9 +22,8 @@ urlpatterns = [
             ProjectDash.as_view(), name='project_dashboard'),
     re_path(r'^level2/project/(?P<pk>\w+)$',
             ProjectDash.as_view(), name='project_dashboard'),
-    re_path(r'^level2/project', ProjectDash.as_view(),
-            name='project_dashboard'),
-    re_path(r'^level2/(?P<program>\w+)/(?P<status>[\w ]+)/$',
+
+    re_path(r'^level2/list/(?P<program>\w+)/(?P<status>[\w ]+)/$',
             ProgramDash.as_view(), name='dashboard'),
 
     re_path(r'^(?P<pk>\w+)/$',

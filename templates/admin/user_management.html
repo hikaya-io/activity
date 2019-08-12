@@ -78,19 +78,27 @@
 												>Edit</a
 											>
 										</li>
-										<li>
-											{% if user.user.is_active %}
+										{% if user.user.is_active %}
+											{% if user.user == request.user %}
+											<li class="disabled">
+												<a href="">Deativate</a>
+											</li>
+											{% else %}
+											<li>
 												<a 
 													href="/accounts/admin/user/updatestatus/{{user.user.id}}/deactivate/">
 													Deativate
 												</a>
-											{% else %}
-												<a 
-													href="/accounts/admin/user/updatestatus/{{user.user.id}}/activate/">
-													Activate
-												</a>
+											</li>
 											{% endif %}
+										{% else %}
+										<li>
+											<a 
+												href="/accounts/admin/user/updatestatus/{{user.user.id}}/activate/">
+												Activate
+											</a>
 										</li>
+										{% endif %}
 										<li class="text-danger">
 											<a
 												href="#deleteItemModal{{ user.id }}"
