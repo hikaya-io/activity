@@ -556,22 +556,22 @@
 
 
 <script>
-// var actualVsTargetCtx = document.getElementById('actualVsTargetChart').getContext('2d');
-// var actualVsTargetChartData = {
-//   labels: [{% for indicator in get_quantitative_data_sums|slice:":20" %}  '{{ indicator.indicator__number }}', {% endfor %}],
-//   datasets: [
-//     {
-//       label: 'Targets',
-//       backgroundColor: "maroon",
-//       data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator__lop_target }}, {% endfor %}]
-//     }, 
-//     {
-//         label: 'Actuals',
-//         backgroundColor: 'darkgreen',
-//         data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator.actuals }}, {% endfor %}]
-//     }
-//   ]
-// };
+var actualVsTargetCtx = document.getElementById('actualVsTargetChart').getContext('2d');
+var actualVsTargetChartData = {
+  labels: [{% for indicator in get_quantitative_data_sums|slice:":20" %}  '{{ indicator.indicator__number }}', {% endfor %}],
+  datasets: [
+    {
+      label: 'Targets',
+      backgroundColor: "maroon",
+      data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator__lop_target }}, {% endfor %}]
+    }, 
+    {
+        label: 'Actuals',
+        backgroundColor: 'darkgreen',
+        data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator.actuals }}, {% endfor %}]
+    }
+  ]
+};
 
 var projectStatusChartCtx = document.getElementById('projectStatusChart').getContext('2d');
 var projectStatusChartData = {
@@ -611,10 +611,10 @@ var projectStatusChart = new Chart(projectStatusChartCtx, {
 });
 
 
-// var actualVsTargetChart = new Chart(actualVsTargetCtx, {
-//     type: 'bar',
-//     data: actualVsTargetChartData,
-// });
+var actualVsTargetChart = new Chart(actualVsTargetCtx, {
+    type: 'bar',
+    data: actualVsTargetChartData,
+});
 
 
 
