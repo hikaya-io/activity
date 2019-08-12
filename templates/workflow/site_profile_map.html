@@ -1,197 +1,51 @@
-<script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
-<script src="https://maps.google.com/maps/api/js?key=AIzaSyBnyFpqwIxiw03se0PC6-vWEey1mnOgFKU"></script>
-<script src="{{ STATIC_URL }}js/leaflet-google.js"></script>
+<div id="map"></div>
+<script>
+	function initMap() {
+		// The map, centered at Uluru
+		var map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 3,
+			center: locations[0],
+		});
 
-<link rel="borders" type="application/json" href="{{ STATIC_URL }}js/world_borders.geojson">
+		// The marker, positioned at Uluru
+		var marker = new google.maps.Marker({ position: locations[0], map: map });
 
-<script type="text/javascript">
-    var country=[];
-    var country_lat=[];
-    var country_long=[];
-    {% for item in country %}
-        country[{{forloop.counter}}] = "{{ item.country }}";
-        country_lat[{{forloop.counter}}] = "{{ item.latitude }}";
-        country_long[{{forloop.counter}}] = "{{ item.longitude }}";
-    {% endfor %}
+		// Create an array of alphabetical characters used to label the markers.
+		// var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+		// Add some markers to the map.
+		// Note: The code uses the JavaScript Array.prototype.map() method to
+		// create an array of markers based on a given "locations" array.
+		// The map() method here has nothing to do with the Google Maps API.
+		var markers = locations.map(function(location, i) {
+			return new google.maps.Marker({
+				position: location,
+				label: labels[i % labels.length],
+			});
+		});
 
-    var osmLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>',
-        thunLink = '<a href="https://thunderforest.com/">Thunderforest</a>';
+		// Add a marker clusterer to manage the markers.
+		var markerCluster = new MarkerClusterer(map, markers, {
+			imagePath:
+				'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+		});
+	   }
+       var locations = [];
+       {% for site in get_site_profile %}
+        const item = {lat: Number('{{site.latitude}}'), lng: Number('{{site.longitude}}')}
+        locations.push(item)
+       {% endfor %}
 
-    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        osmAttrib = '&copy; ' + osmLink + ' Contributors',
-        osmHumURL = "http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
-        osmHumAttrib = "© OpenStreetMap Contributors. Tiles courtesy of Humanitarian OpenStreetMap Team",
-        landUrl = 'http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png',
-        thunAttrib = '&copy; '+osmLink+' Contributors & '+thunLink;
-    var osmMap = L.tileLayer(osmUrl, {attribution: osmAttrib}),
-        landMap = L.tileLayer(landUrl, {attribution: thunAttrib}),
-        osmHumMap = L.tileLayer(osmHumURL, {attribution: osmHumAttrib});
-
-    var googleLayer = new L.Google('ROADMAP');
-
-    var positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',{attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'});
-
-    var baseLayers = {
-			"OSM Mapnik": osmMap,
-            "OSM Humanitarian": osmHumMap,
-			"Landscape": landMap,
-            "CartoDB Positron": positron,
-            "Google Roads": googleLayer
-		};
-
-    //Init map with default zoom and coordinates of logged in users country
-    var map = L.map('map', {
-            layers: [googleLayer] // only add one!
-        }).setView([country_lat[1],country_long[1]], 5);
-
-    L.control.layers(baseLayers).addTo(map);
-
-    // Load map with geojson file that contains borders
-    $.getJSON($('link[rel="borders"]').attr("href"), function(data) {
-
-        /**
-         * Set the style for each feature(country) to be light grey by default
-         * @param feature (from getJson file)
-        */
-        function style(feature) {
-            return {
-            fillColor: "#E3E3E3",
-            weight: 1,
-            opacity: 0.4,
-            color: 'white',
-            fillOpacity: 0.3
-            };
-        }
-
-        var geojson = L.geoJson(data, {
-        onEachFeature: onEachFeature,
-        style : style
-        }).addTo(map);
-
-        /**
-         * Loops over each feature and creates call back function for events
-         * Also highlights the default country based on user login
-         * @param feature (from getJson file)
-         * @param layer (from geoJson file)
-        */
-        function onEachFeature(feature, layer){
-             if ($.inArray(feature.properties.NAME, country) > -1) {
-                highlightDefault(feature, layer);
-             }
-
-            layer.on({
-            click : onCountryClick,
-            mouseover : onCountryHighLight,
-            mouseout : onCountryMouseOut,
-            });
-        }
-
-        /**
-        * Callback for mouse out of the country border. Will take care of the ui aspects, and will call
-        * other callbacks after done.  If it's the default highlighted country leave it alone.
-        * @param e the event
-        */
-        function onCountryMouseOut(e){
-            if ($.inArray(e.target.feature.properties.NAME, country) == -1) {
-                geojson.resetStyle(e.target);
-            }
-            // $("#countryHighlighted").text("No selection");
-
-            var countryName = e.target.feature.properties.NAME;
-            var countryCode = e.target.feature.properties.iso_a2;
-            //callback when mouse exits a country polygon goes here, for additional actions
-        }
-
-        /**
-        * Callback for when a country is clicked.  Pop-up the country name
-        * @param e
-        */
-        function onCountryClick(e){
-        //callback for clicking inside a polygon
-            geojson.bindPopup(e.target.feature.properties.NAME);
-        }
-
-        /**
-        * Callback for when a country is highlighted. Will take care of the ui aspects, and it will call
-        * other callbacks after done. If it's the default highlighted country leave it alone.
-        * @param e
-        */
-        function onCountryHighLight(e){
-
-            if ($.inArray(e.target.feature.properties.NAME, country) == -1) {
-                var layer = e.target;
-
-                layer.setStyle({
-                    weight: 2,
-                    color: '#666',
-                    dashArray: '',
-                    fillOpacity: 0.7
-                });
-
-                if (!L.Browser.ie && !L.Browser.opera) {
-                    layer.bringToFront();
-                }
-
-                var countryName = e.target.feature.properties.name;
-                var countryCode = e.target.feature.properties.ISO2;
-            }
-            //callback when mouse enters a country polygon goes here, for additional actions
-         }
-
-
-        /**
-        * Callback for hilighting the logged in users selected country
-        * @param feature
-        * @param layer
-        */
-        function highlightDefault(feature,layer){
-                layer.setStyle({
-                weight: 2,
-                color: 'blue',
-                fillColor: 'blue',
-                dashArray: '',
-                fillOpacity: 0.1,
-                borderColor: 'blue'
-                });
-            var countryName = feature.properties.NAME;
-            var countryCode = feature.properties.ISO2;
-
-            //callback when mouse enters a country polygon goes here, for additional actions
-         }
-
-
-     });
-
-    // Define an icon called cssIcon
-    var projectIcon = L.divIcon({
-      // Specify a class name we can refer to in CSS.
-      // Set marker width and height
-      html:'<div class="map-marker"></div>',
-      iconSize: [0,0]
-    });
-
-    var indicatorIcon = L.divIcon({
-      // Specify a class name we can refer to in CSS.
-      className: 'map-marker',
-      // Set marker width and height
-      html:'<div class="map-marker indicator"></div>',
-      iconSize: [0,0]
-    });
-
-    {% for item in get_site_profile %}
-        {% if item.status == 1 %}
-        L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: projectIcon}).addTo(map).bindPopup("" + "<b>{{ item.country }}</b><br/>Project Site<br><a href='/workflow/siteprofile_update/{{ item.id }}'>{{ item.name }}</a> <br/>Province: {{ item.province }} <br/>District: {{ item.district }} <br/> Village: {{ item.village }} <br/> ");
-        {% endif %}
-    {% endfor %}
-
-    {% if get_site_profile_indicator %}
-        {% for item in get_site_profile_indicator %}
-            {% if item.status == 1 %}
-            L.marker([{{ item.latitude }}, {{ item.longitude }}], {icon: indicatorIcon}).addTo(map).bindPopup("" + "<b>{{ item.country }}</b><br/>Collected Indicator Data Site<br> <a href='/workflow/siteprofile_update/{{ item.id }}'>{{ item.name }}</a> <br/>Province: {{ item.province }} <br/>District: {{ item.district }} <br/> Village: {{ item.village }} <br/>");
-            {% endif %}
-        {%   endfor %}
-    {% endif %}
-
-
+        locations = [...locations];
 </script>
+<!--Load the API from the specified URL
+* The async attribute allows the browser to render the page while the API loads
+* The key parameter will contain your own API key (which is not needed for this tutorial)
+* The callback parameter executes the initMap() function
+-->
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+<script
+	async
+	defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnyFpqwIxiw03se0PC6-vWEey1mnOgFKU&callback=initMap"
+></script>

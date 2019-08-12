@@ -726,3 +726,13 @@ input[type=number]::-webkit-outer-spin-button {
     flex-direction: column;
     align-items: center;
 }
+
+/**
+* Maps
+**/
+#siteMap {
+    min-height: 400px;
+    /* The height is 400 pixels */
+    width: 100%;
+    /* The width is the width of the web page */
+}
