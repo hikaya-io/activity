@@ -1643,7 +1643,7 @@ class Documentation(models.Model):
     url = models.CharField(
         "URL (Link to document or document repository)", blank=True, null=True,
         max_length=135)
-    description = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(max_length=255, blank=True, null=True)
     template = models.ForeignKey(
         Template, blank=True, null=True, on_delete=models.SET_NULL)
     file_field = models.FileField(upload_to="uploads", blank=True, null=True)

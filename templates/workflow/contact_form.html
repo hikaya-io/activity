@@ -11,8 +11,6 @@
         obj[item.name] = item.value;
       });
 
-      console.log(obj);
-
       $.ajax({
         url: "{% url 'add-contact' %}",
         type: 'POST',
