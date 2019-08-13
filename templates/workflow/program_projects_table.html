@@ -1,7 +1,7 @@
 
 <tr>
     <td>
-      <a href="">{{ project.project_name }}</a>
+      <a href="/workflow/projectagreement_update/{{ project.id }}">{{ project.project_name }}</a>
     </td>
     <td>{{ project.cod_num }}</td>
     <td>{{ project.create_date|date:"d-m-Y" }}</td>
@@ -67,10 +67,21 @@
 
             <li role="separator" class="divider"></li>
 
-            <li><a href="">Edit</a></li>
+            <li><a href="/workflow/projectagreement_update/{{ project.id }}">Edit</a></li>
             <li role="separator" class="divider"></li>
-            <li><a class="text-danger" href="">Delete</a></li>
+            <li>
+              <a
+                  class="text-danger"
+                  href="#deleteProjectModal{{ project.id }}"
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{ project.id }})"
+                  data-target="#deleteProjectModal{{ project.id }}"
+                >
+                  Delete
+                </a>
+            </li>
           </ul>
         </div>
     </td>
+    {% include 'workflow/projectagreement_confirm_delete.html' %}
 </tr>

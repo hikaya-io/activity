@@ -599,6 +599,13 @@ class ProjectAgreementDetail(DetailView):
         return context
 
 
+def delete_project_agreement(request, pk):
+    project = ProjectAgreement.objects.get(pk=int(pk))
+    project.delete()
+
+    return redirect('/workflow/level2/list/0/none/')
+
+
 class ProjectAgreementDelete(DeleteView):
     """
     Project Agreement Delete

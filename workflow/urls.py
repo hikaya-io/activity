@@ -33,7 +33,7 @@ urlpatterns = [
     re_path(r'^projectagreement_update/(?P<pk>\w+)/$',
             ProjectAgreementUpdate.as_view(), name='projectagreement_update'),
     re_path(r'^projectagreement_delete/(?P<pk>\w+)/$',
-            ProjectAgreementDelete.as_view(), name='projectagreement_delete'),
+            delete_project_agreement, name='projectagreement_delete'),
     re_path(r'^projectagreement_import',
             ProjectAgreementImport.as_view(), name='projectagreement_import'),
     re_path(r'^projectagreement_detail/(?P<pk>\w+)/$',

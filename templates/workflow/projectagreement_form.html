@@ -37,7 +37,7 @@
     <li><a href="/">Home Dashboard</a></li>
     {% if pk %}
     <li>
-      <a href="/workflow/level2/0/"
+      <a href="/workflow/level2/list/0/none/"
         >{{ user.activity_user.organization.level_2_label }}(s)</a
       >
     </li>
@@ -58,11 +58,13 @@
     </div>
     <div class="sub-navigation-actions">
       <!-- sample action buttons -->
-      <div class="btn-group" role="group" aria-label=""></div>
+      <!-- <div class="btn-group" role="group" aria-label="">
+
+      </div> -->
+      {% include "form_guidance.html" %} 
     </div>
   </div>
-  
-  {% include "form_guidance.html" %} 
+
   
   {% if form.errors %}
       <div class="help-block">
