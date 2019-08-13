@@ -1,0 +1,194 @@
+{% extends "base.html" %} {% block content %}
+
+<script>
+  $(document).ready(() => {
+    $('#parentObjective').select2({
+      placeholder: 'Select parent (optional)',
+      theme: 'bootstrap',
+      dropdownParent: $('#addObjectiveModal'),
+    });
+    $('#objectivesTable').DataTable();
+  });
+</script>
+
+<div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li class="active">Objectives</li>
+  </ul>
+  {% endblock %}
+
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+        Objectives
+      </h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <!-- sample action buttons -->
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="">
+          <a role="button" class="btn btn-sm btn-default disabled">
+            <i class="fa fa-list"></i> List
+          </a>
+
+          <a
+            role="button"
+            class="btn btn-sm btn-default"
+            href="{% url 'objectives-tree' %}"
+          >
+            <i class="fa fa-sitemap"></i> Tree
+          </a>
+        </div>
+      </div>
+
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="">
+          <button
+            class="btn btn-sm btn-primary"
+            data-toggle="modal"
+            data-target="#addObjectiveModal"
+          >
+           <i class="fa fa-plus"></i> Add Objective
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table" id="objectivesTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Parent</th>
+        <th>Create Date</th>
+        <th class="text-right"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for objective in get_all_objectives %}
+      <tr>
+        <td><a href="/indicators/objectives/edit/{{objective.id}}/">{{ objective.name }}</a></td>
+        <td>{{ objective.parent }}</td>
+        <td>{{ objective.create_date | date }}</td>
+        <td class="text-right">
+          <!-- Action buttons -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-default disabled">
+              More
+            </button>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li class="text-danger"><a href="/indicators/objectives/edit/{{objective.id}}/">Edit</a></li>
+              <li role="separator" class="divider"></li>
+              <li>
+                  <a
+									href="#deleteObjectiveModal{{ objective.id }}"
+									data-toggle="modal"
+									onclick="setItemToDelete({{ objective.id }})"
+                  data-target="#deleteObjectiveModal{{ objective.id }}"
+                  class="text-danger"
+								>
+									Delete
+								</a>
+              </li>
+            </ul>
+          </div>
+        </td>
+        {% include 'components/objective_delete_confirm_modal.html'%}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="addObjectiveModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addProgramModalLabel"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="addProgramModalLabel">Add Objective</h4>
+      </div>
+      <form id="addObjectiveForm" action="" method="POST">
+        <div class="modal-body">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="objectiveName">Objective Name</label>
+            <input
+              type="text"
+              id="objectiveName"
+              name="objective_name"
+              class="form-control"
+              placeholder="Objective"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="parentObjective">Parent Objective</label>
+            <select
+              id="parentObjective"
+              class="form-control"
+              name="parent_objective"
+              style="width: 100%; height: 34px;"
+            >
+              <option value=""></option>
+              {% for objective in get_all_objectives %}
+              <option value="{{ objective.id }}">{{ objective.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="objectiveDescription">Description</label>
+            <textarea
+              name="description"
+              id="objectiveDescription"
+              rows="5"
+              class="form-control"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-default"
+            data-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-success" id="saveObjective">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

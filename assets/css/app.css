@@ -1,15 +1,18 @@
 #App Specific CSS
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
     position: relative;
     min-height: 100%;
 }
+
 body {
     /* Margin bottom by footer height */
     height: 100%;
     margin-bottom: 60px;
 }
+
 #footer {
     position: fixed;
     bottom: 0px;
@@ -25,9 +28,9 @@ body {
 
 /* Bootstrap Overrides */
 @media print {
-  a[href]:after {
-    content: none;
-  }
+    a[href]:after {
+        content: none;
+    }
 }
 
 *,
@@ -39,37 +42,38 @@ button:focus,
 .btn:focus,
 .btn:active:focus,
 .btn.active:focus {
-  outline: none;
+    outline: none;
 }
 
 .breadcrumb {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .navbar-activity {
-  /* Hikaya Brand Color: */
-  background-color: rgb(37, 206, 209);
-  border: none;
+    /* Hikaya Brand Color: */
+    background-color: rgb(37, 206, 209);
+    border: none;
 }
 
-.navbar-activity .navbar-nav > li > a {
-  color: #fff;
+.navbar-activity .navbar-nav>li>a {
+    color: #fff;
 }
 
-.navbar-activity .navbar-nav > li > a:hover,
-.navbar-activity .navbar-nav > li > a:focus,
-.navbar-activity .navbar-nav > li.active > a,
-.navbar-activity .navbar-nav > li.active > a:hover,
-.navbar-activity .navbar-nav > li.active > a:focus,
+.navbar-activity .navbar-nav>li>a:hover,
+.navbar-activity .navbar-nav>li>a:focus,
+.navbar-activity .navbar-nav>li.active>a,
+.navbar-activity .navbar-nav>li.active>a:hover,
+.navbar-activity .navbar-nav>li.active>a:focus,
 .navbar-activity .navbar-nav .dropdown.open a.dropdown-toggle {
-  color: #fff;
-  background-color: rgba(0, 0, 0, .15);
+    color: #fff;
+    background-color: rgba(0, 0, 0, .15);
 }
 
 .navbar-activity .navbar-nav .navbar-collapse {
     clear: both;
     float: none;
 }
+
 /* - End Bootstrap Overrides */
 
 /* Custom page CSS
@@ -77,17 +81,17 @@ button:focus,
 /* Not required for template or sticky footer method. */
 
 
-body > .container {
+body>.container {
     height: 100%;
     margin-top: 40px;
 }
 
-.alert{
+.alert {
     margin-top: 40px;
     margin-bottom: -20px;
 }
 
-#footer > .container {
+#footer>.container {
     padding: 10px;
 }
 
@@ -137,17 +141,14 @@ body > .container {
    for themselves. Background we set to 80% white with
    our animation centered, and no-repeating */
 .ajax_loading {
-    display:    none;
-    position:   fixed;
-    z-index:    100000;
-    top:        0;
-    left:       0;
-    height:     100%;
-    width:      100%;
-    background: rgba( 255, 255, 255, .8 )
-                url('../img/ajax-loader.gif')
-                50% 50%
-                no-repeat;
+    display: none;
+    position: fixed;
+    z-index: 100000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, .8) url('../img/ajax-loader.gif') 50% 50% no-repeat;
 }
 
 /* When the body has the loading class, we turn
@@ -164,98 +165,103 @@ body.loading .ajax_loading {
 
 /*General marker style*/
 .map-marker {
-  width: 20px;
-  height: 20px;
-  border-radius: 50% 50% 50% 0;
-  background: rgb(232, 148, 36);
-  position: absolute;
-  transform: rotate(-45deg);
-  left: 50%;
-  top: 50%;
-  margin: -20px 0 0 -20px;
-  box-shadow: 2px 1px 1px #888888;
+    width: 20px;
+    height: 20px;
+    border-radius: 50% 50% 50% 0;
+    background: rgb(232, 148, 36);
+    position: absolute;
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 50%;
+    margin: -20px 0 0 -20px;
+    box-shadow: 2px 1px 1px #888888;
 }
 
 .map-marker.indicator {
-  width: 20px;
-  height: 20px;
-  border-radius: 50% 50% 50% 0;
-  background: #00cae9;
-  position: absolute;
-  transform: rotate(-45deg);
-  left: 50%;
-  top: 50%;
-  margin: -20px 0 0 -20px;
-  box-shadow: 2px 1px 1px #888888;
+    width: 20px;
+    height: 20px;
+    border-radius: 50% 50% 50% 0;
+    background: #00cae9;
+    position: absolute;
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 50%;
+    margin: -20px 0 0 -20px;
+    box-shadow: 2px 1px 1px #888888;
 }
 
 .map-marker:after {
-  content: "";
-  width: 10px;
-  height: 10px;
-  margin: 5px 0 0 5px;
-  background: #e6e6e6;
-  position: absolute;
-  border-radius: 50%;
+    content: "";
+    width: 10px;
+    height: 10px;
+    margin: 5px 0 0 5px;
+    background: #e6e6e6;
+    position: absolute;
+    border-radius: 50%;
 }
 
 .leaflet-div-icon {
-  border: 0!important;
-  display: none;
+    border: 0 !important;
+    display: none;
 }
 
 /* Chart.js legends */
 
 .chart-legend {
-  list-style: none;
-  position: relative;
-  right: 8px;
-  top: 0;
+    list-style: none;
+    position: relative;
+    right: 8px;
+    top: 0;
 }
+
 .chart-legend li {
-  display: block;
-  padding-left: 30px;
-  position: relative;
-  margin-bottom: 4px;
-  border-radius: 5px;
-  padding: 2px 8px 2px 28px;
-  font-size: 14px;
-  cursor: default;
-  -webkit-transition: background-color 200ms ease-in-out;
-  -moz-transition: background-color 200ms ease-in-out;
-  -o-transition: background-color 200ms ease-in-out;
-  transition: background-color 200ms ease-in-out;
+    display: block;
+    padding-left: 30px;
+    position: relative;
+    margin-bottom: 4px;
+    border-radius: 5px;
+    padding: 2px 8px 2px 28px;
+    font-size: 14px;
+    cursor: default;
+    -webkit-transition: background-color 200ms ease-in-out;
+    -moz-transition: background-color 200ms ease-in-out;
+    -o-transition: background-color 200ms ease-in-out;
+    transition: background-color 200ms ease-in-out;
 }
+
 .chart-legend li:hover {
-  background-color: #fafafa;
+    background-color: #fafafa;
 }
+
 .chart-legend li span {
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
 }
 
 .chart-title {
-  display: block;
-  text-align: center;
+    display: block;
+    text-align: center;
 }
 
 /* Login buttons for Social */
-.social-buttons{
-    margin:12px 0px 0px 0px;
+.social-buttons {
+    margin: 12px 0px 0px 0px;
 }
-.btn-go{
+
+.btn-go {
     color: #fff;
-    background-color:#55acee;
-    margin:12px 0px 12px 0px;
+    background-color: #55acee;
+    margin: 12px 0px 12px 0px;
 }
-.btn-go:hover{
+
+.btn-go:hover {
     color: #fff;
-    background-color:#59b5fa;
+    background-color: #59b5fa;
 }
 
 #iframe {
@@ -272,7 +278,9 @@ ul.paginate {
     margin: 0;
 }
 
-ul.paginate li {display: inline;}
+ul.paginate li {
+    display: inline;
+}
 
 ul.paginate li a {
     color: black;
@@ -289,119 +297,124 @@ ul.paginate li a.active {
     border: 1px solid #4CAF50;
 }
 
-ul.paginate li a:hover:not(.active) {background-color: #ddd;}
+ul.paginate li a:hover:not(.active) {
+    background-color: #ddd;
+}
 
-.per_page
-{
+.per_page {
     float: right;
     margin-right: 15px;
 }
-.float-right
-{
-  float: right;
+
+.float-right {
+    float: right;
 }
+
 /* Keep the picker on top of other elements */
-.ui-datepicker{z-index: 10000 !important};
+.ui-datepicker {
+    z-index: 10000 !important
+}
+
+;
 
 /*Indicator line graph with slider*/
-.clear-fix
-{
-  margin-top: 10px;
-  min-height: 10px;
+.clear-fix {
+    margin-top: 10px;
+    min-height: 10px;
 }
 
-select.listoption_filters
-{
-  height:36px;
-  width:150px;
-  border: 2px solid#ddd;
-  background: none;
-  -webkit-appearance: none;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  padding-left: 5px;
-  -moz-appearance: none;
+select.listoption_filters {
+    height: 36px;
+    width: 150px;
+    border: 2px solid#ddd;
+    background: none;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    padding-left: 5px;
+    -moz-appearance: none;
 }
 
 /* Indicator periodic target creation */
 
 #indicator_form .tab-content.panel-body,
 #indicator_modal_body .tab-content.panel-body,
-#indicator_modal_body
-{
-  padding-bottom: 0px;
+#indicator_modal_body {
+    padding-bottom: 0px;
 }
 
 #periodic-targets-tablediv {
-  padding-left: 0px;
-  padding-right: 0px;
-  margin-bottom: 0px;
-  margin-top: 1px
-  background-color: #F5F5F5;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-bottom: 0px;
+    margin-top: 1px;
+    background-color: #F5F5F5;
 }
 
-.periodic-target, #pt_sum_targets {
-  border-bottom: 1px solid #DBDCDE;
-  border-top: 1px solid #DBDCDE;
-  background-color: #FFFFFF;
+.periodic-target,
+#pt_sum_targets {
+    border-bottom: 1px solid #DBDCDE;
+    border-top: 1px solid #DBDCDE;
+    background-color: #FFFFFF;
 }
 
 #periodic-targets-tablediv .pt-delete-row {
-  padding: 1px 0px 1px 10px;
-  vertical-align: middle;
-  border: none;
+    padding: 1px 0px 1px 10px;
+    vertical-align: middle;
+    border: none;
 }
 
 /* Don't define border property here.  Assigning here prevents red border
 from being applied when there is no value */
 .periodic-target .input-value {
-  margin: 10px 10px 10px 6px;
-  padding-right: 10px;
-  text-align: right;
-  width: 150px;
-  box-shadow: none;
-  display: table-cell;
+    margin: 10px 10px 10px 6px;
+    padding-right: 10px;
+    text-align: right;
+    width: 150px;
+    box-shadow: none;
+    display: table-cell;
 
 }
 
 /* Don't define border property here.  Assigning here prevents red border
 from being applied when there is no value */
 .periodic-target .input-text {
-  padding-right: 2px;
-  text-align: left;
-  box-shadow: none;
-  display: table-cell;
+    padding-right: 2px;
+    text-align: left;
+    box-shadow: none;
+    display: table-cell;
 }
 
 .periodic-target .controls input::placeholder {
-  color: #b8babd;
+    color: #b8babd;
 }
 
 .lop-display {
-  padding: 0px 15px 10px 1px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #DBDCDE;
+    padding: 0px 15px 10px 1px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #DBDCDE;
 }
 
 .target-value-error {
-  margin: 5px 5px 0px 5px;
-  float: left;
-  margin-right: 10px;
+    margin: 5px 5px 0px 5px;
+    float: left;
+    margin-right: 10px;
 }
 
 /* Used for turning red borders off for input fields with errors */
-.border-1px input{
-  border: 1px solid #DBDCDE;
+.border-1px input {
+    border: 1px solid #DBDCDE;
 }
 
 /* turn off arrows from input[type=number] */
 input[type=number] {
-   -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }

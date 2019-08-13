@@ -1,0 +1,38 @@
+<div class="btn-group" role="group" aria-label="...">
+	<div class="btn-group" role="group">
+		<button
+			type="button"
+			class="btn btn-sm btn-default dropdown-toggle"
+			data-toggle="dropdown"
+			aria-haspopup="true"
+			aria-expanded="false"
+		>
+			Role(s)
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+            <li><a href="/accounts/admin/users/all/all/">--All--</a></li>
+            {% for group in groups %}
+                <li><a href="/accounts/admin/users/{{group.id}}/all/">{{group.name}}</a></li>
+            {% endfor %}
+		</ul>
+	</div>
+
+	<div class="btn-group" role="group">
+		<button
+			type="button"
+			class="btn btn-sm btn-default dropdown-toggle"
+			data-toggle="dropdown"
+			aria-haspopup="true"
+			aria-expanded="false"
+		>
+			Status
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+            <li><a href="/accounts/admin/users/all/all/">--All--</a></li>
+            <li><a href="/accounts/admin/users/all/active/">Active</a></li>
+            <li><a href="/accounts/admin/users/all/inactive/">Inactive</a></li>
+		</ul>
+	</div>
+</div>

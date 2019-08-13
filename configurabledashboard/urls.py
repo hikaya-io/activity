@@ -14,18 +14,25 @@ urlpatterns = [
     path('add/<int:pk>/', CustomDashboardCreate.as_view(),
          name='custom_dashboard_add'),
     path('update/<int:pk>/', CustomDashboardUpdate.as_view(
-        template_name="configurabledashboard/dashboard/form.html"), name='custom_dashboard_update'),
+        template_name="configurabledashboard/dashboard/form.html"),
+         name='custom_dashboard_update'),
     path('edit/<int:pk>/', CustomDashboardUpdate.as_view(
-        template_name="configurabledashboard/dashboard/modal_form.html"), name='custom_dashboard_edit'),
+        template_name="configurabledashboard/dashboard/modal_form.html"),
+         name='custom_dashboard_edit'),
     re_path(r'map/(?P<pk>[0-9]+)/(?P<location>[0-9]+)/(?P<type>[-\w]+)/$',
-            custom_dashboard_update_components, name='custom_dashboard_update_components'),
-    re_path(r'remap/(?P<pk>[0-9]+)/(?P<location>[0-9]+)/(?P<type>[-\w]+)/$', CustomDashboardUpdate.as_view(
-        template_name="configurabledashboard/components/admin/remap.html"), name='custom_dashboard_unmap'),
+            custom_dashboard_update_components,
+            name='custom_dashboard_update_components'),
+    re_path(r'remap/(?P<pk>[0-9]+)/(?P<location>[0-9]+)/(?P<type>[-\w]+)/$',
+            CustomDashboardUpdate.as_view(
+                template_name="configurabledashboard/"
+                              "components/admin/remap.html"),
+            name='custom_dashboard_unmap'),
     path('delete/<int:pk>/', CustomDashboardDelete.as_view(),
          name='custom_dashboard_delete'),
 
     path('theme/', DashboardThemeList.as_view(), name='dashboard_theme_list'),
-    path('theme_add/', DashboardThemeCreate.as_view(), name='dashboard_theme_add'),
+    path('theme_add/', DashboardThemeCreate.as_view(),
+         name='dashboard_theme_add'),
     path('theme_update/<int:pk>/', DashboardThemeUpdate.as_view(),
          name='custom_dashboard/theme_update'),
     path('theme_delete/<int:pk>/', DashboardThemeDelete.as_view(),
@@ -36,7 +43,8 @@ urlpatterns = [
     path('component_add/<int:id>/', DashboardComponentCreate.as_view(),
          name='custom_dashboard/component_add'),
     path('component_update/<int:pk>/', DashboardComponentUpdate.as_view(
-        template_name="configurabledashboard/components/admin/update_form.html"),
+        template_name="configurabledashboard/components/"
+                      "admin/update_form.html"),
          name='custom_dashboard/component_update'),
     path('component_delete/<int:pk>/', DashboardComponentDelete.as_view(),
          name='custom_dashboard/component_delete'),

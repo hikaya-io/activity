@@ -41,16 +41,10 @@
         {% csrf_token %}
         {% crispy form %}
 
-        <input type="submit" class="btn btn-primary" name="Save changes" value="Save changes"/>
+        <input type="submit" class="btn btn-success" name="Save changes" value="Save changes"/>
         </form>
     </div>
 
     <div class="modal-footer">
        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.location.href = '/configurabledashboard/update/{{ id }}/#add-dashboard-data-sources';parent.location.reload();">Close</button>
-    </div> 
-
-
-
-
-
-
+    </div>

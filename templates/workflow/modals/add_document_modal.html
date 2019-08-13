@@ -1,0 +1,131 @@
+<script>
+  $(document).ready(() => {
+    $('#program').select2({
+      placeholder: 'Select program...',
+      theme: 'bootstrap',
+      dropdownParent: $('#addDocumentModal'),
+    });
+
+    $(() => {
+      $('#submitDocumentation').click(e => {
+        e.preventDefault();
+
+        const formValue = $('#addDocumentationForm').serializeArray();
+
+        const obj = {};
+
+        formValue.forEach(item => {
+          obj[item.name] = item.value;
+        });
+
+        const data = { ...obj, program: $('#program').val() };
+
+        $.ajax({
+          url: '{% url "add-documentation" %}',
+          type: 'POST',
+          data,
+          success: function(resp, status) {
+            // notify success
+            toastr.success('Documentation was added successfully', `${resp}`);
+
+            //close modal
+            $('#addProjectModal').modal('hide');
+
+            // reset form
+            $('#addDocumentationForm').trigger('reset');
+            $('#program')
+              .select('val', '')
+              .trigger('change');
+
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          },
+          error: function(xhr, status, error) {
+            toastr.error(error, 'Failed');
+          },
+        });
+      });
+    });
+  });
+</script>
+
+<!-- Add Document modal -->
+<div
+  class="modal fade"
+  id="addDocumentModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addProjectModalLabel"
+>
+  <div class="modal-dialog" role="form">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="addProjectModalLabel">
+          <i class="fa fa-link"></i> Add New Documentation
+        </h4>
+      </div>
+
+      <form id="addDocumentationForm" action="" method="POST">
+        <div class="modal-body">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              class="form-control"
+              placeholder="Name of the document"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="program">Program</label>
+            <select class="form-control" id="program" name="program" required>
+              <option value=""></option>
+
+              {% for item in get_programs %} {% if item.name %}
+              <option value="{{ item.id }} ">
+                {{ item.name | truncatechars:50 }}
+              </option>
+              {% endif %} {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="name">URL</label>
+            <input
+              type="text"
+              name="url"
+              id="url"
+              class="form-control"
+              placeholder="e.g https://documents.example.com/files/doca.pdf"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="reset" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            id="submitDocumentation"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

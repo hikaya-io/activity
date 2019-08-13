@@ -8,12 +8,15 @@
     }
 </style>
 <script type="text/javascript">
+    $(document).ready(function() {
+        $('#collectedDataTable').DataTable();
+    });
     $("#id_indicator_data_span_count_" + `{{indicator.id}}`).text("{{ indicator.collecteddata_set.count|default:0 }}" );
 </script>
 {% load assign %}
 {% if indicator.target_frequency  %}
 
-    <table class="table table-bordered">
+    <table class="table table-bordered" id="collectedDataTable">
         <tr>
             <th style="vertical-align:bottom; min-width:180px;">Target Period</th>
             <th style="vertical-align:bottom; text-align: right;">Target</th>
@@ -161,7 +164,7 @@
         {% endif %}
     </table>
 {% else %}
-    <table border='0' vertical-align="top" align="center" height="130">
+    <table class="table table-condensed table-bordered" id="">
         <tr>
             <td valign="top" style="padding:2px;">
                 <img src="/static/img/target.png" class="img-responsive center-block" height="85" width="85">

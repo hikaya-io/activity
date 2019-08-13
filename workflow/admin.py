@@ -16,7 +16,8 @@ class DocumentationResource(resources.ModelResource):
     program = fields.Field(column_name='program', attribute='program',
                            widget=ForeignKeyWidget(Program, 'name'))
     project = fields.Field(column_name='project', attribute='project',
-                           widget=ForeignKeyWidget(ProjectAgreement, 'project_name'))
+                           widget=ForeignKeyWidget(ProjectAgreement,
+                                                   'project_name'))
 
     class Meta:
         model = Documentation
@@ -36,7 +37,6 @@ class DocumentationAdmin(ImportExportModelAdmin):
 
 # Resource for CSV export
 class ProjectAgreementResource(resources.ModelResource):
-
     class Meta:
         model = ProjectAgreement
         widgets = {
@@ -69,7 +69,6 @@ class ProjectAgreementAdmin(ImportExportModelAdmin):
 
 # Resource for CSV export
 class ProjectCompleteResource(resources.ModelResource):
-
     class Meta:
         model = ProjectComplete
         widgets = {
@@ -125,9 +124,11 @@ class SiteProfileResource(resources.ModelResource):
     office = fields.Field(column_name='office', attribute='office',
                           widget=ForeignKeyWidget(Office, 'code'))
     district = fields.Field(column_name='admin level 2',
-                            attribute='district', widget=ForeignKeyWidget(District, 'name'))
+                            attribute='district',
+                            widget=ForeignKeyWidget(District, 'name'))
     province = fields.Field(column_name='admin level 1',
-                            attribute='province', widget=ForeignKeyWidget(Province, 'name'))
+                            attribute='province',
+                            widget=ForeignKeyWidget(Province, 'name'))
     admin_level_three = fields.Field(
         column_name='admin level 3', attribute='admin_level_three',
         widget=ForeignKeyWidget(AdminLevelThree, 'name'))
@@ -148,11 +149,9 @@ class SiteProfileAdmin(ImportExportModelAdmin):
 
 
 class ProgramAdmin(admin.ModelAdmin):
-    list_display = ('countries', 'name', 'gaitid',
-                    'description', 'budget_check', 'funding_status')
-    search_fields = ('name', 'gaitid')
-    list_filter = ('funding_status', 'country',
-                   'budget_check', 'funding_status')
+    list_display = ('id', 'program_uuid', 'name', 'start_date', 'end_date')
+    search_fields = ('name', 'program_uuid')
+    list_filter = ('funding_status', 'country', 'program_uuid', 'start_date')
     display = 'Program'
 
 
@@ -188,8 +187,8 @@ class ActivityUserProxyResource(resources.ModelResource):
                         'country', 'email', 'create_date')
 
 
-class ReportActivityUserProxyAdmin(ChartReportAdmin, ExportMixin, admin.ModelAdmin):
-
+class ReportActivityUserProxyAdmin(ChartReportAdmin, ExportMixin,
+                                   admin.ModelAdmin):
     resource_class = ActivityUserProxyResource
 
     def get_queryset(self, request):
@@ -207,6 +206,12 @@ class ReportActivityUserProxyAdmin(ChartReportAdmin, ExportMixin, admin.ModelAdm
             if data.user == a_user:
                 email = a_user.email
         return email
+
+
+@admin.register(Currency)
+class CurrencyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'symbol', 'code')
+    list_filter = ('name', 'code')
 
 
 admin.site.register(Organization, OrganizationAdmin)

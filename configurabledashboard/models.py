@@ -18,7 +18,8 @@ class DashboardTheme(models.Model):
     theme_name = models.CharField(
         "Dashboard Theme Name", max_length=255, blank=True)
     theme_description = models.TextField(
-        "Brief Description", null=True, blank=True, help_text="What is the focus of this theme?")
+        "Brief Description", null=True, blank=True,
+        help_text="What is the focus of this theme?")
     theme_template = models.CharField("Template", max_length=255, blank=True)
     is_public = models.BooleanField(default=False)
     number_of_components = models.IntegerField(
@@ -45,15 +46,17 @@ class DashboardTheme(models.Model):
 
 class DashboardThemeAdmin(admin.ModelAdmin):
     list_display = ('theme_name', 'theme_description', 'is_public',
-                    'number_of_components', 'layout_dictionary', 'create_date', 'edit_date')
+                    'number_of_components', 'layout_dictionary', 'create_date',
+                    'edit_date')
     display = 'Dashboard Theme'
 
 
 class ComponentDataSource(models.Model):
     data_name = models.CharField(
         "Name of Source Data", max_length=255, blank=True)
-    data_type = models.CharField("Data Type", max_length=200, null=True,
-                                 blank=True, help_text="Is this data photos? Text? Numerical data?")
+    data_type = models.CharField(
+        "Data Type", max_length=200, null=True, blank=True,
+        help_text="Is this data photos? Text? Numerical data?")
     data_source = models.URLField(max_length=200, null=True, blank=True)
     data_source_type = models.CharField(
         "Data Source Type", max_length=200, null=True, blank=True)
@@ -86,7 +89,8 @@ class DashboardComponent(models.Model):
     component_name = models.CharField(
         "Component Name", max_length=255, blank=True)
     component_description = models.TextField(
-        "Brief Description", null=True, blank=True, help_text="What does this component do?")
+        "Brief Description", null=True, blank=True,
+        help_text="What does this component do?")
     is_public = models.BooleanField("External Public Dashboard", default=False)
     component_type = models.CharField(
         "Component Type", max_length=255, blank=True)
@@ -116,21 +120,28 @@ class DashboardComponent(models.Model):
 
 class DashboardComponentAdmin(admin.ModelAdmin):
     list_display = ('component_name', 'component_description',
-                    'component_type', 'data_required', 'create_date', 'edit_date')
+                    'component_type', 'data_required', 'create_date',
+                    'edit_date')
     display = 'Dashboard Components'
-# For programs that have custom dashboards. The default dashboard for all other programs is 'Program Dashboard'
+
+
+# For programs that have custom dashboards. The default dashboard
+# for all other programs is 'Program Dashboard'
 
 
 class CustomDashboard(models.Model):
     dashboard_name = models.CharField(
         "Custom Dashboard Name", max_length=255, blank=True)
     dashboard_description = models.TextField(
-        "Brief Description", null=True, blank=True, help_text="What does this custom dashboard display to the user?")
+        "Brief Description", null=True, blank=True,
+        help_text="What does this custom dashboard display to the user?")
     is_public = models.BooleanField("External Public Dashboard", default=False)
     theme = models.ForeignKey(
-        DashboardTheme, blank=True, null=True, related_name='theme', on_delete=models.SET_NULL)
+        DashboardTheme, blank=True, null=True, related_name='theme',
+        on_delete=models.SET_NULL)
     program = models.ForeignKey(Program, verbose_name="Program",
-                                related_name="dashboard_program", null=True, blank=True, on_delete=models.SET_NULL)
+                                related_name="dashboard_program", null=True,
+                                blank=True, on_delete=models.SET_NULL)
     color_palette = models.CharField(
         "Color Scheme", max_length=255, blank=False, default="bright")
     components = models.ManyToManyField(

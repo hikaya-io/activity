@@ -23,7 +23,7 @@
             <input type='hidden'>
             <input type='hidden'>
             <select id="id_component_map" name="component_map" class="form-control" >
-                {% for component in getDashboardComponents %}
+                {% for component in get_dashboard_components %}
                     {% if component.component_type in request.get_full_path %}
                         <option value='[{{location}}, {{component}}]'>{{component.component_name}}</option>
                     {% endif %}

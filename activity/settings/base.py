@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 """Common settings and globals."""
 
 import os
@@ -17,8 +19,8 @@ SITE_ROOT = dirname(DJANGO_ROOT)
 # Site name:
 SITE_NAME = basename(DJANGO_ROOT)
 
-# Add our project to our pythonpath, this way we don't need to type our project
-# name in our dotted import paths:
+# Add our project to our pythonpath, this way we don't need to type
+# our project name in our dotted import paths:
 path.append(DJANGO_ROOT)
 # END PATH CONFIGURATION
 
@@ -98,12 +100,14 @@ STATIC_ROOT = normpath(join(SITE_ROOT, 'assets'))
 STATIC_URL = '/static/'
 
 
-# See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
+# See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/
+# #std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = (
     normpath(join(SITE_ROOT, 'static')),
 )
 
-# See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
+# See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/
+# #staticfiles-finders
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -126,7 +130,8 @@ ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # FIXTURE CONFIGURATION
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-FIXTURE_DIRS
+# See: https://docs.djangoproject.com/en/dev/ref/settings/
+# #std:setting-FIXTURE_DIRS
 FIXTURE_DIRS = (
     normpath(join(SITE_ROOT, 'fixtures')),
 )
@@ -134,7 +139,8 @@ FIXTURE_DIRS = (
 
 
 # TEMPLATE CONFIGURATION
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors
+# See: https://docs.djangoproject.com/en/dev/ref/settings/
+# #template-context-processors
 
 TEMPLATES = [
     {
@@ -192,7 +198,8 @@ MIDDLEWARE = (
 # Add Pagination to Rest Framework lists
 REST_FRAMEWORK = {
     'PAGINATE_BY': 10,
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_FILTER_BACKENDS':
+        ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
@@ -243,6 +250,7 @@ THIRD_PARTY_APPS = (
     'ckeditor_uploader',
     'simplejson',
     'simple_history',
+    'django_select2'
 )
 
 # Apps specific for this project go here.
@@ -268,11 +276,12 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.open_id.OpenIdAuth',
     # 'social_core.backends.google.GoogleOpenId',
-    'social_core.backends.google.GoogleOAuth2',
+    # 'social_core.backends.google.GoogleOAuth2',
     # 'social_core.backends.google.GoogleOAuth',
     # 'social_core.backends.twitter.TwitterOAuth',
     # 'social_core.backends.yahoo.YahooOpenId',
-    'django.contrib.auth.backends.ModelBackend',
+    # 'django.contrib.auth.backends.ModelBackend',
+    'activity.middlewares.custom_middlewares.EmailOrUsernameBackend',
 )
 
 SOCIAL_AUTH_PIPELINE = (
@@ -359,11 +368,14 @@ LOGGING = {
 WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
 # END WSGI CONFIGURATION
 
+# CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap', 'uni_form', 'bootstrap3', 'bootstrap4', 'materialize_css_forms', )
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
 
 # Report Builder
 # REPORT_BUILDER_INCLUDE = []
-# REPORT_BUILDER_EXCLUDE = ['user','groups','read','template','silo','readtoken']
+# REPORT_BUILDER_EXCLUDE =
+#   ['user','groups','read','template','silo','readtoken']
 # REPORT_BUILDER_ASYNC_REPORT = False
 
 # wysiwyg settings

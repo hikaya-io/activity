@@ -41,14 +41,16 @@ class ChangeListChartReport(ChangeList):
             if self.model_admin.group_by:
                 qs = qs.values(*self.model_admin.group_by)
 
-            # faz uma copia antes de chamar o metodo annotate, pois para campos aggregate que não
-            # representam um campo annotate, não se pode ter o annotate na query
+            # faz uma copia antes de chamar o metodo annotate, pois para
+            # campos aggregate que não representam um campo annotate,
+            # não se pode ter o annotate na query
             self.query_to_normal_aggregate = qs
 
             # print "self.model_admin.annotate_fields"
             # print self.model_admin.annotate_fields
 
-            # qs = qs.annotate(*self.model_admin.annotate_fields_2, **self.model_admin.annotate_fields)
+            # qs = qs.annotate(*self.model_admin.annotate_fields_2,
+            # **self.model_admin.annotate_fields)
             qs = qs.annotate(**self.model_admin.annotate_fields)
 
             # Set ordering.
@@ -120,15 +122,17 @@ class ChangeListChartReport(ChangeList):
 
         qs = self.queryset
         if self.model_admin.aggregate_fields_from_normal:
-            result_aggregate_from_normal_queryset = self.query_to_normal_aggregate.aggregate(
-                *self.model_admin.aggregate_fields_from_normal)
+            result_aggregate_from_normal_queryset = \
+                self.query_to_normal_aggregate.aggregate(
+                    *self.model_admin.aggregate_fields_from_normal)
 
         if self.model_admin.aggregate_fields_from_annotate:
             result_aggregate_from_annotate_queryset = qs.aggregate(
                 *self.model_admin.aggregate_fields_from_annotate)
 
         result_aggregate_queryset = dict(
-            result_aggregate_from_normal_queryset, **result_aggregate_from_annotate_queryset)
+            result_aggregate_from_normal_queryset,
+            **result_aggregate_from_annotate_queryset)
 
         def get_result_aggregate(aggregate):
             pos_value_place_holder = aggregate[2].find("%value")
@@ -153,7 +157,8 @@ class ChangeListChartReport(ChangeList):
             for column in self.list_display:
                 result_aggregate_temp = []
                 if column in self.model_admin.map_list_display_and_aggregate:
-                    for aggregate in self.model_admin.map_list_display_and_aggregate[column]:
+                    for aggregate in self.model_admin\
+                            .map_list_display_and_aggregate[column]:
                         result_aggregate_temp.append(
                             get_result_aggregate(aggregate))
 
@@ -206,8 +211,9 @@ class ChartReportAdmin(admin.ModelAdmin):
                         annotate[0], end_field_name)
                     self.annotate_fields.update(
                         {name_field_annotate: annotate[1](annotate[0])})
-                    self.addMethod(function_builder(
-                        name_field_annotate, name_field_annotate, annotate[2] if len(annotate) == 3 else None))
+                    self.add_method(function_builder(
+                        name_field_annotate, name_field_annotate, annotate[2]
+                        if len(annotate) == 3 else None))
                     break
 
         for aggregate in self.report_aggregates:
@@ -225,7 +231,8 @@ class ChartReportAdmin(admin.ModelAdmin):
                     elif not copy_aggregate[2]:
                         copy_aggregate[2] = new_label
 
-                    # significa que foi especificado em qual coluna deve aparecer o valor agregado
+                    # significa que foi especificado em qual coluna
+                    # deve aparecer o valor agregado
                     if len(copy_aggregate) == 4:
                         column_display_list = aggregate[3]
                     else:
@@ -233,12 +240,13 @@ class ChartReportAdmin(admin.ModelAdmin):
                         if column_display_list not in self.list_display:
                             column_display_list = new_label
 
-                    if column_display_list not in self.map_list_display_and_aggregate:
-                        self.map_list_display_and_aggregate[column_display_list] = [
-                        ]
+                    if column_display_list not in \
+                            self.map_list_display_and_aggregate:
+                        self.map_list_display_and_aggregate[
+                            column_display_list] = []
 
-                    self.map_list_display_and_aggregate[column_display_list].append(
-                        copy_aggregate)
+                    self.map_list_display_and_aggregate[column_display_list]\
+                        .append(copy_aggregate)
                     self.map_summary_aggregate.append(copy_aggregate)
                     break
 
@@ -257,7 +265,7 @@ class ChartReportAdmin(admin.ModelAdmin):
         # volta sempre para a mesma pagina
         return HttpResponseRedirect(request.META["HTTP_REFERER"])
 
-    def addMethod(self, func):
+    def add_method(self, func):
         return setattr(self, func.__name__, types.MethodType(func, self))
 
     def get_changelist(self, request, **kwargs):

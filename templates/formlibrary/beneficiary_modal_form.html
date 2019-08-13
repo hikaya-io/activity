@@ -1,0 +1,162 @@
+<script>
+  $(document).ready(() => {
+    $('#program').select2({
+      theme: 'bootstrap',
+      placeholder: 'Select program...',
+      allowClear: true,
+      dropdownParent: $('#addBeneficiaryModal')
+    });
+
+    $('#gender').select2({
+      theme: 'bootstrap',
+      placeholder: 'Select gender...',
+      allowClear: true,
+      dropdownParent: $('#addBeneficiaryModal')
+    });
+  });
+
+  $(function() {
+    $('#saveBeneficiary').click(function(e) {
+      e.preventDefault();
+
+      const formValue = $('#addBeneficiaryForm').serializeArray();
+
+      const obj = {};
+
+      formValue.forEach(item => {
+        obj[item.name] = item.value;
+      });
+
+      // set enteries
+      data = {
+        ...obj,
+        id_program: $('#program').val(),
+        age: $('#age').val(),
+        gender: $('#gender').val(),
+      };
+
+      $.ajax({
+        url: '/formlibrary/beneficiary_add/0/',
+        type: 'POST',
+        data,
+        success: function(resp, status) {
+          // notify success
+          toastr.success('Beneficiary was added successfully');
+
+          //close modal
+          $('#addBeneficiaryModal').modal('hide');
+
+          // reset form
+          $('#addBeneficiaryForm').trigger('reset');
+          $('#program')
+            .select('val', '')
+            .trigger('change');
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        },
+        error: function(xhr, status, error) {
+          toastr.error(error, 'Failed');
+        },
+      });
+    });
+  });
+</script>
+
+<!-- Modal -->
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="addBeneficiaryModal"
+  tabindex="-1"
+  aria-labelledby="addBeneficiaryModalLabel"
+>
+  <div class="modal-dialog" role="form">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="addProjectModalLabel">
+          Add New Beneficiary
+        </h4>
+      </div>
+      <form id="addBeneficiaryForm">
+        <div class="modal-body">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="beneficiaryName">Beneficiary Name</label>
+            <input
+              type="text"
+              id="beneficiaryName"
+              name="beneficiary_name"
+              class="form-control"
+              placeholder="Beneficiary"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input
+              type="text"
+              id="age"
+              name="age"
+              class="form-control"
+              placeholder="Age"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select
+              id="gender"
+              name="gender"
+              class="form-control"
+              placeholder="Gender"
+            >
+              <option value=""></option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="program">
+                {{ user.activity_user.organization.level_1_label }}
+            </label>
+            <select
+              id="program"
+              class="form-control"
+              style="width: 100%"
+              name="program"
+              required
+            >
+              <option value=""></option>
+              {% for program in get_programs %} {% if program.name %}
+              <option value="{{ program.id }}">
+                {{ program.name | truncatechars:50 }}
+              </option>
+              {% endif %} {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="reset" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary" id="saveBeneficiary">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

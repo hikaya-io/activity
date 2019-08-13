@@ -1,285 +1,310 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">Program Index</a></li>
-  <li><a href="/workflow/report/0/0/">Project Report</a></li>
+  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
+  <li><a href="/workflow/report/0/0/">{{ user.activity_user.organization.level_2_label }} Report</a></li>
   <li class="active">Report</li>
 </ol>
 
 {% endblock bread_crumb %}
 {% load render_table from django_tables2 %}
 
-{% block page_title %}Project Report{% endblock %}
+{% block page_title %}{{ user.activity_user.organization.level_2_label }} Report{% endblock %}
 
 {% block content %}
-<ul class="nav nav-tabs">
-  <li role="presentation"><a href="/workflow/projectagreement_detail/{{ id }}/">Initiation</a></li>
-  <li role="presentation" class="active"><a href="/workflow/projectcomplete_detail/{{ id }}/">Tracking</a></li>
-  <li role="presentation"><a href="/workflow/siteprofile_report/{{ id }}/">Sites</a></li>
-</ul>
-{% if complete %}
-    <h3>{{ complete.project_name }}</h3>
-{% else %}
-    <h3>TRACKING NOT ENTERED</h3>
-{% endif %}
-<p><b>Created:</b> {{ complete.create_date }} <b>Last Edited:</b> {{ complete.edit_date }} <span class="btn btn-xs btn-info">Status: <b>{{ complete.approval }}</b></span></p>
-<div class="panel panel-info">
-    <!-- Default panel contents -->
-    <div class="panel-heading">Part I: Executive Summary</div>
-    <!-- Table -->
-    <table class="table" border="1">
-        <tr>
-            <th>Program</th>
-            <th>Project Initiation</th>
-            <th>Project Tracking</th>
-        </tr>
-        <tr>
-            <td>{{ complete.program }}</td>
-            <td>{{ complete.project_proposal }}</td>
-            <td>{{ complete.project_agreement }}</td>
-        </tr>
-    </table>
-    <br/>
-    <table class="table" border="1">
-        <tr>
-            <th>Project Code</th>
-            <th>Office</th>
-            <th>Project Name</th>
-        </tr>
-        <tr>
-            <td>{{ complete.activity_code }}</td>
-            <td>{{ complete.office }}</td>
-            <td>{{ complete.project_name }}</td>
-        </tr>
-    </table>
-    <br/>
-    <table class="table" border="1">
-        <tr>
-            <th>Expected Start Date</th>
-            <th>Expected End Date</th>
-            <th>Duration</th>
-        </tr>
-        <tr>
-            <td>{{ complete.expected_start_date|date:"M d, Y"  }}</td>
-            <td>{{ complete.expected_end_date|date:"M d, Y"  }}</td>
-            <td>{{ complete.expected_duration }}</td>
-        </tr>
-    </table>
-    <br/>
-     <br/>
-    <table class="table" border="1">
-        <tr>
-            <th>Actual Start Date</th>
-            <th>Actual End Date</th>
-            <th>Actual Duration</th>
-        </tr>
-        <tr>
-            <td>{{ complete.actual_start_date|date:"M d, Y"  }}</td>
-            <td>{{ complete.actual_end_date|date:"M d, Y"  }}</td>
-            <td>{{ complete.actual_duration }}</td>
-        </tr>
-    </table>
-    <br/>
-    <table class="table" border="1">
-        <tr>
-            <th>On Time</th>
-            <th>If not explain</th>
-        </tr>
-        <tr>
-            <td>{{ complete.on_time }}</td>
-            <td>{{ complete.on_time_explain }}</td>
-        </tr>
-    </table>
-</div>
-<div class="panel panel-info">
-    <!-- Default panel contents -->
-    <div class="panel-heading">Part II: Components</div>
+<div class="container">
+        {% block breadcrumbs %}
+        <ul class="breadcrumb">
+        <li><a href="/">Home Dashboard</a></li>
+        <li><a href="/workflow/report/0/0/">{{ user.activity_user.organization.level_2_label }} Report</a></li>
+        <li class="active">Tracking</li>
+        </ul>
+    {% endblock %}
 
-    <table class="table" border="1">
-        <tr>
-            <th>Description</th>
-            <th>Site</th>
-            <th>Est. Start Date</th>
-            <th>Est. End Date</th>
-            <th>Actual Start Date</th>
-            <th>Actual End Date</th>
-            <th>Budget</th>
-            <th>Cost</th>
-        </tr>
-        {% for benchmark in getBenchmarks %}
-        <tr>
-            <td>{{ benchmark.description}}</td>
-            <td>{{ benchmark.site }}</td>
-            <td>{{ benchmark.est_start_date|date:"m-d-Y" }}</td>
-            <td>{{ benchmark.est_end_date|date:"m-d-Y" }}</td>
-            <td>{{ benchmark.actual_start_date|date:"m-d-Y" }}</td>
-            <td>{{ benchmark.actual_end_date|date:"m-d-Y" }}</td>
-            <td>{{ benchmark.budget }}</td>
-            <td>{{ benchmark.cost }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
-<div class="panel panel-info">
-    <!-- Default panel contents -->
-    <div class="panel-heading">Part III: Budget</div>
-    <!-- Table -->
-    <table class="table" border="1">
-        <tr>
-            <th>Estimated Budget</th>
-            <th>Actual Budget</th>
-            <th>Budget Variance</th>
-        </tr>
-        <tr>
-            <td>{{ complete.estimated_budget }}</td>
-            <td>{{ complete.actual_budget }}</td>
-            <td>{{ complete.budget_variance }}</td>
-        </tr>
-    </table>
-    <br/>
-    <table class="table" border="1">
-        <tr>
-            <th>Explanation of Budget Variance</th>
-        </tr>
-        <tr>
-            <td>{{ complete.budget_variance_explanation }}</td>
-        </tr>
-    </table>
-    <br/>
-    <h4>Other Budget Contributions:</h4>
-    <table class="table" border="1">
-        <tr>
-            <th>Contributor</th>
-            <th>Description of Contribution</th>
-            <th>Processed Value of Contribution</th>
-        </tr>
-        {% for budget in budgetContribs %}
-        <tr>
-            <td>{{ budget.contributor }}</td>
-            <td>{{ budget.description_of_contribution }}</td>
-            <td>{{ budget.proposed_value }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <br/>
-</div>
-<div class="panel panel-info">
-    <!-- Default panel contents -->
-    <div class="panel-heading">Part IV: Impact</div>
-    <!-- Table -->
-    <h4> Expected Indicator Outputs</h4>
-    <table class="table" border="1">
-        <tr>
-            <th>Indicator Name</th>
-            <th>Targeted #</th>
-            <th>Achieved #</th>
-            <th>Is this Indicator in the Logframe?</th>
-        </tr>
-        <tr>
-            <td>{{ complete.indicator }}</td>
-            <td>{{ complete.targeted }}</td>
-            <td>{{ complete.achieved }}</td>
-            <td>{{ complete.in_logframe }}</td>
-        </tr>
-    </table>
-    <br/>
-    <table class="table" border="1">
-        <tr>
-            <th>Progress Against Targets </th>
-            <th>Actual Contribution</th>
-            <th>Beneficiary Type</th>
-            <th>Direct Beneficiaries</th>
-        </tr>
-        <tr>
-            <td>{{ complete.progress_against_targets }}</td>
-            <td>{{ complete.actual_contribution }}</td>
-            <td>{{ complete.beneficiary_type }}</td>
-            <td>{{ complete.direct_beneficiaries }}</td>
-        </tr>
-    </table>
-    <br/>
-    <table class="table" border="1">
-        <tr>
-            <th>Average Household Size</th>
-            <th>Indirect Beneficiaries</th>
-            <th>Capacity Built</th>
-            <th>Quality Assured</th>
-        </tr>
-        <tr>
-            <td>{{ complete.average_household_size }}</td>
-            <td>{{ complete.indirect_beneficiaries }}</td>
-            <td>{{ complete.capacity_built }}</td>
-            <td>{{ complete.quality_assured }}</td>
-        </tr>
-    </table>
-    <br/>
-    <h4>Issues</h4>
-    <table class="table" border="1">
-        <tr>
-            <th>List any issues or challenges faced(include reasons for dealys)</th>
-            <th>Lessons learned</th>
-        </tr>
-        <tr>
-            <td>{{ complete.issues_and_challenges }}</td>
-            <td>{{ complete.lessons_learned }}</td>
-        </tr>
-    </table>
-    <br/>
-</div>
-<div class="panel panel-warning">
-    <!-- Default panel contents -->
-    <div class="panel-heading">Part V: Project Approval</div>
-    <!-- Table -->
-    <table class="table" border="1">
-        <tr>
-            <th>Action</th>
-            <th>E-Signature</th>
-            <th>Date</th>
-        </tr>
-        <tr>
-            <td>Submitted By</td>
-            <td>{{ complete.approval_submitted_by }}</td>
-            <td>{{ complete.approval_submitted_by_date|date:"M d, Y" }}</td>
-        </tr>
-        <tr>
-            <td>Estimated</td>
-            <td>{{ complete.approved_by }}</td>
-            <td>{{ complete.approved_date|date:"M d, Y" }}</td>
-        </tr>
-        <tr>
-            <td>Checked</td>
-            <td>{{ complete.estimated_by }}</td>
-            <td>{{ complete.estimated_by_date|date:"M d, Y" }}</td>
-        </tr>
-        <tr>
-            <td>Reviewed by MEL</td>
-            <td>{{ complete.reviewed_by }}</td>
-            <td>{{ complete.reviewed_by_date|date:"M d, Y" }}</td>
-        </tr>
-        <tr>
-            <td>Reviewed</td>
-            <td>{{ complete.reviewed_by }}</td>
-            <td>{{ complete.reviewed_by_date|date:"M d, Y" }}</td>
-        </tr>
-        <tr>
-            <td>Approved</td>
-            <td>{{ complete.approved_by }}</td>
-            <td>{{ complete.approved_date|date:"M d, Y" }}</td>
-        </tr>
-        <tr>
-            <td>Financial Review</td>
-            <td>{{ complete.approved_by }}</td>
-            <td>{{ complete.approved_date|date:"M d, Y" }}</td>
-        </tr>
-    </table>
-    <table class="table" border="1">
-        <tr>
-            <th>Approval Remarks</th>
-        </tr>
-        <tr>
-            <td>{{ complete.approval_remarks }}</td>
-        </tr>
-    </table>
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+        <div class="sub-navigation-header">
+            <h4 class="page-title">
+                Tracking
+            </h4>
+            </div>
+            <div class="sub-navigation-actions">
+            <!-- sample action buttons -->
+            <div class="btn-group" role="group" aria-label="">
+                
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs">
+      <li role="presentation"><a href="/workflow/projectagreement_detail/{{ id }}/">Initiation</a></li>
+      <li role="presentation" class="active"><a href="/workflow/projectcomplete_detail/{{ id }}/">Tracking</a></li>
+      <li role="presentation"><a href="/workflow/siteprofile_report/{{ id }}/">Sites</a></li>
+    </ul>
+    {% if complete %}
+        <h3>{{ complete.project_name }}</h3>
+    {% else %}
+        <h3>TRACKING NOT ENTERED</h3>
+    {% endif %}
+    <p><b>Created:</b> {{ complete.create_date }} <b>Last Edited:</b> {{ complete.edit_date }} <span class="btn btn-xs btn-info">Status: <b>{{ complete.approval }}</b></span></p>
+    <div class="panel panel-info">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Part I: Executive Summary</div>
+        <!-- Table -->
+        <table class="table" border="1">
+            <tr>
+                <th>{{ user.activity_user.organization.level_1_label }}</th>
+                <th>{{ user.activity_user.organization.level_2_label }} Initiation</th>
+                <th>{{ user.activity_user.organization.level_2_label }} Tracking</th>
+            </tr>
+            <tr>
+                <td>{{ complete.program }}</td>
+                <td>{{ complete.project_proposal }}</td>
+                <td>{{ complete.project_agreement }}</td>
+            </tr>
+        </table>
+        <br/>
+        <table class="table" border="1">
+            <tr>
+                <th>{{ user.activity_user.organization.level_2_label }} Code</th>
+                <th>Office</th>
+                <th>{{ user.activity_user.organization.level_2_label }} Name</th>
+            </tr>
+            <tr>
+                <td>{{ complete.activity_code }}</td>
+                <td>{{ complete.office }}</td>
+                <td>{{ complete.project_name }}</td>
+            </tr>
+        </table>
+        <br/>
+        <table class="table" border="1">
+            <tr>
+                <th>Expected Start Date</th>
+                <th>Expected End Date</th>
+                <th>Duration</th>
+            </tr>
+            <tr>
+                <td>{{ complete.expected_start_date|date:"M d, Y"  }}</td>
+                <td>{{ complete.expected_end_date|date:"M d, Y"  }}</td>
+                <td>{{ complete.expected_duration }}</td>
+            </tr>
+        </table>
+        <br/>
+         <br/>
+        <table class="table" border="1">
+            <tr>
+                <th>Actual Start Date</th>
+                <th>Actual End Date</th>
+                <th>Actual Duration</th>
+            </tr>
+            <tr>
+                <td>{{ complete.actual_start_date|date:"M d, Y"  }}</td>
+                <td>{{ complete.actual_end_date|date:"M d, Y"  }}</td>
+                <td>{{ complete.actual_duration }}</td>
+            </tr>
+        </table>
+        <br/>
+        <table class="table" border="1">
+            <tr>
+                <th>On Time</th>
+                <th>If not explain</th>
+            </tr>
+            <tr>
+                <td>{{ complete.on_time }}</td>
+                <td>{{ complete.on_time_explain }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="panel panel-info">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Part II: Components</div>
+    
+        <table class="table" border="1">
+            <tr>
+                <th>Description</th>
+                <th>Site</th>
+                <th>Est. Start Date</th>
+                <th>Est. End Date</th>
+                <th>Actual Start Date</th>
+                <th>Actual End Date</th>
+                <th>Budget</th>
+                <th>Cost</th>
+            </tr>
+            {% for benchmark in get_benchmarks %}
+            <tr>
+                <td>{{ benchmark.description}}</td>
+                <td>{{ benchmark.site }}</td>
+                <td>{{ benchmark.est_start_date|date:"m-d-Y" }}</td>
+                <td>{{ benchmark.est_end_date|date:"m-d-Y" }}</td>
+                <td>{{ benchmark.actual_start_date|date:"m-d-Y" }}</td>
+                <td>{{ benchmark.actual_end_date|date:"m-d-Y" }}</td>
+                <td>{{ benchmark.budget }}</td>
+                <td>{{ benchmark.cost }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="panel panel-info">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Part III: Budget</div>
+        <!-- Table -->
+        <table class="table" border="1">
+            <tr>
+                <th>Estimated Budget</th>
+                <th>Actual Budget</th>
+                <th>Budget Variance</th>
+            </tr>
+            <tr>
+                <td>{{ complete.estimated_budget }}</td>
+                <td>{{ complete.actual_budget }}</td>
+                <td>{{ complete.budget_variance }}</td>
+            </tr>
+        </table>
+        <br/>
+        <table class="table" border="1">
+            <tr>
+                <th>Explanation of Budget Variance</th>
+            </tr>
+            <tr>
+                <td>{{ complete.budget_variance_explanation }}</td>
+            </tr>
+        </table>
+        <br/>
+        <h4>Other Budget Contributions:</h4>
+        <table class="table" border="1">
+            <tr>
+                <th>Contributor</th>
+                <th>Description of Contribution</th>
+                <th>Processed Value of Contribution</th>
+            </tr>
+            {% for budget in budgetContribs %}
+            <tr>
+                <td>{{ budget.contributor }}</td>
+                <td>{{ budget.description_of_contribution }}</td>
+                <td>{{ budget.proposed_value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br/>
+    </div>
+    <div class="panel panel-info">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Part IV: Impact</div>
+        <!-- Table -->
+        <h4> Expected Indicator Outputs</h4>
+        <table class="table" border="1">
+            <tr>
+                <th>Indicator Name</th>
+                <th>Targeted #</th>
+                <th>Achieved #</th>
+                <th>Is this Indicator in the Logframe?</th>
+            </tr>
+            <tr>
+                <td>{{ complete.indicator }}</td>
+                <td>{{ complete.targeted }}</td>
+                <td>{{ complete.achieved }}</td>
+                <td>{{ complete.in_logframe }}</td>
+            </tr>
+        </table>
+        <br/>
+        <table class="table" border="1">
+            <tr>
+                <th>Progress Against Targets </th>
+                <th>Actual Contribution</th>
+                <th>Beneficiary Type</th>
+                <th>Direct Beneficiaries</th>
+            </tr>
+            <tr>
+                <td>{{ complete.progress_against_targets }}</td>
+                <td>{{ complete.actual_contribution }}</td>
+                <td>{{ complete.beneficiary_type }}</td>
+                <td>{{ complete.direct_beneficiaries }}</td>
+            </tr>
+        </table>
+        <br/>
+        <table class="table" border="1">
+            <tr>
+                <th>Average Household Size</th>
+                <th>Indirect Beneficiaries</th>
+                <th>Capacity Built</th>
+                <th>Quality Assured</th>
+            </tr>
+            <tr>
+                <td>{{ complete.average_household_size }}</td>
+                <td>{{ complete.indirect_beneficiaries }}</td>
+                <td>{{ complete.capacity_built }}</td>
+                <td>{{ complete.quality_assured }}</td>
+            </tr>
+        </table>
+        <br/>
+        <h4>Issues</h4>
+        <table class="table" border="1">
+            <tr>
+                <th>List any issues or challenges faced(include reasons for dealys)</th>
+                <th>Lessons learned</th>
+            </tr>
+            <tr>
+                <td>{{ complete.issues_and_challenges }}</td>
+                <td>{{ complete.lessons_learned }}</td>
+            </tr>
+        </table>
+        <br/>
+    </div>
+    <div class="panel panel-warning">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Part V: Project Approval</div>
+        <!-- Table -->
+        <table class="table" border="1">
+            <tr>
+                <th>Action</th>
+                <th>E-Signature</th>
+                <th>Date</th>
+            </tr>
+            <tr>
+                <td>Submitted By</td>
+                <td>{{ complete.approval_submitted_by }}</td>
+                <td>{{ complete.approval_submitted_by_date|date:"M d, Y" }}</td>
+            </tr>
+            <tr>
+                <td>Estimated</td>
+                <td>{{ complete.approved_by }}</td>
+                <td>{{ complete.approved_date|date:"M d, Y" }}</td>
+            </tr>
+            <tr>
+                <td>Checked</td>
+                <td>{{ complete.estimated_by }}</td>
+                <td>{{ complete.estimated_by_date|date:"M d, Y" }}</td>
+            </tr>
+            <tr>
+                <td>Reviewed by MEL</td>
+                <td>{{ complete.reviewed_by }}</td>
+                <td>{{ complete.reviewed_by_date|date:"M d, Y" }}</td>
+            </tr>
+            <tr>
+                <td>Reviewed</td>
+                <td>{{ complete.reviewed_by }}</td>
+                <td>{{ complete.reviewed_by_date|date:"M d, Y" }}</td>
+            </tr>
+            <tr>
+                <td>Approved</td>
+                <td>{{ complete.approved_by }}</td>
+                <td>{{ complete.approved_date|date:"M d, Y" }}</td>
+            </tr>
+            <tr>
+                <td>Financial Review</td>
+                <td>{{ complete.approved_by }}</td>
+                <td>{{ complete.approved_date|date:"M d, Y" }}</td>
+            </tr>
+        </table>
+        <table class="table" border="1">
+            <tr>
+                <th>Approval Remarks</th>
+            </tr>
+            <tr>
+                <td>{{ complete.approval_remarks }}</td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 

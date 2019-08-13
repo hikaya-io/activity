@@ -7,7 +7,8 @@ from crispy_forms.layout import Layout, Submit, Reset
 from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.models import User
-from workflow.models import ActivityUser, ActivityBookmarks
+from workflow.models import ActivityUser, ActivityBookmarks, Organization
+from django.forms .models import model_to_dict
 
 
 class RegistrationForm(UserChangeForm):
@@ -19,12 +20,17 @@ class RegistrationForm(UserChangeForm):
         user = kwargs.pop('initial')
         super(RegistrationForm, self).__init__(*args, **kwargs)
         del self.fields['password']
-        print(user['username'].is_superuser)
-        # if they aren't a super user or User Admin don't let them change countries form field
-        if 'User Admin' not in user['username'].groups.values_list('name', flat=True) and \
-                not user['username'].is_superuser:
-            self.fields['countries'].widget.attrs['disabled'] = "disabled"
-            self.fields['country'].widget.attrs['disabled'] = "disabled"
+        # if they aren't a super user or User Admin
+        # don't let them change countries form field
+        if 'User Admin' not in user['username'].groups.\
+                values_list('name', flat=True) \
+                and not user['username'].is_superuser:
+            self.fields['organizations'].widget.attrs['disabled'] = 'disabled'
+            self.fields['user'].widget.attrs['disabled'] = 'disabled'
+
+        activity_user = ActivityUser.objects.get(user=user['username'])
+        print(model_to_dict(activity_user))
+        self.fields['organization'].queryset = activity_user.organizations.all()
 
     class Meta:
         model = ActivityUser
@@ -32,23 +38,37 @@ class RegistrationForm(UserChangeForm):
 
     helper = FormHelper()
     helper.form_method = 'post'
-    helper.form_class = 'form-horizontal'
-    helper.label_class = 'col-sm-2'
-    helper.field_class = 'col-sm-6'
     helper.form_error_title = 'Form Errors'
     helper.error_text_inline = True
     helper.help_text_inline = True
     helper.html5_required = True
-    helper.layout = Layout(Fieldset('', 'title', 'name', 'employee_number', 'user', 'username',
-                                    'country', 'countries', 'modified_by', 'created', 'updated'),
-                           Submit('submit', 'Submit', css_class='btn-default'),
-                           Reset('reset', 'Reset', css_class='btn-warning'))
+    helper.layout = Layout(
+        'name',
+        Row(
+            Column('title', css_class='form-group col-md-6 mb-0'),
+            Column('employee_number', css_class='form-group col-md-6 mb-0'),
+            css_class='form-row'
+        ),
+        Row(
+            Column('user', css_class='form-group col-md-6 mb-0'),
+            Column('organization', css_class='form-group col-md-6 mb-0'),
+            css_class='form-row'
+        ),
+        Row(
+            Column('organizations', css_class='form-group col-md-12 mb-0'),
+            css_class='form-row'
+        ),
+        'privacy_disclaimer_accepted',
+        Reset('reset', 'Discard Changes', css_class='btn-md btn-warning'),
+        Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
+    )
 
 
 class NewUserRegistrationForm(UserCreationForm):
     """
     Form for registering a new account.
     """
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'username']
@@ -72,6 +92,7 @@ class NewActivityUserRegistrationForm(forms.ModelForm):
     """
     Form for registering a new account.
     """
+
     class Meta:
         model = ActivityUser
         fields = ['title', 'country', 'privacy_disclaimer_accepted']
@@ -91,7 +112,7 @@ class NewActivityUserRegistrationForm(forms.ModelForm):
     helper.form_tag = False
     helper.layout = Layout(
         Fieldset('Information', 'title', 'country'),
-        Fieldset('Privacy Statement', 'privacy_disclaimer_accepted',),
+        Fieldset('Privacy Statement', 'privacy_disclaimer_accepted', ),
 
     )
 
@@ -100,6 +121,7 @@ class BookmarkForm(forms.ModelForm):
     """
     Form for registering a new account.
     """
+
     class Meta:
         model = ActivityBookmarks
         fields = ['name', 'bookmark_url']
@@ -119,5 +141,30 @@ class BookmarkForm(forms.ModelForm):
     helper.form_tag = True
     helper.layout = Layout(
         Fieldset('', 'name', 'bookmark_url'),
-        Submit('submit', 'Submit', css_class='btn-default'),
+        Submit('submit', 'Submit', css_class='btn-success'),
         Reset('reset', 'Reset', css_class='btn-warning'))
+
+
+class OrganizationEditForm(forms.ModelForm):
+    """
+    Form for changing logo via User's profile page
+    """
+    class Meta:
+        model = Organization
+        fields = ['logo', ]
+
+    def __init__(self, *args, **kwargs):
+        super(OrganizationEditForm, self).__init__(*args, **kwargs)
+
+    helper = FormHelper()
+    helper.form_method = 'post'
+    helper.form_class = 'form-horizontal'
+    helper.label_class = 'col-sm-2'
+    helper.field_class = 'col-sm-6'
+    helper.form_error_title = 'Form Errors'
+    helper.error_text_inline = True
+    helper.help_text_inline = True
+    helper.html5_required = True
+    helper.layout = Layout(
+        Fieldset('', 'logo',),
+        Submit('submit', 'Submit', css_class='btn-success'))

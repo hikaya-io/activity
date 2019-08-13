@@ -16,15 +16,15 @@
 {% include "form_guidance.html" %}
     <div class="modal-body">
     {% if "data_assign/" in request.get_full_path  %}
-        {% if getDashboardComponent %}
+        {% if get_dashboard_component %}
             <form class="form-horizontal" method="post" id="dataAssignForm" action="{{request.get_full_path}}">
-             <input id="id_component_name" maxlength="255" type="hidden" readonly="readonly" name="component_name" value="{{ getDashboardComponent.component_name}}"/>
-            <input id="id_component_description" maxlength="255" type="hidden" readonly="readonly" name="component_description" value="{{ getDashboardComponent.component_description}}"/>
-            <input id="id_is_public" maxlength="255" type="hidden" readonly="readonly" name="is_public" value="{{getDashboardComponent.is_public}}"/>
-            <input id="id_component_type" maxlength="255" type="hidden" readonly="readonly" name="component_type" value="{{ getDashboardComponent.component_type}}"/>
-            <input id="id_component_data_required" maxlength="255" type="hidden" readonly="readonly" name="data_required" value="{{ getDashboardComponent.data_required}}"/>
+             <input id="id_component_name" maxlength="255" type="hidden" readonly="readonly" name="component_name" value="{{ get_dashboard_component.component_name}}"/>
+            <input id="id_component_description" maxlength="255" type="hidden" readonly="readonly" name="component_description" value="{{ get_dashboard_component.component_description}}"/>
+            <input id="id_is_public" maxlength="255" type="hidden" readonly="readonly" name="is_public" value="{{get_dashboard_component.is_public}}"/>
+            <input id="id_component_type" maxlength="255" type="hidden" readonly="readonly" name="component_type" value="{{ get_dashboard_component.component_type}}"/>
+            <input id="id_component_data_required" maxlength="255" type="hidden" readonly="readonly" name="data_required" value="{{ get_dashboard_component.data_required}}"/>
             <select multiple="multiple" id="id_data_sources" name="data_sources" class="form-control" >
-                {% for data in getComponentDataSources %}
+                {% for data in get_component_data_sources %}
                     <option value="{{data.id}}">{{data.data_name}}</option>
                 {% endfor %}
             </select>

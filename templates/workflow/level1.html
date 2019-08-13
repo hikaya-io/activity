@@ -1,0 +1,115 @@
+{% extends "base.html" %} {% block content %} 
+{% include '../shared/level1_modal_form.html' %}
+
+<script>
+  $(document).ready(function() {
+    $('#level1Table').DataTable();
+  });
+</script>
+
+<div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="/">Home Dashboard</a></li>
+    <li class="active">
+      {{ request.user.activity_user.organization.level_1_label }}s
+    </li>
+  </ul>
+  {% endblock %}
+
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+        {{ request.user.activity_user.organization.level_1_label }}s
+      </h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <!-- sample action buttons -->
+      <div class="btn-group" role="group" aria-label="">
+        <button
+          class="btn btn-primary btn-sm"
+          data-toggle="modal"
+          data-target="#addProgramModal"
+        >
+          <i class="fa fa-plus"></i> Add New
+          {{ request.user.activity_user.organization.level_1_label }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <table class="table" id="level1Table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for program in programs %} {% if program.name %}
+      <tr>
+        <td>
+          <a href="/workflow/level1/edit/{{ program.id }}/">
+            {{ program.name }}
+          </a>
+        </td>
+        <!-- dates to be formated -->
+        <td>{{ program.start_date | date }}</td>
+        <td>{{ program.end_date | date }}</td>
+        <td class="text-right">
+          <div class="btn-group">
+            <a role="button" href="" class="btn btn-default btn-sm disabled">More</a>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="/workflow/level2/list/{{program.id}}/none/">
+                  {{ request.user.activity_user.organization.level_2_label }}s
+                </a>
+              </li>
+              <li><a href="">Stakeholders</a></li>
+              <li><a href="">Sites</a></li>
+              <li><a href="">Indicators</a></li>
+
+              <li role="separator" class="divider"></li>
+
+              <li>
+                <a class="" href="/workflow/level1/edit/{{ program.id }}/"
+                  >Edit</a
+                >
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a
+                  class="text-danger"
+                  href="#deleteProgramModal{{ program.id }}"
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{ program.id }})"
+                  data-target="#deleteProgramModal{{ program.id }}"
+                >
+                  Delete
+                </a>
+              </li>
+            </ul>
+          </div>
+        </td>
+        {% include 'workflow/modals/program_delete_confirm_modal.html'%}
+      </tr>
+      {% endif %} {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}

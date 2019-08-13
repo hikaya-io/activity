@@ -2,7 +2,7 @@ import unicodedata
 import json
 import requests
 
-from workflow.models import Country, ActivityUser, ActivitySites
+from workflow.models import Country, ActivityUser, ActivitySites, Organization
 from django.contrib.auth.models import User
 from django.core.mail import mail_admins, EmailMessage
 from django.core.exceptions import PermissionDenied
@@ -39,8 +39,21 @@ def get_country(user):
     return get_countries
 
 
+def get_organizations(user):
+    """
+    Returns the object the view is displaying.
+    """
+    user_organizations = ActivityUser.objects.all().filter(
+        user__id=user.id).values('organizations')
+
+    get_user_organizations = Organization.objects.all().filter(id__in=user_organizations)
+
+    return get_user_organizations
+
+
 def email_group(country, group, link, subject, message, submiter=None):
-    # email incident to admins in each country assoicated with the projects program
+    # email incident to admins in each country assoicated
+    # with the projects program
     for single_country in country.all():
         country = Country.objects.all().filter(country=single_country)
         get_group_emails = User.objects.all().filter(
@@ -123,3 +136,19 @@ def group_required(*group_names, url):
             raise PermissionDenied
         return False
     return user_passes_test(in_groups)
+
+
+def get_nav_links(nav):
+    nav_links = [
+        {'label': 'Home', 'status': '', 'link': '/accounts/admin_dashboard'},
+        {'label': 'Profile Settings', 'status': '',
+         'link': '/accounts/admin/profile_settings'},
+        {'label': 'Configurations', 'status': '',
+         'link': '/accounts/admin/configurations'},
+        {'label': 'User Management', 'status': '',
+         'link': '/accounts/admin/users/all/all/'}
+    ]
+    for item in nav_links:
+        if item['label'] == nav:
+            item['status'] = 'hikaya-active'
+    return nav_links

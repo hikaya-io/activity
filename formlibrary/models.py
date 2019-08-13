@@ -18,7 +18,8 @@ class TrainingAttendance(models.Model):
     program = models.ForeignKey(
         Program, null=True, blank=True, on_delete=models.SET_NULL)
     project_agreement = models.ForeignKey(
-        ProjectAgreement, null=True, blank=True, verbose_name="Project Initiation", on_delete=models.SET_NULL)
+        ProjectAgreement, null=True, blank=True,
+        verbose_name="Project Initiation", on_delete=models.SET_NULL)
     implementer = models.CharField(max_length=255, null=True, blank=True)
     reporting_period = models.CharField(max_length=255, null=True, blank=True)
     total_participants = models.IntegerField(null=True, blank=True)
@@ -71,7 +72,8 @@ class Distribution(models.Model):
     program = models.ForeignKey(
         Program, null=True, blank=True, on_delete=models.SET_NULL)
     initiation = models.ForeignKey(ProjectAgreement, null=True, blank=True,
-                                   verbose_name="Project Initiation", on_delete=models.SET_NULL)
+                                   verbose_name="Project Initiation",
+                                   on_delete=models.SET_NULL)
     office_code = models.ForeignKey(
         Office, null=True, blank=True, on_delete=models.SET_NULL)
     distribution_indicator = models.CharField(max_length=255)
@@ -148,7 +150,7 @@ class Beneficiary(models.Model):
     site = models.ForeignKey(SiteProfile, null=True,
                              blank=True, on_delete=models.SET_NULL)
     signature = models.BooleanField(default=True)
-    remarks = models.CharField(max_length=255, null=True, blank=True)
+    remarks = models.TextField(max_length=550, null=True, blank=True)
     program = models.ManyToManyField(Program, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
@@ -165,6 +167,10 @@ class Beneficiary(models.Model):
 
     # displayed in admin templates
     def __str__(self):
+        # TODO : Keep or delete this check, it helps avoiding getting
+        #  error when deleting a beneficiary
+        if self.beneficiary_name is None:
+            return "NULL"
         return self.beneficiary_name
 
 
