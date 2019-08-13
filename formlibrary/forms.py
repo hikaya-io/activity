@@ -232,6 +232,12 @@ class BeneficiaryForm(forms.ModelForm):
         required=False
     )
 
+    # site = forms.ModelChoiceField(
+    #     queryset=SiteProfile.objects.all(),
+    #     widget=Select2MultipleWidget,
+    #     required=False
+    # )
+
     class Meta:
         model = Beneficiary
         exclude = ['create_date', 'edit_date']
@@ -270,7 +276,6 @@ class BeneficiaryForm(forms.ModelForm):
         super(BeneficiaryForm, self).__init__(*args, **kwargs)
 
         organization = self.request.user.activity_user.organization
-        countries = get_country(self.request.user)
         self.fields['training'].queryset = TrainingAttendance.objects.filter(
             program__organization=organization)
         self.fields['program'].queryset = Program.objects.filter(
@@ -278,4 +283,4 @@ class BeneficiaryForm(forms.ModelForm):
         self.fields['distribution'].queryset = Distribution.objects.filter(
             program__organization=organization)
         self.fields['site'].queryset = SiteProfile.objects.filter(
-            country__in=countries)
+            organizations__id__contains=self.request.user.activity_user.organization.id)
