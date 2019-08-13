@@ -32,11 +32,10 @@
 	{% csrf_token %} {% load crispy_forms_tags %} {% crispy form %}
 </div>
 <script>
-	$(document).ready(() => {
-		$('#id_site').select2({
+	$(document).ready(function(){
+		/**$('#id_site').select2({
 			placeholder: 'select site',
-			theme: 'bootstrap',
-		});
+		});**/
 	});
 </script>
 {% endblock content %}

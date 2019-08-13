@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block content %} 
-{% include './contact_form.html' %}
+{% include './modals/contact_quick_entry_form.html' %}
 
 <script>
   $(document).ready(function() {
@@ -50,7 +50,7 @@
     <tbody>
       {% for contact in get_contacts %}
       <tr>
-        <td>{{ contact.name }}</td>
+        <td><a href="/workflow/contact_update/{{contact.id}}/">{{ contact.name }}</a></td>
         <td>{{ contact.city }}</td>
         <td>{{ contact.email }}</td>
         <td>{{ contact.phone }}</td>
@@ -72,12 +72,22 @@
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <ul class="dropdown-menu">
-              <li><a href="#">Edit</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a class="text-danger" href="#">Delete</a></li>
+              <li><a href="/workflow/contact_update/{{contact.id}}/">Edit</a></li>
+              <li>
+                <a
+                  class="text-danger"
+                  href="#deleteItemModal{{ contact.id }}"
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{ contact.id }})"
+                  data-target="#deleteItemModal{{ contact.id }}"
+                >
+                  Delete
+                </a>
+              </li>
             </ul>
           </div>
         </td>
+        {% include 'workflow/contact_confirm_delete.html' %}
       </tr>
       {% endfor %}
     </tbody>

@@ -1839,7 +1839,6 @@ class ContactUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ContactUpdate, self).get_context_data(**kwargs)
         context.update({'id': self.kwargs['pk']})
-        context.update({'stakeholder_id': self.kwargs['stakeholder_id']})
         return context
 
     def form_invalid(self, form):
@@ -1850,39 +1849,16 @@ class ContactUpdate(UpdateView):
         form.save()
         messages.success(self.request, 'Success, Contact Updated!')
 
-        return self.render_to_response(self.get_context_data(form=form))
+        return redirect('/workflow/contact_list/0/')
 
     form_class = ContactForm
 
 
-class ContactDelete(DeleteView):
-    """
-    Benchmark Form
-    """
-    model = Contact
-    success_url = '/workflow/contact_list/0/'
+def delete_contact(request, pk):
+    contact = Contact.objects.get(pk=int(pk))
+    contact.delete()
 
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(ContactDelete, self).dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(ContactDelete, self).get_context_data(**kwargs)
-        context.update({'id': self.kwargs['pk']})
-        return context
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-
-        messages.success(self.request, 'Success, Contact Deleted!')
-        return self.render_to_response(self.get_context_data(form=form))
-
-    form_class = ContactForm
+    return redirect('/workflow/contact_list/0/')
 
 
 class CountryDoesNotExist(Exception):

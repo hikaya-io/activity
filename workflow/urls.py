@@ -158,10 +158,10 @@ urlpatterns = [
             ContactList.as_view(), name='contact_list'),
     re_path(r'^contact_add/(?P<stakeholder_id>\w+)/(?P<id>\w+)/$',
             ContactCreate.as_view(), name='contact_add'),
-    re_path(r'^contact_update/(?P<stakeholder_id>\w+)/(?P<pk>\w+)/$',
+    re_path(r'^contact_update/(?P<pk>\w+)/$',
             ContactUpdate.as_view(), name='contact_update'),
     re_path(r'^contact_delete/(?P<pk>\w+)/$',
-            ContactDelete.as_view(), name='contact_delete'),
+            delete_contact, name='contact_delete'),
 
     re_path(r'^checklistitem_list/(?P<pk>\w+)/$',
             ChecklistItemList.as_view(), name='checklistitem_list'),

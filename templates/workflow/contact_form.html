@@ -1,131 +1,38 @@
-<script>
-  $(document).ready(() => {
-  });
-  
-  $(() => {
-    $('#saveContact').click(e => {
-      e.preventDefault();
-      const formValue = $('#addContactForm').serializeArray();
-      const obj = {};
-      formValue.forEach(item => {
-        obj[item.name] = item.value;
-      });
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    {% if form.errors %}
+	<div class="help-block">
+		{% for field in form %} {% for error in field.errors %}
+		<strong
+			><i>{{ field.label }}</i> - {{ error | escape }}</strong
+		>&nbsp; {% endfor %} {% endfor %}
+	</div>
+	{% for error in form.non_field_errors %}
+	<div class="alert alert-error">
+		<strong>{{ error | escape }}</strong>
+	</div>
+	{% endfor %} {% endif %} {% block breadcrumbs %}
+	<ul class="breadcrumb">
+		<li><a href="/formlibrary/contact_list/0/0/">Contact List</a></li>
+		<li class="active">Contact</li>
+	</ul>
+	{% endblock %}
 
-      $.ajax({
-        url: "{% url 'add-contact' %}",
-        type: 'POST',
-        data: obj,
-        success: function(resp, status) {
-          // notify success
-          toastr.success('Contact was added sucessfully');
-          //close modal
-          $('#addContactModal').modal('hide');
-          // reset form
-          $('#addContactForm').trigger('reset');
+	<!-- Sub navigation -->
+	<div class="sub-navigation">
+		<div class="sub-navigation-header">
+			<h4 class="page-title">
+				Contact Form
+			</h4>
+		</div>
+		<div class="sub-navigation-actions">
+			{% include "form_guidance.html" %}
+		</div>
+	</div>
+  {% csrf_token %}
+  {% load crispy_forms_tags %}
+  {% crispy form %}
+</div>
 
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
-        },
-        error: function(xhr, status, error) {
-          toastr.error(error, 'Failed');
-        },
-      });
-    });
-  });
-</script>
-
-<form id="addContactForm">
-  <!-- Modal -->
-  <div
-    class="modal fade"
-    id="addContactModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="addContactModalLabel"
-  >
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="addContactModalLabel">Add Contact</h4>
-        </div>
-        <div class="modal-body">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              class="form-control"
-              placeholder="Name"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="city">City</label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              class="form-control"
-              placeholder="City"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="phoneNumber">Phone Number</label>
-            <input
-              type="text"
-              id="phoneNumber"
-              name="phone_number"
-              class="form-control"
-              placeholder="Phone Number"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="Email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="form-control"
-              placeholder="Email"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="address">Address</label>
-            <textarea
-              id="address"
-              name="address"
-              class="form-control"
-              placeholder="Address"
-            ></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-default"
-            data-dismiss="modal"
-          >
-            Close
-          </button>
-          <button type="button" class="btn btn-success" id="saveContact">
-            Save
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
+{% endblock content %}

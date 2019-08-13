@@ -12,7 +12,7 @@ from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
     Benchmarks, Monitor, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector, FundCode
+    ActivityUser, Contact, Sector, FundCode, Country
 )
 from indicators.models import CollectedData, Indicator, PeriodicTarget
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
@@ -33,6 +33,13 @@ BUDGET_VARIANCE = (
     ("Over Budget", "Over Budget"),
     ("Under Budget", "Under Budget"),
     ("No Variance", "No Variance"),
+)
+
+# Title Choices
+TITLE_CHOICES = (
+    ('mr', 'Mr.'),
+    ('mrs', 'Mrs.'),
+    ('ms', 'Ms.'),
 )
 
 
@@ -2106,24 +2113,42 @@ class ChecklistItemForm(forms.ModelForm):
 
 
 class ContactForm(forms.ModelForm):
+    title = forms.ChoiceField(choices=TITLE_CHOICES)
+
     class Meta:
         model = Contact
-        exclude = ['create_date', 'edit_date']
+        exclude = ['create_date', 'edit_date', 'organization']
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-2'
-        self.helper.field_class = 'col-sm-6'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.add_input(
-            Submit('submit', 'Save', css_class='btn-success'))
+        self.helper.layout = Layout(
+            Row(
+                Column('title', css_class='form-group col-md-6 mb-0'),
+                Column('name', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('phone', css_class='form-group col-md-6 mb-0'),
+                Column('email', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('city', css_class='form-group col-md-6 mb-0'),
+                Column('country', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            'address',
+            Reset('reset', 'Discard Changes', css_class='btn btn-md btn-default'),
+            Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
+        )
 
         super(ContactForm, self).__init__(*args, **kwargs)
+        self.fields['country'].queryset = Country.objects.all()
 
 
 class StakeholderForm(forms.ModelForm):
