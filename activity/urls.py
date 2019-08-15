@@ -132,6 +132,10 @@ urlpatterns = [  # rest framework
          name='admin_configurations'),
     path('accounts/admin/profile_settings', views.admin_profile_settings,
          name='admin_profile_settings'),
+    path('accounts/admin/invite_user/', views.invite_user,
+         name='invite_user'),
+    path('accounts/admin/users/invitations/list/<slug:organization>/', views.admin_user_invitations,
+         name='admin_user_invitations'),
 
     # bookmarks
     path('bookmark_list', BookmarkList.as_view(),

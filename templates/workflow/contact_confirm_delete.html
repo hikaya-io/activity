@@ -21,7 +21,7 @@
 					<button 
 						type="submit"
 						class="btn btn-secondary" 
-						onclick="deleteCancel()">
+						data-dismiss="modal">
 						Cancel
 					</button>
 					<button
@@ -56,13 +56,6 @@
 		setTimeout(() => {
 			window.location.href = `/workflow/contact_delete/${itemId}/`;
 		}, 2000);
-	}
-
-	/**
-	 * reload the page to close the modal
-	 **/
-	function deleteCancel() {
-		window.location.reload();
 	}
 	$(document).ready(() => {});
 </script>

@@ -12,16 +12,20 @@ from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum, Q, Count
 from django.db import IntegrityError
+from django.views.decorators.csrf import csrf_protect
+from django.core.exceptions import MultipleObjectsReturned
+from django.urls import resolve
 
 from indicators.models import CollectedData, Indicator
 
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, Country, ActivityUser,
-    ActivitySites, ActivityBookmarks, FormGuidance, Organization
+    ActivitySites, ActivityBookmarks, FormGuidance, Organization, UserInvite
 )
 from activity.tables import IndicatorDataTable
-from activity.util import get_country, get_nav_links
+from activity.util import get_country, get_nav_links, send_invite_emails, \
+    send_single_mail
 from activity.forms import (
     RegistrationForm, BookmarkForm, OrganizationEditForm)
 from activity.settings import PROJECT_ROOT
@@ -32,7 +36,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-# from django.forms.models import model_to_dict
+from django.forms.models import model_to_dict
 
 APPROVALS = (
     ('in_progress', 'In Progress'),
@@ -600,17 +604,37 @@ def admin_user_management(request, role, status):
     users = ActivityUser.objects.filter(
         organization=request.user.activity_user.organization)
     groups = Group.objects.all().distinct('name')
+
+    user_organizations = request.user.activity_user.organizations
     if role != 'all':
         users = users.filter(user__groups__id__icontains=int(role))
     if status != 'all':
         status = True if status == 'active' else False
         users = users.filter(user__is_active=status)
 
-    return render(
-        request,
-        'admin/user_management.html',
-        {'nav_links': nav_links, 'users': users, 'groups': groups}
-    )
+    return render(request, 'admin/user_management.html', {
+        'nav_links': nav_links,
+        'users': users,
+        'groups': groups,
+        'organizations': user_organizations,
+    })
+
+
+def admin_user_invitations(request, organization):
+    nav_links = get_nav_links('User Management')
+
+    user_organizations = request.user.activity_user.organizations.all()
+    invitations = UserInvite.objects.filter(
+        organization__in=user_organizations)
+
+    if int(organization) != 0:
+        invitations = invitations.filter(organization_id=int(organization))
+
+    return render(request, 'admin/user_invitations.html', {
+        'nav_links': nav_links,
+        'invitations': invitations,
+        'organizations': user_organizations,
+    })
 
 
 def admin_user_edit(request, pk):
@@ -799,3 +823,48 @@ def logout_view(request):
     logout(request)
     # Redirect to a success page.
     return HttpResponseRedirect("/")
+
+
+@csrf_protect
+def invite_user(request):
+    """
+    invite user
+    :param request: request context
+    :return: success
+    """
+    if request.method == 'POST' and request.is_ajax:
+        data = request.POST
+        email_list = data.getlist('user_email_list[]')
+        organization_id = int(data.get('organization'))
+        failed_invites = []
+        success_invites = []
+        for email in email_list:
+            try:
+                if UserInvite.objects.get(email=email.lower()):
+                    pass
+            except MultipleObjectsReturned:
+                pass
+            except UserInvite.DoesNotExist:
+                invite = UserInvite.objects.create(email=email.lower(), organization_id=organization_id)
+                if invite:
+                    success_invites.append(invite)
+                else:
+                    failed_invites.append(email)
+
+        # send invitation mails
+        mail_subject = 'Invitation to Join Activity'
+        email_from = 'support@hikaya.io'
+        domain = request.build_absolute_uri('/').strip('/')
+        data = {
+            'link': '{}/accounts/register/invite/'.format(domain)
+        }
+
+        if len(success_invites) > 0:
+            send_invite_emails(mail_subject, email_from, success_invites, data)
+
+        if len(failed_invites) == 0:
+            return HttpResponse({'success': True})
+
+        else:
+            return HttpResponse({'success': False, 'failed': failed_invites})
+

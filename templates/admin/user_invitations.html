@@ -8,8 +8,8 @@
 		<div class="col-md-9 admin-content">
 			{% block breadcrumbs %}
 			<ul class="breadcrumb">
-				<li><a href="/">Home Dashboard</a></li>
-				<li class="active">{{ request.user.activity_user.organization.level_1_label }}s</li>
+				<li><a href="/accounts/admin/users/all/all/">User(s)</a></li>
+				<li class="active">Pending Invitation(s)</li>
 			</ul>
 			{% endblock %}
 
@@ -17,76 +17,52 @@
 			<div class="sub-navigation">
 				<div class="sub-navigation-header">
 					<h4 class="page-title">
-						{{ request.user.activity_user.organization.level_1_label }}s
+						Pending User Invitation(s)
 					</h4>
 				</div>
 				<div class="sub-navigation-actions">
 					<div class="sub-nav-item">
-						{% include "admin/user_filter.html" %}
+                        <div class="btn-group" role="group">
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-default dropdown-toggle"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                            >
+                                Organization(s)
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="/accounts/admin/users/invitations/list/0/">--All--</a></li>
+                                {% for org in organizations %}
+                                <li>
+                                <a href="/accounts/admin/users/invitations/list/{{org.id}}/">{{ org.name }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
 					</div>
-					<div class="sub-nav-item">
-						<div class="btn-group">
-							<button type="button" class="btn btn-default btn-sm">Invitations</button>
-							<button
-								type="button"
-								class="btn btn-default btn-sm dropdown-toggle"
-								data-toggle="dropdown"
-								aria-haspopup="true"
-								aria-expanded="false"
-							>
-								<span class="caret"></span>
-								<span class="sr-only">Toggle Dropdown</span>
-							</button>
-							<ul class="dropdown-menu">
-								<li>
-									<a
-									  href="#inviteUserModal"
-									  data-toggle="modal"
-									  data-target="#inviteUserModal"
-									  >
-									  </span> Invite User(s)
-									</a>
-								</li>
-								<li>
-									<a href="/accounts/admin/users/invitations/" >
-									 Pending Invitations
-								</a>
-								</li>
-							</ul>
-						</div>
-					  </div>
 				</div>
 			</div>
 			<div>
-				<table class="table" id="userTable">
+				<table class="table" id="invitationTable">
 					<thead>
 						<tr>
-							<th>First Name</th>
-							<th>Last Name</th>
-							<th>Is Active</th>
-							<th>Role</th>
-							<th>Date Joined</th>
+							<th>Email</th>
+							<th>Invitation Date</th>
+							<th>Status</th>
+							<th>Organization</th>
 							<th>Actions</th>
 						</tr>
 					</thead>
 					<tbody>
-						{% for user in users%}
+						{% for item in invitations%}
 						<tr>
-							<td>{{ user.user.first_name }}</td>
-							<td>{{ user.user.last_name }}</td>
-							<td>
-								{%if user.user.is_active %}
-									<span class="badge">Active</span>
-								{% else %}
-									<span class="badge">In-Active</span>
-								{% endif %}
-							</td>
-							<td>
-								{% if user.user.is_superuser %} Org Admin {% else%}
-								{{ user.user.groups.all.0}}
-								{% endif %}
-							</td>
-							<td>{{ user.create_date | date:"DATE_FORMAT" }}</td>
+							<td>{{ item.email }}</td>
+							<td>{{ item.invite_date }}</td>
+							<td>{{ item.status }}</td>
+							<td>{{ item.organization }}</td>
 							<td class="text-right">
 								<!-- Action buttons -->
 								<div class="btn-group">
@@ -153,6 +129,10 @@
 	</div>
 </div>
 {% block extra_js_in_body %}
-	<script src="{{ STATIC_URL }}js/admin.js"></script>
+	<script>
+        $(document).ready(() => {
+            $('#invitationTable').DataTable();
+        });
+    </script>
 {% endblock %}
 {% endblock content %}
