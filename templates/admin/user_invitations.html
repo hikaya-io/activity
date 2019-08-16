@@ -66,60 +66,18 @@
 							<td class="text-right">
 								<!-- Action buttons -->
 								<div class="btn-group">
-									<button type="button" class="btn btn-sm btn-default">
-										More
-									</button>
-									<button
-										type="button"
-										class="btn btn-default btn-sm dropdown-toggle"
-										data-toggle="dropdown"
-										aria-haspopup="true"
-										aria-expanded="false"
+									<button 
+										type="button" 
+										class="btn btn-sm btn-danger"
+										data-toggle="modal"
+										onclick="setItemToDelete({{ item.id }})"
+										data-target="#revokeInviteModal{{ item.id }}"
 									>
-										<span class="caret"></span>
-										<span class="sr-only">Toggle Dropdown</span>
+										Revoke
 									</button>
-									<ul class="dropdown-menu">
-										<li class="text-danger">
-											<a
-												href="/accounts/admin/user/edit/{{user.id}}/"
-												>Edit</a
-											>
-										</li>
-										{% if user.user.is_active %}
-											{% if user.user == request.user %}
-											<li class="disabled">
-												<a href="">Deativate</a>
-											</li>
-											{% else %}
-											<li>
-												<a 
-													href="/accounts/admin/user/updatestatus/{{user.user.id}}/deactivate/">
-													Deativate
-												</a>
-											</li>
-											{% endif %}
-										{% else %}
-										<li>
-											<a 
-												href="/accounts/admin/user/updatestatus/{{user.user.id}}/activate/">
-												Activate
-											</a>
-										</li>
-										{% endif %}
-										<li class="text-danger">
-											<a
-												href="#deleteItemModal{{ user.id }}"
-												data-toggle="modal"
-												onclick="setItemToDelete({{ user.id }})"
-												data-target="#deleteItemModal{{ user.id }}"
-											>
-												Delete
-											</a>
-										</li>
-									</ul>
 								</div>
 							</td>
+							{% include 'admin/revoke_invitation_confirm_modal.html' %}
 						</tr>
 						{% endfor %}
 					</tbody>

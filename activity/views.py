@@ -853,7 +853,7 @@ def invite_user(request):
 
         # send invitation mails
         mail_subject = 'Invitation to Join Activity'
-        email_from = 'support@hikaya.io'
+        email_from = 'team.hikaya@gmail.com'
         domain = request.build_absolute_uri('/').strip('/')
         data = {
             'link': '{}/accounts/register/invite/'.format(domain)

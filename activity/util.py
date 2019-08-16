@@ -163,9 +163,9 @@ def send_invite_emails(subject, email_from, email_to, data):
     :param email_to: recipients list
     :param data: context data
     """
-
     if len(email_to) > 1:
         messages = []
+        print('inside to:::', email_to)
         for email in email_to:
             link = '{}{}/'.format(data['link'], email.invite_uuid)
             email_context = {'organization': email.organization.name, 'link': link}
@@ -186,6 +186,7 @@ def send_invite_emails(subject, email_from, email_to, data):
         connection.close()
 
     else:
+        print('inside the else:::', email_to)
         link = '{}{}/'.format(data['link'], email_to[0].invite_uuid)
         email_context = {'organization': email_to[0].organization, 'link': link}
         email_txt = loader.render_to_string('emails/invite.txt', email_context)

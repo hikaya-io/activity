@@ -74,6 +74,10 @@ $('form#inviteUserForm').submit(e => {
 						`You have successfuly invited ${data.user_email_list.length} user(s)`,
 						'Inviattion Successful'
 					);
+
+					setTimeout(() => {
+						window.location.reload();
+					}, 2000);
 				}
 			},
 			error: function(xhr, desc, error) {
