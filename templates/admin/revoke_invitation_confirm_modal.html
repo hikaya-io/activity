@@ -59,7 +59,7 @@
             success: function(result) {
                 toastr.success('You have successfully revoked the invitation');
                 setTimeout(() => {
-                    window.location.href = `/accounts/admin/users/all/all/`;
+                    window.location.href = `/accounts/admin/users/invitations/list/0/`;
                 }, 2000);
             }
         })
