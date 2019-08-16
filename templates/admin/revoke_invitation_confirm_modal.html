@@ -31,7 +31,7 @@
 						onclick="deleteItem()"
 						id="revokeInvite{{ item.id }}"
 					>
-						Delete
+						Revoke
 					</button>
 				</div>
 			</div>
@@ -53,9 +53,15 @@
 	 * Redirect to the page to delete the item
 	 **/
 	function deleteItem() {
-		toastr.success('You have successfully delete this Item');
-		setTimeout(() => {
-			window.location.href = `/workflow/level1_delete/${itemId}/`;
-		}, 2000);
+        $.ajax({
+            url: `/accounts/admin/users/invitations/delete_invitation/${itemId}/`,
+            type: 'DELETE',
+            success: function(result) {
+                toastr.success('You have successfully revoked the invitation');
+                setTimeout(() => {
+                    window.location.href = `/accounts/admin/users/all/all/`;
+                }, 2000);
+            }
+        })
 	}
 </script>

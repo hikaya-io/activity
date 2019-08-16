@@ -37,6 +37,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.forms.models import model_to_dict
+from django.views.decorators.csrf import csrf_exempt
 
 APPROVALS = (
     ('in_progress', 'In Progress'),
@@ -868,3 +869,11 @@ def invite_user(request):
         else:
             return HttpResponse({'success': False, 'failed': failed_invites})
 
+@csrf_exempt
+def delete_invitation(request, pk):
+    try:
+        invitation = UserInvite.objects.get(pk=int(pk))
+        invitation.delete()
+        return HttpResponse({'success': True})
+    except UserInvite.DoesNotExist:
+        pass
