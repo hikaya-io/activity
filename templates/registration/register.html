@@ -20,7 +20,7 @@
           <a
             type="button"
             class="btn btn-primary btn-sm"
-            href="{% url 'register' %}"
+            href="/accounts/register/user/none/"
             ><strong>Register</strong></a
           >
         </div>
@@ -33,7 +33,7 @@
         </div>
         <div class="panel-body">
           <div class="auth-form">
-            <form action="/accounts/register/" method="POST">
+            <form action="/accounts/register/user/{{invite_uuid}}/" method="POST">
               {% csrf_token %}
               <div class="row">
                 <div class="col-md-6 form-group" id="div_first_name">

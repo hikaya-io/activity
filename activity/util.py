@@ -164,35 +164,28 @@ def send_invite_emails(subject, email_from, email_to, data):
     :param data: context data
     """
     if len(email_to) > 1:
-        messages = []
-        print('inside to:::', email_to)
+        connection = mail.get_connection()
+        messages = list()
         for email in email_to:
             link = '{}{}/'.format(data['link'], email.invite_uuid)
             email_context = {'organization': email.organization.name, 'link': link}
             email_txt = loader.render_to_string('emails/invite.txt', email_context)
             email_html = loader.get_template('emails/invite.html')
             email_html_content = email_html.render(email_context)
-            msg = EmailMultiAlternatives(subject, email_txt, email_from, [email])
+            msg = EmailMultiAlternatives(subject, email_txt,
+                                         'Hikaya <{}>'.format(email_from), [email.email])
             msg.attach_alternative(email_html_content, "text/html")
-
             messages.append(msg)
 
-        connection = mail.get_connection()
-
-        # manually open connection
-        connection.open()
         connection.send_messages(messages)
-        # manually close connection
-        connection.close()
-
     else:
-        print('inside the else:::', email_to)
         link = '{}{}/'.format(data['link'], email_to[0].invite_uuid)
         email_context = {'organization': email_to[0].organization, 'link': link}
         email_txt = loader.render_to_string('emails/invite.txt', email_context)
         email_html = loader.get_template('emails/invite.html')
         email_html_content = email_html.render(email_context)
-        msg = EmailMultiAlternatives(subject, email_txt, email_from, email_to)
+        msg = EmailMultiAlternatives(subject, email_txt,
+                                     'Hikaya <{}>'.format(email_from), [email_to[0].email])
         msg.attach_alternative(email_html_content, "text/html")
 
         msg.send()

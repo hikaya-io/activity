@@ -112,7 +112,7 @@ urlpatterns = [  # rest framework
     path('accounts/logout/', views.logout_view, name='logout'),
 
     # register
-    path('accounts/register/', views.register, name='register'),
+    path('accounts/register/user/<slug:invite_uuid>/', views.register, name='register'),
     path('accounts/register/organization', views.register_organization,
          name='register_organization'),
 

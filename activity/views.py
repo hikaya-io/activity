@@ -14,18 +14,15 @@ from django.db.models import Sum, Q, Count
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_protect
 from django.core.exceptions import MultipleObjectsReturned
-from django.urls import resolve
 
 from indicators.models import CollectedData, Indicator
-
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, Country, ActivityUser,
     ActivitySites, ActivityBookmarks, FormGuidance, Organization, UserInvite
 )
 from activity.tables import IndicatorDataTable
-from activity.util import get_country, get_nav_links, send_invite_emails, \
-    send_single_mail
+from activity.util import get_country, get_nav_links, send_invite_emails
 from activity.forms import (
     RegistrationForm, BookmarkForm, OrganizationEditForm)
 from activity.settings import PROJECT_ROOT
@@ -403,7 +400,12 @@ class EmailError(Exception):
     pass
 
 
-def register(request):
+class MultipleUserNameError(Exception):
+    """Existing Username Error"""
+    pass
+
+
+def register(request, invite_uuid):
     """
     Register a new User profile using built in Django Users Model
     """
@@ -417,47 +419,80 @@ def register(request):
         password = data.get('password')
 
         try:
-            if User.objects.filter(email=email):
-                raise EmailError
+            if User.objects.get(email=email):
+                invite_uuid = set_invite_uuid(invite_uuid)
+                invite_uuid.message_email = 'email already exists !'
+                return render(request, 'registration/register.html', invite_uuid)
 
-            user = User.objects.create_user(
-                first_name=first_name,
-                last_name=last_name,
-                username=username,
-                email=email,
-                password=password,
-                is_active=False,
-            )
-        except EmailError:
-            return render(request, 'registration/register.html',
-                          {"message_email": "email already exists !"})
-        except IntegrityError:
-            return render(request, 'registration/register.html',
-                          {"message_username": "username already exists !"})
+        except User.DoesNotExist:
+            try:
+                user = User.objects.create_user(
+                    first_name=first_name,
+                    last_name=last_name,
+                    username=username,
+                    email=email,
+                    password=password,
+                    is_active=False,
+                )
+            except IntegrityError:
+                invite_uuid = set_invite_uuid(invite_uuid)
+                invite_uuid.message_username = 'username already exists !'
+                return render(request, 'registration/register.html', invite_uuid)
 
-        current_site = get_current_site(request)
-        mail_subject = 'Activate your Activity account.'
-        message = render_to_string('registration/activate_email.html', {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
-        })
-        email = EmailMessage(
-            mail_subject, message, to=[email]
-        )
-        email.send()
         if user:
+            if invite_uuid != 'none':
+                try:
+                    invite = UserInvite.objects.get(invite_uuid=invite_uuid)
+                    # activate invited user accounts
+                    user.is_active = True
+                    user.save()
+                    activity_user = ActivityUser.objects.create(
+                        user=user,
+                        organization_id=invite.organization.id
+                    )
+                    if activity_user:
+                        # delete the invitation
+                        invite.delete()
+                        return redirect('/accounts/login/')
+
+                except UserInvite.DoesNotExist:
+                    return HttpResponse({
+                        'invalid_invite': 'Invalid invitation code. Please contact Organization admin'
+                    })
+            else:
+                mail_subject = 'Activate your Activity account.'
+                message = render_to_string(
+                    'registration/activate_email.html', {
+                        'user': user,
+                        'domain': request.build_absolute_uri('/').strip('/'),
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'token': account_activation_token.make_token(user),
+                    })
+                email = EmailMessage(mail_subject, message,
+                                     'Hikaya <team.hikaya@gmail.com>', to=[email])
+                email.send()
+
             activity_user = ActivityUser.objects.create(user=user)
             if activity_user:
-                return HttpResponse('Please confirm your email address to '
-                                    'complete the registration')
+                return render(request, 'registration/confirm_email.html')
 
             else:
                 return render(request, 'registration/register.html')
 
     else:
-        return render(request, 'registration/register.html')
+
+        invite_uuid = set_invite_uuid(invite_uuid)
+
+        return render(request, 'registration/register.html', invite_uuid)
+
+
+def set_invite_uuid(invite_uuid):
+    if invite_uuid != 'none':
+        invite_uuid = {'invite_uuid': invite_uuid}
+    else:
+        invite_uuid = {'invite_uuid': 'none'}
+
+    return invite_uuid
 
 
 def user_login(request):
@@ -478,7 +513,7 @@ def user_login(request):
 
         else:
             render(request, 'registration/login.html')
-    return render(request, 'registration/login.html')
+    return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
 
 def register_organization(request):
@@ -857,7 +892,7 @@ def invite_user(request):
         email_from = 'team.hikaya@gmail.com'
         domain = request.build_absolute_uri('/').strip('/')
         data = {
-            'link': '{}/accounts/register/invite/'.format(domain)
+            'link': '{}/accounts/register/user/'.format(domain)
         }
 
         if len(success_invites) > 0:
@@ -868,6 +903,7 @@ def invite_user(request):
 
         else:
             return HttpResponse({'success': False, 'failed': failed_invites})
+
 
 @csrf_exempt
 def delete_invitation(request, pk):
