@@ -371,6 +371,7 @@ def index(request, selected_countries=None, id=0, sector=0):
     })
 
 
+@login_required(login_url='/accounts/login/')
 def switch_organization(request, org_id):
     organization = Organization.objects.filter(id=int(org_id)).first()
     activity_user = ActivityUser.objects.filter(user=request.user).first()
@@ -409,6 +410,10 @@ def register(request, invite_uuid):
     """
     Register a new User profile using built in Django Users Model
     """
+    # redirect to homepage if user is logged in
+    if request.user.is_authenticated:
+        return redirect('/')
+
     # privacy = ActivitySites.objects.get(id=1)
     if request.method == 'POST':
         data = request.POST
@@ -496,6 +501,15 @@ def set_invite_uuid(invite_uuid):
 
 
 def user_login(request):
+    """
+    override django in-built login
+    :param request:
+    :return:
+    """
+    # redirect to homepage if user is logged in
+    if request.user.is_authenticated:
+        return redirect('/')
+
     if request.method == 'POST':
         data = request.POST
         username = data.get('username')
@@ -516,6 +530,7 @@ def user_login(request):
     return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
 
+@login_required
 def register_organization(request):
     """
     register organization
@@ -530,8 +545,9 @@ def register_organization(request):
         org = Organization.objects.create(name=name, description=description)
         if org:
             user = ActivityUser.objects.filter(user=request.user).first()
-            user.organization = org
-            user.save()
+            if not user.organization:
+                user.organization = org
+                user.save()
             return redirect('admin_profile_settings')
         else:
             return redirect('register_organization')
@@ -539,6 +555,7 @@ def register_organization(request):
         return render(request, 'registration/organization_register.html')
 
 
+@login_required(login_url='/accounts/login/')
 def profile(request):
     """
     Update a User profile using built in Django Users Model if the user
@@ -563,6 +580,7 @@ def profile(request):
         return HttpResponseRedirect('/accounts/register')
 
 
+@login_required(login_url='/accounts/login/')
 def admin_dashboard(request):
     """
     Admin dashboard view
@@ -575,6 +593,7 @@ def admin_dashboard(request):
     )
 
 
+@login_required(login_url='/accounts/login/')
 def admin_configurations(request):
     logged_activity_user = ActivityUser.objects.get(user=request.user)
 
@@ -608,6 +627,7 @@ def admin_configurations(request):
     )
 
 
+@login_required(login_url='/accounts/login/')
 def admin_profile_settings(request):
     user = get_object_or_404(ActivityUser, user=request.user)
     organization = user.organization
@@ -635,6 +655,7 @@ def admin_profile_settings(request):
     )
 
 
+@login_required(login_url='/accounts/login/')
 def admin_user_management(request, role, status):
     nav_links = get_nav_links('User Management')
     users = ActivityUser.objects.filter(
@@ -656,6 +677,7 @@ def admin_user_management(request, role, status):
     })
 
 
+@login_required(login_url='/accounts/login/')
 def admin_user_invitations(request, organization):
     nav_links = get_nav_links('User Management')
 
@@ -673,6 +695,7 @@ def admin_user_invitations(request, organization):
     })
 
 
+@login_required(login_url='/accounts/login/')
 def admin_user_edit(request, pk):
     """
     Edit user
@@ -699,6 +722,7 @@ def admin_user_edit(request, pk):
     })
 
 
+@login_required(login_url='/accounts/login/')
 def activate_deactivate_user(request, pk, status):
     """
     Deactivate or Activate Users
@@ -717,6 +741,7 @@ def activate_deactivate_user(request, pk, status):
     return redirect('/accounts/admin/users/all/all/')
 
 
+@login_required(login_url='/accounts/login/')
 def add_program(request):
     """ 
     Add program
@@ -861,6 +886,7 @@ def logout_view(request):
     return HttpResponseRedirect("/")
 
 
+@login_required
 @csrf_protect
 def invite_user(request):
     """
@@ -905,6 +931,7 @@ def invite_user(request):
             return HttpResponse({'success': False, 'failed': failed_invites})
 
 
+@login_required(login_url='/accounts/login/')
 @csrf_exempt
 def delete_invitation(request, pk):
     try:

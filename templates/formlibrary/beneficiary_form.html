@@ -32,6 +32,9 @@
 	{% csrf_token %} {% load crispy_forms_tags %} {% crispy form %}
 </div>
 <script>
+	$('#reset-id-reset').click(() => {
+		window.location.href = '/formlibrary/distribution_list/0/0/';
+	});
 	$(document).ready(function(){
 		/**$('#id_site').select2({
 			placeholder: 'select site',
