@@ -740,3 +740,9 @@ input[type=number]::-webkit-outer-spin-button {
     width: 100%;
     /* The width is the width of the web page */
 }
+
+.dropdown-header {
+    color: #A0A0A0 !important;
+    font-weight:100; 
+    font-size: 14px !important;
+}

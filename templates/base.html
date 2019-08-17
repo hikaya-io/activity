@@ -309,6 +309,8 @@
                   </a>
     
                   <ul class="dropdown-menu">
+                    <li class="dropdown-header">signed in as <strong>{{user.username}}</strong></li>
+                    <li class="divider"></li>
                     <li>
                       <a href="{% url 'profile' %}"
                         >Profile</a
@@ -332,13 +334,16 @@
                       </a>
                     </li>
                     {% endfor %} 
-                    <li class="divider"></li>
-                    <li><a href="/accounts/register/organization">Add new Organization</a></li>
+                    <li>
+                      <a href="/accounts/register/organization">
+                        <i class="fa fa-plus"></i> Add new Organization
+                      </a>
+                    </li>
                     {% endif %}
                     <li class="divider"></li>
                     <li>
                       <a href="{% url 'logout' %}" class="text-danger"
-                        >Logout</a
+                        >Sign out</a
                       >
                     </li>
                     {% endif %}

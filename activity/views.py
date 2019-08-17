@@ -455,6 +455,9 @@ def register(request, invite_uuid):
                         user=user,
                         organization_id=invite.organization.id
                     )
+
+                    # add organization to user organizations
+                    activity_user.organizations.add(invite.organization)
                     if activity_user:
                         # delete the invitation
                         invite.delete()
@@ -493,7 +496,11 @@ def register(request, invite_uuid):
 
 def set_invite_uuid(invite_uuid):
     if invite_uuid != 'none':
-        invite_uuid = {'invite_uuid': invite_uuid}
+        try:
+            invite = UserInvite.objects.get(invite_uuid=invite_uuid)
+            invite_uuid = {'invite_uuid': invite_uuid, 'email_address': invite.email}
+        except UserInvite.DoesNotExist:
+            invite_uuid = {'invite_uuid': 'none'}
     else:
         invite_uuid = {'invite_uuid': 'none'}
 
@@ -548,6 +555,7 @@ def register_organization(request):
             if not user.organization:
                 user.organization = org
                 user.save()
+                user.organizations.add(org)
             return redirect('admin_profile_settings')
         else:
             return redirect('register_organization')
