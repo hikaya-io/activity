@@ -453,7 +453,8 @@ def register(request, invite_uuid):
                     user.save()
                     activity_user = ActivityUser.objects.create(
                         user=user,
-                        organization_id=invite.organization.id
+                        organization_id=invite.organization.id,
+                        name='{} {}'.format(user.first_name, user.last_name)
                     )
 
                     # add organization to user organizations
@@ -480,7 +481,10 @@ def register(request, invite_uuid):
                                      'Hikaya <team.hikaya@gmail.com>', to=[email])
                 email.send()
 
-            activity_user = ActivityUser.objects.create(user=user)
+            activity_user = ActivityUser.objects.create(
+                user=user,
+                name='{} {}'.format(user.first_name, user.last_name)
+            )
             if activity_user:
                 return render(request, 'registration/confirm_email.html')
 
