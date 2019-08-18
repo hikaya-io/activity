@@ -1088,9 +1088,7 @@ class DocumentationAgreementUpdate(AjaxableResponseMixin, UpdateView):
             self.guidance = FormGuidance.objects.get(form="Documentation")
         except FormGuidance.DoesNotExist:
             self.guidance = None
-        return super(DocumentationAgreementUpdate, self).dispatch(request,
-                                                                  *args,
-                                                                  **kwargs)
+        return super(DocumentationAgreementUpdate, self).dispatch(request, *args, **kwargs)
 
     # add the request to the kwargs
     def get_form_kwargs(self):

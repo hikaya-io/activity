@@ -29,8 +29,7 @@
 	   }
 	      var locations = [];
 	      {% for site in get_site_profile %}
-	       const item = {lat: Number('{{site.latitude}}'), lng: Number('{{site.longitude}}')}
-	       locations.push(item)
+	       locations.push({lat: Number('{{site.latitude}}'), lng: Number('{{site.longitude}}')})
 	      {% endfor %}
 
 	       locations = [...locations];
