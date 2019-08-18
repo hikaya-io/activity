@@ -156,7 +156,7 @@ urlpatterns = [  # rest framework
     path('', include('social_django.urls', namespace='social')),
     re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]'
             r'{1,13}-[0-9A-Za-z]{1,20})/$',
-            views.activate, name='activate'),
+            views.activate_acccount, name='activate'),
     # path('oauth/',
     #       include('social_django.urls', namespace='social')),
 

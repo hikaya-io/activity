@@ -381,7 +381,7 @@ def switch_organization(request, org_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
-def activate(request, uidb64, token):
+def activate_acccount(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -391,7 +391,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         # login(request, user)
-        return HttpResponseRedirect('/')
+        return redirect('/accounts/login/')
     else:
         return HttpResponse('Activation link is invalid!')
 
@@ -469,7 +469,7 @@ def register(request, invite_uuid):
                         'invalid_invite': 'Invalid invitation code. Please contact Organization admin'
                     })
             else:
-                mail_subject = 'Activate your Activity account.'
+                mail_subject = 'Please confirm your email address'
                 message = render_to_string(
                     'registration/activate_email.html', {
                         'user': user,
