@@ -502,7 +502,8 @@ def set_invite_uuid(invite_uuid):
     if invite_uuid != 'none':
         try:
             invite = UserInvite.objects.get(invite_uuid=invite_uuid)
-            invite_uuid = {'invite_uuid': invite_uuid, 'email_address': invite.email}
+            invite_uuid = {'invite_uuid': invite_uuid,
+                           'email_address': invite.email}
         except UserInvite.DoesNotExist:
             invite_uuid = {'invite_uuid': 'none'}
     else:
@@ -552,8 +553,17 @@ def register_organization(request):
         data = request.POST
         name = data.get('name')
         description = data.get('description')
+        organization_url = data.get('organization_url')
+        location = data.get('location')
+        activity_url = data.get('activity_url')
 
-        org = Organization.objects.create(name=name, description=description)
+        org = Organization.objects.create(
+            name=name,
+            description=description,
+            organization_url=organization_url,
+            location=location,
+            activity_url=activity_url
+            )
         if org:
             user = ActivityUser.objects.filter(user=request.user).first()
             if not user.organization:
@@ -919,7 +929,8 @@ def invite_user(request):
             except MultipleObjectsReturned:
                 pass
             except UserInvite.DoesNotExist:
-                invite = UserInvite.objects.create(email=email.lower(), organization_id=organization_id)
+                invite = UserInvite.objects.create(
+                    email=email.lower(), organization_id=organization_id)
                 if invite:
                     success_invites.append(invite)
                 else:
