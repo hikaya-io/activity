@@ -87,7 +87,7 @@
       {% for stakeholder in get_stakeholders %} {% if stakeholder.name%}
       <tr>
         <td>
-          <a href="">{{ stakeholder.name }}</a>
+          <a href="/workflow/stakeholder_update/{{stakeholder.id}}/">{{ stakeholder.name }}</a>
         </td>
         <td>
           {{ stakeholder.type.name }}
@@ -112,7 +112,7 @@
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <ul class="dropdown-menu">
-              <li><a href="#">Edit</a></li>
+              <li><a href="/workflow/stakeholder_update/{{stakeholder.id}}/">Edit</a></li>
               <li><a href="#" class="text-danger">Delete</a></li>
             </ul>
           </div>
