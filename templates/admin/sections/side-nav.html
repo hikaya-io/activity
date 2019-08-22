@@ -1,22 +1,19 @@
 <div class="side-nav">
-	<h2>{{ organization.name }} Dashboard</h2>
-	<div>
-		<ul class="nav nav-pills nav-stacked">
-			{% for item in nav_links %}
-			<li role="presentation" class="{{ item.status }}">
-				<a href="{{item.link}}">
-					{% if item.label == 'Profile' %}
-					
-					{% elif item.label == 'Configurations' %}
-					
-					{% elif item.label == 'People' %}
+	<ul class="nav nav-pills nav-stacked">
+		{% for item in nav_links %}
+		<li role="presentation" class="{{ item.status }}">
+			<a href="{{item.link}}" class="side-nav-link">
+				{% if item.label == 'Profile' %}
+				
+				{% elif item.label == 'Configurations' %}
+				
+				{% elif item.label == 'People' %}
 
-					{% elif item.label == 'Usage' %}
-					{% endif %}
+				{% elif item.label == 'Usage' %}
+				{% endif %}
 
-					{{ item.label }}</a>
-			</li>
-			{% endfor %}
-		</ul>
-	</div>
+				{{ item.label }}</a>
+		</li>
+		{% endfor %}
+	</ul>
 </div>

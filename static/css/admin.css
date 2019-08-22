@@ -5,14 +5,13 @@
 
 }
 .side-nav {
-    padding: 8px 10px;
-    background-color: #DCDCDC;
+    background-color: #FFFFFF;
     min-height: 85vh;
 }
 
 .admin-content {
-    padding: 15px 25px;
-    background: #F5F5F5;
+    padding: 10px 25px;
+    background: #FFFFFF;
     min-height: 85vh;
 }
 

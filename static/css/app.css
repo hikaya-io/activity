@@ -746,3 +746,17 @@ input[type=number]::-webkit-outer-spin-button {
     font-weight:100; 
     font-size: 12px !important;
 }
+
+/**
+* Side Nav Link
+**/
+.side-nav-link {
+    color: #737581;
+}
+
+/**
+* Row
+**/
+.admin-content-row {
+    margin-right: 0px;
+}
