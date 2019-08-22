@@ -609,7 +609,7 @@ def admin_dashboard(request):
     """
     Admin dashboard view
     """
-    nav_links = get_nav_links('Home')
+    nav_links = get_nav_links('Usage')
     return render(
         request,
         'admin/landing_page.html',
@@ -656,32 +656,32 @@ def admin_profile_settings(request):
     user = get_object_or_404(ActivityUser, user=request.user)
     organization = user.organization
     if request.method == 'POST':
-        form = OrganizationEditForm(request.FILES,
-                                    instance=organization)
-        if form.is_valid():
+        # form = OrganizationEditForm(request.FILES,
+        #                             instance=organization)
+        # if form.is_valid():
+        data = request.POST
+        print(data)
+        organization.logo = request.FILES.get('organizationLogo')
+        organization.name = data.get('name')
+        organization.description = data.get('description')
+        organization.save()
+        user.organization = organization
+        user.save()
+        messages.error(
+            request, 'Your organization logo has been updated.',
+            fail_silently=False)
 
-            organization.logo = request.FILES.get('logo')
-            organization.save()
-            user.organization = organization
-            user.save()
-            messages.error(
-                request, 'Your organization logo has been updated.',
-                fail_silently=False)
-    else:
-        form = OrganizationEditForm(instance=organization)
-
-    nav_links = get_nav_links('Profile Settings')
+    nav_links = get_nav_links('Profile')
     return render(
         request,
         'admin/profile_settings.html',
-        {'nav_links': nav_links,
-         'form': form}
+        {'nav_links': nav_links, 'organization': organization}
     )
 
 
 @login_required(login_url='/accounts/login/')
 def admin_user_management(request, role, status):
-    nav_links = get_nav_links('User Management')
+    nav_links = get_nav_links('People')
     users = ActivityUser.objects.filter(
         organization=request.user.activity_user.organization)
     groups = Group.objects.all().distinct('name')
@@ -703,7 +703,7 @@ def admin_user_management(request, role, status):
 
 @login_required(login_url='/accounts/login/')
 def admin_user_invitations(request, organization):
-    nav_links = get_nav_links('User Management')
+    nav_links = get_nav_links('People')
 
     user_organizations = request.user.activity_user.organizations.all()
     invitations = UserInvite.objects.filter(
@@ -727,7 +727,7 @@ def admin_user_edit(request, pk):
     :param pk:
     :return:
     """
-    nav_links = get_nav_links('User Management')
+    nav_links = get_nav_links('People')
     obj = get_object_or_404(ActivityUser, pk=int(pk))
     form = RegistrationForm(request.POST or None, instance=obj,
                             initial={'username': request.user})

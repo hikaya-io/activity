@@ -1,66 +1,141 @@
 {% extends "base.html" %} {% block content %}
-<div class="admin-container">
-	<div class="row">
-		<div class="col-md-3">
-			{% include 'admin/sections/side-nav.html' %}
+<div class="container">
+	{% block breadcrumbs %}
+	<ul class="breadcrumb">
+		<li><a href="{% url 'admin_profile_settings' %}">Organization Settings</a></li>
+		<li class="active">Usage</li>
+	</ul>
+	{% endblock %}
+
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">Organization Settings</h4>
+    </div>
+
+    <div class="sub-navigation-actions">
+		<div class="sub-nav-item">
+			{% include "admin/user_filter.html" %}
 		</div>
-		<div class="col-md-9 admin-content">
-			{% include 'admin/sections/home_top_bar.html' %}
-			<div class="row admin-main-panels">
-				<div class="col-md-6">
-					<div class="panel panel-info">
-						<!-- Default panel contents -->
-						<div class="panel-heading">Workflowlevel1 Summary (Status)</div>
-						<ul class="list-group">
-							<li class="list-group-item"><span class="badge">14</span> New</li>
-							<li class="list-group-item"><span class="badge">10</span> Approved</li>
-							<li class="list-group-item">
-								<span class="badge">35</span> Awaiting Approval
-							</li>
-							<li class="list-group-item"><span class="badge">4</span> On hold</li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="panel panel-info">
-						<!-- Default panel contents -->
-						<div class="panel-heading">Workflowlevel2 Summary (Status)</div>
-						<ul class="list-group">
-							<li class="list-group-item"><span class="badge">14</span> New</li>
-							<li class="list-group-item"><span class="badge">10</span> Approved</li>
-							<li class="list-group-item">
-								<span class="badge">35</span> Awaiting Approval
-							</li>
-							<li class="list-group-item"><span class="badge">4</span> On hold</li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="panel panel-info">
-						<!-- Default panel contents -->
-						<div class="panel-heading">Indicators Summary</div>
-						<ul class="list-group">
-							<li class="list-group-item"><span class="badge">24</span> KPIs</li>
-							<li class="list-group-item"><span class="badge">120</span> Normal</li>
-							<li class="list-group-item"><span class="badge">4</span> On hold</li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="panel panel-info">
-						<!-- Default panel contents -->
-						<div class="panel-heading">Sites By Country</div>
-						<ul class="list-group">
-							<li class="list-group-item"><span class="badge">24</span> Kenya</li>
-							<li class="list-group-item"><span class="badge">13</span> Jordan</li>
-							<li class="list-group-item"><span class="badge">10</span> Somali</li>
-							<li class="list-group-item"><span class="badge">24</span> Uganda</li>
-						</ul>
-					</div>
-				</div>
+		<div class="sub-nav-item">
+			<div class="btn-group">
+				<button type="button" class="btn btn-default btn-sm">Invitations</button>
+				<button
+					type="button"
+					class="btn btn-default btn-sm dropdown-toggle"
+					data-toggle="dropdown"
+					aria-haspopup="true"
+					aria-expanded="false"
+				>
+					<span class="caret"></span>
+					<span class="sr-only">Toggle Dropdown</span>
+				</button>
+				<ul class="dropdown-menu">
+					<li>
+						<a
+							href="#inviteUserModal"
+							data-toggle="modal"
+							data-target="#inviteUserModal"
+							>
+							</span> Invite User(s)
+						</a>
+					</li>
+					<li>
+						<a href="/accounts/admin/users/invitations/list/0/" >
+							Pending Invitations
+					</a>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>
+  </div>
+
+  <div class="row admin-content-row">
+    <div class="col-md-2">
+      {% include 'admin/sections/side-nav.html' %}
+    </div>
+    <div class="col-md-10 admin-content">
+    <div class="usage-content">
+      {% include 'admin/sections/home_top_bar.html' %}
+      <div class="row admin-main-panels">
+        <div class="col-md-6">
+          <div class="panel panel-info">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Workflowlevel1 Summary (Status)</div>
+            <ul class="list-group">
+              <li class="list-group-item"><span class="badge">14</span> New</li>
+              <li class="list-group-item">
+                <span class="badge">10</span> Approved
+              </li>
+              <li class="list-group-item">
+                <span class="badge">35</span> Awaiting Approval
+              </li>
+              <li class="list-group-item">
+                <span class="badge">4</span> On hold
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel panel-info">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Workflowlevel2 Summary (Status)</div>
+            <ul class="list-group">
+              <li class="list-group-item"><span class="badge">14</span> New</li>
+              <li class="list-group-item">
+                <span class="badge">10</span> Approved
+              </li>
+              <li class="list-group-item">
+                <span class="badge">35</span> Awaiting Approval
+              </li>
+              <li class="list-group-item">
+                <span class="badge">4</span> On hold
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel panel-info">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Indicators Summary</div>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <span class="badge">24</span> KPIs
+              </li>
+              <li class="list-group-item">
+                <span class="badge">120</span> Normal
+              </li>
+              <li class="list-group-item">
+                <span class="badge">4</span> On hold
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel panel-info">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Sites By Country</div>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <span class="badge">24</span> Kenya
+              </li>
+              <li class="list-group-item">
+                <span class="badge">13</span> Jordan
+              </li>
+              <li class="list-group-item">
+                <span class="badge">10</span> Somali
+              </li>
+              <li class="list-group-item">
+                <span class="badge">24</span> Uganda
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}

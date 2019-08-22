@@ -746,3 +746,18 @@ input[type=number]::-webkit-outer-spin-button {
     font-weight:100; 
     font-size: 12px !important;
 }
+
+/**
+* Side Nav Link
+**/
+.side-nav-link {
+    color: #737581;
+}
+
+
+.hikaya-blue-box {
+    background-color: #25CED1;
+    border-radius: 8px;
+    margin: 16px;
+    padding: 16px;
+}

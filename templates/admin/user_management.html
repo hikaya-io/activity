@@ -1,154 +1,152 @@
 {% extends "base.html" %} {% block content %}
 {% include 'admin/user_invite_modal.html' %}
-<div class="admin-container">
-	<div class="row">
-		<div class="col-md-3">
-			{% include 'admin/sections/side-nav.html' %}
+<div class="container">
+	{% block breadcrumbs %}
+	<ul class="breadcrumb">
+		<li><a href="{% url 'admin_profile_settings' %}">Organization Settings</a></li>
+		<li class="active">People</li>
+	</ul>
+	{% endblock %}
+	
+	<!-- Sub navigation -->
+	<div class="sub-navigation">
+		<div class="sub-navigation-header">
+			<h4 class="page-title">Organization Settings</h4>
 		</div>
-		<div class="col-md-9 admin-content">
-			{% block breadcrumbs %}
-			<ul class="breadcrumb">
-				<li><a href="/">Home Dashboard</a></li>
-				<li class="active">{{ request.user.activity_user.organization.level_1_label }}s</li>
-			</ul>
-			{% endblock %}
 
-			<!-- Sub navigation -->
-			<div class="sub-navigation">
-				<div class="sub-navigation-header">
-					<h4 class="page-title">
-						{{ request.user.activity_user.organization.level_1_label }}s
-					</h4>
-				</div>
-				<div class="sub-navigation-actions">
-					<div class="sub-nav-item">
-						{% include "admin/user_filter.html" %}
-					</div>
-					<div class="sub-nav-item">
-						<div class="btn-group">
-							<button type="button" class="btn btn-default btn-sm">Invitations</button>
-							<button
-								type="button"
-								class="btn btn-default btn-sm dropdown-toggle"
-								data-toggle="dropdown"
-								aria-haspopup="true"
-								aria-expanded="false"
-							>
-								<span class="caret"></span>
-								<span class="sr-only">Toggle Dropdown</span>
-							</button>
-							<ul class="dropdown-menu">
-								<li>
-									<a
-									  href="#inviteUserModal"
-									  data-toggle="modal"
-									  data-target="#inviteUserModal"
-									  >
-									  </span> Invite User(s)
-									</a>
-								</li>
-								<li>
-									<a href="/accounts/admin/users/invitations/list/0/" >
-									 Pending Invitations
-								</a>
-								</li>
-							</ul>
-						</div>
-					  </div>
+		<div class="sub-navigation-actions">
+			<div class="sub-nav-item">
+				{% include "admin/user_filter.html" %}
+			</div>
+			<div class="sub-nav-item">
+				<div class="btn-group">
+					<button type="button" class="btn btn-default btn-sm">Invitations</button>
+					<button
+						type="button"
+						class="btn btn-default btn-sm dropdown-toggle"
+						data-toggle="dropdown"
+						aria-haspopup="true"
+						aria-expanded="false"
+					>
+						<span class="caret"></span>
+						<span class="sr-only">Toggle Dropdown</span>
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							<a
+								href="#inviteUserModal"
+								data-toggle="modal"
+								data-target="#inviteUserModal"
+								>
+								</span> Invite User(s)
+							</a>
+						</li>
+						<li>
+							<a href="/accounts/admin/users/invitations/list/0/" >
+								Pending Invitations
+						</a>
+						</li>
+					</ul>
 				</div>
 			</div>
-			<div>
-				<table class="table" id="userTable">
-					<thead>
-						<tr>
-							<th>First Name</th>
-							<th>Last Name</th>
-							<th>Is Active</th>
-							<th>Role</th>
-							<th>Date Joined</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for user in users%}
-						<tr>
-							<td>{{ user.user.first_name }}</td>
-							<td>{{ user.user.last_name }}</td>
-							<td>
-								{%if user.user.is_active %}
-									<span class="badge">Active</span>
-								{% else %}
-									<span class="badge">In-Active</span>
-								{% endif %}
-							</td>
-							<td>
-								{% if user.user.is_superuser %} Org Admin {% else%}
-								{{ user.user.groups.all.0}}
-								{% endif %}
-							</td>
-							<td>{{ user.create_date | date:"DATE_FORMAT" }}</td>
-							<td class="text-right">
-								<!-- Action buttons -->
-								<div class="btn-group">
-									<button type="button" class="btn btn-sm btn-default">
-										More
-									</button>
-									<button
-										type="button"
-										class="btn btn-default btn-sm dropdown-toggle"
-										data-toggle="dropdown"
-										aria-haspopup="true"
-										aria-expanded="false"
-									>
-										<span class="caret"></span>
-										<span class="sr-only">Toggle Dropdown</span>
-									</button>
-									<ul class="dropdown-menu">
-										<li class="text-danger">
-											<a
-												href="/accounts/admin/user/edit/{{user.id}}/"
-												>Edit</a
-											>
+		</div>
+	</div>
+
+	<div class="row admin-content-row">
+		<div class="col-md-2">
+			{% include 'admin/sections/side-nav.html' %}
+		</div>
+		<div class="col-md-10 admin-content">
+			<table class="table" id="userTable">
+				<thead>
+					<tr>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Is Active</th>
+						<th>Role</th>
+						<th>Date Joined</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for user in users%}
+					<tr>
+						<td>{{ user.user.first_name }}</td>
+						<td>{{ user.user.last_name }}</td>
+						<td>
+							{%if user.user.is_active %}
+								<span class="badge">Active</span>
+							{% else %}
+								<span class="badge">In-Active</span>
+							{% endif %}
+						</td>
+						<td>
+							{% if user.user.is_superuser %} Org Admin {% else%}
+							{{ user.user.groups.all.0}}
+							{% endif %}
+						</td>
+						<td>{{ user.create_date | date:"DATE_FORMAT" }}</td>
+						<td class="text-right">
+							<!-- Action buttons -->
+							<div class="btn-group">
+								<button type="button" class="btn btn-sm btn-default">
+									More
+								</button>
+								<button
+									type="button"
+									class="btn btn-default btn-sm dropdown-toggle"
+									data-toggle="dropdown"
+									aria-haspopup="true"
+									aria-expanded="false"
+								>
+									<span class="caret"></span>
+									<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<ul class="dropdown-menu">
+									<li class="text-danger">
+										<a
+											href="/accounts/admin/user/edit/{{user.id}}/"
+											>Edit</a
+										>
+									</li>
+									{% if user.user.is_active %}
+										{% if user.user == request.user %}
+										<li class="disabled">
+											<a href="">Deativate</a>
 										</li>
-										{% if user.user.is_active %}
-											{% if user.user == request.user %}
-											<li class="disabled">
-												<a href="">Deativate</a>
-											</li>
-											{% else %}
-											<li>
-												<a 
-													href="/accounts/admin/user/updatestatus/{{user.user.id}}/deactivate/">
-													Deativate
-												</a>
-											</li>
-											{% endif %}
 										{% else %}
 										<li>
 											<a 
-												href="/accounts/admin/user/updatestatus/{{user.user.id}}/activate/">
-												Activate
+												href="/accounts/admin/user/updatestatus/{{user.user.id}}/deactivate/">
+												Deativate
 											</a>
 										</li>
 										{% endif %}
-										<li class="text-danger">
-											<a
-												href="#deleteItemModal{{ user.id }}"
-												data-toggle="modal"
-												onclick="setItemToDelete({{ user.id }})"
-												data-target="#deleteItemModal{{ user.id }}"
-											>
-												Delete
-											</a>
-										</li>
-									</ul>
-								</div>
-							</td>
-						</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
+									{% else %}
+									<li>
+										<a 
+											href="/accounts/admin/user/updatestatus/{{user.user.id}}/activate/">
+											Activate
+										</a>
+									</li>
+									{% endif %}
+									<li class="text-danger">
+										<a
+											href="#deleteItemModal{{ user.id }}"
+											data-toggle="modal"
+											onclick="setItemToDelete({{ user.id }})"
+											data-target="#deleteItemModal{{ user.id }}"
+										>
+											Delete
+										</a>
+									</li>
+								</ul>
+							</div>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>
