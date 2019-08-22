@@ -34,5 +34,14 @@
   {% load crispy_forms_tags %}
   {% crispy form %}
 </div>
-
+<script>
+    $(document).ready(() => {
+        $('#id_sectors').select2({
+            theme:'bootstrap'
+        });
+    })
+    $('#reset-id-reset').click(() => {
+        window.location.href = '/workflow/stakeholder_list/0/0/';
+    });
+</script>
 {% endblock content %}

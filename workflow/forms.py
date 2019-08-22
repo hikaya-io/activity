@@ -2176,7 +2176,10 @@ class StakeholderForm(forms.ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.add_input(
-            Submit('submit', 'Save', css_class='btn-success'))
+            Reset('reset', 'Close', css_class='btn-default')),
+        self.helper.add_input(
+            Submit('submit', 'Save', css_class='btn-success')),
+
         pkval = kwargs['instance'].pk if kwargs['instance'] else 0
         self.helper.layout = Layout(
 
@@ -2205,7 +2208,8 @@ class StakeholderForm(forms.ModelForm):
         super(StakeholderForm, self).__init__(*args, **kwargs)
 
         countries = get_country(self.request.user)
-        users = ActivityUser.objects.filter(country__in=countries)
+        users = ActivityUser.objects.filter(
+            organization=self.request.user.activity_user.organization)
         self.fields['contact'].queryset = Contact.objects.filter(
             country__in=countries)
         self.fields['sectors'].queryset = Sector.objects.all()
@@ -2214,10 +2218,11 @@ class StakeholderForm(forms.ModelForm):
         self.fields['filled_by'].queryset = users
         self.fields[
             'formal_relationship_document'].queryset = \
-            Documentation.objects.filter(program__country__in=countries)
+            Documentation.objects.filter(
+                program__organization=self.request.user.activity_user.organization)
         self.fields[
             'vetting_document'].queryset = Documentation.objects.filter(
-            program__country__in=countries)
+            program__organization=self.request.user.activity_user.organization)
 
 
 class FilterForm(forms.Form):
