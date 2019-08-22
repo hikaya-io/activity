@@ -111,26 +111,23 @@
 	<!-- Display site profiles & projects -->
 	<table class="table table-striped" id="siteProfileTable">
 		<thead>
-			<th>Date Created</th>
-			<th>Profile Name</th>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Office</th>
+			<th>Country</th>
 			<th>Status</th>
-			<th>Profile Type</th>
-			<th>Province</th>
-			<th>District</th>
-			<th></th>
+			<th class="text-right"></th>
 		</thead>
 		<tbody>
 			{% for item in get_site_profile %}
 
 			<tr>
 				<td>
-					<a href="/workflow/siteprofile_update/{{ item.id }}"
-						>{{ item.create_date | date:'d-m-Y' }}
-					</a>
-				</td>
-				<td>
 					<a href="/workflow/siteprofile_update/{{ item.id }}">{{ item.name }}</a>
 				</td>
+				<td>{{ item.type }}</td>
+				<td>{{ item.office }}</td>
+				<td>{{ item.country }}</td>
 				{% if item.status == 1 %}
 				<td>
 					<a href="/workflow/siteprofile_update/{{ item.id }}"
@@ -144,23 +141,7 @@
 					>
 				</td>
 				{%endif%}
-				<td>
-					<a href="/workflow/siteprofile_update/{{ item.id }}">{{ item.type }}</a>
-				</td>
-				<td>{{ item.province }}</td>
-				<td>{{ item.district }}</td>
-				<td>
-					<!-- <a href="/workflow/siteprofile_delete/{{ item.id }}" class="btn btn-xs btn-danger"
-            >Delete Site Profile</a
-          >
-          <a href="/workflow/site_indicatordata/{{ item.id }}/" class="btn btn-xs btn-default"
-            >Indicator Data</a
-          >
-          <a
-            href="/workflow/site_projectscomplete/{{ item.id }}/"
-            class="btn btn-xs btn-default"
-            >Projects</a
-          > -->
+				<td class="text-right">
 					<div class="btn-group">
 						<a role="button" href="" class="btn btn-default btn-sm disabled">More</a>
 						<button
@@ -188,9 +169,8 @@
 							</li>
 							<li role="separator" class="divider"></li>
 
-							<li>
-								<a class="" href="/workflow/level1/edit/{{ program.id }}/">Edit</a>
-							</li>
+              				<li><a href="{% url 'siteprofile_update' pk=item.id %}">Edit</a></li>
+
 							<li>
 								<a
 									class="text-danger"
