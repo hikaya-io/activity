@@ -14,30 +14,65 @@
       <h4 class="page-title">Organization Settings</h4>
     </div>
   </div>
+
   <div class="row admin-content-row">
     <div class="col-md-2">
       {% include 'admin/sections/side-nav.html' %}
     </div>
     <div class="col-md-10 admin-content">
-      <h3>Organization logo</h3>
-      <div>
-		{% if form.errors %} 
-			{% for field in form %} 
-				{% for error in field.errors %}
-					<div class="alert alert-error">
-					<strong>{{ error | escape }}</strong>
-					</div>
-				{% endfor %} 
-			{% endfor %} 
-			{% for error in form.non_field_errors %}
-				<div class="alert alert-error">
-				<strong>{{ error | escape }}</strong>
+		<h4><strong>Profile picture</strong></h4>
+		<form 
+			id="profileForm" 
+			action="/accounts/admin/profile_settings" 
+			method="POST" 
+			enctype="multipart/form-data">
+			<div class="form-group row">
+				<div class="col-sm-2 hikaya-blue-box" for="organizationLogo">
+					<img src="../../static/img/white_logo.png" class="img-responsive">
+					{% comment %} <img src="{{ user.activity_user.organization.logo.url }}" alt="Activity"> {% endcomment %}
 				</div>
-			{% endfor %} 
-		{% endif %} 
-		{% load crispy_forms_tags %} 
-		{% crispy form form.helper %}
-      </div>
+				<div class="col-sm-6">
+					<input
+					type="file"
+					id="organizationLogo"
+					name="organizationLogo"
+					value="{{organization.logo.url}}"
+					araia-describedby="helpBlock"
+					/>
+					<p id="helpBlock" class="help-block">
+						You can upload any size image file from you hard drive. We will automatically resize it to 264*264
+					</p>
+				</div>
+			</div>
+			<hr/>
+				{% csrf_token %}
+				<div class="form-group row">
+					<label class="col-sm-2 col-form-label" for="name">Name</label>
+					<div class="col-sm-6">
+						<input
+						type="text"
+						id="name"
+						name="name"
+						value="{{organization.name}}"
+						class="form-control"
+						/>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-2 col-form-label" for="description">Description</label>
+					<div class="col-sm-6">
+						<textarea
+						id="description"
+						name="description"
+						rows="5"
+						class="form-control"
+						>{{organization.description}}</textarea>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-success" id="updateOrganization">
+					Save
+				</button>
+		</form>
     </div>
   </div>
 </div>

@@ -644,26 +644,26 @@ def admin_profile_settings(request):
     user = get_object_or_404(ActivityUser, user=request.user)
     organization = user.organization
     if request.method == 'POST':
-        form = OrganizationEditForm(request.FILES,
-                                    instance=organization)
-        if form.is_valid():
-
-            organization.logo = request.FILES.get('logo')
-            organization.save()
-            user.organization = organization
-            user.save()
-            messages.error(
-                request, 'Your organization logo has been updated.',
-                fail_silently=False)
-    else:
-        form = OrganizationEditForm(instance=organization)
+        # form = OrganizationEditForm(request.FILES,
+        #                             instance=organization)
+        # if form.is_valid():
+        data = request.POST
+        print(data)
+        organization.logo = request.FILES.get('organizationLogo')
+        organization.name = data.get('name')
+        organization.description = data.get('description')
+        organization.save()
+        user.organization = organization
+        user.save()
+        messages.error(
+            request, 'Your organization logo has been updated.',
+            fail_silently=False)
 
     nav_links = get_nav_links('Profile')
     return render(
         request,
         'admin/profile_settings.html',
-        {'nav_links': nav_links,
-         'form': form}
+        {'nav_links': nav_links, 'organization': organization}
     )
 
 

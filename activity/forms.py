@@ -155,7 +155,7 @@ class OrganizationEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(OrganizationEditForm, self).__init__(*args, **kwargs)
-
+        self.fields['logo'].label = ''
     helper = FormHelper()
     helper.form_method = 'post'
     helper.form_class = 'form-horizontal'
@@ -166,5 +166,4 @@ class OrganizationEditForm(forms.ModelForm):
     helper.help_text_inline = True
     helper.html5_required = True
     helper.layout = Layout(
-        Fieldset('', 'logo',),
-        Submit('submit', 'Submit', css_class='btn-success'))
+        Fieldset('', 'logo',))
