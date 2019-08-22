@@ -68,6 +68,8 @@ DATABASES = {
 }
 '''END DATABASE CONFIGURATION'''
 
+#Google map API key
+GOOGLE_MAP_API_KEY = environ.get('GOOGLE_MAP_API_KEY', '')
 
 '''CACHE CONFIGURATION'''
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#caches

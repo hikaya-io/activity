@@ -35,6 +35,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 
 APPROVALS = (
     ('in_progress', 'In Progress'),
@@ -368,6 +369,7 @@ def index(request, selected_countries=None, id=0, sector=0):
         'count_indicator_data': total_indicator_data_count,
         'selected_countries_label_list': selected_countries_label_list,
         'user_pending_approvals': user_pending_approvals,
+        'map_api_key': settings.GOOGLE_MAP_API_KEY
     })
 
 

@@ -56,7 +56,7 @@ from .export import ProjectAgreementResource, StakeholderResource, \
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.core.serializers.json import DjangoJSONEncoder
-
+from django.conf import settings
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -1359,7 +1359,6 @@ class SiteProfileList(ListView):
 
         if user_list:
             default_list = int(user_list)
-
         return render(request, self.template_name,
                       {
                           'inactive_site': inactive_site,
@@ -1371,7 +1370,8 @@ class SiteProfileList(ListView):
                           'get_projects': get_projects,
                           'form': FilterForm(),
                           'helper': FilterForm.helper,
-                          'active': ['components']
+                          'active': ['components'],
+                          'map_api_key': settings.GOOGLE_MAP_API_KEY
                        })
 
 
