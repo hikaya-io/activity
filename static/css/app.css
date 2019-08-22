@@ -766,6 +766,5 @@ input[type=number]::-webkit-outer-spin-button {
     background-color: #25CED1;
     border-radius: 8px;
     margin: 16px;
-    height: 80px;
-    width:  80px;
+    padding: 16px;
 }

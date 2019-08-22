@@ -27,17 +27,21 @@
 			method="POST" 
 			enctype="multipart/form-data">
 			<div class="form-group row">
-				<div class="col-sm-2 hikaya-blue-box" for="organizationLogo">
-					<img src="../../static/img/white_logo.png" class="img-responsive">
-					{% comment %} <img src="{{ user.activity_user.organization.logo.url }}" alt="Activity"> {% endcomment %}
-				</div>
+				{% if organization.logo %}
+					<div class="col-sm-2" for="organizationLogo">
+						<img src="{{ organization.logo.url }}" alt="Organization Logo" class="img-responsive">
+					</div>
+				{% else %}
+					<div class="col-sm-2 hikaya-blue-box" for="organizationLogo">
+						<img src="../../static/img/white_logo.png" alt="Organization Logo" class="img-responsive">
+					</div>
+				{% endif %}
 				<div class="col-sm-6">
 					<input
 					type="file"
 					id="organizationLogo"
 					name="organizationLogo"
-					value="{{organization.logo.url}}"
-					araia-describedby="helpBlock"
+					aria-describedby="helpBlock"
 					/>
 					<p id="helpBlock" class="help-block">
 						You can upload any size image file from you hard drive. We will automatically resize it to 264*264
