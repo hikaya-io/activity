@@ -1,5 +1,18 @@
 $(document).ready(function() {
 	// required fields
+	$('#register_first_name').on('input', function() {
+		const username = $(this);
+		if (username.val()) {
+			$('#div_first_name')
+				.removeClass('has-error')
+				.addClass('has-success');
+		} else {
+			$('#div_first_name')
+				.removeClass('has-success')
+				.addClass('has-error');
+		}
+	});
+
 	$('#register_username').on('input', function() {
 		const username = $(this);
 		if (username.val()) {
