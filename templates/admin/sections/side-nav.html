@@ -5,17 +5,13 @@
 			{% for item in nav_links %}
 			<li role="presentation" class="{{ item.status }}">
 				<a href="{{item.link}}">
-					{% if item.label == 'Home' %}
-					<span class="glyphicon glyphicon-home"></span>
-
-					{% elif item.label == 'Profile Settings' %}
-					<i class="fa fa-user-circle-o"></i>
-
+					{% if item.label == 'Profile' %}
+					
 					{% elif item.label == 'Configurations' %}
-					<span class="glyphicon glyphicon-cog"></span>
+					
+					{% elif item.label == 'People' %}
 
-					{% elif item.label == 'User Management' %}
-					<i class="fa fa-users"></i>
+					{% elif item.label == 'Usage' %}
 					{% endif %}
 
 					{{ item.label }}</a>

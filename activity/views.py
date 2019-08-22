@@ -597,7 +597,7 @@ def admin_dashboard(request):
     """
     Admin dashboard view
     """
-    nav_links = get_nav_links('Home')
+    nav_links = get_nav_links('Usage')
     return render(
         request,
         'admin/landing_page.html',
@@ -658,7 +658,7 @@ def admin_profile_settings(request):
     else:
         form = OrganizationEditForm(instance=organization)
 
-    nav_links = get_nav_links('Profile Settings')
+    nav_links = get_nav_links('Profile')
     return render(
         request,
         'admin/profile_settings.html',
@@ -669,7 +669,7 @@ def admin_profile_settings(request):
 
 @login_required(login_url='/accounts/login/')
 def admin_user_management(request, role, status):
-    nav_links = get_nav_links('User Management')
+    nav_links = get_nav_links('People')
     users = ActivityUser.objects.filter(
         organization=request.user.activity_user.organization)
     groups = Group.objects.all().distinct('name')
@@ -691,7 +691,7 @@ def admin_user_management(request, role, status):
 
 @login_required(login_url='/accounts/login/')
 def admin_user_invitations(request, organization):
-    nav_links = get_nav_links('User Management')
+    nav_links = get_nav_links('People')
 
     user_organizations = request.user.activity_user.organizations.all()
     invitations = UserInvite.objects.filter(
@@ -715,7 +715,7 @@ def admin_user_edit(request, pk):
     :param pk:
     :return:
     """
-    nav_links = get_nav_links('User Management')
+    nav_links = get_nav_links('People')
     obj = get_object_or_404(ActivityUser, pk=int(pk))
     form = RegistrationForm(request.POST or None, instance=obj,
                             initial={'username': request.user})
