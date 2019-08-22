@@ -1923,7 +1923,7 @@ class DocumentationForm(forms.ModelForm):
                 Column('project', css_class='form-group col-md-6 mb-0'),
                 css_class="form-row"
             ),
-            Reset('reset', 'Discard Changes', css_class='btn-md btn-default'),
+            Reset('reset', 'Close', css_class='btn-md btn-default'),
             Submit('submit', 'Save Changes', css_class='btn-md btn-success')
 
         )

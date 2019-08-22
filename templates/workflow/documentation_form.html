@@ -19,7 +19,7 @@
     <li><a href="/">Home Dashboard</a></li>
 
     <li>
-      <a href="/workflow/documentation_list/0/0">Documentations</a>
+      <a href="/workflow/documentation_list/0/0">Document List</a>
     </li>
     <li class="active">
       Document Form
@@ -145,5 +145,10 @@
   {% endfor %} {% endif %} {% csrf_token %} {% load crispy_forms_tags %} 
   {% crispy form %}
 </div>
+<script>
+    $('#reset-id-reset').click(() => {
+      window.location.href = '/workflow/documentation_list/0/0/';
+    });
+</script>
 
 {% endblock content %}
