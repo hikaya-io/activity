@@ -1647,9 +1647,9 @@ class ProjectComplete(models.Model):
 # Project Documents, admin is handled in the admin.py
 class Documentation(models.Model):
     name = models.CharField(
-        "Name of Document", max_length=135, blank=True, null=True)
+        'Document Name', max_length=135, blank=True, null=True)
     url = models.CharField(
-        "URL (Link to document or document repository)", blank=True, null=True,
+        'URL (Link to document or folder)', blank=True, null=True,
         max_length=135)
     description = models.TextField(max_length=255, blank=True, null=True)
     template = models.ForeignKey(
