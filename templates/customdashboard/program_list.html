@@ -53,26 +53,35 @@
   <table class="table" id="programListTable">
     <thead>
       <tr>
-        <th>Date Created</th>
         <th>{{ user.activity_user.organization.level_1_label }} Name</th>
-        <th>Data Complete</th>
         <th>Public Dashboard</th>
-        <th>View Dashboard</th>
+        <th>Data Complete</th>
+        <th>Date Created</th>
+        <th class="text-right">View Dashboard</th>
       </tr>
     </thead>
     <tbody>
-      {% for item in get_program %}
+      {% for item in get_program %} {% if item.name %}
       <tr>
-        <td>{{ item.create_date }}</td>
-        <td>{{ item.name }}</td>
-        <td width="250">
+        <td>
+          <a href="/workflow/level1/edit/{{item.id}}/">{{ item.name }}</a></td>
+        <td>
+          {% if item.public_dashboard %}<a
+            href="/customdashboard/program_dashboard/{{ item.id }}/1/"
+            >Public</a
+          >
+          {% else %} N/A {% endif %}
+        </td>
+        <td>
           <strong>Indicator(s)</strong>
           <div class="progress">
             <div
               class="progress-bar progress-bar-warning"
               style="width: {{ item.indicator_data_percent }}%"
             >
-              <font color="black">Data {{ item.indicator_data_percent }} %</font>
+              <font color="black"
+                >Data {{ item.indicator_data_percent }} %</font
+              >
             </div>
             <div
               class="progress-bar progress-bar-success"
@@ -81,7 +90,9 @@
               <font color="black">No Data {{ item.indicator_percent }} %</font>
             </div>
           </div>
-          <strong>{{ user.activity_user.organization.level_2_label }}(s)</strong>
+          <strong
+            >{{ user.activity_user.organization.level_2_label }}(s)</strong
+          >
           <div class="progress">
             <div
               class="progress-bar progress-bar-warning"
@@ -99,20 +110,15 @@
             </div>
           </div>
         </td>
-        <td>
-          {% if item.public_dashboard %}<a
-            href="/customdashboard/program_dashboard/{{ item.id }}/1/"
-            >Public</a
-          >
-          {% else %} N/A {% endif %}
-        </td>
-        <td>
-          <a href="/customdashboard/program_dashboard/{{ item.id }}/0/"
+
+        <td>{{ item.create_date }}</td>
+        <td class="text-right">
+          <a class="btn btn-default btn-sm" href="/customdashboard/program_dashboard/{{ item.id }}/0/"
             >Internal</a
           >
         </td>
       </tr>
-      {% endfor %}
+      {% endif %} {% endfor %}
     </tbody>
   </table>
 
