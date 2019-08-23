@@ -45,6 +45,9 @@
     $(document).ready(() => {
         $('#summaryTable').dataTable();
         $('#indicatorSummary').dataTable();
+        $('#beneficiariesTable').dataTable();
+        $('#trainingsTable').dataTable();
+        $('#distributionsTable').dataTable();
     })
 </script>
 
@@ -364,89 +367,86 @@
       <!-- End of Monitoring Contents -->
 
       <!-- Monitoring contents -->
-      <div class="sidebar-pane" id="monitoring">
-        <h1 class="sidebar-header">
+      <div class="tab-pane" id="monitoring">
+        <h4 class="page-header">
           Monitoring (Beneficiaries, Distributions & Trainings)
-        </h1>
-        <br />
-        <div class="row">
-          <div class="panel panel-info">
+        </h4>
+
+        <div class="panel panel-info">
             <div class="panel-heading">
               <strong>Beneficiaries for {{ get_program.name }} </strong>
             </div>
             <div class="panel-body">
-              <table class="table table-striped">
-                {% if getBeneficiaries %}
-                <tr>
-                  <th>Date Created</th>
-                  <th>Name</th>
-                  <th>Age</th>
-                  <th>Gender</th>
-                </tr>
-                {% endif %} {% for item in getBeneficiaries %}
-                <tr>
-                  <td>{{ item.create_date | date }}</td>
-                  <td>{{ item.beneficiary_name }}</td>
-                  <td>{{ item.age }}</td>
-                  <td>{{ item.gender }}</td>
-                </tr>
-
-                {% empty %}
-                <li class="list-group-item">No beneficiaries yet.</li>
-                {% endfor %}
+              <table class="table" id="beneficiariesTable">
+                  <thead>
+                      <tr>
+                        <th>Date Created</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for item in getBeneficiaries %}
+                      <tr>
+                        <td>{{ item.create_date | date }}</td>
+                        <td>{{ item.beneficiary_name }}</td>
+                        <td>{{ item.age }}</td>
+                        <td>{{ item.gender }}</td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
               </table>
             </div>
-          </div>
         </div>
-        <div class="row">
-          <div class="panel panel-info">
+
+        <div class="panel panel-info">
             <div class="panel-heading">
-              <strong>Trainings for {{ get_program.name }} </strong>
+                <strong>Trainings for {{ get_program.name }} </strong>
             </div>
             <div class="panel-body">
-              <table class="table table-striped">
-                {% if getTrainings %}
-                <tr>
-                  <th>Date Created</th>
-                  <th>Name</th>
-                </tr>
-                {% endif %} {% for item in getTrainings %}
-                <tr>
-                  <td>{{ item.create_date | date }}</td>
-                  <td>{{ item.training_name }}</td>
-                </tr>
-
-                {% empty %}
-                <li class="list-group-item">No Training(s) yet.</li>
-                {% endfor %}
-              </table>
+                <table class="table" id="trainingsTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Date Created</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        {% for item in getTrainings %}
+                        <tr>
+                            <td>{{ item.training_name }}</td>
+                            <td>{{ item.create_date | date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-          </div>
         </div>
-        <div class="row">
-          <div class="panel panel-info">
+        
+        <div class="panel panel-info">
             <div class="panel-heading">
-              <strong>Distributions for {{ get_program.name }} </strong>
+                <strong>Distributions for {{ get_program.name }} </strong>
             </div>
-            <div class="panel-body">
-              <table class="table table-striped">
-                {% if get_distributions %}
-                <tr>
-                  <th>Date Created</th>
-                  <th>Name</th>
-                </tr>
-                {% endif %} {% for item in get_distributions %}
-                <tr>
-                  <td>{{ item.create_date | date }}</td>
-                  <td>{{ item.distribution_name }}</td>
-                </tr>
-
-                {% empty %}
-                <li class="list-group-item">No Distribution(s) yet.</li>
-                {% endfor %}
-              </table>
-            </div>
-          </div>
+        <div class="panel-body">
+            <table class="table" id="distributionsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Date Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in get_distributions %}
+                    <tr>
+                        <td>{{ item.distribution_name }}</td>
+                        <td>{{ item.create_date | date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         </div>
       </div>
       <!-- End of Monitoring Contents -->
