@@ -41,6 +41,12 @@
 <!--- Hosted Leaflet CSS -->
 <script src="{{ STATIC_URL }}js/Chart.HorizontalBar.js"></script>
 
+<script>
+    $(document).ready(() => {
+        $('#summaryTable').dataTable()
+    })
+</script>
+
 <link
   rel="borders"
   type="application/json"
@@ -113,10 +119,10 @@
     </ul>
     <div class="tab-content">
       <div class="tab-pane" id="projects">
-        <h1 class="sidebar-header">
+        <h4 class="page-header">
           {{ user.activity_user.organization.level_2_label }} Status and Key
           Performance Indicators
-        </h1>
+        </h4>
 
         <h4>
           <strong
@@ -125,46 +131,36 @@
           >
           <span class="badge">{{ total_projects }}</span>
         </h4>
-        <!-- approved count-->
-        <h4>
-          <a href="/workflow/dashboard/{{ get_program.id }}/approved/"
-            ><span class="label label-success"
-              >Approved &nbsp;<span class="badge">{{
-                get_approved_count
-              }}</span></span
-            ></a
-          >
-          <!-- awaiting approval count-->
-          <a href="/workflow/dashboard/{{ get_program.id }}/awaiting_approval/"
-            ><span class="label label-success"
-              >Awaiting Approval &nbsp;<span class="badge">{{
-                get_awaiting_approval_count
-              }}</span></span
-            ></a
-          >
-          <!-- in progress count-->
-          <a href="/workflow/dashboard/{{ get_program.id }}/in_progress/"
-            ><span class="label label-success"
-              >In Progress &nbsp;<span class="badge">{{
-                get_in_progress_count
-              }}</span></span
-            ></a
-          >
-          <!-- in progress count-->
-          <a href="/workflow/dashboard/{{ get_program.id }}/new/"
-            ><span class="label label-success"
-              >New &nbsp;<span class="badge">{{ nostatus_count }}</span></span
-            ></a
-          >
-          <!-- rejected count-->
-          <a href="/workflow/dashboard/{{ get_program.id }}/rejected/"
-            ><span class="label label-success"
-              >Rejected &nbsp;<span class="badge">{{
-                get_rejected_count
-              }}</span></span
-            ></a
-          >
-        </h4>
+        <div class="row mb-3">
+            <div class="col-md-12">
+
+                <!-- approved count-->
+                <a class="btn btn-success btn-xs" href="/workflow/dashboard/{{ get_program.id }}/approved/"
+                >
+                  Approved <span class="badge badge-success">
+                      {{ get_approved_count }}</span></a>
+              <!-- awaiting approval count-->
+              <a class="btn btn-info btn-xs" href="/workflow/dashboard/{{ get_program.id }}/awaiting_approval/"
+                >
+                  Awaiting Approval 
+                  <span class="badge badge-info">
+                      {{ get_awaiting_approval_count }}</span>
+                </a>
+              <!-- in progress count-->
+              <a class="btn btn-primary btn-xs" href="/workflow/dashboard/{{ get_program.id }}/in_progress/"
+                >In Progress &nbsp;<span class="badge badge-primary">{{ get_in_progress_count }}</span></a
+              >
+              <!-- in progress count-->
+              <a class="btn btn-default btn-xs" href="/workflow/dashboard/{{ get_program.id }}/new/"
+                >New <span class="badge">{{ nostatus_count }}</span></a
+              >
+              <!-- rejected count-->
+              <a class="btn btn-danger btn-xs" href="/workflow/dashboard/{{ get_program.id }}/rejected/"
+                >Rejected <span class="badge badge-danger">
+                {{get_rejected_count }}</span></a
+              >
+            </div>
+        </div>
 
         <!-- The table collapse panel -->
         <div class="panel-group">
@@ -185,23 +181,27 @@
               class="panel-collapse collapse"
             >
               <div class="panel-body">
-                <table class="table table-striped">
-                  <tr>
-                    <th>
-                      {{ user.activity_user.organization.level_4_label }} Code
-                    </th>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>EXp. Start Date</th>
-                  </tr>
-                  {% for project in getAllProjects %}
-                  <tr>
-                    <td>{{ project.activity_code }}</td>
-                    <td>{{ project.project_name }}</td>
-                    <td>{{ project.approval }}</td>
-                    <td>{{ project.expected_start_date }}</td>
-                  </tr>
-                  {% endfor %}
+                <table class="table" id="summaryTable">
+                    <thead>
+                        <tr>
+                          <th>
+                            {{ user.activity_user.organization.level_4_label }} Code
+                          </th>
+                          <th>Title</th>
+                          <th>Status</th>
+                          <th>EXp. Start Date</th>
+                        </tr>
+                    </thead>
+                    <tbody> 
+                        {% for project in getAllProjects %}
+                        <tr>
+                          <td>{{ project.activity_code }}</td>
+                          <td>{{ project.project_name }}</td>
+                          <td>{{ project.approval }}</td>
+                          <td>{{ project.expected_start_date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
               </div>
             </div>
@@ -215,12 +215,11 @@
             <div class="panel panel-info">
               <div class="panel-heading">
                 <strong
-                  >{{
-                    user.activity_user.organization.level_1_label
-                  }}
+                  >
+                  {{ user.activity_user.organization.level_1_label }}
                   Expenditure</strong
                 ><br />
-                <strong>Budgets</strong> Vs <strong>Actuals</strong>
+                <small>Budgets Vs Actuals</small>
               </div>
 
               <div class="panel-body">
@@ -235,11 +234,12 @@
               </div>
             </div>
           </div>
+
           <div class="col-md-6">
             <div class="panel panel-info">
               <div class="panel-heading">
                 <strong>Key Performance Indicators (KPIs)</strong><br />
-                <strong>Targets</strong> Vs <strong>Actuals</strong>
+                <small>Targets Vs Actuals</small>
               </div>
               <div class="panel-body">
                 <div class="canvas-container-fixed">
