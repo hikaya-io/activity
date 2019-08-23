@@ -11,39 +11,66 @@
   {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">Home Dashboard</a></li>
-    <li class="active">{{ user.activity_user.organization.level_1_label }} Dashboards</li>
+    <li class="active">
+      {{ user.activity_user.organization.level_1_label }} Dashboards
+    </li>
   </ul>
   {% endblock %}
 
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">{{ user.activity_user.organization.level_1_label }} Dashboards</h4>
+      <h4 class="page-title">
+        {{ user.activity_user.organization.level_1_label }} Dashboards
+      </h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
-        <div class="btn-group" role="group" aria-label="...">
-          <div class="btn-group" role="group">
-            <button
-              type="button"
-              class="btn btn-sm btn-default dropdown-toggle"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Countries
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="#">--All--</a></li>
-              {% for country in get_country %}
-              <li>
-                <a href="/customdashboard/program_list/{{ country.id }}">{{
-                  country.country
-                }}</a>
-              </li>
-              {% endfor %}
-            </ul>
-          </div>
+        <div class="btn-group" role="group">
+          <button
+            type="button"
+            class="btn btn-sm btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Filter by Sectors
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li role="presentation"><a href="#">--All--</a></li>
+            {% for country in get_country %}
+            <li role="presentation">
+              <a href="/customdashboard/program_list/{{ country.id }}">
+                {{ country.country }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group">
+          <button
+            type="button"
+            class="btn btn-sm btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Filter by Countries
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li role="presentation"><a href="#">--All--</a></li>
+            {% for country in get_country %}
+            <li role="presentation">
+              <a href="/customdashboard/program_list/{{ country.id }}">
+                {{ country.country }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
         </div>
       </div>
     </div>
@@ -64,7 +91,9 @@
       {% for item in get_program %} {% if item.name %}
       <tr>
         <td>
-          <a href="/customdashboard/program_dashboard/{{item.id}}/0/">{{ item.name }}</a>
+          <a href="/customdashboard/program_dashboard/{{ item.id }}/0/">
+            {{ item.name }}
+          </a>
         </td>
         <td>
           {% if item.public_dashboard %}<a
@@ -78,17 +107,33 @@
         <td class="text-right">
           <!-- Split button -->
           <div class="btn-group">
-              <button type="button" class="btn btn-default btn-sm disabled">Links</button>
-              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="caret"></span>
-                <span class="sr-only">Toggle Dropdown</span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a href="/customdashboard/program_dashboard/{{ item.id }}/0/">Internal</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="/customdashboard/program_dashboard/{{ item.id }}/1/">Public</a></li>
-              </ul>
-            </div>
+            <button type="button" class="btn btn-default btn-sm disabled">
+              Links
+            </button>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="/customdashboard/program_dashboard/{{ item.id }}/0/"
+                  >Internal</a
+                >
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a href="/customdashboard/program_dashboard/{{ item.id }}/1/"
+                  >Public</a
+                >
+              </li>
+            </ul>
+          </div>
         </td>
       </tr>
       {% endif %} {% endfor %}
