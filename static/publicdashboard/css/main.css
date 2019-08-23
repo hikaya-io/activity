@@ -55,6 +55,18 @@ video {
     vertical-align: middle;
 }
 
+.nav-tabs.nav-justified.li.a {
+    color: #25CED1 !important;
+}
+
+.nav-tabs.nav-justified.li.a :hover {
+    color: #55acee !important;
+}
+
+a {
+    color: #25CED1;
+}
+
 canvas {
     position: absolute;
     top: 0;
@@ -96,20 +108,6 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
-
-
-html,
-body {
-    padding: 0;
-    margin: 0;
-    width: 100% height: 100%;
-}
-
-body {
-
-    font-family: 'Source Sans Pro', sans-serif;
-    color: #666;
-}
 
 /* button */
 .button {
