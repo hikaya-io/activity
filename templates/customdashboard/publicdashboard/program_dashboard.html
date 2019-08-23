@@ -43,7 +43,8 @@
 
 <script>
     $(document).ready(() => {
-        $('#summaryTable').dataTable()
+        $('#summaryTable').dataTable();
+        $('#indicatorSummary').dataTable();
     })
 </script>
 
@@ -207,8 +208,8 @@
             </div>
           </div>
         </div>
-
         <!-- End of the table collapse panel -->
+
         <!--  The bar charts -->
         <div class="row">
           <div class="col-md-6">
@@ -252,16 +253,22 @@
         </div>
       </div>
       <div class="tab-pane" id="indicators">
-        <h1 class="sidebar-header">Key Performance Indicators</h1>
-        <br />
-        <h4>
-          <strong>Number of Indicator(s)</strong>
-          <span class="badge">{{ get_indicator_count }}</span>
-          <strong>With Data</strong>
-          <span class="badge">{{ get_indicator_countData }}</span>
-          <strong>KPIs</strong>
-          <span class="badge">{{ get_indicator_count_kpi }}</span>
-        </h4>
+        <h4 class="page-header">Key Performance Indicators</h4>
+       
+        <div class="mb-3">
+          <button class="btn btn-info btn-xs">Number of Indicator(s)
+              <span class="badge badge-info">{{ get_indicator_count }}</span>
+          </button>
+
+          <button class="btn btn-success btn-xs">With Data
+              <span class="badge badge-success"> {{ get_indicator_countData }}</span>
+          </button>
+
+          <button class="btn btn-warning btn-xs">KPIs
+              <span class="badge badge-warning">{{ get_indicator_count_kpi }}</span>
+          </button>
+        </div>
+
         <div id="indicator-slider" class="row collapse">
           <div class="col-md-12">
             <div class="panel panel-info">
@@ -284,9 +291,8 @@
                   data-toggle="collapse"
                   href="#indi_collapse{{ get_program.id }}"
                   ><b
-                    >Summary of Indicators for - {% if get_program %}{{
-                      get_program.name
-                    }}{% endif %}</b
+                    >Summary of Indicators for - {% if get_program %}
+                    {{ get_program.name }}{% endif %}</b
                   ></a
                 >
               </h4>
@@ -297,7 +303,7 @@
               class="panel-collapse collapse in"
             >
               <div class="panel-body">
-                <table class="table table-striped" id="tbody-sparkline">
+                <table class="table table-striped" id="indicatorSummary">
                   <thead>
                     <tr>
                       <th>Indicator#</th>
