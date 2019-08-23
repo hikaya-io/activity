@@ -343,10 +343,10 @@
 
       <!-- Analysis contents -->
       <div class="tab-pane" id="analysis">
-        <h1 class="sidebar-header">
+        <h4 class="page-header">
           Analysis (Analysis reports, visualizations and Notebooks)
-        </h1>
-        <br />
+        </h4>
+        
         {% for notebook in get_notebooks %}
         <div class="row">
           <div class="panel panel-info">
@@ -354,14 +354,13 @@
               <strong>{{ notebook.name }}</strong>
             </div>
             <div class="panel-body">
-              <a href="/customdashboard/notebook/{{ notebook.id }}">{{
-                notebook.name
-              }}</a>
+              <a href="/customdashboard/notebook/{{ notebook.id }}">
+                {{ notebook.name }}</a>
             </div>
           </div>
         </div>
         {% empty %}
-        <h3>No analysis yet.</h3>
+        <p class="text-danger">No analysis yet. <i class="fa fa-warning"></i></p>
         {% endfor %}
       </div>
       <!-- End of Monitoring Contents -->
