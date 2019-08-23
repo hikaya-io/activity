@@ -451,13 +451,19 @@
       </div>
       <!-- End of Monitoring Contents -->
 
-      <div class="sidebar-pane" id="i_surveys">
-        <h1 class="sidebar-header">
+      <div class="tab-pane" id="i_surveys">
+        {% if get_program_narrative %}
+        <h4 class="page-header">
           {{ get_program_narrative.narrative_title }}
-        </h1>
-        <br />
-        <p>{{ get_program_narrative.narrative }}</p>
+        </h4>
+        
+        <div class="well well-sm">
+            <p>{{ get_program_narrative.narrative }}</p>
+        </div>
+
         <div class="main_panel" id="main_panel"></div>
+
+        {% endif %}
       </div>
 
       <div class="tab-pane active" id="dashboard">
