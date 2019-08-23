@@ -1,18 +1,21 @@
 {% extends "base.html" %} {% block content %}
 {% include 'admin/user_invite_modal.html' %}
-<div class="admin-container">
+
+<div class="container">
+	{% block breadcrumbs %}
+	<ul class="breadcrumb">
+		<li><a href="{% url 'index' %}">Home Dashboard</a></li>
+		<li class="active">
+		{{ user.activity_user.organization.level_1_label }} Dashboards
+		</li>
+	</ul>
+	{% endblock %}
+
 	<div class="row">
 		<div class="col-md-3">
 			{% include 'admin/sections/side-nav.html' %}
 		</div>
 		<div class="col-md-9 admin-content">
-			{% block breadcrumbs %}
-			<ul class="breadcrumb">
-				<li><a href="/accounts/admin/users/all/all/">User(s)</a></li>
-				<li class="active">Pending Invitation(s)</li>
-			</ul>
-			{% endblock %}
-
 			<!-- Sub navigation -->
 			<div class="sub-navigation">
 				<div class="sub-navigation-header">
