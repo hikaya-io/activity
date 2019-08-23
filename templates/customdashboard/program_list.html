@@ -64,7 +64,8 @@
       {% for item in get_program %} {% if item.name %}
       <tr>
         <td>
-          <a href="/workflow/level1/edit/{{item.id}}/">{{ item.name }}</a></td>
+          <a href="/workflow/level1/edit/{{ item.id }}/">{{ item.name }}</a>
+        </td>
         <td>
           {% if item.public_dashboard %}<a
             href="/customdashboard/program_dashboard/{{ item.id }}/1/"
@@ -79,15 +80,15 @@
               class="progress-bar progress-bar-warning"
               style="width: {{ item.indicator_data_percent }}%"
             >
-              <font color="black"
-                >Data {{ item.indicator_data_percent }} %</font
+              <span color="black"
+                >Data {{ item.indicator_data_percent }} %</span
               >
             </div>
             <div
               class="progress-bar progress-bar-success"
               style="width: {{ item.indicator_percent }}%"
             >
-              <font color="black">No Data {{ item.indicator_percent }} %</font>
+              <span color="black">No Data {{ item.indicator_percent }} %</span>
             </div>
           </div>
           <strong
@@ -98,14 +99,14 @@
               class="progress-bar progress-bar-warning"
               style="width: {{ item.project_percent }}%"
             >
-              <font color="black">Tracking {{ item.project_percent }} %</font>
+              <span color="black">Tracking {{ item.project_percent }} %</span>
             </div>
             <div
               class="progress-bar progress-bar-info"
               style="width: {{ item.project_agreement_percent }}%"
             >
-              <font color="black"
-                >Initiation {{ item.project_agreement_percent }} %</font
+              <span color="black"
+                >Initiation {{ item.project_agreement_percent }} %</span
               >
             </div>
           </div>
@@ -113,7 +114,9 @@
 
         <td>{{ item.create_date }}</td>
         <td class="text-right">
-          <a class="btn btn-default btn-sm" href="/customdashboard/program_dashboard/{{ item.id }}/0/"
+          <a
+            class="btn btn-default btn-sm"
+            href="/customdashboard/program_dashboard/{{ item.id }}/0/"
             >Internal</a
           >
         </td>
