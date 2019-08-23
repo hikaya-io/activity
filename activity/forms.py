@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 from workflow.models import ActivityUser, ActivityBookmarks, Organization
 from django.forms .models import model_to_dict
 
-
 class RegistrationForm(UserChangeForm):
     """
     Form for registering a new account.
@@ -59,7 +58,8 @@ class RegistrationForm(UserChangeForm):
             css_class='form-row'
         ),
         'privacy_disclaimer_accepted',
-        Reset('reset', 'Discard Changes', css_class='btn-md btn-warning'),
+        
+        HTML('<a class="btn btn-warning mr-3" href={% url "index" %}>Close</a>'),
         Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
     )
 

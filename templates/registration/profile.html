@@ -1,5 +1,24 @@
 {% extends "base.html" %} {% block content %}
 
+<script>
+	$(document).ready(() => {
+		$('#id_title').select2({
+			theme: "bootstrap"
+		});
+		$('#id_user').select2({
+			theme: "bootstrap"
+		});
+
+		$('#id_organization').select2({
+			theme: "bootstrap"
+		});
+		$('#id_organizations').select2({
+			theme: "bootstrap",
+			multiple: true,
+		})
+	})
+</script>
+
 <div class="container">
 
   {% if form.errors %}
