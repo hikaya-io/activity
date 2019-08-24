@@ -52,7 +52,7 @@ urlpatterns = [
     re_path(r'^projectcomplete_detail/(?P<pk>\w+)/$',
             ProjectCompleteDetail.as_view(), name='projectcomplete_detail'),
 
-    re_path(r'^siteprofile_list/(?P<program_id>\w+)/(?P<activity_id>\w+)/$',
+    re_path(r'^siteprofile_list/(?P<program_id>\w+)/(?P<activity_id>\w+)/(?P<display>\w+)/$',
             SiteProfileList.as_view(), name='siteprofile_list'),
     re_path(r'^siteprofile_report/(?P<pk>\w+)/$',
             SiteProfileReport.as_view(), name='siteprofile_report'),

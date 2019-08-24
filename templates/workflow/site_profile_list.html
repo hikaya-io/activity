@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% load i18n %} {% load group_tag %} {% block content %}
+{% extends "base.html" %} 
+{% block content %}
 
 <div class="container">
 	{% block breadcrumbs %}
@@ -14,6 +15,12 @@
 			<h4 class="page-title">Site Profile List & Map</h4>
 		</div>
 		<div class="sub-navigation-actions">
+			<div class="sub-nav-item">
+				<div class="btn-group" role="group" aria-label="...">
+					<a role="button" href="#" class="btn btn-default btn-sm disabled">List</a>
+					<a role="button" href="/workflow/siteprofile_list/0/0/map/" class="btn btn-default btn-sm">Map</a>
+				</div>
+			</div>
 			<div class="sub-nav-item">
 				<div class="dropdown">
 					<button
@@ -190,13 +197,13 @@
 
 		{% endfor %}
 	</table>
-
+<!-- 
 	{% if offline_mode %}
 	<h2>Offline (No map provided)</h2>
 	{% else %}
 	<div id="map"></div>
 
-	{% include "workflow/site_profile_map.html" %}
+	{% include "workflow/site_profile_map.html" %} -->
 
 	<script>
 		$(document).ready(() => {

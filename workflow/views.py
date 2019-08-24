@@ -210,7 +210,8 @@ class ProgramDash(ListView):
 
                 elif status == 'new':
 
-                    get_projects = get_projects.filter(Q(approval='') | Q(approval=None))
+                    get_projects = get_projects.filter(
+                        Q(approval='') | Q(approval=None))
 
                 else:
                     get_projects = get_projects.filter(approval=status)
@@ -1304,6 +1305,12 @@ class SiteProfileList(ListView):
         return super(SiteProfileList, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
+        # set the template
+        if self.kwargs['display'] == 'map':
+            template_name = 'workflow/site_profile_map.html'
+        else:
+            template_name = 'workflow/site_profile_list.html'
+
         activity_id = int(self.kwargs['activity_id'])
         program_id = int(self.kwargs['program_id'])
 
@@ -1359,7 +1366,7 @@ class SiteProfileList(ListView):
 
         if user_list:
             default_list = int(user_list)
-        return render(request, self.template_name,
+        return render(request, template_name,
                       {
                           'inactive_site': inactive_site,
                           'default_list': default_list,
@@ -1372,7 +1379,7 @@ class SiteProfileList(ListView):
                           'helper': FilterForm.helper,
                           'active': ['components'],
                           'map_api_key': settings.GOOGLE_MAP_API_KEY
-                       })
+                      })
 
 
 class SiteProfileReport(ListView):
