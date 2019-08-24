@@ -1307,9 +1307,9 @@ class SiteProfileList(ListView):
     def get(self, request, *args, **kwargs):
         # set the template
         if self.kwargs['display'] == 'map':
-            template_name = 'workflow/site_profile_map.html'
+            self.template_name = 'workflow/site_profile_map.html'
         else:
-            template_name = 'workflow/site_profile_list.html'
+            self.template_name = 'workflow/site_profile_list.html'
 
         activity_id = int(self.kwargs['activity_id'])
         program_id = int(self.kwargs['program_id'])
@@ -1366,7 +1366,7 @@ class SiteProfileList(ListView):
 
         if user_list:
             default_list = int(user_list)
-        return render(request, template_name,
+        return render(request, self.template_name,
                       {
                           'inactive_site': inactive_site,
                           'default_list': default_list,
@@ -1447,7 +1447,7 @@ class SiteProfileCreate(CreateView):
         initial = {
             'approved_by': self.request.user,
             'filled_by': self.request.user,
-            'country': default_country
+            'country': default_country,
         }
 
         return initial
@@ -1459,7 +1459,8 @@ class SiteProfileCreate(CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-        form.save()
+        instance = form.save()
+        instance.organizations.add(self.request.user.activity_user.organization)
         messages.success(self.request, 'Success, Site Profile Created!')
         latest = SiteProfile.objects.latest('id')
         redirect_url = '/workflow/siteprofile_update/' + str(latest.id)
