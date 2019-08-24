@@ -1,9 +1,11 @@
 {% extends "base.html" %} {% load group_tag %} {% block content %}
+{% include './modals/add_training_modal.html' %}
 
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li class="active">Form Library</li>
     <li class="active">Training</li>
   </ul>
   {% endblock %}
@@ -21,19 +23,20 @@
 
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
-          <a
+          <!-- <a
             role="button"
             class="btn btn-sm btn-default"
             data-toggle="modal"
             data-target="#importModal"
             ><span class="glyphicon glyphicon-import"></span> Import Training</a
-          >
+          > -->
 
-          <a
-            role="button"
-            href="/formlibrary/training_add/0/"
+          <button
+            role="dialog"
+            data-toggle="modal"
+            data-target="#addTrainingModal"
             class="btn btn-sm btn-primary"
-            ><i class="fa fa-plus"></i> New Training</a
+            ><i class="fa fa-plus"></i> New Training</button
           >
         </div>
       </div>
@@ -62,7 +65,7 @@
           <td class="text-right">
             <!-- Action buttons -->
             <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-default">
+              <button type="button" class="btn btn-sm btn-default disabled">
                 More
               </button>
               <button
@@ -79,6 +82,7 @@
                 <li class="text-danger">
                   <a href="/formlibrary/training_update/{{training.id}}/">Edit</a>
                 </li>
+                <li class="divider"></li>
                 <li class="text-danger">
                     <a 
                     class="text-danger"

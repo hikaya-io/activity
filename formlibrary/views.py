@@ -175,7 +175,8 @@ class BeneficiaryList(ListView):
         organization = request.user.activity_user.organization
         get_programs = Program.objects.all().filter(organization=organization)
 
-        get_training = TrainingAttendance.objects.filter(program__in=get_programs)
+        get_training = TrainingAttendance.objects.filter(
+            program__in=get_programs)
         get_beneficiaries = Beneficiary.objects.all().filter(program__in=get_programs)
 
         if int(program_id) != 0:
@@ -528,3 +529,35 @@ class GetAgreements(View, AjaxableResponseMixin):
             final_dict = {'get_agreements': get_agreements}
 
         return JsonResponse(final_dict, safe=False)
+
+
+def add_training(request):
+    data = {
+        'training_name': request.POST.get('training_name'),
+        'start_date': request.POST.get('start_date'),
+        'end_date': request.POST.get('end_date'),
+        'program_id': int(request.POST.get('program')),
+    }
+
+    instance = TrainingAttendance.objects.create(**data)
+
+    if instance.id:
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})
+
+
+def add_distribution(request):
+    data = {
+        'distribution_name': request.POST.get('distribution_name'),
+        'start_date': request.POST.get('start_date'),
+        'end_date': request.POST.get('end_date'),
+        'program_id': int(request.POST.get('program')),
+    }
+
+    instance = Distribution.objects.create(**data)
+
+    if instance.id:
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})
