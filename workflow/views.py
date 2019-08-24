@@ -210,7 +210,8 @@ class ProgramDash(ListView):
 
                 elif status == 'new':
 
-                    get_projects = get_projects.filter(Q(approval='') | Q(approval=None))
+                    get_projects = get_projects.filter(
+                        Q(approval='') | Q(approval=None))
 
                 else:
                     get_projects = get_projects.filter(approval=status)
@@ -1304,6 +1305,12 @@ class SiteProfileList(ListView):
         return super(SiteProfileList, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
+        # set the template
+        if self.kwargs['display'] == 'map':
+            self.template_name = 'workflow/site_profile_map.html'
+        else:
+            self.template_name = 'workflow/site_profile_list.html'
+
         activity_id = int(self.kwargs['activity_id'])
         program_id = int(self.kwargs['program_id'])
 
@@ -1372,7 +1379,7 @@ class SiteProfileList(ListView):
                           'helper': FilterForm.helper,
                           'active': ['components'],
                           'map_api_key': settings.GOOGLE_MAP_API_KEY
-                       })
+                      })
 
 
 class SiteProfileReport(ListView):
@@ -1440,7 +1447,7 @@ class SiteProfileCreate(CreateView):
         initial = {
             'approved_by': self.request.user,
             'filled_by': self.request.user,
-            'country': default_country
+            'country': default_country,
         }
 
         return initial
@@ -1452,10 +1459,11 @@ class SiteProfileCreate(CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-        form.save()
+        instance = form.save()
+        instance.organizations.add(self.request.user.activity_user.organization)
         messages.success(self.request, 'Success, Site Profile Created!')
         latest = SiteProfile.objects.latest('id')
-        redirect_url = '/workflow/siteprofile_update/' + str(latest.id)
+        redirect_url = '/workflow/siteprofile_list/0/0/list/'
         return HttpResponseRedirect(redirect_url)
 
     form_class = SiteProfileForm

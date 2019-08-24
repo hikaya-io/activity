@@ -1,38 +1,174 @@
-<div id="map"></div>
+{% extends "base.html" %} {% block content %}
+<style>
+	#map {
+		height: 70vh !important;
+	}
+</style>
+
+<div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li>
+      <a href="/workflow/siteprofile_list/0/0/list/">Site Profiles</a>
+    </li>
+    <li class="active">Map</li>
+  </ul>
+  {% endblock %}
+
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">Site Profiles Map</h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <a role="button" href="/workflow/siteprofile_list/0/0/list/" class="btn btn-default btn-sm"
+            ><i class="fa fa-list"></i> List</a
+          >
+          <a
+            role="button"
+            href="#"
+            class="btn btn-default btn-sm disabled"
+            ><i class="fa fa-map-marker"></i> Map</a
+          >
+        </div>
+      </div>
+      <div class="sub-nav-item">
+        <div class="dropdown">
+          <button
+            class="btn btn-sm btn-default dropdown-toggle"
+            type="button"
+            id="dropdownMenu1"
+            data-toggle="dropdown"
+            aria-expanded="true"
+          >
+            {{ user.activity_user.organization.level_1_label }}(s)
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation">
+              <a
+                role="menuitem"
+                tabindex="-1"
+                href="/workflow/siteprofile_list/0/0"
+              >
+                -- All --
+              </a>
+            </li>
+            {% for program in get_programs %}
+            <li role="presentation">
+              <a
+                role="menuitem"
+                tabindex="-1"
+                href="/workflow/siteprofile_list/{{ program.id }}/0/"
+              >
+                {{ program.name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <br />
+      </div>
+
+      <div class="sub-nav-item">
+        <div class="dropdown">
+          <button
+            class="btn btn-sm btn-default dropdown-toggle"
+            type="button"
+            id="dropdownMenu1"
+            data-toggle="dropdown"
+            aria-expanded="true"
+          >
+            {{ user.activity_user.organization.level_2_label }}(s)
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation">
+              <a
+                role="menuitem"
+                tabindex="-1"
+                href="/workflow/siteprofile_list/0/0"
+              >
+                -- All --
+              </a>
+            </li>
+            {% for project in get_projects %}
+            <li role="presentation">
+              <a
+                role="menuitem"
+                tabindex="-1"
+                href="/workflow/siteprofile_list/0/{{ project.id }}/"
+              >
+                {{ project.project_name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <a
+            role="button"
+            href="/workflow/export_sites_list/{{ program_id }}/"
+            class="btn btn-sm btn-default"
+            >Export to CSV</a
+          >
+
+          <a
+            role="button"
+            href="/workflow/siteprofile_add"
+            class="btn btn-sm btn-primary"
+          >
+            New Site Profile</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="map"></div>
+</div>
+
 <script>
-	function initMap() {
-		// The map, centered at Uluru
-		var map = new google.maps.Map(document.getElementById('map'), {
-			zoom: 3,
-            center: locations[0]
-		});
+  function initMap() {
+  	// The map, centered at Uluru
+  	var map = new google.maps.Map(document.getElementById('map'), {
+  		zoom: 3,
+        center: locations[0]
+  	});
 
-		// Create an array of alphabetical characters used to label the markers.
-		var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  	// Create an array of alphabetical characters used to label the markers.
+  	var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-		// Add some markers to the map.
-		// Note: The code uses the JavaScript Array.prototype.map() method to
-		// create an array of markers based on a given "locations" array.
-		// The map() method here has nothing to do with the Google Maps API.
-		var markers = locations.map(function(location, i) {
-			return new google.maps.Marker({
-				position: location,
-				label: labels[i % labels.length],
-			});
-		});
+  	// Add some markers to the map.
+  	// Note: The code uses the JavaScript Array.prototype.map() method to
+  	// create an array of markers based on a given "locations" array.
+  	// The map() method here has nothing to do with the Google Maps API.
+  	var markers = locations.map(function(location, i) {
+  		return new google.maps.Marker({
+  			position: location,
+  			label: labels[i % labels.length],
+  		});
+  	});
 
-		// Add a marker clusterer to manage the markers.
-		var markerCluster = new MarkerClusterer(map, markers, {
-			imagePath:
-				'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
-		});
-	   }
-	      var locations = [];
-	      {% for site in get_site_profile %}
-	       locations.push({lat: Number('{{site.latitude}}'), lng: Number('{{site.longitude}}')})
-	      {% endfor %}
+  	// Add a marker clusterer to manage the markers.
+  	var markerCluster = new MarkerClusterer(map, markers, {
+  		imagePath:
+  			'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+  	});
+     }
+        var locations = [];
+        {% for site in get_site_profile %}
+         locations.push({lat: Number('{{site.latitude}}'), lng: Number('{{site.longitude}}')})
+        {% endfor %}
 
-	       locations = [...locations];
+         locations = [...locations];
 </script>
 <!--Load the API from the specified URL
 * The async attribute allows the browser to render the page while the API loads
@@ -41,7 +177,9 @@
 -->
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 <script
-	async
-	defer
-	src="https://maps.googleapis.com/maps/api/js?key={{map_api_key}}&callback=initMap"
+  async
+  defer
+  src="https://maps.googleapis.com/maps/api/js?key={{map_api_key}}&callback=initMap"
 ></script>
+{% endblock %}
+

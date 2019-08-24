@@ -1,22 +1,31 @@
 {% extends "base.html" %}
-{% block bread_crumb %}
-<div class="container">
-<ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
-  {%  if get_program.id %}
-    <li><a href="/workflow/siteprofile_list/{{ get_program.id }}/">Site Profiles</a></li>
-  {% else %}
-    <li><a href="/workflow/siteprofile_list/0/0/">Site Profile</a></li>
-  {% endif %}
-  <li class="active">Site Profile Form</li>
-</ol>
-</div>
-{% endblock %}
-
 {% block content %}
+
 <div class="container">
-  <h1>Site Profile Form</h1>
-  {% include "form_guidance.html" %}
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+      <li>
+        <a href="/workflow/siteprofile_list/0/0/list/">Site Profiles</a>
+      </li>
+      <li class="active">Site Profile Form</li>
+    </ul>
+    {% endblock %}
+
+    <!-- Sub navigation -->
+  <div class="sub-navigation">
+      <div class="sub-navigation-header">
+        <h4 class="page-title">Site Profile Form</h4>
+      </div>
+      <div class="sub-navigation-actions">
+        <div class="sub-nav-item">
+          {% include "form_guidance.html" %}
+        </div>
+      </div>
+    </div>
+  
+
+
   {% if form.errors %}
       <div class="help-block">
       {% for field in form %}
