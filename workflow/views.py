@@ -1463,7 +1463,7 @@ class SiteProfileCreate(CreateView):
         instance.organizations.add(self.request.user.activity_user.organization)
         messages.success(self.request, 'Success, Site Profile Created!')
         latest = SiteProfile.objects.latest('id')
-        redirect_url = '/workflow/siteprofile_update/' + str(latest.id)
+        redirect_url = '/workflow/siteprofile_list/0/0/list/'
         return HttpResponseRedirect(redirect_url)
 
     form_class = SiteProfileForm
