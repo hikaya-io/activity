@@ -545,3 +545,19 @@ def add_training(request):
         return HttpResponse({'success': True})
 
     return HttpResponse({'success': False})
+
+
+def add_distribution(request):
+    data = {
+        'distribution_name': request.POST.get('distribution_name'),
+        'start_date': request.POST.get('start_date'),
+        'end_date': request.POST.get('end_date'),
+        'program_id': int(request.POST.get('program')),
+    }
+
+    instance = Distribution.objects.create(**data)
+
+    if instance.id:
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})

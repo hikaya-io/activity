@@ -1,8 +1,10 @@
-{% extends "base.html" %} {% load group_tag %} {% block content %}
+{% extends "base.html" %} {% block content %}
+{% include './modals/add_distribution_modal.html' %}
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li class="active">Form Library</li>
     <li class="active">Distribution</li>
   </ul>
   {% endblock %}
@@ -18,9 +20,9 @@
       </div>
 
       <div class="sub-nav-item">
-        <a href="/formlibrary/distribution_add/0/" class="btn btn-sm btn-primary">
+        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addDistributionModal">
           <i class="fa fa-plus"></i> New Distribution
-        </a>
+        </button>
       </div>
     </div>
   </div>
@@ -48,7 +50,7 @@
           <td class="text-right">
             <!-- Action buttons -->
             <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-default">
+              <button type="button" class="btn btn-sm btn-default disabled">
                 More
               </button>
               <button
@@ -65,6 +67,7 @@
                 <li class="text-danger">
                   <a href="/formlibrary/distribution_update/{{distribution.id}}/">Edit</a>
                 </li>
+                <li class="divider"></li>
                 <li class="text-danger">
                     <a
                       class="text-danger" 
