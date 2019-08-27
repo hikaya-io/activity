@@ -605,6 +605,7 @@ class IndicatorUpdate(UpdateView):
             .order_by('customsort', 'create_date', 'period')
 
         if self.request.is_ajax():
+            print('Is Ajax call')
             data = serializers.serialize('json', [self.object])
             pts = FlatJsonSerializer().serialize(periodic_targets)
             if generated_targets:
@@ -621,8 +622,9 @@ class IndicatorUpdate(UpdateView):
                                 "," +
                                 str(update_indicator_row) + "]")
         else:
+            print('Not Is Ajax call')
             messages.success(self.request, 'Success, Indicator Updated!')
-        return self.render_to_response(self.get_context_data(form=form))
+        return redirect('/indicators/home/0/0/0/')
     form_class = IndicatorForm
 
 

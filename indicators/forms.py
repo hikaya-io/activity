@@ -153,8 +153,7 @@ class IndicatorForm(forms.ModelForm):
             <a href="{% url 'pt_delete' pt.id %}" id="deleteLastPT"
             class="detelebtn" style="text-align: center;
                 margin: 3px 10px 0px 10px; color:red;
-                display:{% if forloop.last and indicator.target_frequency != 2
-                    or indicator.target_frequency == 8 %}
+                display:{% if forloop.last and indicator.target_frequency != 2 or indicator.target_frequency == 8 %}
                 block{% else %}none{% endif %}">
                     <span class="glyphicon glyphicon-remove"></span>
             </a>
@@ -308,7 +307,7 @@ class IndicatorForm(forms.ModelForm):
         # override the program queryset to use request.user for country
         countries = get_country(self.request.user)
         self.fields['program'].queryset = Program.objects.filter(
-            funding_status="Funded", country__in=countries)
+            organization=self.request.user.activity_user.organization)
         self.fields['disaggregation'].queryset = DisaggregationType.objects. \
             filter(country__in=countries).filter(standard=False)
         self.fields['objectives'].queryset = Objective.objects.all().filter(
@@ -317,10 +316,10 @@ class IndicatorForm(forms.ModelForm):
             'strategic_objectives'].queryset = StrategicObjective.objects.\
             filter(country__in=countries)
         self.fields['approved_by'].queryset = ActivityUser.objects.filter(
-            country__in=countries).distinct()
+            organization=self.request.user.activity_user.organization).distinct()
         self.fields[
             'approval_submitted_by'].queryset = ActivityUser.objects.filter(
-            country__in=countries).distinct()
+            organization=self.request.user.activity_user.organization).distinct()
         self.fields['program'].widget.attrs['readonly'] = "readonly"
         self.fields['baseline'].widget.attrs['class'] = 'col-sm-4'
         # self.fields['target_frequency_start'].widget = DatePicker.DateInput()
