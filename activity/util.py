@@ -191,7 +191,7 @@ def send_invite_emails(subject, email_from, email_to, data):
         msg.send()
 
 
-def send_single_mail(subject, email_from, email_to, data):
+def send_single_mail(subject, email_from, email_to, data, email_txt, email_html):
     """
     Send single email
     :param subject: email subject
@@ -199,11 +199,14 @@ def send_single_mail(subject, email_from, email_to, data):
     :param email_to: recipients list
     :param data: context data
     """
-    email_context = Context({'contact': data['organization'], 'link': data['link']})
-    email_txt = loader.render_to_string('emails/invite.txt', email_context)
-    email_html = loader.get_template('emails/invite.html', email_context)
+    email_context = data
+    email_txt = loader.render_to_string(email_txt, email_context)
+    email_html = loader.get_template(email_html)
+    email_html_content = email_html.render(email_context)
 
     msg = EmailMultiAlternatives(subject, email_txt, email_from, email_to)
-    msg.attach_alternative(email_html, "text/html")
+    msg.attach_alternative(email_html_content, "text/html")
 
     msg.send()
+
+

@@ -22,7 +22,8 @@ from workflow.models import (
     ActivitySites, ActivityBookmarks, FormGuidance, Organization, UserInvite
 )
 from activity.tables import IndicatorDataTable
-from activity.util import get_country, get_nav_links, send_invite_emails
+from activity.util import get_country, get_nav_links, send_invite_emails, \
+    send_single_mail
 from activity.forms import (
     RegistrationForm, BookmarkForm, OrganizationEditForm)
 from activity.settings import PROJECT_ROOT
@@ -392,6 +393,21 @@ def activate_acccount(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
+        mail_subject = 'Welcome to Activity'
+        data = {
+            'user': user,
+            'domain': request.build_absolute_uri('/').strip('/'),
+        }
+        email_txt = 'emails/registration/welcome.txt'
+        email_html = 'emails/registration/welcome.html'
+
+        send_single_mail(
+            mail_subject,
+            'Hikaya <team.hikaya@gmail.com>',
+            [user.email],
+            data, email_txt,
+            email_html
+        )
         # login(request, user)
         return redirect('/accounts/login/')
     else:
@@ -428,7 +444,7 @@ def register(request, invite_uuid):
         try:
             if User.objects.get(email=email):
                 invite_uuid = set_invite_uuid(invite_uuid)
-                invite_uuid.message_email = 'email already exists !'
+                invite_uuid['message_email'] = 'email already exists !'
                 return render(request, 'registration/register.html', invite_uuid)
 
         except User.DoesNotExist:
@@ -443,7 +459,7 @@ def register(request, invite_uuid):
                 )
             except IntegrityError:
                 invite_uuid = set_invite_uuid(invite_uuid)
-                invite_uuid.message_username = 'username already exists !'
+                invite_uuid['message_username'] = 'username already exists !'
                 return render(request, 'registration/register.html', invite_uuid)
 
         if user:
@@ -472,16 +488,23 @@ def register(request, invite_uuid):
                     })
             else:
                 mail_subject = 'Please confirm your email address'
-                message = render_to_string(
-                    'registration/activate_email.html', {
-                        'user': user,
-                        'domain': request.build_absolute_uri('/').strip('/'),
-                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                        'token': account_activation_token.make_token(user),
-                    })
-                email = EmailMessage(mail_subject, message,
-                                     'Hikaya <team.hikaya@gmail.com>', to=[email])
-                email.send()
+                data = {
+                    'user': user,
+                    'domain': request.build_absolute_uri('/').strip('/'),
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                    }
+                email_txt = 'emails/registration/email_confirmation.txt'
+                email_html = 'emails/registration/email_confirmation.html'
+
+                send_single_mail(
+                    mail_subject,
+                    'Hikaya <team.hikaya@gmail.com>',
+                    [email],
+                    data,
+                    email_txt,
+                    email_html
+                )
 
             activity_user = ActivityUser.objects.create(
                 user=user,
