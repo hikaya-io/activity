@@ -616,19 +616,47 @@ def profile(request):
     is logged in otherwise redirect them to registration page
     """
     if request.user.is_authenticated:
-        obj = get_object_or_404(ActivityUser, user=request.user)
-        form = RegistrationForm(request.POST or None, instance=obj,
-                                initial={'username': request.user})
+        activity_user_obj = get_object_or_404(ActivityUser, user=request.user)
+        user_obj = activity_user_obj.user
+        form = RegistrationForm(
+            request.POST or None,
+            instance=activity_user_obj,
+            initial={'username': request.user}
+        )
+        user_form = NewUserRegistrationForm(request.POST or None, instance=user_obj)
 
         if request.method == 'POST':
-            if form.is_valid():
-                form.save()
-                messages.error(
-                    request, 'Your profile has been updated.',
-                    fail_silently=False)
+            data = request.POST
+            activity_user_object = {
+                'employee_number': data.get('employee_number'),
+                'organization': data.get('organization'),
+                'title': data.get('title')
+            }
+
+            user_object = {
+                'first_name': data.get('first_name'),
+                'last_name': data.get('last_name'),
+                'email': data.get('email'),
+                'username': data.get('username')
+            }
+            # save user
+            User.objects.filter(pk=user_obj.id).update(**user_object)
+            user = User.objects.get(pk=user_obj.pk)
+            if user:
+                # save activity user after updating name
+                activity_user = activity_user_obj
+                activity_user.employee_number = activity_user_object['employee_number']
+                activity_user.organization = Organization.objects.get(pk=int(activity_user_object['organization']))
+                activity_user.title = activity_user_object['title']
+                activity_user.name = '{} {}'.format(user.first_name, user.last_name)
+                activity_user.save()
+
+            messages.success(request, 'Your profile has been updated.', fail_silently=False)
 
         return render(request, 'registration/profile.html', {
-            'form': form, 'helper': RegistrationForm.helper
+            'form': form,
+            'user_form': user_form,
+            'helper': RegistrationForm.helper
         })
     else:
         return HttpResponseRedirect('/accounts/register')

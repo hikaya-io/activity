@@ -58,7 +58,7 @@ class RegistrationForm(UserChangeForm):
             Column('organizations', css_class='form-group col-md-12 mb-0'),
             css_class='form-row'
         ),
-        'privacy_disclaimer_accepted',
+        # 'privacy_disclaimer_accepted',
     )
 
 
