@@ -775,45 +775,81 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .panel-title {
-    text-transform: uppercase;
-    font-weight: lighter;
+    text-transform: capitalize;
+    font-weight: 900;
+
 }
 
-/* info box */
-.info-box {
-    border: 2px solid #f5f5f5;
-    text-align: center;
+.box {
+    border: 1px solid #f5f5f5;
     padding: 5px;
     margin-bottom: 10px;
+    height: max-content;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
 }
 
-.info-box :last-child {
+.box :last-child {
     margin-bottom: 0px;
 }
 
-.info-box p {
+/* start of info box */
+.box-info {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.box-info p {
     margin-bottom: 0px;
 }
 
-.info-box-label {
+.box-info-label {
     font-size: 12px;
-    font-weight: bold;
-    text-transform: uppercase;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: #737581;
 }
 
-.info-box-text {
+.box-info-text {
     font-size: 10px;
-    font-weight: lighter;
+    font-weight: 200;
 }
 
-.info-box-number {
-    font-size: 32px;
+.box-info-number {
+    font-size: 28px;
+    font-weight: 100;
 }
 
-.info-box-number p {
-    font-weight: lighter;
+.box-info:hover {
+    background-color: #25CED1;
+    color: #f5f5f5;
+    text-decoration: none;
+    border: 1px solid #25CED1
 }
+
+.box-info:hover .box-info-label {
+    background-color: #25CED1;
+    color: #dfdfdf;
+}
+
+
+/* end of infobox styling */
 
 .white {
     background-color: #fff !important;
+}
+
+.mb-0 {
+    margin-bottom: 0px !important;
+}
+
+.panel-dashboard {
+    border: none;
+    border-bottom: 2px solid #f5f5f5;
 }
