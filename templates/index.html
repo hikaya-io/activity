@@ -1,7 +1,15 @@
-{% extends "base.html" %} {% block content %} 
-{% include 'shared/level1_modal_form.html' %}
+{% extends "base.html" %} 
+{% load static %}
+{% block content %} 
+{% include './shared/level1_modal_form.html' %}
 
-<script src="./../static/js/chart.js@2.8.0.min.js"></script>
+<script src="{% static 'js/chart.js@2.8.0.min.js' %}"></script>
+
+<style>
+  #map {
+    height: 400px !important;
+  }
+</style>
 
 <div class="container">
   {% block breadcrumbs %}
@@ -18,35 +26,29 @@
 
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
-          <div class="btn-group" role="group">
-              <button
-                type="button"
-                class="btn btn-sm btn-default dropdown-toggle"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Filter by {{ user.activity_user.organization.level_1_label }}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li>
-                  <a
-                    href="/dashboard/0/"
-                    >-- All --</a
-                  >
-                </li>
-  
-                {% for program in get_programs %}
-                <li>
-                  <a
-                    href="/dashboard/{{ program.id }}/"
-                    >{{ program.name }}</a
-                  >
-                </li>
-                {% endfor %}
-              </ul>
-            </div>
+        <div class="btn-group" role="group">
+          <button
+            type="button"
+            class="btn btn-sm btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Filter by {{ user.activity_user.organization.level_1_label }}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/dashboard/0/">-- All --</a>
+            </li>
+
+            {% for program in get_programs %}
+            <li>
+              <a href="/dashboard/{{ program.id }}/">{{ program.name }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
 
       <!-- sample action buttons -->
@@ -65,7 +67,6 @@
     </div>
   </div>
 
-
   <!-- workflows -->
   <div class="panel panel-dashboard rounded-0 mb-0">
     <div class="panel-heading white">
@@ -75,7 +76,7 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-2 col-xs-12">
-          <div class=row>
+          <div class="row">
             <div class="col-md-12 col-xs-6">
               <a class="box box-info" href="/">
                 <p class="box-info-label">Programs</p>
@@ -93,9 +94,13 @@
           </div>
         </div>
         <div class="col-md-10">
-          <div class="row">
-            <div class="col-md-6"></div>
-            <div class="col-md-6"></div>
+          <div class="row-charts">
+            <div class="chart">
+              <canvas id="projectStatusPie" height="200"></canvas>
+            </div>
+            <div class="chart">
+              <canvas id="projectBudgetActualColumn" height="200"> </canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -109,33 +114,46 @@
     </div>
 
     <div class="panel-body">
-        <div class="row">
-            <div class="col-md-2 col-xs-12">
-              <div class=row>
-                <div class="col-md-12 col-xs-6">
-                  <a class="box box-info" href="/" role="button">
-                    <p class="box-info-label">Indicators</p>
-                    <p class="box-info-number">890</p>
-                  </a>
-                </div>
-    
-                <div class="col-md-12 col-xs-6">
-                  <a class="box box-info" href="/" role="button">
-                    <p class="box-info-label">Collected Data</p>
-                    <p class="box-info-number">10001</p>
-                  </a>
-                </div>
-              </div>
+      <div class="row">
+        <div class="col-md-2 col-xs-12">
+          <div class="row">
+            <div class="col-md-12 col-xs-6">
+              <a class="box box-info" href="/" role="button">
+                <p class="box-info-label">Indicators</p>
+                <p class="box-info-number">890</p>
+              </a>
             </div>
-            <div class="col-md-10">
-              <div class="row">
-                <div class="col-md-12"></div>
-              </div>
+
+            <div class="col-md-12 col-xs-6">
+              <a class="box box-info" href="/" role="button">
+                <p class="box-info-label">Collected Data</p>
+                <p class="box-info-number">10001</p>
+              </a>
             </div>
+          </div>
         </div>
+        <div class="col-md-10">
+          <table class="table" id="indicatorTargetActualsTable">
+            <thead>
+              <tr>
+                <th>Indicator</th>
+                <th>Target</th>
+                <th>Actual</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="">Name of the indicator</a></td>
+                <td>780</td>
+                <td>200</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
-  
+
   <!-- components -->
   <div class="panel panel-dashboard rounded-0 mb-0">
     <div class="panel-heading white">
@@ -143,42 +161,95 @@
     </div>
 
     <div class="panel-body">
-        <div class="row">
-            <div class="col-md-2 col-xs-12">
-              <div class=row>
-                <div class="col-md-12 col-xs-6">
-                  <a class="box box-info" href="/">
-                    <p class="box-info-label">Active Locations</p>
-                    <p class="box-info-number">890</p>
-                    <p class="box-info-text">out of 1000 locations</p>
-                  </a>
-                </div>
-    
-                <div class="col-md-12 col-xs-6">
-                  <a class="box box-info" href="/">
-                    <p class="box-info-label">Documents</p>
-                    <p class="box-info-number">1</p>
-                    <p class="box-info-text">linked to Programs</p>
-                  </a>
-                </div>
+      <div class="row">
+        <div class="col-md-2 col-xs-12">
+          <div class="row">
+            <div class="col-md-12 col-xs-6">
+              <a class="box box-info" href="/">
+                <p class="box-info-label">Active Locations</p>
+                <p class="box-info-number">890</p>
+                <p class="box-info-text">out of 1000 locations</p>
+              </a>
+            </div>
 
-                <div class="col-md-12 col-xs-12">
-                  <a class="box box-info" href="/">
-                    <p class="box-info-label">Stakeholders</p>
-                    <p class="box-info-number">10</p>
-                    <p class="box-info-text">with 205 contacts</p>
-                  </a>
-                </div>
-              </div>
+            <div class="col-md-12 col-xs-6">
+              <a class="box box-info" href="/">
+                <p class="box-info-label">Documents</p>
+                <p class="box-info-number">1</p>
+                <p class="box-info-text">linked to Programs</p>
+              </a>
             </div>
-            <div class="col-md-10">
-              <div class="row">
-                <div class="col-md-12"></div>
-              </div>
+
+            <div class="col-md-12 col-xs-12">
+              <a class="box box-info" href="/">
+                <p class="box-info-label">Stakeholders</p>
+                <p class="box-info-number">10</p>
+                <p class="box-info-text">with 205 contacts</p>
+              </a>
             </div>
+          </div>
         </div>
+        <div class="col-md-10">
+          <div id="map">
+            {% include './small_site_profile_map.html' %}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  
 </div>
+
+<script>
+  var projectStatusPie = new Chart($('#projectStatusPie'), {
+    type: 'pie',
+    data: {
+      datasets: [
+        {
+          data: [10, 60, 34, 89, 34],
+          backgroundColor: ['yellow', 'blue', 'maroon', 'brown', 'pink'],
+        },
+      ],
+      labels: ['yellow', 'blue', 'maroon', 'brown', 'pink'],
+    },
+    options: {
+      responsive: true,
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Project Status',
+      },
+    },
+  });
+
+  var projectBudgetActualColumn = new Chart($('#projectBudgetActualColumn'), {
+    type: 'bar',
+    data: {
+      labels: ['project a', 'project b', 'project c'],
+      datasets: [
+        {
+          label: 'Budget',
+          backgroundColor: 'lightblue',
+          data: [90, 390, 900],
+        },
+        {
+          label: 'Actual',
+          backgroundColor: 'green',
+          data: [250, 70, 400],
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Project Budget vs Actual',
+      },
+    },
+  });
+</script>
 {% endblock content %}
