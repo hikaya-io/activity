@@ -65,18 +65,23 @@ def index(request, program_id=0):
     get_programs = Program.objects.filter(
         organization=request.user.activity_user.organization)
 
-    # get projects based on the active program
-    if int(program_id) == 0 :
+    # get stuff based on the active program
+    if int(program_id) == 0:
         get_projects = ProjectAgreement.objects.filter(
             program__organization=request.user.activity_user.organization)
+
+        get_indicators = Indicator.objects.filter(
+            program__organization=request.user.activity_user.organization).order_by('-id')
     else:
         get_projects = ProjectAgreement.objects.filter(program__id=program_id)
-        
+        get_indicators = Indicator.objects.filter(program__id=program_id).order_by('-id')
 
     return render(request, "index.html", {
         'selected_program': selected_program,
         'get_programs': get_programs,
         'get_projects': get_projects,
+        'get_indicators': get_indicators,
+        'get_latest_indicators': get_indicators[:10],
         'map_api_key': settings.GOOGLE_MAP_API_KEY
     })
 

@@ -132,7 +132,7 @@
             <div class="col-md-12 col-xs-6">
               <a class="box box-info" href="/" role="button">
                 <p class="box-info-label">Indicators</p>
-                <p class="box-info-number">890</p>
+                <p class="box-info-number">{{ get_indicators | length }}</p>
               </a>
             </div>
 
@@ -154,11 +154,13 @@
               </tr>
             </thead>
             <tbody>
+              {%  for indicator in get_latest_indicators %}
               <tr>
-                <td><a href="">Name of the indicator</a></td>
-                <td>780</td>
-                <td>200</td>
+                <td><a href="">{{indicator.name}}</a></td>
+                <td>{{indicator.target}}</td>
+                <td>{{indicator.actual}}</td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
