@@ -5,23 +5,10 @@
 
 <div class="container">
   {% block breadcrumbs %}
-    <ul class="breadcrumb">
-      <li class="active">Home Dashboard</li>
-    </ul>
+  <ul class="breadcrumb">
+    <li class="active">Home Dashboard</li>
+  </ul>
   {% endblock %}
-
-  {% for approval in user_pending_approvals %}
-  <div class="alert alert-success fade in">
-    <a class="close" data-dismiss="alert" href="#">&times;</a>
-    <p>
-      Project Initiation, <span class="label label-success">{{ approval }}</span
-      >, is awaiting your
-      <a href="/workflow/projectagreement_update/{{ approval.id }}/#approval"
-        >approval</a
-      >
-    </p>
-  </div>
-  {% endfor %}
 
   <!-- Sub navigation -->
   <div class="sub-navigation">
@@ -30,69 +17,41 @@
     </div>
 
     <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+          <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-sm btn-default dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Filter by {{ user.activity_user.organization.level_1_label }}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a
+                    href="/dashboard/0/"
+                    >-- All --</a
+                  >
+                </li>
+  
+                {% for program in get_programs %}
+                <li>
+                  <a
+                    href="/dashboard/{{ program.id }}/"
+                    >{{ program.name }}</a
+                  >
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+      </div>
+
       <!-- sample action buttons -->
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="">
-          <div class="btn-group" role="group">
-            <button
-              type="button"
-              class="btn btn-sm btn-default dropdown-toggle"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              {% if selected_countries_list %} 
-              {% for item in selected_countries_list %}
-              {{ item.country }} {% endfor %} {% else %} Country {% endif %}
-              Dashboard
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              {% for item in countries %}
-              <li>
-                <a href="/{{ item.id }}/">{{ item.country }}</a>
-              </li>
-              {% endfor %} {% if countries|length > 0 %}
-              <li role="separator" class="divider"></li>
-              {% endif %}
-              <li><a href="/">-- All --</a></li>
-            </ul>
-          </div>
-  
-          <div class="btn-group" role="group">
-            <button
-              type="button"
-              class="btn btn-sm btn-default dropdown-toggle"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Filter by {{ user.activity_user.organization.level_1_label }}
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              <li>
-                <a
-                  href="/dashboard/{% if get_filtered_name %}{{
-                    get_filtered_name.id
-                  }}{% else %}0{% endif %}/0/"
-                  >-- All --</a
-                >
-              </li>
-  
-              {% for program in programs %}
-              <li>
-                <a
-                  href="/dashboard/{{ program.id }}/{% if sector %}{{
-                    sector
-                  }}{% else %}0{% endif %}/"
-                  >{{ program.name }}</a
-                >
-              </li>
-              {% endfor %}
-            </ul>
-          </div>
-  
           <button
             class="btn btn-sm btn-primary"
             data-toggle="modal"
@@ -105,251 +64,5 @@
       </div>
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      {% if report_server == True %}
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          Indicator Evidence Leaderboard
-        </div>
-        <div class="panel-body">
-          <table class="table table-bordered">
-            <tr>
-              <th>Country</th>
-              <th>Indicator Data</th>
-              <th>W/Evidence</th>
-            </tr>
-            {% for value in count_evidence %}
-            <tr>
-              <td>{{ value.indicator__program__country__country }}</td>
-              <td>{{ value.indicator_count }}</td>
-              <td>{{ value.evidence_count }}</td>
-            </tr>
-            {% endfor %}
-          </table>
-        </div>
-      </div>
-      {% else %}
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          Indicator Evidence
-        </div>
-        <div class="panel-body">
-          <table class="table table-bordered">
-            <tr>
-              <th>Country</th>
-              <th>Indicator Data</th>
-              <th>W/Evidence</th>
-            </tr>
-            {%for value in count_evidence %} {%for item in countries %} 
-            {% if item.country == value.indicator__program__country__country %}
-            <tr>
-              <td>{{ value.indicator__program__country__country }}</td>
-              <td>{{ value.indicator_count }}</td>
-              <td>{{ value.evidence_count }}</td>
-            </tr>
-            {% endif %} {% endfor %} {% endfor %}
-          </table>
-        </div>
-      </div>
-      {% endif %}
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          Strategic Objectives
-        </div>
-        <div class="panel-body">
-          {% if get_objectives %}
-          <table
-            class="table table-bordered table-striped"
-            id="table-sparkline"
-          >
-            <tbody id="tbody-sparkline">
-              {% for value in get_objectives %}
-              <thead>
-                <tr class="info">
-                  <th colspan="2">
-                    {{ value.indicator__strategic_objectives__name }}
-                  </th>
-                </tr>
-                <tr>
-                  <th># of Indicators</th>
-                  <th>Target/Actuals</th>
-                </tr>
-              </thead>
-            </tbody>
-
-            <tbody id="tbody-sparkline">
-              <tr>
-                <th>{{ value.indicators }}</th>
-                <td
-                  data-sparkline="{{ value.targets }}, {{ value.actuals }};"
-                ></td>
-              </tr>
-            </tbody>
-            {% endfor %}
-          </table>
-          {% else %}
-          <p>
-            No indicators currently aligned with country strategic objectives.
-          </p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-    {% if report_server == True %}
-    <div class="col-md-8">
-      <h2>
-        {% for country in selected_countries_label_list %}{{
-          country.country
-        }}{% endfor %} Country Rollout Report
-      </h2>
-      <br />
-      <table class="table striped">
-        <tr>
-          <th>
-            Milestones:
-          </th>
-          <th>
-            <span
-              title="Red: Requires Attention, Orange: Behind Schedule, Green: On Track"
-              >Current Adoption Status</span
-            >
-          </th>
-        </tr>
-        <tr>
-          <td>Adoption of Workflow</td>
-          <td class="status" bgcolor="{{ workflow_adoption }}">
-            Total Programs: {{ count_program }} <br />Using Workflow:
-            {{ count_program_agreement }}
-          </td>
-        </tr>
-        <tr>
-          <td>Adoption of Indicator</td>
-          <td class="status" bgcolor="{{ indicator_adoption }}">
-            Total Programs: {{ count_program }} <br />Using Indicator Plans:
-            {{ count_indicator }}
-          </td>
-        </tr>
-        <tr>
-          <td>Indicators w/ Evidence</td>
-          <td class="status" bgcolor="{{ evidence_adoption }}">
-            Total Collected Data: {{ count_indicator_data }} <br />Evidence:
-            {{ count_evidence_adoption }}
-          </td>
-        </tr>
-      </table>
-    </div>
-    {% endif %}
-    <div class="col-md-8">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <p>
-            <b
-              >Sites {% if get_filtered_name %} for {{ get_filtered_name }} {% endif %}</b
-            >
-          </p>
-          <style>
-            #map {
-              height: 350px;
-            }
-          </style>
-          <div id="map"></div>
-
-          {% if offline_mode %}
-          <h2>Offline (No map provided)</h2>
-          {% else %} {% include "small_site_profile_map.html" %} {% endif %}
-        </div>
-      </div>
-
-      <div class="panel panel-default">
-        <div class="panel-body">
-            <canvas id="projectStatusChart"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          Indicators {% if getFilteredName %} for {{ getFilteredName }}
-          {% endif %}
-        </div>
-        <canvas id="actualVsTargetChart"></canvas>
-        <div class="panel-body">
-          {% load render_table from django_tables2 %} {% render_table table %}
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
-
-
-<script>
-var actualVsTargetCtx = document.getElementById('actualVsTargetChart').getContext('2d');
-var actualVsTargetChartData = {
-  labels: [{% for indicator in get_quantitative_data_sums|slice:":20" %}  '{{ indicator.indicator__number }}', {% endfor %}],
-  datasets: [
-    {
-      label: 'Targets',
-      backgroundColor: "maroon",
-      data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator__lop_target }}, {% endfor %}]
-    }, 
-    {
-        label: 'Actuals',
-        backgroundColor: 'darkgreen',
-        data: [ {% for indicator in get_quantitative_data_sums|slice:":20" %}  {{ indicator.actuals }}, {% endfor %}]
-    }
-  ]
-};
-
-var projectStatusChartCtx = document.getElementById('projectStatusChart').getContext('2d');
-var projectStatusChartData = {
-    labels: ['Initiation', 'Tracking'],
-    datasets: [
-      {
-        label: 'Approved',
-        data: ['{{agreement_approved_count}}', '{{complete_approved_count}}'],
-        backgroundColor: "darkorange"
-      },
-
-      {
-        label: 'Pending',
-        data: ['{{agreement_wait_count}}', '{{complete_wait_count}}'],
-        backgroundColor: "darkblue"
-      },
-
-      {
-        label: "Awaiting Approval",
-        data: ['{{agreement_awaiting_count}}', '{{complete_awaiting_count}}'],
-        backgroundColor: "black"
-      },
-
-      {
-        label: "Open",
-        data: ['{{agreement_open_count}}', '{{complete_open_count}}'],
-        backgroundColor: "gray"
-      },
-    ]
-  };
-
-
-
-var projectStatusChart = new Chart(projectStatusChartCtx, {
-    type: 'horizontalBar',
-    data: projectStatusChartData,
-});
-
-
-var actualVsTargetChart = new Chart(actualVsTargetCtx, {
-    type: 'bar',
-    data: actualVsTargetChartData,
-});
-
-
-
-</script>
-
 {% endblock content %}
