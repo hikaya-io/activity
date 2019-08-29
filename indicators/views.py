@@ -469,6 +469,7 @@ class IndicatorUpdate(UpdateView):
 
         context.update({'i_name': get_indicator.name})
         context['program_id'] = get_indicator.program.all()[0].id
+        context['active'] = ['indicators']
         context['periodic_targets'] = PeriodicTarget.objects\
             .filter(indicator=get_indicator)\
             .annotate(num_data=Count('collecteddata'))\
