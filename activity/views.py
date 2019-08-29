@@ -395,7 +395,7 @@ def activate_acccount(request, uidb64, token):
         user.save()
 
         # send welcome mail
-        send_welcome_email(user)
+        send_welcome_email(request, user)
 
         # login(request, user)
         messages.success(request, 'Thanks, your email address has been confirmed')
@@ -472,7 +472,7 @@ def register(request, invite_uuid):
                         invite.delete()
 
                         # send welcome email
-                        send_welcome_email(user)
+                        send_welcome_email(request, user)
 
                         messages.success(request, 'Thanks, your email address has been confirmed')
                         return render(request, 'registration/login.html', {'invite_uuid': 'none'})
@@ -518,9 +518,9 @@ def register(request, invite_uuid):
         return render(request, 'registration/register.html', invite_uuid)
 
 
-def send_welcome_email(user):
+def send_welcome_email(request, user):
     mail_subject = 'Welcome to Activity'
-    data = {'user': user, }
+    data = {'user': user, 'domain': request.build_absolute_uri('/').strip('/')}
     email_txt = 'emails/registration/welcome.txt'
     email_html = 'emails/registration/welcome.html'
 
