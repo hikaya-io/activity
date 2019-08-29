@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from workflow.models import ActivityUser, ActivityBookmarks, Organization
 from django.forms .models import model_to_dict
 
+
 class RegistrationForm(UserChangeForm):
     """
     Form for registering a new account.
@@ -42,7 +43,6 @@ class RegistrationForm(UserChangeForm):
     helper.help_text_inline = True
     helper.html5_required = True
     helper.layout = Layout(
-        'name',
         Row(
             Column('title', css_class='form-group col-md-6 mb-0'),
             Column('employee_number', css_class='form-group col-md-6 mb-0'),
@@ -75,17 +75,28 @@ class NewUserRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(NewUserRegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['username'].help_text = None
 
     helper = FormHelper()
     helper.form_method = 'post'
-    helper.form_class = 'form-horizontal'
-    helper.label_class = 'col-sm-2'
-    helper.field_class = 'col-sm-6'
     helper.form_error_title = 'Form Errors'
     helper.error_text_inline = True
-    helper.help_text_inline = True
+    helper.help_text_inline = False
     helper.html5_required = True
     helper.form_tag = False
+    helper.layout = Layout(
+        'name',
+        Row(
+            Column('first_name', css_class='form-group col-md-6 mb-0'),
+            Column('last_name', css_class='form-group col-md-6 mb-0'),
+            css_class='form-row'
+        ),
+        Row(
+            Column('username', css_class='form-group col-md-6 mb-0'),
+            Column('email', css_class='form-group col-md-6 mb-0'),
+            css_class='form-row'
+        )
+    )
 
 
 class NewActivityUserRegistrationForm(forms.ModelForm):

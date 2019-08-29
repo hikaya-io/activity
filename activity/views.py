@@ -25,7 +25,7 @@ from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links, send_invite_emails, \
     send_single_mail
 from activity.forms import (
-    RegistrationForm, BookmarkForm, OrganizationEditForm)
+    RegistrationForm, BookmarkForm, NewUserRegistrationForm)
 from activity.settings import PROJECT_ROOT
 from django.core import serializers
 from .tokens import account_activation_token
@@ -765,6 +765,7 @@ def admin_user_edit(request, pk):
     obj = get_object_or_404(ActivityUser, pk=int(pk))
     form = RegistrationForm(request.POST or None, instance=obj,
                             initial={'username': request.user})
+    user_form = NewUserRegistrationForm(request.POST or None, instance=obj.user)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -775,6 +776,7 @@ def admin_user_edit(request, pk):
             return redirect('/accounts/admin/users/all/all/')
     return render(request, 'admin/user_update_form.html', {
         'form': form,
+        'user_form': user_form,
         'helper': RegistrationForm.helper,
         'nav_links': nav_links
     })
