@@ -17,29 +17,29 @@
 			if (name.val()) {
 				$('#div_stakeholder_name')
 					.removeClass('has-error')
-          .addClass('has-success');
-          $('#nameHelpBlock')
-						.removeClass('hikaya-show')
-						.addClass('hikaya-hide');
+					.addClass('has-success');
+				$('#nameHelpBlock')
+					.removeClass('hikaya-show')
+					.addClass('hikaya-hide');
 			} else {
 				$('#div_stakeholder_name')
 					.removeClass('has-success')
-          .addClass('has-error');
+					.addClass('has-error');
 			}
-    });
-    $('#stakeholderType').on('change', function() {
+		});
+		$('#stakeholderType').on('change', function() {
 			const type = $(this);
 			if (type.val()) {
 				$('#div_stakeholder_type')
 					.removeClass('has-error')
-          .addClass('has-success');
-          $('#typeHelpBlock')
-						.removeClass('hikaya-show')
-						.addClass('hikaya-hide');
+					.addClass('has-success');
+				$('#typeHelpBlock')
+					.removeClass('hikaya-show')
+					.addClass('hikaya-hide');
 			} else {
 				$('#div_stakeholder_type')
 					.removeClass('has-success')
-          .addClass('has-error');
+					.addClass('has-error');
 			}
 		});
 	});
@@ -56,17 +56,17 @@
 
 			if (obj.stakeholder_name == '' || obj.stakeholder_type == '') {
 				if (obj.stakeholder_name == '') {
-          $('#div_stakeholder_name')
-					.removeClass('has-success')
-					.addClass('has-error');
+					$('#div_stakeholder_name')
+						.removeClass('has-success')
+						.addClass('has-error');
 					$('#nameHelpBlock')
 						.removeClass('hikaya-hide')
 						.addClass('hikaya-show');
 				}
 				if (obj.stakeholder_type == '') {
-          $('#div_stakeholder_type')
-					.removeClass('has-success')
-					.addClass('has-error');
+					$('#div_stakeholder_type')
+						.removeClass('has-success')
+						.addClass('has-error');
 					$('#typeHelpBlock')
 						.removeClass('hikaya-hide')
 						.addClass('hikaya-show');
@@ -150,7 +150,7 @@
 						<label class="control-label" for="stakeholdertype">Stakeholder Type*</label>
 						<select name="stakeholder_type" id="stakeholderType" class="form-control">
 							<option value=""></option>
-              {% for stakeholder_type in get_stakeholder_types %}
+							{% for stakeholder_type in get_stakeholder_types %}
 							<option value="{{ stakeholder_type.id }}">
 								{{ stakeholder_type.name }}
 							</option>
