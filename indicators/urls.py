@@ -106,6 +106,8 @@ urlpatterns = [
         IndicatorDataExport.as_view(), name='collecteddata_report_data'),
 
     # objectives
+    path('objectives', objectives_list, name='objectives'),
+    path('objectives/tree', objectives_tree, name='objectives-tree'),
     re_path(r'^objectives/edit/(?P<pk>\w+)/$',
             StrategicObjectiveUpdateView.as_view(),
             name='update_strategic_objective'),
