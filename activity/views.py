@@ -409,7 +409,8 @@ def activate_acccount(request, uidb64, token):
             email_html
         )
         # login(request, user)
-        return redirect('/accounts/login/')
+        messages.success(request, 'Thanks, your email address has been confirmed')
+        return render(request, 'registration/login.html', {'invite_uuid': 'none'})
     else:
         return HttpResponse('Activation link is invalid!')
 
@@ -563,7 +564,7 @@ def user_login(request):
                 return HttpResponseRedirect('/accounts/register/organization')
 
         else:
-            render(request, 'registration/login.html')
+            return render(request, 'registration/login.html')
     return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
 
