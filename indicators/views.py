@@ -10,11 +10,11 @@ import re
 
 from .export import IndicatorResource, CollectedDataResource
 from .tables import IndicatorDataTable
-from .forms import IndicatorForm, CollectedDataForm, StrategicObjectiveForm
+from .forms import IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
     CollectedData, IndicatorType, Level, ExternalServiceRecord,
-    ExternalService, ActivityTable, StrategicObjective
+    ExternalService, ActivityTable, StrategicObjective, Objective
 )
 
 from django.db.models import Count, Sum, Min, Q
@@ -507,6 +507,9 @@ class IndicatorUpdate(UpdateView):
     def get_form_kwargs(self):
         kwargs = super(IndicatorUpdate, self).get_form_kwargs()
         kwargs['request'] = self.request
+        program =  Indicator.objects.all().get(id=int(self.kwargs['pk'])).program.all()
+
+        kwargs['program_id'] = program[0].id
         program = Indicator.objects.all().filter(
             id=self.kwargs['pk']).values_list("program__id", flat=True)
         kwargs['program'] = program
@@ -1910,36 +1913,37 @@ def add_indicator(request):
 def objectives_list(request):
     if request.method == 'POST':
         data = request.POST
-        activity_user = ActivityUser.objects.filter(user=request.user).first()
-        parent = None
-        if data.get('parent_objective'):
-            parent = int(data.get('parent_objective'))
 
-        parent_objective = StrategicObjective.objects.filter(
-            id=parent).first()
-
-        objective = StrategicObjective(
+        objective = Objective(
             name=data.get('objective_name'),
             description=data.get('description'),
-            organization=activity_user.organization,
-            parent=parent_objective)
+            program_id=int(data.get('program')),
+            parent_id=int(
+                data.get('parent_objective')) if data.get('parent_objective') else None
+        )
 
         objective.save()
 
-        return HttpResponseRedirect('/workflow/objectives')
+        return HttpResponseRedirect('/indicators/objectives')
 
-    get_all_objectives = StrategicObjective.objects.filter(
-        organization=request.user.activity_user.organization
+    get_all_objectives = Objective.objects.filter(
+        program__organization=request.user.activity_user.organization
     )
+    get_programs = Program.objects.filter(
+        organization=request.user.activity_user.organization)
 
-    context = {'get_all_objectives': get_all_objectives,
-               'active': ['components']}
+    context = {
+        'get_all_objectives': get_all_objectives,
+        'active': ['components'],
+        'get_programs': get_programs
+    }
 
     return render(request, 'components/objectives.html', context)
 
 
 def objectives_tree(request):
-    get_all_objectives = StrategicObjective.objects.all()
+    get_all_objectives = Objective.objects.filter(
+        program__organization=request.user.activity_user.organization)
 
     objectives_as_json = [{'id': 0, 'name': 'Strategic Objectives'}]
 
@@ -1974,6 +1978,25 @@ class StrategicObjectiveUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(StrategicObjectiveUpdateView, self).get_context_data(**kwargs)
+        context['current_objective'] = self.get_object()
+        return context
+
+
+class ObjectiveUpdateView(UpdateView):
+    model = Objective
+    template_name_suffix = '_update_form'
+    success_url = '/indicators/objectives'
+    form_class = ObjectiveForm
+
+    # add the request to the kwargs
+    def get_form_kwargs(self):
+        kwargs = super(ObjectiveUpdateView, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        kwargs['current_objective'] = self.get_object()
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(ObjectiveUpdateView, self).get_context_data(**kwargs)
         context['current_objective'] = self.get_object()
         return context
 
