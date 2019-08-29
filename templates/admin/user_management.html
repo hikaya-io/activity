@@ -71,7 +71,7 @@
 				<tbody>
 					{% for user in users%}
 					<tr>
-						<td>{{ user.user.first_name }}</td>
+						<td><a href="/accounts/admin/user/edit/{{user.id}}/">{{ user.user.first_name }}</a></td>
 						<td>{{ user.user.last_name }}</td>
 						<td>
 							{%if user.user.is_active %}

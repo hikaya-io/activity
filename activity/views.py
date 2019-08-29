@@ -26,14 +26,10 @@ from activity.util import get_country, get_nav_links, send_invite_emails, \
     send_single_mail
 from activity.forms import (
     RegistrationForm, BookmarkForm, NewUserRegistrationForm)
-from activity.settings import PROJECT_ROOT
 from django.core import serializers
 from .tokens import account_activation_token
-from django.core.mail import EmailMessage
-from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
@@ -694,7 +690,6 @@ def admin_profile_settings(request):
         #                             instance=organization)
         # if form.is_valid():
         data = request.POST
-        print(data)
         organization.logo = request.FILES.get('organizationLogo')
         organization.name = data.get('name')
         organization.description = data.get('description')
@@ -762,18 +757,44 @@ def admin_user_edit(request, pk):
     :return:
     """
     nav_links = get_nav_links('People')
-    obj = get_object_or_404(ActivityUser, pk=int(pk))
-    form = RegistrationForm(request.POST or None, instance=obj,
+    activity_user_obj = get_object_or_404(ActivityUser, pk=int(pk))
+    user_obj = activity_user_obj.user
+
+    form = RegistrationForm(request.POST or None, instance=activity_user_obj,
                             initial={'username': request.user})
-    user_form = NewUserRegistrationForm(request.POST or None, instance=obj.user)
+    user_form = NewUserRegistrationForm(request.POST or None, instance=user_obj)
 
     if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            messages.error(
-                request, 'Your profile has been updated.',
-                fail_silently=False)
-            return redirect('/accounts/admin/users/all/all/')
+        data = request.POST
+        activity_user_object = {
+            'employee_number': data.get('employee_number'),
+            'organization': data.get('organization'),
+            'title': data.get('title')
+        }
+
+        user_object = {
+            'first_name': data.get('first_name'),
+            'last_name': data.get('last_name'),
+            'email': data.get('email'),
+            'username': data.get('username')
+        }
+        # save user
+        User.objects.filter(pk=user_obj.id).update(**user_object)
+        user = User.objects.get(pk=user_obj.pk)
+        if user:
+            # save activity user after updating name
+            activity_user = activity_user_obj
+            activity_user.employee_number = activity_user_object['employee_number']
+            activity_user.organization = Organization.objects.get(
+                pk=int(activity_user_object['organization']))
+            activity_user.title = activity_user_object['title']
+            activity_user.name = '{} {}'.format(user.first_name, user.last_name)
+            activity_user.save()
+
+        messages.success(
+            request, 'Your profile has been updated.',
+            fail_silently=False)
+        return redirect('/accounts/admin/users/all/all/')
     return render(request, 'admin/user_update_form.html', {
         'form': form,
         'user_form': user_form,

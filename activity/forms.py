@@ -9,6 +9,7 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.models import User
 from workflow.models import ActivityUser, ActivityBookmarks, Organization
 from django.forms .models import model_to_dict
+from django_select2.forms import Select2MultipleWidget
 
 
 class RegistrationForm(UserChangeForm):
@@ -29,7 +30,6 @@ class RegistrationForm(UserChangeForm):
             self.fields['user'].widget.attrs['disabled'] = 'disabled'
 
         activity_user = ActivityUser.objects.get(user=user['username'])
-        print(model_to_dict(activity_user))
         self.fields['organization'].queryset = activity_user.organizations.all()
 
     class Meta:
@@ -42,6 +42,7 @@ class RegistrationForm(UserChangeForm):
     helper.error_text_inline = True
     helper.help_text_inline = True
     helper.html5_required = True
+    helper.form_tag = False
     helper.layout = Layout(
         Row(
             Column('title', css_class='form-group col-md-6 mb-0'),
@@ -58,9 +59,6 @@ class RegistrationForm(UserChangeForm):
             css_class='form-row'
         ),
         'privacy_disclaimer_accepted',
-        
-        HTML('<a class="btn btn-warning mr-3" href={% url "index" %}>Close</a>'),
-        Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
     )
 
 
@@ -85,7 +83,6 @@ class NewUserRegistrationForm(UserCreationForm):
     helper.html5_required = True
     helper.form_tag = False
     helper.layout = Layout(
-        'name',
         Row(
             Column('first_name', css_class='form-group col-md-6 mb-0'),
             Column('last_name', css_class='form-group col-md-6 mb-0'),
