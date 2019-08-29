@@ -591,12 +591,12 @@ def register_organization(request):
             activity_url=activity_url
             )
         if org:
-            user = ActivityUser.objects.filter(user=request.user).first()
-            if not user.organization:
-                user.organization = org
-                user.save()
-                user.organizations.add(org)
-            return redirect('admin_profile_settings')
+            user = ActivityUser.objects.get(user=request.user)
+
+            user.organization = org
+            user.save()
+            user.organizations.add(org)
+            return redirect('/')
         else:
             return redirect('register_organization')
     else:
