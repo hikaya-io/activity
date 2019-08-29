@@ -48,7 +48,7 @@ APPROVALS = (
 
 
 @login_required(login_url='/accounts/login/')
-def index(request, selected_countries=None, id=0, sector=0):
+def index(request, program_id=0):
     """
     Home page
     get count of agreements approved and total for dashboard
@@ -58,7 +58,25 @@ def index(request, selected_countries=None, id=0, sector=0):
     if request.method == 'POST' and request.is_ajax:
         return add_program(request)
 
+    # set the selected program
+    selected_program = Program.objects.filter(id=program_id).first()
+
+    # get programs belonging to the current organizatiom
+    get_programs = Program.objects.filter(
+        organization=request.user.activity_user.organization)
+
+    # get projects based on the active program
+    if int(program_id) == 0 :
+        get_projects = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization)
+    else:
+        get_projects = ProjectAgreement.objects.filter(program__id=program_id)
+        
+
     return render(request, "index.html", {
+        'selected_program': selected_program,
+        'get_programs': get_programs,
+        'get_projects': get_projects,
         'map_api_key': settings.GOOGLE_MAP_API_KEY
     })
 
@@ -182,7 +200,7 @@ def register(request, invite_uuid):
                     'domain': request.build_absolute_uri('/').strip('/'),
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': account_activation_token.make_token(user),
-                    }
+                }
                 email_txt = 'emails/registration/email_confirmation.txt'
                 email_html = 'emails/registration/email_confirmation.html'
 
@@ -277,7 +295,7 @@ def register_organization(request):
             organization_url=organization_url,
             location=location,
             activity_url=activity_url
-            )
+        )
         if org:
             user = ActivityUser.objects.filter(user=request.user).first()
             if not user.organization:

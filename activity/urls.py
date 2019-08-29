@@ -70,7 +70,7 @@ urlpatterns = [  # rest framework
     path('api-token-auth/', auth_views.obtain_auth_token),
 
     # index
-    path('', lambda request: redirect('dashboard/0/0/', permanent=False), name="index"),
+    path('', lambda request: redirect('dashboard/0/', permanent=False), name="index"),
     
     # enable the admin:
     path('admin/doc/', include('django.contrib.admindocs.urls')),
@@ -79,7 +79,7 @@ urlpatterns = [  # rest framework
             views.index, name='index'),
 
     # index
-    re_path(r'^dashboard/(?P<id>\w+)/(?P<sector>\w+)/$',
+    re_path(r'^dashboard/(?P<program_id>\w+)/$',
             activityviews.index, name='home_dashboard'),
 
     # base template for layout

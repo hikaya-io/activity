@@ -1,5 +1,5 @@
 {% extends "base.html" %} 
-{% load static %}
+{% load static %} 
 {% block content %} 
 {% include './shared/level1_modal_form.html' %}
 
@@ -34,7 +34,10 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            Filter by {{ user.activity_user.organization.level_1_label }}
+            {% if selected_program %} Filtered by {{ selected_program.name }} 
+            {% else %} Filter by
+            {{ user.activity_user.organization.level_1_label }}
+            {% endif %}
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
@@ -42,11 +45,14 @@
               <a href="/dashboard/0/">-- All --</a>
             </li>
 
-            {% for program in get_programs %}
-            <li>
-              <a href="/dashboard/{{ program.id }}/">{{ program.name }}</a>
+            {% for program in get_programs %} {% if program.name %}
+            <li
+              class="{% if selected_program.id == program.id %} active {% endif %}"
+            >
+              <a href="{% url 'home_dashboard' program.id %}">
+                {{ program.name }}</a>
             </li>
-            {% endfor %}
+            {% endif %} {% endfor %}
           </ul>
         </div>
       </div>
@@ -70,7 +76,7 @@
   <!-- workflows -->
   <div class="panel panel-dashboard rounded-0 mb-0">
     <div class="panel-heading white">
-      <h4 class="panel-title">Workflow</h4>
+      <h4 class="panel-title">Workflows</h4>
     </div>
 
     <div class="panel-body">
@@ -78,18 +84,24 @@
         <div class="col-md-2 col-xs-12">
           <div class="row">
             <div class="col-md-12 col-xs-6">
-              <a class="box box-info" href="/">
-                <p class="box-info-label">Programs</p>
-                <p class="box-info-number">890</p>
+              <a class="box box-info" href="/workflow/level1">
+                <p class="box-info-label">{{ request.user.activity_user.organization.level_1_label }}s</p>
+                <p class="box-info-number">{{ get_programs | length }}</p>
               </a>
             </div>
 
             <div class="col-md-12 col-xs-6">
-              <a class="box box-info" href="/">
-                <p class="box-info-label">Projects</p>
-                <p class="box-info-number">10001</p>
-                <!-- <p class="box-info-text">this is sample description nhdhdfhd hudsyhdb yudb dhdydhy</p> -->
-              </a>
+              {% if selected_program %}
+                <a class="box box-info" href="/workflow/level2/list/{{selected_program.id}}/none">
+                  <p class="box-info-label">{{ request.user.activity_user.organization.level_2_label }}</p>
+                  <p class="box-info-number">{{ get_projects | length }}</p>
+                </a>
+              {% else %}
+                <a class="box box-info" href="/workflow/level2/list/0/none">
+                  <p class="box-info-label">{{ request.user.activity_user.organization.level_2_label }}</p>
+                  <p class="box-info-number">{{ get_projects | length }}</p>
+                </a>
+              {% endif %}
             </div>
           </div>
         </div>
