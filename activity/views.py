@@ -393,21 +393,10 @@ def activate_acccount(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        mail_subject = 'Welcome to Activity'
-        data = {
-            'user': user,
-            'domain': request.build_absolute_uri('/').strip('/'),
-        }
-        email_txt = 'emails/registration/welcome.txt'
-        email_html = 'emails/registration/welcome.html'
 
-        send_single_mail(
-            mail_subject,
-            'Hikaya <team.hikaya@gmail.com>',
-            [user.email],
-            data, email_txt,
-            email_html
-        )
+        # send welcome mail
+        send_welcome_email(user)
+
         # login(request, user)
         messages.success(request, 'Thanks, your email address has been confirmed')
         return render(request, 'registration/login.html', {'invite_uuid': 'none'})
@@ -481,7 +470,12 @@ def register(request, invite_uuid):
                     if activity_user:
                         # delete the invitation
                         invite.delete()
-                        return redirect('/accounts/login/')
+
+                        # send welcome email
+                        send_welcome_email(user)
+
+                        messages.success(request, 'Thanks, your email address has been confirmed')
+                        return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
                 except UserInvite.DoesNotExist:
                     return HttpResponse({
@@ -522,6 +516,22 @@ def register(request, invite_uuid):
         invite_uuid = set_invite_uuid(invite_uuid)
 
         return render(request, 'registration/register.html', invite_uuid)
+
+
+def send_welcome_email(user):
+    mail_subject = 'Welcome to Activity'
+    data = {'user': user, }
+    email_txt = 'emails/registration/welcome.txt'
+    email_html = 'emails/registration/welcome.html'
+
+    send_single_mail(
+        mail_subject,
+        'Hikaya <team.hikaya@gmail.com>',
+        [user.email],
+        data,
+        email_txt,
+        email_html
+    )
 
 
 def set_invite_uuid(invite_uuid):
