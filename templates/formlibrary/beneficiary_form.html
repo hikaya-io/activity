@@ -25,9 +25,9 @@
 				Beneficiary Form
 			</h4>
 		</div>
-		<div class="sub-navigation-actions">
+		{% comment %} <div class="sub-navigation-actions">
 			{% include "form_guidance.html" %}
-		</div>
+		</div> {% endcomment %}
 	</div>
 	{% csrf_token %} {% load crispy_forms_tags %} {% crispy form %}
 </div>
