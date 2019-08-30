@@ -1,9 +1,21 @@
 {% extends "base.html" %} 
 {% load static %} 
-{% block content %} 
+{% load humanize %} 
+{% block content%} 
 {% include './shared/level1_modal_form.html' %}
 
 <script src="{% static 'js/chart.js@2.8.0.min.js' %}"></script>
+
+<script>
+  $(document).ready(() => {
+    $('#indicatorTargetActualsTable').dataTable({
+      searching: false,
+      ordering: false,
+      pageLength: 5,
+      lengthChange: false,
+    })
+  })
+</script>
 
 <style>
   #map {
@@ -37,7 +49,7 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            {{ user.activity_user.organization.level_1_label }} 
+            {{ user.activity_user.organization.level_1_label }}
             {% if selected_program %}
             <i class="fa fa-filter"></i>
             {% else %}
@@ -45,16 +57,28 @@
             {% endif %}
           </button>
           <ul class="dropdown-menu">
-            <li class="{% if selected_program is None %} active {% endif %}" >
-              <a href="/dashboard/0/" data-toggle="tooltip" data-placement="left" title="Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, officiis sequi adipisci enim possimus itaque accusantium quae veniam, laudantium dolorem illum sunt impedit tempora delectus ad quos quisquam mollitia soluta ratione voluptate nam nulla? Architecto, ab harum eaque accusamus explicabo ea deserunt sequi beatae magnam sed maxime, ad quam enim pariatur. Harum magni accusamus deleniti neque ex ullam vero consequuntur nihil eligendi provident rerum quaerat corporis eum voluptatum, porro nam nemo, fugit suscipit nesciunt eveniet eaque dolore animi. Non nostrum sint numquam minima, vel laboriosam ex eaque incidunt magni ipsum, illum molestiae, quos officiis earum obcaecati est excepturi commodi fuga!">-- All --</a>
+            <li class="{% if selected_program is None %} active {% endif %}">
+              <a
+                href="/dashboard/0/"
+                data-toggle="tooltip"
+                data-placement="left"
+                title="All Programs"
+                >-- All --</a
+              >
             </li>
 
             {% for program in get_programs %} {% if program.name %}
             <li
               class="{% if selected_program.id == program.id %} active {% endif %}"
             >
-              <a href="{% url 'home_dashboard' program.id %}">
-                {{ program.name }}</a>
+              <a
+                href="{% url 'home_dashboard' program.id %}"
+                data-toggle="tooltip"
+                data-placement="left"
+                title="{{ program.name }}"
+              >
+                {{ program.name | truncatechars:30 }}</a
+              >
             </li>
             {% endif %} {% endfor %}
           </ul>
@@ -89,23 +113,46 @@
           <div class="row">
             <div class="col-md-12 col-xs-6">
               <a class="box box-info" href="/workflow/level1">
-                <p class="box-info-label">{{ request.user.activity_user.organization.level_1_label }}s</p>
+                <p class="box-info-label">
+                  {{ request.user.activity_user.organization.level_1_label }}s
+                </p>
                 <p class="box-info-number">{{ get_programs | length }}</p>
               </a>
             </div>
 
             <div class="col-md-12 col-xs-6">
               {% if selected_program %}
-                <a class="box box-info" href="/workflow/level2/list/{{selected_program.id}}/none">
-                  <p class="box-info-label">{{ request.user.activity_user.organization.level_2_label }}</p>
-                  <p class="box-info-number">{{ get_projects | length }}</p>
-                </a>
+              <a
+                class="box box-info"
+                href="/workflow/level2/list/{{ selected_program.id }}/none"
+              >
+                <p class="box-info-label">
+                  {{ request.user.activity_user.organization.level_2_label }}
+                </p>
+                <p class="box-info-number">{{ get_projects | length }}</p>
+              </a>
               {% else %}
-                <a class="box box-info" href="/workflow/level2/list/0/none">
-                  <p class="box-info-label">{{ request.user.activity_user.organization.level_2_label }}</p>
-                  <p class="box-info-number">{{ get_projects | length }}</p>
-                </a>
+              <a class="box box-info" href="/workflow/level2/list/0/none">
+                <p class="box-info-label">
+                  {{ request.user.activity_user.organization.level_2_label }}
+                </p>
+                <p class="box-info-number">{{ get_projects | length }}</p>
+              </a>
               {% endif %}
+            </div>
+
+            <div class="col-md-12 col-xs-6">
+              <a class="box box-info">
+                <p class="box-info-label">
+                  {{ request.user.activity_user.organization.level_2_label }}
+                  Tracking
+                </p>
+                <p class="box-info-number">{{ get_projects_tracking_count }}</p>
+                <p class="box-info-text">
+                  out of {{ get_projects | length }}
+                  {{ request.user.activity_user.organization.level_2_label }}
+                </p>
+              </a>
             </div>
           </div>
         </div>
@@ -135,16 +182,35 @@
           <div class="row">
             <div class="col-md-12 col-xs-6">
               {% if selected_program %}
-                <a class="box box-info" href="/indicators/home/{{selected_program.id}}/0/0/" role="button">
-                  <p class="box-info-label">Indicators</p>
-                  <p class="box-info-number">{{ get_indicators | length }}</p>
-                </a>
+              <a
+                class="box box-info"
+                href="/indicators/home/{{ selected_program.id }}/0/0/"
+                role="button"
+              >
+                <p class="box-info-label">Indicators</p>
+                <p class="box-info-number">{{ get_indicators | length }}</p>
+              </a>
               {% else %}
-                <a class="box box-info" href="/indicators/home/0/0/0/" role="button">
-                  <p class="box-info-label">Indicators</p>
-                  <p class="box-info-number">{{ get_indicators | length }}</p>
-                </a>
+              <a
+                class="box box-info"
+                href="/indicators/home/0/0/0/"
+                role="button"
+              >
+                <p class="box-info-label">Indicators</p>
+                <p class="box-info-number">{{ get_indicators | length }}</p>
+              </a>
               {% endif %}
+            </div>
+
+            <div class="col-md-12 col-xs-6">
+              <a class="box box-info" role="button">
+                <p class="box-info-label">KPIs</p>
+                <p class="box-info-number">{{ get_indicators_kpi_count }}</p>
+                <p class="box-info-text">
+                  out of {{ get_indicators | length }}
+                  {{ user.activity_user.organization.indicator_label }}
+                </p>
+              </a>
             </div>
 
             <div class="col-md-12 col-xs-6">
@@ -156,20 +222,30 @@
           </div>
         </div>
         <div class="col-md-10">
+          <p>Latest {{get_latest_indicators | length }} Key Performance Indicators</p>
           <table class="table" id="indicatorTargetActualsTable">
             <thead>
               <tr>
+                <th>Level</th>
                 <th>Indicator</th>
-                <th>Target</th>
-                <th>Actual</th>
+                <th class="text-right">Target</th>
+                <th class="text-right">Actual</th>
               </tr>
             </thead>
             <tbody>
-              {%  for indicator in get_latest_indicators %}
+              {% for indicator in get_latest_indicators %}
               <tr>
-                <td><a href="">{{indicator.name}}</a></td>
-                <td>{{indicator.target}}</td>
-                <td>{{indicator.actual}}</td>
+                <td>{{ indicator.levels }}</td>
+                <td>
+                  <a href="">{{ indicator.name }}</a>
+                </td>
+                <td class="text-right">
+                  {% if indicator.lop_target %}
+                  
+                  {{ indicator.lop_target | floatformat:2 }}
+                  {% else %}0.00{% endif %}
+                </td>
+                <td class="text-right">{{ indicator.actual }}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -191,23 +267,38 @@
           <div class="row">
             <div class="col-md-12 col-xs-6">
               {% if selected_program %}
-              <a class="box box-info" href="/workflow/siteprofile_list/{{selected_program.id}}/0/list/">
+              <a
+                class="box box-info"
+                href="/workflow/siteprofile_list/{{
+                  selected_program.id
+                }}/0/list/"
+              >
                 <p class="box-info-label">Active Locations</p>
                 <p class="box-info-number">{{ get_active_locations_count }}</p>
-                <p class="box-info-text">out of {{ get_locations_count }} locations</p>
+                <p class="box-info-text">
+                  out of {{ get_locations_count }} locations
+                </p>
               </a>
               {% else %}
-              <a class="box box-info" href="/workflow/siteprofile_list/0/0/list/">
+              <a
+                class="box box-info"
+                href="/workflow/siteprofile_list/0/0/list/"
+              >
                 <p class="box-info-label">Active Locations</p>
                 <p class="box-info-number">{{ get_active_locations_count }}</p>
-                <p class="box-info-text">out of {{ get_locations_count }} locations</p>
+                <p class="box-info-text">
+                  out of {{ get_locations_count }} locations
+                </p>
               </a>
               {% endif %}
             </div>
 
             <div class="col-md-12 col-xs-6">
               {% if selected_program %}
-              <a class="box box-info" href="/workflow/documentation_list/{{selected_program.id}}/0/">
+              <a
+                class="box box-info"
+                href="/workflow/documentation_list/{{ selected_program.id }}/0/"
+              >
                 <p class="box-info-label">Documents</p>
                 <p class="box-info-number">{{ get_documents_count }}</p>
                 <p class="box-info-text">linked to Programs</p>
@@ -223,16 +314,23 @@
 
             <div class="col-md-12 col-xs-12">
               {% if selected_program %}
-              <a class="box box-info" href="/workflow/stakeholder_list/{{selected_program.id}}/0/">
+              <a
+                class="box box-info"
+                href="/workflow/stakeholder_list/{{ selected_program.id }}/0/"
+              >
                 <p class="box-info-label">Stakeholders</p>
                 <p class="box-info-number">{{ get_stakeholders_count }}</p>
-                <p class="box-info-text">with {{ get_contacts_count }} contacts</p>
+                <p class="box-info-text">
+                  with {{ get_contacts_count }} contacts
+                </p>
               </a>
               {% else %}
               <a class="box box-info" href="/workflow/stakeholder_list/0/0/">
                 <p class="box-info-label">Stakeholders</p>
                 <p class="box-info-number">{{ get_stakeholders_count }}</p>
-                <p class="box-info-text">with {{ get_contacts_count }} contacts</p>
+                <p class="box-info-text">
+                  with {{ get_contacts_count }} contacts
+                </p>
               </a>
               {% endif %}
             </div>
@@ -255,25 +353,25 @@
       datasets: [
         {
           data: [
-            +'{{get_projects_new_count}}', 
-            +'{{get_projects_in_progress_count}}', 
-            +'{{get_projects_awaiting_approval_count}}', 
-            +'{{get_projects_approved_count}}', 
+            +'{{get_projects_new_count}}',
+            +'{{get_projects_in_progress_count}}',
+            +'{{get_projects_awaiting_approval_count}}',
+            +'{{get_projects_approved_count}}',
             +'{{get_projects_rejected_count}}'
           ],
           backgroundColor: [
-            '#25CED1', 
-            '#FF8360', 
-            '#ffbe0b', 
-            '#40f99b', 
+            '#25CED1',
+            '#FF8360',
+            '#ffbe0b',
+            '#40f99b',
             '#f61067'],
         },
       ],
       labels: [
-        'New', 
-        'In Progress', 
-        'Awaiting Approval', 
-        'Approved', 
+        'New',
+        'In Progress',
+        'Awaiting Approval',
+        'Approved',
         'Rejected'
       ],
     },

@@ -65,10 +65,9 @@ def index(request, program_id=0):
     if int(program_id) == 0:
         get_projects = ProjectAgreement.objects.filter(
             program__organization=request.user.activity_user.organization)
-        print(get_projects.values_list('approval', flat=True))
 
         get_indicators = Indicator.objects.filter(
-            program__organization=request.user.activity_user.organization).order_by('-id')
+            program__organization=request.user.activity_user.organization).distinct().order_by('-id')
 
         get_collected_data = CollectedData.objects.filter(
             program__organization=request.user.activity_user.organization)
@@ -94,11 +93,13 @@ def index(request, program_id=0):
         get_projects_in_progress_count = ProjectAgreement.objects.filter(
             program__organization=request.user.activity_user.organization,
             approval='in progress').count()
+        get_projects_tracking_count = ProjectComplete.objects.filter(
+            program__organization=request.user.activity_user.organization).count()
     else:
         get_projects = ProjectAgreement.objects.filter(program__id=program_id)
 
         get_indicators = Indicator.objects.filter(
-            program__id=program_id).order_by('-id')
+            program__id=program_id).distinct().order_by('-id')
 
         get_collected_data = CollectedData.objects.filter(
             program__id=program_id)
@@ -122,6 +123,9 @@ def index(request, program_id=0):
             program__id=program_id,
             approval='in progress').count()
 
+        get_projects_tracking_count = ProjectComplete.objects.filter(
+            program__id=program_id).count()
+
     get_stakeholders_count = Stakeholder.objects.filter(
         organization=request.user.activity_user.organization).count()
 
@@ -129,13 +133,18 @@ def index(request, program_id=0):
         organization=request.user.activity_user.organization).count()
 
     get_locations_query = SiteProfile.objects
+    get_indicators_kpi_count = get_indicators.filter(
+        key_performance_indicator=True).count()
+    get_latest_indicators = get_indicators.filter(
+        key_performance_indicator=True)[:10]
 
     return render(request, "index.html", {
         'selected_program': selected_program,
         'get_programs': get_programs,
         'get_projects': get_projects,
         'get_indicators': get_indicators,
-        'get_latest_indicators': get_indicators[:10],
+        'get_latest_indicators': get_latest_indicators,
+        'get_indicators_kpi_count': get_indicators_kpi_count,
         'get_collected_data_count': get_collected_data.count(),
         'get_stakeholders_count': get_stakeholders_count,
         'get_contacts_count': get_contacts_count,
@@ -147,6 +156,7 @@ def index(request, program_id=0):
         'get_projects_rejected_count': get_projects_rejected_count,
         'get_projects_new_count': get_projects_new_count,
         'get_projects_in_progress_count': get_projects_in_progress_count,
+        'get_projects_tracking_count': get_projects_tracking_count,
         'map_api_key': settings.GOOGLE_MAP_API_KEY
     })
 
@@ -175,7 +185,8 @@ def activate_acccount(request, uidb64, token):
         send_welcome_email(request, user)
 
         # login(request, user)
-        messages.success(request, 'Thanks, your email address has been confirmed')
+        messages.success(
+            request, 'Thanks, your email address has been confirmed')
         return render(request, 'registration/login.html', {'invite_uuid': 'none'})
     else:
         return HttpResponse('Activation link is invalid!')
@@ -251,7 +262,8 @@ def register(request, invite_uuid):
                         # send welcome email
                         send_welcome_email(request, user)
 
-                        messages.success(request, 'Thanks, your email address has been confirmed')
+                        messages.success(
+                            request, 'Thanks, your email address has been confirmed')
                         return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
                 except UserInvite.DoesNotExist:
@@ -404,7 +416,8 @@ def profile(request):
             instance=activity_user_obj,
             initial={'username': request.user}
         )
-        user_form = NewUserRegistrationForm(request.POST or None, instance=user_obj)
+        user_form = NewUserRegistrationForm(
+            request.POST or None, instance=user_obj)
 
         if request.method == 'POST':
             data = request.POST
@@ -427,11 +440,14 @@ def profile(request):
 
                 # save activity user after updating name
                 activity_user = ActivityUser.objects.get(user=request.user)
-                activity_user.organization = Organization.objects.get(pk=int(activity_user_object['organization']))
-                activity_user.name = '{} {}'.format(user.first_name, user.last_name)
+                activity_user.organization = Organization.objects.get(
+                    pk=int(activity_user_object['organization']))
+                activity_user.name = '{} {}'.format(
+                    user.first_name, user.last_name)
                 activity_user.save()
 
-            messages.success(request, 'Your profile has been updated.', fail_silently=True)
+            messages.success(
+                request, 'Your profile has been updated.', fail_silently=True)
 
         return render(request, 'registration/profile.html', {
             'form': form,
@@ -569,7 +585,8 @@ def admin_user_edit(request, pk):
 
     form = RegistrationForm(request.POST or None, instance=activity_user_obj,
                             initial={'username': request.user})
-    user_form = NewUserRegistrationForm(request.POST or None, instance=user_obj)
+    user_form = NewUserRegistrationForm(
+        request.POST or None, instance=user_obj)
 
     if request.method == 'POST':
         data = request.POST
@@ -595,7 +612,8 @@ def admin_user_edit(request, pk):
             activity_user.organization = Organization.objects.get(
                 pk=int(activity_user_object['organization']))
             activity_user.title = activity_user_object['title']
-            activity_user.name = '{} {}'.format(user.first_name, user.last_name)
+            activity_user.name = '{} {}'.format(
+                user.first_name, user.last_name)
             activity_user.save()
 
         messages.success(
