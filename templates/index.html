@@ -237,11 +237,10 @@
               <tr>
                 <td>{{ indicator.levels }}</td>
                 <td>
-                  <a href="">{{ indicator.name }}</a>
+                  <a href="/indicators/indicator_update/{{indicator.id}}/">{{ indicator.name }}</a>
                 </td>
                 <td class="text-right">
                   {% if indicator.lop_target %}
-                  
                   {{ indicator.lop_target | floatformat:2 }}
                   {% else %}0.00{% endif %}
                 </td>

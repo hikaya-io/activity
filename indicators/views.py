@@ -151,7 +151,7 @@ class IndicatorList(ListView):
         organization = request.user.activity_user.organization
         get_programs = Program.objects.filter(organization=organization)
         # .exclude(collecteddata__isnull=True)
-        get_indicators = Indicator.objects.filter(
+        get_indicators = Indicator.objects.distinct().filter(
             program__organization=organization)
         get_indicator_types = IndicatorType.objects.all()
 
