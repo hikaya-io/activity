@@ -10,7 +10,7 @@
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
     <li class="active">{{ user.activity_user.organization.indicator_label }}s</li>
   </ul>
   {% endblock %}
@@ -19,7 +19,7 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {{ user.activity_user.organization.level_1_label }} Indicators
+        {{ user.activity_user.organization.indicator_label }}s List
       </h4>
     </div>
     <div class="sub-navigation-actions">
@@ -79,7 +79,13 @@
     <tbody>
       {% for indicator in get_indicators %}
       <tr>
-        <td><a href="{% url 'indicator_update' indicator.id %}">{{ indicator.name }}</a></td>
+        <td>
+          <a href="{% url 'indicator_update' indicator.id %}" 
+            data-toggle="tooltip" 
+            title="{{ indicator.name }}">
+            {{ indicator.name | truncatechars:50}}
+          </a>
+        </td>
         <td>
           {{indicator.levels}}
         </td>

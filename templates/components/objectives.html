@@ -17,7 +17,8 @@
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
+    <li><a href="/indicators/home/0/0/0/">Indicators</a></li>
     <li class="active">Objectives</li>
   </ul>
   {% endblock %}
@@ -26,7 +27,7 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        Objectives
+        Objective List
       </h4>
     </div>
     <div class="sub-navigation-actions">
@@ -73,7 +74,9 @@
     <tbody>
       {% for objective in get_all_objectives %}
       <tr>
-        <td><a href="/indicators/objectives/edit/{{objective.id}}/">{{ objective.name }}</a></td>
+        <td><a href="/indicators/objectives/edit/{{objective.id}}/" 
+          data-toggle="tooltip" 
+          title="{{ objective.name }}">{{ objective.name | truncatechars:50 }}</a></td>
         <td>{{ objective.parent }}</td>
         <td>{{ objective.create_date | date }}</td>
         <td class="text-right">

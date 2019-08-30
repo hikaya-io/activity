@@ -10,8 +10,8 @@
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
-    <li class="active">Beneficiary</li>
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
+    <li class="active">Beneficiaries</li>
   </ul>
   {% endblock %}
 
@@ -55,8 +55,10 @@
       {% for beneficiary in get_beneficiaries %}
       <tr>
         <td>
-          <a href="/formlibrary/beneficiary_update/{{ beneficiary.id }}">
-            {{ beneficiary.beneficiary_name }}
+          <a href="/formlibrary/beneficiary_update/{{ beneficiary.id }}" 
+            data-toggle="tooltip" 
+            title="{{beneficiary.beneficiary_name}}">
+            {{ beneficiary.beneficiary_name | truncatechars:50 }}
           </a>
         </td>
         <td>{{ beneficiary.gender }}</td>
