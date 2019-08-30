@@ -56,8 +56,10 @@
         {% for training in get_training %}
         <tr>
           <td>
-            <a href="/formlibrary/training_update/{{training.id}}/">
-              {{ training.training_name }}
+            <a href="/formlibrary/training_update/{{training.id}}/" 
+              data-toggle="tooltip" 
+              title="{{training.training_name}}">
+              {{ training.training_name | truncatechars:50 }}
             </a>
           </td>
           <td>{{ training.start_date }}</td>

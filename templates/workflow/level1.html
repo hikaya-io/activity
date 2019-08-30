@@ -53,8 +53,8 @@
       {% for program in programs %} {% if program.name %}
       <tr>
         <td>
-          <a href="/workflow/level1/edit/{{ program.id }}/">
-            {{ program.name }}
+          <a href="/workflow/level1/edit/{{ program.id }}/" data-toggle="tooltip" title="{{ program.name }}">
+            {{ program.name | truncatechars:50}}
           </a>
         </td>
         <!-- dates to be formated -->
