@@ -70,6 +70,7 @@
       <tr>
         <th>Name</th>
         <th>Level</th>
+        <th>{{user.activity_user.organization.level_1_label}}</th>
         <th>Target</th>
         <th>Actual</th>
         <th class="text-right">Actions</th>
@@ -80,9 +81,12 @@
       <tr>
         <td><a href="{% url 'indicator_update' indicator.id %}">{{ indicator.name }}</a></td>
         <td>
+          {{indicator.levels}}
+        </td>
+        <td>
           {{indicator.programs}}
         </td>
-        <td>{{ indicator.target }}</td>
+        <td>{{ indicator.lop_target }}</td>
         <td>{{ indicator.actual }}</td>
         <td class="text-right">
           <div class="btn-group">
@@ -99,6 +103,7 @@
             </button>
             <ul class="dropdown-menu">
               <li class="dropdown-header">Related</li>
+              <li><a href="">Results</a></li>
               <li><a href="">Objectives</a></li>
               <li><a href="">Levels</a></li>
               <li><a href="">Sectors</a></li>

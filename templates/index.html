@@ -37,15 +37,16 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            {% if selected_program %} {{ selected_program.name }} 
+            {{ user.activity_user.organization.level_1_label }} 
+            {% if selected_program %}
+            <i class="fa fa-filter"></i>
             {% else %}
-            {{ user.activity_user.organization.level_1_label }}
+            <i class="fa fa-angle-down"></i>
             {% endif %}
-            <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li class="{% if selected_program is None %} active {% endif %}">
-              <a href="/dashboard/0/">-- All --</a>
+            <li class="{% if selected_program is None %} active {% endif %}" >
+              <a href="/dashboard/0/" data-toggle="tooltip" data-placement="left" title="Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, officiis sequi adipisci enim possimus itaque accusantium quae veniam, laudantium dolorem illum sunt impedit tempora delectus ad quos quisquam mollitia soluta ratione voluptate nam nulla? Architecto, ab harum eaque accusamus explicabo ea deserunt sequi beatae magnam sed maxime, ad quam enim pariatur. Harum magni accusamus deleniti neque ex ullam vero consequuntur nihil eligendi provident rerum quaerat corporis eum voluptatum, porro nam nemo, fugit suscipit nesciunt eveniet eaque dolore animi. Non nostrum sint numquam minima, vel laboriosam ex eaque incidunt magni ipsum, illum molestiae, quos officiis earum obcaecati est excepturi commodi fuga!">-- All --</a>
             </li>
 
             {% for program in get_programs %} {% if program.name %}

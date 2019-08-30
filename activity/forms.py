@@ -31,6 +31,9 @@ class RegistrationForm(UserChangeForm):
 
         activity_user = ActivityUser.objects.get(user=user['username'])
         self.fields['organization'].queryset = activity_user.organizations.all()
+        # self.fields['user'].error = None
+        self.errors['user'] = None
+        self.fields['user'].widget.attrs['readonly'] = 'readonly'
 
     class Meta:
         model = ActivityUser
@@ -44,11 +47,11 @@ class RegistrationForm(UserChangeForm):
     helper.html5_required = True
     helper.form_tag = False
     helper.layout = Layout(
-        Row(
-            Column('title', css_class='form-group col-md-6 mb-0'),
-            Column('employee_number', css_class='form-group col-md-6 mb-0'),
-            css_class='form-row'
-        ),
+        # Row(
+        #     Column('title', css_class='form-group col-md-6 mb-0'),
+        #     Column('employee_number', css_class='form-group col-md-6 mb-0'),
+        #     css_class='form-row'
+        # ),
         Row(
             Column('user', css_class='form-group col-md-6 mb-0'),
             Column('organization', css_class='form-group col-md-6 mb-0'),
@@ -74,6 +77,9 @@ class NewUserRegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(NewUserRegistrationForm, self).__init__(*args, **kwargs)
         self.fields['username'].help_text = None
+        self.fields['first_name'].label = 'First Name*'
+        self.fields['last_name'].label = 'Last Name'
+        self.fields['email'].label = 'Email*'
 
     helper = FormHelper()
     helper.form_method = 'post'

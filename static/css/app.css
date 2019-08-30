@@ -406,12 +406,6 @@ body.loading .ajax_loading {
     margin: 12px 0px 0px 0px;
 }
 
-.btn-go {
-    color: #fff;
-    background-color: #mr-3;
-    margin: 12px 0px 12px 0px;
-}
-
 .btn-go:hover {
     color: #fff;
     background-color: #59b5fa;
@@ -869,3 +863,20 @@ input[type=number]::-webkit-outer-spin-button {
 .chart:not(:last-child) {
     margin-right: 10px;
 }
+
+/*Select2 ReadOnly Start*/
+select[readonly].select2-hidden-accessible + .select2-container {
+    pointer-events: none;
+    touch-action: none;
+}
+
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection {
+    background: #eee;
+    box-shadow: none;
+}
+
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection__arrow, select[readonly].select2-hidden-accessible + .select2-container .select2-selection__clear {
+    display: none;
+}
+
+/*Select2 ReadOnly End*/

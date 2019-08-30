@@ -7,8 +7,9 @@
 		});
 		$('#id_user').select2({
 			theme: 'bootstrap',
+
 		});
-		$('#id_user').prop('disabled', true)
+		$('#id_user').prop('readonly', true)
 
 		$('#id_organization').select2({
 			theme: 'bootstrap',
@@ -34,8 +35,8 @@
 	</div>
 	{% endfor %} {% endif %} {% block breadcrumbs %}
 	<ul class="breadcrumb">
-		<li><a href="/">Home Dashboard</a></li>
-		<li class="active">My Profile</li>
+		<li><a href="/">My Dashboard</a></li>
+		<li class="active">Profile</li>
 	</ul>
 	{% endblock %}
 
@@ -43,23 +44,15 @@
 	<div class="sub-navigation">
 		<div class="sub-navigation-header">
 			<h4 class="page-title">
-				User Registration/Profile
+				My Profile
 			</h4>
 		</div>
-		<div class="sub-navigation-actions">
+		<!-- <div class="sub-navigation-actions">
 			<a href="/bookmark_list">Bookmarks</a>
-		</div>
+		</div> -->
 	</div>
 	<div class="admin-content">
-		{% if form.errors %} {% for field in form %} {% for error in field.errors %}
-		<div class="alert alert-error">
-			<strong>{{ error | escape }}</strong>
-		</div>
-		{% endfor %} {% endfor %} {% for error in form.non_field_errors %}
-		<div class="alert alert-error">
-			<strong>{{ error | escape }}</strong>
-		</div>
-		{% endfor %} {% endif %} {% load crispy_forms_tags %}
+		{% load crispy_forms_tags %}
 		<form method="POST" action="">
 			{% crispy user_form user_form.helper %} 
 			{% crispy form form.helper %}
@@ -70,5 +63,13 @@
 		</form>
 	</div>
 </div>
+<script>
+	$(document).ready(() => {
+		$('#id-reset-btn').click(() => {
+			document.location.href = '/';
+		});
+	})
+</script>
+
 
 {% endblock content %}
