@@ -1493,9 +1493,11 @@ class SiteProfileUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(SiteProfileUpdate, self).get_context_data(**kwargs)
+        site = SiteProfile.objects.get(pk=int(self.kwargs['pk']))
         get_projects = ProjectAgreement.objects.all().filter(
             site__id=self.kwargs['pk'])
         context.update({'get_projects': get_projects})
+        context.update({'site_name': site.name})
         return context
 
     def form_invalid(self, form):
@@ -1978,7 +1980,9 @@ class StakeholderUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(StakeholderUpdate, self).get_context_data(**kwargs)
+        stakeholder = Stakeholder.objects.get(pk=int(self.kwargs['pk']))
         context.update({'id': self.kwargs['pk']})
+        context.update({'stakeholder_name': stakeholder.name})
         return context
 
     def form_invalid(self, form):

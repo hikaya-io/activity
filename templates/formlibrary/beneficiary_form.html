@@ -22,14 +22,16 @@
 	<div class="sub-navigation">
 		<div class="sub-navigation-header">
 			<h4 class="page-title">
-				Beneficiary Form
+				{% if beneficiary_name %}{{ beneficiary_name }} {% else %} {{ form_title }} {% endif %}
 			</h4>
 		</div>
 		{% comment %} <div class="sub-navigation-actions">
 			{% include "form_guidance.html" %}
 		</div> {% endcomment %}
 	</div>
-	{% csrf_token %} {% load crispy_forms_tags %} {% crispy form %}
+	<div class="admin-content">
+		{% csrf_token %} {% load crispy_forms_tags %} {% crispy form %}
+	</div>
 </div>
 <script>
 	$('#reset-id-reset').click(() => {

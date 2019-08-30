@@ -15,7 +15,9 @@
     <!-- Sub navigation -->
     <div class="sub-navigation">
       <div class="sub-navigation-header">
-        <h4 class="page-title">Site Profile Form </h4>
+        <h4 class="page-title">
+          {% if site_name %}{{ site_name }} {% else %} Site Profile Form {% endif %} 
+        </h4>
       </div>
     </div>
   
@@ -35,9 +37,11 @@
           </div>
       {% endfor %}
   {% endif %}
-  {% csrf_token %}
-  {% load crispy_forms_tags %}
-  {% crispy form %}
+  <div class="admin-content">
+    {% csrf_token %}
+    {% load crispy_forms_tags %}
+    {% crispy form %}
+  </div>
 </div>
 
 {% endblock content %}
