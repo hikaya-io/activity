@@ -250,11 +250,28 @@
     data: {
       datasets: [
         {
-          data: [10, 60, 34, 89, 34],
-          backgroundColor: ['yellow', 'blue', 'maroon', 'brown', 'pink'],
+          data: [
+            +'{{get_projects_new_count}}', 
+            +'{{get_projects_in_progress_count}}', 
+            +'{{get_projects_awaiting_approval_count}}', 
+            +'{{get_projects_approved_count}}', 
+            +'{{get_projects_rejected_count}}'
+          ],
+          backgroundColor: [
+            '#25CED1', 
+            '#FF8360', 
+            '#ffbe0b', 
+            '#40f99b', 
+            '#f61067'],
         },
       ],
-      labels: ['yellow', 'blue', 'maroon', 'brown', 'pink'],
+      labels: [
+        'New', 
+        'In Progress', 
+        'Awaiting Approval', 
+        'Approved', 
+        'Rejected'
+      ],
     },
     options: {
       responsive: true,

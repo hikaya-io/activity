@@ -69,6 +69,7 @@ def index(request, program_id=0):
     if int(program_id) == 0:
         get_projects = ProjectAgreement.objects.filter(
             program__organization=request.user.activity_user.organization)
+        print(get_projects.values_list('approval', flat=True))
 
         get_indicators = Indicator.objects.filter(
             program__organization=request.user.activity_user.organization).order_by('-id')
@@ -78,6 +79,25 @@ def index(request, program_id=0):
 
         get_documents_count = Documentation.objects.filter(
             program__organization=request.user.activity_user.organization).count()
+
+        get_projects_awaiting_approval_count = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization,
+            approval='awaiting approval').count()
+
+        get_projects_approved_count = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization,
+            approval='approved').count()
+
+        get_projects_rejected_count = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization,
+            approval='rejected').count()
+
+        get_projects_new_count = ProjectAgreement.objects.filter(
+            Q(program__organization=request.user.activity_user.organization) & (Q(approval='') | Q(approval=None) | Q(approval='New'))).count()
+
+        get_projects_in_progress_count = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization,
+            approval='in progress').count()
     else:
         get_projects = ProjectAgreement.objects.filter(program__id=program_id)
 
@@ -89,6 +109,22 @@ def index(request, program_id=0):
 
         get_documents_count = Documentation.objects.filter(
             program__id=program_id).count()
+
+        get_projects_awaiting_approval_count = ProjectAgreement.objects.filter(
+            program__id=program_id, approval='awaiting approval').count()
+
+        get_projects_approved_count = ProjectAgreement.objects.filter(
+            program__id=program_id, approval='approved').count()
+
+        get_projects_rejected_count = ProjectAgreement.objects.filter(
+            program__id=program_id, approval='rejected').count()
+
+        get_projects_new_count = ProjectAgreement.objects.filter(
+            Q(program__id=program_id) & (Q(approval='') | Q(approval=None) | Q(approval='New'))).count()
+
+        get_projects_in_progress_count = ProjectAgreement.objects.filter(
+            program__id=program_id,
+            approval='in progress').count()
 
     get_stakeholders_count = Stakeholder.objects.filter(
         organization=request.user.activity_user.organization).count()
@@ -110,6 +146,11 @@ def index(request, program_id=0):
         'get_documents_count': get_documents_count,
         'get_active_locations_count': get_locations_query.filter(status=True).count(),
         'get_locations_count': get_locations_query.count(),
+        'get_projects_awaiting_approval_count': get_projects_awaiting_approval_count,
+        'get_projects_approved_count': get_projects_approved_count,
+        'get_projects_rejected_count': get_projects_rejected_count,
+        'get_projects_new_count': get_projects_new_count,
+        'get_projects_in_progress_count': get_projects_in_progress_count,
         'map_api_key': settings.GOOGLE_MAP_API_KEY
     })
 
