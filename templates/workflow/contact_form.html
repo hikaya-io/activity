@@ -23,13 +23,15 @@
 	<div class="sub-navigation">
 		<div class="sub-navigation-header">
 			<h4 class="page-title">
-				{{contact_leader}}
+				{% if contact_name %}{{contact_name}}{% else %}{{contact_leader}}{% endif %}
 			</h4>
 		</div>
 	</div>
-  {% csrf_token %}
-  {% load crispy_forms_tags %}
-  {% crispy form %}
+	<div class="admin-content">
+		{% csrf_token %}
+		{% load crispy_forms_tags %}
+		{% crispy form %}
+	</div>
 </div>
 
 {% endblock content %}

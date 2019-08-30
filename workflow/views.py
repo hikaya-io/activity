@@ -1209,7 +1209,9 @@ class DocumentationUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(DocumentationUpdate, self).get_context_data(**kwargs)
+        documentation = Documentation.objects.get(pk=int(self.kwargs['pk']))
         context.update({'active': ['components', 'documents']})
+        context.update({'documentation_name': documentation.name})
 
         return context
 
@@ -1853,6 +1855,8 @@ class ContactUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(ContactUpdate, self).get_context_data(**kwargs)
+        contact = Contact.objects.get(pk=int(self.kwargs['pk']))
+        context.update({'contact_name': contact.name})
         context.update({'id': self.kwargs['pk']})
         return context
 
