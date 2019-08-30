@@ -29,11 +29,10 @@
 	   }
 	   var locations = []
 	   {% for location in get_locations %}
-		   const site = {
+		   locations.push({
 			   lat: +"{{location.latitude}}", 
 			   lng: +"{{location.longitude}}"
-			}
-		   locations.push(site)
+			})
 	   {% endfor %}	   
 </script>
 <!--Load the API from the specified URL
