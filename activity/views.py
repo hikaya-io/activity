@@ -19,7 +19,7 @@ from indicators.models import CollectedData, Indicator
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, Country, ActivityUser,
-    ActivitySites, ActivityBookmarks, FormGuidance, Organization, UserInvite, Stakeholder, Contact
+    ActivitySites, ActivityBookmarks, FormGuidance, Organization, UserInvite, Stakeholder, Contact, Documentation
 )
 from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links, send_invite_emails, \
@@ -75,12 +75,20 @@ def index(request, program_id=0):
 
         get_collected_data = CollectedData.objects.filter(
             program__organization=request.user.activity_user.organization)
+
+        get_documents_count = Documentation.objects.filter(
+            program__organization=request.user.activity_user.organization).count()
     else:
         get_projects = ProjectAgreement.objects.filter(program__id=program_id)
+
         get_indicators = Indicator.objects.filter(
             program__id=program_id).order_by('-id')
+
         get_collected_data = CollectedData.objects.filter(
             program__id=program_id)
+
+        get_documents_count = Documentation.objects.filter(
+            program__id=program_id).count()
 
     get_stakeholders_count = Stakeholder.objects.filter(
         organization=request.user.activity_user.organization).count()
@@ -97,6 +105,7 @@ def index(request, program_id=0):
         'get_collected_data_count': get_collected_data.count(),
         'get_stakeholders_count': get_stakeholders_count,
         'get_contacts_count': get_contacts_count,
+        'get_documents_count': get_documents_count,
         'map_api_key': settings.GOOGLE_MAP_API_KEY
     })
 
