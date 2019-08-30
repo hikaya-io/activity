@@ -19,7 +19,9 @@ from indicators.models import CollectedData, Indicator
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, Country, ActivityUser,
-    ActivitySites, ActivityBookmarks, FormGuidance, Organization, UserInvite, Stakeholder, Contact, Documentation
+    ActivitySites, ActivityBookmarks, FormGuidance,
+    Organization, UserInvite, Stakeholder, Contact,
+    Documentation
 )
 from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links, send_invite_emails, \

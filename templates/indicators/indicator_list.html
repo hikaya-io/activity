@@ -83,8 +83,8 @@
         <td>
           {{indicator.levels}}
         </td>
-        <td>
-          {{indicator.programs}}
+        <td data-toggle="tooltip" title="{{ indicator.programs }}">
+          {{indicator.programs | truncatechars:50}}
         </td>
         <td>{{ indicator.lop_target }}</td>
         <td>{{ indicator.actual }}</td>
