@@ -4,7 +4,7 @@
 		// The map, centered at Uluru
 		var map = new google.maps.Map(document.getElementById('map'), {
 			zoom: 3,
-			center: locations[0],
+			center: locations[0] ? locations[0] : { lat: 0, lng: 0 },
 		});
 
 		// Create an array of alphabetical characters used to label the markers.
@@ -27,18 +27,14 @@
 				'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
 		});
 	   }
-       var locations = [
-        {lat: -31.563910, lng: 147.154312},
-        {lat: -33.718234, lng: 150.363181},
-        {lat: -33.727111, lng: 150.371124},
-        {lat: -33.848588, lng: 151.209834},
-        {lat: -33.851702, lng: 151.216968},
-        {lat: -34.671264, lng: 150.863657},
-        {lat: -35.304724, lng: 148.662905},
-        {lat: -42.735258, lng: 147.438000},
-        {lat: -43.999792, lng: 170.463352}
-      ]
-       
+	   var locations = []
+	   {% for location in get_locations %}
+		   const site = {
+			   lat: +"{{location.latitude}}", 
+			   lng: +"{{location.longitude}}"
+			}
+		   locations.push(site)
+	   {% endfor %}	   
 </script>
 <!--Load the API from the specified URL
 * The async attribute allows the browser to render the page while the API loads

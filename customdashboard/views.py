@@ -279,6 +279,10 @@ def public_dashboard(request, id=0, public=0):
     # get all countries
     countries = Country.objects.all().filter(program__id=program_id)
 
+    get_locations = SiteProfile.objects.filter(
+        organizations__id__in=[get_program.id]
+    )
+
     # Trainings
     agreement_id_list = []
     training_id_list = []
@@ -349,6 +353,7 @@ def public_dashboard(request, id=0, public=0):
         'get_notebooks': get_notebooks,
         'evidence_tables_count': evidence_tables_count,
         'get_quantitative_data_sums': get_quantitative_data_sums,
+        'get_locations': get_locations,
         'get_site_profile_indicator': get_site_profile_indicator,
         'get_site_profile_indicator_count': get_site_profile_indicator.count(),
         'get_beneficiaries': get_beneficiaries,

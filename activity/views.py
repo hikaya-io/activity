@@ -65,6 +65,15 @@ def index(request, program_id=0):
 
     # get stuff based on the active program
     if int(program_id) == 0:
+        get_locations = SiteProfile.objects.filter(
+            organizations__id__in=[request.user.activity_user.organization.id])
+
+        get_stakeholders_count = Stakeholder.objects.filter(
+            organization=request.user.activity_user.organization).count()
+
+        get_contacts_count = Contact.objects.filter(
+            organization=request.user.activity_user.organization).count()
+
         get_projects = ProjectAgreement.objects.filter(
             program__organization=request.user.activity_user.organization)
 
@@ -90,14 +99,25 @@ def index(request, program_id=0):
             approval='rejected').count()
 
         get_projects_new_count = ProjectAgreement.objects.filter(
-            Q(program__organization=request.user.activity_user.organization) & (Q(approval='') | Q(approval=None) | Q(approval='New'))).count()
+            Q(program__organization=request.user.activity_user.organization) &
+            (Q(approval='') | Q(approval=None) | Q(approval='New'))).count()
 
         get_projects_in_progress_count = ProjectAgreement.objects.filter(
             program__organization=request.user.activity_user.organization,
             approval='in progress').count()
+
         get_projects_tracking_count = ProjectComplete.objects.filter(
             program__organization=request.user.activity_user.organization).count()
     else:
+        get_locations = SiteProfile.objects.filter(
+            organizations__id__in=[selected_program.organization.id])
+
+        get_stakeholders_count = Stakeholder.objects.filter(
+            organizations=selected_program.organization).count()
+
+        get_contacts_count = Contact.objects.filter(
+            organizations=selected_program.organization).count()
+
         get_projects = ProjectAgreement.objects.filter(program__id=program_id)
 
         get_indicators = Indicator.objects.filter(
@@ -119,7 +139,8 @@ def index(request, program_id=0):
             program__id=program_id, approval='rejected').count()
 
         get_projects_new_count = ProjectAgreement.objects.filter(
-            Q(program__id=program_id) & (Q(approval='') | Q(approval=None) | Q(approval='New'))).count()
+            Q(program__id=program_id) & (Q(approval='') |
+                                         Q(approval=None) | Q(approval='New'))).count()
 
         get_projects_in_progress_count = ProjectAgreement.objects.filter(
             program__id=program_id,
@@ -128,13 +149,6 @@ def index(request, program_id=0):
         get_projects_tracking_count = ProjectComplete.objects.filter(
             program__id=program_id).count()
 
-    get_stakeholders_count = Stakeholder.objects.filter(
-        organization=request.user.activity_user.organization).count()
-
-    get_contacts_count = Contact.objects.filter(
-        organization=request.user.activity_user.organization).count()
-
-    get_locations_query = SiteProfile.objects
     get_indicators_kpi_count = get_indicators.filter(
         key_performance_indicator=True).count()
     get_latest_indicators = get_indicators.filter(
@@ -151,8 +165,9 @@ def index(request, program_id=0):
         'get_stakeholders_count': get_stakeholders_count,
         'get_contacts_count': get_contacts_count,
         'get_documents_count': get_documents_count,
-        'get_active_locations_count': get_locations_query.filter(status=True).count(),
-        'get_locations_count': get_locations_query.count(),
+        'get_active_locations_count': get_locations.filter(status=True).count(),
+        'get_locations_count': get_locations.count(),
+        'get_locations': get_locations,
         'get_projects_awaiting_approval_count': get_projects_awaiting_approval_count,
         'get_projects_approved_count': get_projects_approved_count,
         'get_projects_rejected_count': get_projects_rejected_count,
