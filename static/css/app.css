@@ -769,3 +769,20 @@ input[type=number]::-webkit-outer-spin-button {
 .title-item-name {
     color: #A0A0A0 ;
 }
+
+/*Select2 ReadOnly Start*/
+select[readonly].select2-hidden-accessible + .select2-container {
+    pointer-events: none;
+    touch-action: none;
+}
+
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection {
+    background: #eee;
+    box-shadow: none;
+}
+
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection__arrow, select[readonly].select2-hidden-accessible + .select2-container .select2-selection__clear {
+    display: none;
+}
+
+/*Select2 ReadOnly End*/

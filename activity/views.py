@@ -641,22 +641,20 @@ def profile(request):
             }
             # save user
             User.objects.filter(pk=user_obj.id).update(**user_object)
-            user = User.objects.get(pk=user_obj.pk)
+            user = User.objects.get(pk=request.user.id)
             if user:
+
                 # save activity user after updating name
-                activity_user = activity_user_obj
-                activity_user.employee_number = activity_user_object['employee_number']
+                activity_user = ActivityUser.objects.get(user=request.user)
                 activity_user.organization = Organization.objects.get(pk=int(activity_user_object['organization']))
-                activity_user.title = activity_user_object['title']
                 activity_user.name = '{} {}'.format(user.first_name, user.last_name)
                 activity_user.save()
 
-            messages.success(request, 'Your profile has been updated.', fail_silently=False)
+            messages.success(request, 'Your profile has been updated.', fail_silently=True)
 
         return render(request, 'registration/profile.html', {
             'form': form,
             'user_form': user_form,
-            'helper': RegistrationForm.helper
         })
     else:
         return HttpResponseRedirect('/accounts/register')
