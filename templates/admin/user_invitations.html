@@ -1,54 +1,53 @@
-{% extends "base.html" %} {% block content %}
-{% include 'admin/user_invite_modal.html' %}
+{% extends "base.html" %} {% block content %} {% include 'admin/user_invite_modal.html' %}
 
 <div class="container">
 	{% block breadcrumbs %}
 	<ul class="breadcrumb">
-		<li><a href="{% url 'index' %}">Home Dashboard</a></li>
-		<li class="active">
-		{{ user.activity_user.organization.level_1_label }} Dashboards
-		</li>
+		<li><a href="{% url 'admin_profile_settings' %}">Organization Settings</a></li>
+		<li><a href="/accounts/admin/users/invitations/list/0/">People</a></li>
+		<li class="active">Pending Invitations</li>
 	</ul>
 	{% endblock %}
-
-	<div class="row">
-		<div class="col-md-3">
-			{% include 'admin/sections/side-nav.html' %}
+	<!-- Sub navigation -->
+	<div class="sub-navigation">
+		<div class="sub-navigation-header">
+			<h4 class="page-title">
+				Pending Invitations
+			</h4>
 		</div>
-		<div class="col-md-9 admin-content">
-			<!-- Sub navigation -->
-			<div class="sub-navigation">
-				<div class="sub-navigation-header">
-					<h4 class="page-title">
-						Pending User Invitation(s)
-					</h4>
-				</div>
-				<div class="sub-navigation-actions">
-					<div class="sub-nav-item">
-                        <div class="btn-group" role="group">
-                            <button
-                                type="button"
-                                class="btn btn-sm btn-default dropdown-toggle"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                            >
-                                Organization(s)
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="/accounts/admin/users/invitations/list/0/">--All--</a></li>
-                                {% for org in organizations %}
-                                <li>
-                                <a href="/accounts/admin/users/invitations/list/{{org.id}}/">{{ org.name }}</a>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-					</div>
+		<div class="sub-navigation-actions">
+			<div class="sub-nav-item">
+				<div class="btn-group" role="group">
+					<button
+						type="button"
+						class="btn btn-sm btn-default dropdown-toggle"
+						data-toggle="dropdown"
+						aria-haspopup="true"
+						aria-expanded="false"
+					>
+						Organizations
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li><a href="/accounts/admin/users/invitations/list/0/">--All--</a></li>
+						{% for org in organizations %}
+						<li>
+							<a href="/accounts/admin/users/invitations/list/{{ org.id }}/">{{
+								org.name
+							}}</a>
+						</li>
+						{% endfor %}
+					</ul>
 				</div>
 			</div>
-			
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-2">
+			{% include 'admin/sections/side-nav.html' %}
+		</div>
+		<div class="col-md-10 admin-content">
 			<div>
 				<table class="table" id="invitationTable">
 					<thead>
@@ -70,8 +69,8 @@
 							<td class="text-right">
 								<!-- Action buttons -->
 								<div class="btn-group">
-									<button 
-										type="button" 
+									<button
+										type="button"
 										class="btn btn-sm btn-danger"
 										data-toggle="modal"
 										onclick="setItemToDelete({{ item.id }})"
@@ -91,10 +90,9 @@
 	</div>
 </div>
 {% block extra_js_in_body %}
-	<script>
-        $(document).ready(() => {
-            $('#invitationTable').DataTable();
-        });
-    </script>
-{% endblock %}
-{% endblock content %}
+<script>
+	$(document).ready(() => {
+		$('#invitationTable').DataTable();
+	});
+</script>
+{% endblock %} {% endblock content %}

@@ -145,6 +145,8 @@ class TrainingUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(TrainingUpdate, self).get_context_data(**kwargs)
+        training = TrainingAttendance.objects.get(pk=int(self.kwargs['pk']))
+        context['training_name'] = training.training_name
         context['form_title'] = 'Training Attendance Update Form'
         return context
 
@@ -263,6 +265,13 @@ class BeneficiaryUpdate(UpdateView):
         kwargs = super(BeneficiaryUpdate, self).get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(BeneficiaryUpdate, self).get_context_data(**kwargs)
+        beneficiary = Beneficiary.objects.get(pk=int(self.kwargs['pk']))
+        context['beneficiary_name'] = beneficiary.beneficiary_name
+        context['form_title'] = 'Beneficiary Update Form'
+        return context
 
     def form_invalid(self, form):
         messages.error(self.request, 'Invalid Form', fail_silently=False)
@@ -406,6 +415,8 @@ class DistributionUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(DistributionUpdate, self).get_context_data(**kwargs)
         context['form_title'] = 'Distribution Update Form'
+        distribution = Distribution.objects.get(pk=int(self.kwargs['pk']))
+        context['distribution_name'] = distribution.distribution_name
         return context
     form_class = DistributionForm
 

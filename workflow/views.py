@@ -1209,7 +1209,9 @@ class DocumentationUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(DocumentationUpdate, self).get_context_data(**kwargs)
+        documentation = Documentation.objects.get(pk=int(self.kwargs['pk']))
         context.update({'active': ['components', 'documents']})
+        context.update({'documentation_name': documentation.name})
 
         return context
 
@@ -1493,9 +1495,11 @@ class SiteProfileUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(SiteProfileUpdate, self).get_context_data(**kwargs)
+        site = SiteProfile.objects.get(pk=int(self.kwargs['pk']))
         get_projects = ProjectAgreement.objects.all().filter(
             site__id=self.kwargs['pk'])
         context.update({'get_projects': get_projects})
+        context.update({'site_name': site.name})
         return context
 
     def form_invalid(self, form):
@@ -1851,6 +1855,8 @@ class ContactUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(ContactUpdate, self).get_context_data(**kwargs)
+        contact = Contact.objects.get(pk=int(self.kwargs['pk']))
+        context.update({'contact_name': contact.name})
         context.update({'id': self.kwargs['pk']})
         return context
 
@@ -1978,7 +1984,9 @@ class StakeholderUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(StakeholderUpdate, self).get_context_data(**kwargs)
+        stakeholder = Stakeholder.objects.get(pk=int(self.kwargs['pk']))
         context.update({'id': self.kwargs['pk']})
+        context.update({'stakeholder_name': stakeholder.name})
         return context
 
     def form_invalid(self, form):

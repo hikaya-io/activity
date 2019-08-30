@@ -158,7 +158,7 @@
                 role="button"
                 aria-haspopup="true"
                 aria-expanded="false"
-                >Workflow <i class="fa fa-angle-down" aria-hidden="true"></i
+                >Workflows <i class="fa fa-angle-down" aria-hidden="true"></i
               ></a>
               <ul class="dropdown-menu">
                 <li>
@@ -176,7 +176,22 @@
             </li>
 
             <li class="{% if 'indicators' in active %} active {% endif %}">
-              <a href="/indicators/home/0/0/0">Indicators <span class="sr-only">(current)</span></a>
+              <a 
+                href="#"
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false">Indicators <i class="fa fa-angle-down" aria-hidden="true"></i
+              ></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="/indicators/home/0/0/0">Indicators</a>
+                </li>
+                <li>
+                  <a href="{% url 'objectives' %}">Objectives</a>
+                </li>
+              </ul>
             </li>
 
             <li class="dropdown {% if 'forms' in active %} active {% endif %}">
@@ -191,13 +206,13 @@
               ></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/formlibrary/training_list/0/0/"> Training</a>
+                  <a href="/formlibrary/beneficiary_list/0/0/"> Beneficiaries</a>
                 </li>
                 <li>
                   <a href="/formlibrary/distribution_list/0/0/"> Distributions</a>
                 </li>
                 <li>
-                  <a href="/formlibrary/beneficiary_list/0/0/"> Beneficiaries</a>
+                  <a href="/formlibrary/training_list/0/0/"> Trainings</a>
                 </li>
               </ul>
             </li>
@@ -214,25 +229,22 @@
               ></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/workflow/siteprofile_list/0/0/list">
-                    Locations (Site Profiles)</a
-                  >
-                </li>
-                <li>
-                  <a href="/workflow/stakeholder_list/0/0">
-                    Stakeholders (Orgs)
-                  </a>
-                </li>
-                <li>
                   <a href="/workflow/contact_list/0/">Contacts</a>
                 </li>
                 <li>
                   <a href="/workflow/documentation_list/0/0/">
-                    Documentation
+                    Documents
                   </a>
                 </li>
                 <li>
-                  <a href="{% url 'objectives' %}">Objectives</a>
+                  <a href="/workflow/siteprofile_list/0/0/list">
+                    Locations</a
+                  >
+                </li>
+                <li>
+                  <a href="/workflow/stakeholder_list/0/0">
+                    Stakeholders
+                  </a>
                 </li>
               </ul>
             </li>
@@ -247,6 +259,11 @@
                 aria-expanded="false"
                 >Reports <i class="fa fa-angle-down"></i></a>
               <ul class="dropdown-menu">
+                  <li>
+                    <a href="/customdashboard/program_list/0/"
+                      >Dashboards</a
+                    >
+                  </li>
                   <!-- <li>
                     <a href="/reports/report/"
                       >
@@ -254,13 +271,6 @@
                       Report</a
                     >
                   </li> -->
-                  <li>
-                    <a href="/customdashboard/program_list/0/"
-                      >
-                      {{ user.activity_user.organization.level_1_label }}
-                      Dashboards</a
-                    >
-                  </li>
                   <!-- <li>
                     <a href="/workflow/report/0/none"
                       >
@@ -445,7 +455,7 @@
         {% else %}
         <div class="column col-xs-16 text-right">
           <a href="http://www.hikaya.io" class="text-muted"><b>Hikaya</b></a> |
-          <a href="http://help.hikaya.io" class="text-muted"
+          <a href="https://help.hikaya.io" class="text-muted"
             ><b>Documentation</b></a
           >
           |

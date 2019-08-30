@@ -19,7 +19,9 @@ from indicators.models import CollectedData, Indicator
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, Country, ActivityUser,
-    ActivitySites, ActivityBookmarks, FormGuidance, Organization, UserInvite
+    ActivitySites, ActivityBookmarks, FormGuidance,
+    Organization, UserInvite, Stakeholder, Contact,
+    Documentation
 )
 from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links, send_invite_emails, \
@@ -44,7 +46,7 @@ APPROVALS = (
 
 
 @login_required(login_url='/accounts/login/')
-def index(request, selected_countries=None, id=0, sector=0):
+def index(request, program_id=0):
     """
     Home page
     get count of agreements approved and total for dashboard
@@ -54,318 +56,109 @@ def index(request, selected_countries=None, id=0, sector=0):
     if request.method == 'POST' and request.is_ajax:
         return add_program(request)
 
-    program_id = id
-    user_countries = get_country(request.user)
+    # set the selected program
+    selected_program = Program.objects.filter(id=program_id).first()
 
-    if not selected_countries:
-        selected_countries = user_countries
-        selected_countries_list = None
-        selected_countries_label_list = None
-    else:
-        # transform to list if a submitted country
-        selected_countries = [selected_countries]
-        selected_countries_list = Country.objects.all().filter(
-            id__in=selected_countries)
-        selected_countries_label_list = Country.objects.all().filter(
-            id__in=selected_countries).values('country')
+    # get programs belonging to the current organizatiom
+    get_programs = Program.objects.filter(
+        organization=request.user.activity_user.organization)
 
-    get_agency_site = ActivitySites.objects.all().filter(id=1)
-    get_sectors = Sector.objects.all().exclude(
-        program__isnull=True).select_related()
-    get_all_sectors = Sector.objects.all()
-
-    # limit the programs by the selected sector
-    if int(sector) == 0:
-        get_programs = Program.objects.all()\
-            .prefetch_related('agreement', 'agreement__office').filter(
-            funding_status="Funded", country__in=selected_countries)
-        # .exclude(agreement__isnull=True)
-        sectors = Sector.objects.all()
-    else:
-        get_programs = Program.objects.all()\
-            .filter(funding_status="Funded",
-                    country__in=selected_countries, sector=sector)
-        sectors = Sector.objects.all().filter(id=sector)
-
-    filter_for_quantitative_data_sums = {
-        'indicator__key_performance_indicator': True,
-        'periodic_target__isnull': False,
-        'achieved__isnull': False,
-    }
-
-    # get data for just one program or all programs
+    # get stuff based on the active program
     if int(program_id) == 0:
-        get_filtered_name = None
-        filter_for_quantitative_data_sums[
-            'indicator__program__country__in'] = selected_countries
+        get_projects = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization)
 
-        # filter by all programs then filter by sector if found
-        if int(sector) > 0:
-            filter_for_quantitative_data_sums[
-                'agreement__sector__in'] = sectors
-            get_site_profile = SiteProfile.objects.all().prefetch_related(
-                'country', 'district', 'province').filter(
-                Q(Q(projectagreement__sector__in=sectors)),
-                country__in=selected_countries).filter(status=1)
-            get_site_profile_indicator = SiteProfile.objects.all()\
-                .prefetch_related('country', 'district', 'province').filter(
-                Q(collecteddata__program__country__in=selected_countries))\
-                .filter(status=1)
-            agreement_total_count = ProjectAgreement.objects.all().filter(
-                sector__in=sectors,
-                program__country__in=selected_countries).count()
-            complete_total_count = ProjectComplete.objects.all().filter(
-                project_agreement__sector__in=sectors,
-                program__country__in=selected_countries).count()
-            agreement_approved_count = ProjectAgreement.objects.all().filter(
-                approval='approved', sector__in=sectors,
-                program__country__in=selected_countries).count()
-            complete_approved_count = ProjectComplete.objects.all().filter(
-                approval='approved', project_agreement__sector__in=sectors,
-                program__country__in=selected_countries).count()
+        get_indicators = Indicator.objects.filter(
+            program__organization=request.user.activity_user.organization).distinct().order_by('-id')
 
-            agreement_awaiting_count = ProjectAgreement.objects.all().filter(
-                approval='awaiting approval', sector__in=sectors,
-                program__country__in=selected_countries).count()
+        get_collected_data = CollectedData.objects.filter(
+            program__organization=request.user.activity_user.organization)
 
-            complete_awaiting_count = ProjectComplete.objects.all().filter(
-                approval='awaiting approval',
-                project_agreement__sector__in=sectors,
-                program__country__in=selected_countries).count()
+        get_documents_count = Documentation.objects.filter(
+            program__organization=request.user.activity_user.organization).count()
 
-            agreement_open_count = ProjectAgreement.objects.all().filter(
-                Q(Q(approval='open') | Q(approval="") | Q(
-                    approval=None)), sector__id__in=sectors,
-                program__country__in=selected_countries).count()
-            complete_open_count = ProjectComplete.objects.all().filter(
-                Q(Q(approval='open') | Q(approval="") | Q(approval=None)),
-                project_agreement__sector__in=sectors,
-                program__country__in=selected_countries).count()
-            agreement_wait_count = ProjectAgreement.objects.all().filter(
-                Q(approval='in progress') & Q(
-                    Q(approval='in progress') | Q(approval=None) | Q(
-                        approval="")),
-                sector__in=sectors,
-                program__country__in=selected_countries).count()
-            complete_wait_count = ProjectComplete.objects.all().filter(
-                Q(approval='in progress') & Q(
-                    Q(approval='in progress') | Q(approval=None) | Q(
-                        approval="")),
-                project_agreement__sector__in=sectors,
-                program__country__in=selected_countries).count()
+        get_projects_awaiting_approval_count = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization,
+            approval='awaiting approval').count()
 
-        else:
-            get_site_profile = SiteProfile.objects.all().prefetch_related(
-                'country', 'district', 'province').filter(
-                country__in=selected_countries).filter(status=1)
-            get_site_profile_indicator = SiteProfile.objects.all()\
-                .prefetch_related('country', 'district', 'province').filter(
-                Q(collecteddata__program__country__in=selected_countries))\
-                .filter(status=1)
-            agreement_total_count = ProjectAgreement.objects.all().filter(
-                program__country__in=selected_countries).count()
-            complete_total_count = ProjectComplete.objects.all().filter(
-                program__country__in=selected_countries).count()
-            agreement_approved_count = ProjectAgreement.objects.all().filter(
-                approval='approved',
-                program__country__in=selected_countries).count()
-            complete_approved_count = ProjectComplete.objects.all().filter(
-                approval='approved',
-                program__country__in=selected_countries).count()
+        get_projects_approved_count = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization,
+            approval='approved').count()
 
-            agreement_awaiting_count = ProjectAgreement.objects.all().filter(
-                approval='awaiting approval',
-                program__country__in=selected_countries).count()
-            complete_awaiting_count = ProjectComplete.objects.all().filter(
-                approval='awaiting approval',
-                program__country__in=selected_countries).count()
-            agreement_open_count = ProjectAgreement.objects.all().filter(
-                Q(Q(approval='open') | Q(
-                    approval="") | Q(approval=None)),
-                program__country__in=selected_countries).count()
-            complete_open_count = ProjectComplete.objects.all().filter(
-                Q(Q(approval='open') | Q(
-                    approval="") | Q(approval=None)),
-                program__country__in=selected_countries).count()
-            agreement_wait_count = ProjectAgreement.objects.all().filter(
-                Q(approval='in progress') & Q(
-                    Q(approval='in progress') | Q(approval=None) | Q(
-                        approval="")),
-                program__country__in=selected_countries).count()
-            complete_wait_count = ProjectComplete.objects.all().filter(
-                Q(approval='in progress') &
-                Q(Q(approval='in progress') |
-                  Q(approval=None) | Q(approval="")),
-                program__country__in=selected_countries).count()
+        get_projects_rejected_count = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization,
+            approval='rejected').count()
 
+        get_projects_new_count = ProjectAgreement.objects.filter(
+            Q(program__organization=request.user.activity_user.organization) & (Q(approval='') | Q(approval=None) | Q(approval='New'))).count()
+
+        get_projects_in_progress_count = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization,
+            approval='in progress').count()
+        get_projects_tracking_count = ProjectComplete.objects.filter(
+            program__organization=request.user.activity_user.organization).count()
     else:
-        filter_for_quantitative_data_sums[
-            'indicator__program__id'] = program_id
+        get_projects = ProjectAgreement.objects.filter(program__id=program_id)
 
-        get_filtered_name = Program.objects.get(id=program_id)
-        agreement_total_count = ProjectAgreement.objects.all().filter(
-            program__id=program_id).count()
-        complete_total_count = ProjectComplete.objects.all().filter(
-            program__id=program_id).count()
-        agreement_approved_count = ProjectAgreement.objects.all().filter(
-            program__id=program_id, approval='approved').count()
-        complete_approved_count = ProjectComplete.objects.all().filter(
-            program__id=program_id, approval='approved').count()
-        agreement_open_count = ProjectAgreement.objects.all().filter(
-            program__id=program_id, approval='open').count()
-        complete_open_count = ProjectComplete.objects.all().filter(
-            Q(Q(approval='open') | Q(approval="")),
-            program__id=program_id).count()
-        agreement_wait_count = ProjectAgreement.objects.all().filter(
-            Q(program__id=program_id), Q(
-                approval='in progress') & Q(
-                Q(approval='in progress') | Q(approval=None) | Q(
-                    approval=""))).count()
-        complete_wait_count = ProjectComplete.objects.all().filter(
-            Q(program__id=program_id), Q(
-                approval='in progress') & Q(
-                Q(approval='in progress') | Q(approval=None) | Q(
-                    approval=""))).count()
-        get_site_profile = SiteProfile.objects.all().prefetch_related(
-            'country', 'district', 'province').filter(
-            projectagreement__program__id=program_id).filter(status=1)
-        get_site_profile_indicator = SiteProfile.objects.all()\
-            .prefetch_related('country', 'district', 'province').filter(
-            Q(collecteddata__program__id=program_id)).filter(status=1)
+        get_indicators = Indicator.objects.filter(
+            program__id=program_id).distinct().order_by('-id')
 
-        agreement_awaiting_count = ProjectAgreement.objects.all().filter(
-            program__id=program_id, approval='awaiting approval').count()
-        complete_awaiting_count = ProjectComplete.objects.all().filter(
+        get_collected_data = CollectedData.objects.filter(
+            program__id=program_id)
+
+        get_documents_count = Documentation.objects.filter(
+            program__id=program_id).count()
+
+        get_projects_awaiting_approval_count = ProjectAgreement.objects.filter(
             program__id=program_id, approval='awaiting approval').count()
 
-    get_quantitative_data_sums = CollectedData.objects.all() \
-        .filter(**filter_for_quantitative_data_sums) \
-        .exclude(achieved=None, periodic_target=None,
-                 program__funding_status="Archived") \
-        .order_by('indicator__program', 'indicator__number') \
-        .values('indicator__lop_target', 'indicator__program__id',
-                'indicator__program__name',
-                'indicator__number', 'indicator__name', 'indicator__id') \
-        .annotate(targets=Sum('periodic_target'), actuals=Sum('achieved'))
+        get_projects_approved_count = ProjectAgreement.objects.filter(
+            program__id=program_id, approval='approved').count()
 
-    # Evidence and Objectives are for the global leader dashboard
-    # items and are the same every time
-    count_evidence = CollectedData.objects.all().filter(
-        indicator__isnull=False) \
-        .values("indicator__program__country__country").annotate(
-        evidence_count=Count('evidence', distinct=True) + Count(
-            'activity_table', distinct=True),
-        indicator_count=Count('pk', distinct=True)).order_by('-evidence_count')
-    get_objectives = CollectedData.objects.filter(
-        indicator__strategic_objectives__isnull=False,
-        indicator__program__country__in=selected_countries) \
-        .exclude(
-        achieved=None,
-        periodic_target=None) \
-        .order_by('indicator__strategic_objectives__name') \
-        .values('indicator__strategic_objectives__name') \
-        .annotate(
-        indicators=Count('indicator__pk', distinct=True),
-        targets=Sum('periodic_target__target'), actuals=Sum('achieved'))
-    table = IndicatorDataTable(get_quantitative_data_sums)
-    table.paginate(page=request.GET.get('page', 1), per_page=20)
+        get_projects_rejected_count = ProjectAgreement.objects.filter(
+            program__id=program_id, approval='rejected').count()
 
-    count_program = Program.objects.all().filter(
-        country__in=selected_countries, funding_status='Funded').count()
+        get_projects_new_count = ProjectAgreement.objects.filter(
+            Q(program__id=program_id) & (Q(approval='') | Q(approval=None) | Q(approval='New'))).count()
 
-    approved_by = ActivityUser.objects.get(user_id=request.user)
-    user_pending_approvals = ProjectAgreement.objects.filter(
-        approved_by=approved_by).exclude(approval='approved')
+        get_projects_in_progress_count = ProjectAgreement.objects.filter(
+            program__id=program_id,
+            approval='in progress').count()
 
-    count_program_agreement = ProjectAgreement.objects.all().filter(
-        program__country__in=selected_countries,
-        program__funding_status='Funded').values('program').distinct().count()
-    count_indicator = Indicator.objects.all().filter(
-        program__country__in=selected_countries,
-        program__funding_status='Funded').values('program').distinct().count()
-    count_evidence_adoption = CollectedData.objects.all().filter(
-        indicator__isnull=False,
-        indicator__program__country__in=selected_countries) \
-        .values("indicator__program__country__country") \
-        .annotate(evidence_count=Count('evidence', distinct=True) + Count(
-            'activity_table', distinct=True),
-        indicator_count=Count('pk', distinct=True)).order_by(
-        '-evidence_count')
-    count_program = int(count_program)
-    count_program_agreement = int(count_program_agreement)
+        get_projects_tracking_count = ProjectComplete.objects.filter(
+            program__id=program_id).count()
 
-    green = "#5CB85C"
-    yellow = "#E89424"
-    red = "#B30838"
+    get_stakeholders_count = Stakeholder.objects.filter(
+        organization=request.user.activity_user.organization).count()
 
-    # 66% or higher = Green above 25% below %66 is Orange and below %25 is Red
+    get_contacts_count = Contact.objects.filter(
+        organization=request.user.activity_user.organization).count()
 
-    if count_program_agreement >= float(count_program / 1.5):
-        workflow_adoption = green
-    elif count_program / 1.5 > count_program_agreement > count_program / 4:
-        workflow_adoption = yellow
-    elif count_program_agreement <= count_program / 4:
-        workflow_adoption = red
-
-    if count_indicator >= float(count_program / 1.5):
-        indicator_adoption = green
-    elif count_program / 1.5 > count_indicator > count_program / 4:
-        indicator_adoption = yellow
-    elif count_indicator <= count_program / 4:
-        indicator_adoption = red
-
-    total_evidence_adoption_count = 0
-    total_indicator_data_count = 0
-    for country in count_evidence_adoption:
-        total_evidence_adoption_count = total_evidence_adoption_count + \
-            country['evidence_count']
-        total_indicator_data_count = total_indicator_data_count + \
-            country['indicator_count']
-
-    if total_evidence_adoption_count >= float(
-            total_indicator_data_count / 1.5):
-        evidence_adoption = green
-    elif total_indicator_data_count / 1.5 > total_evidence_adoption_count > \
-            total_indicator_data_count / 4:
-        evidence_adoption = yellow
-    elif total_evidence_adoption_count <= total_indicator_data_count / 4:
-        evidence_adoption = red
+    get_locations_query = SiteProfile.objects
+    get_indicators_kpi_count = get_indicators.filter(
+        key_performance_indicator=True).count()
+    get_latest_indicators = get_indicators.filter(
+        key_performance_indicator=True)[:10]
 
     return render(request, "index.html", {
-        'agreement_total_count': agreement_total_count,
-        'agreement_approved_count': agreement_approved_count,
-        'agreement_open_count': agreement_open_count,
-        'agreement_wait_count': agreement_wait_count,
-        'agreement_awaiting_count': agreement_awaiting_count,
-        'complete_open_count': complete_open_count,
-        'complete_approved_count': complete_approved_count,
-        'complete_total_count': complete_total_count,
-        'complete_wait_count': complete_wait_count,
-        'complete_awaiting_count': complete_awaiting_count,
-        'programs': get_programs,
-        'get_site_profile': get_site_profile,
-        'countries': user_countries,
-        'selected_countries': selected_countries,
-        'get_filtered_name': get_filtered_name,
-        'get_sectors': get_sectors,
-        'get_all_sectors': get_all_sectors,
-        'sector': sector, 'table': table,
-        'get_quantitative_data_sums': get_quantitative_data_sums,
-        'count_evidence': count_evidence,
-        'get_objectives': get_objectives,
-        'selected_countries_list': selected_countries_list,
-        'get_site_profile_indicator': get_site_profile_indicator,
-        'get_agency_site': get_agency_site,
-        'workflow_adoption': workflow_adoption,
-        'count_program': count_program,
-        'count_program_agreement': count_program_agreement,
-        'indicator_adoption': indicator_adoption,
-        'count_indicator': count_indicator,
-        'evidence_adoption': evidence_adoption,
-        'count_evidence_adoption': total_evidence_adoption_count,
-        'count_indicator_data': total_indicator_data_count,
-        'selected_countries_label_list': selected_countries_label_list,
-        'user_pending_approvals': user_pending_approvals,
+        'selected_program': selected_program,
+        'get_programs': get_programs,
+        'get_projects': get_projects,
+        'get_indicators': get_indicators,
+        'get_latest_indicators': get_latest_indicators,
+        'get_indicators_kpi_count': get_indicators_kpi_count,
+        'get_collected_data_count': get_collected_data.count(),
+        'get_stakeholders_count': get_stakeholders_count,
+        'get_contacts_count': get_contacts_count,
+        'get_documents_count': get_documents_count,
+        'get_active_locations_count': get_locations_query.filter(status=True).count(),
+        'get_locations_count': get_locations_query.count(),
+        'get_projects_awaiting_approval_count': get_projects_awaiting_approval_count,
+        'get_projects_approved_count': get_projects_approved_count,
+        'get_projects_rejected_count': get_projects_rejected_count,
+        'get_projects_new_count': get_projects_new_count,
+        'get_projects_in_progress_count': get_projects_in_progress_count,
+        'get_projects_tracking_count': get_projects_tracking_count,
         'map_api_key': settings.GOOGLE_MAP_API_KEY
     })
 
@@ -394,7 +187,8 @@ def activate_acccount(request, uidb64, token):
         send_welcome_email(request, user)
 
         # login(request, user)
-        messages.success(request, 'Thanks, your email address has been confirmed')
+        messages.success(
+            request, 'Thanks, your email address has been confirmed')
         return render(request, 'registration/login.html', {'invite_uuid': 'none'})
     else:
         return HttpResponse('Activation link is invalid!')
@@ -470,7 +264,8 @@ def register(request, invite_uuid):
                         # send welcome email
                         send_welcome_email(request, user)
 
-                        messages.success(request, 'Thanks, your email address has been confirmed')
+                        messages.success(
+                            request, 'Thanks, your email address has been confirmed')
                         return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
                 except UserInvite.DoesNotExist:
@@ -484,7 +279,7 @@ def register(request, invite_uuid):
                     'domain': request.build_absolute_uri('/').strip('/'),
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': account_activation_token.make_token(user),
-                    }
+                }
                 email_txt = 'emails/registration/email_confirmation.txt'
                 email_html = 'emails/registration/email_confirmation.html'
 
@@ -595,7 +390,7 @@ def register_organization(request):
             organization_url=organization_url,
             location=location,
             activity_url=activity_url
-            )
+        )
         if org:
             user = ActivityUser.objects.get(user=request.user)
 
@@ -623,7 +418,8 @@ def profile(request):
             instance=activity_user_obj,
             initial={'username': request.user}
         )
-        user_form = NewUserRegistrationForm(request.POST or None, instance=user_obj)
+        user_form = NewUserRegistrationForm(
+            request.POST or None, instance=user_obj)
 
         if request.method == 'POST':
             data = request.POST
@@ -641,22 +437,23 @@ def profile(request):
             }
             # save user
             User.objects.filter(pk=user_obj.id).update(**user_object)
-            user = User.objects.get(pk=user_obj.pk)
+            user = User.objects.get(pk=request.user.id)
             if user:
+
                 # save activity user after updating name
-                activity_user = activity_user_obj
-                activity_user.employee_number = activity_user_object['employee_number']
-                activity_user.organization = Organization.objects.get(pk=int(activity_user_object['organization']))
-                activity_user.title = activity_user_object['title']
-                activity_user.name = '{} {}'.format(user.first_name, user.last_name)
+                activity_user = ActivityUser.objects.get(user=request.user)
+                activity_user.organization = Organization.objects.get(
+                    pk=int(activity_user_object['organization']))
+                activity_user.name = '{} {}'.format(
+                    user.first_name, user.last_name)
                 activity_user.save()
 
-            messages.success(request, 'Your profile has been updated.', fail_silently=False)
+            messages.success(
+                request, 'Your profile has been updated.', fail_silently=True)
 
         return render(request, 'registration/profile.html', {
             'form': form,
             'user_form': user_form,
-            'helper': RegistrationForm.helper
         })
     else:
         return HttpResponseRedirect('/accounts/register')
@@ -790,7 +587,8 @@ def admin_user_edit(request, pk):
 
     form = RegistrationForm(request.POST or None, instance=activity_user_obj,
                             initial={'username': request.user})
-    user_form = NewUserRegistrationForm(request.POST or None, instance=user_obj)
+    user_form = NewUserRegistrationForm(
+        request.POST or None, instance=user_obj)
 
     if request.method == 'POST':
         data = request.POST
@@ -816,7 +614,8 @@ def admin_user_edit(request, pk):
             activity_user.organization = Organization.objects.get(
                 pk=int(activity_user_object['organization']))
             activity_user.title = activity_user_object['title']
-            activity_user.name = '{} {}'.format(user.first_name, user.last_name)
+            activity_user.name = '{} {}'.format(
+                user.first_name, user.last_name)
             activity_user.save()
 
         messages.success(

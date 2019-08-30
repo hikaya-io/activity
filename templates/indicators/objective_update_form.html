@@ -17,11 +17,15 @@
 	<div class="sub-navigation">
 		<div class="sub-navigation-header">
 			<h4 class="page-title">
-				Objective Edit Form
+				{% if  current_objective.name %}
+					{{ current_objective.name }}{% 
+				else %}
+					Objective Edit Form
+				{% endif %}
 			</h4>
 		</div>
 	</div>
-	<div>
+	<div class="admin-content">
 		{% block editform %} {% crispy form %} {% endblock editform %}
 	</div>
 </div>

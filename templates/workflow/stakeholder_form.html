@@ -24,16 +24,18 @@
 	<div class="sub-navigation">
 		<div class="sub-navigation-header">
 			<h4 class="page-title">
-				Stakeholder Form
+			 {% if stakeholder_name %} {{stakeholder_name}}{% else %}Stakeholder Form{% endif %}
 			</h4>
 		</div>
 		<div class="sub-navigation-actions">
 			{% include "form_guidance.html" %}
 		</div>
 	</div>
-  {% csrf_token %}
-  {% load crispy_forms_tags %}
-  {% crispy form %}
+	<div class="admin-content">
+		{% csrf_token %}
+		{% load crispy_forms_tags %}
+		{% crispy form %}
+	</div>
 </div>
 <script>
     $(document).ready(() => {

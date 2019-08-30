@@ -17,25 +17,24 @@
 		<li class="active">Add Training</li>
 	</ul> {% endcomment %}
 	<ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">My Dashboard</a></li>
-   <li><a href="/formlibrary/training_list/0/0/">Trainings</a></li>
-	<li class="active">Details</li>
-  </ul>
+    	<li><a href="{% url 'index' %}">My Dashboard</a></li>
+   		<li><a href="/formlibrary/training_list/0/0/">Trainings</a></li>
+		<li class="active">Details</li>
+	</ul>
 	{% endblock %}
 
 	<!-- Sub navigation -->
 	<div class="sub-navigation">
 		<div class="sub-navigation-header">
 			<h4 class="page-title">
-				{{ form_title }}
+				{% if training_name %}{{ training_name }} {% else %} {{ form_title }} {% endif %}
 			</h4>
 		</div>
-		<div class="sub-navigation-actions">
-			{% include "form_guidance.html" %}
-		</div>
+	</div>
+	<div class="admin-content">
+		{% csrf_token %} {% load crispy_forms_tags %} {% crispy form %}
 	</div>
 
-	{% csrf_token %} {% load crispy_forms_tags %} {% crispy form %}
 </div>
 <script>
 	$('#reset-id-reset').click(() => {
