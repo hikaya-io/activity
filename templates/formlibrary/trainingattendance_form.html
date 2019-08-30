@@ -12,10 +12,15 @@
 		<strong>{{ error | escape }}</strong>
 	</div>
 	{% endfor %} {% endif %} {% block breadcrumbs %}
-	<ul class="breadcrumb">
+	{% comment %} <ul class="breadcrumb">
 		<li><a href="/formlibrary/training_list/0/0/">Training List</a></li>
 		<li class="active">Add Training</li>
-	</ul>
+	</ul> {% endcomment %}
+	<ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
+   <li><a href="/formlibrary/training_list/0/0/">Trainings</a></li>
+	<li class="active">Details</li>
+  </ul>
 	{% endblock %}
 
 	<!-- Sub navigation -->

@@ -60,15 +60,15 @@
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="/">Home Dashboard</a></li>
+    <li><a href="/">My Dashboard</a></li>
     <li>
       <a href="/customdashboard/program_list/0/"
-        >{{ request.user.activity_user.organization.level_1_label }}s Reports
-        Dashboard</a
+        >
+        Dashboards</a
       >
     </li>
     <li class="active">
-      {{ get_program.name }}
+      Details
     </li>
   </ul>
   {% endblock %}
