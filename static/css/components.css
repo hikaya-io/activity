@@ -55,6 +55,7 @@
 /* states */
 .hikaya-active a {
     border-left: 5px #25CED1 solid;
+    border-radius: 0px !important;
 }
 .hikaya-active a:hover {
     color: #01579B;

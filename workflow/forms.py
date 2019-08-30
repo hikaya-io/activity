@@ -2143,7 +2143,7 @@ class ContactForm(forms.ModelForm):
                 css_class='form-row'
             ),
             'address',
-            Reset('reset', 'Discard Changes', css_class='btn btn-md btn-default'),
+            Reset('reset', 'Close', css_class='btn btn-md btn-default'),
             Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
         )
 
