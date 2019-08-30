@@ -2,12 +2,13 @@
 <div class="container">
 	{% block breadcrumbs %}
 	<ul class="breadcrumb">
+		<li><a href="{% url 'index' %}">My Dashboard</a></li>
 		<li class="active">
 			<a href="/indicators">
 				{{ request.user.activity_user.organization.indicator_label }}s
 			</a>
 		</li>
-		<li><a href="/workflow/objectives">Objectives</a></li>
+		<li><a href="/indicators/objectives">Objectives</a></li>
 		<li class="active">{{ current_objective.name }}</li>
 	</ul>
 	{% endblock %}

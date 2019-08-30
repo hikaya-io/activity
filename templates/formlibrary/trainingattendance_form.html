@@ -12,9 +12,14 @@
 		<strong>{{ error | escape }}</strong>
 	</div>
 	{% endfor %} {% endif %} {% block breadcrumbs %}
-	<ul class="breadcrumb">
+	{% comment %} <ul class="breadcrumb">
 		<li><a href="/formlibrary/training_list/0/0/">Training List</a></li>
-		<li class="active">Training Attendance Form</li>
+		<li class="active">Add Training</li>
+	</ul> {% endcomment %}
+	<ul class="breadcrumb">
+    	<li><a href="{% url 'index' %}">My Dashboard</a></li>
+   		<li><a href="/formlibrary/training_list/0/0/">Trainings</a></li>
+		<li class="active">Details</li>
 	</ul>
 	{% endblock %}
 
@@ -25,9 +30,6 @@
 				{% if training_name %}{{ training_name }} {% else %} {{ form_title }} {% endif %}
 			</h4>
 		</div>
-		{% comment %} <div class="sub-navigation-actions">
-			{% include "form_guidance.html" %}
-		</div> {% endcomment %}
 	</div>
 	<div class="admin-content">
 		{% csrf_token %} {% load crispy_forms_tags %} {% crispy form %}

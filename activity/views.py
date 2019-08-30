@@ -113,10 +113,10 @@ def index(request, program_id=0):
             organizations__id__in=[selected_program.organization.id])
 
         get_stakeholders_count = Stakeholder.objects.filter(
-            organizations=selected_program.organization).count()
+            organization=selected_program.organization).count()
 
         get_contacts_count = Contact.objects.filter(
-            organizations=selected_program.organization).count()
+            organization=selected_program.organization).count()
 
         get_projects = ProjectAgreement.objects.filter(program__id=program_id)
 

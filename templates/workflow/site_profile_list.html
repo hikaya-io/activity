@@ -9,15 +9,15 @@
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
-    <li class="active">Site Profiles</li>
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
+    <li class="active">Locations</li>
   </ul>
   {% endblock %}
 
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">Site Profiles List</h4>
+      <h4 class="page-title">Location List</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
@@ -144,8 +144,10 @@
       {% for item in get_site_profile %}
       <tr>
         <td>
-		  <a href="/workflow/siteprofile_update/{{ item.id }}">
-			{{ item.name }}</a>
+          <a href="/workflow/siteprofile_update/{{ item.id }}" 
+            data-toggle="tooltip" 
+            title="{{ item.name }}">
+			    {{ item.name | truncatechars:50 }}</a>
         </td>
         <td>{{ item.type }}</td>
         <td>{{ item.office }}</td>
@@ -216,21 +218,5 @@
     </tbody>
   </table>
 
-  <!-- Modal -->
-  <div
-    class="modal fade"
-    id="importModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="myModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content"></div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-  </div>
-  <!-- /.modal -->
 </div>
 {% endblock content %}

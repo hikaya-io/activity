@@ -1,11 +1,16 @@
 {% extends "base.html" %} {% block content %}
 {% include './modals/add_distribution_modal.html' %}
+
+<script>
+  $(document).ready(() => {
+    $('#distributionTable').dataTable()
+  })
+</script>
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
-    <li class="active">Form Library</li>
-    <li class="active">Distribution</li>
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
+    <li class="active">Distributions</li>
   </ul>
   {% endblock %}
 
@@ -41,8 +46,10 @@
         {% for distribution in get_distribution %}
         <tr>
           <td>
-            <a href="/formlibrary/distribution_update/{{distribution.id}}/">
-              {{ distribution.distribution_name }}
+            <a href="/formlibrary/distribution_update/{{distribution.id}}/" 
+              data-toggle="tooltip" 
+              title="{{ distribution.distribution_name }}">
+              {{ distribution.distribution_name | truncatechars:50 }}
             </a>
           </td>
           <td>{{ distribution.start_date | date }}</td>
@@ -86,78 +93,4 @@
         {% endfor %}
       </tbody>
   </table>
-  <!-- <table class="table" id="distributiontable"></table> -->
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('#distributionTable').DataTable();
-      $('select#program').change(function() {
-        if ($(this).val() == 'all') {
-          $('select#project').html('<option>Project(s)</option>');
-          $('select#project').attr('disabled', true);
-        } else {
-          var url = '/formlibrary/getagreements/' + $(this).val() + '/0/';
-          program_id = $(this).val();
-          $.getJSON(url, function(models) {
-            var options = '<option value="all">Project</option>';
-
-            if (!$.trim(models['get_agreements'])) {
-              $('select#project').html('<option>project(s)</option>');
-              $('select#project').attr('disabled', true);
-              program_filter(program_id, 0);
-            } else {
-              data = JSON.parse(models['get_agreements']);
-              for (var i = 0; i < data.length; i++) {
-                options +=
-                  '<option value="' +
-                  data[i]['id'] +
-                  '">' +
-                  data[i]['project_name'] +
-                  '</option>';
-              }
-
-              $('select#project').html(options);
-              $('select#project option:first').attr('selected', 'selected');
-              $('select#project').attr('disabled', false);
-              program_filter(program_id, 0);
-            }
-          });
-        }
-      });
-
-      $('select#project').change(function() {
-        project_id = $(this).val();
-        program_id = $('select#program').val();
-        program_filter(program_id, project_id);
-      });
-      program_filter(0, 0);
-    });
-
-    function program_filter(program_id, project_id) {
-      // Filter distributions
-
-      if (program_id != 0 && project_id == 0) {
-        $.getJSON(
-          '/formlibrary/distribution_objects/' + program_id + '/0/',
-          function(data) {
-            show_training_table(data['get_distribution']);
-          },
-        );
-      } else if (program_id != 0 && project_id != 0) {
-        $.getJSON(
-          '/formlibrary/distribution_objects/' +
-            program_id +
-            '/' +
-            project_id +
-            '/',
-          function(data) {
-            show_training_table(data['get_distribution']);
-          },
-        );
-      } else {
-        $.getJSON('/formlibrary/distribution_objects/0/0/', function(data) {
-          show_training_table(data['get_distribution']);
-        });
-      }
-    }
-  </script>
 {% endblock content %}
