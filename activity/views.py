@@ -96,6 +96,8 @@ def index(request, program_id=0):
     get_contacts_count = Contact.objects.filter(
         organization=request.user.activity_user.organization).count()
 
+    get_locations_query = SiteProfile.objects
+
     return render(request, "index.html", {
         'selected_program': selected_program,
         'get_programs': get_programs,
@@ -106,6 +108,8 @@ def index(request, program_id=0):
         'get_stakeholders_count': get_stakeholders_count,
         'get_contacts_count': get_contacts_count,
         'get_documents_count': get_documents_count,
+        'get_active_locations_count': get_locations_query.filter(status=True).count(),
+        'get_locations_count': get_locations_query.count(),
         'map_api_key': settings.GOOGLE_MAP_API_KEY
     })
 

@@ -186,11 +186,19 @@
         <div class="col-md-2 col-xs-12">
           <div class="row">
             <div class="col-md-12 col-xs-6">
-              <a class="box box-info" href="/">
+              {% if selected_program %}
+              <a class="box box-info" href="/workflow/siteprofile_list/{{selected_program.id}}/0/list/">
                 <p class="box-info-label">Active Locations</p>
-                <p class="box-info-number">890</p>
-                <p class="box-info-text">out of 1000 locations</p>
+                <p class="box-info-number">{{ get_active_locations_count }}</p>
+                <p class="box-info-text">out of {{ get_locations_count }} locations</p>
               </a>
+              {% else %}
+              <a class="box box-info" href="/workflow/siteprofile_list/0/0/list/">
+                <p class="box-info-label">Active Locations</p>
+                <p class="box-info-number">{{ get_active_locations_count }}</p>
+                <p class="box-info-text">out of {{ get_locations_count }} locations</p>
+              </a>
+              {% endif %}
             </div>
 
             <div class="col-md-12 col-xs-6">
