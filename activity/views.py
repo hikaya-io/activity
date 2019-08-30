@@ -19,7 +19,7 @@ from indicators.models import CollectedData, Indicator
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, Country, ActivityUser,
-    ActivitySites, ActivityBookmarks, FormGuidance, Organization, UserInvite
+    ActivitySites, ActivityBookmarks, FormGuidance, Organization, UserInvite, Stakeholder, Contact
 )
 from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links, send_invite_emails, \
@@ -72,15 +72,21 @@ def index(request, program_id=0):
 
         get_indicators = Indicator.objects.filter(
             program__organization=request.user.activity_user.organization).order_by('-id')
+
         get_collected_data = CollectedData.objects.filter(
             program__organization=request.user.activity_user.organization)
-
     else:
         get_projects = ProjectAgreement.objects.filter(program__id=program_id)
         get_indicators = Indicator.objects.filter(
             program__id=program_id).order_by('-id')
         get_collected_data = CollectedData.objects.filter(
             program__id=program_id)
+
+    get_stakeholders_count = Stakeholder.objects.filter(
+        organization=request.user.activity_user.organization).count()
+
+    get_contacts_count = Contact.objects.filter(
+        organization=request.user.activity_user.organization).count()
 
     return render(request, "index.html", {
         'selected_program': selected_program,
@@ -89,6 +95,8 @@ def index(request, program_id=0):
         'get_indicators': get_indicators,
         'get_latest_indicators': get_indicators[:10],
         'get_collected_data_count': get_collected_data.count(),
+        'get_stakeholders_count': get_stakeholders_count,
+        'get_contacts_count': get_contacts_count,
         'map_api_key': settings.GOOGLE_MAP_API_KEY
     })
 
