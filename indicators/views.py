@@ -10,11 +10,11 @@ import re
 
 from .export import IndicatorResource, CollectedDataResource
 from .tables import IndicatorDataTable
-from .forms import IndicatorForm, CollectedDataForm, StrategicObjectiveForm
+from .forms import IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
     CollectedData, IndicatorType, Level, ExternalServiceRecord,
-    ExternalService, ActivityTable, StrategicObjective
+    ExternalService, ActivityTable, StrategicObjective, Objective
 )
 
 from django.db.models import Count, Sum, Min, Q
@@ -469,6 +469,7 @@ class IndicatorUpdate(UpdateView):
 
         context.update({'i_name': get_indicator.name})
         context['program_id'] = get_indicator.program.all()[0].id
+        context['active'] = ['indicators']
         context['periodic_targets'] = PeriodicTarget.objects\
             .filter(indicator=get_indicator)\
             .annotate(num_data=Count('collecteddata'))\
@@ -507,6 +508,9 @@ class IndicatorUpdate(UpdateView):
     def get_form_kwargs(self):
         kwargs = super(IndicatorUpdate, self).get_form_kwargs()
         kwargs['request'] = self.request
+        program =  Indicator.objects.all().get(id=int(self.kwargs['pk'])).program.all()
+
+        kwargs['program_id'] = program[0].id
         program = Indicator.objects.all().filter(
             id=self.kwargs['pk']).values_list("program__id", flat=True)
         kwargs['program'] = program
@@ -1907,6 +1911,59 @@ def add_indicator(request):
     return HttpResponse({'success': True})
 
 
+def objectives_list(request):
+    if request.method == 'POST':
+        data = request.POST
+
+        objective = Objective(
+            name=data.get('objective_name'),
+            description=data.get('description'),
+            program_id=int(data.get('program')),
+            parent_id=int(
+                data.get('parent_objective')) if data.get('parent_objective') else None
+        )
+
+        objective.save()
+
+        return HttpResponseRedirect('/indicators/objectives')
+
+    get_all_objectives = Objective.objects.filter(
+        program__organization=request.user.activity_user.organization
+    )
+    get_programs = Program.objects.filter(
+        organization=request.user.activity_user.organization)
+
+    context = {
+        'get_all_objectives': get_all_objectives,
+        'active': ['components'],
+        'get_programs': get_programs
+    }
+
+    return render(request, 'components/objectives.html', context)
+
+
+def objectives_tree(request):
+    get_all_objectives = Objective.objects.filter(
+        program__organization=request.user.activity_user.organization)
+
+    objectives_as_json = [{'id': 0, 'name': 'Strategic Objectives'}]
+
+    for objective in get_all_objectives:
+        data = {'id': objective.id, 'name': objective.name}
+
+        if objective.parent is None:
+            data['parent'] = 0
+        else:
+            data['parent'] = objective.parent.id
+
+        objectives_as_json.append(data)
+
+    context = {'get_all_objectives': get_all_objectives,
+               'objectives_as_json': objectives_as_json}
+
+    return render(request, 'components/objectives-tree.html', context)
+
+
 class StrategicObjectiveUpdateView(UpdateView):
     model = StrategicObjective
     template_name_suffix = '_update_form'
@@ -1922,6 +1979,25 @@ class StrategicObjectiveUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(StrategicObjectiveUpdateView, self).get_context_data(**kwargs)
+        context['current_objective'] = self.get_object()
+        return context
+
+
+class ObjectiveUpdateView(UpdateView):
+    model = Objective
+    template_name_suffix = '_update_form'
+    success_url = '/indicators/objectives'
+    form_class = ObjectiveForm
+
+    # add the request to the kwargs
+    def get_form_kwargs(self):
+        kwargs = super(ObjectiveUpdateView, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        kwargs['current_objective'] = self.get_object()
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(ObjectiveUpdateView, self).get_context_data(**kwargs)
         context['current_objective'] = self.get_object()
         return context
 

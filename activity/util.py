@@ -168,7 +168,11 @@ def send_invite_emails(subject, email_from, email_to, data):
         messages = list()
         for email in email_to:
             link = '{}{}/'.format(data['link'], email.invite_uuid)
-            email_context = {'organization': email.organization.name, 'link': link}
+            email_context = {
+                'organization': email.organization.name,
+                'link': link,
+                'email': email.email
+            }
             email_txt = loader.render_to_string('emails/invite.txt', email_context)
             email_html = loader.get_template('emails/invite.html')
             email_html_content = email_html.render(email_context)
@@ -180,7 +184,11 @@ def send_invite_emails(subject, email_from, email_to, data):
         connection.send_messages(messages)
     else:
         link = '{}{}/'.format(data['link'], email_to[0].invite_uuid)
-        email_context = {'organization': email_to[0].organization, 'link': link}
+        email_context = {
+            'organization': email_to[0].organization.name,
+            'link': link,
+            'email': email_to[0].email
+        }
         email_txt = loader.render_to_string('emails/invite.txt', email_context)
         email_html = loader.get_template('emails/invite.html')
         email_html_content = email_html.render(email_context)

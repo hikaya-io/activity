@@ -2610,56 +2610,6 @@ def import_service(service_id=1, deserialize=True):
     return data
 
 
-def objectives_list(request):
-    if request.method == 'POST':
-        data = request.POST
-        activity_user = ActivityUser.objects.filter(user=request.user).first()
-        parent = None
-        if data.get('parent_objective'):
-            parent = int(data.get('parent_objective'))
-
-        parent_objective = StrategicObjective.objects.filter(
-            id=parent).first()
-
-        objective = StrategicObjective(
-            name=data.get('objective_name'),
-            description=data.get('description'),
-            organization=activity_user.organization,
-            parent=parent_objective)
-
-        objective.save()
-
-        return HttpResponseRedirect('/workflow/objectives')
-
-    get_all_objectives = StrategicObjective.objects.all()
-
-    context = {'get_all_objectives': get_all_objectives,
-               'active': ['components']}
-
-    return render(request, 'components/objectives.html', context)
-
-
-def objectives_tree(request):
-    get_all_objectives = StrategicObjective.objects.all()
-
-    objectives_as_json = [{'id': 0, 'name': 'Strategic Objectives'}]
-
-    for objective in get_all_objectives:
-        data = {'id': objective.id, 'name': objective.name}
-
-        if objective.parent is None:
-            data['parent'] = 0
-        else:
-            data['parent'] = objective.parent.id
-
-        objectives_as_json.append(data)
-
-    context = {'get_all_objectives': get_all_objectives,
-               'objectives_as_json': objectives_as_json}
-
-    return render(request, 'components/objectives-tree.html', context)
-
-
 def service_json(request, service):
     """
     For populating service indicators in dropdown

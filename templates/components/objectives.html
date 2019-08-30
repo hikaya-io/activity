@@ -3,7 +3,10 @@
 <script>
   $(document).ready(() => {
     $('#parentObjective').select2({
-      placeholder: 'Select parent (optional)',
+      theme: 'bootstrap',
+      dropdownParent: $('#addObjectiveModal'),
+    });
+    $('#program').select2({
       theme: 'bootstrap',
       dropdownParent: $('#addObjectiveModal'),
     });
@@ -137,7 +140,7 @@
         <div class="modal-body">
           {% csrf_token %}
           <div class="form-group">
-            <label for="objectiveName">Objective Name</label>
+            <label for="objectiveName">Objective Name*</label>
             <input
               type="text"
               id="objectiveName"
@@ -159,6 +162,17 @@
               {% for objective in get_all_objectives %}
               <option value="{{ objective.id }}">{{ objective.name }}</option>
               {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="program">Program*</label>
+            <select class="form-control" id="program" name="program" required>
+              <option value=""></option>
+              {% for item in get_programs %} {% if item.name %}
+              <option value="{{ item.id }} ">
+                {{ item.name | truncatechars:50 }}
+              </option>
+              {% endif %}{% endfor %}
             </select>
           </div>
 

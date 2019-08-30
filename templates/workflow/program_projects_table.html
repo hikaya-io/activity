@@ -37,22 +37,18 @@
           </button>
           <ul class="dropdown-menu">
             <li class="dropdown-header">Related</li>
-            <li>
               {% if project.approval == "approved" %}
-                <a>Project Initiation</a>
+                <li class="disabled"><a><span class="glyphicon glyphicon-lock"></span> Project Initiation</a></li>
               {% else %}
-                <a href="/workflow/projectagreement_update/{{ project.id }}">Project Initiation</a>
+                <li><a href="/workflow/projectagreement_update/{{ project.id }}">Project Initiation</a></li>
               {% endif%}
-            </li>
-            <li>
               {% if item.projectcomplete %}
-                <a  href="/workflow/projectcomplete_update/{{ project.projectcomplete.id }}">
+                <li><a href="/workflow/projectcomplete_update/{{ project.projectcomplete.id }}">
                   Project Tracking
-                </a>
+                </a></li>
               {% else %}
-                <a>Project Tracking</a>
+                <li class="disabled"><a><span class="glyphicon glyphicon-lock"></span> Project Tracking</a></li>
               {% endif%}
-            </li>
             <li><a href="">Sites</a></li>
             <li><a href="">Stakeholders</a></li>
             <li><a href="">Checklist</a></li>

@@ -1,3 +1,15 @@
 Invitation to joing {{organization}} on Hikaya
 Click on the invitation link below to register and be a member of {{organization}} on Hikaya Activity
 Copy link: {{link}}
+
+You've been invited to join {{organization}}.
+Click on the link below to complete your user registration.
+
+Activity is an open source product brought to you by your friends at Hikaya 
+
+{{link}}
+
+Copyright © 2019 Hikaya
+All rights reserved.
+
+This email was sent to <{{email}}> because you created an Activity account.

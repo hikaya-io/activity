@@ -25,15 +25,11 @@ from activity.tables import IndicatorDataTable
 from activity.util import get_country, get_nav_links, send_invite_emails, \
     send_single_mail
 from activity.forms import (
-    RegistrationForm, BookmarkForm, OrganizationEditForm)
-from activity.settings import PROJECT_ROOT
+    RegistrationForm, BookmarkForm, NewUserRegistrationForm)
 from django.core import serializers
 from .tokens import account_activation_token
-from django.core.mail import EmailMessage
-from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
@@ -174,23 +170,13 @@ def activate_acccount(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        mail_subject = 'Welcome to Activity'
-        data = {
-            'user': user,
-            'domain': request.build_absolute_uri('/').strip('/'),
-        }
-        email_txt = 'emails/registration/welcome.txt'
-        email_html = 'emails/registration/welcome.html'
 
-        send_single_mail(
-            mail_subject,
-            'Hikaya <team.hikaya@gmail.com>',
-            [user.email],
-            data, email_txt,
-            email_html
-        )
+        # send welcome mail
+        send_welcome_email(request, user)
+
         # login(request, user)
-        return redirect('/accounts/login/')
+        messages.success(request, 'Thanks, your email address has been confirmed')
+        return render(request, 'registration/login.html', {'invite_uuid': 'none'})
     else:
         return HttpResponse('Activation link is invalid!')
 
@@ -261,7 +247,12 @@ def register(request, invite_uuid):
                     if activity_user:
                         # delete the invitation
                         invite.delete()
-                        return redirect('/accounts/login/')
+
+                        # send welcome email
+                        send_welcome_email(request, user)
+
+                        messages.success(request, 'Thanks, your email address has been confirmed')
+                        return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
                 except UserInvite.DoesNotExist:
                     return HttpResponse({
@@ -304,6 +295,22 @@ def register(request, invite_uuid):
         return render(request, 'registration/register.html', invite_uuid)
 
 
+def send_welcome_email(request, user):
+    mail_subject = 'Welcome to Activity'
+    data = {'user': user, 'domain': request.build_absolute_uri('/').strip('/')}
+    email_txt = 'emails/registration/welcome.txt'
+    email_html = 'emails/registration/welcome.html'
+
+    send_single_mail(
+        mail_subject,
+        'Hikaya <team.hikaya@gmail.com>',
+        [user.email],
+        data,
+        email_txt,
+        email_html
+    )
+
+
 def set_invite_uuid(invite_uuid):
     if invite_uuid != 'none':
         try:
@@ -344,7 +351,7 @@ def user_login(request):
                 return HttpResponseRedirect('/accounts/register/organization')
 
         else:
-            render(request, 'registration/login.html')
+            return render(request, 'registration/login.html')
     return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
 
@@ -371,12 +378,12 @@ def register_organization(request):
             activity_url=activity_url
         )
         if org:
-            user = ActivityUser.objects.filter(user=request.user).first()
-            if not user.organization:
-                user.organization = org
-                user.save()
-                user.organizations.add(org)
-            return redirect('admin_profile_settings')
+            user = ActivityUser.objects.get(user=request.user)
+
+            user.organization = org
+            user.save()
+            user.organizations.add(org)
+            return redirect('/')
         else:
             return redirect('register_organization')
     else:
@@ -390,19 +397,47 @@ def profile(request):
     is logged in otherwise redirect them to registration page
     """
     if request.user.is_authenticated:
-        obj = get_object_or_404(ActivityUser, user=request.user)
-        form = RegistrationForm(request.POST or None, instance=obj,
-                                initial={'username': request.user})
+        activity_user_obj = get_object_or_404(ActivityUser, user=request.user)
+        user_obj = activity_user_obj.user
+        form = RegistrationForm(
+            request.POST or None,
+            instance=activity_user_obj,
+            initial={'username': request.user}
+        )
+        user_form = NewUserRegistrationForm(request.POST or None, instance=user_obj)
 
         if request.method == 'POST':
-            if form.is_valid():
-                form.save()
-                messages.error(
-                    request, 'Your profile has been updated.',
-                    fail_silently=False)
+            data = request.POST
+            activity_user_object = {
+                'employee_number': data.get('employee_number'),
+                'organization': data.get('organization'),
+                'title': data.get('title')
+            }
+
+            user_object = {
+                'first_name': data.get('first_name'),
+                'last_name': data.get('last_name'),
+                'email': data.get('email'),
+                'username': data.get('username')
+            }
+            # save user
+            User.objects.filter(pk=user_obj.id).update(**user_object)
+            user = User.objects.get(pk=user_obj.pk)
+            if user:
+                # save activity user after updating name
+                activity_user = activity_user_obj
+                activity_user.employee_number = activity_user_object['employee_number']
+                activity_user.organization = Organization.objects.get(pk=int(activity_user_object['organization']))
+                activity_user.title = activity_user_object['title']
+                activity_user.name = '{} {}'.format(user.first_name, user.last_name)
+                activity_user.save()
+
+            messages.success(request, 'Your profile has been updated.', fail_silently=False)
 
         return render(request, 'registration/profile.html', {
-            'form': form, 'helper': RegistrationForm.helper
+            'form': form,
+            'user_form': user_form,
+            'helper': RegistrationForm.helper
         })
     else:
         return HttpResponseRedirect('/accounts/register')
@@ -464,7 +499,6 @@ def admin_profile_settings(request):
         #                             instance=organization)
         # if form.is_valid():
         data = request.POST
-        print(data)
         organization.logo = request.FILES.get('organizationLogo')
         organization.name = data.get('name')
         organization.description = data.get('description')
@@ -532,19 +566,47 @@ def admin_user_edit(request, pk):
     :return:
     """
     nav_links = get_nav_links('People')
-    obj = get_object_or_404(ActivityUser, pk=int(pk))
-    form = RegistrationForm(request.POST or None, instance=obj,
+    activity_user_obj = get_object_or_404(ActivityUser, pk=int(pk))
+    user_obj = activity_user_obj.user
+
+    form = RegistrationForm(request.POST or None, instance=activity_user_obj,
                             initial={'username': request.user})
+    user_form = NewUserRegistrationForm(request.POST or None, instance=user_obj)
 
     if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            messages.error(
-                request, 'Your profile has been updated.',
-                fail_silently=False)
-            return redirect('/accounts/admin/users/all/all/')
+        data = request.POST
+        activity_user_object = {
+            'employee_number': data.get('employee_number'),
+            'organization': data.get('organization'),
+            'title': data.get('title')
+        }
+
+        user_object = {
+            'first_name': data.get('first_name'),
+            'last_name': data.get('last_name'),
+            'email': data.get('email'),
+            'username': data.get('username')
+        }
+        # save user
+        User.objects.filter(pk=user_obj.id).update(**user_object)
+        user = User.objects.get(pk=user_obj.pk)
+        if user:
+            # save activity user after updating name
+            activity_user = activity_user_obj
+            activity_user.employee_number = activity_user_object['employee_number']
+            activity_user.organization = Organization.objects.get(
+                pk=int(activity_user_object['organization']))
+            activity_user.title = activity_user_object['title']
+            activity_user.name = '{} {}'.format(user.first_name, user.last_name)
+            activity_user.save()
+
+        messages.success(
+            request, 'Your profile has been updated.',
+            fail_silently=False)
+        return redirect('/accounts/admin/users/all/all/')
     return render(request, 'admin/user_update_form.html', {
         'form': form,
+        'user_form': user_form,
         'helper': RegistrationForm.helper,
         'nav_links': nav_links
     })
