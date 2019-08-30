@@ -130,10 +130,17 @@
         <div class="col-md-2 col-xs-12">
           <div class="row">
             <div class="col-md-12 col-xs-6">
-              <a class="box box-info" href="/" role="button">
-                <p class="box-info-label">Indicators</p>
-                <p class="box-info-number">{{ get_indicators | length }}</p>
-              </a>
+              {% if selected_program %}
+                <a class="box box-info" href="/indicators/home/{{selected_program.id}}/0/0/" role="button">
+                  <p class="box-info-label">Indicators</p>
+                  <p class="box-info-number">{{ get_indicators | length }}</p>
+                </a>
+              {% else %}
+                <a class="box box-info" href="/indicators/home/0/0/0/" role="button">
+                  <p class="box-info-label">Indicators</p>
+                  <p class="box-info-number">{{ get_indicators | length }}</p>
+                </a>
+              {% endif %}
             </div>
 
             <div class="col-md-12 col-xs-6">
