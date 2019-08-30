@@ -285,10 +285,20 @@
     },
   });
 
+  // prepare data for the projectBudgetActualColumn chart
+  var columnChartLabels = [];
+  var columnChartBudgetData = [];
+  var columnChartActualsData = [];
+
+  {% for project in get_projects %}
+    columnChartLabels.push('{{ project.name }}');
+    columnChartBudgetData.push(+'{{ project.total_estimated_budget }}')
+  {% endfor %}
+
   var projectBudgetActualColumn = new Chart($('#projectBudgetActualColumn'), {
     type: 'bar',
     data: {
-      labels: ['project a', 'project b', 'project c'],
+      labels: ['{% for project in get_projects %} {{ project.name }},' ],
       datasets: [
         {
           label: 'Budget',

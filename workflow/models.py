@@ -1463,8 +1463,8 @@ class ProjectComplete(models.Model):
         Program, null=True, blank=True, related_name="complete",
         on_delete=models.SET_NULL)
     project_agreement = models.OneToOneField(
-        ProjectAgreement, verbose_name="Project Initiation",
-        on_delete=models.CASCADE)
+        ProjectAgreement, verbose_name="Project Initiation", 
+        related_name='project_complete', on_delete=models.CASCADE)
     # Rename to more generic "nonproject" names
     activity_code = models.CharField(
         "Project Code", max_length=255, blank=True, null=True)
