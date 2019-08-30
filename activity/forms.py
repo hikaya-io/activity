@@ -77,6 +77,9 @@ class NewUserRegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(NewUserRegistrationForm, self).__init__(*args, **kwargs)
         self.fields['username'].help_text = None
+        self.fields['first_name'].label = 'First Name*'
+        self.fields['last_name'].label = 'Last Name'
+        self.fields['email'].label = 'Email*'
 
     helper = FormHelper()
     helper.form_method = 'post'
