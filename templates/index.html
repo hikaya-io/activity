@@ -26,6 +26,9 @@
 
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
+        <span>Filter by:</span>
+      </div>
+      <div class="sub-nav-item">
         <div class="btn-group" role="group">
           <button
             type="button"
@@ -34,14 +37,14 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            {% if selected_program %} Filtered by {{ selected_program.name }} 
-            {% else %} Filter by
+            {% if selected_program %} {{ selected_program.name }} 
+            {% else %}
             {{ user.activity_user.organization.level_1_label }}
             {% endif %}
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li>
+            <li class="{% if selected_program is None %} active {% endif %}">
               <a href="/dashboard/0/">-- All --</a>
             </li>
 
@@ -108,10 +111,10 @@
         <div class="col-md-10">
           <div class="row-charts">
             <div class="chart">
-              <canvas id="projectStatusPie" height="200"></canvas>
+              <canvas id="projectStatusPie" height="250"></canvas>
             </div>
             <div class="chart">
-              <canvas id="projectBudgetActualColumn" height="200"> </canvas>
+              <canvas id="projectBudgetActualColumn" height="250"> </canvas>
             </div>
           </div>
         </div>
@@ -291,24 +294,29 @@
   var columnChartActualsData = [];
 
   {% for project in get_projects %}
-    columnChartLabels.push('{{ project.name }}');
+    columnChartLabels.push('{{ project.project_name }}');
     columnChartBudgetData.push(+'{{ project.total_estimated_budget }}')
+    {% if project.project_complete %}
+      columnChartActualsData.push(+'{{ project.project_complete.actual_budget }}')
+    {% else %}
+      columnChartActualsData.push(0);
+    {% endif %}
   {% endfor %}
 
   var projectBudgetActualColumn = new Chart($('#projectBudgetActualColumn'), {
     type: 'bar',
     data: {
-      labels: ['{% for project in get_projects %} {{ project.name }},' ],
+      labels: columnChartLabels,
       datasets: [
         {
           label: 'Budget',
-          backgroundColor: 'lightblue',
-          data: [90, 390, 900],
+          backgroundColor: '#25CED1',
+          data: columnChartBudgetData,
         },
         {
           label: 'Actual',
-          backgroundColor: 'green',
-          data: [250, 70, 400],
+          backgroundColor: '#40f99b',
+          data: columnChartActualsData,
         },
       ],
     },
@@ -321,6 +329,15 @@
         display: true,
         text: 'Project Budget vs Actual',
       },
+      scales: {
+          yAxes: [
+            {
+              ticks: {
+                  beginAtZero: true
+            }
+          }
+        ]
+      }
     },
   });
 </script>
