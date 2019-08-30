@@ -34,8 +34,8 @@
 	</div>
 	{% endfor %} {% endif %} {% block breadcrumbs %}
 	<ul class="breadcrumb">
-		<li><a href="/">Home Dashboard</a></li>
-		<li class="active">My Profile</li>
+		<li><a href="/">My Dashboard</a></li>
+		<li class="active">Profile</li>
 	</ul>
 	{% endblock %}
 
@@ -43,12 +43,12 @@
 	<div class="sub-navigation">
 		<div class="sub-navigation-header">
 			<h4 class="page-title">
-				User Registration/Profile
+				My Profile
 			</h4>
 		</div>
-		<div class="sub-navigation-actions">
+		<!-- <div class="sub-navigation-actions">
 			<a href="/bookmark_list">Bookmarks</a>
-		</div>
+		</div> -->
 	</div>
 	<div class="admin-content">
 		{% if form.errors %} {% for field in form %} {% for error in field.errors %}
