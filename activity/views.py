@@ -72,9 +72,15 @@ def index(request, program_id=0):
 
         get_indicators = Indicator.objects.filter(
             program__organization=request.user.activity_user.organization).order_by('-id')
+        get_collected_data = CollectedData.objects.filter(
+            program__organization=request.user.activity_user.organization)
+
     else:
         get_projects = ProjectAgreement.objects.filter(program__id=program_id)
-        get_indicators = Indicator.objects.filter(program__id=program_id).order_by('-id')
+        get_indicators = Indicator.objects.filter(
+            program__id=program_id).order_by('-id')
+        get_collected_data = CollectedData.objects.filter(
+            program__id=program_id)
 
     return render(request, "index.html", {
         'selected_program': selected_program,
@@ -82,6 +88,7 @@ def index(request, program_id=0):
         'get_projects': get_projects,
         'get_indicators': get_indicators,
         'get_latest_indicators': get_indicators[:10],
+        'get_collected_data_count': get_collected_data.count(),
         'map_api_key': settings.GOOGLE_MAP_API_KEY
     })
 
