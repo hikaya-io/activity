@@ -599,7 +599,7 @@ class StrategicObjectiveForm(forms.ModelForm):
                 Column('description', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
-            Reset('reset', 'Discard Changes', css_class='btn-md btn-default'),
+            Reset('reset', 'Close', css_class='btn-md btn-default'),
             Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
         )
         super(StrategicObjectiveForm, self).__init__(*args, **kwargs)
@@ -638,7 +638,7 @@ class ObjectiveForm(forms.ModelForm):
                 Column('description', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
-            Reset('reset', 'Discard Changes', css_class='btn-md btn-default'),
+            Reset('reset', 'Close', css_class='btn-md btn-default'),
             Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
         )
         super(ObjectiveForm, self).__init__(*args, **kwargs)

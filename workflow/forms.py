@@ -186,8 +186,8 @@ class ProgramForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(css_class='form-row'),
-            Submit('submit', 'Discard Changes',
-                   css_class='btn btn-md btn-default'),
+            Reset('reset', 'Close',
+                  css_class='btn btn-md btn-default'),
             Submit('submit', 'Save Changes',
                    css_class='btn btn-md btn-success'),
 

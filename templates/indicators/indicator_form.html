@@ -56,7 +56,7 @@
             </div>
         </div>
     
-        <div id="indicator_form">
+        <div id="indicator_form" class="admin-content">
             {% load crispy_forms_tags %}
             <form 
                 action="{% url 'indicator_update' indicator.id %}" 
@@ -67,7 +67,7 @@
                 {% csrf_token %}
                 {% crispy form %}
                 <div>
-                    <input type="reset" id="reset-id-reset" class="btn btn-default" value="Reset">
+                    <input type="reset" id="reset-id-reset" class="btn btn-default" value="Close">
                     <input type="submit" class="btn btn-success" value="Save changes">
                 </div>
     

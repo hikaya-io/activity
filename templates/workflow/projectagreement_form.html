@@ -81,14 +81,16 @@
       {% endfor %} 
   {% endif %} 
   {% load crispy_forms_tags %}
-  <form
-    class="form-horizontal"
-    method="post"
-    enctype="multipart/form-data"
-    name="most"
-    id="agreement"
-  >
-    {% crispy form %}
-  </form>
+  <div class="admin-content">
+    <form
+      class="form-horizontal"
+      method="post"
+      enctype="multipart/form-data"
+      name="most"
+      id="agreement"
+    >
+      {% crispy form %}
+    </form>
+  </div>
 </div>
 {% endblock content %}
