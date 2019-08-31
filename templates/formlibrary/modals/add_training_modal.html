@@ -7,6 +7,37 @@
       placeholder:
         'Select {{request.user.activity_user.organization.level_1_label }}',
     });
+
+    $('#trainingName').on('input', function() {
+			const name = $(this);
+			if (name.val()) {
+				$('#div_training_name')
+					.removeClass('has-error')
+					.addClass('has-success');
+				$('#nameHelpBlock')
+					.removeClass('hikaya-show')
+					.addClass('hikaya-hide');
+			} else {
+				$('#div_training_name')
+					.removeClass('has-success')
+					.addClass('has-error');
+			}
+		});
+		$('#indicatorWorkflowLevel1').on('change', function() {
+			const type = $(this);
+			if (type.val()) {
+				$('#div_training_program')
+					.removeClass('has-error')
+					.addClass('has-success');
+				$('#programHelpBlock')
+					.removeClass('hikaya-show')
+					.addClass('hikaya-hide');
+			} else {
+				$('#div_training_program')
+					.removeClass('has-success')
+					.addClass('has-error');
+			}
+		});
   });
 
   $(function() {
@@ -19,28 +50,50 @@
         obj[item.name] = item.value;
       });
 
-      $.ajax({
-        url: '{% url "add_training" %}',
-        type: 'POST',
-        data: obj,
-        success: function(resp, status) {
-          // notify success
-          toastr.success('Training record was added successfully', `${resp}`);
+      // validate input
+			if (obj.training_name == '' || obj.program == '') {
+				if (obj.training_name == '') {
+					$('#div_training_name')
+						.removeClass('has-success')
+						.addClass('has-error');
+					$('#nameHelpBlock')
+						.removeClass('hikaya-hide')
+						.addClass('hikaya-show');
+				}
+				if (obj.program == '') {
+					$('#div_training_program')
+						.removeClass('has-success')
+						.addClass('has-error');
+					$('#programHelpBlock')
+						.removeClass('hikaya-hide')
+						.addClass('hikaya-show');
+				}
+				toastr.error('Fill in all required fields');
+			} else {
 
-          //close modal
-          $('#addTrainingModal').modal('hide');
-
-          // reset form
-          $('#addTrainingForm').trigger('reset');
-
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
-        },
-        error: function(xhr, status, error) {
-          toastr.error(error, 'Failed');
-        },
-      });
+          $.ajax({
+            url: '{% url "add_training" %}',
+            type: 'POST',
+            data: obj,
+            success: function(resp, status) {
+              // notify success
+              toastr.success('Training record was added successfully', `${resp}`);
+    
+              //close modal
+              $('#addTrainingModal').modal('hide');
+    
+              // reset form
+              $('#addTrainingForm').trigger('reset');
+    
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
+            },
+            error: function(xhr, status, error) {
+              toastr.error(error, 'Failed');
+            },
+          });
+      }
     });
   });
 </script>
@@ -71,9 +124,9 @@
           </h4>
         </div>
         <div class="modal-body">
-          <div class="form-group">
-            <label for="trainingName">
-              {{ request.user.activity_user.organization.level_1_label }}
+          <div class="form-group" id="div_training_program">
+            <label class="control-label" for="trainingProgram">
+              {{ request.user.activity_user.organization.level_1_label }}*
             </label>
             <select class="form-control" name="program" id="program">
               <option value=""></option>
@@ -81,10 +134,13 @@
               <option value="{{ item.id }}">{{ item.name }}</option>
               {% endif %} {% endfor %}
             </select>
+            <span id="programHelpBlock" class="help-block hikaya-hide"
+							>{{ user.activity_user.level_1_label }} is required</span
+						>
           </div>
 
-          <div class="form-group">
-            <label for="trainingName">Name</label>
+          <div class="form-group" id="div_training_name">
+            <label class="control-label" for="trainingName">Name*</label>
             <input
               type="text"
               id="trainingName"
@@ -93,6 +149,9 @@
               placeholder="Name of the training"
               autocomplete="off"
             />
+            <span id="nameHelpBlock" class="help-block hikaya-hide"
+							>Name is required</span
+						>
           </div>
 
           <div class="row">
