@@ -136,26 +136,26 @@ class Organization(models.Model):
     location = models.CharField(
         'Location', blank=True, null=True, max_length=255)
     level_1_label = models.CharField(
-        "Project/Program Organization Level 1 label", default="Program",
+        "Project/Program Organization Level 1 label", default="Programs",
         max_length=255, blank=True)
     level_2_label = models.CharField(
-        "Project/Program Organization Level 2 label", default="Project",
+        "Project/Program Organization Level 2 label", default="Projects",
         max_length=255, blank=True)
     level_3_label = models.CharField(
-        "Project/Program Organization Level 3 label", default="Component",
+        "Project/Program Organization Level 3 label", default="Components",
         max_length=255, blank=True)
     level_4_label = models.CharField(
-        "Project/Program Organization Level 4 label", default="Activity",
+        "Project/Program Organization Level 4 label", default="Activities",
         max_length=255, blank=True)
-    site_label = models.CharField('Site Organization label', default='Site',
+    site_label = models.CharField('Site Organization label', default='Locations',
                                   max_length=255)
     stakeholder_label = models.CharField('Stakeholder Organization label',
-                                         default='Stakeholder',
+                                         default='Stakeholders',
                                          max_length=255)
-    form_label = models.CharField('Form Organization label', default='Form',
+    form_label = models.CharField('Form Organization label', default='Forms',
                                   max_length=255)
     indicator_label = models.CharField('Indicator Organization label',
-                                       default='Indicator',
+                                       default='Indicators',
                                        max_length=255)
     theme_color = models.CharField('Organization theme color',
                                    default='#25ced1', max_length=50)
