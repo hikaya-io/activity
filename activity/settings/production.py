@@ -24,7 +24,7 @@ def get_env_setting(setting):
 # HOST CONFIGURATION
 # See: https://docs.djangoproject.com/en/1.5/releases/1.5/
 # #allowed-hosts-required-in-production
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost:8000', '127.0.0.1:8000']
 # END HOST CONFIGURATION
 
 # EMAIL CONFIGURATION
@@ -83,7 +83,7 @@ CACHES = {
 
 # SECRET CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-SECRET_KEY = get_env_setting('ACTIVITY_SECRET_KEY')
+SECRET_KEY = environ.get('ACTIVITY_SECRET_KEY', '!0^+)=t*ly6ycprf9@kfw$6fsjd0xoh#pa*2erx1m*lp5k9ko7')
 # END SECRET CONFIGURATION
 
 REPORT_SERVER = False
