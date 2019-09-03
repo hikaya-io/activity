@@ -3,9 +3,17 @@
 
 # add global variable for report server or not to all templates
 # so we can hide elements that aren't wanted on the report server
-from settings.local import REPORT_SERVER
-from settings.local import OFFLINE_MODE
-from settings.local import NON_LDAP
+
+
+try:
+    from settings.local import REPORT_SERVER
+    from settings.local import OFFLINE_MODE
+    from settings.local import NON_LDAP
+except (ModuleNotFoundError, ImportError):
+    from settings.production import REPORT_SERVER
+    from settings.production import OFFLINE_MODE
+    from settings.production import NON_LDAP
+
 from django.conf import settings
 
 
