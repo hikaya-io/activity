@@ -58,10 +58,13 @@
 }
 .hikaya-active a:hover {
     color: #01579B;
-    border-radius: 0px !important;
 }
 
 /* Links rendered as pills */
 .nav-pills > li > a {
     border-radius: 0px;
   }
+
+.nav-stacked > li + li {
+    margin-top: 0px;
+}
