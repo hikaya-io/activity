@@ -26,6 +26,7 @@ from django.db.models import Q
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
+from django.contrib.postgres.fields import ArrayField
 
 APPROVALS = (
     ('in progress', 'in progress'),
@@ -128,33 +129,34 @@ class Organization(models.Model):
                             max_length=255, blank=True, default="Hikaya")
     description = models.TextField(
         "Description/Notes", max_length=765, null=True, blank=True)
-    logo = models.FileField("Your Organization Logo",
-                            blank=True, null=True, upload_to="media/img/")
-    organization_url = models.CharField(blank=True, null=True, max_length=255)
+    organization_url = models.CharField(
+        'URL', blank=True, null=True, max_length=255)
+    activity_url = models.CharField(
+        'Activity URL', blank=True, null=True, max_length=255)
+    location = models.CharField(
+        'Location', blank=True, null=True, max_length=255)
     level_1_label = models.CharField(
-        "Project/Program Organization Level 1 label", default="Program",
+        "Project/Program Organization Level 1 label", default="Programs",
         max_length=255, blank=True)
     level_2_label = models.CharField(
-        "Project/Program Organization Level 2 label", default="Project",
+        "Project/Program Organization Level 2 label", default="Projects",
         max_length=255, blank=True)
     level_3_label = models.CharField(
-        "Project/Program Organization Level 3 label", default="Component",
+        "Project/Program Organization Level 3 label", default="Components",
         max_length=255, blank=True)
     level_4_label = models.CharField(
-        "Project/Program Organization Level 4 label", default="Activity",
+        "Project/Program Organization Level 4 label", default="Activities",
         max_length=255, blank=True)
-    site_label = models.CharField('Site Organization label', default='Site',
+    site_label = models.CharField('Site Organization label', default='Locations',
                                   max_length=255)
     stakeholder_label = models.CharField('Stakeholder Organization label',
-                                         default='Stakeholder',
+                                         default='Stakeholders',
                                          max_length=255)
-    form_label = models.CharField('Form Organization label', default='Form',
+    form_label = models.CharField('Form Organization label', default='Forms',
                                   max_length=255)
     indicator_label = models.CharField('Indicator Organization label',
-                                       default='Indicator',
+                                       default='Indicators',
                                        max_length=255)
-    site_label = models.CharField('Site Organization label', default='Site',
-                                  max_length=255)
     theme_color = models.CharField('Organization theme color',
                                    default='#25ced1', max_length=50)
     default_currency = models.ForeignKey(Currency,
@@ -829,7 +831,8 @@ class SiteProfile(models.Model):
         null=True, blank=True)
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
-    organizations = models.ManyToManyField(Organization, blank=True, related_name='organizations')
+    organizations = models.ManyToManyField(
+        Organization, blank=True, related_name='organizations')
     province = models.ForeignKey(Province,
                                  verbose_name="Administrative Level 1",
                                  null=True, blank=True,
@@ -1460,8 +1463,8 @@ class ProjectComplete(models.Model):
         Program, null=True, blank=True, related_name="complete",
         on_delete=models.SET_NULL)
     project_agreement = models.OneToOneField(
-        ProjectAgreement, verbose_name="Project Initiation",
-        on_delete=models.CASCADE)
+        ProjectAgreement, verbose_name="Project Initiation", 
+        related_name='project_complete', on_delete=models.CASCADE)
     # Rename to more generic "nonproject" names
     activity_code = models.CharField(
         "Project Code", max_length=255, blank=True, null=True)
@@ -1646,9 +1649,9 @@ class ProjectComplete(models.Model):
 # Project Documents, admin is handled in the admin.py
 class Documentation(models.Model):
     name = models.CharField(
-        "Name of Document", max_length=135, blank=True, null=True)
+        'Document Name', max_length=135, blank=True, null=True)
     url = models.CharField(
-        "URL (Link to document or document repository)", blank=True, null=True,
+        'URL (Link to document or folder)', blank=True, null=True,
         max_length=135)
     description = models.TextField(max_length=255, blank=True, null=True)
     template = models.ForeignKey(
@@ -1875,8 +1878,6 @@ class ChecklistItemAdmin(admin.ModelAdmin):
 
 
 # Logged users
-
-
 class LoggedUser(models.Model):
     username = models.CharField(max_length=30, primary_key=True)
     country = models.CharField(max_length=100, blank=False)
@@ -1935,3 +1936,31 @@ def get_user_country(request):
     except Exception as e:
         response = "undefined"
         return response
+
+
+# invitation statuse
+INVITE_STATUSES = (
+    ('accepted', 'Accepted'),
+    ('pending', 'pending'),
+    ('rejected', 'Rejected')
+)
+
+
+class UserInvite(models.Model):
+    """
+    store user invitations
+    """
+    invite_uuid = models.UUIDField(
+        'Invite UUUID', unique=True, editable=False, default=uuid.uuid4)
+    email = models.CharField('Email Address', max_length=255)
+    organization = models.ForeignKey(
+        Organization, verbose_name='Organization', on_delete=models.CASCADE)
+    status = models.CharField(
+        'Invitation Status', max_length=35, choices=INVITE_STATUSES, default='pending')
+    invite_date = models.DateTimeField('Invitation DAte', auto_now_add=True)
+
+    class Meta:
+        ordering = ('invite_date',)
+
+    def __str__(self):
+        return '{}'.format(self.email)

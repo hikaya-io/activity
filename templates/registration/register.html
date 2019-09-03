@@ -20,7 +20,7 @@
           <a
             type="button"
             class="btn btn-primary btn-sm"
-            href="{% url 'register' %}"
+            href="/accounts/register/user/none/"
             ><strong>Register</strong></a
           >
         </div>
@@ -33,12 +33,12 @@
         </div>
         <div class="panel-body">
           <div class="auth-form">
-            <form action="/accounts/register/" method="POST">
+            <form action="/accounts/register/user/{{invite_uuid}}/" method="POST">
               {% csrf_token %}
               <div class="row">
                 <div class="col-md-6 form-group" id="div_first_name">
                   <label class="control-label" for="first_name"
-                    >First Name</label
+                    >First Name*</label
                   >
                   <input
                     type="text"
@@ -85,6 +85,17 @@
                   <label class="control-label" for="email_address"
                     >Email Address*</label
                   >
+                  {% if email_address %}
+                  <input
+                    type="text"
+                    id="register_email_address"
+                    name="email_address"
+                    class="form-control"
+                    value="{{email_address}}"
+                    aria-describedby="emailHelpBlock"
+                    readonly
+                  />
+                  {% else %}
                   <input
                     type="text"
                     id="register_email_address"
@@ -92,6 +103,7 @@
                     class="form-control"
                     aria-describedby="emailHelpBlock"
                   />
+                  {% endif %}
                   <span id="emailHelpBlock" class="help-block hikaya-hide"
                     >Invalid email address</span
                   >

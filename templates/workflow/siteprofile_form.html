@@ -1,22 +1,28 @@
 {% extends "base.html" %}
-{% block bread_crumb %}
-<div class="container">
-<ol class="breadcrumb">
-  <li><a href="/workflow/dashboard/0/">{{ user.activity_user.organization.level_1_label }} Index</a></li>
-  {%  if get_program.id %}
-    <li><a href="/workflow/siteprofile_list/{{ get_program.id }}/">Site Profiles</a></li>
-  {% else %}
-    <li><a href="/workflow/siteprofile_list/0/0/">Site Profile</a></li>
-  {% endif %}
-  <li class="active">Site Profile Form</li>
-</ol>
-</div>
-{% endblock %}
-
 {% block content %}
+
 <div class="container">
-  <h1>Site Profile Form</h1>
-  {% include "form_guidance.html" %}
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li><a href="{% url 'index' %}">My Dashboard</a></li>
+      <li>
+        <a href="/workflow/siteprofile_list/0/0/list/">Locations</a>
+      </li>
+      <li class="active">Details</li>
+    </ul>
+    {% endblock %}
+
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+      <div class="sub-navigation-header">
+        <h4 class="page-title">
+          {% if site_name %}{{ site_name }} {% else %} Site Profile Form {% endif %} 
+        </h4>
+      </div>
+    </div>
+  
+
+
   {% if form.errors %}
       <div class="help-block">
       {% for field in form %}
@@ -31,9 +37,11 @@
           </div>
       {% endfor %}
   {% endif %}
-  {% csrf_token %}
-  {% load crispy_forms_tags %}
-  {% crispy form %}
+  <div class="admin-content">
+    {% csrf_token %}
+    {% load crispy_forms_tags %}
+    {% crispy form %}
+  </div>
 </div>
 
 {% endblock content %}

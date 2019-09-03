@@ -84,8 +84,8 @@ class StrategicObjectiveAdmin(admin.ModelAdmin):
 
 class Objective(models.Model):
     name = models.CharField(max_length=135, blank=True)
-    program = models.ForeignKey(
-        Program, null=True, blank=True, on_delete=models.SET_NULL)
+    program = models.ForeignKey(Program, null=True, blank=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey('self', blank=True, null=True, related_name='children', on_delete=models.SET_NULL)
     description = models.TextField(max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
@@ -94,7 +94,7 @@ class Objective(models.Model):
         ordering = ('program', 'name')
 
     def __str__(self):
-        return self.name
+        return '{}'.format(self.name) or ''
 
     def save(self):
         if self.create_date is None:

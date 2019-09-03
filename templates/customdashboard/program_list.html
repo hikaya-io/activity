@@ -1,118 +1,143 @@
 {% extends "base.html" %} {% block content %}
 
 <script>
-  $(document).ready(function() {
-    $('#programListTable').DataTable();
+  $(document).ready(() => {
+    $('#programListTable').dataTable();
   });
 </script>
+
 <!-- Sub navigation -->
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
-    <li class="active">Public Dashboards</li>
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
+    <li class="active">
+      Dashboards
+    </li>
   </ul>
   {% endblock %}
 
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">Public Dashboards</h4>
+      <h4 class="page-title">
+        Dashboard List
+      </h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
-        <div class="btn-group" role="group" aria-label="...">
-          <div class="btn-group" role="group">
-            <button
-              type="button"
-              class="btn btn-sm btn-default dropdown-toggle"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Countries
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="#">--All--</a></li>
-              {% for country in get_country %}
-              <li>
-                <a href="/customdashboard/program_list/{{ country.id }}">{{
-                  country.country
-                }}</a>
-              </li>
-              {% endfor %}
-            </ul>
-          </div>
+        <div class="btn-group" role="group">
+          <button
+            type="button"
+            class="btn btn-sm btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Filter by Sectors
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li role="presentation"><a href="#">--All--</a></li>
+            {% for country in get_country %}
+            <li role="presentation">
+              <a href="/customdashboard/program_list/{{ country.id }}">
+                {{ country.country }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group">
+          <button
+            type="button"
+            class="btn btn-sm btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Filter by Countries
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li role="presentation"><a href="#">--All--</a></li>
+            {% for country in get_country %}
+            <li role="presentation">
+              <a href="/customdashboard/program_list/{{ country.id }}">
+                {{ country.country }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Table -->
-  <table class="table table-condensed" id="programListTable">
-    <tr>
-      <th>Date Created</th>
-      <th>{{ user.activity_user.organization.level_1_label }} Name</th>
-      <th>Data Complete</th>
-      <th>Public Dashboard</th>
-      <th>View Dashboard</th>
-    </tr>
-    {% for item in get_program %}
-    <tr>
-      <td>{{ item.create_date }}</td>
-      <td>{{ item.name }}</td>
-      <td width="250">
-        <strong>Indicator(s)</strong>
-        <div class="progress">
-          <div
-            class="progress-bar progress-bar-warning"
-            style="width: {{ item.indicator_data_percent }}%"
+  <table class="table" id="programListTable">
+    <thead>
+      <tr>
+        <th>{{ user.activity_user.organization.level_1_label }} Name</th>
+        <th>Public Dashboard</th>
+        <th>Date Created</th>
+        <th>Date Modified</th>
+        <th class="text-right"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in get_program %} {% if item.name %}
+      <tr>
+        <td>
+          <a href="/customdashboard/program_dashboard/{{ item.id }}/0/">
+            {{ item.name | truncatechars:50}}
+          </a>
+        </td>
+        <td>
+          {% if item.public_dashboard %}<a
+            href="/customdashboard/program_dashboard/{{ item.id }}/1/"
+            >Public</a
           >
-            <font color="black">Data {{ item.indicator_data_percent }} %</font>
-          </div>
-          <div
-            class="progress-bar progress-bar-success"
-            style="width: {{ item.indicator_percent }}%"
-          >
-            <font color="black">No Data {{ item.indicator_percent }} %</font>
-          </div>
-        </div>
-        <strong>{{ user.activity_user.organization.level_2_label }}(s)</strong>
-        <div class="progress">
-          <div
-            class="progress-bar progress-bar-warning"
-            style="width: {{ item.project_percent }}%"
-          >
-            <font color="black">Tracking {{ item.project_percent }} %</font>
-          </div>
-          <div
-            class="progress-bar progress-bar-info"
-            style="width: {{ item.project_agreement_percent }}%"
-          >
-            <font color="black"
-              >Initiation {{ item.project_agreement_percent }} %</font
+          {% else %} N/A {% endif %}
+        </td>
+        <td>{{ item.create_date | date }}</td>
+        <td>{{ item.edit_date | date }}</td>
+        <td class="text-right">
+          <!-- Split button -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm disabled">
+              Links
+            </button>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
             >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="/customdashboard/program_dashboard/{{ item.id }}/0/"
+                  >Internal</a
+                >
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a href="/customdashboard/program_dashboard/{{ item.id }}/1/"
+                  >Public</a
+                >
+              </li>
+            </ul>
           </div>
-        </div>
-      </td>
-      <td>
-        {% if item.public_dashboard %}<a
-          href="/customdashboard/program_dashboard/{{ item.id }}/1/"
-          >Public</a
-        >
-        {% else %} N/A {% endif %}
-      </td>
-      <td>
-        <a href="/customdashboard/program_dashboard/{{ item.id }}/0/"
-          >Internal</a
-        >
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="5">No dashboards yet.</td>
-    </tr>
-    {% endfor %}
+        </td>
+      </tr>
+      {% endif %} {% endfor %}
+    </tbody>
   </table>
 
   <!-- Modal -->

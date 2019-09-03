@@ -53,6 +53,7 @@ class IndicatorForm(forms.ModelForm):
         indicator = kwargs.get('instance', None)
         self.request = kwargs.pop('request')
         self.program = kwargs.pop('program')
+        self.program_id = kwargs.pop('program_id')
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_action = reverse_lazy(
@@ -153,8 +154,7 @@ class IndicatorForm(forms.ModelForm):
             <a href="{% url 'pt_delete' pt.id %}" id="deleteLastPT"
             class="detelebtn" style="text-align: center;
                 margin: 3px 10px 0px 10px; color:red;
-                display:{% if forloop.last and indicator.target_frequency != 2
-                    or indicator.target_frequency == 8 %}
+                display:{% if forloop.last and indicator.target_frequency != 2 or indicator.target_frequency == 8 %}
                 block{% else %}none{% endif %}">
                     <span class="glyphicon glyphicon-remove"></span>
             </a>
@@ -308,19 +308,18 @@ class IndicatorForm(forms.ModelForm):
         # override the program queryset to use request.user for country
         countries = get_country(self.request.user)
         self.fields['program'].queryset = Program.objects.filter(
-            funding_status="Funded", country__in=countries)
+            organization=self.request.user.activity_user.organization)
         self.fields['disaggregation'].queryset = DisaggregationType.objects. \
             filter(country__in=countries).filter(standard=False)
-        self.fields['objectives'].queryset = Objective.objects.all().filter(
-            program__id__in=self.program)
-        self.fields[
-            'strategic_objectives'].queryset = StrategicObjective.objects.\
+        self.fields['objectives'].queryset = Objective.objects.filter(
+            program__id=self.program_id)
+        self.fields['strategic_objectives'].queryset = StrategicObjective.objects.\
             filter(country__in=countries)
         self.fields['approved_by'].queryset = ActivityUser.objects.filter(
-            country__in=countries).distinct()
+            organization=self.request.user.activity_user.organization).distinct()
         self.fields[
             'approval_submitted_by'].queryset = ActivityUser.objects.filter(
-            country__in=countries).distinct()
+            organization=self.request.user.activity_user.organization).distinct()
         self.fields['program'].widget.attrs['readonly'] = "readonly"
         self.fields['baseline'].widget.attrs['class'] = 'col-sm-4'
         # self.fields['target_frequency_start'].widget = DatePicker.DateInput()
@@ -600,10 +599,49 @@ class StrategicObjectiveForm(forms.ModelForm):
                 Column('description', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
-            Reset('reset', 'Discard Changes', css_class='btn-md btn-default'),
+            Reset('reset', 'Close', css_class='btn-md btn-default'),
             Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
         )
         super(StrategicObjectiveForm, self).__init__(*args, **kwargs)
         self.fields['parent'].queryset = StrategicObjective.objects.\
             filter(organization=self.request.user.activity_user.organization).\
+            exclude(pk=self.current_objective.id)
+
+
+class ObjectiveForm(forms.ModelForm):
+    class Meta:
+        model = Objective
+        exclude = ('create_date', 'edit_date')
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        self.current_objective = kwargs.pop('current_objective')
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.error_text_inline = True
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+        self.helper.form_tag = True
+        self.helper.layout = Layout(
+            Row(
+                Column('name', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('parent', css_class='form-group col-md-6 mb-0'),
+                Column('program', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+
+            Row(
+                Column('description', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+            Reset('reset', 'Close', css_class='btn-md btn-default'),
+            Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
+        )
+        super(ObjectiveForm, self).__init__(*args, **kwargs)
+        self.fields['parent'].queryset = Objective.objects.\
+            filter(program__organization=self.request.user.activity_user.organization).\
             exclude(pk=self.current_objective.id)

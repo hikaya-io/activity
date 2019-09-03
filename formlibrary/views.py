@@ -145,6 +145,8 @@ class TrainingUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(TrainingUpdate, self).get_context_data(**kwargs)
+        training = TrainingAttendance.objects.get(pk=int(self.kwargs['pk']))
+        context['training_name'] = training.training_name
         context['form_title'] = 'Training Attendance Update Form'
         return context
 
@@ -175,7 +177,8 @@ class BeneficiaryList(ListView):
         organization = request.user.activity_user.organization
         get_programs = Program.objects.all().filter(organization=organization)
 
-        get_training = TrainingAttendance.objects.filter(program__in=get_programs)
+        get_training = TrainingAttendance.objects.filter(
+            program__in=get_programs)
         get_beneficiaries = Beneficiary.objects.all().filter(program__in=get_programs)
 
         if int(program_id) != 0:
@@ -262,6 +265,13 @@ class BeneficiaryUpdate(UpdateView):
         kwargs = super(BeneficiaryUpdate, self).get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(BeneficiaryUpdate, self).get_context_data(**kwargs)
+        beneficiary = Beneficiary.objects.get(pk=int(self.kwargs['pk']))
+        context['beneficiary_name'] = beneficiary.beneficiary_name
+        context['form_title'] = 'Beneficiary Update Form'
+        return context
 
     def form_invalid(self, form):
         messages.error(self.request, 'Invalid Form', fail_silently=False)
@@ -405,6 +415,8 @@ class DistributionUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(DistributionUpdate, self).get_context_data(**kwargs)
         context['form_title'] = 'Distribution Update Form'
+        distribution = Distribution.objects.get(pk=int(self.kwargs['pk']))
+        context['distribution_name'] = distribution.distribution_name
         return context
     form_class = DistributionForm
 
@@ -528,3 +540,35 @@ class GetAgreements(View, AjaxableResponseMixin):
             final_dict = {'get_agreements': get_agreements}
 
         return JsonResponse(final_dict, safe=False)
+
+
+def add_training(request):
+    data = {
+        'training_name': request.POST.get('training_name'),
+        'start_date': request.POST.get('start_date'),
+        'end_date': request.POST.get('end_date'),
+        'program_id': int(request.POST.get('program')),
+    }
+
+    instance = TrainingAttendance.objects.create(**data)
+
+    if instance.id:
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})
+
+
+def add_distribution(request):
+    data = {
+        'distribution_name': request.POST.get('distribution_name'),
+        'start_date': request.POST.get('start_date'),
+        'end_date': request.POST.get('end_date'),
+        'program_id': int(request.POST.get('program')),
+    }
+
+    instance = Distribution.objects.create(**data)
+
+    if instance.id:
+        return HttpResponse({'success': True})
+
+    return HttpResponse({'success': False})

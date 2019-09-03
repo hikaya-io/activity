@@ -14,7 +14,7 @@
 							{% csrf_token %}
 							<div class="row">
 								<div class="form-group" id="div_org_name">
-									<label class="control-label" for="name">Organization Name*</label>
+									<label class="control-label" for="name">Name*</label>
 									<input
 										type="text"
 										id="org_name"
@@ -25,7 +25,7 @@
 							</div>
 							<div class="row">
 								<div class="">
-									<label for="description">What do you do?</label>
+									<label for="description">Description</label>
 									<textarea
 										name="description"
 										id="description"
@@ -35,23 +35,46 @@
 								</div>
 							</div>
 							<div class="row">
+								<div id="div_org_url">
+									<label class="control-label" for="organization_url">URL</label>
+									<input
+										type="text"
+										id="org_url"
+										name="organization_url"
+										class="form-control"
+									/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="" id="div_location">
+									<label class="control-label" for="location">Location</label>
+									<input
+										type="text"
+										id="location"
+										name="location"
+										class="form-control"
+									/>
+								</div>
+							</div>
+							<div class="row">
 								<div class="">
-									<label for="password">Activity Url</label>
+									<label for="activity_url">Activity URL</label>
 									<input
                                         type="text"
-                                        id="org_url"
+										id="activity_url"
+										name="activity_url"
 										class="form-control"
-										disabled
+										readonly
 									/>
 								</div>
 							</div>
 							<div class="row">
                                 <div class="text-right">
                                     <button type="reset" class="btn btn-md hikaya-btn-cancel">
-                                        <i class="fa fa-undo"></i> Cancel
+                                        Cancel
                                     </button>
                                     <button id="orgFormSubmitBtn"  type="submit" class="btn btn-success" disabled>
-                                        <i class="fa fa-save"></i> Submit
+                                        Create
                                     </button>
                                 </div>
 							</div>

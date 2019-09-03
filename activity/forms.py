@@ -9,6 +9,7 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.models import User
 from workflow.models import ActivityUser, ActivityBookmarks, Organization
 from django.forms .models import model_to_dict
+from django_select2.forms import Select2MultipleWidget
 
 
 class RegistrationForm(UserChangeForm):
@@ -29,8 +30,10 @@ class RegistrationForm(UserChangeForm):
             self.fields['user'].widget.attrs['disabled'] = 'disabled'
 
         activity_user = ActivityUser.objects.get(user=user['username'])
-        print(model_to_dict(activity_user))
         self.fields['organization'].queryset = activity_user.organizations.all()
+        # self.fields['user'].error = None
+        self.errors['user'] = None
+        self.fields['user'].widget.attrs['readonly'] = 'readonly'
 
     class Meta:
         model = ActivityUser
@@ -42,13 +45,13 @@ class RegistrationForm(UserChangeForm):
     helper.error_text_inline = True
     helper.help_text_inline = True
     helper.html5_required = True
+    helper.form_tag = False
     helper.layout = Layout(
-        'name',
-        Row(
-            Column('title', css_class='form-group col-md-6 mb-0'),
-            Column('employee_number', css_class='form-group col-md-6 mb-0'),
-            css_class='form-row'
-        ),
+        # Row(
+        #     Column('title', css_class='form-group col-md-6 mb-0'),
+        #     Column('employee_number', css_class='form-group col-md-6 mb-0'),
+        #     css_class='form-row'
+        # ),
         Row(
             Column('user', css_class='form-group col-md-6 mb-0'),
             Column('organization', css_class='form-group col-md-6 mb-0'),
@@ -58,9 +61,7 @@ class RegistrationForm(UserChangeForm):
             Column('organizations', css_class='form-group col-md-12 mb-0'),
             css_class='form-row'
         ),
-        'privacy_disclaimer_accepted',
-        Reset('reset', 'Discard Changes', css_class='btn-md btn-warning'),
-        Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
+        # 'privacy_disclaimer_accepted',
     )
 
 
@@ -75,17 +76,30 @@ class NewUserRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(NewUserRegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['username'].help_text = None
+        self.fields['first_name'].label = 'First Name*'
+        self.fields['last_name'].label = 'Last Name'
+        self.fields['email'].label = 'Email*'
 
     helper = FormHelper()
     helper.form_method = 'post'
-    helper.form_class = 'form-horizontal'
-    helper.label_class = 'col-sm-2'
-    helper.field_class = 'col-sm-6'
     helper.form_error_title = 'Form Errors'
     helper.error_text_inline = True
-    helper.help_text_inline = True
+    helper.help_text_inline = False
     helper.html5_required = True
     helper.form_tag = False
+    helper.layout = Layout(
+        Row(
+            Column('first_name', css_class='form-group col-md-6 mb-0'),
+            Column('last_name', css_class='form-group col-md-6 mb-0'),
+            css_class='form-row'
+        ),
+        Row(
+            Column('username', css_class='form-group col-md-6 mb-0'),
+            Column('email', css_class='form-group col-md-6 mb-0'),
+            css_class='form-row'
+        )
+    )
 
 
 class NewActivityUserRegistrationForm(forms.ModelForm):
@@ -155,7 +169,7 @@ class OrganizationEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(OrganizationEditForm, self).__init__(*args, **kwargs)
-
+        self.fields['logo'].label = ''
     helper = FormHelper()
     helper.form_method = 'post'
     helper.form_class = 'form-horizontal'
@@ -166,5 +180,4 @@ class OrganizationEditForm(forms.ModelForm):
     helper.help_text_inline = True
     helper.html5_required = True
     helper.layout = Layout(
-        Fieldset('', 'logo',),
-        Submit('submit', 'Submit', css_class='btn-success'))
+        Fieldset('', 'logo',))

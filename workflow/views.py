@@ -56,7 +56,7 @@ from .export import ProjectAgreementResource, StakeholderResource, \
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.core.serializers.json import DjangoJSONEncoder
-
+from django.conf import settings
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -210,7 +210,8 @@ class ProgramDash(ListView):
 
                 elif status == 'new':
 
-                    get_projects = get_projects.filter(Q(approval='') | Q(approval=None))
+                    get_projects = get_projects.filter(
+                        Q(approval='') | Q(approval=None))
 
                 else:
                     get_projects = get_projects.filter(approval=status)
@@ -597,6 +598,13 @@ class ProjectAgreementDetail(DetailView):
         context.update({'get_quantitative_outputs': get_quantitative_outputs})
 
         return context
+
+
+def delete_project_agreement(request, pk):
+    project = ProjectAgreement.objects.get(pk=int(pk))
+    project.delete()
+
+    return redirect('/workflow/level2/list/0/none/')
 
 
 class ProjectAgreementDelete(DeleteView):
@@ -1081,9 +1089,7 @@ class DocumentationAgreementUpdate(AjaxableResponseMixin, UpdateView):
             self.guidance = FormGuidance.objects.get(form="Documentation")
         except FormGuidance.DoesNotExist:
             self.guidance = None
-        return super(DocumentationAgreementUpdate, self).dispatch(request,
-                                                                  *args,
-                                                                  **kwargs)
+        return super(DocumentationAgreementUpdate, self).dispatch(request, *args, **kwargs)
 
     # add the request to the kwargs
     def get_form_kwargs(self):
@@ -1203,7 +1209,9 @@ class DocumentationUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(DocumentationUpdate, self).get_context_data(**kwargs)
+        documentation = Documentation.objects.get(pk=int(self.kwargs['pk']))
         context.update({'active': ['components', 'documents']})
+        context.update({'documentation_name': documentation.name})
 
         return context
 
@@ -1299,6 +1307,12 @@ class SiteProfileList(ListView):
         return super(SiteProfileList, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
+        # set the template
+        if self.kwargs['display'] == 'map':
+            self.template_name = 'workflow/site_profile_map.html'
+        else:
+            self.template_name = 'workflow/site_profile_list.html'
+
         activity_id = int(self.kwargs['activity_id'])
         program_id = int(self.kwargs['program_id'])
 
@@ -1354,7 +1368,6 @@ class SiteProfileList(ListView):
 
         if user_list:
             default_list = int(user_list)
-
         return render(request, self.template_name,
                       {
                           'inactive_site': inactive_site,
@@ -1366,8 +1379,9 @@ class SiteProfileList(ListView):
                           'get_projects': get_projects,
                           'form': FilterForm(),
                           'helper': FilterForm.helper,
-                          'active': ['components']
-                       })
+                          'active': ['components'],
+                          'map_api_key': settings.GOOGLE_MAP_API_KEY
+                      })
 
 
 class SiteProfileReport(ListView):
@@ -1435,7 +1449,7 @@ class SiteProfileCreate(CreateView):
         initial = {
             'approved_by': self.request.user,
             'filled_by': self.request.user,
-            'country': default_country
+            'country': default_country,
         }
 
         return initial
@@ -1447,10 +1461,11 @@ class SiteProfileCreate(CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-        form.save()
+        instance = form.save()
+        instance.organizations.add(self.request.user.activity_user.organization)
         messages.success(self.request, 'Success, Site Profile Created!')
         latest = SiteProfile.objects.latest('id')
-        redirect_url = '/workflow/siteprofile_update/' + str(latest.id)
+        redirect_url = '/workflow/siteprofile_list/0/0/list/'
         return HttpResponseRedirect(redirect_url)
 
     form_class = SiteProfileForm
@@ -1480,9 +1495,11 @@ class SiteProfileUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(SiteProfileUpdate, self).get_context_data(**kwargs)
+        site = SiteProfile.objects.get(pk=int(self.kwargs['pk']))
         get_projects = ProjectAgreement.objects.all().filter(
             site__id=self.kwargs['pk'])
         context.update({'get_projects': get_projects})
+        context.update({'site_name': site.name})
         return context
 
     def form_invalid(self, form):
@@ -1838,6 +1855,8 @@ class ContactUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(ContactUpdate, self).get_context_data(**kwargs)
+        contact = Contact.objects.get(pk=int(self.kwargs['pk']))
+        context.update({'contact_name': contact.name})
         context.update({'id': self.kwargs['pk']})
         return context
 
@@ -1965,7 +1984,9 @@ class StakeholderUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(StakeholderUpdate, self).get_context_data(**kwargs)
+        stakeholder = Stakeholder.objects.get(pk=int(self.kwargs['pk']))
         context.update({'id': self.kwargs['pk']})
+        context.update({'stakeholder_name': stakeholder.name})
         return context
 
     def form_invalid(self, form):
@@ -2595,56 +2616,6 @@ def import_service(service_id=1, deserialize=True):
     data2 = json.dumps(data)  # json formatted string
 
     return data
-
-
-def objectives_list(request):
-    if request.method == 'POST':
-        data = request.POST
-        activity_user = ActivityUser.objects.filter(user=request.user).first()
-        parent = None
-        if data.get('parent_objective'):
-            parent = int(data.get('parent_objective'))
-
-        parent_objective = StrategicObjective.objects.filter(
-            id=parent).first()
-
-        objective = StrategicObjective(
-            name=data.get('objective_name'),
-            description=data.get('description'),
-            organization=activity_user.organization,
-            parent=parent_objective)
-
-        objective.save()
-
-        return HttpResponseRedirect('/workflow/objectives')
-
-    get_all_objectives = StrategicObjective.objects.all()
-
-    context = {'get_all_objectives': get_all_objectives,
-               'active': ['components']}
-
-    return render(request, 'components/objectives.html', context)
-
-
-def objectives_tree(request):
-    get_all_objectives = StrategicObjective.objects.all()
-
-    objectives_as_json = [{'id': 0, 'name': 'Strategic Objectives'}]
-
-    for objective in get_all_objectives:
-        data = {'id': objective.id, 'name': objective.name}
-
-        if objective.parent is None:
-            data['parent'] = 0
-        else:
-            data['parent'] = objective.parent.id
-
-        objectives_as_json.append(data)
-
-    context = {'get_all_objectives': get_all_objectives,
-               'objectives_as_json': objectives_as_json}
-
-    return render(request, 'components/objectives-tree.html', context)
 
 
 def service_json(request, service):

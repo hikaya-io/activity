@@ -214,6 +214,12 @@ class CurrencyAdmin(admin.ModelAdmin):
     list_filter = ('name', 'code')
 
 
+@admin.register(UserInvite)
+class UserInviteAdmin(admin.ModelAdmin):
+    list_display = ('invite_uuid', 'email', 'organization', 'status', 'invite_date')
+    list_filter = ('organization', 'status')
+
+
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Country, CountryAdmin)
 admin.site.register(Province, ProvinceAdmin)

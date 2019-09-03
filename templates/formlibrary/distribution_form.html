@@ -11,10 +11,12 @@
 	<div class="alert alert-error">
 		<strong>{{ error | escape }}</strong>
 	</div>
-	{% endfor %} {% endif %} {% block breadcrumbs %}
+	{% endfor %} {% endif %} 
+	{% block breadcrumbs %}
 	<ul class="breadcrumb">
-		<li><a href="/formlibrary/distribution_list/0/0/">Distribution List</a></li>
-		<li class="active">Add Distribution</li>
+		<li><a href="/">My Dashboard</a></li>
+		<li><a href="/formlibrary/distribution_list/0/0/">Distribution</a></li>
+		<li class="active">Details</li>
 	</ul>
 	{% endblock %}
 
@@ -22,15 +24,21 @@
 	<div class="sub-navigation">
 		<div class="sub-navigation-header">
 			<h4 class="page-title">
-				{{ form_title }}
+				{% if distribution_name %}{{ distribution_name }} {% else %} {{ form_title }} {% endif %}
 			</h4>
 		</div>
-		<div class="sub-navigation-actions">
+		{% comment %} <div class="sub-navigation-actions">
 			{% include "form_guidance.html" %}
-		</div>
+		</div> {% endcomment %}
 	</div>
-
-	{% csrf_token %} {% load crispy_forms_tags %} {% crispy form %}
+	<div class="admin-content">
+		{% csrf_token %} {% load crispy_forms_tags %} {% crispy form %}
+	</div>
 </div>
+<script>
+	$('#reset-id-reset').click(() => {
+		window.location.href = '/formlibrary/distribution_list/0/0/';
+	});
+</script>
 
 {% endblock content %}

@@ -34,15 +34,15 @@
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="/">Home Dashboard</a></li>
+    <li><a href="/">My Dashboard</a></li>
     {% if pk %}
     <li>
-      <a href="/workflow/level2/0/"
-        >{{ user.activity_user.organization.level_2_label }}(s)</a
+      <a href="/workflow/level2/list/0/none/"
+        >{{ user.activity_user.organization.level_2_label }}s</a
       >
     </li>
     {% endif %}
-    <li class="active">Project Initiation Form</li>
+    <li class="active">Project Initiation Details</li>
   </ul>
   {% endblock %}
 
@@ -50,19 +50,18 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        Project Initiation Form | 
-        {% if p_agreement%}
-        {{ p_agreement | truncatechars:150 }}
-        {% endif %} 
+        {{ p_agreement | truncatechars:150}}
       </h4>
     </div>
     <div class="sub-navigation-actions">
       <!-- sample action buttons -->
-      <div class="btn-group" role="group" aria-label=""></div>
+      <!-- <div class="btn-group" role="group" aria-label="">
+
+      </div> -->
+      {% include "form_guidance.html" %} 
     </div>
   </div>
-  
-  {% include "form_guidance.html" %} 
+
   
   {% if form.errors %}
       <div class="help-block">
@@ -82,14 +81,16 @@
       {% endfor %} 
   {% endif %} 
   {% load crispy_forms_tags %}
-  <form
-    class="form-horizontal"
-    method="post"
-    enctype="multipart/form-data"
-    name="most"
-    id="agreement"
-  >
-    {% crispy form %}
-  </form>
+  <div class="admin-content">
+    <form
+      class="form-horizontal"
+      method="post"
+      enctype="multipart/form-data"
+      name="most"
+      id="agreement"
+    >
+      {% crispy form %}
+    </form>
+  </div>
 </div>
 {% endblock content %}

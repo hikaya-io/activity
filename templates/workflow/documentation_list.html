@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} 
+{% block content %}
 <script>
   $(document).ready(() => {
     $('#documentationtable').DataTable();
@@ -8,7 +9,7 @@
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
     <li class="active">Documents</li>
   </ul>
   {% endblock %}
@@ -16,7 +17,7 @@
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">Documentation List</h4>
+      <h4 class="page-title">Document List</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
@@ -50,7 +51,7 @@
             data-toggle="modal"
             data-target="#addDocumentModal"
           >
-            <i class="fa fa-plus"></i> Add Document
+            <i class="fa fa-plus"></i> Document
           </button>
         </div>
       </div>
@@ -70,11 +71,17 @@
     <tbody>
       {% for document in get_documentation %}
       <tr>
-        <td><a href="{% url 'documentation_update' pk=document.id %}">{{ document.name }}</a></td>
+        <td>
+          <a href="{% url 'documentation_update' pk=document.id %}" 
+            data-toggle="tooltip" 
+            title="{{ document.name }}">{{ document.name | truncatechars:50 }}</a>
+        </td>
         <td>{{ document.program.name }}</td>
         <td>
-          <a href="{{ document.url }}" target="_blank">
-            {{ document.url }}
+          <a href="{{ document.url }}" target="_blank" 
+            data-toggle="tooltip" 
+            title="{{ document.url }}">
+            {{ document.url | truncatechars:50 }}
           </a>
         </td>
         <td class="text-right">
@@ -95,7 +102,6 @@
             </button>
             <ul class="dropdown-menu">
               <li><a href="{% url 'documentation_update' pk=document.id %}">Edit</a></li>
-              <li role="separator" class="divider"></li>
               <li><a class="text-danger" href="#">Delete</a></li>
             </ul>
           </div>
@@ -106,23 +112,6 @@
     </tbody>
   </table>
 
-  <!-- Modal -->
-  <div
-    class="modal fade"
-    id="importModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="myModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content"></div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-  </div>
-  <!-- /.modal -->
-</div>
-
 <!-- add document modal -->
-{% include 'workflow/modals/add_document_modal.html' %} {% endblock content %}
+{% include 'workflow/modals/add_document_modal.html' %} 
+{% endblock content %}

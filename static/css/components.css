@@ -53,15 +53,18 @@
 /* enf of buttons*/
 
 /* states */
-/* .hikaya-active {
-    background-color: #01579B;
-    color: #ffffff;
-} */
-
 .hikaya-active a {
-    background-color: #01579B;
-    color: #ffffff;
+    border-left: 5px #25CED1 solid;
 }
 .hikaya-active a:hover {
     color: #01579B;
+}
+
+/* Links rendered as pills */
+.nav-pills > li > a {
+    border-radius: 0px;
+  }
+
+.nav-stacked > li + li {
+    margin-top: 0px;
 }

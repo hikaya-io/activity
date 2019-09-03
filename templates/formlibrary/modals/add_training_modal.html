@@ -1,0 +1,198 @@
+<script>
+  $(document).ready(() => {
+    $('#trainingStart').datepicker({ dateFormat: 'yy-mm-dd' });
+    $('#trainingEnd').datepicker({ dateFormat: 'yy-mm-dd' });
+    $('#program').select2({
+      theme: 'bootstrap',
+      placeholder:
+        'Select {{request.user.activity_user.organization.level_1_label }}',
+    });
+
+    $('#trainingName').on('input', function() {
+			const name = $(this);
+			if (name.val()) {
+				$('#div_training_name')
+					.removeClass('has-error')
+					.addClass('has-success');
+				$('#nameHelpBlock')
+					.removeClass('hikaya-show')
+					.addClass('hikaya-hide');
+			} else {
+				$('#div_training_name')
+					.removeClass('has-success')
+					.addClass('has-error');
+			}
+		});
+		$('#indicatorWorkflowLevel1').on('change', function() {
+			const type = $(this);
+			if (type.val()) {
+				$('#div_training_program')
+					.removeClass('has-error')
+					.addClass('has-success');
+				$('#programHelpBlock')
+					.removeClass('hikaya-show')
+					.addClass('hikaya-hide');
+			} else {
+				$('#div_training_program')
+					.removeClass('has-success')
+					.addClass('has-error');
+			}
+		});
+  });
+
+  $(function() {
+    $('#saveTrainingBtn').click(function(e) {
+      const formValue = $('#addTrainingForm').serializeArray();
+
+      const obj = {};
+
+      formValue.forEach(item => {
+        obj[item.name] = item.value;
+      });
+
+      // validate input
+			if (obj.training_name == '' || obj.program == '') {
+				if (obj.training_name == '') {
+					$('#div_training_name')
+						.removeClass('has-success')
+						.addClass('has-error');
+					$('#nameHelpBlock')
+						.removeClass('hikaya-hide')
+						.addClass('hikaya-show');
+				}
+				if (obj.program == '') {
+					$('#div_training_program')
+						.removeClass('has-success')
+						.addClass('has-error');
+					$('#programHelpBlock')
+						.removeClass('hikaya-hide')
+						.addClass('hikaya-show');
+				}
+				toastr.error('Fill in all required fields');
+			} else {
+
+          $.ajax({
+            url: '{% url "add_training" %}',
+            type: 'POST',
+            data: obj,
+            success: function(resp, status) {
+              // notify success
+              toastr.success('Training record was added successfully', `${resp}`);
+    
+              //close modal
+              $('#addTrainingModal').modal('hide');
+    
+              // reset form
+              $('#addTrainingForm').trigger('reset');
+    
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
+            },
+            error: function(xhr, status, error) {
+              toastr.error(error, 'Failed');
+            },
+          });
+      }
+    });
+  });
+</script>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="addTrainingModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addTrainingModalLabel"
+>
+  <div class="modal-dialog" role="form">
+    <div class="modal-content">
+      <form id="addTrainingForm">
+        {% csrf_token %}
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="addTrainingModalLabel">
+            Add Training Record
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group" id="div_training_program">
+            <label class="control-label" for="trainingProgram">
+              {{ request.user.activity_user.organization.level_1_label }}*
+            </label>
+            <select class="form-control" name="program" id="program">
+              <option value=""></option>
+              {% for item in get_programs %} {% if item.name %}
+              <option value="{{ item.id }}">{{ item.name }}</option>
+              {% endif %} {% endfor %}
+            </select>
+            <span id="programHelpBlock" class="help-block hikaya-hide"
+							>{{ user.activity_user.level_1_label }} is required</span
+						>
+          </div>
+
+          <div class="form-group" id="div_training_name">
+            <label class="control-label" for="trainingName">Name*</label>
+            <input
+              type="text"
+              id="trainingName"
+              name="training_name"
+              class="form-control"
+              placeholder="Name of the training"
+              autocomplete="off"
+            />
+            <span id="nameHelpBlock" class="help-block hikaya-hide"
+							>Name is required</span
+						>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="trainingStart">Start Date</label>
+                <input
+                  type="text"
+                  name="start_date"
+                  id="trainingStart"
+                  class="form-control"
+                  placeholder="Start Date"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="trainingEnd">End Date</label>
+                <input
+                  type="text"
+                  name="end_date"
+                  id="trainingEnd"
+                  class="form-control"
+                  placeholder="End Date"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="button" class="btn btn-success" id="saveTrainingBtn">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

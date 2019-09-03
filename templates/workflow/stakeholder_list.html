@@ -10,7 +10,7 @@
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
     <li class="active">Stakeholders</li>
   </ul>
   {% endblock %}
@@ -65,7 +65,7 @@
             data-toggle="modal"
             data-target="#addStakeholderModal"
           >
-           <i class="fa fa-plus"></i> New Stakeholder
+           <i class="fa fa-plus"></i> {{user.activity_user.organization.stakeholder_label}}
           </a>
         </div>
       </div>
@@ -87,7 +87,9 @@
       {% for stakeholder in get_stakeholders %} {% if stakeholder.name%}
       <tr>
         <td>
-          <a href="">{{ stakeholder.name }}</a>
+          <a href="/workflow/stakeholder_update/{{stakeholder.id}}/" data-toggle="tooltip" title="{{stakeholder.name}}">
+            {{ stakeholder.name | truncatechars:50}}
+          </a>
         </td>
         <td>
           {{ stakeholder.type.name }}
@@ -112,8 +114,7 @@
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <ul class="dropdown-menu">
-              <li><a href="#">Edit</a></li>
-              <li role="separator" class="divider"></li>
+              <li><a href="/workflow/stakeholder_update/{{stakeholder.id}}/">Edit</a></li>
               <li><a href="#" class="text-danger">Delete</a></li>
             </ul>
           </div>

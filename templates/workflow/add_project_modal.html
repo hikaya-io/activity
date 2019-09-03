@@ -3,7 +3,7 @@
     $('#program').select2({
       placeholder: 'Select program...',
       theme: 'bootstrap',
-      dropdownParent: $('#addProjectModal')
+      dropdownParent: $('#addProjectModal'),
     });
   });
 
@@ -19,7 +19,7 @@
         obj[item.name] = item.value;
       });
 
-      const data = {...obj, program: $('#program').val()}
+      const data = { ...obj, program: $('#program').val() };
 
       $.ajax({
         url: '{% url "add-level2" %}',
@@ -79,7 +79,7 @@
           {% csrf_token %}
 
           <div class="form-group">
-            <label for="project_name">Project Name</label>
+            <label for="project_name">{{request.user.activity_user.organization.level_2_label}} Name</label>
             <input
               type="text"
               name="project_name"
@@ -87,20 +87,18 @@
               id="id_project_name"
               class="textinput textInput form-control"
               maxlength="255"
+              placeholder="{{request.user.activity_user.organization.level_2_label}} Name"
             />
           </div>
 
           <div class="form-group">
             <label for="program">Program</label>
-            <select
-              class="form-control"
-              id="program"
-              name="program"
-              required
-            >
+            <select class="form-control" id="program" name="program" required>
               <option value=""></option>
               {% for item in get_programs %} {% if item.name %}
-              <option value="{{ item.id }} ">{{ item.name | truncatechars:50 }}</option>
+              <option value="{{ item.id }} ">
+                {{ item.name | truncatechars:50 }}
+              </option>
               {% endif %}{% endfor %}
             </select>
           </div>
@@ -110,8 +108,8 @@
           <button type="reset" class="btn btn-default" data-dismiss="modal">
             Close
           </button>
-          <button type="submit" class="btn btn-primary" id="submitProject">
-            Submit
+          <button type="submit" class="btn btn-success" id="submitProject">
+            Save
           </button>
         </div>
       </form>

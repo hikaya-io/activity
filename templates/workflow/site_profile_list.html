@@ -1,263 +1,222 @@
-{% extends "base.html" %} {% load i18n %} {% load group_tag %} {% block content %}
+{% extends "base.html" %} {% block content %}
+
+<script>
+  $(document).ready(() => {
+    $('#siteProfileTable').DataTable();
+  });
+</script>
 
 <div class="container">
-	{% block breadcrumbs %}
-	<ul class="breadcrumb">
-		<li><a href="{% url 'index' %}">Home Dashboard</a></li>
-		<li class="active">Site Profiles</li>
-	</ul>
-	{% endblock %}
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
+    <li class="active">Locations</li>
+  </ul>
+  {% endblock %}
 
-	<!-- Sub navigation -->
-	<div class="sub-navigation">
-		<div class="sub-navigation-header">
-			<h4 class="page-title">Site Profile List & Map</h4>
-		</div>
-		<div class="sub-navigation-actions">
-			<div class="sub-nav-item">
-				<div class="dropdown">
-					<button
-						class="btn btn-sm btn-default dropdown-toggle"
-						type="button"
-						id="dropdownMenu1"
-						data-toggle="dropdown"
-						aria-expanded="true"
-					>
-						{{ user.activity_user.organization.level_1_label }}(s)
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-						<li role="presentation">
-							<a role="menuitem" tabindex="-1" href="/workflow/siteprofile_list/0/0">
-								-- All --
-							</a>
-						</li>
-						{% for program in get_programs %}
-						<li role="presentation">
-							<a
-								role="menuitem"
-								tabindex="-1"
-								href="/workflow/siteprofile_list/{{ program.id }}/0/"
-							>
-								{{ program.name }}
-							</a>
-						</li>
-						{% endfor %}
-					</ul>
-				</div>
-
-				<br />
-			</div>
-
-			<div class="sub-nav-item">
-				<div class="dropdown">
-					<button
-						class="btn btn-sm btn-default dropdown-toggle"
-						type="button"
-						id="dropdownMenu1"
-						data-toggle="dropdown"
-						aria-expanded="true"
-					>
-						{{ user.activity_user.organization.level_2_label }}(s)
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-						<li role="presentation">
-							<a role="menuitem" tabindex="-1" href="/workflow/siteprofile_list/0/0">
-								-- All --
-							</a>
-						</li>
-						{% for project in get_projects %}
-						<li role="presentation">
-							<a
-								role="menuitem"
-								tabindex="-1"
-								href="/workflow/siteprofile_list/0/{{ project.id }}/"
-							>
-								{{ project.project_name }}
-							</a>
-						</li>
-						{% endfor %}
-					</ul>
-				</div>
-			</div>
-
-			<div class="sub-nav-item">
-				<div class="btn-group" role="group" aria-label="...">
-					<a
-						role="button"
-						href="/workflow/export_sites_list/{{ program_id }}/"
-						class="btn btn-sm btn-default"
-						>Export to CSV</a
-					>
-
-					<a
-						role="button"
-						href="/workflow/siteprofile_add"
-						class="btn btn-sm btn-primary"
-					>
-						New Site Profile</a
-					>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<style>
-		#map {
-			height: 480px;
-		}
-	</style>
-	<!-- Display site profiles & projects -->
-	<table class="table table-striped" id="siteProfileTable">
-		<thead>
-			<th>Date Created</th>
-			<th>Profile Name</th>
-			<th>Status</th>
-			<th>Profile Type</th>
-			<th>Province</th>
-			<th>District</th>
-			<th></th>
-		</thead>
-		<tbody>
-			{% for item in get_site_profile %}
-
-			<tr>
-				<td>
-					<a href="/workflow/siteprofile_update/{{ item.id }}"
-						>{{ item.create_date | date:'d-m-Y' }}
-					</a>
-				</td>
-				<td>
-					<a href="/workflow/siteprofile_update/{{ item.id }}">{{ item.name }}</a>
-				</td>
-				{% if item.status == 1 %}
-				<td>
-					<a href="/workflow/siteprofile_update/{{ item.id }}"
-						><span class="badge">Active</span></a
-					>
-				</td>
-				{%else%}
-				<td>
-					<a href="/workflow/siteprofile_update/{{ item.id }}"
-						><span class="badge">Inactive</span></a
-					>
-				</td>
-				{%endif%}
-				<td>
-					<a href="/workflow/siteprofile_update/{{ item.id }}">{{ item.type }}</a>
-				</td>
-				<td>{{ item.province }}</td>
-				<td>{{ item.district }}</td>
-				<td>
-					<!-- <a href="/workflow/siteprofile_delete/{{ item.id }}" class="btn btn-xs btn-danger"
-            >Delete Site Profile</a
-          >
-          <a href="/workflow/site_indicatordata/{{ item.id }}/" class="btn btn-xs btn-default"
-            >Indicator Data</a
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">Location List</h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <a role="button" href="#" class="btn btn-default btn-sm disabled"
+            ><i class="fa fa-list"></i> List</a
           >
           <a
-            href="/workflow/site_projectscomplete/{{ item.id }}/"
-            class="btn btn-xs btn-default"
-            >Projects</a
-          > -->
-					<div class="btn-group">
-						<a role="button" href="" class="btn btn-default btn-sm disabled">More</a>
-						<button
-							type="button"
-							class="btn btn-default btn-sm dropdown-toggle"
-							data-toggle="dropdown"
-							aria-haspopup="true"
-							aria-expanded="false"
-						>
-							<span class="caret"></span>
-							<span class="sr-only">Toggle Dropdown</span>
-						</button>
-						<ul class="dropdown-menu">
-							<li>
-								<a href="/workflow/site_indicatordata/{{ item.id }}/">
-									{{request.user.activity_user.organization.indicator_label}}
-									Data
-								</a>
-							</li>
-							<li>
-								<a href="/workflow/site_projectscomplete/{{ item.id }}/">
-									{{ request.user.activity_user.organization.level_2_label }}
-								</a>
-							</li>
-							<li role="separator" class="divider"></li>
+            role="button"
+            href="/workflow/siteprofile_list/0/0/map/"
+            class="btn btn-default btn-sm"
+            ><i class="fa fa-map-marker"></i> Map</a
+          >
+        </div>
+      </div>
+      <div class="sub-nav-item">
+        <div class="dropdown">
+          <button
+            class="btn btn-sm btn-default dropdown-toggle"
+            type="button"
+            id="dropdownMenu1"
+            data-toggle="dropdown"
+            aria-expanded="true"
+          >
+            {{ user.activity_user.organization.level_1_label }}(s)
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation">
+              <a
+                role="menuitem"
+                tabindex="-1"
+                href="/workflow/siteprofile_list/0/0"
+              >
+                -- All --
+              </a>
+            </li>
+            {% for program in get_programs %}
+            <li role="presentation">
+              <a
+                role="menuitem"
+                tabindex="-1"
+                href="/workflow/siteprofile_list/{{ program.id }}/0/"
+              >
+                {{ program.name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
 
-							<li>
-								<a class="" href="/workflow/level1/edit/{{ program.id }}/">Edit</a>
-							</li>
-							<li>
-								<a
-									class="text-danger"
-									href="#deleteProgramModal{{ program.id }}"
-									data-toggle="modal"
-									onclick="setItemToDelete({{ program.id }})"
-									data-target="#deleteProgramModal{{ program.id }}"
-								>
-									Delete
-								</a>
-							</li>
-						</ul>
-					</div>
-				</td>
-			</tr>
-		</tbody>
+        <br />
+      </div>
 
-		{% endfor %}
-	</table>
+      <div class="sub-nav-item">
+        <div class="dropdown">
+          <button
+            class="btn btn-sm btn-default dropdown-toggle"
+            type="button"
+            id="dropdownMenu1"
+            data-toggle="dropdown"
+            aria-expanded="true"
+          >
+            {{ user.activity_user.organization.level_2_label }}(s)
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation">
+              <a
+                role="menuitem"
+                tabindex="-1"
+                href="/workflow/siteprofile_list/0/0"
+              >
+                -- All --
+              </a>
+            </li>
+            {% for project in get_projects %}
+            <li role="presentation">
+              <a
+                role="menuitem"
+                tabindex="-1"
+                href="/workflow/siteprofile_list/0/{{ project.id }}/"
+              >
+                {{ project.project_name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
 
-	{% if offline_mode %}
-	<h2>Offline (No map provided)</h2>
-	{% else %}
-	<div id="map"></div>
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <a
+            role="button"
+            href="/workflow/export_sites_list/{{ program_id }}/"
+            class="btn btn-sm btn-default"
+            >Export to CSV</a
+          >
 
-	{% include "workflow/site_profile_map.html" %}
+          <a
+            role="button"
+            href="/workflow/siteprofile_add"
+            class="btn btn-sm btn-primary"
+          >
+          <i class="fa fa-plus"></i> {{user.activity_user.organization.site_label}}</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
 
-	<script>
-		$(document).ready(() => {
-			$('#siteProfileTable').DataTable();
-		});
-		function ZoomToCountry(region) {
-			if (region == 'Latin America, Caribbean, Balkans, Caucasus') {
-				map.setView([9, -60], 4);
-			} else if (region == 'East Asia') {
-				map.setView([30, 96], 4);
-			} else if (region == 'Central & South Asia') {
-				map.setView([30, 80], 4);
-			} else if (region == 'East & Southern Africa') {
-				map.setView([10, 10], 4);
-			} else if (region == 'West & Central Africa') {
-				map.setView([10, 10], 4);
-			} else if (region == 'Latin America, Caribbean, Balkans, Caucasus') {
-				map.setView([30, 20], 4);
-			} else if (region == 'Middle East') {
-				map.setView([30, 20], 4);
-			} else if (region == '1') {
-				map.setView([10, -10], 2);
-			}
-		}
-	</script>
-	{% endif %}
+  <!-- Display site profiles & projects -->
+  <table class="table" id="siteProfileTable">
+    <thead>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Office</th>
+      <th>Country</th>
+      <th>Status</th>
+      <th class="text-right"></th>
+    </thead>
+    <tbody>
+      {% for item in get_site_profile %}
+      <tr>
+        <td>
+          <a href="/workflow/siteprofile_update/{{ item.id }}" 
+            data-toggle="tooltip" 
+            title="{{ item.name }}">
+			    {{ item.name | truncatechars:50 }}</a>
+        </td>
+        <td>{{ item.type }}</td>
+        <td>{{ item.office }}</td>
+        <td>{{ item.country }}</td>
+        {% if item.status == 1 %}
+        <td>
+          <a href="/workflow/siteprofile_update/{{ item.id }}"
+            ><span class="badge">Active</span></a
+          >
+        </td>
+        {% else %}
+        <td>
+          <a href="/workflow/siteprofile_update/{{ item.id }}"
+            ><span class="badge">Inactive</span></a
+          >
+        </td>
+        {% endif %}
+        <td class="text-right">
+          <div class="btn-group">
+            <a role="button" href="" class="btn btn-default btn-sm disabled"
+              >More</a
+            >
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li class="dropdown-header">Related</li>
+              <li>
+                <a href="/workflow/site_indicatordata/{{ item.id }}/">
+                  {{ request.user.activity_user.organization.indicator_label }}
+                  Data
+                </a>
+              </li>
+              <li>
+                <a href="/workflow/site_projectscomplete/{{ item.id }}/">
+                  {{ request.user.activity_user.organization.level_2_label }}
+                </a>
+              </li>
+              <li role="separator" class="divider"></li>
 
-	<!-- Modal -->
-	<div
-		class="modal fade"
-		id="importModal"
-		tabindex="-1"
-		role="dialog"
-		aria-labelledby="myModalLabel"
-		aria-hidden="true"
-	>
-		<div class="modal-dialog">
-			<div class="modal-content"></div>
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
-	<!-- /.modal -->
+              <li>
+                <a href="{% url 'siteprofile_update' pk=item.id %}">Edit</a>
+              </li>
+
+              <li>
+                <a
+                  class="text-danger"
+                  href="#deleteProgramModal{{ program.id }}"
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{ program.id }})"
+                  data-target="#deleteProgramModal{{ program.id }}"
+                >
+                  Delete
+                </a>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
 </div>
 {% endblock content %}

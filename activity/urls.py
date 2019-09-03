@@ -70,7 +70,8 @@ urlpatterns = [  # rest framework
     path('api-token-auth/', auth_views.obtain_auth_token),
 
     # index
-    path('', views.index, name='index'),
+    path('', lambda request: redirect('dashboard/0/', permanent=False), name="index"),
+    
     # enable the admin:
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
@@ -78,8 +79,8 @@ urlpatterns = [  # rest framework
             views.index, name='index'),
 
     # index
-    re_path(r'^dashboard/(?P<id>\w+)/(?P<sector>\w+)/$',
-            activityviews.index, name='index'),
+    re_path(r'^dashboard/(?P<program_id>\w+)/$',
+            activityviews.index, name='home_dashboard'),
 
     # base template for layout
     path('', TemplateView.as_view(template_name='base.html')),
@@ -112,7 +113,7 @@ urlpatterns = [  # rest framework
     path('accounts/logout/', views.logout_view, name='logout'),
 
     # register
-    path('accounts/register/', views.register, name='register'),
+    path('accounts/register/user/<slug:invite_uuid>/', views.register, name='register'),
     path('accounts/register/organization', views.register_organization,
          name='register_organization'),
 
@@ -132,6 +133,12 @@ urlpatterns = [  # rest framework
          name='admin_configurations'),
     path('accounts/admin/profile_settings', views.admin_profile_settings,
          name='admin_profile_settings'),
+    path('accounts/admin/invite_user/', views.invite_user,
+         name='invite_user'),
+    path('accounts/admin/users/invitations/list/<slug:organization>/', views.admin_user_invitations,
+         name='admin_user_invitations'),
+    path('accounts/admin/users/invitations/delete_invitation/<slug:pk>/', views.delete_invitation,
+         name='delete_invitation'),
 
     # bookmarks
     path('bookmark_list', BookmarkList.as_view(),
@@ -150,7 +157,7 @@ urlpatterns = [  # rest framework
     path('', include('social_django.urls', namespace='social')),
     re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]'
             r'{1,13}-[0-9A-Za-z]{1,20})/$',
-            views.activate, name='activate'),
+            views.activate_acccount, name='activate'),
     # path('oauth/',
     #       include('social_django.urls', namespace='social')),
 

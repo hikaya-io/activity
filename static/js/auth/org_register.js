@@ -14,6 +14,10 @@ $(document).ready(function() {
 			$('#orgFormSubmitBtn').attr('disabled', true);
             
 		}
-		$('#org_url').val(`www.activity.hikaya.io/${orgName}`);
+		$('#activity_url').val(`www.activity.hikaya.io/${cleanName(orgName)}`);
 	});
 });
+
+function cleanName(name) {
+	return name.replace(' ', '-').toLowerCase();
+}

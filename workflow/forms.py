@@ -186,8 +186,8 @@ class ProgramForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(css_class='form-row'),
-            Submit('submit', 'Discard Changes',
-                   css_class='btn btn-md btn-default'),
+            Reset('reset', 'Close',
+                  css_class='btn btn-md btn-default'),
             Submit('submit', 'Save Changes',
                    css_class='btn btn-md btn-success'),
 
@@ -1787,8 +1787,8 @@ class SiteProfileForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-2'
-        self.helper.field_class = 'col-sm-6'
+        self.helper.label_class = 'col-sm-3'
+        self.helper.field_class = 'col-sm-9'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
@@ -1847,8 +1847,8 @@ class SiteProfileForm(forms.ModelForm):
 
             ),
             FormActions(
-                Submit('submit', 'Save', css_class='btn-default'),
-                Reset('reset', 'Reset', css_class='btn-warning')
+                Reset('reset', 'Close', css_class='btn-default'),
+                Submit('submit', 'Save', css_class='btn-default')
             ),
 
             HTML("""
@@ -1923,7 +1923,7 @@ class DocumentationForm(forms.ModelForm):
                 Column('project', css_class='form-group col-md-6 mb-0'),
                 css_class="form-row"
             ),
-            Reset('reset', 'Discard Changes', css_class='btn-md btn-default'),
+            Reset('reset', 'Close', css_class='btn-md btn-default'),
             Submit('submit', 'Save Changes', css_class='btn-md btn-success')
 
         )
@@ -2143,7 +2143,7 @@ class ContactForm(forms.ModelForm):
                 css_class='form-row'
             ),
             'address',
-            Reset('reset', 'Discard Changes', css_class='btn btn-md btn-default'),
+            Reset('reset', 'Close', css_class='btn btn-md btn-default'),
             Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
         )
 
@@ -2169,14 +2169,17 @@ class StakeholderForm(forms.ModelForm):
         self.request = kwargs.pop('request')
         self.helper.form_method = 'post'
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-2'
-        self.helper.field_class = 'col-sm-6'
+        self.helper.label_class = 'col-sm-3'
+        self.helper.field_class = 'col-sm-9'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.add_input(
-            Submit('submit', 'Save', css_class='btn-success'))
+            Reset('reset', 'Close', css_class='btn-default')),
+        self.helper.add_input(
+            Submit('submit', 'Save', css_class='btn-success')),
+
         pkval = kwargs['instance'].pk if kwargs['instance'] else 0
         self.helper.layout = Layout(
 
@@ -2205,7 +2208,8 @@ class StakeholderForm(forms.ModelForm):
         super(StakeholderForm, self).__init__(*args, **kwargs)
 
         countries = get_country(self.request.user)
-        users = ActivityUser.objects.filter(country__in=countries)
+        users = ActivityUser.objects.filter(
+            organization=self.request.user.activity_user.organization)
         self.fields['contact'].queryset = Contact.objects.filter(
             country__in=countries)
         self.fields['sectors'].queryset = Sector.objects.all()
@@ -2214,10 +2218,11 @@ class StakeholderForm(forms.ModelForm):
         self.fields['filled_by'].queryset = users
         self.fields[
             'formal_relationship_document'].queryset = \
-            Documentation.objects.filter(program__country__in=countries)
+            Documentation.objects.filter(
+                program__organization=self.request.user.activity_user.organization)
         self.fields[
             'vetting_document'].queryset = Documentation.objects.filter(
-            program__country__in=countries)
+            program__organization=self.request.user.activity_user.organization)
 
 
 class FilterForm(forms.Form):

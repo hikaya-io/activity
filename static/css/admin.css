@@ -5,15 +5,22 @@
 
 }
 .side-nav {
-    padding: 8px 10px;
-    background-color: #DCDCDC;
+    background-color: #FFFFFF;
     min-height: 85vh;
 }
 
 .admin-content {
-    padding: 15px 25px;
-    background: #F5F5F5;
+    padding: 10px 25px;
+    background: #FFFFFF;
     min-height: 85vh;
+}
+
+.admin-content-row {
+    margin-right: 0px;
+}
+
+.usage-content {
+    background-color: #f5f5f5;
 }
 
 .default-setting {
@@ -22,7 +29,7 @@
 
 .dashboard-summaries {
     background: #FFFFFF;
-    margin-left:33px;
+    margin-left: 2.8%;
     line-height: 10px;
 }
 

@@ -9,8 +9,6 @@ from django.urls import re_path, path
 urlpatterns = [
     path('level1', list_workflow_level1, name='level1'),
     path('level1_delete/<slug:pk>/', level1_delete, name='level1_delete'),
-    path('objectives', objectives_list, name='objectives'),
-    path('objectives/tree', objectives_tree, name='objectives-tree'),
     path('level2/add', add_level2, name='add-level2'),
     path('documentation/add', add_documentation, name='add-documentation'),
     path('contact/add', add_contact, name='add-contact'),
@@ -24,7 +22,7 @@ urlpatterns = [
             ProjectDash.as_view(), name='project_dashboard'),
 
     re_path(r'^level2/list/(?P<program>\w+)/(?P<status>[\w ]+)/$',
-            ProgramDash.as_view(), name='dashboard'),
+            ProgramDash.as_view(), name='projects_list'),
 
     re_path(r'^(?P<pk>\w+)/$',
             ProjectAgreementList.as_view(), name='projectagreement_list'),
@@ -33,7 +31,7 @@ urlpatterns = [
     re_path(r'^projectagreement_update/(?P<pk>\w+)/$',
             ProjectAgreementUpdate.as_view(), name='projectagreement_update'),
     re_path(r'^projectagreement_delete/(?P<pk>\w+)/$',
-            ProjectAgreementDelete.as_view(), name='projectagreement_delete'),
+            delete_project_agreement, name='projectagreement_delete'),
     re_path(r'^projectagreement_import',
             ProjectAgreementImport.as_view(), name='projectagreement_import'),
     re_path(r'^projectagreement_detail/(?P<pk>\w+)/$',
@@ -52,7 +50,7 @@ urlpatterns = [
     re_path(r'^projectcomplete_detail/(?P<pk>\w+)/$',
             ProjectCompleteDetail.as_view(), name='projectcomplete_detail'),
 
-    re_path(r'^siteprofile_list/(?P<program_id>\w+)/(?P<activity_id>\w+)/$',
+    re_path(r'^siteprofile_list/(?P<program_id>\w+)/(?P<activity_id>\w+)/(?P<display>\w+)/$',
             SiteProfileList.as_view(), name='siteprofile_list'),
     re_path(r'^siteprofile_report/(?P<pk>\w+)/$',
             SiteProfileReport.as_view(), name='siteprofile_report'),

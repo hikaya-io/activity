@@ -91,8 +91,8 @@ class TrainingAttendanceForm(forms.ModelForm):
                 Column('total_age_25_59_female', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
-            Reset('reset', 'Discard Changes', css_class='btn-md btn-default'),
-            Submit('submit', 'Save Changes', css_class='btn-md btn-success'), )
+            Reset('reset', 'Close', css_class='btn-md btn-default'),
+            Submit('submit', 'Save', css_class='btn-md btn-success'), )
 
         super(TrainingAttendanceForm, self).__init__(*args, **kwargs)
 
@@ -199,8 +199,8 @@ class DistributionForm(forms.ModelForm):
                 Column('form_verified_date', css_class='form-group col-md-3 mb-0'),
                 css_class='form-row'
             ),
-            Reset('reset', 'Discard Changes', css_class='btn btn-md btn-default'),
-            Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
+            Reset('reset', 'Close', css_class='btn btn-md btn-default'),
+            Submit('submit', 'Save', css_class='btn btn-md btn-success'),
         )
 
         super(DistributionForm, self).__init__(*args, **kwargs)
@@ -269,8 +269,8 @@ class BeneficiaryForm(forms.ModelForm):
                 css_class='form-row'
             ),
             'remarks',
-            Reset('reset', 'Discard Changes', css_class='btn btn-md btn-default'),
-            Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
+            Reset('reset', 'Close', css_class='btn btn-md btn-default'),
+            Submit('submit', 'Save', css_class='btn btn-md btn-success'),
         )
 
         super(BeneficiaryForm, self).__init__(*args, **kwargs)

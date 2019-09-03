@@ -1,0 +1,15 @@
+Welcome to Activity, {{user.username}}!
+
+Thank you for registering.
+You are now ready to track your project data and indicators! 😄
+
+Activity is an open source product brought to you by your friends at Hikaya.
+
+Login to activity
+
+{{domain}}/accounts/login/
+
+Copyright © 2019 Hikaya
+All rights reserved.
+
+This email was sent to <{{user.email}}> because you registered a new Activity account.

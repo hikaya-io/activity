@@ -10,7 +10,7 @@
 <div class="container">
   {% block breadcrumbs %}
     <ul class="breadcrumb">
-      <li><a href="{% url 'index' %}">Home Dashboard</a></li>
+      <li><a href="{% url 'index' %}">My Dashboard</a></li>
       <li class="active">{{ request.user.activity_user.organization.level_2_label }}s</li>
     </ul>
   {% endblock %}
@@ -18,11 +18,14 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {{ request.user.activity_user.organization.level_2_label }}s
+        {{ request.user.activity_user.organization.level_2_label }}s List
       </h4>
     </div>
 
     <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        Filter by:
+      </div>
       <div class="sub-nav-item">
         {% include "workflow/filter.html" %}
       </div>
@@ -35,7 +38,7 @@
             data-toggle="modal"
             data-target="#addProjectModal"
           >
-            <i class="fa fa-plus"></i> Create New
+            <i class="fa fa-plus"></i>
             {{ request.user.activity_user.organization.level_2_label }}
           </button>
         </div>
@@ -82,7 +85,7 @@
   </thead>
   <tbody>
     {% for project in get_projects %} {% if project.project_name %}
-        {% include "workflow/program_projects_table.html" %}
+        {% include "./program_projects_table.html" %}
     {% endif %}{% endfor %}
   </tbody>
   </table>

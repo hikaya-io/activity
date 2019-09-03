@@ -14,6 +14,8 @@ from indicators.models import CollectedData, Indicator, ActivityTable
 from django.db.models import Sum
 from django.db.models import Q
 
+from django.conf import settings
+
 from activity.util import get_country, get_table
 
 from django.contrib.auth.decorators import login_required
@@ -277,6 +279,10 @@ def public_dashboard(request, id=0, public=0):
     # get all countries
     countries = Country.objects.all().filter(program__id=program_id)
 
+    get_locations = SiteProfile.objects.filter(
+        organizations__id__in=[get_program.id]
+    )
+
     # Trainings
     agreement_id_list = []
     training_id_list = []
@@ -347,12 +353,14 @@ def public_dashboard(request, id=0, public=0):
         'get_notebooks': get_notebooks,
         'evidence_tables_count': evidence_tables_count,
         'get_quantitative_data_sums': get_quantitative_data_sums,
+        'get_locations': get_locations,
         'get_site_profile_indicator': get_site_profile_indicator,
         'get_site_profile_indicator_count': get_site_profile_indicator.count(),
         'get_beneficiaries': get_beneficiaries,
         'get_distributions': get_distributions, 'get_trainings': get_trainings,
         'get_project_completed': get_project_completed,
-        'get_all_projects': get_all_projects})
+        'get_all_projects': get_all_projects,
+        'map_api_key': settings.GOOGLE_MAP_API_KEY})
 
 
 """

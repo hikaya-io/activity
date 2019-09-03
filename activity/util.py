@@ -1,12 +1,13 @@
 import unicodedata
 import json
 import requests
-
+from django.core import mail
 from workflow.models import Country, ActivityUser, ActivitySites, Organization
 from django.contrib.auth.models import User
-from django.core.mail import mail_admins, EmailMessage
+from django.core.mail import mail_admins, EmailMessage, EmailMultiAlternatives
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import user_passes_test
+from django.template import loader, Context
 
 
 # CREATE NEW DATA DICTIONARY OBJECT
@@ -140,15 +141,80 @@ def group_required(*group_names, url):
 
 def get_nav_links(nav):
     nav_links = [
-        {'label': 'Home', 'status': '', 'link': '/accounts/admin_dashboard'},
-        {'label': 'Profile Settings', 'status': '',
+        {'label': 'Profile', 'status': '',
          'link': '/accounts/admin/profile_settings'},
         {'label': 'Configurations', 'status': '',
          'link': '/accounts/admin/configurations'},
-        {'label': 'User Management', 'status': '',
-         'link': '/accounts/admin/users/all/all/'}
+        {'label': 'People', 'status': '',
+         'link': '/accounts/admin/users/all/all/'},
+        {'label': 'Usage', 'status': '', 'link': '/accounts/admin_dashboard'}
     ]
     for item in nav_links:
         if item['label'] == nav:
             item['status'] = 'hikaya-active'
     return nav_links
+
+
+def send_invite_emails(subject, email_from, email_to, data):
+    """
+    send mass emails
+    :param subject: email subject
+    :param email_from: email sender
+    :param email_to: recipients list
+    :param data: context data
+    """
+    if len(email_to) > 1:
+        connection = mail.get_connection()
+        messages = list()
+        for email in email_to:
+            link = '{}{}/'.format(data['link'], email.invite_uuid)
+            email_context = {
+                'organization': email.organization.name,
+                'link': link,
+                'email': email.email
+            }
+            email_txt = loader.render_to_string('emails/invite.txt', email_context)
+            email_html = loader.get_template('emails/invite.html')
+            email_html_content = email_html.render(email_context)
+            msg = EmailMultiAlternatives(subject, email_txt,
+                                         'Hikaya <{}>'.format(email_from), [email.email])
+            msg.attach_alternative(email_html_content, "text/html")
+            messages.append(msg)
+
+        connection.send_messages(messages)
+    else:
+        link = '{}{}/'.format(data['link'], email_to[0].invite_uuid)
+        email_context = {
+            'organization': email_to[0].organization.name,
+            'link': link,
+            'email': email_to[0].email
+        }
+        email_txt = loader.render_to_string('emails/invite.txt', email_context)
+        email_html = loader.get_template('emails/invite.html')
+        email_html_content = email_html.render(email_context)
+        msg = EmailMultiAlternatives(subject, email_txt,
+                                     'Hikaya <{}>'.format(email_from), [email_to[0].email])
+        msg.attach_alternative(email_html_content, "text/html")
+
+        msg.send()
+
+
+def send_single_mail(subject, email_from, email_to, data, email_txt, email_html):
+    """
+    Send single email
+    :param subject: email subject
+    :param email_from: email sender
+    :param email_to: recipients list
+    :param data: context data
+    """
+    email_context = data
+    email_txt = loader.render_to_string(email_txt, email_context)
+    email_html = loader.get_template(email_html)
+    email_html_content = email_html.render(email_context)
+
+    msg = EmailMultiAlternatives(subject, email_txt, email_from, email_to)
+    msg.attach_alternative(email_html_content, "text/html")
+
+    msg.send()
+
+
