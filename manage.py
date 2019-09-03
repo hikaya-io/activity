@@ -4,7 +4,7 @@ import sys
 
 if __name__ == "__main__":
 
-    settings = 'activity.settings.test' if 'test' in sys.argv else 'activity.settings.local'
+    settings = 'activity.settings.test' if 'test' in sys.argv else 'activity.settings.production'
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings)
 
