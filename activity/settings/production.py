@@ -32,16 +32,16 @@ ALLOWED_HOSTS = []
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-host
-EMAIL_HOST = environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_HOST = environ.get('ACTIVITY_EMAIL_HOST', '')
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-host-password
-EMAIL_HOST_PASSWORD = environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_PASSWORD = environ.get('ACTIVITY_EMAIL_HOST_PASSWORD', '')
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-host-user
-EMAIL_HOST_USER = environ.get('EMAIL_HOST_USER', 'your_email@example.com')
+EMAIL_HOST_USER = environ.get('ACTIVITY_EMAIL_HOST_USER', '')
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-port
-EMAIL_PORT = environ.get('EMAIL_PORT', 587)
+EMAIL_PORT = environ.get('ACTIVITY_EMAIL_PORT', '')
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
 EMAIL_SUBJECT_PREFIX = '[%s] ' % SITE_NAME
@@ -54,7 +54,21 @@ SERVER_EMAIL = EMAIL_HOST_USER
 # END EMAIL CONFIGURATION
 
 # DATABASE CONFIGURATION
-DATABASES = {}
+# DATABASE CONFIGURATION
+DATABASES = {
+    'default': {
+        # 'django.db.backends.postgresql'
+        'ENGINE': environ.get('ACTIVITY_PROD_DB_ENGINE', ''),
+        'NAME': environ.get('ACTIVITY_PROD_DB_NAME', ''),
+        'USER': environ.get('ACTIVITY_PROD_DB_USER', ''),
+        'PASSWORD': environ.get('ACTIVITY_PROD_DB_PASSWORD', ''),
+        'HOST': environ.get('ACTIVITY_PROD_DB_HOST', ''),
+        'PORT': environ.get('ACTIVITY_PROD_DB_PORT', ''),
+    }
+}
+
+GOOGLE_MAP_API_KEY = environ.get('ACTIVITY_GOOGLE_MAP_API_KEY', '')
+
 # END DATABASE CONFIGURATION
 
 
@@ -66,5 +80,9 @@ CACHES = {}
 
 # SECRET CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-SECRET_KEY = get_env_setting('SECRET_KEY')
+SECRET_KEY = get_env_setting('ACTIVITY_SECRET_KEY')
 # END SECRET CONFIGURATION
+
+REPORT_SERVER = False
+OFFLINE_MODE = False
+NON_LDAP = True
