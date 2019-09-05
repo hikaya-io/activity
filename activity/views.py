@@ -185,7 +185,7 @@ def switch_organization(request, org_id):
     activity_user.organization = organization
     activity_user.save()
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    return redirect('/')
 
 
 def activate_acccount(request, uidb64, token):
