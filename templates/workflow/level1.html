@@ -12,7 +12,7 @@
   <ul class="breadcrumb">
     <li><a href="/">My Dashboard</a></li>
     <li class="active">
-      {{ request.user.activity_user.organization.level_1_label }}s
+      {{ request.user.activity_user.organization.level_1_label }}
     </li>
   </ul>
   {% endblock %}
@@ -21,7 +21,7 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {{ request.user.activity_user.organization.level_1_label }}s List
+        {{ request.user.activity_user.organization.level_1_label }} List
       </h4>
     </div>
     <div class="sub-navigation-actions">
@@ -80,9 +80,9 @@
                   {{ request.user.activity_user.organization.level_2_label }}s
                 </a>
               </li>
-              <li><a href="">Stakeholders</a></li>
-              <li><a href="">Sites</a></li>
-              <li><a href="">Indicators</a></li>
+              <li><a href="">{{ user.activity_user.organization.stakeholder_label }}</a></li>
+              <li><a href="">{{ user.activity_user.organization.site_label }}</a></li>
+              <li><a href="">{{ user.activity_user.organization.indicator_label }}</a></li>
 
               <li role="separator" class="divider"></li>
 

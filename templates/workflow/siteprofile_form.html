@@ -6,7 +6,7 @@
     <ul class="breadcrumb">
       <li><a href="{% url 'index' %}">My Dashboard</a></li>
       <li>
-        <a href="/workflow/siteprofile_list/0/0/list/">Locations</a>
+        <a href="/workflow/siteprofile_list/0/0/list/">{{ user.activity_user.organization.site_label }}</a>
       </li>
       <li class="active">Details</li>
     </ul>

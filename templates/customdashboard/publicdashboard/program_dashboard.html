@@ -97,12 +97,12 @@
       <li>
         <a href="#projects" data-toggle="tab"
           ><i class="fa fa-folder-open"></i>
-          {{ user.activity_user.organization.level_2_label }}(s)</a
+          {{ user.activity_user.organization.level_2_label }}</a
         >
       </li>
       <li>
         <a href="#indicators" data-toggle="tab"
-          ><i class="fa fa-bars"></i> Indicator(s)</a
+          ><i class="fa fa-bars"></i> {{ user.activity_user.organization.indicator_label }}</a
         >
       </li>
       <li>
@@ -174,7 +174,7 @@
                 <a data-toggle="collapse" href="#collapse{{ get_program.id }}"
                   ><b
                     >Summary of
-                    {{ user.activity_user.organization.level_2_label }}(s) for -
+                    {{ user.activity_user.organization.level_2_label }} for -
                     {% if get_program %}{{ get_program.name }}{% endif %}</b
                   ></a
                 >
@@ -259,7 +259,7 @@
         <h4 class="page-header">Key Performance Indicators</h4>
        
         <div class="mb-3">
-          <button class="btn btn-info btn-xs">Number of Indicator(s)
+          <button class="btn btn-info btn-xs">{{ user.activity_user.organization.indicator_label }}
               <span class="badge badge-info">{{ get_indicator_count }}</span>
           </button>
 
@@ -294,7 +294,7 @@
                   data-toggle="collapse"
                   href="#indi_collapse{{ get_program.id }}"
                   ><b
-                    >Summary of Indicators for - {% if get_program %}
+                    >Summary of {{ user.activity_user.organization.indicator_label }} for - {% if get_program %}
                     {{ get_program.name }}{% endif %}</b
                   ></a
                 >
@@ -508,7 +508,7 @@
           <div class="col-md-12">
             <div class="panel panel-info">
               <div class="panel-heading">
-                <b>{{ user.activity_user.organization.level_2_label }} Sites</b>
+                <b>{{ user.activity_user.organization.level_2_label }} {{ user.activity_user.organization.site_label }}</b>
                 {% if get_filtered_name %} for
                 <a href="/workflow/dashboard/{{ get_filtered_name.id }}">{{
                   get_filtered_name

@@ -51,8 +51,8 @@
               {% else %}
                 <li class="disabled"><a><span class="glyphicon glyphicon-lock"></span> Project Tracking</a></li>
               {% endif%}
-            <li><a href="">Sites</a></li>
-            <li><a href="">Stakeholders</a></li>
+            <li><a href="">{{ user.activity_user.organization.site_label }}</a></li>
+            <li><a href="">{{ user.activity_user.organization.stakeholder_label }}</a></li>
             <li><a href="">Checklist</a></li>
             <li role="separator" class="divider"></li>
             <li>
