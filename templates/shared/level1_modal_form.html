@@ -30,7 +30,7 @@
       };
 
       $.ajax({
-        url: '/',
+        url: "{% url 'home_dashboard' 0 %}",
         type: 'POST',
         data,
         success: function(resp, status) {
