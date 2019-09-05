@@ -385,7 +385,7 @@ class CustomDashboardForm(forms.ModelForm):
                 <div class="modal-header"></div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
+                    <button type="button" class="btn btn-close"
                         data-dismiss="modal">Close</button>
                 </div>
             </div>

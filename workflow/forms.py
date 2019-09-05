@@ -187,7 +187,7 @@ class ProgramForm(forms.ModelForm):
             ),
             Row(css_class='form-row'),
             Reset('reset', 'Close',
-                  css_class='btn btn-md btn-default'),
+                  css_class='btn btn-md btn-close'),
             Submit('submit', 'Save Changes',
                    css_class='btn btn-md btn-success'),
 
@@ -557,7 +557,7 @@ class ProjectAgreementForm(forms.ModelForm):
 
             FormActions(
                 Submit('submit', 'Save', css_class='btn-default'),
-                Reset('reset', 'Reset', css_class='btn-warning')
+                Reset('reset', 'Close', css_class='btn-close')
             ),
 
             HTML("""<br/>"""),
@@ -1847,7 +1847,7 @@ class SiteProfileForm(forms.ModelForm):
 
             ),
             FormActions(
-                Reset('reset', 'Close', css_class='btn-default'),
+                Reset('reset', 'Close', css_class='btn-close'),
                 Submit('submit', 'Save', css_class='btn-default')
             ),
 
@@ -1923,7 +1923,7 @@ class DocumentationForm(forms.ModelForm):
                 Column('project', css_class='form-group col-md-6 mb-0'),
                 css_class="form-row"
             ),
-            Reset('reset', 'Close', css_class='btn-md btn-default'),
+            Reset('reset', 'Close', css_class='btn-md btn-close'),
             Submit('submit', 'Save Changes', css_class='btn-md btn-success')
 
         )
@@ -2143,7 +2143,7 @@ class ContactForm(forms.ModelForm):
                 css_class='form-row'
             ),
             'address',
-            Reset('reset', 'Close', css_class='btn btn-md btn-default'),
+            Reset('reset', 'Close', css_class='btn btn-md btn-close'),
             Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
         )
 
@@ -2176,7 +2176,7 @@ class StakeholderForm(forms.ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.add_input(
-            Reset('reset', 'Close', css_class='btn-default')),
+            Reset('reset', 'Close', css_class='btn-close')),
         self.helper.add_input(
             Submit('submit', 'Save', css_class='btn-success')),
 
