@@ -1,3 +1,56 @@
+.btn-close {
+  color: #25ced1;
+  background-color: transparent;
+  border-color: #25ced1;
+}
+.btn-close:focus,
+.btn-close.focus {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #8c8c8c;
+}
+.btn-close:hover {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+.btn-close:active,
+.btn-close.active,
+.open > .dropdown-toggle.btn-close {
+  color: #333;
+  background-color: #e6e6e6;
+  background-image: none;
+  border-color: #adadad;
+}
+.btn-close:active:hover,
+.btn-close.active:hover,
+.open > .dropdown-toggle.btn-close:hover,
+.btn-close:active:focus,
+.btn-close.active:focus,
+.open > .dropdown-toggle.btn-close:focus,
+.btn-close:active.focus,
+.btn-close.active.focus,
+.open > .dropdown-toggle.btn-close.focus {
+  color: #333;
+  background-color: #d4d4d4;
+  border-color: #8c8c8c;
+}
+.btn-close.disabled:hover,
+.btn-close[disabled]:hover,
+fieldset[disabled] .btn-close:hover,
+.btn-close.disabled:focus,
+.btn-close[disabled]:focus,
+fieldset[disabled] .btn-close:focus,
+.btn-close.disabled.focus,
+.btn-close[disabled].focus,
+fieldset[disabled] .btn-close.focus {
+  background-color: #fff;
+  border-color: #ccc;
+}
+.btn-close .badge {
+  color: #fff;
+  background-color: #333;
+}
 .btn-primary {
     color: #fff;
     background-color: #25ced1;
