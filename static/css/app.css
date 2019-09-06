@@ -755,8 +755,11 @@ input[type=number]::-webkit-outer-spin-button {
 .hikaya-blue-box {
     background-color: #25CED1;
     border-radius: 8px;
-    margin: 16px;
     padding: 16px;
+}
+
+.btn-reset {
+    padding-top: 16px;
 }
 
 .title-item-name {

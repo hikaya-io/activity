@@ -27,15 +27,18 @@
 			method="POST" 
 			enctype="multipart/form-data">
 			<div class="form-group row">
-				{% if organization.logo %}
-					<div class="col-sm-2" for="organizationLogo">
-						<img src="{{ organization.logo.url }}" alt="Organization Logo" class="img-responsive">
-					</div>
-				{% else %}
-					<div class="col-sm-2 hikaya-blue-box" for="organizationLogo">
-						<img src="../../static/img/white_logo.png" alt="Organization Logo" class="img-responsive">
-					</div>
-				{% endif %}
+				<div class="column col-sm-2">
+					{% if organization.logo %}
+						<div for="organizationLogo">
+							<img src="{{ organization.logo.url }}" alt="Organization Logo" class="img-responsive">
+						</div>
+					{% else %}
+						<div class="hikaya-blue-box" for="organizationLogo">
+							<img src="../../static/img/white_logo.png" alt="Organization Logo" class="img-responsive">
+						</div>
+					{% endif %}
+					<div class="btn-reset"><button type="submit" class="btn btn-default btn-sm">Reset</button></div>
+				</div>
 				<div class="col-sm-6">
 					<input
 					type="file"
