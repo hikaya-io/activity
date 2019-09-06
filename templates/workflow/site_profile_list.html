@@ -10,14 +10,14 @@
   {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">My Dashboard</a></li>
-    <li class="active">Locations</li>
+    <li class="active">{{ user.activity_user.organization.site_label }}</li>
   </ul>
   {% endblock %}
 
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">Location List</h4>
+      <h4 class="page-title">{{ user.activity_user.organization.site_label }} List</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
@@ -42,7 +42,7 @@
             data-toggle="dropdown"
             aria-expanded="true"
           >
-            {{ user.activity_user.organization.level_1_label }}(s)
+            {{ user.activity_user.organization.level_1_label }}
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -81,7 +81,7 @@
             data-toggle="dropdown"
             aria-expanded="true"
           >
-            {{ user.activity_user.organization.level_2_label }}(s)
+            {{ user.activity_user.organization.level_2_label }}
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">

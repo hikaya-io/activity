@@ -114,7 +114,7 @@
             <div class="col-md-12 col-xs-6">
               <a class="box box-info" href="/workflow/level1">
                 <p class="box-info-label">
-                  {{ request.user.activity_user.organization.level_1_label }}s
+                  {{ request.user.activity_user.organization.level_1_label }}
                 </p>
                 <p class="box-info-number">{{ get_programs | length }}</p>
               </a>
@@ -173,7 +173,7 @@
   <!-- indicators -->
   <div class="panel panel-dashboard rounded-0 mb-0">
     <div class="panel-heading white">
-      <h4 class="panel-title">Indicators</h4>
+      <h4 class="panel-title">{{ user.activity_user.organization.indicator_label }}</h4>
     </div>
 
     <div class="panel-body">
@@ -187,7 +187,7 @@
                 href="/indicators/home/{{ selected_program.id }}/0/0/"
                 role="button"
               >
-                <p class="box-info-label">Indicators</p>
+                <p class="box-info-label">{{ user.activity_user.organization.indicator_label }}</p>
                 <p class="box-info-number">{{ get_indicators | length }}</p>
               </a>
               {% else %}
@@ -196,7 +196,7 @@
                 href="/indicators/home/0/0/0/"
                 role="button"
               >
-                <p class="box-info-label">Indicators</p>
+                <p class="box-info-label">{{ user.activity_user.organization.indicator_label }}</p>
                 <p class="box-info-number">{{ get_indicators | length }}</p>
               </a>
               {% endif %}
@@ -272,10 +272,10 @@
                   selected_program.id
                 }}/0/list/"
               >
-                <p class="box-info-label">Active Locations</p>
+                <p class="box-info-label">Active {{ user.activity_user.organization.site_label }}</p>
                 <p class="box-info-number">{{ get_active_locations_count }}</p>
                 <p class="box-info-text">
-                  out of {{ get_locations_count }} locations
+                  out of {{ get_locations_count }} {{ user.activity_user.organization.site_label }}
                 </p>
               </a>
               {% else %}
@@ -300,13 +300,13 @@
               >
                 <p class="box-info-label">Documents</p>
                 <p class="box-info-number">{{ get_documents_count }}</p>
-                <p class="box-info-text">linked to Programs</p>
+                <p class="box-info-text">linked to {{ user.activity_user.organization.level_1_label }}</p>
               </a>
               {% else %}
               <a class="box box-info" href="/workflow/documentation_list/0/0/">
                 <p class="box-info-label">Documents</p>
                 <p class="box-info-number">{{ get_documents_count }}</p>
-                <p class="box-info-text">linked to Programs</p>
+                <p class="box-info-text">linked to {{ user.activity_user.organization.level_1_label }}</p>
               </a>
               {% endif %}
             </div>
@@ -317,7 +317,7 @@
                 class="box box-info"
                 href="/workflow/stakeholder_list/{{ selected_program.id }}/0/"
               >
-                <p class="box-info-label">Stakeholders</p>
+                <p class="box-info-label">{{ user.activity_user.organization.stakeholder_label }}</p>
                 <p class="box-info-number">{{ get_stakeholders_count }}</p>
                 <p class="box-info-text">
                   with {{ get_contacts_count }} contacts
@@ -325,7 +325,7 @@
               </a>
               {% else %}
               <a class="box box-info" href="/workflow/stakeholder_list/0/0/">
-                <p class="box-info-label">Stakeholders</p>
+                <p class="box-info-label">{{ user.activity_user.organization.stakeholder_label }}</p>
                 <p class="box-info-number">{{ get_stakeholders_count }}</p>
                 <p class="box-info-text">
                   with {{ get_contacts_count }} contacts

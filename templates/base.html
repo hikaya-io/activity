@@ -163,13 +163,13 @@
               <ul class="dropdown-menu">
                 <li>
                   <a href="{% url 'level1' %}"
-                    >{{ user.activity_user.organization.level_1_label }}s</a
+                    >{{ user.activity_user.organization.level_1_label }}</a
                   >
                 </li>
 
                 <li>
                   <a href="/workflow/level2/list/0/none/"
-                    >{{ user.activity_user.organization.level_2_label }}s</a
+                    >{{ user.activity_user.organization.level_2_label }}</a
                   >
                 </li>
               </ul>
@@ -186,7 +186,7 @@
               ></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/indicators/home/0/0/0">Indicators</a>
+                  <a href="/indicators/home/0/0/0">{{ user.activity_user.organization.indicator_label }}</a>
                 </li>
                 <li>
                   <a href="{% url 'objectives' %}">Objectives</a>
@@ -238,12 +238,12 @@
                 </li>
                 <li>
                   <a href="/workflow/siteprofile_list/0/0/list">
-                    Locations</a
+                    {{ user.activity_user.organization.site_label }}</a
                   >
                 </li>
                 <li>
                   <a href="/workflow/stakeholder_list/0/0">
-                    Stakeholders
+                    {{ user.activity_user.organization.stakeholder_label }}
                   </a>
                 </li>
               </ul>
