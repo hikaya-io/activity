@@ -30,7 +30,7 @@
       };
 
       $.ajax({
-        url: '/',
+        url: "{% url 'home_dashboard' 0 %}",
         type: 'POST',
         data,
         success: function(resp, status) {
@@ -141,7 +141,7 @@
       <div class="modal-footer">
         <button
           type="button"
-          class="btn btn-default"
+          class="btn btn-close"
           data-dismiss="modal"
         >
           Close

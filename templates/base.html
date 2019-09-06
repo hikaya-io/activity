@@ -319,44 +319,38 @@
                   </a>
     
                   <ul class="dropdown-menu">
-                    <li class="dropdown-header">signed in as <strong>{{user.username}}</strong></li>
-                    <li class="divider"></li>
-                    <li>
-                      <a href="{% url 'profile' %}"
-                        >Profile</a
-                      >
-                    </li>
-                    {% if user.is_superuser %}
-                    <li>
-                      <a href="{% url 'admin_profile_settings' %}"
-                        >Organization Settings</a
-                      >
-                    </li>
-                    {% endif %} 
-                    {% if user.is_authenticated %}
-                    {% if user.activity_user.organizations %} 
-                    <li class="divider"></li>
-                    <li class="dropdown-header">Organizations</li>
-                    {% for org in user.activity_user.organizations.all %}
-                    <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
-                      <a href="/accounts/organization/{{ org.id }}/">
-                      {{ org.name }}
-                      </a>
-                    </li>
-                    {% endfor %} 
-                    <li>
-                      <a href="/accounts/register/organization">
-                        <i class="fa fa-plus"></i> Add new Organization
-                      </a>
-                    </li>
-                    {% endif %}
-                    <li class="divider"></li>
-                    <li>
-                      <a href="{% url 'logout' %}" class="text-danger"
-                        >Sign out</a
-                      >
-                    </li>
-                    {% endif %}
+                      <li class="dropdown-header">signed in as <strong>{{user.username}}</strong></li>
+                      <li class="divider"></li>
+                      <li><a href="{% url 'profile' %}">Profile</a></li>
+                      {% if user.is_superuser or user.activity_user|has_org_access:"Owner" %}
+                        <li>
+                          <a href="{% url 'admin_profile_settings' %}"
+                            >Organization Settings</a
+                          >
+                        </li>
+                      {% endif %} 
+                      <li class="divider"></li>
+                      {% if user.activity_user.organizations %} 
+                        <li class="dropdown-header">Organizations</li>
+                          {% for org in user.activity_user.organizations.all %}
+                            <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
+                              <a href="/accounts/organization/{{ org.id }}/">
+                                {{ org.name }}
+                              </a>
+                            </li>
+                          {% endfor %} 
+                        <li>
+                        <a href="/accounts/register/organization">
+                          <i class="fa fa-plus"></i> Add new Organization
+                        </a>
+                        </li>
+                      {% endif %}
+                      <li class="divider"></li>
+                      <li>
+                        <a href="{% url 'logout' %}" class="text-danger"
+                          >Sign out</a
+                        >
+                      </li>
                   </ul>  
             </li>
           </ul>

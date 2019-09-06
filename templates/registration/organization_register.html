@@ -70,9 +70,11 @@
 							</div>
 							<div class="row">
                                 <div class="text-right">
-                                    <button type="reset" class="btn btn-md hikaya-btn-cancel">
+									{% if user.activity_user.organization %}
+                                    <button  id="reset-org-create-form" type="reset" class="btn btn-md btn-close">
                                         Cancel
-                                    </button>
+									</button>
+									{% endif %}
                                     <button id="orgFormSubmitBtn"  type="submit" class="btn btn-success" disabled>
                                         Create
                                     </button>
@@ -86,6 +88,11 @@
 		<div class="col-md-1"></div>
 	</div>
 </div>
+<script>
+	$('#reset-org-create-form').click(() => {
+		document.location.href = '/'
+	})
+</script>
 
 {% endblock %}
 {% block extra_js_in_body %}

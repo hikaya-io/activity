@@ -18,13 +18,11 @@ from django.core.exceptions import MultipleObjectsReturned
 from indicators.models import CollectedData, Indicator
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
-    SiteProfile, Sector, Country, ActivityUser,
-    ActivitySites, ActivityBookmarks, FormGuidance,
-    Organization, UserInvite, Stakeholder, Contact,
-    Documentation
+    SiteProfile, Sector, ActivityUser, ActivityBookmarks, FormGuidance,
+    Organization, UserInvite, Stakeholder, Contact, Documentation,
+    ActivityUserOrganizationGroup
 )
-from activity.tables import IndicatorDataTable
-from activity.util import get_country, get_nav_links, send_invite_emails, \
+from activity.util import get_nav_links, send_invite_emails, \
     send_single_mail
 from activity.forms import (
     RegistrationForm, BookmarkForm, NewUserRegistrationForm)
@@ -185,7 +183,7 @@ def switch_organization(request, org_id):
     activity_user.organization = organization
     activity_user.save()
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    return redirect('/')
 
 
 def activate_acccount(request, uidb64, token):
@@ -272,6 +270,14 @@ def register(request, invite_uuid):
 
                     # add organization to user organizations
                     activity_user.organizations.add(invite.organization)
+
+                    # define user organization access groups
+                    user_org_access = ActivityUserOrganizationGroup.objects.create(
+                        activity_user=activity_user,
+                        organization=invite.organization,
+                    )
+                    group = Group.objects.get(name='Viewer')
+                    user_org_access.groups.add(group)
                     if activity_user:
                         # delete the invitation
                         invite.delete()
@@ -408,10 +414,19 @@ def register_organization(request):
         )
         if org:
             user = ActivityUser.objects.get(user=request.user)
-
+            # add organization to the current user
             user.organization = org
             user.save()
             user.organizations.add(org)
+
+            # define user organization access groups
+            user_org_access = ActivityUserOrganizationGroup.objects.create(
+                activity_user=user,
+                organization=org,
+            )
+            group = Group.objects.get(name='Owner')
+            user_org_access.groups.add(group)
+
             return redirect('/')
         else:
             return redirect('register_organization')

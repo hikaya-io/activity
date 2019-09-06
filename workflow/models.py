@@ -5,7 +5,7 @@ from urllib.request import urlopen
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.db import models
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
 from decimal import Decimal
 from datetime import datetime
@@ -1964,3 +1964,36 @@ class UserInvite(models.Model):
 
     def __str__(self):
         return '{}'.format(self.email)
+
+
+class ActivityUserOrganizationGroup(models.Model):
+    """
+    This models tracks user permissions for all organizations they have access to
+    """
+    uuid = models.UUIDField('ActivityUser Organization Group UUUID',
+                            unique=True, editable=False, default=uuid.uuid4)
+    activity_user = models.ForeignKey(ActivityUser, related_name='activity_user_org_group',
+                                      on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, related_name='organization_user_group',
+                                     on_delete=models.CASCADE)
+    groups = models.ManyToManyField(Group, verbose_name='Organization Groups',
+                                    related_name='org_groups', blank=True)
+
+    create_date = models.DateTimeField(null=True, blank=True)
+    edit_date = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('activity_user',)
+
+    # on save add create date or update edit date
+    def save(self, *args, **kwargs):
+        if self.create_date is None:
+            self.create_date = datetime.now()
+        self.edit_date = datetime.now()
+        super(ActivityUserOrganizationGroup, self).save()
+
+    # displayed in admin templates
+    def __str__(self):
+        return '{} - {}'.format(self.activity_user, self.organization) or ''
+
+
