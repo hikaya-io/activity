@@ -424,7 +424,7 @@ def register_organization(request):
                 activity_user=user,
                 organization=org,
             )
-            group = Group.objects.get(name='Org Admin')
+            group = Group.objects.get(name='Owner')
             user_org_access.groups.add(group)
 
             return redirect('/')
