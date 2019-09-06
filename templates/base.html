@@ -322,7 +322,7 @@
                       <li class="dropdown-header">signed in as <strong>{{user.username}}</strong></li>
                       <li class="divider"></li>
                       <li><a href="{% url 'profile' %}">Profile</a></li>
-                      {% if user.is_superuser or user.activity_user|has_org_access:"Org Admin" %}
+                      {% if user.is_superuser or user.activity_user|has_org_access:"Owner" %}
                         <li>
                           <a href="{% url 'admin_profile_settings' %}"
                             >Organization Settings</a
