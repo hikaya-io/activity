@@ -1994,6 +1994,6 @@ class ActivityUserOrganizationGroup(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        return '{}'.format(self.user) or ''
+        return '{} - {}'.format(self.activity_user, self.organization) or ''
 
 

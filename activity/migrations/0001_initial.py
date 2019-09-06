@@ -5,7 +5,7 @@ from django.db import migrations
 
 def create_default_groups(apps, schema_editor):
     Group = apps.get_model('auth', 'Group')
-    group_list = ['Administrator', 'Editor', 'Viewer', 'Org Admin']
+    group_list = ['Owner', 'Editor', 'Viewer']
     for item in group_list:
         group = Group(name=item)
         group.save()
