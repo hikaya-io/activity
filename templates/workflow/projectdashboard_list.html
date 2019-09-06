@@ -11,14 +11,14 @@
   {% block breadcrumbs %}
     <ul class="breadcrumb">
       <li><a href="{% url 'index' %}">My Dashboard</a></li>
-      <li class="active">{{ request.user.activity_user.organization.level_2_label }}s</li>
+      <li class="active">{{ request.user.activity_user.organization.level_2_label }}</li>
     </ul>
   {% endblock %}
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {{ request.user.activity_user.organization.level_2_label }}s List
+        {{ request.user.activity_user.organization.level_2_label }} List
       </h4>
     </div>
 

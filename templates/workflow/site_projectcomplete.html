@@ -1,8 +1,8 @@
 {% extends "base.html" %}{% load i18n %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li><a href="/workflow/siteprofile_list/0/0/">Sites</a></li>
-  <li class="active">Site Projects</li>
+  <li><a href="/workflow/siteprofile_list/0/0/">{{ user.activity_user.organization.site_label }}</a></li>
+  <li class="active">Site {{ user.activity_user.organization.level_2_label }}</li>
 </ol>
 {% endblock %}
 {% block page_title %}Project Data for <small>{{ site }}</small> {% endblock %}

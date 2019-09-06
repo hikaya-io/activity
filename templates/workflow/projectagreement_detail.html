@@ -37,7 +37,7 @@
             <ul class="nav nav-tabs">
                     <li role="presentation" class="active"><a href="/workflow/projectagreement_detail/{{ id }}/">Initiation</a></li>
                     <li role="presentation"><a href="/workflow/projectcomplete_detail/{{ id }}/">Tracking</a></li>
-                    <li role="presentation"><a href="/workflow/siteprofile_report/{{ id }}/">Sites</a></li>
+                    <li role="presentation"><a href="/workflow/siteprofile_report/{{ id }}/">{{ user.activity_user.organization.site_label }}</a></li>
                   </ul>
                   <h3>{{ agreement.project_name }}</h3>
                   <p><b>Created:</b> {{ agreement.create_date }} <b>Last Edited:</b> {{ agreement.edit_date }} <span class="btn btn-xs btn-info">Status: <b>{{ agreement.approval }}</b></span></p>
