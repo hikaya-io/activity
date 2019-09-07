@@ -332,7 +332,8 @@ class DistributionList(ListView):
 
         return render(request, self.template_name, {
             'get_distribution': get_distribution,
-            'program_id': program_id,
+            'program_id': int(program_id),
+            'project_id': int(project_id),
             'get_programs': get_programs,
             'get_projects': get_projects,
             'form_component': 'distribution_list',
