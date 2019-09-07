@@ -24,9 +24,10 @@ $('form#configForm').submit(function(e) {
 		data,
 		success: function(data, status) {
 			toastr.success(
-				'Admin configurations have been successfuly updated',
+				'Your update has been saved.',
 				'Succesfully Updated'
 			);
+			document.location.reload();
 		},
 		error: function(xhr, desc, error) {
 			toastr.error('An error occured during the operation', 'An Error occurred');

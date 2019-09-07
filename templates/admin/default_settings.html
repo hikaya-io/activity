@@ -21,6 +21,7 @@
 		<div class="col-md-10 admin-content">
 			<div>
 				<form id="configForm" class="">
+					{% csrf_token %}
 					<!-- Default Labels -->
 					<div class="panel panel-info">
 						<div class="panel-heading">Workflow Level Labels</div>
@@ -192,12 +193,8 @@
 					<!-- end of other settings -->
 					<div class="row">
 						<div class="text-right admin-form-actions">
-							<button type="reset" class="btn hikaya-btn-cancel">
-								<i class="fa fa-undo"></i> Discard Changes
-							</button>
-							<button type="submit" class="btn btn-success">
-								<i class="fa fa-save"></i> Save Changes
-							</button>
+							<button type="reset" id="reset-config-form" class="btn btn-close">Close</button>
+							<button type="submit" class="btn btn-success">Save</button>
 						</div>
 					</div>
 				</form>
@@ -205,6 +202,11 @@
 		</div>
 	</div>
 </div>
+<script>
+	$('#reset-config-form').click(() => {
+		document.location.href = '/accounts/admin/profile_settings'
+	})
+</script>
 {% block extra_js_in_body %}
 	<script type="text/javascript" src="{{ STATIC_URL }}js/admin.js"></script>
 {% endblock %}
