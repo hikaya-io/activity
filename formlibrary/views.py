@@ -42,16 +42,19 @@ class TrainingList(ListView):
 
         get_training = TrainingAttendance.objects.all().filter(
             program__organization=request.user.activity_user.organization)
+        
+        program_id = int(self.kwargs['program'])
+        project_id = int(self.kwargs['project'])
 
         # filter by program
-        if int(self.kwargs['program']) != 0:
+        if program_id != 0:
             get_training = TrainingAttendance.objects.all().filter(
-                program_id=self.kwargs['program'])
+                program_id=program_id)
 
         # filter by projects
-        if int(self.kwargs['project']) != 0:
+        if project_id != 0:
             get_training = TrainingAttendance.objects.all().filter(
-                project_agreement_id=self.kwargs['program'])
+                project_agreement_id=project_id)
 
         return render(request, self.template_name, {
             'get_training': get_training,
@@ -59,6 +62,8 @@ class TrainingList(ListView):
             'form_component': 'training_list',
             'get_programs': get_programs,
             'get_projects': get_projects,
+            'program_id': program_id,
+            'project_id': project_id,
             'active': ['forms', 'training_list']
         })
 

@@ -23,7 +23,7 @@
         {% endfor %}
       {% endif %}
 
-      {% if form_component == 'distribution_list' %}
+      {% if form_component != 'beneficiary_list' %}
         <li class="{% if program_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/0/{{project_id}}/">--All--</a></li>
         
         {% for program in get_programs %}
@@ -37,6 +37,7 @@
     </ul>
   </div>
 
+  <!-- poroject filter -->
   {% if form_component != 'beneficiary_list' %}
   <div class="btn-group" role="group">
     <button
@@ -50,9 +51,9 @@
       <span class="fa {% if project_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
     </button>
     <ul class="dropdown-menu">
-      <li><a href="/formlibrary/{{form_component}}/{{program_id}}/0/">--All--</a></li>
+      <li class="{% if project_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/{{program_id}}/0/">--All--</a></li>
       {% for project in get_projects %}
-      <li>
+      <li class="{% if project_id == project.id %} active {% endif %}">
         <a href="/formlibrary/{{form_component}}/{{program_id}}/{{project.id}}/">{{ project.project_name | truncatechars:30 }}</a>
       </li>
       {% endfor %}
