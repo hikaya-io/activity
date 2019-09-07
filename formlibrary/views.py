@@ -191,9 +191,10 @@ class BeneficiaryList(ListView):
         return render(request, self.template_name,
                       {
                           'get_beneficiaries': get_beneficiaries,
-                          'program_id': program_id,
+                          'program_id': int(program_id),
                           'get_programs': get_programs,
                           'get_training': get_training,
+                          'training_id': int(training_id),
                           'form_component': 'beneficiary_list',
                           'active': ['forms', 'beneficiary_list']
                       })

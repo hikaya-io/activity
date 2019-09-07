@@ -18,11 +18,14 @@
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">Beneficiary List</h4>
+      <h4 class="page-title">Beneficiaries List</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
-        {% include "formlibrary/filter.html" %}
+        <span class="text-filter">Filter by</span>
+      </div>
+      <div class="sub-nav-item">
+        {% include "./filter.html" %}
       </div>
 
       <div class="sub-nav-item">
