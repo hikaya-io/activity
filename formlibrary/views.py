@@ -173,28 +173,37 @@ class BeneficiaryList(ListView):
 
         program_id = self.kwargs['program']
         training_id = self.kwargs['training']
+        distribution_id = self.kwargs['distribution']
 
         organization = request.user.activity_user.organization
         get_programs = Program.objects.all().filter(organization=organization)
 
         get_training = TrainingAttendance.objects.filter(
             program__in=get_programs)
-        get_beneficiaries = Beneficiary.objects.all().filter(program__in=get_programs)
+        get_distribution = Distribution.objects.filter(
+            program__in=get_programs)
+        get_beneficiaries = Beneficiary.objects.filter(
+            program__in=get_programs)
 
         if int(program_id) != 0:
-            get_beneficiaries = Beneficiary.objects.all().filter(
+            get_beneficiaries = Beneficiary.objects.filter(
                 program__id__contains=program_id)
         if int(training_id) != 0:
-            get_beneficiaries = Beneficiary.objects.all().filter(
+            get_beneficiaries = Beneficiary.objects.filter(
                 training__id=int(training_id))
+        if int(distribution_id) != 0:
+            get_beneficiaries = Beneficiary.objects.filter(
+                distribution__id=int(distribution_id))
 
         return render(request, self.template_name,
                       {
                           'get_beneficiaries': get_beneficiaries,
                           'program_id': int(program_id),
                           'get_programs': get_programs,
+                          'get_distribution': get_distribution,
                           'get_training': get_training,
                           'training_id': int(training_id),
+                          'distribution_id': int(distribution_id),
                           'form_component': 'beneficiary_list',
                           'active': ['forms', 'beneficiary_list']
                       })

@@ -11,12 +11,12 @@
       <span class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
     </button>
     <ul class="dropdown-menu">
-      <li class="{% if program_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/0/{{training_id}}/">--All--</a></li>
+      <li class="{% if program_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/0/{{training_id}}/{{distribution_id}}/">--All--</a></li>
       
       {% for program in get_programs %}
       {% if program.name %}
       <li class="{% if program_id == program.id %} active {% endif %}">
-        <a href="/formlibrary/{{form_component}}/{{ program.id }}/{{training_id}}/">{{ program.name | truncatechars:30 }}</a>
+        <a href="/formlibrary/{{form_component}}/{{ program.id }}/{{training_id}}/{{distribution_id}}/">{{ program.name | truncatechars:30 }}</a>
       </li>
       {% endif %}
       {% endfor %}
@@ -55,14 +55,34 @@
         aria-haspopup="true"
         aria-expanded="false"
       >
-        Training(s)
+        Training
         <span class="fa {% if training_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
       </button>
       <ul class="dropdown-menu">
-        <li class="{% if training_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/0/0/">--All--</a></li>
+        <li class="{% if training_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/{{program_id}}/0/{{distribution_id}}/">--All--</a></li>
         {% for training in get_training %}
         <li class="{% if training_id == training.id %} active {% endif %}">
-          <a href="/formlibrary/{{form_component}}/{{program_id}}/{{training.id}}/">{{ training.training_name | truncatechars:30}}</a>
+          <a href="/formlibrary/{{form_component}}/{{program_id}}/{{training.id}}/{{distribution_id}}">{{ training.training_name | truncatechars:30}}</a>
+        </li>
+        {% endfor %}
+      </ul>
+  </div>
+  <div class="btn-group" role="group">
+      <button
+        type="button"
+        class="btn btn-sm btn-default dropdown-toggle"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        Distribution
+        <span class="fa {% if distribution_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li class="{% if distribution_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/{{program_id}}/{{training_id}}/0/">--All--</a></li>
+        {% for distribution in get_distribution %}
+        <li class="{% if distribution_id == distribution.id %} active {% endif %}">
+          <a href="/formlibrary/{{form_component}}/{{program_id}}/{{training_id}}/{{distribution.id}}">{{ distribution.distribution_name | truncatechars:30}}</a>
         </li>
         {% endfor %}
       </ul>
