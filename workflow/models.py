@@ -452,12 +452,20 @@ class FundCodeAdmin(admin.ModelAdmin):
 
 
 class Program(models.Model):
+    FUNDING_STATUSES = (
+        ('open', 'Open'),
+        ('in_negotiation', 'In Negotiation'),
+        ('signed', 'Signed'),
+        ('Awarded', 'Awarded'),
+        ('Closed', 'Closed'),
+    )
+
     program_uuid = models.UUIDField(
         editable=False, verbose_name='Program UUID', default=uuid.uuid4, unique=True)
     name = models.CharField("Program Name", max_length=255,
                             blank=False, null=False, default='Default Level 1')
-    funding_status = models.CharField(
-        "Funding Status", max_length=255, blank=True)
+    funding_status = models.CharField('Funding Status', choices=FUNDING_STATUSES,
+                                      default='open', max_length=255, blank=True)
     cost_center = models.CharField(
         "Cost Center", max_length=255, blank=True, null=True)
     fund_code = models.ManyToManyField(FundCode, blank=True)
