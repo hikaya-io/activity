@@ -23,7 +23,9 @@
       </h4>
     </div>
     <div class="sub-navigation-actions">
-      <!-- sample action buttons -->
+      <div class="sub-nav-item">
+        <span class="text-filter">Filter by</span>
+      </div>
       <div class="sub-nav-item">
         <!-- filters -->
         <div class="btn-group" role="group" aria-label="...">
@@ -35,15 +37,15 @@
               aria-haspopup="true"
               aria-expanded="false"
             >
-              Filter by {{ user.activity_user.organization.level_1_label }}
-              <i class="fa fa-angle-down"></i>
+              {{ user.activity_user.organization.level_1_label }}
+              <i class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></i>
             </button>
             <ul class="dropdown-menu">
-              <li><a href="#">-- All --</a></li>
+              <li class="{% if program_id == 0 %} active {% endif %}"><a href="/indicators/home/0/0/0/">-- All --</a></li>
               <li class="divider"></li>
               {% for program in get_programs %} {% if program.name %}
-              <li>
-                <a href="#">{{ program.name }}</a>
+              <li class="{% if program_id == program.id %} active {% endif %}">
+                <a href="/indicators/home/{{program.id}}/0/0/">{{ program.name | truncatechars:30 }}</a>
               </li>
               {% endif %} {% endfor %}
             </ul>
