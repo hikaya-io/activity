@@ -1390,6 +1390,7 @@ class SiteProfileList(ListView):
                           'get_projects': get_projects,
                           'form': FilterForm(),
                           'helper': FilterForm.helper,
+                          'program_id': program_id,
                           'active': ['components'],
                           'map_api_key': settings.GOOGLE_MAP_API_KEY
                       })
