@@ -980,19 +980,31 @@ class DocumentationList(ListView):
     template_name = 'workflow/documentation_list.html'
 
     def get(self, request, *args, **kwargs):
-
-        project_agreement_id = self.kwargs['project']
-        countries = get_country(request.user)
         user = ActivityUser.objects.filter(user=request.user).first()
-        get_programs = Program.objects.all().filter(organization=user.organization)
+
+        project_agreement_id = int(self.kwargs['project'])
+        program_id = int(self.kwargs['program'])
+
+        get_programs = Program.objects.filter(organization=user.organization)
+        get_projects = ProjectAgreement.objects.filter(program__organization=user.organization)
 
         get_documentation = Documentation.objects.filter(program__organization=user.organization).select_related(
             'program')
 
+        if program_id != 0:
+            get_documentation = get_documentation.filter(
+                program__id=program_id)
+
+        if project_agreement_id != 0:
+            get_documentation = get_documentation.filter(
+                project__id=project_agreement_id)
+
         return render(request, self.template_name,
                       {'get_programs': get_programs,
+                       'get_projects': get_projects,
                        'get_documentation': get_documentation,
                        'project_agreement_id': project_agreement_id,
+                       'program_id': program_id,
                        'active': ['components', 'documents']})
 
 
@@ -1461,7 +1473,8 @@ class SiteProfileCreate(CreateView):
 
     def form_valid(self, form):
         instance = form.save()
-        instance.organizations.add(self.request.user.activity_user.organization)
+        instance.organizations.add(
+            self.request.user.activity_user.organization)
         messages.success(self.request, 'Success, Site Profile Created!')
         latest = SiteProfile.objects.latest('id')
         redirect_url = '/workflow/siteprofile_list/0/0/list/'
@@ -1783,7 +1796,8 @@ class ContactList(ListView):
         user = ActivityUser.objects.filter(user=request.user).first()
 
         get_contacts = Contact.objects.filter(organization=user.organization)
-        get_stakeholders = Stakeholder.objects.filter(organization=user.organization)
+        get_stakeholders = Stakeholder.objects.filter(
+            organization=user.organization)
 
         stakeholder_id = int(self.kwargs['stakeholder_id'])
 
