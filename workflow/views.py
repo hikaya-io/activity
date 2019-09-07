@@ -1808,7 +1808,8 @@ class ContactList(ListView):
         return render(request, self.template_name, {
             'get_contacts': get_contacts,
             'get_stakeholders': get_stakeholders,
-            'stakeholder_id': stakeholder_id
+            'stakeholder_id': stakeholder_id,
+            'active': ['components']
         })
 
 

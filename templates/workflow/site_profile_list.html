@@ -74,24 +74,24 @@
               <div class="btn-group" role="group">
                   <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       {{ user.activity_user.organization.level_2_label }}
-                    <span class="caret"></span>
+                    <span class="fa {% if project_agreement_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
                   </button>
                   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                      <li role="presentation">
+                      <li role="presentation" class="{% if project_agreement_id == 0 %} active {% endif %}">
                         <a
                           role="menuitem"
                           tabindex="-1"
-                          href="/workflow/siteprofile_list/0/0/list"
+                          href="/workflow/siteprofile_list/{{program_id}}/0/list"
                         >
                           -- All --
                         </a>
                       </li>
                       {% for project in get_projects %}
-                      <li role="presentation">
+                      <li role="presentation" class="{% if project_agreement_id == project.id %} active {% endif %}">
                         <a
                           role="menuitem"
                           tabindex="-1"
-                          href="/workflow/siteprofile_list/0/{{ project.id }}/list"
+                          href="/workflow/siteprofile_list/{{program_id}}/{{ project.id }}/list"
                         >
                           {{ project.project_name }}
                         </a>
@@ -103,29 +103,13 @@
       </div>
 
       <div class="sub-nav-item">
-        <div class="dropdown">
-          <button
-            class="btn btn-sm btn-default dropdown-toggle"
-            type="button"
-            id="dropdownMenu1"
-            data-toggle="dropdown"
-            aria-expanded="true"
-          >
-            {{ user.activity_user.organization.level_2_label }}
-            <span class="caret"></span>
-          </button>
-          
-        </div>
-      </div>
-
-      <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
-          <a
+          <!-- <a
             role="button"
             href="/workflow/export_sites_list/{{ program_id }}/"
             class="btn btn-sm btn-default"
             >Export to CSV</a
-          >
+          > -->
 
           <a
             role="button"
