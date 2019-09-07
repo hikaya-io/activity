@@ -152,7 +152,7 @@ urlpatterns = [
     re_path(r'^export_sites_list/(?P<program_id>\w+)/$',
             export_sites_list, name='export_sites_list'),
 
-    re_path(r'^contact_list/(?P<pk>\w+)/$',
+    re_path(r'^contact_list/(?P<stakeholder_id>\d+)/$',
             ContactList.as_view(), name='contact_list'),
     re_path(r'^contact_add/(?P<stakeholder_id>\w+)/(?P<id>\w+)/$',
             ContactCreate.as_view(), name='contact_add'),

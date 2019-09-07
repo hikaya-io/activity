@@ -1783,9 +1783,17 @@ class ContactList(ListView):
         user = ActivityUser.objects.filter(user=request.user).first()
 
         get_contacts = Contact.objects.filter(organization=user.organization)
+        get_stakeholders = Stakeholder.objects.filter(organization=user.organization)
+
+        stakeholder_id = int(self.kwargs['stakeholder_id'])
+
+        if stakeholder_id != 0:
+            get_contacts = get_contacts.filter(stakeholder__id=stakeholder_id)
 
         return render(request, self.template_name, {
-            'get_contacts': get_contacts
+            'get_contacts': get_contacts,
+            'get_stakeholders': get_stakeholders,
+            'stakeholder_id': stakeholder_id
         })
 
 
