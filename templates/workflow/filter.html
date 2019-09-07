@@ -9,21 +9,23 @@
       aria-expanded="false"
     >
       {{ user.activity_user.organization.level_1_label }}
-      <span class="caret"></span>
+      <span class="fa {% if filtered_program %} fa-filter {% else %} fa-caret-down {% endif %}"></span>
     </button>
     <ul class="dropdown-menu">
       <li><a role="menuitem" tabindex="-1" href="/workflow/level2/list/0/none/">-- All --</a></li>
 
       {% for program in get_programs %}
+      {% if program.name %}
       <li>
         <a
           role="menuitem"
           tabindex="-1"
-          onclick="program_filter({{ program.id}})"
+          href="/workflow/level2/list/{{program.id}}/none/"
         >
           {{ program.name }}</a
         >
       </li>
+      {% endif %}
       {% endfor %}
     </ul>
   </div>
@@ -38,19 +40,28 @@
       aria-expanded="false"
     >
       {{ user.activity_user.organization.level_2_label }} Status
-      <span class="caret"></span>
+      <span class="fa {% if status == 'none' %} fa-caret-down {% else %} fa-filter {% endif %}"></span>
     </button>
     <ul class="dropdown-menu">
 	  <li> <a role="menuitem" tabindex="-1" href="/workflow/level2/list/0/none/">-- All --</a></li>
 	
 		{% for status in APPROVALS %}
 		<li>
+      {% if filtered_program %}
 			<a
 			role="menuitem"
 			tabindex="-1"
-			onclick="status_filter('{{status.0}}')"
+			href="/workflow/level2/list/{{filtered_program.id}}/{{status.0}}/"
 			>{{ status.1 }}</a
-			>
+      >
+      {% else %}
+      <a
+			role="menuitem"
+			tabindex="-1"
+			href="/workflow/level2/list/0/{{status.0}}/"
+			>{{ status.1 }}</a
+      >
+      {% endif %}
 		</li>
 		{% endfor %}
     </ul>
