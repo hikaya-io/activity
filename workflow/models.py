@@ -1074,8 +1074,6 @@ class Stakeholder(models.Model):
         Organization, blank=True, null=True, on_delete=models.SET_NULL)
     program = models.ForeignKey(
         Program, blank=True, null=True, on_delete=models.SET_NULL)
-    program = models.ForeignKey(
-        ProjectAgreement, blank=True, null=True, on_delete=models.SET_NULL)
     sectors = models.ManyToManyField(Sector, blank=True)
     stakeholder_register = models.BooleanField(
         "Has this partner been added to stakeholder register?")

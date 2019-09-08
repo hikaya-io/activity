@@ -64,10 +64,10 @@
               <ul class="dropdown-menu">
                 <li class="{% if project_id == 0 %} active {% endif%}"><a href="/workflow/stakeholder_list/0/0/">--All--</a></li>
                 {% for project in get_projects %}
-                {% if project.name %}
+                {% if project.project_name %}
                 <li class="{% if project_id == project.id %} active {% endif %}">
                   <a href="/workflow/stakeholder_list/{{ project_id }}/{{project.id}}/ "
-                    >{{ project.name | truncatechars:30 }}</a
+                    >{{ project.project_name | truncatechars:30 }}</a
                   >
                 </li>
                 {% endif %}

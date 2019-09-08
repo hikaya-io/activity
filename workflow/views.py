@@ -1929,9 +1929,8 @@ class StakeholderList(ListView):
         get_projects = ProjectAgreement.objects.filter(
             program__organization=request.user.activity_user.organization)
 
-        # @todo add program field to stakeholder
-        # if program_id != 0:
-        #     get_stakeholders = get_stakeholders.filter(program__id=program_id)
+        if program_id != 0:
+            get_stakeholders = get_stakeholders.filter(program__id=program_id)
 
         return render(request, self.template_name,
                       {'get_stakeholders': get_stakeholders,
