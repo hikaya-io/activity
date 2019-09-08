@@ -986,7 +986,8 @@ class DocumentationList(ListView):
         program_id = int(self.kwargs['program'])
 
         get_programs = Program.objects.filter(organization=user.organization)
-        get_projects = ProjectAgreement.objects.filter(program__organization=user.organization)
+        get_projects = ProjectAgreement.objects.filter(
+            program__organization=user.organization)
 
         get_documentation = Documentation.objects.filter(program__organization=user.organization).select_related(
             'program')
@@ -1916,14 +1917,28 @@ class StakeholderList(ListView):
     template_name = 'workflow/stakeholder_list.html'
 
     def get(self, request, *args, **kwargs):
-        # Check for project filter
-        # project_agreement_id = self.kwargs['pk']
+        program_id = int(self.kwargs['program_id'])
+        project_id = int(self.kwargs['project_id'])
 
-        get_stakeholders = Stakeholder.objects.all().filter(
-            organization=self.request.user.activity_user.organization)
+        get_stakeholders = Stakeholder.objects.filter(
+            organization=request.user.activity_user.organization)
+
+        get_programs = Program.objects.filter(
+            organization=request.user.activity_user.organization)
+
+        get_projects = ProjectAgreement.objects.filter(
+            program__organization=request.user.activity_user.organization)
+
+        # @todo add program field to stakeholder
+        # if program_id != 0:
+        #     get_stakeholders = get_stakeholders.filter(program__id=program_id)
 
         return render(request, self.template_name,
                       {'get_stakeholders': get_stakeholders,
+                       'program_id': program_id,
+                       'project_id': project_id,
+                       'get_programs': get_programs,
+                       'get_projects': get_projects,
                        'get_stakeholder_types': StakeholderType.objects.all(),
                        'get_sectors': Sector.objects.all(),
                        'active': ['components', 'stakeholders']})

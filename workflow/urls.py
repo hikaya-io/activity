@@ -122,7 +122,7 @@ urlpatterns = [
     re_path(r'^benchmark_complete_delete/(?P<pk>\w+)/$',
             BenchmarkDelete.as_view(), name='benchmark_delete'),
 
-    re_path(r'^stakeholder_list/(?P<program_id>\w+)/(?P<pk>\w+)/$',
+    re_path(r'^stakeholder_list/(?P<program_id>\w+)/(?P<project_id>\w+)/$',
             StakeholderList.as_view(), name='stakeholder_list'),
 
     re_path(r'^stakeholder_table/(?P<program_id>\w+)/(?P<pk>\w+)/$',
