@@ -27,7 +27,9 @@ $('form#configForm').submit(function(e) {
 				'Your update has been saved.',
 				'Succesfully Updated'
 			);
-			document.location.reload();
+			setTimeout(() => {
+				document.location.reload();
+			}, 2000);
 		},
 		error: function(xhr, desc, error) {
 			toastr.error('An error occured during the operation', 'An Error occurred');

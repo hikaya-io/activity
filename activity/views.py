@@ -514,6 +514,9 @@ def admin_configurations(request):
             'level_2_label': data.get('level_2_label'),
             'level_3_label': data.get('level_3_label'),
             'level_4_label': data.get('level_4_label'),
+            'site_label': data.get('site_label'),
+            'indicator_label': data.get('indicator_label'),
+            'form_label': data.get('form_label'),
             'stakeholder_label': data.get('stakeholder_label'),
             'date_format': data.get('date_format'),
             # 'default_currency': data.get('default_currency')
