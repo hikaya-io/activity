@@ -32,12 +32,12 @@
 						<div for="organizationLogo">
 							<img src="{{ organization.logo.url }}" alt="Organization Logo" class="img-responsive">
 						</div>
+						<div class="btn-reset"><button id="org-logo-reset" class="btn btn-default btn-sm">Reset</button></div>
 					{% else %}
-						<div class="hikaya-blue-box" for="organizationLogo">
-							<img src="../../static/img/white_logo.png" alt="Organization Logo" class="img-responsive">
+						<div for="organizationLogo" class="navbar-default navbar-brand">
+							<b class="middle">Activity</b>
 						</div>
 					{% endif %}
-					<div class="btn-reset"><button type="submit" class="btn btn-default btn-sm">Reset</button></div>
 				</div>
 				<div class="col-sm-6">
 					<input
@@ -83,5 +83,10 @@
     </div>
   </div>
 </div>
+<script>
+	$('#org-logo-reset').click(() => {
+		document.location.href = '/accounts/admin/profile_settings?reset_logo=True'
+	});
+</script>
 
 {% endblock content %}
