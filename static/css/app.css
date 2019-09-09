@@ -642,6 +642,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .sub-nav-item {
     display: flex;
+    align-items: center;
     margin-left: 5px;
 }
 
@@ -867,18 +868,26 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 /*Select2 ReadOnly Start*/
-select[readonly].select2-hidden-accessible + .select2-container {
+select[readonly].select2-hidden-accessible+.select2-container {
     pointer-events: none;
     touch-action: none;
 }
 
-select[readonly].select2-hidden-accessible + .select2-container .select2-selection {
+select[readonly].select2-hidden-accessible+.select2-container .select2-selection {
     background: #eee;
     box-shadow: none;
 }
 
-select[readonly].select2-hidden-accessible + .select2-container .select2-selection__arrow, select[readonly].select2-hidden-accessible + .select2-container .select2-selection__clear {
+select[readonly].select2-hidden-accessible+.select2-container .select2-selection__arrow,
+select[readonly].select2-hidden-accessible+.select2-container .select2-selection__clear {
     display: none;
 }
 
 /*Select2 ReadOnly End*/
+
+.text-filter {
+    font-family: 'lato-light', sans-serif;
+    text-transform: uppercase;
+    font-weight: 100;
+    font-size: 10px;
+}

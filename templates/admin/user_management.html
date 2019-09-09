@@ -16,11 +16,17 @@
 
 		<div class="sub-navigation-actions">
 			<div class="sub-nav-item">
+				<span class="text-filter">Filter by</span>
+			</div>
+			<div class="sub-nav-item">
 				{% include "admin/user_filter.html" %}
 			</div>
 			<div class="sub-nav-item">
+				<span class="text-filter">Invite Users</span>
+			</div>
+			<div class="sub-nav-item">
 				<div class="btn-group">
-					<button type="button" class="btn btn-default btn-sm">Invite Users</button>
+					<!-- <button type="button" class="btn btn-default btn-sm">Invite Users</button> -->
 					<button
 						type="button"
 						class="btn btn-default btn-sm dropdown-toggle"
@@ -28,10 +34,10 @@
 						aria-haspopup="true"
 						aria-expanded="false"
 					>
-						<span class="caret"></span>
+						<span class="fa fa-angle-down"></span>
 						<span class="sr-only">Toggle Dropdown</span>
 					</button>
-					<ul class="dropdown-menu">
+					<ul class="dropdown-menu dropdown-menu-right">
 						<li>
 							<a
 								href="#inviteUserModal"

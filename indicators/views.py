@@ -146,8 +146,6 @@ class IndicatorList(ListView):
 
     def get(self, request, *args, **kwargs):
 
-        # countries = get_country(request.user)
-        countries = request.user.activity_user.countries.all()
         organization = request.user.activity_user.organization
         get_programs = Program.objects.filter(organization=organization)
         # .exclude(collecteddata__isnull=True)

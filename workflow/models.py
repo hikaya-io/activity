@@ -1072,8 +1072,8 @@ class Stakeholder(models.Model):
         Country, blank=True, null=True, on_delete=models.SET_NULL)
     organization = models.ForeignKey(
         Organization, blank=True, null=True, on_delete=models.SET_NULL)
-    # sector = models.ForeignKey(Sector, blank=True, null=True,
-    # related_name='sectors')
+    program = models.ForeignKey(
+        Program, blank=True, null=True, on_delete=models.SET_NULL)
     sectors = models.ManyToManyField(Sector, blank=True)
     stakeholder_register = models.BooleanField(
         "Has this partner been added to stakeholder register?")
@@ -1471,7 +1471,7 @@ class ProjectComplete(models.Model):
         Program, null=True, blank=True, related_name="complete",
         on_delete=models.SET_NULL)
     project_agreement = models.OneToOneField(
-        ProjectAgreement, verbose_name="Project Initiation", 
+        ProjectAgreement, verbose_name="Project Initiation",
         related_name='project_complete', on_delete=models.CASCADE)
     # Rename to more generic "nonproject" names
     activity_code = models.CharField(
@@ -2003,5 +2003,3 @@ class ActivityUserOrganizationGroup(models.Model):
     # displayed in admin templates
     def __str__(self):
         return '{} - {}'.format(self.activity_user, self.organization) or ''
-
-

@@ -8,19 +8,37 @@
       aria-expanded="false"
     >
       {{ user.activity_user.organization.level_1_label }}
-      <span class="caret"></span>
+      <span class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
     </button>
     <ul class="dropdown-menu">
-      <li><a href="/formlibrary/{{form_component}}/0/0/">--All--</a></li>
-      {% for program in get_programs %}
-      <li>
-        <a href="/formlibrary/{{form_component}}/{{ program.id }}/0/">{{ program.name }}</a>
-      </li>
-      {% endfor %}
+      {% if form_component == 'beneficiary_list' %}
+        <li class="{% if program_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/0/{{training_id}}/{{distribution_id}}/">--All--</a></li>
+        
+        {% for program in get_programs %}
+        {% if program.name %}
+        <li class="{% if program_id == program.id %} active {% endif %}">
+          <a href="/formlibrary/{{form_component}}/{{ program.id }}/{{training_id}}/{{distribution_id}}/">{{ program.name | truncatechars:30 }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {% if form_component != 'beneficiary_list' %}
+        <li class="{% if program_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/0/{{project_id}}/">--All--</a></li>
+        
+        {% for program in get_programs %}
+        {% if program.name %}
+        <li class="{% if program_id == program.id %} active {% endif %}">
+          <a href="/formlibrary/{{form_component}}/{{ program.id }}/{{project_id}}/">{{ program.name | truncatechars:30 }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      {% endif %}
     </ul>
   </div>
 
-  {% ifnotequal form_component 'beneficiary_list' %}
+  <!-- poroject filter -->
+  {% if form_component != 'beneficiary_list' %}
   <div class="btn-group" role="group">
     <button
       type="button"
@@ -30,20 +48,20 @@
       aria-expanded="false"
     >
       {{ user.activity_user.organization.level_2_label }}
-      <span class="caret"></span>
+      <span class="fa {% if project_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
     </button>
     <ul class="dropdown-menu">
-      <li><a href="/formlibrary/{{form_component}}/0/0/">--All--</a></li>
+      <li class="{% if project_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/{{program_id}}/0/">--All--</a></li>
       {% for project in get_projects %}
-      <li>
-        <a href="/formlibrary/{{form_component}}/0/{{project.id}}/">{{ project.project_name }}</a>
+      <li class="{% if project_id == project.id %} active {% endif %}">
+        <a href="/formlibrary/{{form_component}}/{{program_id}}/{{project.id}}/">{{ project.project_name | truncatechars:30 }}</a>
       </li>
       {% endfor %}
     </ul>
   </div>
-  {% endifnotequal %}
+  {% endif %}
 
-  {% ifequal form_component 'beneficiary_list' %}
+  {% if  form_component == 'beneficiary_list' %}
   <div class="btn-group" role="group">
       <button
         type="button"
@@ -52,17 +70,37 @@
         aria-haspopup="true"
         aria-expanded="false"
       >
-        Training(s)
-        <span class="caret"></span>
+        Training
+        <span class="fa {% if training_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
       </button>
       <ul class="dropdown-menu">
-        <li><a href="/formlibrary/{{form_component}}/0/0/">--All--</a></li>
+        <li class="{% if training_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/{{program_id}}/0/{{distribution_id}}/">--All--</a></li>
         {% for training in get_training %}
-        <li>
-          <a href="/formlibrary/{{form_component}}/0/{{training.id}}/">{{ training.training_name }}</a>
+        <li class="{% if training_id == training.id %} active {% endif %}">
+          <a href="/formlibrary/{{form_component}}/{{program_id}}/{{training.id}}/{{distribution_id}}">{{ training.training_name | truncatechars:30}}</a>
         </li>
         {% endfor %}
       </ul>
   </div>
-  {% endifequal %}
+  <div class="btn-group" role="group">
+      <button
+        type="button"
+        class="btn btn-sm btn-default dropdown-toggle"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        Distribution
+        <span class="fa {% if distribution_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li class="{% if distribution_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/{{program_id}}/{{training_id}}/0/">--All--</a></li>
+        {% for distribution in get_distribution %}
+        <li class="{% if distribution_id == distribution.id %} active {% endif %}">
+          <a href="/formlibrary/{{form_component}}/{{program_id}}/{{training_id}}/{{distribution.id}}">{{ distribution.distribution_name | truncatechars:30}}</a>
+        </li>
+        {% endfor %}
+      </ul>
+  </div>
+  {% endif %}
 </div>
