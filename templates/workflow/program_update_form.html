@@ -24,4 +24,15 @@
 		{% block editform %} {% crispy form %} {% endblock editform %}
 	</div>
 </div>
+<script>
+	$(document).ready(() => {
+		$('#id_funding_status').select2({theme: 'bootstrap'})
+		$('#id_sector').select2({theme: 'bootstrap'})
+		$('#id_user_access').select2({theme: 'bootstrap'})
+		$('#id_fund_code').select2({theme: 'bootstrap'})
+	});
+	$('#reset-id-reset').click(() => {
+		document.location.href = '/workflow/level1'
+	})
+</script>
 {% endblock content %}

@@ -21,15 +21,35 @@
       <h4 class="page-title">Contact List</h4>
     </div>
     <div class="sub-navigation-actions">
-      <div>
+      <div class="sub-nav-item">
+        <span class="text-filter">Filter by</span>
+      </div>
+      <div class="sub-nav-item">
+          <div class="btn-group" role="group" aria-label="pageFilters">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Stakeholder
+                  <span class="fa {% if stakeholder_id == 0 %} fa-angle-down {% else%} fa-filter {% endif %}"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li class="{% if stakeholder_id == 0 %} active {% endif %}"><a href="/workflow/contact_list/0/">--All--</a></li>
+                  {% for stakeholder in get_stakeholders %}
+                  <li class="{% if stakeholder_id == stakeholder.id %} active {% endif %}">
+                    <a href="/workflow/contact_list/{{stakeholder.id}}/">{{ stakeholder.name | truncatechars:30 }}</a>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+      </div>
+      <div class="sub-nav-item">
         <button
           class="btn btn-sm btn-primary"
           data-toggle="modal"
           data-target="#addContactModal"
         >
           <i class="fa fa-plus"></i> Contact
-        </button>
-        &nbsp;
+      </button>
       </div>
     </div>
   </div>

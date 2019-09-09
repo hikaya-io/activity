@@ -22,6 +22,9 @@
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
+        <span class="text-filter">Filter by</span>
+      </div>  
+      <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
           <div class="btn-group" role="group">
             <button
@@ -32,32 +35,58 @@
               aria-expanded="false"
             >
               {{ user.activity_user.organization.level_1_label }}
-              <span class="caret"></span>
+              <span class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
             </button>
             <ul class="dropdown-menu">
-              <li><a href="/workflow/stakeholder_list/0/0/">--All--</a></li>
+              <li class="{% if program_id == 0 %} active {% endif%}"><a href="/workflow/stakeholder_list/0/0/">--All--</a></li>
               {% for program in get_programs %}
-              <li>
+              {% if program.name %}
+              <li class="{% if program_id == program.id %} active {% endif%}">
                 <a href="/workflow/stakeholder_list/{{ program.id }}/0/ "
-                  >{{ program.gaitid }} - {{ program.name }}</a
+                  >{{ program.name | truncatechars:30 }}</a
                 >
               </li>
+              {% endif %}
               {% endfor %}
             </ul>
           </div>
+          <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-sm btn-default dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                {{ user.activity_user.organization.level_2_label }}
+                <span class="fa {% if project_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li class="{% if project_id == 0 %} active {% endif%}"><a href="/workflow/stakeholder_list/0/0/">--All--</a></li>
+                {% for project in get_projects %}
+                {% if project.project_name %}
+                <li class="{% if project_id == project.id %} active {% endif %}">
+                  <a href="/workflow/stakeholder_list/{{ project_id }}/{{project.id}}/ "
+                    >{{ project.project_name | truncatechars:30 }}</a
+                  >
+                </li>
+                {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
         </div>
       </div>
 
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
-          <a
+          <!-- <a
             role="button"
             class="btn btn-sm btn-info  disabled"
             href="/workflow/export_stakeholders_list/{{ program_id }}/"
             class="btn btn-sm btn-default"
           >
             Export to CSV</a
-          >
+          > -->
 
           <a
             role="button"

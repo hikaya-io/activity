@@ -21,6 +21,9 @@
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
+        <span class="text-filter">Filter by</span>
+      </div>
+      <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
           <div class="btn-group" role="group">
             <button
@@ -31,16 +34,38 @@
               aria-expanded="false"
             >
               {{ user.activity_user.organization.level_1_label }}
-              <span class="caret"></span>
+              <span class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
             </button>
             <ul class="dropdown-menu">
-              <li><a href="#">--All--</a></li>
+              <li class="{% if program_id == 0 %} active {% endif %}"><a href="/workflow/documentation_list/0/{{project_agreement_id}}/">--All--</a></li>
               {% for program in get_programs %}
-              <li>
-                <a href="#">{{ program.gaitid }} - {{ program.name }}</a>
+              {% if program.name %}
+              <li class="{% if program_id == program.id %} active {% endif %}">
+                <a href="/workflow/documentation_list/{{program.id}}/{{project_agreement_id}}/">{{ program.name | truncatechars:30 }}</a>
               </li>
+              {% endif%}
               {% endfor %}
             </ul>
+          </div>
+          <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn btn-sm btn-default dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                {{ user.activity_user.organization.level_2_label }}
+                <span class="fa {% if project_agreement_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li class="{% if project_agreement_id == 0 %} active {% endif %}"><a href="/workflow/documentation_list/{{program_id}}/0/">--All--</a></li>
+                {% for project in get_projects %}
+                <li class="{% if project_agreement_id == project.id %} active {% endif %}">
+                  <a href="/workflow/documentation_list/{{program_id}}/{{project.id}}/">{{ project.project_name | truncatechars:30 }}</a>
+                </li>
+                {% endfor %}
+              </ul>
           </div>
         </div>
       </div>
