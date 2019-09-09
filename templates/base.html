@@ -163,13 +163,13 @@
               <ul class="dropdown-menu">
                 <li>
                   <a href="{% url 'level1' %}"
-                    >{{ user.activity_user.organization.level_1_label }}s</a
+                    >{{ user.activity_user.organization.level_1_label }}</a
                   >
                 </li>
 
                 <li>
                   <a href="/workflow/level2/list/0/none/"
-                    >{{ user.activity_user.organization.level_2_label }}s</a
+                    >{{ user.activity_user.organization.level_2_label }}</a
                   >
                 </li>
               </ul>
@@ -186,7 +186,7 @@
               ></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="/indicators/home/0/0/0">Indicators</a>
+                  <a href="/indicators/home/0/0/0">{{ user.activity_user.organization.indicator_label }}</a>
                 </li>
                 <li>
                   <a href="{% url 'objectives' %}">Objectives</a>
@@ -238,12 +238,12 @@
                 </li>
                 <li>
                   <a href="/workflow/siteprofile_list/0/0/list">
-                    Locations</a
+                    {{ user.activity_user.organization.site_label }}</a
                   >
                 </li>
                 <li>
                   <a href="/workflow/stakeholder_list/0/0">
-                    Stakeholders
+                    {{ user.activity_user.organization.stakeholder_label }}
                   </a>
                 </li>
               </ul>
@@ -319,44 +319,38 @@
                   </a>
     
                   <ul class="dropdown-menu">
-                    <li class="dropdown-header">signed in as <strong>{{user.username}}</strong></li>
-                    <li class="divider"></li>
-                    <li>
-                      <a href="{% url 'profile' %}"
-                        >Profile</a
-                      >
-                    </li>
-                    {% if user.is_superuser %}
-                    <li>
-                      <a href="{% url 'admin_profile_settings' %}"
-                        >Organization Settings</a
-                      >
-                    </li>
-                    {% endif %} 
-                    {% if user.is_authenticated %}
-                    {% if user.activity_user.organizations %} 
-                    <li class="divider"></li>
-                    <li class="dropdown-header">Organizations</li>
-                    {% for org in user.activity_user.organizations.all %}
-                    <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
-                      <a href="/accounts/organization/{{ org.id }}/">
-                      {{ org.name }}
-                      </a>
-                    </li>
-                    {% endfor %} 
-                    <li>
-                      <a href="/accounts/register/organization">
-                        <i class="fa fa-plus"></i> Add new Organization
-                      </a>
-                    </li>
-                    {% endif %}
-                    <li class="divider"></li>
-                    <li>
-                      <a href="{% url 'logout' %}" class="text-danger"
-                        >Sign out</a
-                      >
-                    </li>
-                    {% endif %}
+                      <li class="dropdown-header">signed in as <strong>{{user.username}}</strong></li>
+                      <li class="divider"></li>
+                      <li><a href="{% url 'profile' %}">Profile</a></li>
+                      {% if user.is_superuser or user.activity_user|has_org_access:"Owner" %}
+                        <li>
+                          <a href="{% url 'admin_profile_settings' %}"
+                            >Organization Settings</a
+                          >
+                        </li>
+                      {% endif %} 
+                      <li class="divider"></li>
+                      {% if user.activity_user.organizations %} 
+                        <li class="dropdown-header">Organizations</li>
+                          {% for org in user.activity_user.organizations.all %}
+                            <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
+                              <a href="/accounts/organization/{{ org.id }}/">
+                                {{ org.name }}
+                              </a>
+                            </li>
+                          {% endfor %} 
+                        <li>
+                        <a href="/accounts/register/organization">
+                          <i class="fa fa-plus"></i> Add new Organization
+                        </a>
+                        </li>
+                      {% endif %}
+                      <li class="divider"></li>
+                      <li>
+                        <a href="{% url 'logout' %}" class="text-danger"
+                          >Sign out</a
+                        >
+                      </li>
                   </ul>  
             </li>
           </ul>

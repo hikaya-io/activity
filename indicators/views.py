@@ -1935,7 +1935,7 @@ def objectives_list(request):
 
     context = {
         'get_all_objectives': get_all_objectives,
-        'active': ['components'],
+        'active': ['indicators'],
         'get_programs': get_programs
     }
 

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
 <ol class="breadcrumb">
-  <li class="active">Indicators</li>
+  <li class="active">{{ user.activity_user.organization.indicator_label }}</li>
 </ol>
 {% endblock %}
 {% block page_title %}Indicator Planning Tool{% endblock %} 
@@ -10,7 +10,7 @@
 
     <div class="dropdown">
     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-    Programs
+    {{ user.activity_user.organization.level_1_label }}
     <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">

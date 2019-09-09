@@ -220,6 +220,12 @@ class UserInviteAdmin(admin.ModelAdmin):
     list_filter = ('organization', 'status')
 
 
+@admin.register(ActivityUserOrganizationGroup)
+class ActivityUserOrganizationGroupAdmin(admin.ModelAdmin):
+    list_display = ('activity_user', 'organization', 'create_date', 'edit_date')
+    list_filter = ('activity_user', 'organization')
+
+
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Country, CountryAdmin)
 admin.site.register(Province, ProvinceAdmin)
