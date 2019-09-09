@@ -543,6 +543,12 @@ def admin_configurations(request):
 def admin_profile_settings(request):
     user = get_object_or_404(ActivityUser, user=request.user)
     organization = user.organization
+    # reset logo
+    if request.GET.get('reset_logo'):
+        organization = Organization.objects.get(pk=user.organization.id)
+        organization.logo = ''
+        organization.save()
+      
     if request.method == 'POST':
         # form = OrganizationEditForm(request.FILES,
         #                             instance=organization)
