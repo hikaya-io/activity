@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}{% load group_tag %}{% block content %}
 {% include 'admin/user_invite_modal.html' %}
 <div class="container">
 	{% block breadcrumbs %}
@@ -87,8 +87,8 @@
 							{% endif %}
 						</td>
 						<td>
-							{% if user.user.is_superuser %} Org Admin {% else%}
-							{{ user.user.groups.all.0}}
+							{% if user.user.is_superuser %} Owner {% else%}
+							{{ user|get_group_name }}
 							{% endif %}
 						</td>
 						<td>{{ user.create_date | date:"DATE_FORMAT" }}</td>
@@ -110,9 +110,9 @@
 								</button>
 								<ul class="dropdown-menu">
 									{% if user.user.is_active %}
-										<li><a href="/accounts/admin/user/updatestatus/{{user.user.id}}/owner/">Change to Owner</a></li>
-										<li><a href="/accounts/admin/user/updatestatus/{{user.user.id}}/editor/">Change to Editor</a> </li>
-										<li><a href="/accounts/admin/user/updatestatus/{{user.user.id}}/viewer/">Change to Viewer</a></li>
+										<li><a href="/accounts/admin/user/updatestatus/{{user.user.id}}/Owner/">Change to Owner</a></li>
+										<li><a href="/accounts/admin/user/updatestatus/{{user.user.id}}/Editor/">Change to Editor</a> </li>
+										<li><a href="/accounts/admin/user/updatestatus/{{user.user.id}}/Viewer/">Change to Viewer</a></li>
 									{% else %}
 										<li class="disabled"><a href="">Change to Owner</a></li>
 										<li class="disabled"><a href="">Change to Editor</a> </li>

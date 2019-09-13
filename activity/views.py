@@ -684,37 +684,26 @@ def update_user_access(request, pk, status):
         user.is_active = True
         user.save()
 
-    if status == 'deactivate':
+    elif status == 'deactivate':
         user.is_active = False
         user.save()
 
-    if status == 'owner':
-        user.groups.clear()
-        group = Group.objects.get(name='Owner')
-        user.groups.add(group)
-
-    if status == 'editor':
-        user.groups.clear()
-        group = Group.objects.get(name='Editor')
-        user.groups.add(group)
-
-    if status == 'viewer':
-        user.groups.clear()
-        group = Group.objects.get(name='Viewer')
-        user.groups.add(group)
+    else:
+        new_gp = Group.objects.get(name=status)
+        activity_user = user.activity_user
+        user_org_access = ActivityUserOrganizationGroup.objects.filter(
+            activity_user_id=activity_user.id,
+            organization_id=activity_user.organization.id).first()
+        if user_org_access:
+            user_org_access.group = new_gp
+            user_org_access.save()
+        else:
+            ActivityUserOrganizationGroup.objects.create(
+                activity_user=activity_user,
+                organization=activity_user.organization,
+                group=new_gp)
 
     return redirect('/accounts/admin/users/all/all/')
-
-
-def update_permission(request, group):
-    new_gp = Group.objects.get(name=group)
-    activity_user = request.user.activity_user
-    user_org_access = ActivityUserOrganizationGroup.objects.filter(
-        activity_user_id=activity_user.id,
-        organization_id=activity_user.organization.id
-    )
-    user_org_access.groups.clear()
-    user_org_access.groups.add(new_gp)
 
 
 @login_required(login_url='/accounts/login/')
