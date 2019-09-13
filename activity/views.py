@@ -670,7 +670,7 @@ def admin_user_edit(request, pk):
 
 
 @login_required(login_url='/accounts/login/')
-def activate_deactivate_user(request, pk, status):
+def update_user_user_access(request, pk, status):
     """
     Deactivate or Activate Users
     :param request:
@@ -682,9 +682,27 @@ def activate_deactivate_user(request, pk, status):
 
     if status == 'activate':
         user.is_active = True
-    else:
+        user.save()
+
+    if status == 'deactivate':
         user.is_active = False
-    user.save()
+        user.save()
+
+    if status == 'owner':
+        user.groups.clear()
+        group = Group.objects.get(name='Owner')
+        user.groups.add(group)
+
+    if status == 'editor':
+        user.groups.clear()
+        group = Group.objects.get(name='Editor')
+        user.groups.add(group)
+
+    if status == 'viewer':
+        user.groups.clear()
+        group = Group.objects.get(name='Viewer')
+        user.groups.add(group)
+
     return redirect('/accounts/admin/users/all/all/')
 
 

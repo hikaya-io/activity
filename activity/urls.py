@@ -127,7 +127,7 @@ urlpatterns = [  # rest framework
          name='admin_user_management'),
     path('accounts/admin/user/edit/<slug:pk>/', views.admin_user_edit,
          name='admin_user_edit'),
-    path('accounts/admin/user/updatestatus/<slug:pk>/<slug:status>/', views.activate_deactivate_user,
+    path('accounts/admin/user/updatestatus/<slug:pk>/<slug:status>/', views.update_user_user_access,
          name='user_status_update'),
     path('accounts/admin/configurations', views.admin_configurations,
          name='admin_configurations'),
