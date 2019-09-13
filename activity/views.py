@@ -670,7 +670,7 @@ def admin_user_edit(request, pk):
 
 
 @login_required(login_url='/accounts/login/')
-def update_user_user_access(request, pk, status):
+def update_user_access(request, pk, status):
     """
     Deactivate or Activate Users
     :param request:
@@ -704,6 +704,17 @@ def update_user_user_access(request, pk, status):
         user.groups.add(group)
 
     return redirect('/accounts/admin/users/all/all/')
+
+
+def update_permission(request, group):
+    new_gp = Group.objects.get(name=group)
+    activity_user = request.user.activity_user
+    user_org_access = ActivityUserOrganizationGroup.objects.filter(
+        activity_user_id=activity_user.id,
+        organization_id=activity_user.organization.id
+    )
+    user_org_access.groups.clear()
+    user_org_access.groups.add(new_gp)
 
 
 @login_required(login_url='/accounts/login/')

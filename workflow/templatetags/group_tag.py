@@ -18,16 +18,14 @@ def has_group(user, group_name):
 
 
 @register.filter(name='has_org_access')
-def has_access(activity_user, group):
+def has_org_access(activity_user, group):
     user_org_access = ActivityUserOrganizationGroup.objects.filter(
         activity_user_id=activity_user.id,
         organization_id=activity_user.organization.id
     )
 
-    groups = user_org_access.values_list('groups__name', flat=True)
-    print('Groups:::::::::', groups)
-
-    if group in groups:
+    user_group = Group.objects.get(name=user_org_access.group.name)
+    if group == user_group.name:
         return True
     return False
 
