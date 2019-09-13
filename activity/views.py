@@ -514,6 +514,9 @@ def admin_configurations(request):
             'level_2_label': data.get('level_2_label'),
             'level_3_label': data.get('level_3_label'),
             'level_4_label': data.get('level_4_label'),
+            'site_label': data.get('site_label'),
+            'indicator_label': data.get('indicator_label'),
+            'form_label': data.get('form_label'),
             'stakeholder_label': data.get('stakeholder_label'),
             'date_format': data.get('date_format'),
             # 'default_currency': data.get('default_currency')
@@ -540,6 +543,12 @@ def admin_configurations(request):
 def admin_profile_settings(request):
     user = get_object_or_404(ActivityUser, user=request.user)
     organization = user.organization
+    # reset logo
+    if request.GET.get('reset_logo'):
+        organization = Organization.objects.get(pk=user.organization.id)
+        organization.logo = ''
+        organization.save()
+      
     if request.method == 'POST':
         # form = OrganizationEditForm(request.FILES,
         #                             instance=organization)
@@ -661,7 +670,7 @@ def admin_user_edit(request, pk):
 
 
 @login_required(login_url='/accounts/login/')
-def activate_deactivate_user(request, pk, status):
+def update_user_user_access(request, pk, status):
     """
     Deactivate or Activate Users
     :param request:
@@ -673,9 +682,27 @@ def activate_deactivate_user(request, pk, status):
 
     if status == 'activate':
         user.is_active = True
-    else:
+        user.save()
+
+    if status == 'deactivate':
         user.is_active = False
-    user.save()
+        user.save()
+
+    if status == 'owner':
+        user.groups.clear()
+        group = Group.objects.get(name='Owner')
+        user.groups.add(group)
+
+    if status == 'editor':
+        user.groups.clear()
+        group = Group.objects.get(name='Editor')
+        user.groups.add(group)
+
+    if status == 'viewer':
+        user.groups.clear()
+        group = Group.objects.get(name='Viewer')
+        user.groups.add(group)
+
     return redirect('/accounts/admin/users/all/all/')
 
 

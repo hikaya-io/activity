@@ -132,21 +132,6 @@ class ProgramForm(forms.ModelForm):
         widget=DatePicker.DateInput(), required=False)
     end_date = forms.DateTimeField(
         widget=DatePicker.DateInput(), required=False)
-    sector = forms.ModelMultipleChoiceField(
-        queryset=Sector.objects.all(),
-        widget=Select2MultipleWidget,
-        required=False
-    )
-    fund_code = forms.ModelMultipleChoiceField(
-        queryset=FundCode.objects.all(),
-        widget=Select2MultipleWidget,
-        required=False
-    )
-    user_access = forms.ModelMultipleChoiceField(
-        queryset=ActivityUser.objects.all(),
-        widget=Select2MultipleWidget,
-        required=False
-    )
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')

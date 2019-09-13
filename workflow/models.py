@@ -452,12 +452,20 @@ class FundCodeAdmin(admin.ModelAdmin):
 
 
 class Program(models.Model):
+    FUNDING_STATUSES = (
+        ('open', 'Open'),
+        ('in_negotiation', 'In Negotiation'),
+        ('signed', 'Signed'),
+        ('Awarded', 'Awarded'),
+        ('Closed', 'Closed'),
+    )
+
     program_uuid = models.UUIDField(
         editable=False, verbose_name='Program UUID', default=uuid.uuid4, unique=True)
     name = models.CharField("Program Name", max_length=255,
                             blank=False, null=False, default='Default Level 1')
-    funding_status = models.CharField(
-        "Funding Status", max_length=255, blank=True)
+    funding_status = models.CharField('Funding Status', choices=FUNDING_STATUSES,
+                                      default='open', max_length=255, blank=True)
     cost_center = models.CharField(
         "Cost Center", max_length=255, blank=True, null=True)
     fund_code = models.ManyToManyField(FundCode, blank=True)
@@ -1064,8 +1072,8 @@ class Stakeholder(models.Model):
         Country, blank=True, null=True, on_delete=models.SET_NULL)
     organization = models.ForeignKey(
         Organization, blank=True, null=True, on_delete=models.SET_NULL)
-    # sector = models.ForeignKey(Sector, blank=True, null=True,
-    # related_name='sectors')
+    program = models.ForeignKey(
+        Program, blank=True, null=True, on_delete=models.SET_NULL)
     sectors = models.ManyToManyField(Sector, blank=True)
     stakeholder_register = models.BooleanField(
         "Has this partner been added to stakeholder register?")
@@ -1463,7 +1471,7 @@ class ProjectComplete(models.Model):
         Program, null=True, blank=True, related_name="complete",
         on_delete=models.SET_NULL)
     project_agreement = models.OneToOneField(
-        ProjectAgreement, verbose_name="Project Initiation", 
+        ProjectAgreement, verbose_name="Project Initiation",
         related_name='project_complete', on_delete=models.CASCADE)
     # Rename to more generic "nonproject" names
     activity_code = models.CharField(
@@ -1995,5 +2003,3 @@ class ActivityUserOrganizationGroup(models.Model):
     # displayed in admin templates
     def __str__(self):
         return '{} - {}'.format(self.activity_user, self.organization) or ''
-
-

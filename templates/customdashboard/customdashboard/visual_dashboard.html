@@ -30,7 +30,7 @@
   <div class="panel panel-info">
     <div class="panel-body">
       <div style="float:left;">
-        Number of {{ user.activity_user.organization.level_2_label }}(s):
+        Number of {{ user.activity_user.organization.level_2_label }}:
         <b>{{ get_projects_count }}</b
         ><br />
 
@@ -118,7 +118,7 @@
     <div class="col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <b>{{ user.activity_user.organization.level_2_label }}(s) Status</b>
+          <b>{{ user.activity_user.organization.level_2_label }} Status</b>
           {% if get_filtered_name %} for
           <a href="/workflow/dashboard/{{ get_filtered_name.id }}"
             >{{ get_filtered_name }} </a
