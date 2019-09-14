@@ -277,7 +277,8 @@ def register(request, invite_uuid):
                         organization=invite.organization,
                     )
                     group = Group.objects.get(name='Viewer')
-                    user_org_access.groups.add(group)
+                    user_org_access.group = group
+                    user_org_access.save()
                     if activity_user:
                         # delete the invitation
                         invite.delete()
