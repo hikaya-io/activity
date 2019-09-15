@@ -18,11 +18,11 @@ def has_group(user, group_name):
 
 
 @register.filter(name='has_org_access')
-def has_org_access(activity_user, group):
+def has_access(activity_user, group):
     user_org_access = ActivityUserOrganizationGroup.objects.filter(
         activity_user_id=activity_user.id,
         organization_id=activity_user.organization.id
-    )
+    ).first()
 
     user_group = Group.objects.get(name=user_org_access.group.name)
     if group == user_group.name:
