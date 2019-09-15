@@ -276,7 +276,8 @@ def register(request, invite_uuid):
                         activity_user=activity_user,
                         organization=invite.organization,
                     )
-                    group = Group.objects.get(name='Viewer')
+                    # set default permission to editor on invite
+                    group = Group.objects.get(name='Editor')
                     user_org_access.group = group
                     user_org_access.save()
                     if activity_user:
@@ -577,7 +578,7 @@ def admin_profile_settings(request):
 def admin_user_management(request, role, status):
     nav_links = get_nav_links('People')
     users = ActivityUser.objects.filter(
-        organization=request.user.activity_user.organization)
+        organizations__id=request.user.activity_user.organization.id)
     groups = Group.objects.all().distinct('name')
 
     user_organizations = request.user.activity_user.organizations
