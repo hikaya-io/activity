@@ -1,0 +1,56 @@
+{% load crispy_forms_tags %}
+<div>
+	<div class="row">
+		<div class="col-md-12">
+			{{ form.distribution_name | as_crispy_field }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 form-group">
+			{{ form.distribution_implementer | as_crispy_field }}
+		</div>
+		<div class="col-md-6 form-group">
+			{{ form.distribution_location | as_crispy_field }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 form-group">
+			{{ form.office_code | as_crispy_field }}
+		</div>
+		<div class="col-md-6 form-group">
+			{{ form.province | as_crispy_field }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 form-group">
+			{{ form.input_type_distributed | as_crispy_field }}
+		</div>
+		<div class="col-md-6 form-group">
+			{{ form.total_beneficiaries_received_input | as_crispy_field }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 form-group">
+			{{ form.distribution_indicator | as_crispy_field }}
+		</div>
+		<div class="col-md-6 form-group">
+			{{ form.reporting_period | as_crispy_field }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 form-group">
+			{{ form.distributor_name_and_affiliation | as_crispy_field }}
+		</div>
+		<div class="col-md-6 form-group">
+			{{ form.distributor_contact_number | as_crispy_field }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 form-group">
+			{{ form.start_date | as_crispy_field }}
+		</div>
+		<div class="col-md-6 form-group">
+			{{ form.end_date | as_crispy_field }}
+		</div>
+	</div>
+</div>

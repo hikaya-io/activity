@@ -117,91 +117,88 @@ class DistributionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.request = kwargs.pop('request')
-        self.helper.form_method = 'post'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
-        self.helper.layout = Layout(
-            'distribution_name',
-            Row(
-                Column('program', css_class='form-group col-md-6 mb-0'),
-                Column('initiation', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('office_code', css_class='form-group col-md-6 mb-0'),
-                Column('province', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('distribution_implementer', css_class='form-group col-md-6 mb-0'),
-                Column('distribution_location', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('input_type_distributed', css_class='form-group col-md-6 mb-0'),
-                Column('total_beneficiaries_received_input', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('distribution_indicator', css_class='form-group col-md-6 mb-0'),
-                Column('reporting_period', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('distributor_name_and_affiliation', css_class='form-group col-md-6 mb-0'),
-                Column('distributor_contact_number', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('form_filled_by', css_class='form-group col-md-4 mb-0'),
-                Column('form_filled_by_position', css_class='form-group col-md-4 mb-0'),
-                Column('form_filled_by_contact_num', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('form_verified_by', css_class='form-group col-md-4 mb-0'),
-                Column('form_verified_by_position', css_class='form-group col-md-4 mb-0'),
-                Column('form_verified_by_contact_num', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('total_received_input', css_class='form-group col-md-4 mb-0'),
-                Column('total_male', css_class='form-group col-md-4 mb-0'),
-                Column('total_female', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('total_age_0_14_male', css_class='form-group col-md-6 mb-0'),
-                Column('total_age_0_14_female', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('total_age_15_24_male', css_class='form-group col-md-6 mb-0'),
-                Column('total_age_15_24_female', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('total_age_25_59_male', css_class='form-group col-md-6 mb-0'),
-                Column('total_age_25_59_female', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            # Row(
-            #     Column('total_age_25_59_male', css_class='form-group col-md-6 mb-0'),
-            #     Column('total_age_25_59_female', css_class='form-group col-md-6 mb-0'),
-            #     css_class='form-row'
-            # ),
-            Row(
-                Column('start_date', css_class='form-group col-md-3 mb-0'),
-                Column('end_date', css_class='form-group col-md-3 mb-0'),
-                Column('form_filled_date', css_class='form-group col-md-3 mb-0'),
-                Column('form_verified_date', css_class='form-group col-md-3 mb-0'),
-                css_class='form-row'
-            ),
-            Reset('reset', 'Close', css_class='btn btn-md btn-close'),
-            Submit('submit', 'Save', css_class='btn btn-md btn-success'),
-        )
+        # self.helper.layout = Layout(
+        #     'distribution_name',
+        #     Row(
+        #         Column('program', css_class='form-group col-md-6 mb-0'),
+        #         Column('initiation', css_class='form-group col-md-6 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('office_code', css_class='form-group col-md-6 mb-0'),
+        #         Column('province', css_class='form-group col-md-6 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('distribution_implementer', css_class='form-group col-md-6 mb-0'),
+        #         Column('distribution_location', css_class='form-group col-md-6 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('input_type_distributed', css_class='form-group col-md-6 mb-0'),
+        #         Column('total_beneficiaries_received_input', css_class='form-group col-md-6 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('distribution_indicator', css_class='form-group col-md-6 mb-0'),
+        #         Column('reporting_period', css_class='form-group col-md-6 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('distributor_name_and_affiliation', css_class='form-group col-md-6 mb-0'),
+        #         Column('distributor_contact_number', css_class='form-group col-md-6 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('form_filled_by', css_class='form-group col-md-4 mb-0'),
+        #         Column('form_filled_by_position', css_class='form-group col-md-4 mb-0'),
+        #         Column('form_filled_by_contact_num', css_class='form-group col-md-4 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('form_verified_by', css_class='form-group col-md-4 mb-0'),
+        #         Column('form_verified_by_position', css_class='form-group col-md-4 mb-0'),
+        #         Column('form_verified_by_contact_num', css_class='form-group col-md-4 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('total_received_input', css_class='form-group col-md-4 mb-0'),
+        #         Column('total_male', css_class='form-group col-md-4 mb-0'),
+        #         Column('total_female', css_class='form-group col-md-4 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('total_age_0_14_male', css_class='form-group col-md-6 mb-0'),
+        #         Column('total_age_0_14_female', css_class='form-group col-md-6 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('total_age_15_24_male', css_class='form-group col-md-6 mb-0'),
+        #         Column('total_age_15_24_female', css_class='form-group col-md-6 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('total_age_25_59_male', css_class='form-group col-md-6 mb-0'),
+        #         Column('total_age_25_59_female', css_class='form-group col-md-6 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     # Row(
+        #     #     Column('total_age_25_59_male', css_class='form-group col-md-6 mb-0'),
+        #     #     Column('total_age_25_59_female', css_class='form-group col-md-6 mb-0'),
+        #     #     css_class='form-row'
+        #     # ),
+        #     Row(
+        #         Column('start_date', css_class='form-group col-md-3 mb-0'),
+        #         Column('end_date', css_class='form-group col-md-3 mb-0'),
+        #         Column('form_filled_date', css_class='form-group col-md-3 mb-0'),
+        #         Column('form_verified_date', css_class='form-group col-md-3 mb-0'),
+        #         css_class='form-row'
+        #     )
+        # )
 
         super(DistributionForm, self).__init__(*args, **kwargs)
 

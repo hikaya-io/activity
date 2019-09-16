@@ -403,6 +403,7 @@ class DistributionUpdate(UpdateView):
     model = Distribution
     success_url = '/formlibrary/distribution_list/0/0/'
     guidance = None
+    template_name = 'formlibrary/distribution_form_tab_ui.html'
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
