@@ -904,7 +904,9 @@ select[readonly].select2-hidden-accessible+.select2-container .select2-selection
 .nav-tabs>li>a {
     color: #737581;
     /* padding-left: 0px; */
-    /* margin-right: 4px; */
+    margin-right: 0px;
+    margin-left: 0px;
+    border-radius: 0px;
 }
 
 .nav-tabs>li.active>a,
@@ -914,6 +916,5 @@ select[readonly].select2-hidden-accessible+.select2-container .select2-selection
     cursor: default;
     background-color: #fff;
     /* border: transparent; */
-    border-radius: 0px;
     border-top: 2px solid #25CED1;
 }
