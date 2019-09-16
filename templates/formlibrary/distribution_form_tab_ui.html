@@ -68,6 +68,12 @@
 	$('#reset-id-reset').click(() => {
 		window.location.href = '/formlibrary/distribution_list/0/0/';
 	});
+	$(document).ready(() => {
+		$('#id_program').select2({theme: 'bootstrap'});
+		$('#id_initiation').select2({theme: 'bootstrap'});
+		$('#id_office_code').select2({theme: 'bootstrap'});
+		$('#id_province').select2({theme: 'bootstrap'});
+	})
 </script>
 
 {% endblock content %}
