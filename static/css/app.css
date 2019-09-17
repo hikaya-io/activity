@@ -900,6 +900,10 @@ select[readonly].select2-hidden-accessible+.select2-container .select2-selection
     min-height: 72vh;
 }
 
+#training-tab {
+    min-height: 46vh;
+}
+
 .nav-tabs {
     /* border-bottom: none; */
     margin-bottom: 16px;
