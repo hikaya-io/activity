@@ -893,6 +893,10 @@ select[readonly].select2-hidden-accessible+.select2-container .select2-selection
 }
 
 #beneficiary-tab {
+    min-height: 58vh;
+}
+
+#distribution-tab {
     min-height: 72vh;
 }
 

@@ -1,0 +1,87 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+	{% if form.errors %}
+        <div class="help-block">
+            {% for field in form %} 
+                {% for error in field.errors %}
+                    <strong
+                        ><i>{{ field.label }}</i> - {{ error | escape }}</strong
+                    >&nbsp; 
+                {% endfor %} 
+            {% endfor %}
+        </div>
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-error">
+                <strong>{{ error | escape }}</strong>
+            </div>
+        {% endfor %} 
+    {% endif %} 
+    {% block breadcrumbs %}
+        <ul class="breadcrumb">
+            <li><a href="{% url 'index' %}">My Dashboard</a></li>
+            <li><a href="/formlibrary/beneficiary_list/0/0/">Beneficiaries</a></li>
+            <li class="active">Details</li>
+        </ul>
+	{% endblock %}
+
+	<!-- Sub navigation -->
+	<div class="sub-navigation">
+		<div class="sub-navigation-header">
+			<h4 class="page-title">
+                {% if beneficiary_name %}
+                    {{ beneficiary_name }} 
+                {% else %} 
+                    {{ form_title }} 
+                {% endif%}
+			</h4>
+		</div>
+		{% comment %}
+            <div class="sub-navigation-actions">
+                {% include "form_guidance.html" %}
+            </div>
+		{% endcomment %}
+	</div>
+	<div class="admin-content">
+		<form method="POST">
+			{% csrf_token %}
+			<div id="beneficiary-tab">
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="#details" data-toggle="tab">Beneficiary Details</a>
+					</li>
+					<li><a href="#information" data-toggle="tab">Services</a></li>
+					<li><a href="#participants" data-toggle="tab">Participants</a></li>
+				</ul>
+
+				<div class="tab-content clearfix">
+					<div class="tab-pane active" id="details">
+						{% include 'formlibrary/form-sections/beneficiary/details.html' %}
+					</div>
+					<div class="tab-pane" id="information">
+						{% include 'formlibrary/form-sections/beneficiary/services.html' %}
+					</div>
+					<div class="tab-pane" id="participants">
+						{% include 'formlibrary/form-sections/beneficiary/related.html' %}
+					</div>
+				</div>
+			</div>
+			<div class="">
+				<button type="reset" id="reset-id-reset" class="btn btn-md btn-close">Close</button>
+				<button type="submit" class="btn btn-md btn-success">Save Changes</button>
+			</div>
+		</form>
+	</div>
+</div>
+<script>
+	$('#reset-id-reset').click(() => {
+		window.location.href = '/formlibrary/distribution_list/0/0/';
+	});
+	$(document).ready(function() {
+		$('#id_site').select2({theme: 'bootstrap', placeholder: 'select site',});
+		$('#id_program').select2({theme: 'bootstrap'});
+		$('#id_site').select2({theme: 'bootstrap'});
+		$('#id_training').select2({placeholder: 'select training', theme: 'bootstrap'});
+		$('#id_distribution').select2({placeholder: 'select distribution', theme: 'bootstrap'});
+	});
+</script>
+{% endblock content %}
