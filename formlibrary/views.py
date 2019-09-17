@@ -265,7 +265,6 @@ class BeneficiaryUpdate(UpdateView):
     """
     model = Beneficiary
     guidance = None
-    template_name = 'formlibrary/beneficiary_form_tab_ui.html'
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
