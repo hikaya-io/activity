@@ -1,0 +1,38 @@
+{% load crispy_forms_tags %}
+<div>
+	<div class="row">
+		<div class="col-md-6 form-group">
+			{{ form.total_age_0_14_male | as_crispy_field }}
+		</div>
+		<div class="col-md-6 form-group">
+			{{ form.total_age_0_14_female | as_crispy_field }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 form-group">
+			{{ form.total_age_15_24_male | as_crispy_field }}
+		</div>
+		<div class="col-md-6 form-group">
+			{{ form.total_age_15_24_female | as_crispy_field }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 form-group">
+			{{ form.total_age_25_59_male | as_crispy_field }}
+		</div>
+		<div class="col-md-6 form-group">
+			{{ form.total_age_25_59_female | as_crispy_field }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4 form-group">
+			{{ form.total_participants | as_crispy_field }}
+		</div>
+		<div class="col-md-4 form-group">
+			{{ form.total_male | as_crispy_field }}
+		</div>
+		<div class="col-md-4 form-group">
+			{{ form.total_female | as_crispy_field }}
+		</div>
+	</div>
+</div>
