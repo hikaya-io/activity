@@ -918,3 +918,25 @@ select[readonly].select2-hidden-accessible+.select2-container .select2-selection
     /* border: transparent; */
     border-top: 2px solid #25CED1;
 }
+
+/* Override data tables pagination button size */
+.pagination>li:first-child>a,
+.pagination>li:first-child>span,
+.pagination>li:last-child>a,
+.pagination>li:last-child>span,
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover,
+.pagination>li>a,
+.pagination>li>span {
+    height: 30px !important;
+    line-height: 1.5;
+    font-size: 12px;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+    padding-top: 6px;
+}
