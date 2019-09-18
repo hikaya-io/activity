@@ -17,18 +17,26 @@
   </div>
 
   <div class="bg-white p-10 pt-0">
+    <!-- Tabs -->
     <ul class="nav nav-tabs">
-      <li role="presentation" class="active"><a href="#">Details</a></li>
-      <li role="presentation"><a href="#">Funding</a></li>
-      <li role="presentation"><a href="#">Access</a></li>
+      <li role="presentation" class="active">
+        <a href="#program_details" role="tab" data-toggle="tab">Details</a>
+      </li>
+      <li role="presentation">
+        <a href="#program_funding" role="tab" data-toggle="tab">Funding</a>
+      </li>
+      <li role="presentation">
+        <a href="#program_access" role="tab" data-toggle="tab">Access</a>
+      </li>
     </ul>
+
+    <!-- Tab content -->
     <div class="tab-content">
-      <div role="tabpanel" class="tab-pane fade in active" id="programDetails">
+      <div role="tabpanel" class="tab-pane active" id="program_details">
         {% include '../workflow/form-sections/program_details.html' %}
       </div>
-      <div role="tabpanel" class="tab-pane fade" id="profile">...</div>
-      <div role="tabpanel" class="tab-pane fade" id="messages">...</div>
-      <div role="tabpanel" class="tab-pane fade" id="settings">...</div>
+      <div role="tabpanel" class="tab-pane" id="program_funding">...</div>
+      <div role="tabpanel" class="tab-pane" id="program_access">...</div>
     </div>
   </div>
 </div>
