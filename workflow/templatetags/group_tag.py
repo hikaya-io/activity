@@ -22,14 +22,23 @@ def has_access(activity_user, group):
     user_org_access = ActivityUserOrganizationGroup.objects.filter(
         activity_user_id=activity_user.id,
         organization_id=activity_user.organization.id
-    )
+    ).first()
 
-    groups = user_org_access.values_list('groups__name', flat=True)
-    print('Groups:::::::::', groups)
-
-    if group in groups:
+    user_group = Group.objects.get(name=user_org_access.group.name)
+    if group == user_group.name:
         return True
     return False
+
+
+@register.filter(name='get_group_name')
+def get_group_name(activity_user):
+    user_org_access = ActivityUserOrganizationGroup.objects.filter(
+        activity_user_id=activity_user.id,
+        organization_id=activity_user.organization.id).first()
+    if user_org_access:
+        return user_org_access.group.name
+
+    return 'Viewer'
 
 
 @register.filter

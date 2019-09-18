@@ -296,7 +296,7 @@ class BeneficiaryUpdate(UpdateView):
         form.save()
         messages.success(self.request, 'Success, Beneficiary Updated!')
 
-        return redirect('/formlibrary/beneficiary_list/0/0/')
+        return redirect('/formlibrary/beneficiary_list/0/0/0/')
 
     form_class = BeneficiaryForm
 

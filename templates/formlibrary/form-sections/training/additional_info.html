@@ -1,0 +1,30 @@
+{% load crispy_forms_tags %}
+<div>
+	<div class="row">
+		<div class="col-md-6 form-group">
+			{{ form.program | as_crispy_field }}
+		</div>
+		<div class="col-md-6 form-group">
+			{{ form.project_agreement | as_crispy_field }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 form-group">
+			{{ form.form_filled_by | as_crispy_field }}
+		</div>
+		<div class="col-md-6 form-group">
+			{{ form.form_filled_by_contact_num | as_crispy_field }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4 form-group">
+			{{ form.implementer | as_crispy_field }}
+		</div>
+		<div class="col-md-4 form-group">
+			{{ form.location | as_crispy_field }}
+		</div>
+        <div class="col-md-4 form-group">
+			{{ form.community | as_crispy_field }}
+		</div>
+	</div>
+</div>

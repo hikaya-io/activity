@@ -1984,8 +1984,8 @@ class ActivityUserOrganizationGroup(models.Model):
                                       on_delete=models.CASCADE)
     organization = models.ForeignKey(Organization, related_name='organization_user_group',
                                      on_delete=models.CASCADE)
-    groups = models.ManyToManyField(Group, verbose_name='Organization Groups',
-                                    related_name='org_groups', blank=True)
+    group = models.ForeignKey(Group, verbose_name='Organization Group',  related_name='org_groups',
+                              blank=True, null=True, on_delete=models.SET_NULL)
 
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)

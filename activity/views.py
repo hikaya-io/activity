@@ -276,8 +276,10 @@ def register(request, invite_uuid):
                         activity_user=activity_user,
                         organization=invite.organization,
                     )
-                    group = Group.objects.get(name='Viewer')
-                    user_org_access.groups.add(group)
+                    # set default permission to editor on invite
+                    group = Group.objects.get(name='Editor')
+                    user_org_access.group = group
+                    user_org_access.save()
                     if activity_user:
                         # delete the invitation
                         invite.delete()
@@ -576,7 +578,7 @@ def admin_profile_settings(request):
 def admin_user_management(request, role, status):
     nav_links = get_nav_links('People')
     users = ActivityUser.objects.filter(
-        organization=request.user.activity_user.organization)
+        organizations__id=request.user.activity_user.organization.id)
     groups = Group.objects.all().distinct('name')
 
     user_organizations = request.user.activity_user.organizations
@@ -670,7 +672,7 @@ def admin_user_edit(request, pk):
 
 
 @login_required(login_url='/accounts/login/')
-def update_user_user_access(request, pk, status):
+def update_user_access(request, pk, status):
     """
     Deactivate or Activate Users
     :param request:
@@ -684,24 +686,24 @@ def update_user_user_access(request, pk, status):
         user.is_active = True
         user.save()
 
-    if status == 'deactivate':
+    elif status == 'deactivate':
         user.is_active = False
         user.save()
 
-    if status == 'owner':
-        user.groups.clear()
-        group = Group.objects.get(name='Owner')
-        user.groups.add(group)
-
-    if status == 'editor':
-        user.groups.clear()
-        group = Group.objects.get(name='Editor')
-        user.groups.add(group)
-
-    if status == 'viewer':
-        user.groups.clear()
-        group = Group.objects.get(name='Viewer')
-        user.groups.add(group)
+    else:
+        new_gp = Group.objects.get(name=status)
+        activity_user = user.activity_user
+        user_org_access = ActivityUserOrganizationGroup.objects.filter(
+            activity_user_id=activity_user.id,
+            organization_id=activity_user.organization.id).first()
+        if user_org_access:
+            user_org_access.group = new_gp
+            user_org_access.save()
+        else:
+            ActivityUserOrganizationGroup.objects.create(
+                activity_user=activity_user,
+                organization=activity_user.organization,
+                group=new_gp)
 
     return redirect('/accounts/admin/users/all/all/')
 
