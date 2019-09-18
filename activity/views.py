@@ -12,6 +12,7 @@ from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum, Q, Count
 from django.db import IntegrityError
+from django.views import View
 from django.views.decorators.csrf import csrf_protect
 from django.core.exceptions import MultipleObjectsReturned
 
@@ -861,21 +862,48 @@ def invite_user(request):
     :param request: request context
     :return: success
     """
+    # re-invite user
+    if request.GET.get('resend_invite', None) is not  None:
+        invite = request.GET.get('resend_invite')
+        user_invite = UserInvite.objects.get(invite_uuid=invite)
+        try:
+            if User.objects.get(email=user_invite.email):
+                url_route = '/accounts/join/organization/'
+        except User.DoesNotExist:
+            url_route = '/accounts/register/user/'
+
+        mail_subject = 'Invitation to Join Activity'
+        email_from = 'team.hikaya@gmail.com'
+        domain = request.build_absolute_uri('/').strip('/')
+        data = {'link': '{}{}'.format(domain, url_route)}
+
+        send_invite_emails(mail_subject, email_from, [user_invite], data)
+
+        return HttpResponse({'success': True})
+
+    # New Invitations
     if request.method == 'POST' and request.is_ajax:
         data = request.POST
         email_list = data.getlist('user_email_list[]')
         organization_id = int(data.get('organization'))
         failed_invites = []
         success_invites = []
+        url_route = ''
         for email in email_list:
             try:
                 if UserInvite.objects.get(email=email.lower()):
-                    pass
+                    pass # purpose to implement resend invite
             except MultipleObjectsReturned:
                 pass
             except UserInvite.DoesNotExist:
                 invite = UserInvite.objects.create(
                     email=email.lower(), organization_id=organization_id)
+
+                try:
+                    if User.objects.get(email=email):
+                        url_route = '/accounts/join/organization/'
+                except User.DoesNotExist:
+                    url_route = '/accounts/register/user/'
                 if invite:
                     success_invites.append(invite)
                 else:
@@ -886,7 +914,7 @@ def invite_user(request):
         email_from = 'team.hikaya@gmail.com'
         domain = request.build_absolute_uri('/').strip('/')
         data = {
-            'link': '{}/accounts/register/user/'.format(domain)
+            'link': '{}{}'.format(domain, url_route)
         }
 
         if len(success_invites) > 0:
@@ -897,6 +925,149 @@ def invite_user(request):
 
         else:
             return HttpResponse({'success': False, 'failed': failed_invites})
+
+
+class UserInvite(View):
+    """
+    User invitation class view
+    """
+    def get(self, request, *args, **kwargs):
+        # create new invite
+        if self.request.method == 'POST' and self.request.is_ajax:
+            data = self.request.POST
+            invitation = self.create_new_invitation(data)
+            pass
+
+        # revoke existing invite
+        if self.request.GET.get('delete_invite', None) is not None:
+            invitation_uuid = self.request.GET.get('delete_invite')
+            invitation = self.delete_invitation(invitation_uuid)
+
+        # resend existing invite
+        if self.request.GET.get('resend_invite', None) is not None:
+            invitation_uuid = self.request.GET.get('resend_invite')
+            invitation = self.resend_invitation(invitation_uuid)
+
+        return HttpResponse(invitation)
+
+    def create_new_invitation(self, data):
+        """
+        Send new invitations
+        :param data: post data
+        """
+        email_list = data.getlist('user_email_list[]')
+        organization_id = int(data.get('organization'))
+        failed_invites = []
+        success_invites = []
+        url_route = ''
+        for email in email_list:
+            try:
+                if UserInvite.objects.get(email=email.lower()):
+                    pass  # purpose to implement resend invite
+            except MultipleObjectsReturned:
+                pass
+            except UserInvite.DoesNotExist:
+                invite = UserInvite.objects.create(
+                    email=email.lower(), organization_id=organization_id)
+
+                try:
+                    if User.objects.get(email=email):
+                        url_route = '/accounts/join/organization/'
+                except User.DoesNotExist:
+                    url_route = '/accounts/register/user/'
+                if invite:
+                    success_invites.append(invite)
+                else:
+                    failed_invites.append(email)
+        if len(success_invites) > 0:
+            self.send_invitation_mail(success_invites, url_route)
+
+        if len(failed_invites) == 0:
+            return {'success': True}
+
+        else:
+            return {'success': False}
+
+    def resend_invitation(self, invite):
+        """
+        Resend invitations
+        """
+        user_invite = UserInvite.objects.get(invite_uuid=invite)
+        try:
+            if User.objects.get(email=user_invite.email):
+                url_route = '/accounts/join/organization/'
+        except User.DoesNotExist:
+            url_route = '/accounts/register/user/'
+
+        self.send_invitation_mail([user_invite], url_route)
+
+        return {'success': True}
+
+    @staticmethod
+    def delete_invitation(invite_uuid):
+        """
+        Revoke Invitations
+        :param invite_uuid:
+        """
+        try:
+            invitation = UserInvite.objects.get(invite_uuid=invite_uuid)
+            invitation.delete()
+            return {'success': True}
+
+        except UserInvite.DoesNotExist:
+            return {'success': False}
+
+    def send_invitation_mail(self, user_invites, link):
+        """
+        Send invitation mail
+        :param user_invites:
+        :param link:
+        """
+        mail_subject = 'Invitation to Join Activity'
+        email_from = 'team.hikaya@gmail.com'
+        domain = self.request.build_absolute_uri('/').strip('/')
+        data = {'link': '{}{}'.format(domain, link)}
+
+        send_invite_emails(
+            mail_subject,
+            email_from,
+            user_invites,
+            data
+        )
+
+
+def invite_existing_user(request, invite_uuid):
+    """
+    Invite an existing user
+    :param request:
+    :param invite_uuid:
+    :return:
+    """
+    try:
+        invite = UserInvite.objects.get(invite_uuid=invite_uuid)
+        try:
+            user = User.objects.get(email=invite.email)
+            activity_user = ActivityUser.objects.filter(user=user).first()
+            if activity_user:
+                activity_user.organization = invite.organization
+                activity_user.save()
+                activity_user.organizations.add(invite.organization)
+                messages.error(request,
+                               'You have successfully joined {}'.format(invite.organization.name))
+                return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
+
+            # if user is not found
+            messages.error(request, 'Error, there was an error adding you to {}'.format(invite.organization.name))
+            return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
+        except User.DoesNotExist:
+            messages.error(
+                request,
+                'Error, there was an error adding you to {}'.format(invite.organization.name))
+            return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
+
+    except UserInvite.DoesNotExist:
+        messages.error(request, 'Error, this invitation is no-longer valid')
+        return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
 
 @login_required(login_url='/accounts/login/')
