@@ -33,9 +33,11 @@
     <!-- Tab content -->
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="program_details">
-        {% include '../workflow/form-sections/program_details.html' %}
+        {% include './form-sections/program_details.html' %}
       </div>
-      <div role="tabpanel" class="tab-pane" id="program_funding">...</div>
+      <div role="tabpanel" class="tab-pane" id="program_funding">
+        {% include './form-sections/program_funding.html'%}
+      </div>
       <div role="tabpanel" class="tab-pane" id="program_access">...</div>
     </div>
   </div>
