@@ -16,7 +16,8 @@
     </div>
   </div>
 
-  <div class="bg-white p-10 pt-0">
+  <form class="bg-white p-10 pt-0" method="POST">
+    {% csrf_token %}
     <!-- Tabs -->
     <ul class="nav nav-tabs">
       <li role="presentation" class="active">
@@ -42,7 +43,12 @@
         {% include './form-sections/program_access.html'%}
       </div>
     </div>
-  </div>
+
+    <div class="form-group text-right">
+      <a role="button" class="btn btn-close" href="/workflow/level1">Close</a>
+      <button type="submit" class="btn btn-success">Save Changes</button>
+    </div>
+  </form>
 </div>
 
 {% endblock %}
