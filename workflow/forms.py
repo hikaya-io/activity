@@ -143,40 +143,54 @@ class ProgramForm(forms.ModelForm):
         self.helper.html5_required = True
         self.helper.form_tag = True
         self.helper.layout = Layout(
-            'name',
-            'description',
-            Row(
-                Column('start_date', css_class='form-group col-md-6 mb-0'),
-                Column('end_date', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('sector', css_class='form-group col-md-6 mb-0'),
-                Column('user_access', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('funding_status', css_class='form-group col-md-4 mb-0'),
-                Column('cost_center', css_class='form-group col-md-4 mb-0'),
-                Column('fund_code', css_class='form-group col-md-4 mb-0'),
-                css_class='form-row'
-            ),
-
-            Row(
-                Column('budget_check', css_class='form-group col-md-12 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('public_dashboard', css_class='form-group col-md-12 mb-0'),
-                css_class='form-row'
-            ),
-            Row(css_class='form-row'),
-            Reset('reset', 'Close',
-                  css_class='btn btn-md btn-close'),
-            Submit('submit', 'Save Changes',
-                   css_class='btn btn-md btn-success'),
-
+            TabHolder(
+                Tab('Details', Fieldset('', 'name',
+                                        'description', Row(
+                                            Column(
+                                                'start_date', css_class='form-group col-md-6 mb-0'),
+                                            Column('end_date', css_class='form-group col-md-6 mb-0')), 'sector')),
+                Tab('Funding',  Fieldset('', 'fund_code',
+                                         'funding_status', 'cost_center')),
+                Tab('Access', Fieldset('', 'user_access', Row(
+                    Column('budget_check', css_class='form-group col-md-4'),
+                    Column('public_dashboard', css_class='form-group col-md-4'))))
+            )
         )
+        # self.helper.layout = Layout(
+        #     'name',
+        #     'description',
+        #     Row(
+        #         Column('start_date', css_class='form-group col-md-6 mb-0'),
+        #         Column('end_date', css_class='form-group col-md-6 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('sector', css_class='form-group col-md-6 mb-0'),
+        #         Column('user_access', css_class='form-group col-md-6 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('funding_status', css_class='form-group col-md-4 mb-0'),
+        #         Column('cost_center', css_class='form-group col-md-4 mb-0'),
+        #         Column('fund_code', css_class='form-group col-md-4 mb-0'),
+        #         css_class='form-row'
+        #     ),
+
+        #     Row(
+        #         Column('budget_check', css_class='form-group col-md-12 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(
+        #         Column('public_dashboard', css_class='form-group col-md-12 mb-0'),
+        #         css_class='form-row'
+        #     ),
+        #     Row(css_class='form-row'),
+        #     Reset('reset', 'Close',
+        #           css_class='btn btn-md btn-close'),
+        #     Submit('submit', 'Save Changes',
+        #            css_class='btn btn-md btn-success'),
+
+        # )
 
         super(ProgramForm, self).__init__(*args, **kwargs)
 
@@ -2129,7 +2143,8 @@ class ContactForm(forms.ModelForm):
             ),
             'address',
             Reset('reset', 'Close', css_class='btn btn-md btn-close'),
-            Submit('submit', 'Save Changes', css_class='btn btn-md btn-success'),
+            Submit('submit', 'Save Changes',
+                   css_class='btn btn-md btn-success'),
         )
 
         super(ContactForm, self).__init__(*args, **kwargs)
