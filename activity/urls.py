@@ -71,7 +71,7 @@ urlpatterns = [  # rest framework
 
     # index
     path('', lambda request: redirect('dashboard/0/', permanent=False), name="index"),
-    
+
     # enable the admin:
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
@@ -110,8 +110,8 @@ urlpatterns = [  # rest framework
     # local login
     path('login/', authviews.LoginView.as_view(), name='login'),
     path('accounts/login/', views.user_login, name='login'),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/logout/', views.logout_view, name='logout'),
-
     # register
     path('accounts/register/user/<slug:invite_uuid>/', views.register, name='register'),
     path('accounts/register/organization', views.register_organization,
