@@ -97,8 +97,7 @@ def level1_delete(request, pk):
 
 class ProgramUpdate(UpdateView):
     model = Program
-    # fields = '__all__'
-    template_name_suffix = '_update_form'
+    template_name = 'workflow/program_form_tab_ui.html'
     success_url = '/workflow/level1'
     form_class = ProgramForm
 
