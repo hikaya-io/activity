@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="/">My Dashboard</a></li>
+    <li><a href="/workflow/level1">Programs</a></li>
+    <li class="active">{{ program.name }}</li>
+  </ul>
+  {% endblock %}
+
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+        {{ program.name }}
+      </h4>
+    </div>
+  </div>
+
+  <form class="bg-white p-10 pt-0" method="POST">
+    {% csrf_token %}
+    <!-- Tabs -->
+    <ul class="nav nav-tabs">
+      <li role="presentation" class="active">
+        <a href="#program_details" role="tab" data-toggle="tab">Details</a>
+      </li>
+      <li role="presentation">
+        <a href="#program_funding" role="tab" data-toggle="tab">Funding</a>
+      </li>
+      <li role="presentation">
+        <a href="#program_access" role="tab" data-toggle="tab">Access</a>
+      </li>
+    </ul>
+
+    <!-- Tab content -->
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="program_details">
+        {% include './form-sections/program_details.html' %}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="program_funding">
+        {% include './form-sections/program_funding.html'%}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="program_access">
+        {% include './form-sections/program_access.html'%}
+      </div>
+    </div>
+
+    <div class="form-group text-right">
+      <a role="button" class="btn btn-close" href="/workflow/level1">Close</a>
+      <button type="submit" class="btn btn-success">Save Changes</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

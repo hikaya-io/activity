@@ -948,3 +948,19 @@ select[readonly].select2-hidden-accessible+.select2-container .select2-selection
 div.dataTables_wrapper div.dataTables_paginate ul.pagination {
     padding-top: 6px;
 }
+
+.bg-white {
+    background-color: #ffffff;
+}
+
+.p-5 {
+    padding: 5px;
+}
+
+.p-10 {
+    padding: 10px;
+}
+
+.pt-0 {
+    padding-top: 0px !important;
+}

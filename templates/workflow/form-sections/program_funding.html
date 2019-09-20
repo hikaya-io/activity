@@ -1,0 +1,26 @@
+{% load crispy_forms_tags %}
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      {{ form.fund_code | as_crispy_field }}
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="form-group">
+      {{ form.funding_status | as_crispy_field }}
+    </div>
+  </div>
+</div>
+
+<div class="form-group">
+  {{ form.cost_center | as_crispy_field }}
+</div>
+
+<script>
+  $(document).ready(() => {
+    $('#id_fund_code').select2({ theme: 'bootstrap' });
+    $('#id_funding_status').select2({ theme: 'bootstrap' });
+  });
+</script>
