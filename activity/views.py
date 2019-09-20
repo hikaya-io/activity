@@ -428,7 +428,8 @@ def register_organization(request):
                 organization=org,
             )
             group = Group.objects.get(name='Owner')
-            user_org_access.groups.add(group)
+            user_org_access.group = group
+            user_org_access.save()
 
             return redirect('/')
         else:
