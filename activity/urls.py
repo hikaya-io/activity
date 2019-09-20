@@ -114,6 +114,8 @@ urlpatterns = [  # rest framework
 
     # register
     path('accounts/register/user/<slug:invite_uuid>/', views.register, name='register'),
+    path('accounts/join/organization/<slug:invite_uuid>/', views.invite_existing_user,
+         name='join_organization'),
     path('accounts/register/organization', views.register_organization,
          name='register_organization'),
 
