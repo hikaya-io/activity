@@ -78,9 +78,9 @@
         <th class="text-right">Actions</th>
       </tr>
     </thead>
+    {% for indicator in get_indicators %}
     <tbody>
-      {% for indicator in get_indicators %}
-      <tr>
+      <tr class="expandable" data-toggle="collapse" href="#row-{{indicator.id}}" aria-expanded="false" aria-controls="row-{{indicator.id}}">
         <td>
           <a href="{% url 'indicator_update' indicator.id %}" 
             data-toggle="tooltip" 
@@ -125,8 +125,18 @@
           </div>
         </td>
       </tr>
-      {% endfor %}
     </tbody>
+
+    <tbody id="row-{{indicator.id}}" class="collapse">
+      <tr>
+      <td colspan="6">
+        <div class="text-right">
+          <a href="#" role="button" class="btn btn-sm btn-success">Add Collected Data</a>
+        </div>
+      </td>
+      </tr>
+    </tbody>
+    {% endfor %}
   </table>
 
   <div
