@@ -22,6 +22,14 @@ def populate_default_sectors(apps, schema_editor):
         Sector.objects.create(sector=sector)
 
 
+def create_default_groups(apps, schema_editor):
+    Group = apps.get_model('auth', 'Group')
+    group_list = ['Owner', 'Editor', 'Viewer']
+    for item in group_list:
+        group = Group(name=item)
+        group.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -30,4 +38,5 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(populate_default_sectors),
+        migrations.RunPython(create_default_groups),
     ]
