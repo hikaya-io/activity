@@ -141,6 +141,7 @@ urlpatterns = [  # rest framework
          name='admin_user_invitations'),
     path('accounts/admin/users/invitations/delete_invitation/<slug:pk>/', views.delete_invitation,
          name='delete_invitation'),
+    path('accounts/admin/invitations/', UserInviteView.as_view(), name='user_invitations'),
 
     # bookmarks
     path('bookmark_list', BookmarkList.as_view(),

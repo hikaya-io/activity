@@ -32,9 +32,9 @@
 						<li><a href="/accounts/admin/users/invitations/list/0/">--All--</a></li>
 						{% for org in organizations %}
 						<li>
-							<a href="/accounts/admin/users/invitations/list/{{ org.id }}/">{{
-								org.name
-							}}</a>
+							<a href="/accounts/admin/users/invitations/list/{{ org.id }}/">
+								{{ org.name }}
+							</a>
 						</li>
 						{% endfor %}
 					</ul>
@@ -66,19 +66,42 @@
 							<td>{{ item.invite_date }}</td>
 							<td>{{ item.status }}</td>
 							<td>{{ item.organization }}</td>
-							<td class="text-right">
+							<td>
 								<!-- Action buttons -->
 								<div class="btn-group">
-									<button
-										type="button"
-										class="btn btn-sm btn-danger"
-										data-toggle="modal"
-										onclick="setItemToDelete({{ item.id }})"
-										data-target="#revokeInviteModal{{ item.id }}"
-									>
-										Revoke
+									<button type="button" class="btn btn-sm btn-default disabled">
+									  More
 									</button>
-								</div>
+									<button
+									  type="button"
+									  class="btn btn-default btn-sm dropdown-toggle"
+									  data-toggle="dropdown"
+									  aria-haspopup="true"
+									  aria-expanded="false"
+									>
+									  <span class="caret"></span>
+									  <span class="sr-only">Toggle Dropdown</span>
+									</button>
+									<ul class="dropdown-menu">
+									  <li class="text-danger">
+										<a 
+											href="#"
+											onclick="reinviteUser('{{item.invite_uuid}}')"
+										>Resend</a>
+									  </li>
+									  <li class="divider"></li>
+									  <li class="text-danger">
+										  <a
+											class="text-danger" 
+											href="#deleteItemModal{{distribution.id}}" 
+											data-toggle="modal"
+											onclick="setItemToDelete('{{item.invite_uuid}}')"
+											data-target="#revokeInviteModal{{ item.id }}">
+											Revoke
+										  </a>
+									  </li>
+									</ul>
+								  </div>
 							</td>
 							{% include 'admin/revoke_invitation_confirm_modal.html' %}
 						</tr>
@@ -94,5 +117,25 @@
 	$(document).ready(() => {
 		$('#invitationTable').DataTable();
 	});
+
+	/**
+	* Resend user invitation
+	* @param {string} invite_uuid
+	*/
+	function reinviteUser(invite_uuid) {
+		$.ajax({
+			url: `/accounts/admin/invitations/?resend_invite=${invite_uuid}`,
+			type: 'GET',
+			success: function(result) {
+				toastr.success('Invitation was successfully sent');
+				setTimeout(() => {
+					window.location.href = `/accounts/admin/users/invitations/list/0/`;
+				}, 2000);
+			},
+			error: function(error) {
+				toastr.error('There was a problem sending your invitation');
+			}
+		})
+	}
 </script>
 {% endblock %} {% endblock content %}

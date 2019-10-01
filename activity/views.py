@@ -23,6 +23,7 @@ from workflow.models import (
     Organization, UserInvite, Stakeholder, Contact, Documentation,
     ActivityUserOrganizationGroup
 )
+from workflow.models import UserInvite as UserIn
 from activity.util import get_nav_links, send_invite_emails, \
     send_single_mail
 from activity.forms import (
@@ -928,20 +929,15 @@ def invite_user(request):
             return HttpResponse({'success': False, 'failed': failed_invites})
 
 
-class UserInvite(View):
+class UserInviteView(View):
     """
     User invitation class view
     """
     def get(self, request, *args, **kwargs):
-        # create new invite
-        if self.request.method == 'POST' and self.request.is_ajax:
-            data = self.request.POST
-            invitation = self.create_new_invitation(data)
-            pass
 
         # revoke existing invite
-        if self.request.GET.get('delete_invite', None) is not None:
-            invitation_uuid = self.request.GET.get('delete_invite')
+        if self.request.GET.get('revoke_invite', None) is not None:
+            invitation_uuid = self.request.GET.get('revoke_invite')
             invitation = self.delete_invitation(invitation_uuid)
 
         # resend existing invite
@@ -1004,12 +1000,12 @@ class UserInvite(View):
 
         return {'success': True}
 
-    @staticmethod
-    def delete_invitation(invite_uuid):
+    def delete_invitation(self, invite_uuid):
         """
         Revoke Invitations
         :param invite_uuid:
         """
+        print('called with', invite_uuid)
         try:
             invitation = UserInvite.objects.get(invite_uuid=invite_uuid)
             invitation.delete()
