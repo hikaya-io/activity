@@ -38,7 +38,7 @@ def get_group_name(activity_user):
     if user_org_access:
         return user_org_access.group.name
 
-    return 'Viewer'
+    return 'Not Set'
 
 
 @register.filter

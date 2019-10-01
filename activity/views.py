@@ -581,12 +581,23 @@ def admin_profile_settings(request):
 def admin_user_management(request, role, status):
     nav_links = get_nav_links('People')
     users = ActivityUser.objects.filter(
-        organizations__id=request.user.activity_user.organization.id)
+        organizations__id=request.user.activity_user.organization.id
+    ).exclude(user__is_superuser=True)
     groups = Group.objects.all().distinct('name')
 
     user_organizations = request.user.activity_user.organizations
     if role != 'all':
-        users = users.filter(user__groups__id__icontains=int(role))
+        group = Group.objects.get(id=int(role))
+
+        get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
+            organization_id=request.user.activity_user.organization.id,
+            group_id=group.id
+        ).values_list('activity_user__user__id')
+
+        users = users.filter(
+            user__id__in=get_org_users_by_roles
+        ).exclude(user__is_superuser=True)
+
     if status != 'all':
         status = True if status == 'active' else False
         users = users.filter(user__is_active=status)
