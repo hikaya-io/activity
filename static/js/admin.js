@@ -71,8 +71,7 @@ $('form#inviteUserForm').submit(e => {
 			url: '/accounts/admin/invite_user/',
 			type: 'POST',
 			data,
-			success: function(res, status) {
-				if (res) {
+			success: function(res) {
 					toastr.success(
 						`You have successfuly invited ${data.user_email_list.length} user(s)`,
 						'Invitation Successful'
@@ -81,10 +80,9 @@ $('form#inviteUserForm').submit(e => {
 					setTimeout(() => {
 						window.location.reload();
 					}, 2000);
-				}
 			},
 			error: function(xhr, desc, error) {
-				toastr.error('An error occured during the operation', 'An Error occurred');
+				toastr.error('Could not invite user', 'An Error occurred');
 			},
 		});
 	}
