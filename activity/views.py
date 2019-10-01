@@ -1055,6 +1055,9 @@ def invite_existing_user(request, invite_uuid):
                 activity_user.organizations.add(invite.organization)
                 messages.error(request,
                                'You have successfully joined {}'.format(invite.organization.name))
+                # delete the invite
+                invite.delete()
+
                 return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
             # if user is not found
