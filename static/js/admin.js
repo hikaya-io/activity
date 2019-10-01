@@ -71,20 +71,18 @@ $('form#inviteUserForm').submit(e => {
 			url: '/accounts/admin/invite_user/',
 			type: 'POST',
 			data,
-			success: function(res, status) {
-				if (res) {
+			success: function(res) {
 					toastr.success(
 						`You have successfuly invited ${data.user_email_list.length} user(s)`,
-						'Inviattion Successful'
+						'Invitation Successful'
 					);
 
 					setTimeout(() => {
 						window.location.reload();
 					}, 2000);
-				}
 			},
 			error: function(xhr, desc, error) {
-				toastr.error('An error occured during the operation', 'An Error occurred');
+				toastr.error('Could not invite user', 'An Error occurred');
 			},
 		});
 	}
@@ -97,3 +95,4 @@ function validateEmail(email) {
 	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return re.test(String(email).toLowerCase());
 }
+
