@@ -28,8 +28,8 @@
             </li>
             <li role="presentation"><a href="#targets" aria-controls="targets" role="tab" data-toggle="tab">Targets</a>
             </li>
-            <li role="presentation"><a href="#settings" aria-controls="settings" role="tab"
-                    data-toggle="tab">Settings</a></li>
+            <li role="presentation"><a href="#data_acquiscition" aria-controls="data_acquiscition" role="tab"
+                    data-toggle="tab">Data Acquiscition</a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -43,7 +43,9 @@
             <div role="tabpanel" class="tab-pane" id="targets">
                 {% include "./form-sections/targets.html" %}
             </div>
-            <div role="tabpanel" class="tab-pane" id="settings">...</div>
+            <div role="tabpanel" class="tab-pane" id="data_acquiscition">
+                {% include "./form-sections/data_acquiscition.html" %}
+            </div>
         </div>
 
         <div class="form-group text-right">
