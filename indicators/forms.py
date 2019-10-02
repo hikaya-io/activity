@@ -83,7 +83,7 @@ class IndicatorForm(forms.ModelForm):
             'approval_submitted_by'].queryset = ActivityUser.objects.filter(
             organization=self.request.user.activity_user.organization).distinct()
         self.fields['program'].widget.attrs['readonly'] = "readonly"
-        self.fields['baseline'].widget.attrs['class'] = 'col-sm-4'
+        # self.fields['baseline'].widget.attrs['class'] = 'col-sm-4'
         # self.fields['target_frequency_start'].widget = DatePicker.DateInput()
         # self.fields['target_frequency_start'].help_text =
         #   'This field is required'

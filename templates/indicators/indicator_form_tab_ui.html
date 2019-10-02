@@ -26,8 +26,8 @@
             <li role="presentation"><a href="#performance" aria-controls="performance" role="tab"
                     data-toggle="tab">Performance</a>
             </li>
-            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab"
-                    data-toggle="tab">Messages</a></li>
+            <li role="presentation"><a href="#targets" aria-controls="targets" role="tab" data-toggle="tab">Targets</a>
+            </li>
             <li role="presentation"><a href="#settings" aria-controls="settings" role="tab"
                     data-toggle="tab">Settings</a></li>
         </ul>
@@ -40,7 +40,9 @@
             <div role="tabpanel" class="tab-pane" id="performance">
                 {% include "./form-sections/performance.html" %}
             </div>
-            <div role="tabpanel" class="tab-pane" id="messages">...</div>
+            <div role="tabpanel" class="tab-pane" id="targets">
+                {% include "./form-sections/targets.html" %}
+            </div>
             <div role="tabpanel" class="tab-pane" id="settings">...</div>
         </div>
 
