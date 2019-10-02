@@ -23,7 +23,8 @@
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#indicator_summary" aria-controls="indicator_summary"
                     role="tab" data-toggle="tab">Summary</a></li>
-            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a>
+            <li role="presentation"><a href="#performance" aria-controls="performance" role="tab"
+                    data-toggle="tab">Performance</a>
             </li>
             <li role="presentation"><a href="#messages" aria-controls="messages" role="tab"
                     data-toggle="tab">Messages</a></li>
@@ -36,7 +37,9 @@
             <div role="tabpanel" class="tab-pane active" id="indicator_summary">
                 {% include "./form-sections/summary.html" %}
             </div>
-            <div role="tabpanel" class="tab-pane" id="profile">...</div>
+            <div role="tabpanel" class="tab-pane" id="performance">
+                {% include "./form-sections/performance.html" %}
+            </div>
             <div role="tabpanel" class="tab-pane" id="messages">...</div>
             <div role="tabpanel" class="tab-pane" id="settings">...</div>
         </div>

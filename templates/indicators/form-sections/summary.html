@@ -1,6 +1,10 @@
 {% load crispy_forms_tags %}
 
 <div class="form-group">
+    {{ form.name | as_crispy_field }}
+</div>
+
+<div class="form-group">
     {{ form.program | as_crispy_field }}
 </div>
 
