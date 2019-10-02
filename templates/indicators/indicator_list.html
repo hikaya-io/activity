@@ -80,8 +80,9 @@
     </thead>
     {% for indicator in get_indicators %}
     <tbody>
-      <tr class="expandable" data-toggle="collapse" href="#row-{{indicator.id}}" aria-expanded="false" aria-controls="row-{{indicator.id}}">
+      <tr>
         <td>
+          <span class="expandable" data-toggle="collapse" href="#row-{{indicator.id}}" aria-expanded="false" aria-controls="row-{{indicator.id}}"><i class="fa fa-angle-right"></i></span>
           <a href="{% url 'indicator_update' indicator.id %}" 
             data-toggle="tooltip" 
             title="{{ indicator.name }}">

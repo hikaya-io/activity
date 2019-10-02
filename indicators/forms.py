@@ -35,16 +35,16 @@ class IndicatorForm(forms.ModelForm):
     class Meta:
         model = Indicator
         exclude = ['create_date', 'edit_date']
-        widgets = {
-            'definition': forms.Textarea(attrs={'rows': 4}),
-            'justification': forms.Textarea(attrs={'rows': 4}),
-            'quality_assurance': forms.Textarea(attrs={'rows': 4}),
-            'data_issues': forms.Textarea(attrs={'rows': 4}),
-            'indicator_changes': forms.Textarea(attrs={'rows': 4}),
-            'comments': forms.Textarea(attrs={'rows': 4}),
-            'notes': forms.Textarea(attrs={'rows': 4}),
-            'rationale_for_target': forms.Textarea(attrs={'rows': 4}),
-        }
+        # widgets = {
+        #     'definition': forms.Textarea(attrs={'rows': 4}),
+        #     'justification': forms.Textarea(attrs={'rows': 4}),
+        #     'quality_assurance': forms.Textarea(attrs={'rows': 4}),
+        #     'data_issues': forms.Textarea(attrs={'rows': 4}),
+        #     'indicator_changes': forms.Textarea(attrs={'rows': 4}),
+        #     'comments': forms.Textarea(attrs={'rows': 4}),
+        #     'notes': forms.Textarea(attrs={'rows': 4}),
+        #     'rationale_for_target': forms.Textarea(attrs={'rows': 4}),
+        # }
 
     def __init__(self, *args, **kwargs):
         # get the user object to check permissions with
@@ -59,249 +59,12 @@ class IndicatorForm(forms.ModelForm):
         self.helper.form_action = reverse_lazy(
             'indicator_update', kwargs={'pk': indicator.id})
         self.helper.form_id = 'indicator_update_form'
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-4'
-        self.helper.field_class = 'col-sm-6'
+
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.form_tag = False
-        self.helper.layout = Layout(
-
-            TabHolder(
-                Tab('Summary',
-                    Fieldset('',
-                             'program', 'sector', 'objectives',
-                             'strategic_objectives',
-                             ),
-                    HTML("""
-                        {% if get_external_service_record %}
-                            <div class='panel panel-default'>
-                            <div class='panel-heading'>
-                            External Indicator Service</div>
-                                <table class="table">
-                                    <tr>
-                                        <th>Service Name</th>
-                                        <th>View Guidance</th>
-                                    </tr>
-                                    {% for item in get_external_service_record %}
-                                        <tr>
-                                            <td>
-                                            {{ item.external_service.name }}
-                                            </td>
-                                            <td><a target="_new"
-                                            href='{{ item.full_url }}'>View</a>
-                                        </tr>
-                                    {% endfor %}
-                                </table>
-                            </div>
-                        {% endif %}
-                    """),
-                    ),
-                Tab('Performance',
-                    Fieldset(
-                        '', 'name', 'level', 'number', 'source',
-                        'definition', 'justification', 'disaggregation',
-                        'indicator_type', PrependedText(
-                            'key_performance_indicator', False))),
-                Tab('Targets',
-                    Fieldset('',
-                             'unit_of_measure', 'lop_target',
-                             'rationale_for_target',
-                             Field('baseline',
-                                   template="indicators/crispy.html"),
-                             'baseline_na', 'target_frequency',
-                             'target_frequency_start',
-                             'target_frequency_custom',
-                             'target_frequency_num_periods'
-                             ),
-                    Fieldset('',
-                             HTML("""
-    <div id="div_id_create_targets_btn" class="form-group">
-        <div class="controls col-sm-offset-4 col-sm-6">
-            <button type="button" id="id_create_targets_btn"
-            class="btn btn-primary">Create targets</button>
-            <button type="button" id="id_delete_targets_btn"
-            class="btn btn-link">Remove all targets</button>
-        </div>
-    </div>
-                            """)),
-                    Fieldset('',
-                             HTML("""
-    <div id="id_div_periodic_tables_placeholder">
-    {% if periodic_targets and indicator.target_frequency != 1%}
-        <div class="container-fluid" style="background-color: #F5F5F5;
-        margin: 0px -30px 0px -30px;">
-            <div class="row">
-                <div class="col-sm-offset-2 col-sm-8"
-                style="padding-left: 1px; margin-top: 30px;">
-                    <h4>{{ indicator.get_target_frequency_label }} targets</h4>
-                </div>
-            </div>
-            <div class="row">
-                <div id="periodic-targets-tablediv"
-                class="col-sm-offset-2 col-sm-8">
-                    <table class="table table-condensed"
-                    id="periodic_targets_table" style="margin-bottom: 1px;">
-                        <tbody>
-                            {% for pt in periodic_targets %}
-                                <tr id="{{pt.pk}}"
-                                data-collected-count="{{pt.num_data}}"
-                                class="periodic-target">
-                                    <td style="width:50px;
-                                    vertical-align: middle; border: none;">
-            <a href="{% url 'pt_delete' pt.id %}" id="deleteLastPT"
-            class="detelebtn" style="text-align: center;
-                margin: 3px 10px 0px 10px; color:red;
-                display:{% if forloop.last and indicator.target_frequency != 2 or indicator.target_frequency == 8 %}
-                block{% else %}none{% endif %}">
-                    <span class="glyphicon glyphicon-remove"></span>
-            </a>
-                                    </td>
-                                    <td style="padding:1px; border:none;
-                                    vertical-align:middle;">
-                                    {% if indicator.target_frequency == 8 %}
-                                        <div class="controls border-1px">
-                                            <input type="text"
-                                            name="{{ pt.period }}"
-                                            value="{{ pt.period }}"
-                                                class="form-control
-                                                input-text">
-                                            <span style="margin:0px;"
-                                            class="help-block"> </span>
-                                        </div>
-                                    {% else %}
-                                        <div style="line-height:1;">
-                                        <strong>{{ pt.period }}</strong>
-                                        </div>
-                                        <div style="line-height:1;
-                                        margin-top:3px;">
-                                        {{ pt.start_date_formatted }}
-                                        {% if pt.start_date %} -
-                                        {% endif %}
-                                        {{ pt.end_date_formatted }}</div>
-                                    {% endif %}
-                                    </td>
-                                    <td align="right" style="padding:1px;
-                                    border:none; vertical-align: middle;
-                                        width: 150px">
-                                            <div class="controls border-1px">
-                                                <input type="number"
-                                                id="pt-{{ pt.id }}"
-                                                name="{{ pt.period }}"
-                                    value="{{ pt.target|floatformat:"-2" }}"
-                                    data-start-date=
-                                "{{pt.start_date|date:"M d, Y"|default:''}}"
-                                    data-end-date=
-                                    "{{pt.end_date|date:"M d, Y"|default:''}}"
-                                    placeholder="Enter target"
-                                    class="form-control input-value">
-                                    <span id="hint_id_pt_{{pt.pk}}"
-                                    style="margin:0px;" class="help-block">
-                                                </span>
-                                            </div>
-                                    </td>
-                                </tr>
-                                {% if forloop.last %}
-                                    <tr id="pt_sum_targets">
-                                        <td class="pt-delete-row"
-                                        style="border: none;">
-                                        </td>
-                                        <td align="left"
-                                        style="padding-left:0px; border:none;
-                                        vertical-align: middle;">
-                                            <strong>Sum of targets</strong>
-                                        </td>
-                                        <td align="right" style="border:none;
-                                        vertical-align: middle;">
-                                    <div style="margin: 5px 10px;">
-                                        <strong><span id="id_span_targets_sum">
-                                        {{targets_sum|floatformat:"-2"}}
-                                        </span></strong>
-                                    </div>
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                            <tr style="background-color:#F5F5F5">
-                                <td class="pt-delete-row"
-                                style="border: none;">
-                                </td>
-                                <td align="left" style="padding-left:0px;
-                                border:none; vertical-align: middle;">
-                                    <strong>Life of Program (LoP) target
-                                    </strong>
-                                </td>
-                                <td align="right" style="border:none;
-                                vertical-align: middle;">
-                            <div style="margin: 5px 10px;">
-                                <strong>
-                                {{indicator.lop_target|floatformat:"-2"}}
-                                </strong>
-                            </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr style="background-color:#F5F5F5">
-                                <td colspan="3" style="color:red; padding: 0px"
-                                id="id_pt_errors"></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-            {% if indicator.target_frequency != 2 %}
-                <div class="row">
-                    <div class="col-sm-offset-2 col-sm-8"
-                    style="padding-left: 1px; margin-top:10px;
-                    margin-bottom:40px;">
-                        <a href="#" id="addNewPeriodicTarget"
-                        style="padding-left: 1px;"
-                        class="button btn-lg btn-link">
-                        <span class=" glyphicon glyphicon-plus-sign"></span>
-                         Add a target</a>
-                    </div>
-                </div>
-            {% else %}
-                <div class="row" style="height: 30px; margin-bottom: 15px">
-                </div>
-            {% endif %}
-        </div>
-    {% endif %}
-    </div>
-                        """),
-                             ),
-                    ),
-                Tab('Data Acquisition',
-                    Fieldset('',
-                             'means_of_verification', 'data_collection_method',
-                             'data_collection_frequency',
-                             'data_points', 'responsible_person',
-                             ),
-                    ),
-                Tab('Analysis and Reporting',
-                    Fieldset('',
-                             'method_of_analysis', 'information_use',
-                             'reporting_frequency', 'quality_assurance',
-                             'data_issues', 'indicator_changes', 'comments',
-                             'notes'
-                             ),
-                    ),
-                Tab('Approval',
-                    Fieldset('',
-                             'approval_submitted_by', 'approved_by',
-                             ),
-                    ),
-            ),
-
-            # HTML("""<hr/>"""),
-            # FormActions(
-            #     Submit('submit', 'Save', css_class='btn-default'),
-            #     Reset('reset', 'Reset', css_class='btn-default')
-            # )
-        )
 
         super(IndicatorForm, self).__init__(*args, **kwargs)
 
@@ -309,12 +72,11 @@ class IndicatorForm(forms.ModelForm):
         countries = get_country(self.request.user)
         self.fields['program'].queryset = Program.objects.filter(
             organization=self.request.user.activity_user.organization)
-        self.fields['disaggregation'].queryset = DisaggregationType.objects. \
-            filter(country__in=countries).filter(standard=False)
+        self.fields['disaggregation'].queryset = DisaggregationType.objects.filter(
+            country__in=countries).filter(standard=False)
         self.fields['objectives'].queryset = Objective.objects.filter(
             program__id=self.program_id)
-        self.fields['strategic_objectives'].queryset = StrategicObjective.objects.\
-            filter(country__in=countries)
+
         self.fields['approved_by'].queryset = ActivityUser.objects.filter(
             organization=self.request.user.activity_user.organization).distinct()
         self.fields[
