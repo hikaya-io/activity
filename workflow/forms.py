@@ -303,7 +303,6 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         exclude = ['create_date', 'edit_date', 'account_code', 'lin_code',
                    'mc_estimated_budget',
                    'local_total_estimated_budget', 'local_estimated_budget',
-                   'approval_submitted_by',
                    'finance_reviewed_by', 'me_reviewed_by', 'exchange_rate',
                    'exchange_rate_date',
                    'estimation_date', 'other_budget', 'short']
@@ -406,6 +405,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         choices=APPROVALS,
         initial='in progress',
         required=False,
+        label="Project Status"
     )
 
     def __init__(self, *args, **kwargs):
@@ -419,7 +419,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         self.helper.html5_required = True
         self.helper.form_tag = True
         self.helper.form_id = "agreement"
-       
+
         super(ProjectAgreementSimpleForm, self).__init__(*args, **kwargs)
 
         # override the program queryset to use request.user for country
@@ -428,7 +428,9 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         #   funding_status="Funded", country__in=countries).distinct()
         self.fields['program'].widget = forms.HiddenInput()
         self.fields['program2'].initial = self.instance.program
-        self.fields['program2'].label = "Program"
+        self.fields['program2'].label = 'Progra'
+        self.fields['approval_submitted_by'].label = 'Originated by'
+        self.fields['approved_by'].label = 'Approved by'
 
         self.fields['approved_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
@@ -898,7 +900,6 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
         exclude = ['create_date', 'edit_date', 'project_activity',
                    'account_code', 'lin_code', 'mc_estimated_budget',
                    'local_total_estimated_budget', 'local_estimated_budget',
-                   'approval_submitted_by',
                    'finance_reviewed_by', 'me_reviewed_by', 'exchange_rate',
                    'exchange_rate_date',
                    'estimation_date', 'other_budget']

@@ -35,6 +35,9 @@
 
             <li role="presentation"><a href="#project_rationale" aria-controls="project_rationale" role="tab"
                     data-toggle="tab">Rationale</a></li>
+
+            <li role="presentation"><a href="#project_approval" aria-controls="project_approval" role="tab"
+                    data-toggle="tab">Approval</a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -57,7 +60,11 @@
             </div>
 
             <div role="tabpanel" class="tab-pane" id="project_rationale">
-                    {% include "./project-form-sections/project_rationale.html" %}
+                {% include "./project-form-sections/project_rationale.html" %}
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="project_approval">
+                    {% include "./project-form-sections/project_approval.html" %}
                 </div>
         </div>
 
