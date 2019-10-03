@@ -1,0 +1,13 @@
+{% load crispy_forms_tags %}
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form.total_estimated_budget | as_crispy_field}}
+
+        {{ form.estimation_date | as_crispy_field}}
+    </div>
+
+    <div class="col-md-12">
+        <button type="button" class="btn btn-warning">Add Budget Contributions</button>
+    </div>
+</div>

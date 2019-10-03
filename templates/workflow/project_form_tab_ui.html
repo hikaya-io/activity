@@ -20,12 +20,13 @@
     <form action="POST" class="bg-white p-10 pt-0">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#project_details" aria-controls="project_details"
-                    role="tab" data-toggle="tab">Details</a></li>
-            <li role="presentation"><a href="#project_financials" aria-controls="project_financials" role="tab" data-toggle="tab">Financials</a>
+            <li role="presentation" class="active"><a href="#project_details" aria-controls="project_details" role="tab"
+                    data-toggle="tab">Details</a></li>
+            <li role="presentation"><a href="#project_financials" aria-controls="project_financials" role="tab"
+                    data-toggle="tab">Financials</a>
             </li>
-            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab"
-                    data-toggle="tab">Messages</a></li>
+            <li role="presentation"><a href="#project_components" aria-controls="project_components" role="tab"
+                    data-toggle="tab">Components</a></li>
             <li role="presentation"><a href="#settings" aria-controls="settings" role="tab"
                     data-toggle="tab">Settings</a></li>
         </ul>
@@ -38,7 +39,9 @@
             <div role="tabpanel" class="tab-pane" id="project_financials">
                 {% include "./project-form-sections/project_financials.html" %}
             </div>
-            <div role="tabpanel" class="tab-pane" id="messages">...</div>
+            <div role="tabpanel" class="tab-pane" id="project_components">
+                {% include "./project-form-sections/project_components.html" %}
+            </div>
             <div role="tabpanel" class="tab-pane" id="settings">...</div>
         </div>
 
