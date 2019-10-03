@@ -379,7 +379,8 @@ class ProjectAgreementUpdate(UpdateView):
     """
     model = ProjectAgreement
     form_class = ProjectAgreementForm
-    guidance = None
+    guidance = None,
+    template_name = 'workflow/project_form_tab_ui.html'
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
@@ -408,6 +409,7 @@ class ProjectAgreementUpdate(UpdateView):
         context.update({'program': pk})
         get_agreement = ProjectAgreement.objects.get(id=self.kwargs['pk'])
         context.update({'p_agreement': get_agreement.project_name})
+        context.update({'project': get_agreement})
         context.update({'p_agreement_program': get_agreement.program})
 
         try:

@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container">
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li><a href="/">My Dashboard</a></li>
+        <li><a href="/workflow/level2/list/0/none/">{{user.activity_user.organization.level_2_label}}</a></li>
+        <li class="active">{{ project.project_name }}</li>
+    </ul>
+    {% endblock %}
+
+    <div class="sub-navigation">
+        <div class="sub-navigation-header">
+            <h4 class="page-title">
+                {{ project.project_name }}
+            </h4>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
