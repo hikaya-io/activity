@@ -338,6 +338,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
     documentation_community_approval = forms.FileField(required=False)
 
     effect_or_impact = forms.CharField(
+        label="Relation to Project Logic",
         help_text="Please do not include outputs and keep less than 120 "
                   "words. Describe the logic that will link this "
                   "project/activity to the proposed desired outcome/goal. "
