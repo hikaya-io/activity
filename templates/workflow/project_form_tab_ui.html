@@ -30,8 +30,8 @@
             <li role="presentation"><a href="#project_locations" aria-controls="project_locations" role="tab"
                     data-toggle="tab">Locations</a></li>
 
-            <li role="presentation"><a href="#settings" aria-controls="settings" role="tab"
-                    data-toggle="tab">Settings</a></li>
+            <li role="presentation"><a href="#project_stakeholders" aria-controls="project_stakeholders" role="tab"
+                    data-toggle="tab">Stakeholders</a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -47,6 +47,10 @@
             </div>
             <div role="tabpanel" class="tab-pane" id="project_locations">
                 {% include "./project-form-sections/project_locations.html" %}
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="project_stakeholders">
+                {% include "./project-form-sections/project_stakeholders.html" %}
             </div>
         </div>
 
