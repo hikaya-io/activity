@@ -16,6 +16,35 @@
             </h4>
         </div>
     </div>
+
+    <form action="POST" class="bg-white p-10 pt-0">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#executive_summary" aria-controls="executive_summary"
+                    role="tab" data-toggle="tab">Executive Summary</a></li>
+            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a>
+            </li>
+            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab"
+                    data-toggle="tab">Messages</a></li>
+            <li role="presentation"><a href="#settings" aria-controls="settings" role="tab"
+                    data-toggle="tab">Settings</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="executive_summary">
+                {% include "./project-form-sections/executive_summary.html" %}
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile">...</div>
+            <div role="tabpanel" class="tab-pane" id="messages">...</div>
+            <div role="tabpanel" class="tab-pane" id="settings">...</div>
+        </div>
+
+        <div class="form-group text-right">
+            <button class="btn btn-close">Close</button>
+            <button type="submit" class="btn btn-success">Save Changes</button>
+        </div>
+    </form>
 </div>
 
 {% endblock %}

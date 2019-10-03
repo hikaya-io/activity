@@ -379,7 +379,6 @@ class ProjectAgreementUpdate(UpdateView):
     """
     model = ProjectAgreement
     form_class = ProjectAgreementForm
-    guidance = None,
     template_name = 'workflow/project_form_tab_ui.html'
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
