@@ -110,6 +110,7 @@ class ProgramUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ProgramUpdate, self).get_context_data(**kwargs)
         context['current_program'] = self.get_object()
+        context['active']= ['workflow']
         return context
 
 
@@ -408,7 +409,7 @@ class ProjectAgreementUpdate(UpdateView):
         context.update({'program': pk})
         get_agreement = ProjectAgreement.objects.get(id=self.kwargs['pk'])
         context.update({'p_agreement': get_agreement.project_name})
-        context.update({'project': get_agreement})
+        context.update({'project': get_agreement, 'active': ['workflow']})
         context.update({'p_agreement_program': get_agreement.program})
 
         try:
