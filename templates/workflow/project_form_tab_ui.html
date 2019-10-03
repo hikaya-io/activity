@@ -17,7 +17,8 @@
         </div>
     </div>
 
-    <form action="POST" class="bg-white p-10 pt-0">
+    <form method="POST" class="bg-white p-10 pt-0">
+        {% csrf_token %}
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#project_details" aria-controls="project_details" role="tab"
@@ -64,8 +65,8 @@
             </div>
 
             <div role="tabpanel" class="tab-pane" id="project_approval">
-                    {% include "./project-form-sections/project_approval.html" %}
-                </div>
+                {% include "./project-form-sections/project_approval.html" %}
+            </div>
         </div>
 
         <div class="form-group text-right">
