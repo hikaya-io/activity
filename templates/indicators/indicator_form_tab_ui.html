@@ -33,6 +33,9 @@
 
             <li role="presentation"><a href="#analysis_and_reporting" aria-controls="analysis_and_reporting" role="tab"
                     data-toggle="tab">Analysis &amp; Reporting</a></li>
+
+            <li role="presentation"><a href="#approval" aria-controls="approval" role="tab"
+                    data-toggle="tab">Approval</a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -52,6 +55,10 @@
 
             <div role="tabpanel" class="tab-pane" id="analysis_and_reporting">
                 {% include "./form-sections/analysis_and_reporting.html" %}
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="approval">
+                {% include "./form-sections/approval.html" %}
             </div>
         </div>
 
