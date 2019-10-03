@@ -23,6 +23,7 @@ from workflow.models import (
     Organization, UserInvite, Stakeholder, Contact, Documentation,
     ActivityUserOrganizationGroup
 )
+from workflow.models import UserInvite as UserIn
 from activity.util import get_nav_links, send_invite_emails, \
     send_single_mail
 from activity.forms import (
@@ -580,12 +581,23 @@ def admin_profile_settings(request):
 def admin_user_management(request, role, status):
     nav_links = get_nav_links('People')
     users = ActivityUser.objects.filter(
-        organizations__id=request.user.activity_user.organization.id)
+        organizations__id=request.user.activity_user.organization.id
+    ).exclude(user__is_superuser=True)
     groups = Group.objects.all().distinct('name')
 
     user_organizations = request.user.activity_user.organizations
     if role != 'all':
-        users = users.filter(user__groups__id__icontains=int(role))
+        group = Group.objects.get(id=int(role))
+
+        get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
+            organization_id=request.user.activity_user.organization.id,
+            group_id=group.id
+        ).values_list('activity_user__user__id')
+
+        users = users.filter(
+            user__id__in=get_org_users_by_roles
+        ).exclude(user__is_superuser=True)
+
     if status != 'all':
         status = True if status == 'active' else False
         users = users.filter(user__is_active=status)
@@ -863,24 +875,6 @@ def invite_user(request):
     :param request: request context
     :return: success
     """
-    # re-invite user
-    if request.GET.get('resend_invite', None) is not  None:
-        invite = request.GET.get('resend_invite')
-        user_invite = UserInvite.objects.get(invite_uuid=invite)
-        try:
-            if User.objects.get(email=user_invite.email):
-                url_route = '/accounts/join/organization/'
-        except User.DoesNotExist:
-            url_route = '/accounts/register/user/'
-
-        mail_subject = 'Invitation to Join Activity'
-        email_from = 'team.hikaya@gmail.com'
-        domain = request.build_absolute_uri('/').strip('/')
-        data = {'link': '{}{}'.format(domain, url_route)}
-
-        send_invite_emails(mail_subject, email_from, [user_invite], data)
-
-        return HttpResponse({'success': True})
 
     # New Invitations
     if request.method == 'POST' and request.is_ajax:
@@ -892,17 +886,36 @@ def invite_user(request):
         url_route = ''
         for email in email_list:
             try:
-                if UserInvite.objects.get(email=email.lower()):
-                    pass # purpose to implement resend invite
-            except MultipleObjectsReturned:
-                pass
-            except UserInvite.DoesNotExist:
-                invite = UserInvite.objects.create(
-                    email=email.lower(), organization_id=organization_id)
+                check_invite = UserInvite.objects.get(email=email.lower())
+                if check_invite:
+                    redirect(
+                        '/accounts/admin/invitations/?resend_invite={}'.format(
+                            check_invite.invite_uuid)
+                    )
 
+            except MultipleObjectsReturned:
+                redirect(
+                    '/accounts/admin/invitations/?resend_invite={}'.format(
+                        check_invite.invite_uuid)
+                )
+
+            except UserInvite.DoesNotExist:
+                invite = None
                 try:
-                    if User.objects.get(email=email):
-                        url_route = '/accounts/join/organization/'
+                    check_user = User.objects.get(email=email)
+                    if check_user:
+                        user_orgs = check_user.activity_user.organizations.values_list(
+                            'id', flat=True)
+                        if organization_id in user_orgs:
+                            # raise Exception('Could not invite this user')
+                            pass
+                        else:
+                            invite = UserInvite.objects.create(
+                                email=email.lower(),
+                                organization_id=organization_id
+                            )
+                            url_route = '/accounts/join/organization/'
+
                 except User.DoesNotExist:
                     url_route = '/accounts/register/user/'
                 if invite:
@@ -928,25 +941,22 @@ def invite_user(request):
             return HttpResponse({'success': False, 'failed': failed_invites})
 
 
-class UserInvite(View):
+class UserInviteView(View):
     """
     User invitation class view
     """
     def get(self, request, *args, **kwargs):
-        # create new invite
-        if self.request.method == 'POST' and self.request.is_ajax:
-            data = self.request.POST
-            invitation = self.create_new_invitation(data)
-            pass
 
         # revoke existing invite
-        if self.request.GET.get('delete_invite', None) is not None:
-            invitation_uuid = self.request.GET.get('delete_invite')
+        if self.request.GET.get('revoke_invite', None) is not None:
+            invitation_uuid = self.request.GET.get('revoke_invite')
             invitation = self.delete_invitation(invitation_uuid)
 
         # resend existing invite
         if self.request.GET.get('resend_invite', None) is not None:
             invitation_uuid = self.request.GET.get('resend_invite')
+            print('Resent Invite', invitation_uuid)
+
             invitation = self.resend_invitation(invitation_uuid)
 
         return HttpResponse(invitation)
@@ -1010,6 +1020,7 @@ class UserInvite(View):
         Revoke Invitations
         :param invite_uuid:
         """
+        print('called with', invite_uuid)
         try:
             invitation = UserInvite.objects.get(invite_uuid=invite_uuid)
             invitation.delete()
@@ -1055,6 +1066,9 @@ def invite_existing_user(request, invite_uuid):
                 activity_user.organizations.add(invite.organization)
                 messages.error(request,
                                'You have successfully joined {}'.format(invite.organization.name))
+                # delete the invite
+                invite.delete()
+
                 return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
             # if user is not found
@@ -1071,12 +1085,3 @@ def invite_existing_user(request, invite_uuid):
         return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
 
-@login_required(login_url='/accounts/login/')
-@csrf_exempt
-def delete_invitation(request, pk):
-    try:
-        invitation = UserInvite.objects.get(pk=int(pk))
-        invitation.delete()
-        return HttpResponse({'success': True})
-    except UserInvite.DoesNotExist:
-        pass

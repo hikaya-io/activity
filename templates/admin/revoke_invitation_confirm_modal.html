@@ -54,14 +54,21 @@
 	 **/
 	function deleteItem() {
         $.ajax({
-            url: `/accounts/admin/users/invitations/delete_invitation/${itemId}/`,
-            type: 'DELETE',
+            url: `/accounts/admin/invitations/?revoke_invite=${itemId}`,
+            type: 'GET',
             success: function(result) {
-                toastr.success('You have successfully revoked the invitation');
-                setTimeout(() => {
-                    window.location.href = `/accounts/admin/users/invitations/list/0/`;
-                }, 2000);
-            }
+				if(result === 'success') {
+					toastr.success('You have successfully revoked the invitation');
+					setTimeout(() => {
+						window.location.href = `/accounts/admin/users/invitations/list/0/`;
+					}, 2000);
+				} else {
+					toastr.error('There was a problem revoking the invitation');
+				}
+			},
+			error: (error) => {
+				toastr.error('There was a problem revoking the invitation');
+			}
         })
 	}
 </script>
