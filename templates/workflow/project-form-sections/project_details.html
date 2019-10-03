@@ -1,0 +1,37 @@
+{% load crispy_forms_tags %}
+
+<div class="row">
+    <div class="col-md-12">
+        {{ form.project_name | as_crispy_field }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form.activity_code | as_crispy_field }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form.program2 | as_crispy_field }}
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form.expected_start_date | as_crispy_field }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form.expected_end_date | as_crispy_field }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form.sector | as_crispy_field }}
+    </div>
+</div>
+
+<script>
+    $(document).ready(() => {
+        $('#id_office').select2({ theme: 'bootstrap' })
+        $('#id_sector').select2({ theme: 'bootstrap' })
+    })
+</script>

@@ -20,9 +20,9 @@
     <form action="POST" class="bg-white p-10 pt-0">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#executive_summary" aria-controls="executive_summary"
-                    role="tab" data-toggle="tab">Executive Summary</a></li>
-            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a>
+            <li role="presentation" class="active"><a href="#project_details" aria-controls="project_details"
+                    role="tab" data-toggle="tab">Details</a></li>
+            <li role="presentation"><a href="#project_financials" aria-controls="project_financials" role="tab" data-toggle="tab">Financials</a>
             </li>
             <li role="presentation"><a href="#messages" aria-controls="messages" role="tab"
                     data-toggle="tab">Messages</a></li>
@@ -32,10 +32,12 @@
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="executive_summary">
-                {% include "./project-form-sections/executive_summary.html" %}
+            <div role="tabpanel" class="tab-pane active" id="project_details">
+                {% include "./project-form-sections/project_details.html" %}
             </div>
-            <div role="tabpanel" class="tab-pane" id="profile">...</div>
+            <div role="tabpanel" class="tab-pane" id="project_financials">
+                {% include "./project-form-sections/project_financials.html" %}
+            </div>
             <div role="tabpanel" class="tab-pane" id="messages">...</div>
             <div role="tabpanel" class="tab-pane" id="settings">...</div>
         </div>
