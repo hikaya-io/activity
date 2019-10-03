@@ -27,6 +27,9 @@
             </li>
             <li role="presentation"><a href="#project_components" aria-controls="project_components" role="tab"
                     data-toggle="tab">Components</a></li>
+            <li role="presentation"><a href="#project_locations" aria-controls="project_locations" role="tab"
+                    data-toggle="tab">Locations</a></li>
+
             <li role="presentation"><a href="#settings" aria-controls="settings" role="tab"
                     data-toggle="tab">Settings</a></li>
         </ul>
@@ -42,7 +45,9 @@
             <div role="tabpanel" class="tab-pane" id="project_components">
                 {% include "./project-form-sections/project_components.html" %}
             </div>
-            <div role="tabpanel" class="tab-pane" id="settings">...</div>
+            <div role="tabpanel" class="tab-pane" id="project_locations">
+                {% include "./project-form-sections/project_locations.html" %}
+            </div>
         </div>
 
         <div class="form-group text-right">
