@@ -1,0 +1,58 @@
+{% load crispy_forms_tags %}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            {{ form.level | as_crispy_field }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            {{ form.number | as_crispy_field }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            {{ form.source | as_crispy_field }}
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    {{ form.definition | as_crispy_field }}
+</div>
+
+<div class="form-group">
+    {{ form.justification | as_crispy_field }}
+</div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form.disaggregation | as_crispy_field }}
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            {{ form.indicator_type | as_crispy_field }}
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    {{ form.key_performance_indicator | as_crispy_field}}
+</div>
+
+<script>
+    $(document).ready(() => {
+        $('#id_level').select2({
+            theme: 'bootstrap',
+        });
+        $('#id_definition').attr('rows', 3);
+        $('#id_justification').attr('rows', 3);
+        $('#id_disaggregation').select2({ theme: 'bootstrap' });
+        $('#id_indicator_type').select2({ theme: 'bootstrap' });
+    })
+</script>

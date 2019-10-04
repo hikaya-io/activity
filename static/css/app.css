@@ -964,3 +964,8 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
 .pt-0 {
     padding-top: 0px !important;
 }
+
+.expandable {
+    cursor: pointer;
+    margin-right: 10px;
+}
