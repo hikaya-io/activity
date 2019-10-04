@@ -8,7 +8,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import *
 from crispy_forms.layout import Layout, Submit, Reset
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode
 
 from workflow.models import ActivityUser, ActivityBookmarks, Organization
@@ -187,6 +186,9 @@ class OrganizationEditForm(forms.ModelForm):
 
 
 class HTMLPasswordResetForm(forms.Form):
+    """
+    Override Reset Password Form
+    """
     email = forms.EmailField(label="Email", max_length=254)
 
     def save(self, domain_override=None,
@@ -198,8 +200,6 @@ class HTMLPasswordResetForm(forms.Form):
         Generates a one-use only link for resetting password and sends to the
         user.
         """
-        # from django.core.mail import send_mail
-        from django.core.mail import EmailMultiAlternatives
         email = self.cleaned_data["email"]
         active_users = User._default_manager.filter(
             email__iexact=email, is_active=True)
@@ -210,7 +210,7 @@ class HTMLPasswordResetForm(forms.Form):
                 continue
 
             domain = request.build_absolute_uri('/').strip('/')
-            c = {
+            context_data = {
                 'email': user.email,
                 'domain': domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -218,9 +218,8 @@ class HTMLPasswordResetForm(forms.Form):
                 'token': token_generator.make_token(user),
                 'protocol': 'https' if use_https else 'http',
             }
-            subject = loader.render_to_string(subject_template_name, c)
+            subject = loader.render_to_string(subject_template_name, context_data)
             subject = ''.join(subject.splitlines())
-            email = loader.render_to_string(email_template_name, c)
 
             email_txt = 'registration/password_reset_email.txt'
             email_html = 'registration/password_reset_email.html'
@@ -229,16 +228,8 @@ class HTMLPasswordResetForm(forms.Form):
                 subject,
                 'team.hikaya@gmail.com',
                 [user.email],
-                c,
+                context_data,
                 email_txt,
                 email_html
             )
-            # email_html_content = email_html.render(c)
-            # msg = EmailMultiAlternatives(subject, email_txt, 'Hikaya <{}>'.format(from_email), [user.email])
-            #
-            # msg.attach_alternative(email_html_content, "text/html")
-            # msg.send()
 
-            # msg = EmailMessage(subject, email, from_email, [user.email])
-            # msg.content_subtype = "html"  # Main content is now text/html
-            # msg.send()\

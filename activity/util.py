@@ -212,10 +212,13 @@ def send_single_mail(subject, email_from, email_to, data, email_txt, email_html)
     email_html = loader.get_template(email_html)
     email_html_content = email_html.render(email_context)
 
-    msg = EmailMultiAlternatives(subject, email_txt, 'Hikaya <{}>'.format(email_from), email_to)
+    msg = EmailMultiAlternatives(
+        subject,
+        email_txt,
+        'Hikaya <{}>'.format(email_from),
+        email_to
+    )
     msg.attach_alternative(email_html_content, "text/html")
-    print('called:::::');
-
     msg.send()
 
 

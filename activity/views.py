@@ -1089,26 +1089,11 @@ def invite_existing_user(request, invite_uuid):
         return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
 
-class MyPasswordResetView(PasswordResetView):
-    # forcing to use HTML email template (param: html_email_template_name
-    def form_valid(self, form):
-        opts = {
-            'use_https': self.request.is_secure(),
-            'token_generator': self.token_generator,
-            'from_email': self.from_email,
-            'email_template_name': self.email_template_name,
-            'subject_template_name': self.subject_template_name,
-            'request': self.request,
-            'html_email_template_name': 'registration/password_reset_email.html',
-            'extra_email_context': self.extra_email_context
-        }
-        form.save(**opts)
-        return HttpResponseRedirect(self.get_success_url())
-
-    form_class = HTMLPasswordResetForm
-
-
 class PasswordReset(RedirectView):
+    """
+    Override Password Reset View
+    forcing to use HTML email template (param: html_email_template_name
+    """
     is_admin_site = False
     template_name = 'registration/password_reset_form.html'
     email_template_name = 'registration/password_reset_email.html'
@@ -1120,7 +1105,6 @@ class PasswordReset(RedirectView):
     extra_context = None
 
     def get(self, request, *args, **kwargs):
-        print('Called::::')
         form = HTMLPasswordResetForm()
         context = {
             'form': form,
@@ -1132,8 +1116,6 @@ class PasswordReset(RedirectView):
     def post(self, request, *args, **kwargs):
         form = HTMLPasswordResetForm(request.POST)
         if form.is_valid():
-            if self.from_email is not None:
-                from_email = 'From Email'
             opts = {
                 'use_https': request.is_secure(),
                 'token_generator': self.token_generator,
