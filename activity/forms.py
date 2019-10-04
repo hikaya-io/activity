@@ -1,15 +1,18 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
+from django import forms
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.auth.models import User
+from django.utils.encoding import force_bytes
+from django.template import loader
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import *
 from crispy_forms.layout import Layout, Submit, Reset
-from django import forms
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode
+
 from workflow.models import ActivityUser, ActivityBookmarks, Organization
-from django.forms .models import model_to_dict
-from django_select2.forms import Select2MultipleWidget
+from .util import send_single_mail
 
 
 class RegistrationForm(UserChangeForm):
@@ -181,3 +184,66 @@ class OrganizationEditForm(forms.ModelForm):
     helper.html5_required = True
     helper.layout = Layout(
         Fieldset('', 'logo',))
+
+
+class HTMLPasswordResetForm(forms.Form):
+    email = forms.EmailField(label="Email", max_length=254)
+
+    def save(self, domain_override=None,
+             subject_template_name='registration/password_reset_subject.txt',
+             email_template_name='registration/password_reset_email.html',
+             use_https=False, token_generator=default_token_generator,
+             from_email=None, request=None):
+        """
+        Generates a one-use only link for resetting password and sends to the
+        user.
+        """
+        # from django.core.mail import send_mail
+        from django.core.mail import EmailMultiAlternatives
+        email = self.cleaned_data["email"]
+        active_users = User._default_manager.filter(
+            email__iexact=email, is_active=True)
+        for user in active_users:
+            # Make sure that no email is sent to a user that actually has
+            # a password marked as unusable
+            if not user.has_usable_password():
+                continue
+            if not domain_override:
+                current_site = get_current_site(request)
+                site_name = current_site.name
+                domain = current_site.domain
+            else:
+                site_name = domain = domain_override
+            c = {
+                'email': user.email,
+                'domain': domain,
+                'site_name': site_name,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'user': user,
+                'token': token_generator.make_token(user),
+                'protocol': 'https' if use_https else 'http',
+            }
+            subject = loader.render_to_string(subject_template_name, c)
+            subject = ''.join(subject.splitlines())
+            email = loader.render_to_string(email_template_name, c)
+
+            email_txt = 'registration/password_reset_email.txt'
+            email_html = 'registration/password_reset_email.html'
+
+            send_single_mail(
+                subject,
+                'team.hikaya@gmail.com',
+                [user.email],
+                c,
+                email_txt,
+                email_html
+            )
+            # email_html_content = email_html.render(c)
+            # msg = EmailMultiAlternatives(subject, email_txt, 'Hikaya <{}>'.format(from_email), [user.email])
+            #
+            # msg.attach_alternative(email_html_content, "text/html")
+            # msg.send()
+
+            # msg = EmailMessage(subject, email, from_email, [user.email])
+            # msg.content_subtype = "html"  # Main content is now text/html
+            # msg.send()\

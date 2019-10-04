@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
+from django.contrib.auth.tokens import default_token_generator
+from django.template.response import TemplateResponse
+from django.views.generic import RedirectView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.contrib import messages
@@ -15,6 +17,7 @@ from django.db import IntegrityError
 from django.views import View
 from django.views.decorators.csrf import csrf_protect
 from django.core.exceptions import MultipleObjectsReturned
+from django.contrib.auth.views import PasswordResetView
 
 from indicators.models import CollectedData, Indicator
 from workflow.models import (
@@ -35,6 +38,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from .forms import HTMLPasswordResetForm
 
 APPROVALS = (
     ('in_progress', 'In Progress'),
@@ -51,7 +55,7 @@ def index(request, program_id=0):
     Home page
     get count of agreements approved and total for dashboard
     """
-
+    format_data()
     # add program
     if request.method == 'POST' and request.is_ajax:
         return add_program(request)
@@ -1085,3 +1089,67 @@ def invite_existing_user(request, invite_uuid):
         return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
 
+class MyPasswordResetView(PasswordResetView):
+    # forcing to use HTML email template (param: html_email_template_name
+    def form_valid(self, form):
+        opts = {
+            'use_https': self.request.is_secure(),
+            'token_generator': self.token_generator,
+            'from_email': self.from_email,
+            'email_template_name': self.email_template_name,
+            'subject_template_name': self.subject_template_name,
+            'request': self.request,
+            'html_email_template_name': 'registration/password_reset_email.html',
+            'extra_email_context': self.extra_email_context
+        }
+        form.save(**opts)
+        return HttpResponseRedirect(self.get_success_url())
+
+    form_class = HTMLPasswordResetForm
+
+
+class PasswordReset(RedirectView):
+    is_admin_site = False
+    template_name = 'registration/password_reset_form.html'
+    email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.html'
+    token_generator = default_token_generator
+    post_reset_redirect = '/accounts/password_reset/done/'
+    from_email = None,
+    current_app = None,
+    extra_context = None
+
+    def get(self, request, *args, **kwargs):
+        print('Called::::')
+        form = HTMLPasswordResetForm()
+        context = {
+            'form': form,
+        }
+        if self.extra_context is not None:
+            context.update(self.extra_context)
+        return TemplateResponse(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = HTMLPasswordResetForm(request.POST)
+        if form.is_valid():
+            if self.from_email is not None:
+                from_email = 'From Email'
+            opts = {
+                'use_https': request.is_secure(),
+                'token_generator': self.token_generator,
+                'from_email': self.from_email,
+                'email_template_name': self.email_template_name,
+                'subject_template_name': self.subject_template_name,
+                'request': request,
+            }
+            if self.is_admin_site:
+                opts = dict(opts, domain_override=request.get_host())
+            form.save(**opts)
+            return HttpResponseRedirect(self.post_reset_redirect)
+        context = {
+            'form': form,
+        }
+        if self.extra_context is not None:
+            context.update(self.extra_context)
+        return TemplateResponse(request, self.template_name, context,
+                                current_app=self.current_app)
