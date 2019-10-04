@@ -120,10 +120,8 @@ urlpatterns = [  # rest framework
          name='register_organization'),
 
     # # password reset
-    # path('accounts/password_reset/', MyPasswordResetView.as_view(),
-    #      name='password_reset'),
     path('accounts/user/password_reset/', PasswordReset.as_view(is_admin_site=True),
-    {'is_admin_site': 'True'}, name='user_password_reset'),
+         {'is_admin_site': 'True'}, name='user_password_reset'),
 
     # accounts
     re_path('accounts/organization/(?P<org_id>\w+)/$',

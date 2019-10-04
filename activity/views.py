@@ -12,12 +12,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
-from django.db.models import Sum, Q, Count
+from django.db.models import Q
 from django.db import IntegrityError
 from django.views import View
 from django.views.decorators.csrf import csrf_protect
 from django.core.exceptions import MultipleObjectsReturned
-from django.contrib.auth.views import PasswordResetView
 
 from indicators.models import CollectedData, Indicator
 from workflow.models import (
@@ -26,7 +25,6 @@ from workflow.models import (
     Organization, UserInvite, Stakeholder, Contact, Documentation,
     ActivityUserOrganizationGroup
 )
-from workflow.models import UserInvite as UserIn
 from activity.util import get_nav_links, send_invite_emails, \
     send_single_mail
 from activity.forms import (
@@ -35,8 +33,6 @@ from django.core import serializers
 from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.forms.models import model_to_dict
-from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from .forms import HTMLPasswordResetForm
 
@@ -55,7 +51,6 @@ def index(request, program_id=0):
     Home page
     get count of agreements approved and total for dashboard
     """
-    format_data()
     # add program
     if request.method == 'POST' and request.is_ajax:
         return add_program(request)
