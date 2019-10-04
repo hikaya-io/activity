@@ -1,0 +1,30 @@
+{% load crispy_forms_tags %}
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form.means_of_verification | as_crispy_field }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form.data_collection_method | as_crispy_field }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form.data_collection_frequency | as_crispy_field }}
+    </div>
+
+    <div class="col-md-12">
+        {{ form.data_points | as_crispy_field }}
+    </div>
+
+    <div class="col-md-12">
+        {{form.responsible_person | as_crispy_field}}
+    </div>
+</div>
+
+<script>
+    $(document).ready(() => {
+        $('#id_data_collection_frequency').select2({ theme: 'bootstrap' });
+        $('#id_data_points').attr('rows', 3);
+    })
+</script>

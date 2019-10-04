@@ -432,12 +432,14 @@ class IndicatorUpdate(UpdateView):
     """
     model = Indicator
     guidance = None
+    template_name = 'indicators/indicator_form_tab_ui.html'
+
     object = None
 
-    def get_template_names(self):
-        if self.request.GET.get('modal'):
-            return 'indicators/indicator_form_modal.html'
-        return 'indicators/indicator_form.html'
+    # def get_template_names(self):
+    #     if self.request.GET.get('modal'):
+    #         return 'indicators/indicator_form_modal.html'
+    #     return 'indicators/indicator_form_tab_ui.html'
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
@@ -506,7 +508,8 @@ class IndicatorUpdate(UpdateView):
     def get_form_kwargs(self):
         kwargs = super(IndicatorUpdate, self).get_form_kwargs()
         kwargs['request'] = self.request
-        program =  Indicator.objects.all().get(id=int(self.kwargs['pk'])).program.all()
+        program = Indicator.objects.all().get(
+            id=int(self.kwargs['pk'])).program.all()
 
         kwargs['program_id'] = program[0].id
         program = Indicator.objects.all().filter(
@@ -516,8 +519,6 @@ class IndicatorUpdate(UpdateView):
 
     def form_invalid(self, form):
         messages.error(self.request, 'Invalid Form', fail_silently=False)
-        print(".............................%s............................" %
-              form.errors)
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form, **kwargs):
@@ -1976,7 +1977,8 @@ class StrategicObjectiveUpdateView(UpdateView):
         return kwargs
 
     def get_context_data(self, **kwargs):
-        context = super(StrategicObjectiveUpdateView, self).get_context_data(**kwargs)
+        context = super(StrategicObjectiveUpdateView,
+                        self).get_context_data(**kwargs)
         context['current_objective'] = self.get_object()
         return context
 
