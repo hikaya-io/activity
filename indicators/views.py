@@ -1999,6 +1999,7 @@ class ObjectiveUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ObjectiveUpdateView, self).get_context_data(**kwargs)
         context['current_objective'] = self.get_object()
+        context['active'] = ['indicators']
         return context
 
 
