@@ -1,0 +1,36 @@
+{% load crispy_forms_tags %}
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form.unit_of_measure | as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form.lop_target | as_crispy_field }}
+    </div>
+
+    <div class="col-md-6">
+        {{ form.baseline | as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        {{ form.rationale_for_target | as_crispy_field }}
+    </div>
+
+    <div class="col-md-12">
+        {{ form.target_frequency | as_crispy_field }}
+    </div>
+</div>
+
+<script>
+    $(document).ready(() => {
+        $('#id_rationale_for_target').attr('rows', 3);
+        $('#id_target_frequency').select2({
+            theme: 'bootstrap',
+        })
+    })
+</script>

@@ -1,0 +1,17 @@
+{% load crispy_forms_tags %}
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form.site | as_crispy_field }}
+
+        {{ form.office | as_crispy_field }}
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(() => {
+        $('#id_office').select2({ theme: 'bootstrap' })
+        $('#id_site').select2({ theme: 'bootstrap', multiple: true })
+    });
+</script>

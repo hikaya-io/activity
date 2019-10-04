@@ -1,0 +1,36 @@
+{% load crispy_forms_tags %}
+
+<div class="row">
+    <div class="col-md-6">
+        {{form.approval | as_crispy_field}}
+    </div>
+
+    <div class="col-md-6">
+        {{form.approval_submitted_by | as_crispy_field}}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        {{form.approved_by | as_crispy_field}}
+    </div>
+
+    <div class="col-md-6">
+        {{form.approved_by_date | as_crispy_field}}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        {{ form.approval_remarks | as_crispy_field}}
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(() => {
+        $('#id_approval').select2({ theme: 'bootstrap' })
+        $('#id_approval_submitted_by').select2({ theme: 'bootstrap' })
+        $('#id_approved_by').select2({ theme: 'bootstrap' })
+    })
+</script>
