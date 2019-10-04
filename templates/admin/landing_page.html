@@ -1,11 +1,11 @@
 {% extends "base.html" %} {% block content %}
 <div class="container">
-	{% block breadcrumbs %}
-	<ul class="breadcrumb">
-		<li><a href="{% url 'admin_profile_settings' %}">Organization Settings</a></li>
-		<li class="active">Usage</li>
-	</ul>
-	{% endblock %}
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'admin_profile_settings' %}">Organization Settings</a></li>
+    <li class="active">Usage</li>
+  </ul>
+  {% endblock %}
 
   <!-- Sub navigation -->
   <div class="sub-navigation">
@@ -13,92 +13,12 @@
       <h4 class="page-title">Organization Settings</h4>
     </div>
 
-  
+
   </div>
 
-  <div class="row admin-content-row">
-    <div class="col-md-2">
+  <div class="bg-white p-10 pt-0">
+    <div class="mb-10">
       {% include 'admin/sections/side-nav.html' %}
-    </div>
-    <div class="col-md-10 admin-content">
-    <div class="usage-content">
-      {% include 'admin/sections/home_top_bar.html' %}
-      <div class="row admin-main-panels">
-        <div class="col-md-6">
-          <div class="panel panel-info">
-            <!-- Default panel contents -->
-            <div class="panel-heading">Workflowlevel1 Summary (Status)</div>
-            <ul class="list-group">
-              <li class="list-group-item"><span class="badge">14</span> New</li>
-              <li class="list-group-item">
-                <span class="badge">10</span> Approved
-              </li>
-              <li class="list-group-item">
-                <span class="badge">35</span> Awaiting Approval
-              </li>
-              <li class="list-group-item">
-                <span class="badge">4</span> On hold
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="panel panel-info">
-            <!-- Default panel contents -->
-            <div class="panel-heading">Workflowlevel2 Summary (Status)</div>
-            <ul class="list-group">
-              <li class="list-group-item"><span class="badge">14</span> New</li>
-              <li class="list-group-item">
-                <span class="badge">10</span> Approved
-              </li>
-              <li class="list-group-item">
-                <span class="badge">35</span> Awaiting Approval
-              </li>
-              <li class="list-group-item">
-                <span class="badge">4</span> On hold
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="panel panel-info">
-            <!-- Default panel contents -->
-            <div class="panel-heading">{{ user.activity_user.organization.indicator_label }} Summary</div>
-            <ul class="list-group">
-              <li class="list-group-item">
-                <span class="badge">24</span> KPIs
-              </li>
-              <li class="list-group-item">
-                <span class="badge">120</span> Normal
-              </li>
-              <li class="list-group-item">
-                <span class="badge">4</span> On hold
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="panel panel-info">
-            <!-- Default panel contents -->
-            <div class="panel-heading">{{ user.activity_user.organization.site_label }} By Country</div>
-            <ul class="list-group">
-              <li class="list-group-item">
-                <span class="badge">24</span> Kenya
-              </li>
-              <li class="list-group-item">
-                <span class="badge">13</span> Jordan
-              </li>
-              <li class="list-group-item">
-                <span class="badge">10</span> Somali
-              </li>
-              <li class="list-group-item">
-                <span class="badge">24</span> Uganda
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
     </div>
   </div>
 </div>

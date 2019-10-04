@@ -503,7 +503,7 @@ def admin_dashboard(request):
     return render(
         request,
         'admin/landing_page.html',
-        {'nav_links': nav_links}
+        {'nav_links': nav_links, 'active': 'usage'}
     )
 
 
@@ -540,7 +540,7 @@ def admin_configurations(request):
         request,
         'admin/default_settings.html',
         {'nav_links': nav_links,
-         'organization': logged_activity_user.organization}
+         'organization': logged_activity_user.organization, 'active': 'configurations'}
     )
 
 
@@ -553,7 +553,7 @@ def admin_profile_settings(request):
         organization = Organization.objects.get(pk=user.organization.id)
         organization.logo = ''
         organization.save()
-      
+
     if request.method == 'POST':
         # form = OrganizationEditForm(request.FILES,
         #                             instance=organization)
@@ -573,7 +573,7 @@ def admin_profile_settings(request):
     return render(
         request,
         'admin/profile_settings.html',
-        {'nav_links': nav_links, 'organization': organization}
+        {'nav_links': nav_links, 'organization': organization, 'active': 'profile'}
     )
 
 
@@ -607,6 +607,7 @@ def admin_user_management(request, role, status):
         'users': users,
         'groups': groups,
         'organizations': user_organizations,
+        'active': 'people'
     })
 
 
@@ -945,6 +946,7 @@ class UserInviteView(View):
     """
     User invitation class view
     """
+
     def get(self, request, *args, **kwargs):
 
         # revoke existing invite
@@ -1072,7 +1074,8 @@ def invite_existing_user(request, invite_uuid):
                 return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
             # if user is not found
-            messages.error(request, 'Error, there was an error adding you to {}'.format(invite.organization.name))
+            messages.error(request, 'Error, there was an error adding you to {}'.format(
+                invite.organization.name))
             return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
         except User.DoesNotExist:
             messages.error(
@@ -1083,5 +1086,3 @@ def invite_existing_user(request, invite_uuid):
     except UserInvite.DoesNotExist:
         messages.error(request, 'Error, this invitation is no-longer valid')
         return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
-
-
