@@ -1,0 +1,9 @@
+{% load crispy_forms_tags %}
+
+{{ form.stakeholder | as_crispy_field }}
+
+<script>
+    $(document).ready(() => {
+        $('#id_stakeholder').select2({ theme: 'bootstrap' })
+    })
+</script>

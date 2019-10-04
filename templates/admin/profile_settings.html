@@ -1,4 +1,4 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block content %}
 <div class="container">
 	{% block breadcrumbs %}
@@ -7,81 +7,62 @@
 		<li class="active">Profile</li>
 	</ul>
 	{% endblock %}
-	
-  <!-- Sub navigation -->
-  <div class="sub-navigation">
-    <div class="sub-navigation-header">
-      <h4 class="page-title">Organization Settings</h4>
-    </div>
-  </div>
 
-  <div class="row admin-content-row">
-    <div class="col-md-2">
-      {% include 'admin/sections/side-nav.html' %}
-    </div>
-    <div class="col-md-10 admin-content">
+	<!-- Sub navigation -->
+	<div class="sub-navigation">
+		<div class="sub-navigation-header">
+			<h4 class="page-title">Organization Settings</h4>
+		</div>
+	</div>
+
+	<div class="bg-white p-10 pt-0">
+		<div class="mb-15">
+			{% include 'admin/sections/side-nav.html' %}
+		</div>
 		<h4><strong>Profile picture</strong></h4>
-		<form 
-			id="profileForm" 
-			action="/accounts/admin/profile_settings" 
-			method="POST" 
-			enctype="multipart/form-data">
+		<form id="profileForm" action="/accounts/admin/profile_settings" method="POST" enctype="multipart/form-data">
 			<div class="form-group row">
 				<div class="column col-sm-2">
 					{% if organization.logo %}
-						<div for="organizationLogo">
-							<img src="{{ organization.logo.url }}" alt="Organization Logo" class="img-responsive">
-						</div>
-						<div class="btn-reset"><button id="org-logo-reset" class="btn btn-default btn-sm">Reset</button></div>
+					<div for="organizationLogo">
+						<img src="{{ organization.logo.url }}" alt="Organization Logo" class="img-responsive">
+					</div>
+					<div class="btn-reset"><button id="org-logo-reset" class="btn btn-default btn-sm">Reset</button>
+					</div>
 					{% else %}
-						<div for="organizationLogo" class="navbar-default navbar-brand">
-							<b class="middle">Activity</b>
-						</div>
+					<div for="organizationLogo" class="navbar-default navbar-brand">
+						<b class="middle">Activity</b>
+					</div>
 					{% endif %}
 				</div>
 				<div class="col-sm-6">
-					<input
-					type="file"
-					id="organizationLogo"
-					name="organizationLogo"
-					aria-describedby="helpBlock"
-					/>
+					<input type="file" id="organizationLogo" name="organizationLogo" aria-describedby="helpBlock" />
 					<p id="helpBlock" class="help-block">
-						You can upload any size image file from you hard drive. We will automatically resize it to 264*264
+						You can upload any size image file from you hard drive. We will automatically resize it to
+						264*264
 					</p>
 				</div>
 			</div>
-			<hr/>
-				{% csrf_token %}
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label" for="name">Name</label>
-					<div class="col-sm-6">
-						<input
-						type="text"
-						id="name"
-						name="name"
-						value="{{organization.name}}"
-						class="form-control"
-						/>
-					</div>
+			<hr />
+			{% csrf_token %}
+			<div class="form-group row">
+				<label class="col-sm-2 col-form-label" for="name">Name</label>
+				<div class="col-sm-6">
+					<input type="text" id="name" name="name" value="{{organization.name}}" class="form-control" />
 				</div>
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label" for="description">Description</label>
-					<div class="col-sm-6">
-						<textarea
-						id="description"
-						name="description"
-						rows="5"
-						class="form-control"
-						>{{organization.description}}</textarea>
-					</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-sm-2 col-form-label" for="description">Description</label>
+				<div class="col-sm-6">
+					<textarea id="description" name="description" rows="5"
+						class="form-control">{{organization.description}}</textarea>
 				</div>
-				<button type="submit" class="btn btn-success" id="updateOrganization">
-					Save
-				</button>
+			</div>
+			<button type="submit" class="btn btn-success" id="updateOrganization">
+				Save
+			</button>
 		</form>
-    </div>
-  </div>
+	</div>
 </div>
 <script>
 	$('#org-logo-reset').click(() => {

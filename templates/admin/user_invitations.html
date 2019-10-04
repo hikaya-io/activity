@@ -18,13 +18,8 @@
 		<div class="sub-navigation-actions">
 			<div class="sub-nav-item">
 				<div class="btn-group" role="group">
-					<button
-						type="button"
-						class="btn btn-sm btn-default dropdown-toggle"
-						data-toggle="dropdown"
-						aria-haspopup="true"
-						aria-expanded="false"
-					>
+					<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false">
 						Organizations
 						<span class="caret"></span>
 					</button>
@@ -43,73 +38,58 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-md-2">
+	<div class="bg-white p-10 pt-0">
+		<div class="mb-15">
 			{% include 'admin/sections/side-nav.html' %}
 		</div>
-		<div class="col-md-10 admin-content">
-			<div>
-				<table class="table" id="invitationTable">
-					<thead>
-						<tr>
-							<th>Email</th>
-							<th>Invitation Date</th>
-							<th>Status</th>
-							<th>Organization</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for item in invitations%}
-						<tr>
-							<td>{{ item.email }}</td>
-							<td>{{ item.invite_date }}</td>
-							<td>{{ item.status }}</td>
-							<td>{{ item.organization }}</td>
-							<td>
-								<!-- Action buttons -->
-								<div class="btn-group">
-									<button type="button" class="btn btn-sm btn-default disabled">
-									  More
-									</button>
-									<button
-									  type="button"
-									  class="btn btn-default btn-sm dropdown-toggle"
-									  data-toggle="dropdown"
-									  aria-haspopup="true"
-									  aria-expanded="false"
-									>
-									  <span class="caret"></span>
-									  <span class="sr-only">Toggle Dropdown</span>
-									</button>
-									<ul class="dropdown-menu">
-									  <li class="text-danger">
-										<a 
-											href="#"
-											onclick="reinviteUser('{{item.invite_uuid}}')"
-										>Resend</a>
-									  </li>
-									  <li class="divider"></li>
-									  <li class="text-danger">
-										  <a
-											class="text-danger" 
-											href="#deleteItemModal{{distribution.id}}" 
-											data-toggle="modal"
-											onclick="setItemToDelete('{{item.invite_uuid}}')"
-											data-target="#revokeInviteModal{{ item.id }}">
-											Revoke
-										  </a>
-									  </li>
-									</ul>
-								  </div>
-							</td>
-							{% include 'admin/revoke_invitation_confirm_modal.html' %}
-						</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-		</div>
+		<table class="table" id="invitationTable">
+			<thead>
+				<tr>
+					<th>Email</th>
+					<th>Invitation Date</th>
+					<th>Status</th>
+					<th>Organization</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in invitations%}
+				<tr>
+					<td>{{ item.email }}</td>
+					<td>{{ item.invite_date }}</td>
+					<td>{{ item.status }}</td>
+					<td>{{ item.organization }}</td>
+					<td>
+						<!-- Action buttons -->
+						<div class="btn-group">
+							<button type="button" class="btn btn-sm btn-default disabled">
+								More
+							</button>
+							<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+								aria-haspopup="true" aria-expanded="false">
+								<span class="caret"></span>
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<ul class="dropdown-menu">
+								<li class="text-danger">
+									<a href="#" onclick="reinviteUser('{{item.invite_uuid}}')">Resend</a>
+								</li>
+								<li class="divider"></li>
+								<li class="text-danger">
+									<a class="text-danger" href="#deleteItemModal{{distribution.id}}"
+										data-toggle="modal" onclick="setItemToDelete('{{item.invite_uuid}}')"
+										data-target="#revokeInviteModal{{ item.id }}">
+										Revoke
+									</a>
+								</li>
+							</ul>
+						</div>
+					</td>
+					{% include 'admin/revoke_invitation_confirm_modal.html' %}
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 	</div>
 </div>
 {% block extra_js_in_body %}
@@ -126,13 +106,13 @@
 		$.ajax({
 			url: `/accounts/admin/invitations/?resend_invite=${invite_uuid}`,
 			type: 'GET',
-			success: function(result) {
+			success: function (result) {
 				toastr.success('Invitation was successfully sent');
 				setTimeout(() => {
 					window.location.href = `/accounts/admin/users/invitations/list/0/`;
 				}, 2000);
 			},
-			error: function(error) {
+			error: function (error) {
 				toastr.error('There was a problem sending your invitation');
 			}
 		})

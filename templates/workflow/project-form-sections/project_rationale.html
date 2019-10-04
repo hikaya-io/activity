@@ -1,0 +1,15 @@
+{% load crispy_forms_tags %}
+
+{{form.description_of_project_activities | as_crispy_field}}
+
+{{form.effect_or_impact | as_crispy_field}}
+
+{{form.risks_assumptions | as_crispy_field}}
+
+<script>
+    $(document).ready(() => {
+        $('#id_description_of_project_activities').attr('rows', 4);
+        $('#id_effect_or_impact').attr('rows', 4);
+        $('#id_risks_assumptions').attr('rows', 4);
+    })
+</script>
