@@ -208,16 +208,11 @@ class HTMLPasswordResetForm(forms.Form):
             # a password marked as unusable
             if not user.has_usable_password():
                 continue
-            if not domain_override:
-                current_site = get_current_site(request)
-                site_name = current_site.name
-                domain = current_site.domain
-            else:
-                site_name = domain = domain_override
+
+            domain = request.build_absolute_uri('/').strip('/')
             c = {
                 'email': user.email,
                 'domain': domain,
-                'site_name': site_name,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'user': user,
                 'token': token_generator.make_token(user),
