@@ -1133,3 +1133,5 @@ class PasswordReset(RedirectView):
             context.update(self.extra_context)
         return TemplateResponse(request, self.template_name, context,
                                 current_app=self.current_app)
+
+

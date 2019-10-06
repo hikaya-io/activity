@@ -32,11 +32,12 @@ def has_access(activity_user, group):
 
 @register.filter(name='get_group_name')
 def get_group_name(activity_user):
-    user_org_access = ActivityUserOrganizationGroup.objects.filter(
-        activity_user_id=activity_user.id,
-        organization_id=activity_user.organization.id).first()
-    if user_org_access:
-        return user_org_access.group.name
+    if activity_user is not None:
+        user_org_access = ActivityUserOrganizationGroup.objects.filter(
+            activity_user_id=activity_user.id,
+            organization_id=activity_user.organization.id).first()
+        if user_org_access:
+            return user_org_access.group.name
 
     return 'Not Set'
 
