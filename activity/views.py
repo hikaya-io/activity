@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
+from django.contrib.auth.tokens import default_token_generator
+from django.template.response import TemplateResponse
+from django.views.generic import RedirectView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.contrib import messages
@@ -10,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
-from django.db.models import Sum, Q, Count
+from django.db.models import Q
 from django.db import IntegrityError
 from django.views import View
 from django.views.decorators.csrf import csrf_protect
@@ -23,7 +25,6 @@ from workflow.models import (
     Organization, UserInvite, Stakeholder, Contact, Documentation,
     ActivityUserOrganizationGroup
 )
-from workflow.models import UserInvite as UserIn
 from activity.util import get_nav_links, send_invite_emails, \
     send_single_mail
 from activity.forms import (
@@ -32,9 +33,8 @@ from django.core import serializers
 from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.forms.models import model_to_dict
-from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from .forms import HTMLPasswordResetForm
 
 APPROVALS = (
     ('in_progress', 'In Progress'),
@@ -51,7 +51,6 @@ def index(request, program_id=0):
     Home page
     get count of agreements approved and total for dashboard
     """
-
     # add program
     if request.method == 'POST' and request.is_ajax:
         return add_program(request)
@@ -1086,3 +1085,51 @@ def invite_existing_user(request, invite_uuid):
     except UserInvite.DoesNotExist:
         messages.error(request, 'Error, this invitation is no-longer valid')
         return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
+
+
+class PasswordReset(RedirectView):
+    """
+    Override Password Reset View
+    forcing to use HTML email template (param: html_email_template_name
+    """
+    is_admin_site = False
+    template_name = 'registration/password_reset_form.html'
+    email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.html'
+    token_generator = default_token_generator
+    post_reset_redirect = '/accounts/password_reset/done/'
+    from_email = None,
+    current_app = None,
+    extra_context = None
+
+    def get(self, request, *args, **kwargs):
+        form = HTMLPasswordResetForm()
+        context = {
+            'form': form,
+        }
+        if self.extra_context is not None:
+            context.update(self.extra_context)
+        return TemplateResponse(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = HTMLPasswordResetForm(request.POST)
+        if form.is_valid():
+            opts = {
+                'use_https': request.is_secure(),
+                'token_generator': self.token_generator,
+                'from_email': self.from_email,
+                'email_template_name': self.email_template_name,
+                'subject_template_name': self.subject_template_name,
+                'request': request,
+            }
+            if self.is_admin_site:
+                opts = dict(opts, domain_override=request.get_host())
+            form.save(**opts)
+            return HttpResponseRedirect(self.post_reset_redirect)
+        context = {
+            'form': form,
+        }
+        if self.extra_context is not None:
+            context.update(self.extra_context)
+        return TemplateResponse(request, self.template_name, context,
+                                current_app=self.current_app)

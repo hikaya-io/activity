@@ -68,3 +68,11 @@
 .nav-stacked > li + li {
     margin-top: 0px;
 }
+
+.hikaya-font-blue {
+    color: #25CED1;
+}
+
+.forgot-password{
+    color: #25CED1;
+}
