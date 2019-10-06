@@ -36,9 +36,11 @@ def get_group_name(activity_user):
         user_org_access = ActivityUserOrganizationGroup.objects.filter(
             activity_user_id=activity_user.id,
             organization_id=activity_user.organization.id).first()
-        if user_org_access:
-            return user_org_access.group.name
-
+        if user_org_access is not None:
+            try:
+                return user_org_access.group.name
+            except AttributeError:
+                return 'Not Set'
     return 'Not Set'
 
 

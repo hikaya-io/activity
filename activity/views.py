@@ -910,14 +910,18 @@ def invite_user(request):
                             # raise Exception('Could not invite this user')
                             pass
                         else:
-                            invite = UserInvite.objects.create(
-                                email=email.lower(),
-                                organization_id=organization_id
-                            )
                             url_route = '/accounts/join/organization/'
 
                 except User.DoesNotExist:
                     url_route = '/accounts/register/user/'
+
+                # create an invitation
+                if url_route is not None:
+                    invite = UserInvite.objects.create(
+                        email=email.lower(),
+                        organization_id=organization_id
+                    )
+
                 if invite:
                     success_invites.append(invite)
                 else:
