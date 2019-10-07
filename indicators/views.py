@@ -689,13 +689,12 @@ class CollectedDataCreate(CreateView):
     """
     model = CollectedData
     guidance = None
+    form_class = CollectedDataForm
 
     def get_template_names(self):
         if self.request.is_ajax():
             return 'indicators/collecteddata_form_modal.html'
         return 'indicators/collecteddata_form.html'
-
-    form_class = CollectedDataForm
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
