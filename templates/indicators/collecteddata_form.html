@@ -1,5 +1,42 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
 
+<div class="container">
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li><a href="/">My Dashboard</a></li>
+        <li><a href="/indicators/home/0/0/0/">Indicators</a></li>
+        <li class="active">Add Collected Data</li>
+    </ul>
+    {% endblock %}
+
+    <div class="sub-navigation">
+        <div class="sub-navigation-header">
+            <h4 class="page-title">
+                {{ indicator.name }}
+            </h4>
+        </div>
+    </div>
+
+    <form method="POST" class="bg-white p-10">
+        <div class="row">
+            <div class="col-md-4">
+                {{form.periodic_target | as_crispy_field }}
+            </div>
+        </div>
+
+        <div class="for-group text-right">
+            <a class="btn btn-close" role="button" href="/indicators/home/0/0/0/">Close</a>
+            <button class="btn btn-success" type="submit">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(() => {
+        $('#id_periodic_target').select2({ theme: 'bootstrap' })
+    })
+</script>
 
 {% endblock content %}

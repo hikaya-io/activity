@@ -721,7 +721,7 @@ class CollectedDataCreate(CreateView):
         # set values to None so the form doesn't display empty fields
         # for previous entries
         get_disaggregation_value = None
-        indicator = Indicator.objects.get(pk=self.kwargs.get('indicator'))
+        indicator = Indicator.objects.get(pk=int(self.kwargs.get('indicator')))
 
         context.update({'get_disaggregation_value': get_disaggregation_value})
         context.update({'get_disaggregation_label': get_disaggregation_label})

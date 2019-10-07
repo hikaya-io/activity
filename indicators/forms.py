@@ -124,17 +124,8 @@ class CollectedDataForm(forms.ModelForm):
         self.indicator = kwargs.pop('indicator', None)
         self.activity_table = kwargs.pop('activity_table')
         self.helper.form_method = 'post'
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-4'
-        self.helper.field_class = 'col-sm-6'
         self.helper.form_error_title = 'Form Errors'
-        self.helper.form_action = reverse_lazy('collecteddata_update'
-                                               if instance else
-                                               'collecteddata_add',
-                                               kwargs={'pk': instance.id}
-                                               if instance else
-                                               {'program': self.program,
-                                                'indicator': self.indicator})
+        
         self.helper.form_id = 'collecteddata_update_form'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
@@ -152,13 +143,9 @@ class CollectedDataForm(forms.ModelForm):
             program=self.program)
         self.fields['complete'].label = "Project"
 
-        # override the program queryset to use request.user for country
-        countries = get_country(self.request.user)
-        # self.fields['program'].queryset = Program.objects\
-        #   .filter(funding_status="Funded", country__in=countries).distinct()
         try:
-            int(self.program)
-            self.program = Program.objects.get(id=self.program)
+            program_id = int(self.program)
+            self.program = Program.objects.filter(id=program_id).first()
         except TypeError:
             pass
 
@@ -183,14 +170,14 @@ class CollectedDataForm(forms.ModelForm):
             self.indicator.target_frequency
         self.fields['target_frequency'].widget = forms.HiddenInput()
         # override the program queryset to use request.user for country
-        self.fields['site'].queryset = SiteProfile.objects.filter(
-            country__in=countries)
+        # self.fields['site'].queryset = SiteProfile.objects.filter(
+        #     country__in=countries)
 
         # self.fields['indicator'].queryset = Indicator.objects\
         #   .filter(name__isnull=False, program__country__in=countries)
         self.fields['activity_table'].queryset = ActivityTable.objects.filter(
             Q(owner=self.request.user.activity_user) | Q(id=self.activity_table))
-        self.fields['periodic_target'].label = 'Measure against target*'
+        self.fields['periodic_target'].label = 'Target Period*'
         self.fields['achieved'].label = 'Actual value'
         self.fields['date_collected'].help_text = ' '
 
