@@ -977,3 +977,14 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
     cursor: pointer;
     margin-right: 10px;
 }
+
+.disaggregation {
+    display: flex;
+    align-items: center;
+}
+
+.disaggregation>h4 {
+    font-weight: 800;
+    flex: 1;
+    margin-right: 3px;
+}
