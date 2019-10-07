@@ -76,3 +76,7 @@
 .forgot-password{
     color: #25CED1;
 }
+
+.form-errors {
+    color: red;
+}

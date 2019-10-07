@@ -1,6 +1,7 @@
 import unicodedata
 import json
 import requests
+
 from django.core import mail
 from workflow.models import Country, ActivityUser, ActivitySites, Organization
 from django.contrib.auth.models import User

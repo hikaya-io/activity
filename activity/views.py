@@ -5,9 +5,14 @@ from django.template.response import TemplateResponse
 from django.views.generic import RedirectView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+
 from django.contrib import messages
-from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth import (
+    logout, authenticate,
+    login, update_session_auth_hash,)
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.forms import PasswordChangeForm
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
@@ -1139,3 +1144,25 @@ class PasswordReset(RedirectView):
                                 current_app=self.current_app)
 
 
+def change_password(request):
+    """
+    change password view
+    :param request:
+    :return:
+    """
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Important!!! keep the user logged in after changing the password
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+
+    return render(request, 'registration/change_password.html', {
+        'form': form
+    })
