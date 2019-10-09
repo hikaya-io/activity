@@ -458,7 +458,7 @@ class ProjectAgreementUpdate(UpdateView):
 
     def form_invalid(self, form):
 
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form', fail_silently=False, extra_tags='danger')
 
         return self.render_to_response(self.get_context_data(form=form))
 
