@@ -428,7 +428,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         #   funding_status="Funded", country__in=countries).distinct()
         self.fields['program'].widget = forms.HiddenInput()
         self.fields['program2'].initial = self.instance.program
-        self.fields['program2'].label = 'Progra'
+        self.fields['program2'].label = self.request.user.activity_user.organization.level_1_label
         self.fields['approval_submitted_by'].label = 'Originated by'
         self.fields['approved_by'].label = 'Approved by'
 
