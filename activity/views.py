@@ -14,7 +14,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import PasswordChangeForm
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
@@ -919,8 +919,10 @@ def invite_user(request):
                         user_orgs = check_user.activity_user.organizations.values_list(
                             'id', flat=True)
                         if organization_id in user_orgs:
-                            # raise Exception('Could not invite this user')
-                            pass
+                            organization = Organization.objects.get(id=organization_id)
+                            return JsonResponse(
+                                {'user_exists': True, 'organization': organization.name}
+                            )
                         else:
                             url_route = '/accounts/join/organization/'
 

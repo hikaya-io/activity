@@ -47,9 +47,11 @@
               required
             >
               <option value=""></option>
-              {% for item in organizations.all %} {% if item.name %}
-              <option value="{{ item.id }}">{{ item.name | truncatechars:50 }}</option>
-              {% endif %}{% endfor %}
+              {% for item in organizations.all %} 
+                {% if item.name %}
+                <option value="{{ item.id }}">{{ item.name | truncatechars:50 }}</option>
+                {% endif %}
+              {% endfor %}
             </select>
           </div>
         </div>
