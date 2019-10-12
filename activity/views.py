@@ -589,14 +589,21 @@ def admin_user_management(request, role, status):
     ).exclude(user__is_superuser=True)
     groups = Group.objects.all().distinct('name')
 
-    user_organizations = request.user.activity_user.organizations
+    # get owner orgs
+    owner_group = Group.objects.get(name='Owner')
+    user_org_group_ids = ActivityUserOrganizationGroup.objects.filter(
+        activity_user=request.user.activity_user,
+        group=owner_group
+    ).values_list('organization__id', flat=True)
+
+    user_organizations = Organization.objects.filter(id__in=user_org_group_ids)
     if role != 'all':
         group = Group.objects.get(id=int(role))
 
         get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
             organization_id=request.user.activity_user.organization.id,
             group_id=group.id
-        ).values_list('activity_user__user__id')
+        ).values_list('activity_user__user__id').distinct('organization')
 
         users = users.filter(
             user__id__in=get_org_users_by_roles
