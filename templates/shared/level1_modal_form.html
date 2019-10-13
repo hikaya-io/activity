@@ -9,8 +9,8 @@
     $('#endDate').datepicker({ dateFormat: 'dd.mm.yy' });
   });
 
-  $(function() {
-    $('#saveProgram').click(function(e) {
+  $(function () {
+    $('#saveProgram').click(function (e) {
       e.preventDefault();
 
       const formValue = $('#addProgramForm').serializeArray();
@@ -33,7 +33,7 @@
         url: "{% url 'home_dashboard' 0 %}",
         type: 'POST',
         data,
-        success: function(resp, status) {
+        success: function (resp, status) {
           // notify success
           toastr.success('Program was added sucessfully', `${resp}`);
 
@@ -50,7 +50,7 @@
             window.location.reload();
           }, 2000);
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
           toastr.error(error, 'Failed');
         },
       });
@@ -59,22 +59,11 @@
 </script>
 
 <!-- Modal -->
-<div
-  class="modal fade"
-  id="addProgramModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="addProgramModalLabel"
->
+<div class="modal fade" id="addProgramModal" tabindex="-1" role="dialog" aria-labelledby="addProgramModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         <h4 class="modal-title" id="addProgramModalLabel">Add Program</h4>
@@ -84,23 +73,12 @@
           {% csrf_token %}
           <div class="form-group">
             <label for="programName">Program Name</label>
-            <input
-              type="text"
-              id="programName"
-              name="program_name"
-              class="form-control"
-              placeholder="Program"
-            />
+            <input type="text" id="programName" name="program_name" class="form-control" placeholder="Program" />
           </div>
 
           <div class="form-group">
             <label for="sectors">Sectors</label>
-            <select
-              id="sectors"
-              class="form-control"
-              name="sectors"
-              multiple="multiple"
-            >
+            <select id="sectors" class="form-control" name="sectors" multiple="multiple">
               {% for sector in get_all_sectors %}
               <option value="{{ sector.id }}">{{ sector.sector }}</option>
               {% endfor %}
@@ -111,40 +89,27 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="startDate">Start Date</label>
-                <input
-                  type="text"
-                  id="startDate"
-                  class="form-control"
-                  placeholder="Start Date"
-                  name="start_date"
-                  autocomplete="off"
-                />
+                <input type="text" id="startDate" class="form-control" placeholder="Start Date" name="start_date"
+                  autocomplete="off" />
               </div>
             </div>
 
             <div class="col-md-6">
               <div class="form-group">
                 <label for="endDate">End Date</label>
-                <input
-                  type="text"
-                  id="endDate"
-                  class="form-control"
-                  placeholder="End Date"
-                  name="end_date"
-                  autocomplete="off"
-                />
+                <input type="text" id="endDate" class="form-control" placeholder="End Date" name="end_date"
+                  autocomplete="off" />
               </div>
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-close"
-          data-dismiss="modal"
-        >
+        <button type="button" class="btn btn-close" data-dismiss="modal">
           Close
+        </button>
+        <button type="submit" class="btn btn-outline-success" id="saveAndNew">
+          Save &amp; New
         </button>
         <button type="submit" class="btn btn-success" id="saveProgram">
           Save
