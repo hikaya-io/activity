@@ -7,10 +7,16 @@
     });
     $('#startDate').datepicker({ dateFormat: 'dd.mm.yy' });
     $('#endDate').datepicker({ dateFormat: 'dd.mm.yy' });
+
+    // show the modal if program modal is set to true
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('program-modal')) {
+      $('#addProgramModal').modal('show')
+    }
   });
 
-  $(function () {
-    $('#saveProgram').click(function (e) {
+  var save = (id) => {
+    $(`#${id}`).click(function (e) {
       e.preventDefault();
 
       const formValue = $('#addProgramForm').serializeArray();
@@ -46,15 +52,26 @@
             .select('val', '')
             .trigger('change');
 
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          const urlWithoutQueryString = window.location.href.split('?')[0];
+          if (id === 'saveAndNew') {
+            window.location.replace(`${urlWithoutQueryString}?program-modal=true`);
+          } else {
+            setTimeout(() => {
+              window.location.replace(urlWithoutQueryString);
+            }, 2000);
+          }
+
         },
         error: function (xhr, status, error) {
           toastr.error(error, 'Failed');
         },
       });
     });
+  }
+
+  $(function () {
+    save('saveAndNew');
+    save('saveProgram');
   });
 </script>
 
