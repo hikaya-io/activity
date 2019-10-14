@@ -302,7 +302,6 @@ def register(request, invite_uuid):
                         'invalid_invite': 'Invalid invitation code. Please contact Organization admin'
                     })
             else:
-                print('Email Sent')
                 mail_subject = 'Please confirm your email address'
                 data = {
                     'user': user,
@@ -604,7 +603,7 @@ def admin_user_management(request, role, status):
         get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
             organization_id=request.user.activity_user.organization.id,
             group_id=group.id
-        ).values_list('activity_user__user__id').distinct('organization')
+        ).values_list('activity_user__user__id')
 
         users = users.filter(
             user__id__in=get_org_users_by_roles
@@ -614,9 +613,9 @@ def admin_user_management(request, role, status):
         status = True if status == 'active' else False
         get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
             organization_id=request.user.activity_user.organization.id,
-            group_id=group.id, is_active=True).values_list('activity_user__user__id').\
-            distinct('organization')
-        users = users.filter(user__activity_user_id__in=get_org_users_by_roles)
+            is_active=status
+        ).values_list('activity_user__user__id')
+        users = users.filter(user__activity_user__id__in=get_org_users_by_roles)
 
     return render(request, 'admin/user_management.html', {
         'nav_links': nav_links,
@@ -934,7 +933,6 @@ def invite_user(request):
 
                 # create an invitation
                 if url_route is not None:
-                    print('Calllleeeeedddd:::::')
 
                     invite = UserInvite.objects.create(
                         email=email.lower(),
@@ -979,8 +977,6 @@ class UserInviteView(View):
         # resend existing invite
         if self.request.GET.get('resend_invite', None) is not None:
             invitation_uuid = self.request.GET.get('resend_invite')
-            print('Resent Invite', invitation_uuid)
-
             invitation = self.resend_invitation(invitation_uuid)
 
         return HttpResponse(invitation)
@@ -1044,7 +1040,6 @@ class UserInviteView(View):
         Revoke Invitations
         :param invite_uuid:
         """
-        print('called with', invite_uuid)
         try:
             invitation = UserInvite.objects.get(invite_uuid=invite_uuid)
             invitation.delete()
