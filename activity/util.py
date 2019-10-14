@@ -207,6 +207,8 @@ def send_single_mail(subject, email_from, email_to, data, email_txt, email_html)
     :param email_from: email sender
     :param email_to: recipients list
     :param data: context data
+    :param email_txt: text email template
+    :param email_html: html email template
     """
     email_context = data
     email_txt = loader.render_to_string(email_txt, email_context)

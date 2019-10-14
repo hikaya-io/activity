@@ -302,6 +302,7 @@ def register(request, invite_uuid):
                         'invalid_invite': 'Invalid invitation code. Please contact Organization admin'
                     })
             else:
+                print('Email Sent')
                 mail_subject = 'Please confirm your email address'
                 data = {
                     'user': user,
@@ -314,7 +315,7 @@ def register(request, invite_uuid):
 
                 send_single_mail(
                     mail_subject,
-                    'Hikaya <team.hikaya@gmail.com>',
+                    'team.hikaya@gmail.com',
                     [email],
                     data,
                     email_txt,
@@ -346,7 +347,7 @@ def send_welcome_email(request, user):
 
     send_single_mail(
         mail_subject,
-        'Hikaya <team.hikaya@gmail.com>',
+        'team.hikaya@gmail.com',
         [user.email],
         data,
         email_txt,
@@ -933,6 +934,8 @@ def invite_user(request):
 
                 # create an invitation
                 if url_route is not None:
+                    print('Calllleeeeedddd:::::')
+
                     invite = UserInvite.objects.create(
                         email=email.lower(),
                         organization_id=organization_id
