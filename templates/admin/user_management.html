@@ -70,7 +70,7 @@
 					<td><a href="/accounts/admin/user/edit/{{user.id}}/">{{ user.user.first_name }}</a></td>
 					<td>{{ user.user.last_name }}</td>
 					<td>
-						{%if user.user.is_active %}
+						{%if user|enabled_in_org:user.organization.id %}
 						<span class="badge">Active</span>
 						{% else %}
 						<span class="badge">Inactive</span>
@@ -116,19 +116,19 @@
 								<li class="text-danger">
 									<a href="/accounts/admin/user/edit/{{user.id}}/">Edit</a>
 								</li>
-								{% if user.user.is_active %}
-								{% if user.user == request.user %}
-								<li class="disabled">
-									<a href="" class="text-danger">Deativate account</a>
-								</li>
-								{% else %}
-								<li>
-									<a href="/accounts/admin/user/updatestatus/{{user.user.id}}/deactivate/"
-										class="text-danger">
-										Deactivate account
-									</a>
-								</li>
-								{% endif %}
+								{% if user|enabled_in_org:user.organization.id %}
+									{% if user.user == request.user %}
+										<li class="disabled">
+											<a href="" class="text-danger">Deativate account</a>
+										</li>
+									{% else %}
+										<li>
+											<a href="/accounts/admin/user/updatestatus/{{user.user.id}}/deactivate/"
+												class="text-danger">
+												Deactivate account
+											</a>
+										</li>
+									{% endif %}
 								{% else %}
 								<li>
 									<a href="/accounts/admin/user/updatestatus/{{user.user.id}}/activate/">

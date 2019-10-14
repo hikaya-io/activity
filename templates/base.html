@@ -249,11 +249,13 @@
               {% if user.activity_user.organizations %}
               <li class="dropdown-header">Organizations</li>
               {% for org in user.activity_user.organizations.all %}
-              <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
-                <a href="/accounts/organization/{{ org.id }}/">
-                  {{ org.name }}
-                </a>
-              </li>
+                {% if user.activity_user|enabled_in_org:org.id%}
+                  <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
+                    <a href="/accounts/organization/{{ org.id }}/">
+                      {{ org.name }}
+                    </a>
+                  </li>
+                {% endif %}
               {% endfor %}
               <li>
                 <a href="/accounts/register/organization">
