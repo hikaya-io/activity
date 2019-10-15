@@ -23,10 +23,7 @@ $('form#configForm').submit(function(e) {
 		type: 'POST',
 		data,
 		success: function(data, status) {
-			toastr.success(
-				'Your update has been saved.',
-				'Succesfully Updated'
-			);
+			toastr.success('Your update has been saved.', 'Succesfully Updated');
 			setTimeout(() => {
 				document.location.reload();
 			}, 2000);
@@ -71,20 +68,28 @@ $('form#inviteUserForm').submit(e => {
 			url: '/accounts/admin/invite_user/',
 			type: 'POST',
 			data,
-			success: function(res, status) {
-				if (res) {
+			success: function(res) {
+				if (res.user_exists) {
+					toastr.error(
+						`A user with this email address already belongs to organization: ${res.organization}`,
+						'User Exists'
+					);
+					setTimeout(() => {
+						window.location.reload();
+					}, 3000);
+				} else {
 					toastr.success(
 						`You have successfuly invited ${data.user_email_list.length} user(s)`,
-						'Inviattion Successful'
+						'Invitation Successful'
 					);
-
 					setTimeout(() => {
 						window.location.reload();
 					}, 2000);
 				}
+
 			},
 			error: function(xhr, desc, error) {
-				toastr.error('An error occured during the operation', 'An Error occurred');
+				toastr.error('Could not invite user', 'An Error occurred');
 			},
 		});
 	}

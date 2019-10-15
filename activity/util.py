@@ -1,13 +1,14 @@
 import unicodedata
 import json
 import requests
+
 from django.core import mail
 from workflow.models import Country, ActivityUser, ActivitySites, Organization
 from django.contrib.auth.models import User
 from django.core.mail import mail_admins, EmailMessage, EmailMultiAlternatives
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import user_passes_test
-from django.template import loader, Context
+from django.template import loader
 
 
 # CREATE NEW DATA DICTIONARY OBJECT
@@ -206,15 +207,21 @@ def send_single_mail(subject, email_from, email_to, data, email_txt, email_html)
     :param email_from: email sender
     :param email_to: recipients list
     :param data: context data
+    :param email_txt: text email template
+    :param email_html: html email template
     """
     email_context = data
     email_txt = loader.render_to_string(email_txt, email_context)
     email_html = loader.get_template(email_html)
     email_html_content = email_html.render(email_context)
 
-    msg = EmailMultiAlternatives(subject, email_txt, email_from, email_to)
+    msg = EmailMultiAlternatives(
+        subject,
+        email_txt,
+        'Hikaya <{}>'.format(email_from),
+        email_to
+    )
     msg.attach_alternative(email_html_content, "text/html")
-
     msg.send()
 
 

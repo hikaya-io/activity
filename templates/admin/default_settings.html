@@ -6,7 +6,7 @@
 		<li class="active">Configurations</li>
 	</ul>
 	{% endblock %}
-	
+
 	<!-- Sub navigation -->
 	<div class="sub-navigation">
 		<div class="sub-navigation-header">
@@ -14,192 +14,121 @@
 		</div>
 	</div>
 
-	<div class="row admin-content-row">
-		<div class="col-md-2">
+	<div class="bg-white p-10 pt-0">
+		<div class="mb-15">
 			{% include 'admin/sections/side-nav.html' %}
 		</div>
-		<div class="col-md-10 admin-content">
-			<div>
-				<form id="configForm" class="">
-					{% csrf_token %}
-					<!-- Default Labels -->
-					<div class="panel panel-info">
-						<div class="panel-heading">Workflow Level Labels</div>
-						<div class="panel-body">
-							<div class="row">
-								<div class="col-md-6 default-setting">
-									<label for="workflowlevel1"> Workflow Level 1: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="Program"
-										value="{{ organization.level_1_label }}"
-										id="workflowlevel1"
-										name="level_1_label"
-									/>
-								</div>
-								<div class="col-md-6">
-									<label for="workflowlevel1"> Workflow Level 2: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="Project"
-										value="{{ organization.level_2_label }}"
-										id="workflowlevel2"
-										name="level_2_label"
-									/>
-								</div>
-							</div>
 
-							<div class="row">
-								<div class="col-md-6">
-									<label for="workflowlevel1"> Workflow Level 3: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="Component"
-										value="{{ organization.level_3_label }}"
-										id="workflowlevel3"
-										name="level_3_label"
-									/>
-								</div>
-								<div class="col-md-6">
-									<label for="workflowlevel1"> Workflow Level 4: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="Activity"
-										value="{{ organization.level_4_label }}"
-										id="workflowlevel4"
-										name="level_4_label"
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- End of Default Labals-->
-					<!-- start of other Lables -->
-					<div class="panel panel-info">
-						<div class="panel-heading">Other Labels</div>
-						<div class="panel-body">
-							<div class="row">
-								<div class="col-md-6 default-setting">
-									<label for="workflowlevel1"> Indicator: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="Indicator"
-										value="{{ organization.indicator_label }}"
-										id="indicator"
-										name="indicator_label"
-									/>
-								</div>
-								<div class="col-md-6">
-									<label for="workflowlevel1"> Site: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="Site"
-										value="{{ organization.site_label }}"
-										id="site"
-										name="site_label"
-									/>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-md-6">
-									<label for="workflowlevel1"> Stakeholder: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="Stakeholder"
-										value="{{ organization.stakeholder_label }}"
-										id="stakeholder"
-										name="stakeholder_label"
-									/>
-								</div>
-								<div class="col-md-6">
-									<label for="workflowlevel1"> Form: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="Form"
-										value="{{ organization.form_label }}"
-										id="form"
-										name="form_label"
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- end of other Labels -->
-
-					<!-- start of other settings-->
-					<div class="panel panel-info">
-						<div class="panel-heading">Default Settings</div>
-						<div class="panel-body">
-							<div class="row">
-								<div class="col-md-6 default-setting">
-									<label for="workflowlevel1"> Default Currency: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="USD ($)"
-										value="{{ organization.default_currency.name }}"
-										id="workflowlevel1"
-										name="default_currency"
-									/>
-								</div>
-								<div class="col-md-6">
-									<label for="workflowlevel1"> Date Format: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="DD/MM/YYYY"
-										value="{{ organization.date_format }}"
-										id="date_format"
-										name="date_format"
-									/>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-md-6">
-									<label for="workflowlevel1"> Default Language: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="English-US"
-										value="{{ organization.default_language }}"
-										id="workflowlevel1"
-										name="default_language"
-									/>
-								</div>
-								<div class="col-md-6">
-									<label for="workflowlevel1"> Theme Color: </label>
-									<input
-										type="text"
-										class="form-control"
-										placeholder="Theme Color"
-										value="{{ organization.theme_color }}"
-										id="workflowlevel1"
-										name="theme_color"
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- end of other settings -->
+		<form id="configForm" class="">
+			{% csrf_token %}
+			<!-- Default Labels -->
+			<div class="panel panel-default">
+				<div class="panel-heading">Workflow Level Labels</div>
+				<div class="panel-body">
 					<div class="row">
-						<div class="text-right admin-form-actions">
-							<button type="reset" id="reset-config-form" class="btn btn-close">Close</button>
-							<button type="submit" class="btn btn-success">Save</button>
+						<div class="col-md-6 default-setting">
+							<label for="workflowlevel1"> Workflow Level 1: </label>
+							<input type="text" class="form-control" placeholder="Program"
+								value="{{ organization.level_1_label }}" id="workflowlevel1" name="level_1_label" />
+						</div>
+						<div class="col-md-6">
+							<label for="workflowlevel1"> Workflow Level 2: </label>
+							<input type="text" class="form-control" placeholder="Project"
+								value="{{ organization.level_2_label }}" id="workflowlevel2" name="level_2_label" />
 						</div>
 					</div>
-				</form>
+
+					<div class="row">
+						<div class="col-md-6">
+							<label for="workflowlevel1"> Workflow Level 3: </label>
+							<input type="text" class="form-control" placeholder="Component"
+								value="{{ organization.level_3_label }}" id="workflowlevel3" name="level_3_label" />
+						</div>
+						<div class="col-md-6">
+							<label for="workflowlevel1"> Workflow Level 4: </label>
+							<input type="text" class="form-control" placeholder="Activity"
+								value="{{ organization.level_4_label }}" id="workflowlevel4" name="level_4_label" />
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
+			<!-- End of Default Labals-->
+			<!-- start of other Lables -->
+			<div class="panel panel-default">
+				<div class="panel-heading">Other Labels</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-6 default-setting">
+							<label for="workflowlevel1"> Indicator: </label>
+							<input type="text" class="form-control" placeholder="Indicator"
+								value="{{ organization.indicator_label }}" id="indicator" name="indicator_label" />
+						</div>
+						<div class="col-md-6">
+							<label for="workflowlevel1"> Site: </label>
+							<input type="text" class="form-control" placeholder="Site"
+								value="{{ organization.site_label }}" id="site" name="site_label" />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
+							<label for="workflowlevel1"> Stakeholder: </label>
+							<input type="text" class="form-control" placeholder="Stakeholder"
+								value="{{ organization.stakeholder_label }}" id="stakeholder"
+								name="stakeholder_label" />
+						</div>
+						<div class="col-md-6">
+							<label for="workflowlevel1"> Form: </label>
+							<input type="text" class="form-control" placeholder="Form"
+								value="{{ organization.form_label }}" id="form" name="form_label" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- end of other Labels -->
+
+			<!-- start of other settings-->
+			<div class="panel panel-default">
+				<div class="panel-heading">Default Settings</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-6 default-setting">
+							<label for="workflowlevel1"> Default Currency: </label>
+							<input type="text" class="form-control" placeholder="USD ($)"
+								value="{{ organization.default_currency.name }}" id="workflowlevel1"
+								name="default_currency" />
+						</div>
+						<div class="col-md-6">
+							<label for="workflowlevel1"> Date Format: </label>
+							<input type="text" class="form-control" placeholder="DD/MM/YYYY"
+								value="{{ organization.date_format }}" id="date_format" name="date_format" />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
+							<label for="workflowlevel1"> Default Language: </label>
+							<input type="text" class="form-control" placeholder="English-US"
+								value="{{ organization.default_language }}" id="workflowlevel1"
+								name="default_language" />
+						</div>
+						<div class="col-md-6">
+							<label for="workflowlevel1"> Theme Color: </label>
+							<input type="text" class="form-control" placeholder="Theme Color"
+								value="{{ organization.theme_color }}" id="workflowlevel1" name="theme_color" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- end of other settings -->
+			<div class="row">
+				<div class="text-right admin-form-actions">
+					<button type="reset" id="reset-config-form" class="btn btn-close">Close</button>
+					<button type="submit" class="btn btn-success">Save</button>
+				</div>
+			</div>
+		</form>
+
 	</div>
 </div>
 <script>
@@ -208,6 +137,6 @@
 	})
 </script>
 {% block extra_js_in_body %}
-	<script type="text/javascript" src="{{ STATIC_URL }}js/admin.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/admin.js"></script>
 {% endblock %}
 {% endblock content %}

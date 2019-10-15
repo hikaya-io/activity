@@ -71,7 +71,7 @@ urlpatterns = [  # rest framework
 
     # index
     path('', lambda request: redirect('dashboard/0/', permanent=False), name="index"),
-    
+
     # enable the admin:
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
@@ -110,14 +110,19 @@ urlpatterns = [  # rest framework
     # local login
     path('login/', authviews.LoginView.as_view(), name='login'),
     path('accounts/login/', views.user_login, name='login'),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/logout/', views.logout_view, name='logout'),
-
     # register
     path('accounts/register/user/<slug:invite_uuid>/', views.register, name='register'),
     path('accounts/join/organization/<slug:invite_uuid>/', views.invite_existing_user,
          name='join_organization'),
     path('accounts/register/organization', views.register_organization,
          name='register_organization'),
+
+    # password reset
+    path('accounts/user/password_reset/', PasswordReset.as_view(is_admin_site=True),
+         {'is_admin_site': 'True'}, name='user_password_reset'),
+    path('accounts/user/password_update/', views.change_password, name='change_password'),
 
     # accounts
     re_path('accounts/organization/(?P<org_id>\w+)/$',
@@ -139,8 +144,7 @@ urlpatterns = [  # rest framework
          name='invite_user'),
     path('accounts/admin/users/invitations/list/<slug:organization>/', views.admin_user_invitations,
          name='admin_user_invitations'),
-    path('accounts/admin/users/invitations/delete_invitation/<slug:pk>/', views.delete_invitation,
-         name='delete_invitation'),
+    path('accounts/admin/invitations/', UserInviteView.as_view(), name='user_invitations'),
 
     # bookmarks
     path('bookmark_list', BookmarkList.as_view(),

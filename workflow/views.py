@@ -110,6 +110,7 @@ class ProgramUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ProgramUpdate, self).get_context_data(**kwargs)
         context['current_program'] = self.get_object()
+        context['active']= ['workflow']
         return context
 
 
@@ -379,7 +380,7 @@ class ProjectAgreementUpdate(UpdateView):
     """
     model = ProjectAgreement
     form_class = ProjectAgreementForm
-    guidance = None
+    template_name = 'workflow/project_form_tab_ui.html'
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
@@ -408,6 +409,7 @@ class ProjectAgreementUpdate(UpdateView):
         context.update({'program': pk})
         get_agreement = ProjectAgreement.objects.get(id=self.kwargs['pk'])
         context.update({'p_agreement': get_agreement.project_name})
+        context.update({'project': get_agreement, 'active': ['workflow']})
         context.update({'p_agreement_program': get_agreement.program})
 
         try:
@@ -456,7 +458,7 @@ class ProjectAgreementUpdate(UpdateView):
 
     def form_invalid(self, form):
 
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form', fail_silently=False, extra_tags='danger')
 
         return self.render_to_response(self.get_context_data(form=form))
 

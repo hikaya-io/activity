@@ -1,0 +1,42 @@
+{% load crispy_forms_tags %}
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form.method_of_analysis | as_crispy_field }}
+
+        {{form.information_use | as_crispy_field}}
+
+        {{form.reporting_frequency | as_crispy_field}}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        {{form.quality_assurance | as_crispy_field}}
+    </div>
+
+    <div class="col-md-12">
+        {{form.data_issues | as_crispy_field}}
+    </div>
+
+    <div class="col-md-12">
+        {{form.indicator_changes | as_crispy_field}}
+    </div>
+
+    <div class="col-md-12">
+        {{form.notes | as_crispy_field}}
+    </div>
+</div>
+
+<script>
+    $(document).ready(() => {
+        $('#id_reporting_frequency').select2({
+            theme: 'bootstrap',
+        });
+
+        $('#id_quality_assurance').attr('rows', 3);
+        $('#id_data_issues').attr('rows', 3);
+        $('#id_indicator_changes').attr('rows', 3);
+        $('#id_notes').attr('rows', 3);
+    })
+</script>

@@ -47,9 +47,17 @@
 				My Profile
 			</h4>
 		</div>
-		<!-- <div class="sub-navigation-actions">
-			<a href="/bookmark_list">Bookmarks</a>
-		</div> -->
+		<div class="sub-navigation-actions">
+			<!-- sample action buttons -->
+			<div class="btn-group" role="group" aria-label="">
+				<a
+					href="{% url 'change_password' %}"
+					class="btn btn-primary btn-sm"
+					>
+				Change Password
+				</a>
+			</div>
+		</div>
 	</div>
 	<div class="admin-content">
 		{% load crispy_forms_tags %}

@@ -1,16 +1,23 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
+from django.contrib.auth.tokens import default_token_generator
+from django.template.response import TemplateResponse
+from django.views.generic import RedirectView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+
 from django.contrib import messages
-from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth import (
+    logout, authenticate,
+    login, update_session_auth_hash,)
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.forms import PasswordChangeForm
+
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
-from django.db.models import Sum, Q, Count
+from django.db.models import Q
 from django.db import IntegrityError
 from django.views import View
 from django.views.decorators.csrf import csrf_protect
@@ -31,9 +38,8 @@ from django.core import serializers
 from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.forms.models import model_to_dict
-from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from .forms import HTMLPasswordResetForm
 
 APPROVALS = (
     ('in_progress', 'In Progress'),
@@ -50,7 +56,6 @@ def index(request, program_id=0):
     Home page
     get count of agreements approved and total for dashboard
     """
-
     # add program
     if request.method == 'POST' and request.is_ajax:
         return add_program(request)
@@ -309,7 +314,7 @@ def register(request, invite_uuid):
 
                 send_single_mail(
                     mail_subject,
-                    'Hikaya <team.hikaya@gmail.com>',
+                    'team.hikaya@gmail.com',
                     [email],
                     data,
                     email_txt,
@@ -341,7 +346,7 @@ def send_welcome_email(request, user):
 
     send_single_mail(
         mail_subject,
-        'Hikaya <team.hikaya@gmail.com>',
+        'team.hikaya@gmail.com',
         [user.email],
         data,
         email_txt,
@@ -502,7 +507,7 @@ def admin_dashboard(request):
     return render(
         request,
         'admin/landing_page.html',
-        {'nav_links': nav_links}
+        {'nav_links': nav_links, 'active': 'usage'}
     )
 
 
@@ -539,7 +544,7 @@ def admin_configurations(request):
         request,
         'admin/default_settings.html',
         {'nav_links': nav_links,
-         'organization': logged_activity_user.organization}
+         'organization': logged_activity_user.organization, 'active': 'configurations'}
     )
 
 
@@ -552,7 +557,7 @@ def admin_profile_settings(request):
         organization = Organization.objects.get(pk=user.organization.id)
         organization.logo = ''
         organization.save()
-      
+
     if request.method == 'POST':
         # form = OrganizationEditForm(request.FILES,
         #                             instance=organization)
@@ -572,7 +577,7 @@ def admin_profile_settings(request):
     return render(
         request,
         'admin/profile_settings.html',
-        {'nav_links': nav_links, 'organization': organization}
+        {'nav_links': nav_links, 'organization': organization, 'active': 'profile'}
     )
 
 
@@ -580,21 +585,44 @@ def admin_profile_settings(request):
 def admin_user_management(request, role, status):
     nav_links = get_nav_links('People')
     users = ActivityUser.objects.filter(
-        organizations__id=request.user.activity_user.organization.id)
+        organizations__id=request.user.activity_user.organization.id
+    ).exclude(user__is_superuser=True)
     groups = Group.objects.all().distinct('name')
 
-    user_organizations = request.user.activity_user.organizations
+    # get owner orgs
+    owner_group = Group.objects.get(name='Owner')
+    user_org_group_ids = ActivityUserOrganizationGroup.objects.filter(
+        activity_user=request.user.activity_user,
+        group=owner_group
+    ).values_list('organization__id', flat=True)
+
+    user_organizations = Organization.objects.filter(id__in=user_org_group_ids)
     if role != 'all':
-        users = users.filter(user__groups__id__icontains=int(role))
+        group = Group.objects.get(id=int(role))
+
+        get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
+            organization_id=request.user.activity_user.organization.id,
+            group_id=group.id
+        ).values_list('activity_user__user__id')
+
+        users = users.filter(
+            user__id__in=get_org_users_by_roles
+        ).exclude(user__is_superuser=True)
+
     if status != 'all':
         status = True if status == 'active' else False
-        users = users.filter(user__is_active=status)
+        get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
+            organization_id=request.user.activity_user.organization.id,
+            is_active=status
+        ).values_list('activity_user__user__id')
+        users = users.filter(user__activity_user__id__in=get_org_users_by_roles)
 
     return render(request, 'admin/user_management.html', {
         'nav_links': nav_links,
         'users': users,
         'groups': groups,
         'organizations': user_organizations,
+        'active': 'people'
     })
 
 
@@ -679,22 +707,20 @@ def update_user_access(request, pk, status):
     Deactivate or Activate Users
     :param request:
     :param pk:
-    :param state:
-    :return:
+    :param status:
     """
-    user = get_object_or_404(User, pk=pk)
-
+    user_grp = ActivityUserOrganizationGroup.objects.get(activity_user_id=int(pk))
     if status == 'activate':
-        user.is_active = True
-        user.save()
+        user_grp.is_active = True
+        user_grp.save()
 
     elif status == 'deactivate':
-        user.is_active = False
-        user.save()
+        user_grp.is_active = False
+        user_grp.save()
 
     else:
         new_gp = Group.objects.get(name=status)
-        activity_user = user.activity_user
+        activity_user = ActivityUser.objects.get(pk=int(pk))
         user_org_access = ActivityUserOrganizationGroup.objects.filter(
             activity_user_id=activity_user.id,
             organization_id=activity_user.organization.id).first()
@@ -863,24 +889,6 @@ def invite_user(request):
     :param request: request context
     :return: success
     """
-    # re-invite user
-    if request.GET.get('resend_invite', None) is not  None:
-        invite = request.GET.get('resend_invite')
-        user_invite = UserInvite.objects.get(invite_uuid=invite)
-        try:
-            if User.objects.get(email=user_invite.email):
-                url_route = '/accounts/join/organization/'
-        except User.DoesNotExist:
-            url_route = '/accounts/register/user/'
-
-        mail_subject = 'Invitation to Join Activity'
-        email_from = 'team.hikaya@gmail.com'
-        domain = request.build_absolute_uri('/').strip('/')
-        data = {'link': '{}{}'.format(domain, url_route)}
-
-        send_invite_emails(mail_subject, email_from, [user_invite], data)
-
-        return HttpResponse({'success': True})
 
     # New Invitations
     if request.method == 'POST' and request.is_ajax:
@@ -892,19 +900,45 @@ def invite_user(request):
         url_route = ''
         for email in email_list:
             try:
-                if UserInvite.objects.get(email=email.lower()):
-                    pass # purpose to implement resend invite
-            except MultipleObjectsReturned:
-                pass
-            except UserInvite.DoesNotExist:
-                invite = UserInvite.objects.create(
-                    email=email.lower(), organization_id=organization_id)
+                check_invite = UserInvite.objects.get(email=email.lower())
+                if check_invite:
+                    redirect(
+                        '/accounts/admin/invitations/?resend_invite={}'.format(
+                            check_invite.invite_uuid)
+                    )
 
+            except MultipleObjectsReturned:
+                redirect(
+                    '/accounts/admin/invitations/?resend_invite={}'.format(
+                        check_invite.invite_uuid)
+                )
+
+            except UserInvite.DoesNotExist:
+                invite = None
                 try:
-                    if User.objects.get(email=email):
-                        url_route = '/accounts/join/organization/'
+                    check_user = User.objects.get(email=email)
+                    if check_user:
+                        user_orgs = check_user.activity_user.organizations.values_list(
+                            'id', flat=True)
+                        if organization_id in user_orgs:
+                            organization = Organization.objects.get(id=organization_id)
+                            return JsonResponse(
+                                {'user_exists': True, 'organization': organization.name}
+                            )
+                        else:
+                            url_route = '/accounts/join/organization/'
+
                 except User.DoesNotExist:
                     url_route = '/accounts/register/user/'
+
+                # create an invitation
+                if url_route is not None:
+
+                    invite = UserInvite.objects.create(
+                        email=email.lower(),
+                        organization_id=organization_id
+                    )
+
                 if invite:
                     success_invites.append(invite)
                 else:
@@ -928,20 +962,16 @@ def invite_user(request):
             return HttpResponse({'success': False, 'failed': failed_invites})
 
 
-class UserInvite(View):
+class UserInviteView(View):
     """
     User invitation class view
     """
+
     def get(self, request, *args, **kwargs):
-        # create new invite
-        if self.request.method == 'POST' and self.request.is_ajax:
-            data = self.request.POST
-            invitation = self.create_new_invitation(data)
-            pass
 
         # revoke existing invite
-        if self.request.GET.get('delete_invite', None) is not None:
-            invitation_uuid = self.request.GET.get('delete_invite')
+        if self.request.GET.get('revoke_invite', None) is not None:
+            invitation_uuid = self.request.GET.get('revoke_invite')
             invitation = self.delete_invitation(invitation_uuid)
 
         # resend existing invite
@@ -1055,10 +1085,14 @@ def invite_existing_user(request, invite_uuid):
                 activity_user.organizations.add(invite.organization)
                 messages.error(request,
                                'You have successfully joined {}'.format(invite.organization.name))
+                # delete the invite
+                invite.delete()
+
                 return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
             # if user is not found
-            messages.error(request, 'Error, there was an error adding you to {}'.format(invite.organization.name))
+            messages.error(request, 'Error, there was an error adding you to {}'.format(
+                invite.organization.name))
             return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
         except User.DoesNotExist:
             messages.error(
@@ -1071,12 +1105,73 @@ def invite_existing_user(request, invite_uuid):
         return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
 
-@login_required(login_url='/accounts/login/')
-@csrf_exempt
-def delete_invitation(request, pk):
-    try:
-        invitation = UserInvite.objects.get(pk=int(pk))
-        invitation.delete()
-        return HttpResponse({'success': True})
-    except UserInvite.DoesNotExist:
-        pass
+class PasswordReset(RedirectView):
+    """
+    Override Password Reset View
+    forcing to use HTML email template (param: html_email_template_name
+    """
+    is_admin_site = False
+    template_name = 'registration/password_reset_form.html'
+    email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.html'
+    token_generator = default_token_generator
+    post_reset_redirect = '/accounts/password_reset/done/'
+    from_email = None,
+    current_app = None,
+    extra_context = None
+
+    def get(self, request, *args, **kwargs):
+        form = HTMLPasswordResetForm()
+        context = {
+            'form': form,
+        }
+        if self.extra_context is not None:
+            context.update(self.extra_context)
+        return TemplateResponse(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = HTMLPasswordResetForm(request.POST)
+        if form.is_valid():
+            opts = {
+                'use_https': request.is_secure(),
+                'token_generator': self.token_generator,
+                'from_email': self.from_email,
+                'email_template_name': self.email_template_name,
+                'subject_template_name': self.subject_template_name,
+                'request': request,
+            }
+            if self.is_admin_site:
+                opts = dict(opts, domain_override=request.get_host())
+            form.save(**opts)
+            return HttpResponseRedirect(self.post_reset_redirect)
+        context = {
+            'form': form,
+        }
+        if self.extra_context is not None:
+            context.update(self.extra_context)
+        return TemplateResponse(request, self.template_name, context,
+                                current_app=self.current_app)
+
+
+def change_password(request):
+    """
+    change password view
+    :param request:
+    :return:
+    """
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Important!!! keep the user logged in after changing the password
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+
+    return render(request, 'registration/change_password.html', {
+        'form': form
+    })
