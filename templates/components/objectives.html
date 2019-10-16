@@ -11,6 +11,12 @@
       dropdownParent: $('#addObjectiveModal'),
     });
     $('#objectivesTable').DataTable();
+
+    // show quick add modal if quick-modal to true
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('quick-action')) {
+      $('#addObjectiveModal').modal('show');
+    }
   });
 </script>
 
