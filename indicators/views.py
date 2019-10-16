@@ -1924,8 +1924,6 @@ def objectives_list(request):
 
         objective.save()
 
-        print(data)
-
         if (data.get('saveObjectiveAndNew')):
             return HttpResponseRedirect('/indicators/objectives?quick-action=true')
 
