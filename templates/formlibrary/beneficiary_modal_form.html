@@ -13,10 +13,16 @@
       allowClear: true,
       dropdownParent: $('#addBeneficiaryModal')
     });
+
+    // show quick add modal if quick-modal to true
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('quick-modal')) {
+      $('#addBeneficiaryModal').modal('show');
+    }
   });
 
-  $(function() {
-    $('#saveBeneficiary').click(function(e) {
+  var saveBeneficiary = (buttonId) => {
+    $(`#${buttonId}`).click(function (e) {
       e.preventDefault();
 
       const formValue = $('#addBeneficiaryForm').serializeArray();
@@ -39,7 +45,7 @@
         url: '/formlibrary/beneficiary_add/0/',
         type: 'POST',
         data,
-        success: function(resp, status) {
+        success: function (resp, status) {
           // notify success
           toastr.success('Beneficiary was added successfully');
 
@@ -52,35 +58,35 @@
             .select('val', '')
             .trigger('change');
 
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          const urlWithoutQueryString = window.location.href.split('?')[0];
+          if (buttonId === 'saveBeneficiaryAndNew') {
+            window.location.replace(`${urlWithoutQueryString}?quick-modal=true`);
+          } else {
+            setTimeout(() => {
+              window.location.replace(urlWithoutQueryString);
+            }, 2000);
+          }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
           toastr.error(error, 'Failed');
         },
       });
     });
+  }
+
+  $(function () {
+    saveBeneficiary('saveBeneficiaryAndNew');
+    saveBeneficiary('saveBeneficiary');
   });
 </script>
 
 <!-- Modal -->
 <!-- Modal -->
-<div
-  class="modal fade"
-  id="addBeneficiaryModal"
-  tabindex="-1"
-  aria-labelledby="addBeneficiaryModalLabel"
->
+<div class="modal fade" id="addBeneficiaryModal" tabindex="-1" aria-labelledby="addBeneficiaryModalLabel">
   <div class="modal-dialog" role="form">
     <div class="modal-content">
       <div class="modal-header">
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         <h4 class="modal-title" id="addProjectModalLabel">
@@ -92,34 +98,18 @@
           {% csrf_token %}
           <div class="form-group">
             <label for="beneficiaryName">Beneficiary Name</label>
-            <input
-              type="text"
-              id="beneficiaryName"
-              name="beneficiary_name"
-              class="form-control"
-              placeholder="Beneficiary"
-            />
+            <input type="text" id="beneficiaryName" name="beneficiary_name" class="form-control"
+              placeholder="Beneficiary" />
           </div>
 
           <div class="form-group">
             <label for="age">Age</label>
-            <input
-              type="text"
-              id="age"
-              name="age"
-              class="form-control"
-              placeholder="Age"
-            />
+            <input type="text" id="age" name="age" class="form-control" placeholder="Age" />
           </div>
 
           <div class="form-group">
             <label for="gender">Gender</label>
-            <select
-              id="gender"
-              name="gender"
-              class="form-control"
-              placeholder="Gender"
-            >
+            <select id="gender" name="gender" class="form-control" placeholder="Gender">
               <option value=""></option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -129,15 +119,9 @@
 
           <div class="form-group">
             <label for="program">
-                {{ user.activity_user.organization.level_1_label }}
+              {{ user.activity_user.organization.level_1_label }}
             </label>
-            <select
-              id="program"
-              class="form-control"
-              style="width: 100%"
-              name="program"
-              required
-            >
+            <select id="program" class="form-control" style="width: 100%" name="program" required>
               <option value=""></option>
               {% for program in get_programs %} {% if program.name %}
               <option value="{{ program.id }}">
@@ -152,8 +136,12 @@
           <button type="reset" class="btn btn-close" data-dismiss="modal">
             Close
           </button>
-          <button type="submit" class="btn btn-primary" id="saveBeneficiary">
-            Submit
+          <button type="submit" class="btn btn-outline-success" id="saveBeneficiaryAndNew">
+            Save &amp; New
+          </button>
+
+          <button type="submit" class="btn btn-success" id="saveBeneficiary">
+            Save
           </button>
         </div>
       </form>
