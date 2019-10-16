@@ -110,7 +110,7 @@ class ProgramUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ProgramUpdate, self).get_context_data(**kwargs)
         context['current_program'] = self.get_object()
-        context['active']= ['workflow']
+        context['active'] = ['workflow']
         return context
 
 
@@ -214,7 +214,6 @@ class ProgramDash(ListView):
 
                 else:
                     get_projects = get_projects.filter(approval=status)
-                    print('console.log', status)
 
         return render(request, self.template_name,
                       {
@@ -457,8 +456,8 @@ class ProjectAgreementUpdate(UpdateView):
         return kwargs
 
     def form_invalid(self, form):
-
-        messages.error(self.request, 'Invalid Form', fail_silently=False, extra_tags='danger')
+        messages.error(self.request, 'Invalid Form',
+                       fail_silently=False, extra_tags='danger')
 
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -532,8 +531,7 @@ class ProjectAgreementUpdate(UpdateView):
             link = "Link: " + "https://" + get_current_site(
                 self.request).name + "/workflow/projectagreement_detail/" + str(
                 self.kwargs['pk']) + "/"
-            subject = "Project Initiation Waiting for Approval: " + \
-                      project_name
+            subject = "Project Initiation Waiting for Approval: "
             message = "A new initiation was submitted for approval by " + \
                       str(self.request.user) + "\n" + "Budget Amount: " + \
                       str(form.instance.total_estimated_budget) + "\n"
