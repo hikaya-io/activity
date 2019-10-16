@@ -4,7 +4,7 @@
 			theme: 'bootstrap'
 		});
 
-		$('#indicatorName').on('input', function() {
+		$('#indicatorName').on('input', function () {
 			const name = $(this);
 			if (name.val()) {
 				$('#div_indicator_name')
@@ -19,7 +19,7 @@
 					.addClass('has-error');
 			}
 		});
-		$('#indicatorWorkflowLevel1').on('change', function() {
+		$('#indicatorWorkflowLevel1').on('change', function () {
 			const type = $(this);
 			if (type.val()) {
 				$('#div_indicator_program')
@@ -34,10 +34,16 @@
 					.addClass('has-error');
 			}
 		});
+
+		// show the modal if project modal is set to true
+		const url = new URL(window.location.href);
+		if (url.searchParams.get('quick-modal')) {
+			$('#addIndicatorModal').modal('show');
+		}
 	});
 
-	$(() => {
-		$('#createNewIndicator').click(() => {
+	var saveIndicator = (buttonId) => {
+		$(`#${buttonId}`).click(() => {
 			const formValue = $('#addIndicatorForm').serializeArray();
 
 			const indicator = {};
@@ -70,7 +76,7 @@
 					url: "{% url 'add-indicator' %}",
 					type: 'POST',
 					data: indicator,
-					success: function(resp, status) {
+					success: function (resp, status) {
 						// notify success
 						toastr.success('Indicator was added sucessfully', `${resp}`);
 
@@ -83,27 +89,31 @@
 							.select('val', '')
 							.trigger('change');
 
-						setTimeout(() => {
-							window.location.reload();
-						}, 2000);
+						const urlWithoutQueryString = window.location.href.split('?')[0];
+						if (buttonId === 'createNewIndicatorAndNew') {
+							window.location.replace(`${urlWithoutQueryString}?quick-modal=true`);
+						} else {
+							setTimeout(() => {
+								window.location.replace(urlWithoutQueryString);
+							}, 2000);
+						}
 					},
-					error: function(xhr, status, error) {
+					error: function (xhr, status, error) {
 						toastr.error(error, 'Failed');
 					},
 				});
 			}
 		});
+	}
+
+	$(() => {
+		saveIndicator('createNewIndicator');
+		saveIndicator('createNewIndicatorAndNew');
 	});
 </script>
 
 <!-- Modal for captring data -->
-<div
-	class="modal fade"
-	tabindex="-1"
-	role="dialog"
-	id="addIndicatorModal"
-	aria-labelledby="addIndicatorModal"
->
+<div class="modal fade" tabindex="-1" role="dialog" id="addIndicatorModal" aria-labelledby="addIndicatorModal">
 	<div class="modal-dialog modal-md" role="form">
 		<div class="modal-content">
 			<form id="addIndicatorForm">
@@ -117,42 +127,32 @@
 				<div class="modal-body">
 					<div class="form-group" id="div_indicator_name">
 						<label class="control-label" for="indicatorName">Indicator Name*</label>
-						<input
-							type="text"
-							class="form-control"
-							name="indicator_name"
-							id="indicatorName"
-							autocomplete="off"
-							placeholder="Indicator Name"
-						/>
-						<span id="nameHelpBlock" class="help-block hikaya-hide"
-							>Name is required</span
-						>
+						<input type="text" class="form-control" name="indicator_name" id="indicatorName"
+							autocomplete="off" placeholder="Indicator Name" />
+						<span id="nameHelpBlock" class="help-block hikaya-hide">Name is required</span>
 					</div>
 
 					<div class="form-group" id="div_indicator_program">
 						<label for="indicatorWorkflowLevel1" class="control-label">
-							{{ user.activity_user.organization.level_1_label }}*</label
-						>
-						<select
-							name="workflowlevel1"
-							id="indicatorWorkflowLevel1"
-							class="form-control"
-						>
+							{{ user.activity_user.organization.level_1_label }}*</label>
+						<select name="workflowlevel1" id="indicatorWorkflowLevel1" class="form-control">
 							<option value=""></option>
 							{% for program in get_programs %} {% if program.name %}
 							<option value="{{ program.id }}">{{ program.name }}</option>
 							{% endif %} {% endfor %}
 						</select>
-						<span id="programHelpBlock" class="help-block hikaya-hide"
-							>{{ user.activity_user.level_1_label }} is required</span
-						>
+						<span id="programHelpBlock"
+							class="help-block hikaya-hide">{{ user.activity_user.level_1_label }} is required</span>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-close" data-dismiss="modal">
 						Close
 					</button>
+					<button id="createNewIndicatorAndNew" type="button" class="btn btn-outline-success">
+						Save &amp; New
+					</button>
+
 					<button id="createNewIndicator" type="button" class="btn btn-success">
 						Save
 					</button>
