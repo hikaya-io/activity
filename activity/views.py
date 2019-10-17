@@ -314,7 +314,7 @@ def register(request, invite_uuid):
 
                 send_single_mail(
                     mail_subject,
-                    'Hikaya <team.hikaya@gmail.com>',
+                    'team.hikaya@gmail.com',
                     [email],
                     data,
                     email_txt,
@@ -346,7 +346,7 @@ def send_welcome_email(request, user):
 
     send_single_mail(
         mail_subject,
-        'Hikaya <team.hikaya@gmail.com>',
+        'team.hikaya@gmail.com',
         [user.email],
         data,
         email_txt,
@@ -603,7 +603,7 @@ def admin_user_management(request, role, status):
         get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
             organization_id=request.user.activity_user.organization.id,
             group_id=group.id
-        ).values_list('activity_user__user__id').distinct('organization')
+        ).values_list('activity_user__user__id')
 
         users = users.filter(
             user__id__in=get_org_users_by_roles
@@ -611,7 +611,11 @@ def admin_user_management(request, role, status):
 
     if status != 'all':
         status = True if status == 'active' else False
-        users = users.filter(user__is_active=status)
+        get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
+            organization_id=request.user.activity_user.organization.id,
+            is_active=status
+        ).values_list('activity_user__user__id')
+        users = users.filter(user__activity_user__id__in=get_org_users_by_roles)
 
     return render(request, 'admin/user_management.html', {
         'nav_links': nav_links,
@@ -703,22 +707,20 @@ def update_user_access(request, pk, status):
     Deactivate or Activate Users
     :param request:
     :param pk:
-    :param state:
-    :return:
+    :param status:
     """
-    user = get_object_or_404(User, pk=pk)
-
+    user_grp = ActivityUserOrganizationGroup.objects.get(activity_user_id=int(pk))
     if status == 'activate':
-        user.is_active = True
-        user.save()
+        user_grp.is_active = True
+        user_grp.save()
 
     elif status == 'deactivate':
-        user.is_active = False
-        user.save()
+        user_grp.is_active = False
+        user_grp.save()
 
     else:
         new_gp = Group.objects.get(name=status)
-        activity_user = user.activity_user
+        activity_user = ActivityUser.objects.get(pk=int(pk))
         user_org_access = ActivityUserOrganizationGroup.objects.filter(
             activity_user_id=activity_user.id,
             organization_id=activity_user.organization.id).first()
@@ -931,6 +933,7 @@ def invite_user(request):
 
                 # create an invitation
                 if url_route is not None:
+
                     invite = UserInvite.objects.create(
                         email=email.lower(),
                         organization_id=organization_id
@@ -974,8 +977,6 @@ class UserInviteView(View):
         # resend existing invite
         if self.request.GET.get('resend_invite', None) is not None:
             invitation_uuid = self.request.GET.get('resend_invite')
-            print('Resent Invite', invitation_uuid)
-
             invitation = self.resend_invitation(invitation_uuid)
 
         return HttpResponse(invitation)
@@ -1039,7 +1040,6 @@ class UserInviteView(View):
         Revoke Invitations
         :param invite_uuid:
         """
-        print('called with', invite_uuid)
         try:
             invitation = UserInvite.objects.get(invite_uuid=invite_uuid)
             invitation.delete()

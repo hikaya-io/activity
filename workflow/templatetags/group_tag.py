@@ -52,3 +52,23 @@ def template_exists(template_name="links.html"):
         return True
     except template.TemplateDoesNotExist:
         return False
+
+
+@register.filter(name='enabled_in_org')
+def enabled_in_org(activity_user, organization_id):
+    """
+    check if a user status is active on an org
+    :param activity_user:
+    :param organization_id:
+    :return: boolean
+    """
+    user_active_org_access = ActivityUserOrganizationGroup.objects.filter(
+        activity_user_id=activity_user.id,
+        organization_id=organization_id,
+        is_active=True
+    ).first()
+
+    if user_active_org_access is not None:
+        return True
+
+    return False
