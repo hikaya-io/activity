@@ -80,3 +80,7 @@
 .form-errors {
     color: red;
 }
+
+.help-block {
+    font-size: 12px;
+}

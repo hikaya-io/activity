@@ -33,9 +33,13 @@
               name="user_email_list"
               multiple="true"
               required
+              aria-describedby="emailsHelpBlock"
             >
               <option value=""></option>
             </select>
+            <span id="emailsHelpBlock" class="help-block">
+              Click on 'ENTER' once you are done typing an email address
+            </span>
           </div>
 
           <div class="form-group">
@@ -47,9 +51,11 @@
               required
             >
               <option value=""></option>
-              {% for item in organizations.all %} {% if item.name %}
-              <option value="{{ item.id }}">{{ item.name | truncatechars:50 }}</option>
-              {% endif %}{% endfor %}
+              {% for item in organizations.all %} 
+                {% if item.name %}
+                <option value="{{ item.id }}">{{ item.name | truncatechars:50 }}</option>
+                {% endif %}
+              {% endfor %}
             </select>
           </div>
         </div>
