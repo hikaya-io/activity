@@ -180,7 +180,7 @@ class CollectedDataForm(forms.ModelForm):
         self.fields['periodic_target'].label = 'Target Period*'
         self.fields['achieved'].label = 'Actual value'
         self.fields['date_collected'].help_text = ' '
-
+        self.fields['evidence'].queryset = Documentation.objects.filter()
 
 class StrategicObjectiveForm(forms.ModelForm):
     class Meta:

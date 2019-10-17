@@ -730,7 +730,8 @@ class CollectedDataCreate(CreateView):
                 get_disaggregation_label_standard})
         context.update({'indicator_id': self.kwargs['indicator']})
         context.update({'indicator': indicator})
-        context.update({'program_id': self.kwargs['program']})
+        context.update(
+            {'program_id': self.kwargs['program'], 'active': ['indicators']})
 
         return context
 
@@ -754,7 +755,8 @@ class CollectedDataCreate(CreateView):
 
     def form_invalid(self, form):
 
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form',
+                       fail_silently=False, extra_tags='danger')
 
         return self.render_to_response(self.get_context_data(form=form))
 

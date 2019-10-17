@@ -74,8 +74,10 @@
     <tbody>
       <tr>
         <td>
-          <span class="expandable" data-toggle="collapse" href="#row-{{indicator.id}}" aria-expanded="false"
-            aria-controls="row-{{indicator.id}}"><i class="fa fa-angle-right"></i></span>
+          <span class="expandable collapsed" data-toggle="collapse" href="#row-{{indicator.id}}" aria-expanded="false"
+            aria-controls="row-{{indicator.id}}">
+            <button class="btn btn-link"><i class="fa fa-angle-right"></i></button>
+          </span>
           <a href="{% url 'indicator_update' indicator.id %}" data-toggle="tooltip" title="{{ indicator.name }}">
             {{ indicator.name | truncatechars:50}}
           </a>
@@ -114,7 +116,7 @@
       </tr>
     </tbody>
 
-    <tbody id="row-{{indicator.id}}" class="collapse">
+    <tbody id="row-{{indicator.id}}" class="collapse expanded">
       <tr>
         <td colspan="6">
           <div class="text-right">
