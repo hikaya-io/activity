@@ -249,11 +249,13 @@
               {% if user.activity_user.organizations %}
               <li class="dropdown-header">Organizations</li>
               {% for org in user.activity_user.organizations.all %}
-              <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
-                <a href="/accounts/organization/{{ org.id }}/">
-                  {{ org.name }}
-                </a>
-              </li>
+                {% if user.activity_user|enabled_in_org:org.id%}
+                  <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
+                    <a href="/accounts/organization/{{ org.id }}/">
+                      {{ org.name }}
+                    </a>
+                  </li>
+                {% endif %}
               {% endfor %}
               <li>
                 <a href="/accounts/register/organization">
@@ -318,13 +320,13 @@
     <!-- Any messages for users -->
     {% block messages %} {% if messages %} {% for message in messages %}
     {% if 'safe' in message.tags %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+    <div class="alert alert-{{ message.tags }} alert-dismissible rounded-0" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
           aria-hidden="true">&times;</span></button>
       {{ message | safe }}
     </div>
     {% else %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+    <div class="alert alert-{{ message.tags }} alert-dismissible rounded-0" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
           aria-hidden="true">&times;</span></button>
       {{ message | safe }}

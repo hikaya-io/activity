@@ -1986,7 +1986,7 @@ class ActivityUserOrganizationGroup(models.Model):
                                      on_delete=models.CASCADE)
     group = models.ForeignKey(Group, verbose_name='Organization Group',  related_name='org_groups',
                               blank=True, null=True, on_delete=models.SET_NULL)
-
+    is_active = models.BooleanField('User Active', default=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
