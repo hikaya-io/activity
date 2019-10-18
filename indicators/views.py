@@ -689,13 +689,12 @@ class CollectedDataCreate(CreateView):
     """
     model = CollectedData
     guidance = None
+    form_class = CollectedDataForm
 
     def get_template_names(self):
         if self.request.is_ajax():
             return 'indicators/collecteddata_form_modal.html'
         return 'indicators/collecteddata_form.html'
-
-    form_class = CollectedDataForm
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
@@ -722,7 +721,7 @@ class CollectedDataCreate(CreateView):
         # set values to None so the form doesn't display empty fields
         # for previous entries
         get_disaggregation_value = None
-        indicator = Indicator.objects.get(pk=self.kwargs.get('indicator'))
+        indicator = Indicator.objects.get(pk=int(self.kwargs.get('indicator')))
 
         context.update({'get_disaggregation_value': get_disaggregation_value})
         context.update({'get_disaggregation_label': get_disaggregation_label})
@@ -731,7 +730,8 @@ class CollectedDataCreate(CreateView):
                 get_disaggregation_label_standard})
         context.update({'indicator_id': self.kwargs['indicator']})
         context.update({'indicator': indicator})
-        context.update({'program_id': self.kwargs['program']})
+        context.update(
+            {'program_id': self.kwargs['program'], 'active': ['indicators']})
 
         return context
 
@@ -755,7 +755,8 @@ class CollectedDataCreate(CreateView):
 
     def form_invalid(self, form):
 
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form',
+                       fail_silently=False, extra_tags='danger')
 
         return self.render_to_response(self.get_context_data(form=form))
 

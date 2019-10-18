@@ -1,66 +1,85 @@
-{% extends "base.html" %}
-{% block bread_crumb %}
-<ol class="breadcrumb">
-  <li><a href="/indicators/home/0/0/0/#hidden-{{ self.program }}">Indicators</a></li>
-  <li class="active">Output Form</li>
-</ol>
-
-{% endblock %}
-{% block page_title %}Collected Indicator Data{% endblock %}
-
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
-    {% include "form_guidance.html" %}
-    <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
-    <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
-    <script type="text/javascript">
-        //Searchable select option for service indicator
-        $(document).ready(function() {
-            /* add select2 js library to the indicator select box */
-            $("#id_site").select2();
-            $("#id_activity_table").select2();
-            $("#id_evidence").select2();
-            $("#id_agreement").select2();
 
-            $('#myModal').on('hidden.bs.modal', function (e) {
-                var sel = $("#service_table option:selected");
-                $.get('/api/activitytable/?table_id=' + sel.val() , function(data){
-                    if (data.length == 1) {
-                        $("#id_activity_table").append($("<option></option>")
-                            .attr("value", data[0].id)
-                            .text(sel.text()));
-                    } else {
-                        console.log('something wrong');
-                    }
+<div class="container">
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li><a href="/">My Dashboard</a></li>
+        <li><a href="/indicators/home/0/0/0/">Indicators</a></li>
+        <li class="active">Results</li>
+    </ul>
+    {% endblock %}
 
-                });
-            })
-        });
-    </script>
-
-    {% if form.errors %}
-        <div class="help-block">
-        {% for field in form %}
-            {% for error in field.errors %}
-                    <strong><i>{{ field.label }}</i> - {{ error|escape }}</strong>&nbsp;
-            {% endfor %}
-        {% endfor %}
+    <div class="sub-navigation">
+        <div class="sub-navigation-header">
+            <h4 class="page-title">
+                {{ indicator.name }}
+            </h4>
         </div>
-        {% for error in form.non_field_errors %}
-            <div class="alert alert-error">
-                <strong>{{ error|escape }}</strong>
-            </div>
-        {% endfor %}
-    {% endif %}
-	{% csrf_token %}
-    {% load crispy_forms_tags %}
-    {% crispy form %}
+    </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            </div> <!-- /.modal-content -->
-        </div> <!-- /.modal-dialog -->
-    </div> <!-- /.modal -->
+    <form method="POST" class="bg-white p-10">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4 col-sm-6">
+                {{form.periodic_target | as_crispy_field }}
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                {{form.date_collected | as_crispy_field }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 col-sm-6">
+                <div class="form-group">
+                    <label for="id_target">Target</label>
+                    <input type="number" id="id_target" class="form-control" value="{{indicator.lop_target}}" readonly>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                {{form.achieved | as_crispy_field}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 col">
+                {{form.evidence | as_crispy_field}}
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row mb-15">
+            <div class="col-md-8 col-sm-12">
+                <div class="disaggregation">
+                    <h4>Disaggregation</h4>
+                    <button type="button" class="btn btn-default btn-sm disabled" id="add_disaggregation">Add
+                        Disaggregation</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group text-right">
+            <a class="btn btn-close" role="button" href="/indicators/home/0/0/0/">Close</a>
+            <button class="btn btn-success" type="submit">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(() => {
+        $('#id_periodic_target').select2({ theme: 'bootstrap' })
+        $('#id_evidence').select2({ theme: 'bootstrap' })
+    });
+
+    // add new disaggregation
+    $('#add_disaggregation').click(() => {
+
+    })
+
+</script>
 
 {% endblock content %}

@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block content %} 
+{% extends "base.html" %} {% block content %}
 {% include './add_indicator_modal.html' %}
 
 <script>
@@ -30,18 +30,14 @@
         <!-- filters -->
         <div class="btn-group" role="group" aria-label="...">
           <div class="btn-group" role="group">
-            <button
-              type="button"
-              class="btn btn-sm btn-default dropdown-toggle"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
               {{ user.activity_user.organization.level_1_label }}
               <i class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></i>
             </button>
             <ul class="dropdown-menu">
-              <li class="{% if program_id == 0 %} active {% endif %}"><a href="/indicators/home/0/0/0/">-- All --</a></li>
+              <li class="{% if program_id == 0 %} active {% endif %}"><a href="/indicators/home/0/0/0/">-- All --</a>
+              </li>
               <li class="divider"></li>
               {% for program in get_programs %} {% if program.name %}
               <li class="{% if program_id == program.id %} active {% endif %}">
@@ -55,11 +51,7 @@
 
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
-          <button
-            class="btn btn-sm btn-primary"
-            data-toggle="modal"
-            data-target="#addIndicatorModal"
-          >
+          <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addIndicatorModal">
             <i class="fa fa-plus"></i> {{ user.activity_user.organization.indicator_label }}
           </button>
         </div>
@@ -82,10 +74,11 @@
     <tbody>
       <tr>
         <td>
-          <span class="expandable" data-toggle="collapse" href="#row-{{indicator.id}}" aria-expanded="false" aria-controls="row-{{indicator.id}}"><i class="fa fa-angle-right"></i></span>
-          <a href="{% url 'indicator_update' indicator.id %}" 
-            data-toggle="tooltip" 
-            title="{{ indicator.name }}">
+          <span class="expandable collapsed" data-toggle="collapse" href="#row-{{indicator.id}}" aria-expanded="false"
+            aria-controls="row-{{indicator.id}}">
+            <button class="btn btn-link"><i class="fa fa-angle-right"></i></button>
+          </span>
+          <a href="{% url 'indicator_update' indicator.id %}" data-toggle="tooltip" title="{{ indicator.name }}">
             {{ indicator.name | truncatechars:50}}
           </a>
         </td>
@@ -100,13 +93,8 @@
         <td class="text-right">
           <div class="btn-group">
             <a role="button" href="" class="btn btn-default btn-sm disabled">More</a>
-            <button
-              type="button"
-              class="btn btn-default btn-sm dropdown-toggle"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
               <span class="sr-only">Toggle Dropdown</span>
             </button>
@@ -128,33 +116,24 @@
       </tr>
     </tbody>
 
-    <tbody id="row-{{indicator.id}}" class="collapse">
+    <tbody id="row-{{indicator.id}}" class="collapse expanded">
       <tr>
-      <td colspan="6">
-        <div class="text-right">
-          <a href="#" role="button" class="btn btn-sm btn-success">Add Collected Data</a>
-        </div>
-      </td>
+        <td colspan="6">
+          <div class="text-right">
+            <a href="/indicators/collecteddata_add/{{program_id}}/{{indicator.id}}" role="button"
+              class="btn btn-sm btn-success">Add Collected Data</a>
+          </div>
+        </td>
       </tr>
     </tbody>
     {% endfor %}
   </table>
 
-  <div
-    class="modal fade"
-    role="dialog"
-    id="conform_modal_div"
-    aria-labelledby="mySmallModalLabel"
-  >
+  <div class="modal fade" role="dialog" id="conform_modal_div" aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h4 class="modal-title" id="myModalLabel">Warning</h4>
