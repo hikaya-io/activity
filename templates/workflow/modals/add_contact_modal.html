@@ -1,9 +1,14 @@
 <script>
   $(document).ready(() => {
+    // show quick add modal if quick-modal to true
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('quick-modal')) {
+      $('#addContactModal').modal('show');
+    }
   });
-  
-  $(() => {
-    $('#saveContact').click(e => {
+
+  var saveContact = (buttonId) => {
+    $(`#${buttonId}`).click(e => {
       e.preventDefault();
       const formValue = $('#addContactForm').serializeArray();
       const obj = {};
@@ -15,7 +20,7 @@
         url: "{% url 'add-contact' %}",
         type: 'POST',
         data: obj,
-        success: function(resp, status) {
+        success: function (resp, status) {
           // notify success
           toastr.success('Contact was added sucessfully');
           //close modal
@@ -23,36 +28,35 @@
           // reset form
           $('#addContactForm').trigger('reset');
 
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          const urlWithoutQueryString = window.location.href.split('?')[0];
+          if (buttonId === 'saveContactAndNew') {
+            window.location.replace(`${urlWithoutQueryString}?quick-modal=true`);
+          } else {
+            setTimeout(() => {
+              window.location.replace(urlWithoutQueryString);
+            }, 2000);
+          }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
           toastr.error(error, 'Failed');
         },
       });
     });
+  }
+
+  $(() => {
+    saveContact('saveContactAndNew');
+    saveContact('saveContact');
   });
 </script>
 
 <form id="addContactForm">
   <!-- Modal -->
-  <div
-    class="modal fade"
-    id="addContactModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="addContactModalLabel"
-  >
+  <div class="modal fade" id="addContactModal" tabindex="-1" role="dialog" aria-labelledby="addContactModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h4 class="modal-title" id="addContactModalLabel">Add Contact</h4>
@@ -61,66 +65,37 @@
           {% csrf_token %}
           <div class="form-group">
             <label for="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              class="form-control"
-              placeholder="Name"
-            />
+            <input type="text" id="name" name="name" class="form-control" placeholder="Name" />
           </div>
 
           <div class="form-group">
             <label for="city">City</label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              class="form-control"
-              placeholder="City"
-            />
+            <input type="text" id="city" name="city" class="form-control" placeholder="City" />
           </div>
 
           <div class="form-group">
             <label for="phoneNumber">Phone Number</label>
-            <input
-              type="text"
-              id="phoneNumber"
-              name="phone_number"
-              class="form-control"
-              placeholder="Phone Number"
-            />
+            <input type="text" id="phoneNumber" name="phone_number" class="form-control" placeholder="Phone Number" />
           </div>
 
           <div class="form-group">
             <label for="Email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="form-control"
-              placeholder="Email"
-            />
+            <input type="email" id="email" name="email" class="form-control" placeholder="Email" />
           </div>
 
           <div class="form-group">
             <label for="address">Address</label>
-            <textarea
-              id="address"
-              name="address"
-              class="form-control"
-              placeholder="Address"
-            ></textarea>
+            <textarea id="address" name="address" class="form-control" placeholder="Address"></textarea>
           </div>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-close"
-            data-dismiss="modal"
-          >
+          <button type="button" class="btn btn-close" data-dismiss="modal">
             Close
           </button>
+          <button type="button" class="btn btn-outline-success" id="saveContactAndNew">
+            Save &amp; New
+          </button>
+
           <button type="button" class="btn btn-success" id="saveContact">
             Save
           </button>

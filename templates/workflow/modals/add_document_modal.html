@@ -6,67 +6,74 @@
       dropdownParent: $('#addDocumentModal'),
     });
 
-    $(() => {
-      $('#submitDocumentation').click(e => {
-        e.preventDefault();
+    // show quick add modal if quick-modal to true
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('quick-modal')) {
+      $('#addDocumentModal').modal('show');
+    }
+  });
 
-        const formValue = $('#addDocumentationForm').serializeArray();
+  var saveDocumentation = (buttonId) => {
+    $(`#${buttonId}`).click(e => {
+      e.preventDefault();
 
-        const obj = {};
+      const formValue = $('#addDocumentationForm').serializeArray();
 
-        formValue.forEach(item => {
-          obj[item.name] = item.value;
-        });
+      const obj = {};
 
-        const data = { ...obj, program: $('#program').val() };
+      formValue.forEach(item => {
+        obj[item.name] = item.value;
+      });
 
-        $.ajax({
-          url: '{% url "add-documentation" %}',
-          type: 'POST',
-          data,
-          success: function(resp, status) {
-            // notify success
-            toastr.success('Documentation was added successfully', `${resp}`);
+      const data = { ...obj, program: $('#program').val() };
 
-            //close modal
-            $('#addProjectModal').modal('hide');
+      $.ajax({
+        url: '{% url "add-documentation" %}',
+        type: 'POST',
+        data,
+        success: function (resp, status) {
+          // notify success
+          toastr.success('Documentation was added successfully', `${resp}`);
 
-            // reset form
-            $('#addDocumentationForm').trigger('reset');
-            $('#program')
-              .select('val', '')
-              .trigger('change');
+          //close modal
+          $('#addProjectModal').modal('hide');
 
+          // reset form
+          $('#addDocumentationForm').trigger('reset');
+          $('#program')
+            .select('val', '')
+            .trigger('change');
+
+          $('#addDocumentModal').modal('hide');
+
+          const urlWithoutQueryString = window.location.href.split('?')[0];
+          if (buttonId === 'submitDocumentationAndNew') {
+            window.location.replace(`${urlWithoutQueryString}?quick-modal=true`);
+          } else {
             setTimeout(() => {
-              window.location.reload();
+              window.location.replace(urlWithoutQueryString);
             }, 2000);
-          },
-          error: function(xhr, status, error) {
-            toastr.error(error, 'Failed');
-          },
-        });
+          }
+        },
+        error: function (xhr, status, error) {
+          toastr.error(error, 'Failed');
+        },
       });
     });
+  }
+
+  $(() => {
+    saveDocumentation('submitDocumentationAndNew');
+    saveDocumentation('submitDocumentation');
   });
 </script>
 
 <!-- Add Document modal -->
-<div
-  class="modal fade"
-  id="addDocumentModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="addProjectModalLabel"
->
+<div class="modal fade" id="addDocumentModal" tabindex="-1" role="dialog" aria-labelledby="addProjectModalLabel">
   <div class="modal-dialog" role="form">
     <div class="modal-content">
       <div class="modal-header">
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         <h4 class="modal-title" id="addProjectModalLabel">
@@ -79,14 +86,7 @@
           {% csrf_token %}
           <div class="form-group">
             <label for="name">Name</label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              class="form-control"
-              placeholder="Name of the document"
-              required
-            />
+            <input type="text" name="name" id="name" class="form-control" placeholder="Name of the document" required />
           </div>
           <div class="form-group">
             <label for="program">Program</label>
@@ -102,14 +102,8 @@
           </div>
           <div class="form-group">
             <label for="name">URL</label>
-            <input
-              type="text"
-              name="url"
-              id="url"
-              class="form-control"
-              placeholder="e.g https://documents.example.com/files/doca.pdf"
-              required
-            />
+            <input type="text" name="url" id="url" class="form-control"
+              placeholder="e.g https://documents.example.com/files/doca.pdf" required />
           </div>
         </div>
 
@@ -117,11 +111,11 @@
           <button type="reset" class="btn btn-close" data-dismiss="modal">
             Close
           </button>
-          <button
-            type="submit"
-            class="btn btn-success"
-            id="submitDocumentation"
-          >
+
+          <button type="submit" class="btn btn-outline-success" id="submitDocumentationAndNew">
+            Save &amp; New
+          </button>
+          <button type="submit" class="btn btn-success" id="submitDocumentation">
             Save
           </button>
         </div>

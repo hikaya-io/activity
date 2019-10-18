@@ -5,10 +5,18 @@
       theme: 'bootstrap',
       dropdownParent: $('#addProjectModal'),
     });
+
+
+    // show the modal if project modal is set to true
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('project-modal')) {
+      $('#addProjectModal').modal('show');
+    }
   });
 
-  $(() => {
-    $('#submitProject').click(e => {
+
+  var saveProject = (buttonId) => {
+    $(`#${buttonId}`).click(e => {
       e.preventDefault();
 
       const formValue = $('#addProjectForm').serializeArray();
@@ -20,12 +28,11 @@
       });
 
       const data = { ...obj, program: $('#program').val() };
-
       $.ajax({
         url: '{% url "add-level2" %}',
         type: 'POST',
         data,
-        success: function(resp, status) {
+        success: function (resp, status) {
           // notify success
           toastr.success('Project was added successfully', `${resp}`);
 
@@ -38,35 +45,34 @@
             .select('val', '')
             .trigger('change');
 
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          const urlWithoutQueryString = window.location.href.split('?')[0];
+          if (buttonId === 'submitProjectAndNew') {
+            window.location.replace(`${urlWithoutQueryString}?project-modal=true`);
+          } else {
+            setTimeout(() => {
+              window.location.replace(urlWithoutQueryString);
+            }, 2000);
+          }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
           toastr.error(error, 'Failed');
         },
       });
     });
+  }
+
+  $(function () {
+    saveProject('submitProject');
+    saveProject('submitProjectAndNew');
   });
 </script>
 
 <!-- Modal -->
-<div
-  class="modal fade"
-  id="addProjectModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="addProjectModalLabel"
->
+<div class="modal fade" id="addProjectModal" tabindex="-1" role="dialog" aria-labelledby="addProjectModalLabel">
   <div class="modal-dialog" role="form">
     <div class="modal-content">
       <div class="modal-header">
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         <h4 class="modal-title" id="addProjectModalLabel">
@@ -75,20 +81,13 @@
       </div>
 
       <form id="addProjectForm" action="" method="POST">
+        {% csrf_token %}
         <div class="modal-body">
-          {% csrf_token %}
-
           <div class="form-group">
             <label for="project_name">{{request.user.activity_user.organization.level_2_label}} Name</label>
-            <input
-              type="text"
-              name="project_name"
-              required=""
-              id="id_project_name"
-              class="textinput textInput form-control"
-              maxlength="255"
-              placeholder="{{request.user.activity_user.organization.level_2_label}} Name"
-            />
+            <input type="text" name="project_name" required="" id="id_project_name"
+              class="textinput textInput form-control" maxlength="255"
+              placeholder="{{request.user.activity_user.organization.level_2_label}} Name" />
           </div>
 
           <div class="form-group">
@@ -108,7 +107,11 @@
           <button type="reset" class="btn btn-close" data-dismiss="modal">
             Close
           </button>
-          <button type="submit" class="btn btn-success" id="submitProject">
+          <button type="button" class="btn btn-outline-success" id="submitProjectAndNew">
+            Save &amp; New
+          </button>
+
+          <button type="button" class="btn btn-success" id="submitProject">
             Save
           </button>
         </div>

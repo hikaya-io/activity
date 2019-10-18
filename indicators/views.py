@@ -1924,6 +1924,9 @@ def objectives_list(request):
 
         objective.save()
 
+        if (data.get('saveObjectiveAndNew')):
+            return HttpResponseRedirect('/indicators/objectives?quick-action=true')
+
         return HttpResponseRedirect('/indicators/objectives')
 
     get_all_objectives = Objective.objects.filter(
