@@ -526,8 +526,8 @@ class CollectedData(models.Model):
     periodic_target = models.ForeignKey(
         PeriodicTarget, null=True, blank=True, help_text=" ",
         on_delete=models.SET_NULL)
-    # targeted = models.DecimalField("Targeted", max_digits=20,
-    #   decimal_places=2, default=Decimal('0.00'))
+    targeted = models.DecimalField("Targeted", max_digits=20,
+      decimal_places=2, default=Decimal('0.00'))
     achieved = models.DecimalField(
         "Achieved", max_digits=20, decimal_places=2, help_text=" ")
     disaggregation_value = models.ManyToManyField(

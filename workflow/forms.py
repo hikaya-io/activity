@@ -398,9 +398,6 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
                   "- supplying laborers, getting training, etc.",
         widget=forms.Textarea, required=False)
 
-    program2 = forms.CharField(
-        widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-
     approval = forms.ChoiceField(
         choices=APPROVALS,
         initial='in progress',
@@ -424,18 +421,12 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
 
         # override the program queryset to use request.user for country
         countries = get_country(self.request.user)
-        # self.fields['program'].queryset = Program.objects.filter(
-        #   funding_status="Funded", country__in=countries).distinct()
-        self.fields['program'].widget = forms.HiddenInput()
-        self.fields['program2'].initial = self.instance.program
-        self.fields['program2'].label = self.request.user.activity_user.organization.level_1_label
+
         self.fields['approval_submitted_by'].label = 'Originated by'
         self.fields['approved_by'].label = 'Approved by'
 
-        self.fields['approved_by'].queryset = ActivityUser.objects.filter(
-            country__in=countries).distinct()
-        self.fields['reviewed_by'].queryset = ActivityUser.objects.filter(
-            country__in=countries).distinct()
+        self.fields['approved_by'].queryset = ActivityUser.objects.filter(organization=self.request.user.activity_user.organization).distinct()
+        self.fields['reviewed_by'].queryset = ActivityUser.objects.filter(organization=self.request.user.activity_user.organization).distinct()
         self.fields['estimated_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
 
@@ -470,9 +461,7 @@ class ProjectCompleteCreateForm(forms.ModelForm):
     class Meta:
         model = ProjectComplete
         fields = '__all__'
-
-    program2 = forms.CharField(
-        widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+        
     project_agreement2 = forms.CharField(
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
@@ -505,14 +494,14 @@ class ProjectCompleteCreateForm(forms.ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         if kwargs['initial'].get('short'):
-            fieldset = Fieldset('Program', 'program2', 'program',
+            fieldset = Fieldset('Program', 'program',
                                 'project_agreement2', 'project_agreement',
                                 'activity_code', 'office', 'sector',
                                 'project_name', 'estimated_budget', 'site',
                                 'stakeholder',
                                 )
         else:
-            fieldset = Fieldset('Program', 'program2', 'program',
+            fieldset = Fieldset('Program', 'program',
                                 'project_agreement', 'project_agreement2',
                                 'activity_code', 'account_code', 'lin_code',
                                 'office', 'sector', 'project_name',
@@ -546,9 +535,6 @@ class ProjectCompleteCreateForm(forms.ModelForm):
             country__in=countries)
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
             country__in=countries)
-        self.fields['program2'].initial = kwargs['initial'].get('program')
-        self.fields['program'].widget = forms.HiddenInput()
-        self.fields['program2'].label = "Program"
         self.fields['project_agreement2'].initial = "%s - %s" % (
             kwargs['initial'].get(
                 'office'),
@@ -581,9 +567,6 @@ class ProjectCompleteForm(forms.ModelForm):
         widget=DatePicker.DateInput(), required=False)
     exchange_rate_date = forms.DateField(
         widget=DatePicker.DateInput(), required=False)
-
-    program2 = forms.CharField(
-        widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     project_agreement2 = forms.CharField(
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
@@ -616,7 +599,7 @@ class ProjectCompleteForm(forms.ModelForm):
             HTML("""<br/>"""),
             TabHolder(
                 Tab('Executive Summary',
-                    Fieldset('', 'program', 'program2', 'project_agreement',
+                    Fieldset('', 'program', 'project_agreement',
                              'project_agreement2', 'activity_code',
                              'account_code', 'lin_code', 'office', 'sector',
                              'project_name', 'project_activity',
@@ -849,8 +832,6 @@ class ProjectCompleteForm(forms.ModelForm):
         # self.fields['program'].queryset = Program.objects.filter(
         # funding_status="Funded", country__in=countries)
         self.fields['program'].widget = forms.HiddenInput()
-        self.fields['program2'].initial = self.instance.program
-        self.fields['program2'].label = "Program"
 
         # self.fields['project_agreement'].queryset =
         # ProjectAgreement.objects.filter(program__country__in = countries)
@@ -917,8 +898,6 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
     actual_end_date = forms.DateField(
         widget=DatePicker.DateInput(), required=False)
 
-    program2 = forms.CharField(
-        widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     project_agreement2 = forms.CharField(
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
@@ -951,7 +930,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
             TabHolder(
                 Tab('Executive Summary',
                     Fieldset('Program',
-                             'program', 'program2', 'project_agreement',
+                             'program', 'project_agreement',
                              'project_agreement2', 'activity_code',
                              'office', 'sector', 'project_name', 'site',
                              'stakeholder'
@@ -1160,8 +1139,6 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
         # self.fields['program'].queryset = Program.objects.filter(
         # funding_status="Funded", country__in=countries)
         self.fields['program'].widget = forms.HiddenInput()
-        self.fields['program2'].initial = self.instance.program
-        self.fields['program2'].label = "Program"
 
         # self.fields['project_agreement'].queryset =
         # ProjectAgreement.objects.filter(program__country__in = countries)

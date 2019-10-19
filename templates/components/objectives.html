@@ -11,6 +11,12 @@
       dropdownParent: $('#addObjectiveModal'),
     });
     $('#objectivesTable').DataTable();
+
+    // show quick add modal if quick-modal to true
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('quick-action')) {
+      $('#addObjectiveModal').modal('show');
+    }
   });
 </script>
 
@@ -38,11 +44,7 @@
             <i class="fa fa-list"></i> List
           </a>
 
-          <a
-            role="button"
-            class="btn btn-sm btn-default"
-            href="{% url 'objectives-tree' %}"
-          >
+          <a role="button" class="btn btn-sm btn-default" href="{% url 'objectives-tree' %}">
             <i class="fa fa-sitemap"></i> Tree
           </a>
         </div>
@@ -50,12 +52,8 @@
 
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="">
-          <button
-            class="btn btn-sm btn-primary"
-            data-toggle="modal"
-            data-target="#addObjectiveModal"
-          >
-           <i class="fa fa-plus"></i> Objective
+          <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addObjectiveModal">
+            <i class="fa fa-plus"></i> Objective
           </button>
         </div>
       </div>
@@ -74,9 +72,8 @@
     <tbody>
       {% for objective in get_all_objectives %}
       <tr>
-        <td><a href="/indicators/objectives/edit/{{objective.id}}/" 
-          data-toggle="tooltip" 
-          title="{{ objective.name }}">{{ objective.name | truncatechars:50 }}</a></td>
+        <td><a href="/indicators/objectives/edit/{{objective.id}}/" data-toggle="tooltip"
+            title="{{ objective.name }}">{{ objective.name | truncatechars:50 }}</a></td>
         <td>{{ objective.parent }}</td>
         <td>{{ objective.create_date | date }}</td>
         <td class="text-right">
@@ -85,28 +82,19 @@
             <button type="button" class="btn btn-sm btn-default disabled">
               More
             </button>
-            <button
-              type="button"
-              class="btn btn-default btn-sm dropdown-toggle"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <ul class="dropdown-menu">
               <li class="text-danger"><a href="/indicators/objectives/edit/{{objective.id}}/">Edit</a></li>
               <li>
-                  <a
-									href="#deleteObjectiveModal{{ objective.id }}"
-									data-toggle="modal"
-									onclick="setItemToDelete({{ objective.id }})"
-                  data-target="#deleteObjectiveModal{{ objective.id }}"
-                  class="text-danger"
-								>
-									Delete
-								</a>
+                <a href="#deleteObjectiveModal{{ objective.id }}" data-toggle="modal"
+                  onclick="setItemToDelete({{ objective.id }})" data-target="#deleteObjectiveModal{{ objective.id }}"
+                  class="text-danger">
+                  Delete
+                </a>
               </li>
             </ul>
           </div>
@@ -118,93 +106,5 @@
   </table>
 </div>
 
-<!-- Modal -->
-<div
-  class="modal fade"
-  id="addObjectiveModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="addProgramModalLabel"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title" id="addProgramModalLabel">Add Objective</h4>
-      </div>
-      <form id="addObjectiveForm" action="" method="POST">
-        <div class="modal-body">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="objectiveName">Objective Name*</label>
-            <input
-              type="text"
-              id="objectiveName"
-              name="objective_name"
-              class="form-control"
-              placeholder="Objective"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="parentObjective">Parent Objective</label>
-            <select
-              id="parentObjective"
-              class="form-control"
-              name="parent_objective"
-              style="width: 100%; height: 34px;"
-            >
-              <option value=""></option>
-              {% for objective in get_all_objectives %}
-              <option value="{{ objective.id }}">{{ objective.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="program">Program*</label>
-            <select class="form-control" id="program" name="program" required>
-              <option value=""></option>
-              {% for item in get_programs %} {% if item.name %}
-              <option value="{{ item.id }} ">
-                {{ item.name | truncatechars:50 }}
-              </option>
-              {% endif %}{% endfor %}
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="objectiveDescription">Description</label>
-            <textarea
-              name="description"
-              id="objectiveDescription"
-              rows="5"
-              class="form-control"
-            ></textarea>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-close"
-            data-dismiss="modal"
-          >
-            Close
-          </button>
-          <button type="submit" class="btn btn-success" id="saveObjective">
-            Save
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
+{% include './modals/add_objective_modal.html' %}
 {% endblock content %}

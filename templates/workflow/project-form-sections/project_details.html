@@ -10,7 +10,7 @@
     </div>
 
     <div class="col-md-6">
-        {{ form.program2 | as_crispy_field }}
+        {{ form.program | as_crispy_field }}
     </div>
 
 </div>
@@ -31,6 +31,7 @@
 
 <script>
     $(document).ready(() => {
-        $('#id_sector').select2({ theme: 'bootstrap' })
+        $('#id_sector').select2({ theme: 'bootstrap' });
+        $('#id_program').select2({ theme: 'bootstrap' })
     })
 </script>

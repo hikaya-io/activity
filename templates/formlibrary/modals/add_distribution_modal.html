@@ -7,10 +7,16 @@
       placeholder:
         'Select {{request.user.activity_user.organization.level_1_label }}',
     });
+
+    // show quick add modal if quick-modal to true
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('quick-modal')) {
+      $('#addDistributionModal').modal('show');
+    }
   });
 
-  $(function() {
-    $('#saveDistributionBtn').click(function(e) {
+  var saveDistribution = (buttonId) => {
+    $(`#${buttonId}`).click(function (e) {
       const formValue = $('#addDistributionForm').serializeArray();
 
       const obj = {};
@@ -23,7 +29,7 @@
         url: '{% url "add_distribution" %}',
         type: 'POST',
         data: obj,
-        success: function(resp, status) {
+        success: function (resp, status) {
           // notify success
           toastr.success(
             'Distribution record was added successfully',
@@ -36,37 +42,37 @@
           // reset form
           $('#addDistributionForm').trigger('reset');
 
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          const urlWithoutQueryString = window.location.href.split('?')[0];
+          if (buttonId === 'saveDistributionAndNewBtn') {
+            window.location.replace(`${urlWithoutQueryString}?quick-modal=true`);
+          } else {
+            setTimeout(() => {
+              window.location.replace(urlWithoutQueryString);
+            }, 2000);
+          }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
           toastr.error(error, 'Failed');
         },
       });
     });
+  }
+
+  $(function () {
+    saveDistribution('saveDistributionBtn');
+    saveDistribution('saveDistributionAndNewBtn');
   });
 </script>
 
 <!-- Modal -->
-<div
-  class="modal fade"
-  id="addDistributionModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="addDistributionModalLabel"
->
+<div class="modal fade" id="addDistributionModal" tabindex="-1" role="dialog"
+  aria-labelledby="addDistributionModalLabel">
   <div class="modal-dialog" role="form">
     <div class="modal-content">
       <form id="addDistributionForm">
         {% csrf_token %}
         <div class="modal-header">
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <h4 class="modal-title" id="addDistributionModalLabel">
@@ -88,42 +94,24 @@
 
           <div class="form-group">
             <label for="distributionName">Name</label>
-            <input
-              type="text"
-              id="distributionName"
-              name="distribution_name"
-              class="form-control"
-              placeholder="Name of the distribution"
-              autocomplete="off"
-            />
+            <input type="text" id="distributionName" name="distribution_name" class="form-control"
+              placeholder="Name of the distribution" autocomplete="off" />
           </div>
 
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="distributionStart">Start Date</label>
-                <input
-                  type="text"
-                  name="start_date"
-                  id="distributionStart"
-                  class="form-control"
-                  placeholder="Start Date"
-                  autocomplete="off"
-                />
+                <input type="text" name="start_date" id="distributionStart" class="form-control"
+                  placeholder="Start Date" autocomplete="off" />
               </div>
             </div>
 
             <div class="col-md-6">
               <div class="form-group">
                 <label for="distributionEnd">End Date</label>
-                <input
-                  type="text"
-                  name="end_date"
-                  id="distributionEnd"
-                  class="form-control"
-                  placeholder="End Date"
-                  autocomplete="off"
-                />
+                <input type="text" name="end_date" id="distributionEnd" class="form-control" placeholder="End Date"
+                  autocomplete="off" />
               </div>
             </div>
           </div>
@@ -132,11 +120,11 @@
           <button type="button" class="btn btn-close" data-dismiss="modal">
             Close
           </button>
-          <button
-            type="button"
-            class="btn btn-success"
-            id="saveDistributionBtn"
-          >
+          <button type="button" class="btn btn-outline-success" id="saveDistributionAndNewBtn">
+            Save &amp; New
+          </button>
+
+          <button type="button" class="btn btn-success" id="saveDistributionBtn">
             Save
           </button>
         </div>
