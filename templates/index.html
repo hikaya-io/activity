@@ -318,7 +318,7 @@
                 href="/workflow/stakeholder_list/{{ selected_program.id }}/0/"
               >
                 <p class="box-info-label">{{ user.activity_user.organization.stakeholder_label }}</p>
-                <p class="box-info-number">{{ get_stakeholders_count }}</p>
+                <p class="box-info-number">{{ get_stakeholders_count.length }}</p>
                 <p class="box-info-text">
                   with {{ get_contacts_count }} contacts
                 </p>
@@ -326,10 +326,13 @@
               {% else %}
               <a class="box box-info" href="/workflow/stakeholder_list/0/0/">
                 <p class="box-info-label">{{ user.activity_user.organization.stakeholder_label }}</p>
-                <p class="box-info-number">{{ get_stakeholders_count }}</p>
+                <p class="box-info-number">{{ get_stakeholders_count.count }}</p>
                 <p class="box-info-text">
                   with {{ get_contacts_count }} contacts
                 </p>
+                {% for x in get_stakeholders_count %}
+                <p>{{x.id}}</p>
+                {% endfor %}
               </a>
               {% endif %}
             </div>
