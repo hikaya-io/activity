@@ -727,7 +727,7 @@ def update_user_access(request, pk, status):
     if user_grp is None:
         activity_user = ActivityUser.objects.get(pk=int(pk))
         group = Group.objects.filter(name='Editor').first()
-        ActivityUserOrganizationGroup.objects.create(
+        user_grp = ActivityUserOrganizationGroup.objects.create(
             activity_user=activity_user,
             organization=activity_user.organization, group=group)
 
