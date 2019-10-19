@@ -96,15 +96,15 @@
 							<ul class="dropdown-menu">
 								{% if user.user.is_active and not user.user.is_superuser %}
 								{% ifnotequal user|get_group_name 'Owner'%}
-								<li><a href="/accounts/admin/user/updatestatus/{{user.user.id}}/Owner/">Change to
+								<li><a href="/accounts/admin/user/updatestatus/{{user.id}}/Owner/">Change to
 										Owner</a></li>
 								{% endifnotequal %}
 								{% ifnotequal user|get_group_name 'Editor'%}
-								<li><a href="/accounts/admin/user/updatestatus/{{user.user.id}}/Editor/">Change to
+								<li><a href="/accounts/admin/user/updatestatus/{{user.id}}/Editor/">Change to
 										Editor</a> </li>
 								{% endifnotequal %}
 								{% ifnotequal user|get_group_name 'Viewer'%}
-								<li><a href="/accounts/admin/user/updatestatus/{{user.user.id}}/Viewer/">Change to
+								<li><a href="/accounts/admin/user/updatestatus/{{user.id}}/Viewer/">Change to
 										Viewer</a></li>
 								{% endifnotequal %}
 								{% else %}

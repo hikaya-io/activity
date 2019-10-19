@@ -709,31 +709,34 @@ def update_user_access(request, pk, status):
     :param pk:
     :param status:
     """
-    user_grp = ActivityUserOrganizationGroup.objects.get(activity_user_id=int(pk))
-    if status == 'activate':
-        user_grp.is_active = True
-        user_grp.save()
+    user_grp = ActivityUserOrganizationGroup.objects.filter(activity_user__id=int(pk)).first()
+    if user_grp is not None:
+        if status == 'activate':
+            user_grp.is_active = True
+            user_grp.save()
 
-    elif status == 'deactivate':
-        user_grp.is_active = False
-        user_grp.save()
+        elif status == 'deactivate':
+            user_grp.is_active = False
+            user_grp.save()
 
-    else:
-        new_gp = Group.objects.get(name=status)
-        activity_user = ActivityUser.objects.get(pk=int(pk))
-        user_org_access = ActivityUserOrganizationGroup.objects.filter(
-            activity_user_id=activity_user.id,
-            organization_id=activity_user.organization.id).first()
-        if user_org_access:
-            user_org_access.group = new_gp
-            user_org_access.save()
         else:
-            ActivityUserOrganizationGroup.objects.create(
-                activity_user=activity_user,
-                organization=activity_user.organization,
-                group=new_gp)
+            new_gp = Group.objects.get(name=status)
+            activity_user = ActivityUser.objects.get(pk=int(pk))
+            user_org_access = ActivityUserOrganizationGroup.objects.filter(
+                activity_user_id=activity_user.id,
+                organization_id=activity_user.organization.id).first()
+            if user_org_access:
+                user_org_access.group = new_gp
+                user_org_access.save()
+            else:
+                ActivityUserOrganizationGroup.objects.create(
+                    activity_user=activity_user,
+                    organization=activity_user.organization,
+                    group=new_gp)
 
-    return redirect('/accounts/admin/users/all/all/')
+        return redirect('/accounts/admin/users/all/all/')
+    else:
+        pass
 
 
 @login_required(login_url='/accounts/login/')
