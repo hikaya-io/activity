@@ -729,7 +729,9 @@ def update_user_access(request, pk, status):
         group = Group.objects.filter(name='Editor').first()
         user_grp = ActivityUserOrganizationGroup.objects.create(
             activity_user=activity_user,
-            organization=activity_user.organization, group=group)
+            organization=request.user.activity_user.organization,
+            group=group
+        )
 
     if status == 'activate':
         user_grp.is_active = True
@@ -744,7 +746,7 @@ def update_user_access(request, pk, status):
         activity_user = ActivityUser.objects.get(pk=int(pk))
         user_org_access = ActivityUserOrganizationGroup.objects.filter(
             activity_user_id=activity_user.id,
-            organization_id=activity_user.organization.id).first()
+            organization_id=request.user.activity_user.organization.id).first()
         user_org_access.group = new_gp
         user_org_access.save()
 
