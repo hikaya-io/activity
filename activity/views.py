@@ -383,6 +383,13 @@ def user_login(request):
         username = data.get('username')
         password = data.get('password')
 
+        is_user_active = User.objects.filter(username=username).first()
+        if is_user_active:
+            if not is_user_active.is_active:
+                print('Called')
+                messages.error(request, 'Please verify your email address then try again.', fail_silently=True)
+                return render(request, 'registration/login.html')
+
         user = authenticate(username=username, password=password)
 
         if user is not None:
