@@ -73,7 +73,7 @@ def index(request, program_id=0):
             organizations__id__in=[request.user.activity_user.organization.id])
 
         get_stakeholders_count = Stakeholder.objects.filter(
-            organization=request.user.activity_user.organization).distinct()
+            organization=request.user.activity_user.organization).distinct().count()
 
         get_contacts_count = Contact.objects.filter(
             organization=request.user.activity_user.organization).count()
@@ -117,7 +117,7 @@ def index(request, program_id=0):
             organizations__id__in=[selected_program.organization.id])
 
         get_stakeholders_count = Stakeholder.objects.filter(
-            program__id=selected_program.id).distinct()
+            program__id=selected_program.id).distinct().count()
 
         get_contacts_count = Contact.objects.filter(
             organization=selected_program.organization).count()
