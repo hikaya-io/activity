@@ -613,21 +613,21 @@ def admin_user_management(request, role, status):
         group = Group.objects.get(id=int(role))
 
         get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
-            organization_id=request.user.activity_user.organization.id,
-            group_id=group.id
-        ).values_list('activity_user__user__id')
+            organization__id=request.user.activity_user.organization.id,
+            group__id=group.id
+        ).values_list('activity_user__id')
 
         users = users.filter(
-            user__id__in=get_org_users_by_roles
-        ).exclude(user__is_superuser=True)
+            id__in=get_org_users_by_roles
+        )
 
     if status != 'all':
         status = True if status == 'active' else False
         get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
-            organization_id=request.user.activity_user.organization.id,
+            organization__id=request.user.activity_user.organization.id,
             is_active=status
-        ).values_list('activity_user__user__id')
-        users = users.filter(user__activity_user__id__in=get_org_users_by_roles)
+        ).values_list('activity_user__id')
+        users = users.filter(id__in=get_org_users_by_roles)
 
     return render(request, 'admin/user_management.html', {
         'nav_links': nav_links,
@@ -724,29 +724,29 @@ def update_user_access(request, pk, status):
     user_grp = ActivityUserOrganizationGroup.objects.filter(
         activity_user__id=int(pk),
         organization_id=request.user.activity_user.organization.id).first()
-    if user_grp is not None:
-        if status == 'activate':
-            user_grp.is_active = True
-            user_grp.save()
+    if user_grp is None:
+        activity_user = ActivityUser.objects.get(pk=int(pk))
+        group = Group.objects.filter(name='Editor').first()
+        ActivityUserOrganizationGroup.objects.create(
+            activity_user=activity_user,
+            organization=activity_user.organization, group=group)
 
-        elif status == 'deactivate':
-            user_grp.is_active = False
-            user_grp.save()
+    if status == 'activate':
+        user_grp.is_active = True
+        user_grp.save()
 
-        else:
-            new_gp = Group.objects.get(name=status)
-            activity_user = ActivityUser.objects.get(pk=int(pk))
-            user_org_access = ActivityUserOrganizationGroup.objects.filter(
-                activity_user_id=activity_user.id,
-                organization_id=activity_user.organization.id).first()
-            if user_org_access:
-                user_org_access.group = new_gp
-                user_org_access.save()
-            else:
-                ActivityUserOrganizationGroup.objects.create(
-                    activity_user=activity_user,
-                    organization=activity_user.organization,
-                    group=new_gp)
+    elif status == 'deactivate':
+        user_grp.is_active = False
+        user_grp.save()
+
+    else:
+        new_gp = Group.objects.get(name=status)
+        activity_user = ActivityUser.objects.get(pk=int(pk))
+        user_org_access = ActivityUserOrganizationGroup.objects.filter(
+            activity_user_id=activity_user.id,
+            organization_id=activity_user.organization.id).first()
+        user_org_access.group = new_gp
+        user_org_access.save()
 
     return redirect('/accounts/admin/users/all/all/')
 
