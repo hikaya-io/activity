@@ -116,10 +116,10 @@
 								<li class="text-danger">
 									<a href="/accounts/admin/user/edit/{{user.id}}/">Edit</a>
 								</li>
-								{% if user|enabled_in_org:user.organization.id %}
+								{% if user|enabled_in_org:request.user.activity_user.organization.id %}
 									{% if user.user == request.user %}
 										<li class="disabled">
-											<a href="" class="text-danger">Deativate account</a>
+											<a href="" class="text-danger">Deactivate account</a>
 										</li>
 									{% else %}
 										<li>
