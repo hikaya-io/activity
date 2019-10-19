@@ -383,13 +383,18 @@ def user_login(request):
         username = data.get('username')
         password = data.get('password')
 
+        # check if user is active
         is_user_active = User.objects.filter(username=username).first()
         if is_user_active:
             if not is_user_active.is_active:
-                print('Called')
-                messages.error(request, 'Please verify your email address then try again.', fail_silently=True)
+                messages.error(
+                    request,
+                    'Please verify your email address then try again.',
+                    fail_silently=True
+                )
                 return render(request, 'registration/login.html')
 
+        # proceed to authenticate the user
         user = authenticate(username=username, password=password)
 
         if user is not None:
@@ -716,7 +721,9 @@ def update_user_access(request, pk, status):
     :param pk:
     :param status:
     """
-    user_grp = ActivityUserOrganizationGroup.objects.filter(activity_user__id=int(pk)).first()
+    user_grp = ActivityUserOrganizationGroup.objects.filter(
+        activity_user__id=int(pk),
+        organization_id=request.user.activity_user.organization.id).first()
     if user_grp is not None:
         if status == 'activate':
             user_grp.is_active = True
@@ -741,9 +748,7 @@ def update_user_access(request, pk, status):
                     organization=activity_user.organization,
                     group=new_gp)
 
-        return redirect('/accounts/admin/users/all/all/')
-    else:
-        pass
+    return redirect('/accounts/admin/users/all/all/')
 
 
 @login_required(login_url='/accounts/login/')
