@@ -17,7 +17,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
         <h4 class="modal-title" id="inviteUserLabel">
-          Invite User(s)
+          Invite people
         </h4>
       </div>
 
@@ -26,7 +26,7 @@
           {% csrf_token %}
 
           <div class="form-group">
-            <label for="project_name">User Email(s)</label>
+            <label for="project_name">Email Address</label>
             <select
               class="form-control"
               id="id_user_email_list"
@@ -38,7 +38,7 @@
               <option value=""></option>
             </select>
             <span id="emailsHelpBlock" class="help-block">
-              Click on 'ENTER' once you are done typing an email address
+              Multiple email addresses can be added. To save, click ‘ENTER’ once you are done typing an email address.
             </span>
           </div>
 
