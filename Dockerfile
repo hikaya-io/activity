@@ -1,28 +1,29 @@
-# Pull base image
-FROM python:3.7-alpine
+#official base image
+FROM python:3.8.0-alpine
 
-RUN apk --update --upgrade add gcc musl-dev jpeg-dev zlib-dev libffi-dev cairo-dev pango-dev gdk-pixbuf
+# set work directory
+WORKDIR /root/Downloads/django-on-docker/activity_ce
 
-# make psycopg2-binary install on alpine
-RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 
-# Set environment varibles
+# set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Set environment variables
-ENV ACTIVITY_CE_DB_ENGINE=django.db.backends.postgresql
-ENV ACTIVITY_CE_DB_NAME=postgres
-ENV ACTIVITY_CE_DB_USER=postgres
-ENV ACTIVITY_CE_DB_HOST=db
-ENV ACTIVITY_CE_DB_PORT=5432
+RUN apk --update --upgrade add gcc musl-dev  jpeg-dev zlib-dev libffi-dev cairo-dev pango-dev gdk-pixbuf 	 
 
-# Set work directory
-WORKDIR /code
+# install psycopg2 dependencies
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev
 
-# Install dependencies
-ADD requirements.txt /code/
+
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt /root/Downloads/django-on-docker/activity_ce/requirements.txt
 RUN pip install -r requirements.txt
 
-# Copy project
-COPY . /code/
+COPY ./entrypoint.sh /root/Downloads/django-on-docker/activity_ce/entrypoint.sh
+
+# copy project
+COPY . /root/Downloads/django-on-docker/activity_ce
+
+ENTRYPOINT ["/root/Downloads/django-on-docker/activity_ce/entrypoint.sh"]
