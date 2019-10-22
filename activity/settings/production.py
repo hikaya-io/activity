@@ -58,13 +58,20 @@ SERVER_EMAIL = EMAIL_HOST_USER
 '''DATABASE CONFIGURATION'''
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+      '''  'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('ACTIVITY_CE_DB_NAME', ''),
         'USER': os.environ.get('ACTIVITY_CE_DB_USER', ''),
         'PASSWORD': os.environ.get('ACTIVITY_CE_DB_PASSWORD', ''),
         'HOST': os.environ.get('ACTIVITY_CE_DB_HOST', ''),
-        'PORT': os.environ.get('ACTIVITY_CE_DB_PORT', ''),
-    }
+        'PORT': os.environ.get('ACTIVITY_CE_DB_PORT', ''),  '''
+      
+        'ENGINE': "django.db.backends.sqlite3",
+        'NAME': "db",
+        'USER': "postgres",
+        'PASSWORD': 'postgres',
+        'HOST': '', # default localhost
+        'PORT': '5432', # 5432 - for postgres
+    },
 }
 '''END DATABASE CONFIGURATION'''
 
