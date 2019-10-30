@@ -413,8 +413,6 @@ $(document).ready(function() {
         $('.collapse').removeClass('in');
         $(location.hash + '.collapse').collapse('show');
         indicator_id = location.hash.split('-')
-        console.log(indicator_id)
-        //loadIndicators(indicator_id[1])
     }
 });
 

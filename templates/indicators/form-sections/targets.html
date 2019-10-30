@@ -1,36 +1,177 @@
 {% load crispy_forms_tags %}
 
 <div class="row">
-    <div class="col-md-6">
-        {{ form.unit_of_measure | as_crispy_field }}
-    </div>
+  <div class="col-md-6">
+    {{ form.unit_of_measure | as_crispy_field }}
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6">
-        {{ form.lop_target | as_crispy_field }}
-    </div>
+  <div class="col-md-6">
+    {{ form.lop_target | as_crispy_field }}
+  </div>
 
-    <div class="col-md-6">
-        {{ form.baseline | as_crispy_field }}
-    </div>
+  <div class="col-md-6">
+    {{ form.baseline | as_crispy_field }}
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-md-12">
-        {{ form.rationale_for_target | as_crispy_field }}
+  <div class="col-md-12">
+    {{ form.rationale_for_target | as_crispy_field }}
+  </div>
+
+  <div class="col-md-6">
+    {{ form.target_frequency | as_crispy_field }}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12" id="quarterlyTargets">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-6">
+            {{ form.target_frequency_start | as_crispy_field }}
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="numberOfTargetPeriods"
+                >Number of Target Periods*</label
+              >
+              <input
+                class="form-control"
+                type="number"
+                name="numberOfTargetPeriods"
+                id="numberOfTargetPeriods"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="col-md-12">
-        {{ form.target_frequency | as_crispy_field }}
+    <div class="form-group">
+      <button type="button" class="btn btn-warning" id="addTargetsBtn">
+        Add Targets
+      </button>
+      <button type="button" class="btn btn-link btn-link-warning">
+        Remove all targets
+      </button>
     </div>
+  </div>
+
+  <div class="col-md-6" id="quaterlyTargets"></div>
 </div>
 
 <script>
-    $(document).ready(() => {
-        $('#id_rationale_for_target').attr('rows', 3);
-        $('#id_target_frequency').select2({
-            theme: 'bootstrap',
-        })
-    })
+  $(document).ready(() => {
+    $("#id_rationale_for_target").attr("rows", 3);
+    $("#id_target_frequency").select2({
+      theme: "bootstrap"
+    });
+
+    $("#id_target_frequency_start")
+      .datepicker({
+        dateFormat: "MM yy",
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+
+        onClose: function(dateText, inst) {
+          var month = $(
+            "#ui-datepicker-div .ui-datepicker-month :selected"
+          ).val();
+          var year = $(
+            "#ui-datepicker-div .ui-datepicker-year :selected"
+          ).val();
+          $(this).val(
+            $.datepicker.formatDate("M d, yy", new Date(year, month, 1))
+          );
+        }
+      })
+      .focus(function() {
+        $(".ui-datepicker-calendar").hide();
+        $("#ui-datepicker-div").position({
+          my: "right top",
+          at: "right bottom",
+          of: $(this)
+        });
+      })
+      .attr("autocomplete", "off");
+  });
+
+  $(() => {
+    $("#id_target_frequency").on("select2:select", e => {
+      switch ($("#id_target_frequency").val()) {
+        case 6: {
+          break;
+        }
+
+        default:
+          break;
+      }
+    });
+
+    // add target fields when the #addTargetsBtn is clicked
+    $("#addTargetsBtn").click(() => {
+      let numberOfTargets = $("#numberOfTargetPeriods").val();
+      let periodStarts = new Date($("#id_target_frequency_start").val());
+      let table = $("<table>").addClass("table");
+      let tbody = $("<tbody>");
+
+      for (let i = 1; i <= numberOfTargets; i++) {
+        let row = $("<tr>");
+        let label = $("<th>").text(`Quarter ${i}`);
+        let year = periodStarts.getFullYear();
+        let month = periodStarts.getMonth();
+        let dateSpan = $("<small>").text(
+          `${new Date(year, month, 1).toJSON().slice(0, 10)} to ${new Date(
+            year,
+            month + 1,
+            0
+          )
+            .toJSON()
+            .slice(0, 10)}`
+        );
+        label.append("<br>", dateSpan);
+
+        let input = $("<input>")
+          .addClass("form-control")
+          .attr("type", "number");
+        let value = $("<td>").append(input);
+
+        let removeTarget = $("<td>").addClass("text-danger");
+        if (i == numberOfTargets) {
+          console.log("Logged target");
+          removeTarget.append($("<i>").addClass("fa fa-close"));
+        }
+
+        row.append(label, value, removeTarget);
+
+        tbody.append(row);
+
+        periodStarts = new Date(year, month + 1, 1);
+      }
+
+      tbody.append(
+        $("<tr>").append(
+          $("<th>").text("Sum of Targets"),
+          $("<th>").text(0),
+          $("<td>")
+        ),
+
+        $("<tr>").append(
+          $("<th>").text("Life of Program (LoP) target"),
+          $("<th>").text(1000),
+          $("<td>")
+        )
+      );
+
+      table.append(tbody);
+
+      $("#quaterlyTargets").append(table);
+    });
+  });
 </script>
