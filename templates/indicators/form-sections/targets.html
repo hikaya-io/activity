@@ -182,7 +182,8 @@
 
         let input = $("<input>")
           .addClass("form-control")
-          .attr({ type: "number", id: `id_target_${i}` }).keyup(updateSum)
+          .attr({ type: "number", id: `id_target_${i}` })
+          .keyup(updateSum);
         let value = $("<td>").append(input);
 
         let removeTarget = $("<td>").addClass("text-danger");
@@ -211,7 +212,9 @@
       tbody.append(
         $("<tr>").append(
           $("<th>").text("Sum of Targets"),
-          $("<th>").attr("id", "sumOfTargets").text(0),
+          $("<th>")
+            .attr("id", "sumOfTargets")
+            .text(0),
           $("<td>")
         ),
 
