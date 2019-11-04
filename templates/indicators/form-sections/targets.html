@@ -1,5 +1,6 @@
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags %} {% load static %}
 
+<script src="{% static 'js/moment.js' %}"></script>
 <div class="row">
   <div class="col-md-6">
     {{ form.unit_of_measure | as_crispy_field }}
@@ -27,11 +28,12 @@
 </div>
 
 <div class="row">
-  <div class="col-md-12" id="quarterlyTargets">
+  <!-- quaterly targets setup -->
+  <div class="col-md-12">
     <div class="row">
       <div class="col-md-6">
-        <div class="row">
-          <div class="col-md-6">
+        <div class="row" id="frequencyMetadata">
+          <div class="col-md-6" id="i">
             {{ form.target_frequency_start | as_crispy_field }}
           </div>
 
@@ -52,13 +54,21 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <button type="button" class="btn btn-warning" id="addTargetsBtn">
-        Add Targets
-      </button>
-      <button type="button" class="btn btn-link btn-link-warning">
-        Remove all targets
-      </button>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group text-right">
+          <button
+            type="button"
+            class="btn btn-link btn-link-warning"
+            id="clearTargets"
+          >
+            Remove all targets
+          </button>
+          <button type="button" class="btn btn-warning" id="addTargetsBtn">
+            Add Targets
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -100,6 +110,8 @@
         });
       })
       .attr("autocomplete", "off");
+
+    $("#clearTargets").hide();
   });
 
   $(() => {
@@ -114,26 +126,48 @@
       }
     });
 
+    $("#clearTargets").click(() => {
+      // remove the table
+      $("#targetsTable").remove();
+
+      // show frequency metadata
+      $("#frequencyMetadata").show();
+
+      // enable the button
+      $("#addTargetsBtn").removeClass("disabled");
+
+      $("#clearTargets").hide();
+    });
+
     // add target fields when the #addTargetsBtn is clicked
     $("#addTargetsBtn").click(() => {
+      // hide the #frequencyMetadata
+      $("#frequencyMetadata").hide();
+
+      // disable create targets button
+      $("#addTargetsBtn").addClass("disabled");
+
       let numberOfTargets = $("#numberOfTargetPeriods").val();
-      let periodStarts = new Date($("#id_target_frequency_start").val());
-      let table = $("<table>").addClass("table");
+      let periodStarts = moment($("#id_target_frequency_start").val()).startOf(
+        "month"
+      );
+      let table = $("<table>")
+        .attr("id", "targetsTable")
+        .addClass("table table-hover");
       let tbody = $("<tbody>");
 
       for (let i = 1; i <= numberOfTargets; i++) {
         let row = $("<tr>");
         let label = $("<th>").text(`Quarter ${i}`);
-        let year = periodStarts.getFullYear();
-        let month = periodStarts.getMonth();
+        let periodEnds = moment(periodStarts)
+          .subtract(1, "months")
+          .add(1, "quarters");
         let dateSpan = $("<small>").text(
-          `${new Date(year, month, 1).toJSON().slice(0, 10)} to ${new Date(
-            year,
-            month + 1,
-            0
-          )
-            .toJSON()
-            .slice(0, 10)}`
+          `${moment(periodStarts)
+            .startOf("month")
+            .format("MMM DD, YYYY")} - ${moment(periodEnds)
+            .endOf("month")
+            .format("MMM DD, YYYY")}`
         );
         label.append("<br>", dateSpan);
 
@@ -144,15 +178,25 @@
 
         let removeTarget = $("<td>").addClass("text-danger");
         if (i == numberOfTargets) {
-          console.log("Logged target");
-          removeTarget.append($("<i>").addClass("fa fa-close"));
+          // row.attr("id", "lastRowElement");
+          // removeTarget.append(
+          //   $("<button>")
+          //     .attr({ id: "lastTargetColumn", type: "button" })
+          //     .addClass("btn text-danger")
+          //     .append($("<i>").addClass("fa fa-close"))
+          //     .click(() => {
+          //       $("#lastRowElement").remove();
+          //     })
+          // );
         }
 
         row.append(label, value, removeTarget);
 
         tbody.append(row);
 
-        periodStarts = new Date(year, month + 1, 1);
+        periodStarts = moment(periodEnds).add(1, "months");
+
+        $("#clearTargets").show();
       }
 
       tbody.append(

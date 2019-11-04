@@ -1012,6 +1012,11 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   border-bottom: none !important;
 }
 
-.expanded tbody:last-child>tr:last-child {
+.expanded tbody:last-child > tr:last-child {
   border-bottom: 1px solid #dddddd;
+}
+
+.disabled {
+  cursor: not-allowed;
+  pointer-events: none;
 }
