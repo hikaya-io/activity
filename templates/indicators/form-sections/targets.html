@@ -139,6 +139,15 @@
       $("#clearTargets").hide();
     });
 
+    function updateSum(e) {
+      let sum = 0;
+      for (i = 1; i <= $("#numberOfTargetPeriods").val(); i++) {
+        sum += +$(`#id_target_${i}`).val();
+      }
+
+      $("#sumOfTargets").text(sum);
+    }
+
     // add target fields when the #addTargetsBtn is clicked
     $("#addTargetsBtn").click(() => {
       // hide the #frequencyMetadata
@@ -173,7 +182,7 @@
 
         let input = $("<input>")
           .addClass("form-control")
-          .attr("type", "number");
+          .attr({ type: "number", id: `id_target_${i}` }).keyup(updateSum)
         let value = $("<td>").append(input);
 
         let removeTarget = $("<td>").addClass("text-danger");
@@ -202,7 +211,7 @@
       tbody.append(
         $("<tr>").append(
           $("<th>").text("Sum of Targets"),
-          $("<th>").text(0),
+          $("<th>").attr("id", "sumOfTargets").text(0),
           $("<td>")
         ),
 
