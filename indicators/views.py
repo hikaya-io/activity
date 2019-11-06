@@ -524,22 +524,24 @@ class IndicatorUpdate(UpdateView):
 
     def form_valid(self, form, **kwargs):
         data = self.request.POST
-        print("Object", data.get("periodic_targets_object", None))
 
-        periodic_targets = self.request.POST.getlist(
-            'periodic_targets[]', None)
+        periodic_targets_object = json.loads(
+            data.get("periodic_targets_object", None))
 
-        start_date = data.get('target_frequency_start', None)
+        indicator = Indicator.objects.get(pk=self.kwargs.get('pk'))
 
-        print(periodic_targets)
+        for target in periodic_targets_object:
+            periodic_target = PeriodicTarget(indicator=indicator, start_date=datetime.strptime(
+                target['start'], "%b %d, %Y").date(), end_date=datetime.strptime(
+                target['end'], "%b %d, %Y").date(), target=target['value'], period=target['period'])
 
-        periodic_target_object = {}
+            periodic_target.save()
+
         # generate the target periods and assign the values
         # for periodic_target_value in periodic_targets:
 
-        indicatr = Indicator.objects.get(pk=self.kwargs.get('pk'))
         generated_targets = []
-        existing_target_frequency = indicatr.target_frequency
+        existing_target_frequency = indicator.target_frequency
         new_target_frequency = form.cleaned_data.get('target_frequency', None)
         lop = form.cleaned_data.get('lop_target', None)
 
@@ -554,7 +556,7 @@ class IndicatorUpdate(UpdateView):
         self.object = form.save()
         # periodic_targets = PeriodicTarget.objects.filter(indicator=indicatr)\
         #     .order_by('customsort','create_date', 'period')
-        periodic_targets = PeriodicTarget.objects.filter(indicator=indicatr)\
+        periodic_targets = PeriodicTarget.objects.filter(indicator=indicator)\
             .annotate(num_data=Count('collecteddata'))\
             .order_by('customsort', 'create_date', 'period')
 

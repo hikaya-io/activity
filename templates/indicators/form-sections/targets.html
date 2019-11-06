@@ -82,7 +82,9 @@
 </div>
 
 <script>
+  // for storing the generated periods
   var periods = [];
+
   $(document).ready(() => {
     $("#id_rationale_for_target").attr("rows", 3);
     $("#id_target_frequency").select2({
@@ -156,6 +158,9 @@
       $("#addTargetsBtn").removeClass("disabled");
 
       $("#clearTargets").hide();
+
+      // reset the periods
+      periods = [];
     });
 
     function updateSum() {
@@ -194,7 +199,8 @@
 
       for (let i = 1; i <= numberOfTargets; i++) {
         let row = $("<tr>");
-        let label = $("<th>").text(`Quarter ${i}`);
+        let period = `Quarter ${i}`;
+        let label = $("<th>").text(period);
         let periodEnds = moment(periodStarts)
           .subtract(1, "months")
           .add(1, "quarters");
@@ -207,7 +213,9 @@
           .format("MMM DD, YYYY");
         let dateSpan = $("<small>").text(`${start} - ${end}`);
         label.append("<br>", dateSpan);
-        periods = [...periods, { start, end }];
+
+        // update the periods
+        periods = [...periods, { start, end, period }];
 
         let input = $("<input>")
           .addClass("form-control")
@@ -221,18 +229,6 @@
         let value = $("<td>").append(input);
 
         let removeTarget = $("<td>").addClass("text-danger");
-        // if (i == numberOfTargets) {
-        //   row.attr("id", "lastRowElement");
-        //   removeTarget.append(
-        //     $("<button>")
-        //       .attr({ id: "lastTargetColumn", type: "button" })
-        //       .addClass("btn text-danger")
-        //       .append($("<i>").addClass("fa fa-close"))
-        //       .click(() => {
-        //         $("#lastRowElement").remove();
-        //       })
-        //   );
-        // }
 
         row.append(label, value, removeTarget);
 
