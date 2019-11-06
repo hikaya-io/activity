@@ -2869,8 +2869,15 @@ def add_contact(request):
 
     user = ActivityUser.objects.filter(user=request.user).first()
 
-    contact = Contact(name=data.get('name'), city=data.get('city'), address=data.get(
-        'address'), phone=data.get('phone_number'), organization=user.organization)
+    contact = Contact(
+        name=data.get('name'),
+        city=data.get('city'),
+        address=data.get('address'),
+        phone=data.get('phone_number'),
+        organization=user.organization,
+        stakeholder_id=data.get('stakeholder'),
+        email=data.get('email'),
+    )
 
     if contact.save():
         return HttpResponse({'success': True})

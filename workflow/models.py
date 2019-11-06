@@ -398,6 +398,9 @@ class Contact(models.Model):
         Country, blank=True, null=True, on_delete=models.SET_NULL)
     organization = models.ForeignKey(
         Organization, blank=True, null=True, on_delete=models.SET_NULL)
+    stakeholder = models.ForeignKey(
+        'Stakeholder', related_name='contact_stakeholder', null=True,
+        blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -1067,7 +1070,9 @@ class Stakeholder(models.Model):
                             max_length=255, blank=True, null=True)
     type = models.ForeignKey(StakeholderType, blank=True,
                              null=True, on_delete=models.SET_NULL)
-    contact = models.ManyToManyField(Contact, max_length=255, blank=True)
+    contact = models.ManyToManyField(
+        Contact, related_name='stakeholder_contacts', max_length=255,
+        blank=True)
     country = models.ForeignKey(
         Country, blank=True, null=True, on_delete=models.SET_NULL)
     organization = models.ForeignKey(

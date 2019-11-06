@@ -59,9 +59,10 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>City</th>
+        <th>Stakeholder</th>
         <th>Email</th>
         <th>Phone Number</th>
+        <th>City</th>
         <th>Address</th>
         <th class="text-right">Actions</th>
       </tr>
@@ -74,10 +75,11 @@
           <a href="/workflow/contact_update/{{contact.id}}/" 
           data-toggle="tooltip" title="{{ contact.name }}">{{ contact.name | truncatechars:50 }}</a>
         </td>
-        <td>{{ contact.city }}</td>
-        <td>{{ contact.email }}</td>
-        <td>{{ contact.phone }}</td>
-        <td>{{ contact.address }}</td>
+        <td>{% if contact.stakeholder  %}{{ contact.stakeholder }} {% else %} - {% endif %}</td>
+        <td>{% if contact.email  %}{{ contact.email }} {% else %} - {% endif %}</td>
+        <td>{% if contact.phone  %}{{ contact.phone }} {% else %} - {% endif %}</td>
+        <td>{% if contact.city  %}{{ contact.city }} {% else %} - {% endif %}</td>
+        <td>{% if contact.address  %}{{ contact.address }} {% else %} - {% endif %}</td>
         <td class="text-right">
           <!-- Split button -->
           <div class="btn-group">
