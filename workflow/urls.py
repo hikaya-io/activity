@@ -13,6 +13,8 @@ urlpatterns = [
     path('documentation/add', add_documentation, name='add-documentation'),
     path('contact/add', add_contact, name='add-contact'),
     path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
+    path('stakeholder/delete_stakeholder/<slug:pk>/',
+         delete_stakeholder, name='delete_stakeholder'),
 
     re_path('level1/edit/(?P<pk>\w+)/$', ProgramUpdate.as_view(),
             name='level1_edit'),
@@ -132,8 +134,6 @@ urlpatterns = [
             StakeholderCreate.as_view(), name='stakeholder_add'),
     re_path(r'^stakeholder_update/(?P<pk>\w+)/$',
             StakeholderUpdate.as_view(), name='stakeholder_update'),
-    re_path(r'^stakeholder_delete/(?P<pk>\w+)/$',
-            StakeholderDelete.as_view(), name='stakeholder_delete'),
     re_path(r'^export_stakeholders_list/(?P<program_id>\w+)/$',
             export_stakeholders_list, name='export_stakeholders_list'),
 

@@ -1897,6 +1897,12 @@ class ContactUpdate(UpdateView):
 
 
 def delete_contact(request, pk):
+    """
+    delete contact
+    :param request:
+    :param pk:
+    :return redirect:
+    """
     contact = Contact.objects.get(pk=int(pk))
     contact.delete()
 
@@ -2038,30 +2044,17 @@ class StakeholderUpdate(UpdateView):
     form_class = StakeholderForm
 
 
-class StakeholderDelete(DeleteView):
+def delete_stakeholder(request, pk):
     """
-    Benchmark Form
+    delete Stakeholder
+    :param request:
+    :param pk: Primary key of the stakeholder to be deleted
+    :return redirect:
     """
-    model = Stakeholder
-    success_url = '/workflow/stakeholder_list/0/0/'
+    stakeholder = Stakeholder.objects.get(pk=int(pk))
+    stakeholder.delete()
 
-    def get_context_data(self, **kwargs):
-        context = super(StakeholderDelete, self).get_context_data(**kwargs)
-        context.update({'id': self.kwargs['pk']})
-        return context
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-
-        messages.success(self.request, 'Success, Stakeholder Deleted!')
-        return self.render_to_response(self.get_context_data(form=form))
-
-    form_class = StakeholderForm
+    return redirect('/workflow/stakeholder_list/0/0/')
 
 
 class QuantitativeOutputsCreate(AjaxableResponseMixin, CreateView):

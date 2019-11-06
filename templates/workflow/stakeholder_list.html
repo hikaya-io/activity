@@ -144,10 +144,18 @@
             </button>
             <ul class="dropdown-menu">
               <li><a href="/workflow/stakeholder_update/{{stakeholder.id}}/">Edit</a></li>
-              <li><a href="#" class="text-danger">Delete</a></li>
+              <li>
+                <a 
+                  class="text-danger"
+                  href="#deleteItemModal{{ stakeholder.id }}"
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{ stakeholder.id }})"
+                  data-target="#deleteItemModal{{ stakeholder.id }}"
+                >Delete</a></li>
             </ul>
           </div>
         </td>
+        {% include 'workflow/deletemodals/stakeholder_confirm_delete.html' %}
       </tr>
       {% endif %} {% endfor %}
     </tbody>
