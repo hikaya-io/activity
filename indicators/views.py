@@ -524,14 +524,14 @@ class IndicatorUpdate(UpdateView):
 
     def form_valid(self, form, **kwargs):
         data = self.request.POST
+        print("Object", data.get("periodic_targets_object", None))
 
         periodic_targets = self.request.POST.getlist(
             'periodic_targets[]', None)
 
         start_date = data.get('target_frequency_start', None)
 
-        print (periodic_targets)
-
+        print(periodic_targets)
 
         periodic_target_object = {}
         # generate the target periods and assign the values

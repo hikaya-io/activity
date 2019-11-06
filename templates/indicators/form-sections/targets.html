@@ -25,6 +25,12 @@
   <div class="col-md-6">
     {{ form.target_frequency | as_crispy_field }}
   </div>
+
+  <input
+    type="hidden"
+    name="periodic_targets_object"
+    id="periodic_targets_object"
+  />
 </div>
 
 <div class="row">
@@ -156,11 +162,11 @@
       let sum = 0;
       for (i = 1; i <= $("#number_of_target_periods").val(); i++) {
         sum += +$(`#id_target_${i}`).val();
+        periods[i - 1]["value"] = +$(`#id_target_${i}`).val();
       }
 
-      console.log(periods);
-
       $("#sumOfTargets").text(sum);
+      $("#periodic_targets_object").attr("value", JSON.stringify(periods));
     }
 
     // add target fields when the #addTargetsBtn is clicked
@@ -212,13 +218,7 @@
           })
           .keyup(updateSum);
 
-        let hiddenInput = $("<input>").attr({
-          type: "hidden",
-          id: `id_target_${i}_input`,
-          name: "periodic_targets_values[]"
-        });
-
-        let value = $("<td>").append(input, hiddenInput);
+        let value = $("<td>").append(input);
 
         let removeTarget = $("<td>").addClass("text-danger");
         // if (i == numberOfTargets) {
