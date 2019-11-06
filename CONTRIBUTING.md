@@ -1,17 +1,13 @@
----
-layout: default
----
-
 # Contributing to Hikaya
 
 Thanks for checking out Activity. Activity is an open source project currently maintained by Hikaya.
 
 ## Table of Contents
 
-0. [Ground rules & expectations](#ground-rules--expectations)
-0. [How to contribute](#how-to-contribute)
-0. [Contribution review process](#contribution-review-process)
-0. [Community](#community)
+1. [Ground rules & expectations](#ground-rules--expectations)
+2. [How to contribute](#how-to-contribute)
+3. [Contribution review process](#contribution-review-process)
+4. [Community](#community)
 
 
 ## Ground rules & expectations
