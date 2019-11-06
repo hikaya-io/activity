@@ -29,7 +29,7 @@
 
 <div class="row">
   <!-- quaterly targets setup -->
-  <div class="col-md-12">
+  <div class="col-md-12" id="id_quarterly_targets_div">
     <div class="row">
       <div class="col-md-6">
         <div class="row" id="frequencyMetadata">
@@ -39,14 +39,14 @@
 
           <div class="col-md-6">
             <div class="form-group">
-              <label for="numberOfTargetPeriods"
+              <label for="number_of_target_periods"
                 >Number of Target Periods*</label
               >
               <input
                 class="form-control"
                 type="number"
-                name="numberOfTargetPeriods"
-                id="numberOfTargetPeriods"
+                name="number_of_target_periods"
+                id="number_of_target_periods"
               />
             </div>
           </div>
@@ -76,6 +76,7 @@
 </div>
 
 <script>
+  var periods = [];
   $(document).ready(() => {
     $("#id_rationale_for_target").attr("rows", 3);
     $("#id_target_frequency").select2({
@@ -88,7 +89,6 @@
         changeMonth: true,
         changeYear: true,
         showButtonPanel: true,
-
         onClose: function(dateText, inst) {
           var month = $(
             "#ui-datepicker-div .ui-datepicker-month :selected"
@@ -112,12 +112,25 @@
       .attr("autocomplete", "off");
 
     $("#clearTargets").hide();
+    $("#id_quarterly_targets_div").hide();
   });
 
   $(() => {
     $("#id_target_frequency").on("select2:select", e => {
-      switch ($("#id_target_frequency").val()) {
+      switch (+$("#id_target_frequency").val()) {
         case 6: {
+          $("#id_quarterly_targets_div").show();
+          $("#number_of_target_periods")
+            .attr({
+              value: 1,
+              type: "number",
+              min: 1
+            })
+            .keyup(e => {
+              if (+$("#number_of_target_periods").val() < 1) {
+                $("#number_of_target_periods").attr("value", 1);
+              }
+            });
           break;
         }
 
@@ -139,24 +152,31 @@
       $("#clearTargets").hide();
     });
 
-    function updateSum(e) {
+    function updateSum() {
       let sum = 0;
-      for (i = 1; i <= $("#numberOfTargetPeriods").val(); i++) {
+      for (i = 1; i <= $("#number_of_target_periods").val(); i++) {
         sum += +$(`#id_target_${i}`).val();
       }
+
+      console.log(periods);
 
       $("#sumOfTargets").text(sum);
     }
 
     // add target fields when the #addTargetsBtn is clicked
     $("#addTargetsBtn").click(() => {
+      let numberOfTargets = $("#number_of_target_periods").val();
+
+      if (numberOfTargets < 1) {
+        return;
+      }
+
       // hide the #frequencyMetadata
       $("#frequencyMetadata").hide();
 
       // disable create targets button
       $("#addTargetsBtn").addClass("disabled");
 
-      let numberOfTargets = $("#numberOfTargetPeriods").val();
       let periodStarts = moment($("#id_target_frequency_start").val()).startOf(
         "month"
       );
@@ -164,6 +184,7 @@
         .attr("id", "targetsTable")
         .addClass("table table-hover");
       let tbody = $("<tbody>");
+      periods = [];
 
       for (let i = 1; i <= numberOfTargets; i++) {
         let row = $("<tr>");
@@ -171,34 +192,47 @@
         let periodEnds = moment(periodStarts)
           .subtract(1, "months")
           .add(1, "quarters");
-        let dateSpan = $("<small>").text(
-          `${moment(periodStarts)
-            .startOf("month")
-            .format("MMM DD, YYYY")} - ${moment(periodEnds)
-            .endOf("month")
-            .format("MMM DD, YYYY")}`
-        );
+
+        let start = moment(periodStarts)
+          .startOf("month")
+          .format("MMM DD, YYYY");
+        let end = moment(periodEnds)
+          .endOf("month")
+          .format("MMM DD, YYYY");
+        let dateSpan = $("<small>").text(`${start} - ${end}`);
         label.append("<br>", dateSpan);
+        periods = [...periods, { start, end }];
 
         let input = $("<input>")
           .addClass("form-control")
-          .attr({ type: "number", id: `id_target_${i}` })
+          .attr({
+            type: "number",
+            id: `id_target_${i}`,
+            name: "periodic_targets[]"
+          })
           .keyup(updateSum);
-        let value = $("<td>").append(input);
+
+        let hiddenInput = $("<input>").attr({
+          type: "hidden",
+          id: `id_target_${i}_input`,
+          name: "periodic_targets_values[]"
+        });
+
+        let value = $("<td>").append(input, hiddenInput);
 
         let removeTarget = $("<td>").addClass("text-danger");
-        if (i == numberOfTargets) {
-          // row.attr("id", "lastRowElement");
-          // removeTarget.append(
-          //   $("<button>")
-          //     .attr({ id: "lastTargetColumn", type: "button" })
-          //     .addClass("btn text-danger")
-          //     .append($("<i>").addClass("fa fa-close"))
-          //     .click(() => {
-          //       $("#lastRowElement").remove();
-          //     })
-          // );
-        }
+        // if (i == numberOfTargets) {
+        //   row.attr("id", "lastRowElement");
+        //   removeTarget.append(
+        //     $("<button>")
+        //       .attr({ id: "lastTargetColumn", type: "button" })
+        //       .addClass("btn text-danger")
+        //       .append($("<i>").addClass("fa fa-close"))
+        //       .click(() => {
+        //         $("#lastRowElement").remove();
+        //       })
+        //   );
+        // }
 
         row.append(label, value, removeTarget);
 
