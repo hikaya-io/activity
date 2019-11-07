@@ -1,36 +1,461 @@
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags %} {% load static %}
 
+<script src="{% static 'js/moment.js' %}"></script>
 <div class="row">
-    <div class="col-md-6">
-        {{ form.unit_of_measure | as_crispy_field }}
-    </div>
+  <div class="col-md-6">
+    {{ form.unit_of_measure | as_crispy_field }}
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6">
-        {{ form.lop_target | as_crispy_field }}
-    </div>
+  <div class="col-md-6">
+    {{ form.lop_target | as_crispy_field }}
+  </div>
 
-    <div class="col-md-6">
-        {{ form.baseline | as_crispy_field }}
-    </div>
+  <div class="col-md-6">
+    {{ form.baseline | as_crispy_field }}
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-md-12">
-        {{ form.rationale_for_target | as_crispy_field }}
+  <div class="col-md-12">
+    {{ form.rationale_for_target | as_crispy_field }}
+  </div>
+
+  <div class="col-md-6">
+    {{ form.target_frequency | as_crispy_field }}
+  </div>
+
+  <input
+    type="hidden"
+    name="periodic_targets_object"
+    id="periodic_targets_object"
+  />
+</div>
+
+<div class="row" id="id_periodic_targets_section">
+  <div class="col-md-12" id="frequency_metadata">
+    <div class="row">
+      <div class="col-md-6" id="id_periods_generator">
+        <div class="row">
+          <div class="col-md-6">
+            {{ form.target_frequency_start | as_crispy_field }}
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="number_of_target_periods"
+                >Number of Target Periods*</label
+              >
+              <input
+                class="form-control"
+                type="number"
+                name="number_of_target_periods"
+                id="number_of_target_periods"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="col-md-12">
-        {{ form.target_frequency | as_crispy_field }}
+    <div class="row" id="id_control_btns">
+      <div class="col-md-6">
+        <div class="form-group text-right">
+          <button
+            type="button"
+            class="btn btn-link btn-link-warning"
+            id="clearTargets"
+          >
+            Remove all targets
+          </button>
+          <button type="button" class="btn btn-warning" id="addTargetsBtn">
+            Add Targets
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="col-md-6" id="id_targets"></div>
 </div>
 
 <script>
-    $(document).ready(() => {
-        $('#id_rationale_for_target').attr('rows', 3);
-        $('#id_target_frequency').select2({
-            theme: 'bootstrap',
+  // for storing the generated periods
+  var periods = [];
+  var selectedTarget = null;
+
+  $(document).ready(() => {
+    $("#id_rationale_for_target").attr("rows", 3);
+    $("#id_target_frequency").select2({
+      theme: "bootstrap"
+    });
+
+    $("#id_target_frequency_start")
+      .datepicker({
+        dateFormat: "MM yy",
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        onClose: function(dateText, inst) {
+          var month = $(
+            "#ui-datepicker-div .ui-datepicker-month :selected"
+          ).val();
+          var year = $(
+            "#ui-datepicker-div .ui-datepicker-year :selected"
+          ).val();
+          $(this).val(
+            $.datepicker.formatDate("M d, yy", new Date(year, month, 1))
+          );
+        }
+      })
+      .focus(function() {
+        $(".ui-datepicker-calendar").hide();
+        $("#ui-datepicker-div").position({
+          my: "right top",
+          at: "right bottom",
+          of: $(this)
+        });
+      })
+      .attr("autocomplete", "off");
+
+    $("#clearTargets").hide();
+    $("#id_targets").hide();
+    $("#frequency_metadata").hide();
+  });
+
+  $(() => {
+    $("#id_target_frequency").on("select2:select", e => {
+      selectedTarget = +$("#id_target_frequency").val();
+      // console.log(selectedTarget);
+
+      $("#number_of_target_periods")
+        .attr({
+          value: 1,
+          type: "number",
+          min: 1
         })
-    })
+        .keyup(e => {
+          if (+$("#number_of_target_periods").val() < 1) {
+            $("#number_of_target_periods").attr("value", 1);
+          }
+        });
+
+      if (
+        selectedTarget !== 1 &&
+        selectedTarget !== 2 &&
+        selectedTarget !== 8
+      ) {
+        $("#frequency_metadata").show();
+        $("#id_targets").show();
+      }
+    });
+
+    $("#clearTargets").click(() => {
+      // remove the table
+      $("#targetsTable").remove();
+
+      // show id_periods_generator
+      $("#id_periods_generator").show();
+
+      // enable the button
+      $("#addTargetsBtn").removeClass("disabled");
+
+      $("#clearTargets").hide();
+
+      // reset the periods
+      periods = [];
+    });
+
+    function updateSum() {
+      let sum = 0;
+      for (i = 1; i <= $("#number_of_target_periods").val(); i++) {
+        sum += +$(`#id_target_${i}`).val();
+        periods[i - 1]["value"] = +$(`#id_target_${i}`).val();
+      }
+
+      $("#sumOfTargets").text(sum);
+      $("#periodic_targets_object").attr("value", JSON.stringify(periods));
+    }
+
+    // add target fields when the #addTargetsBtn is clicked
+    $("#addTargetsBtn").click(() => {
+      let numberOfTargets = $("#number_of_target_periods").val();
+
+      if (numberOfTargets < 1) {
+        return;
+      }
+
+      // hide the #id_periods_generator
+      $("#id_periods_generator").hide();
+
+      // disable create targets button
+      $("#addTargetsBtn").addClass("disabled");
+
+      let periodStarts = moment($("#id_target_frequency_start").val()).startOf(
+        "month"
+      );
+      let table = $("<table>")
+        .attr("id", "targetsTable")
+        .addClass("table table-hover");
+      let tbody = $("<tbody>");
+      periods = [];
+
+      function generateTriAnnualTargets() {
+        for (let i = 1; i <= numberOfTargets; i++) {
+          let row = $("<tr>");
+          let period = `Triannual ${i}`;
+          let label = $("<th>").text(period);
+          let periodEnds = moment(periodStarts);
+
+          let start = moment(periodStarts)
+            .startOf("month")
+            .format("MMM DD, YYYY");
+          let end = moment(periodEnds)
+            .add(3, "months")
+            .endOf("month")
+            .format("MMM DD, YYYY");
+          let dateSpan = $("<small>").text(`${start} - ${end}`);
+          label.append("<br>", dateSpan);
+
+          // update the periods
+          periods = [...periods, { start, end, period }];
+
+          let input = $("<input>")
+            .addClass("form-control")
+            .attr({
+              type: "number",
+              id: `id_target_${i}`,
+              name: "periodic_targets[]"
+            })
+            .keyup(updateSum);
+
+          let value = $("<td>").append(input);
+
+          let removeTarget = $("<td>").addClass("text-danger");
+
+          row.append(label, value, removeTarget);
+
+          tbody.append(row);
+
+          periodStarts = moment(periodEnds).add(4, "months");
+
+          $("#clearTargets").show();
+        }
+      }
+
+      function generateSemiAnnualTargets() {
+        for (let i = 1; i <= numberOfTargets; i++) {
+          let row = $("<tr>");
+          let period = `Semi-annual ${i}`;
+          let label = $("<th>").text(period);
+          let periodEnds = moment(periodStarts);
+
+          let start = moment(periodStarts)
+            .startOf("month")
+            .format("MMM DD, YYYY");
+          let end = moment(periodEnds)
+            .add(5, "months")
+            .endOf("month")
+            .format("MMM DD, YYYY");
+          let dateSpan = $("<small>").text(`${start} - ${end}`);
+          label.append("<br>", dateSpan);
+
+          // update the periods
+          periods = [...periods, { start, end, period }];
+
+          let input = $("<input>")
+            .addClass("form-control")
+            .attr({
+              type: "number",
+              id: `id_target_${i}`,
+              name: "periodic_targets[]"
+            })
+            .keyup(updateSum);
+
+          let value = $("<td>").append(input);
+
+          let removeTarget = $("<td>").addClass("text-danger");
+
+          row.append(label, value, removeTarget);
+
+          tbody.append(row);
+
+          periodStarts = moment(periodEnds).add(6, "month");
+
+          $("#clearTargets").show();
+        }
+      }
+
+      function generateYearlyTargets() {
+        for (let i = 1; i <= numberOfTargets; i++) {
+          let row = $("<tr>");
+          let period = `Year ${i}`;
+          let label = $("<th>").text(period);
+          let periodEnds = moment(periodStarts);
+
+          let start = moment(periodStarts)
+            .startOf("month")
+            .format("MMM DD, YYYY");
+          let end = moment(periodEnds)
+            .add(11, "months")
+            .endOf("month")
+            .format("MMM DD, YYYY");
+          let dateSpan = $("<small>").text(`${start} - ${end}`);
+          label.append("<br>", dateSpan);
+
+          // update the periods
+          periods = [...periods, { start, end, period }];
+
+          let input = $("<input>")
+            .addClass("form-control")
+            .attr({
+              type: "number",
+              id: `id_target_${i}`,
+              name: "periodic_targets[]"
+            })
+            .keyup(updateSum);
+
+          let value = $("<td>").append(input);
+
+          let removeTarget = $("<td>").addClass("text-danger");
+
+          row.append(label, value, removeTarget);
+
+          tbody.append(row);
+
+          periodStarts = moment(periodEnds).add(12, "months");
+
+          $("#clearTargets").show();
+        }
+      }
+
+      function generateMonthlyTargets() {
+        for (let i = 1; i <= numberOfTargets; i++) {
+          let row = $("<tr>");
+          let period = `Month ${i}`;
+          let label = $("<th>").text(period);
+          let periodEnds = moment(periodStarts);
+
+          let start = moment(periodStarts)
+            .startOf("month")
+            .format("MMM DD, YYYY");
+          let end = moment(periodEnds)
+            .endOf("month")
+            .format("MMM DD, YYYY");
+          let dateSpan = $("<small>").text(`${start} - ${end}`);
+          label.append("<br>", dateSpan);
+
+          // update the periods
+          periods = [...periods, { start, end, period }];
+
+          let input = $("<input>")
+            .addClass("form-control")
+            .attr({
+              type: "number",
+              id: `id_target_${i}`,
+              name: "periodic_targets[]"
+            })
+            .keyup(updateSum);
+
+          let value = $("<td>").append(input);
+
+          let removeTarget = $("<td>").addClass("text-danger");
+
+          row.append(label, value, removeTarget);
+
+          tbody.append(row);
+
+          periodStarts = moment(periodEnds).add(1, "months");
+
+          $("#clearTargets").show();
+        }
+      }
+
+      function generateQuarterlyTargets() {
+        for (let i = 1; i <= numberOfTargets; i++) {
+          let row = $("<tr>");
+          let period = `Quarter ${i}`;
+          let label = $("<th>").text(period);
+          let periodEnds = moment(periodStarts)
+            .subtract(1, "months")
+            .add(1, "quarters");
+
+          let start = moment(periodStarts)
+            .startOf("month")
+            .format("MMM DD, YYYY");
+          let end = moment(periodEnds)
+            .endOf("month")
+            .format("MMM DD, YYYY");
+          let dateSpan = $("<small>").text(`${start} - ${end}`);
+          label.append("<br>", dateSpan);
+
+          // update the periods
+          periods = [...periods, { start, end, period }];
+
+          let input = $("<input>")
+            .addClass("form-control")
+            .attr({
+              type: "number",
+              id: `id_target_${i}`,
+              name: "periodic_targets[]"
+            })
+            .keyup(updateSum);
+
+          let value = $("<td>").append(input);
+
+          let removeTarget = $("<td>").addClass("text-danger");
+
+          row.append(label, value, removeTarget);
+
+          tbody.append(row);
+
+          periodStarts = moment(periodEnds).add(1, "months");
+
+          $("#clearTargets").show();
+        }
+      }
+
+      switch (selectedTarget) {
+        case 3:
+          generateYearlyTargets();
+          break;
+        case 4:
+          generateSemiAnnualTargets();
+          break;
+        case 5:
+          generateTriAnnualTargets();
+          break;
+        case 6:
+          generateQuarterlyTargets();
+          break;
+        case 7:
+          generateMonthlyTargets();
+          break;
+
+        default:
+          break;
+      }
+
+      tbody.append(
+        $("<tr>").append(
+          $("<th>").text("Sum of Targets"),
+          $("<th>")
+            .attr("id", "sumOfTargets")
+            .text(0),
+          $("<td>")
+        ),
+
+        $("<tr>").append(
+          $("<th>").text("Life of Program (LoP) target"),
+          $("<th>").text(1000),
+          $("<td>")
+        )
+      );
+
+      table.append(tbody);
+
+      $("#id_targets").append(table);
+    });
+  });
 </script>
