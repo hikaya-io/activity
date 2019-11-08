@@ -1,58 +1,133 @@
 {% load crispy_forms_tags %}
 
 <div class="row">
-    <div class="col-md-4">
-        <div class="form-group">
-            {{ form.level | as_crispy_field }}
-        </div>
+  <div class="col-md-4">
+    <div class="form-group">
+      {{ form.level | as_crispy_field }}
     </div>
+  </div>
 
-    <div class="col-md-4">
-        <div class="form-group">
-            {{ form.number | as_crispy_field }}
-        </div>
+  <div class="col-md-4">
+    <div class="form-group">
+      {{ form.number | as_crispy_field }}
     </div>
+  </div>
 
-    <div class="col-md-4">
-        <div class="form-group">
-            {{ form.source | as_crispy_field }}
-        </div>
+  <div class="col-md-4">
+    <div class="form-group">
+      {{ form.source | as_crispy_field }}
     </div>
+  </div>
 </div>
 
 <div class="form-group">
-    {{ form.definition | as_crispy_field }}
+  {{ form.definition | as_crispy_field }}
 </div>
 
 <div class="form-group">
-    {{ form.justification | as_crispy_field }}
+  {{ form.justification | as_crispy_field }}
 </div>
-
 
 <div class="row">
-    <div class="col-md-6">
-        {{ form.disaggregation | as_crispy_field }}
-    </div>
+  <div class="col-md-6">
+    {{ form.disaggregation | as_crispy_field }}
+  </div>
 
-    <div class="col-md-6">
-        <div class="form-group">
-            {{ form.indicator_type | as_crispy_field }}
-        </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      {{ form.indicator_type | as_crispy_field }}
     </div>
+  </div>
 </div>
 
 <div class="form-group">
-    {{ form.key_performance_indicator | as_crispy_field}}
+  {{ form.key_performance_indicator | as_crispy_field }}
+</div>
+
+<hr />
+
+<div class="row">
+  <div class="col-md-6">
+    <h4>
+      Disaggregations
+      <small class="pull-right">
+        <button
+          class="btn btn-default btn-sm"
+          type="button"
+          id="add_disaggregation_btn"
+        >
+          <i class="fa fa-plus"></i> Add Disaggregation Type
+        </button>
+      </small>
+    </h4>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6" id="id_disaggregations">
+    <div class="row mt-10" id="disagg_type_group">
+      <div class="col-md-6">
+        <i class="fa fa-angle-right"></i> Disaggregation type
+      </div>
+
+      <div class="col-md-5">
+        <div class="form-group-sm">
+          <input class="form-control" type="text" name="" id="" />
+        </div>
+      </div>
+
+      <div class="col-md-1">
+        <button class="btn" type="button"><i class="fa fa-trash"></i></button>
+      </div>
+
+      <div class="col-md-12">
+        <button
+          class="btn btn-xs btn-default"
+          type="button"
+          id="id_add_disagg_label"
+        >
+          <i class="fa fa-plus"></i> Add Disaggregation Label
+        </button>
+
+        <div id="id_disagg_labels">
+          <div class="row mt-10" id="disagg_label_group">
+            <div class="col-md-6 text-right">Disaggregation label</div>
+            <div class="col-md-5">
+              <div class="form-group-sm">
+                <input class="form-control" type="text" name="" id="" />
+              </div>
+            </div>
+            <div class="col-md-1">
+              <button class="btn" type="button">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-    $(document).ready(() => {
-        $('#id_level').select2({
-            theme: 'bootstrap',
-        });
-        $('#id_definition').attr('rows', 3);
-        $('#id_justification').attr('rows', 3);
-        $('#id_disaggregation').select2({ theme: 'bootstrap' });
-        $('#id_indicator_type').select2({ theme: 'bootstrap' });
-    })
+  $(document).ready(() => {
+    $("#id_level").select2({
+      theme: "bootstrap"
+    });
+    $("#id_definition").attr("rows", 3);
+    $("#id_justification").attr("rows", 3);
+    $("#id_disaggregation").select2({ theme: "bootstrap" });
+    $("#id_indicator_type").select2({ theme: "bootstrap" });
+  });
+
+  var countDisaggTypes = 0;
+
+  $("#add_disaggregation_btn").click(() => {
+    countDisaggTypes++;
+    $("#id_disaggregations").append($("#disagg_type_group").clone(false));
+  });
+
+  $("#id_add_disagg_label").click(() => {
+    $("#id_disagg_labels").append($("#disagg_label_group").clone());
+  });
 </script>

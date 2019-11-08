@@ -978,6 +978,10 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   padding-top: 0px !important;
 }
 
+.mt-10 {
+  margin-top: 10px;
+}
+
 .expandable {
   cursor: pointer;
   margin-right: 10px;
