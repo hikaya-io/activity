@@ -33,7 +33,7 @@
         </div>
         <div class="panel-body">
           <div class="auth-form">
-            <form action="/accounts/register/user/{{invite_uuid}}/" method="POST">
+            <form action="/accounts/register/user/{{invite_uuid}}/" method="POST" id="registerForm">
               {% csrf_token %}
               <div class="row">
                 <div class="col-md-6 form-group" id="div_first_name">
@@ -155,6 +155,7 @@
                   type="submit"
                   id="register_submit_btn"
                   class="btn btn-md btn-primary"
+                  disabled
                 >
                   Submit
                 </button>
