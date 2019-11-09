@@ -44,6 +44,7 @@ import json
 import requests
 from weasyprint import HTML, CSS
 from datetime import datetime
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 import dateutil.parser
 
@@ -522,75 +523,27 @@ class IndicatorUpdate(UpdateView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form, **kwargs):
-        periodic_targets = self.request.POST.get('periodic_targets', None)
-        indicatr = Indicator.objects.get(pk=self.kwargs.get('pk'))
+        data = self.request.POST
+
+        periodic_targets_object = json.loads(
+            data.get("periodic_targets_object", None))
+
+        indicator = Indicator.objects.get(pk=self.kwargs.get('pk'))
+
+        for target in periodic_targets_object:
+            periodic_target = PeriodicTarget(indicator=indicator, start_date=datetime.strptime(
+                target['start'], "%b %d, %Y").date(), end_date=datetime.strptime(
+                target['end'], "%b %d, %Y").date(), target=target['value'], period=target['period'])
+
+            periodic_target.save()
+
+        # generate the target periods and assign the values
+        # for periodic_target_value in periodic_targets:
+
         generated_targets = []
-        existing_target_frequency = indicatr.target_frequency
+        existing_target_frequency = indicator.target_frequency
         new_target_frequency = form.cleaned_data.get('target_frequency', None)
         lop = form.cleaned_data.get('lop_target', None)
-
-        if periodic_targets == 'generateTargets':
-            # handle (delete) association of colelcted data records
-            # if necessary
-            handle_data_collected_records(
-                indicatr, lop, existing_target_frequency, new_target_frequency)
-
-            target_frequency_num_periods = form.cleaned_data.get(
-                'target_frequency_num_periods', 0)
-            if target_frequency_num_periods is None:
-                target_frequency_num_periods = 1
-
-            event_name = form.cleaned_data.get('target_frequency_custom', '')
-            start_date = form.cleaned_data.get('target_frequency_start', None)
-            generated_targets = generate_periodic_targets(
-                new_target_frequency, start_date, target_frequency_num_periods,
-                event_name)
-
-        if periodic_targets and periodic_targets != 'generateTargets':
-            # now create/update periodic targets
-            pt_json = json.loads(periodic_targets)
-            generated_pt_ids = []
-            for i, pt in enumerate(pt_json):
-                pk = int(pt.get('id'))
-                if pk == 0:
-                    pk = None
-                try:
-                    start_date = dateutil.parser.parse(
-                        pt.get('start_date', None))
-                    start_date = datetime.strftime(start_date, '%Y-%m-%d')
-                except ValueError:
-                    # raise ValueError("Incorrect data value")
-                    start_date = None
-
-                try:
-                    end_date = dateutil.parser.parse(pt.get('end_date', None))
-                    end_date = datetime.strftime(end_date, '%Y-%m-%d')
-                except ValueError:
-                    # raise ValueError("Incorrect data value")
-                    end_date = None
-
-                # print("i = %s............%s..........." %
-                # (i, periodic_targets) )
-                periodic_target, created = PeriodicTarget.objects\
-                    .update_or_create(indicator=indicatr, id=pk,
-                                      defaults={'period': pt.get('period', ''),
-                                                'target': pt.get('target', 0),
-                                                'customsort': i,
-                                                'start_date': start_date,
-                                                'end_date': end_date,
-                                                'edit_date': timezone.now()})
-                # print("%s|%s = %s, %s" % (created, pk, pt.get('period'),
-                # pt.get('target') ))
-                if created:
-                    periodic_target.create_date = timezone.now()
-                    periodic_target.save()
-                    generated_pt_ids.append(periodic_target.id)
-
-            # handle related collected_data records for the new
-            # periodic targets
-            handle_data_collected_records(
-                indicatr, lop, existing_target_frequency, new_target_frequency,
-                generated_pt_ids)
 
         fields_to_watch = {'indicator_type', 'level', 'name',
                            'number', 'sector'}
@@ -603,12 +556,11 @@ class IndicatorUpdate(UpdateView):
         self.object = form.save()
         # periodic_targets = PeriodicTarget.objects.filter(indicator=indicatr)\
         #     .order_by('customsort','create_date', 'period')
-        periodic_targets = PeriodicTarget.objects.filter(indicator=indicatr)\
+        periodic_targets = PeriodicTarget.objects.filter(indicator=indicator)\
             .annotate(num_data=Count('collecteddata'))\
             .order_by('customsort', 'create_date', 'period')
 
         if self.request.is_ajax():
-            print('Is Ajax call')
             data = serializers.serialize('json', [self.object])
             pts = FlatJsonSerializer().serialize(periodic_targets)
             if generated_targets:
@@ -625,7 +577,6 @@ class IndicatorUpdate(UpdateView):
                                 "," +
                                 str(update_indicator_row) + "]")
         else:
-            print('Not Is Ajax call')
             messages.success(self.request, 'Success, Indicator Updated!')
         return redirect('/indicators/home/0/0/0/')
     form_class = IndicatorForm

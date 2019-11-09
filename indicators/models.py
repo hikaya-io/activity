@@ -56,9 +56,12 @@ class IndicatorTypeAdmin(admin.ModelAdmin):
 
 class StrategicObjective(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False)
-    country = models.ForeignKey(Country, null=True, blank=True, on_delete=models.SET_NULL)
-    organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.SET_NULL)
-    parent = models.ForeignKey('self', blank=True, null=True, related_name='children', on_delete=models.SET_NULL)
+    country = models.ForeignKey(
+        Country, null=True, blank=True, on_delete=models.SET_NULL)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey(
+        'self', blank=True, null=True, related_name='children', on_delete=models.SET_NULL)
     description = models.TextField(max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
@@ -84,8 +87,10 @@ class StrategicObjectiveAdmin(admin.ModelAdmin):
 
 class Objective(models.Model):
     name = models.CharField(max_length=135, blank=True)
-    program = models.ForeignKey(Program, null=True, blank=True, on_delete=models.SET_NULL)
-    parent = models.ForeignKey('self', blank=True, null=True, related_name='children', on_delete=models.SET_NULL)
+    program = models.ForeignKey(
+        Program, null=True, blank=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey(
+        'self', blank=True, null=True, related_name='children', on_delete=models.SET_NULL)
     description = models.TextField(max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
@@ -475,8 +480,9 @@ class PeriodicTarget(models.Model):
     end_date = models.DateField(
         auto_now=False, auto_now_add=False, null=True, blank=True)
     customsort = models.IntegerField(blank=True, null=True)
-    create_date = models.DateTimeField(null=True, blank=True)
-    edit_date = models.DateTimeField(null=True, blank=True)
+    create_date = models.DateTimeField(
+        null=True, blank=True, auto_now_add=True)
+    edit_date = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     def __str__(self):
         if self.indicator.target_frequency == Indicator.LOP \
@@ -485,8 +491,8 @@ class PeriodicTarget(models.Model):
             return self.period
         if self.start_date and self.end_date:
             return "%s (%s - %s)" % (
-            self.period, self.start_date.strftime('%b %d, %Y'),
-            self.end_date.strftime('%b %d, %Y'))
+                self.period, self.start_date.strftime('%b %d, %Y'),
+                self.end_date.strftime('%b %d, %Y'))
         return self.period
 
     class Meta:
@@ -527,7 +533,7 @@ class CollectedData(models.Model):
         PeriodicTarget, null=True, blank=True, help_text=" ",
         on_delete=models.SET_NULL)
     targeted = models.DecimalField("Targeted", max_digits=20,
-      decimal_places=2, default=Decimal('0.00'))
+                                   decimal_places=2, default=Decimal('0.00'))
     achieved = models.DecimalField(
         "Achieved", max_digits=20, decimal_places=2, help_text=" ")
     disaggregation_value = models.ManyToManyField(
