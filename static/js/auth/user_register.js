@@ -107,12 +107,12 @@ $(document).ready(function() {
 			return 'Password too short';
 		}
 
-		//length is ok, lets continue.
+		// length is ok, continue.
 
-		//if length is 8 characters or more, increase strength value
+		// if length is 8 characters or more, increase strength value
 		if (password.length > 7) strength += 1;
 
-		//if password contains both lower and uppercase characters, increase strength value
+		// if password contains both lower and uppercase characters, increase strength value
 		if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 1;
 
 		//if it has numbers and characters, increase strength value
