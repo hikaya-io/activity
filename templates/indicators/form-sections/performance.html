@@ -44,17 +44,20 @@
   {{ form.key_performance_indicator | as_crispy_field }}
 </div>
 
+<input type="hidden" name="disaggregation_types" id="id_disaggregation_types" />
+
 <hr />
 
 <div class="row">
   <div class="col-md-6">
     <h4>
       Disaggregations
-      <small class="pull-right">
+      <small class="">
         <button
           class="btn btn-default btn-sm"
           type="button"
           id="add_disaggregation_btn"
+          onclick="addDisagType()"
         >
           <i class="fa fa-plus"></i> Add Disaggregation Type
         </button>
@@ -64,49 +67,7 @@
 </div>
 
 <div class="row">
-  <div class="col-md-6" id="id_disaggregations">
-    <div class="row mt-10" id="disagg_type_group">
-      <div class="col-md-6">
-        <i class="fa fa-angle-right"></i> Disaggregation type
-      </div>
-
-      <div class="col-md-5">
-        <div class="form-group-sm">
-          <input class="form-control" type="text" name="" id="" />
-        </div>
-      </div>
-
-      <div class="col-md-1">
-        <button class="btn" type="button"><i class="fa fa-trash"></i></button>
-      </div>
-
-      <div class="col-md-12">
-        <button
-          class="btn btn-xs btn-default"
-          type="button"
-          id="id_add_disagg_label"
-        >
-          <i class="fa fa-plus"></i> Add Disaggregation Label
-        </button>
-
-        <div id="id_disagg_labels">
-          <div class="row mt-10" id="disagg_label_group">
-            <div class="col-md-6 text-right">Disaggregation label</div>
-            <div class="col-md-5">
-              <div class="form-group-sm">
-                <input class="form-control" type="text" name="" id="" />
-              </div>
-            </div>
-            <div class="col-md-1">
-              <button class="btn" type="button">
-                <i class="fa fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="col-md-6" id="id_disaggregations"></div>
 </div>
 
 <script>
@@ -118,16 +79,141 @@
     $("#id_justification").attr("rows", 3);
     $("#id_disaggregation").select2({ theme: "bootstrap" });
     $("#id_indicator_type").select2({ theme: "bootstrap" });
+
+    $("#id_disaggregation_types").attr("value", JSON.stringify([]));
   });
 
   var countDisaggTypes = 0;
+  var disagTypes = [];
 
-  $("#add_disaggregation_btn").click(() => {
+  function stringifyDisags() {
+    disagTypes = [];
+    for (let i = 1; i <= countDisaggTypes; i++) {
+      let disagType = { type: "", labels: [] };
+
+      $(`#disagg_type_group_${i} input`).each(function(index, elem) {
+        if (index === 0) {
+          disagType["type"] = $(this).val();
+        } else {
+          disagType["labels"] = [...disagType["labels"], $(this).val()];
+        }
+      });
+
+      disagTypes = [...disagTypes, disagType];
+    }
+
+    $("#id_disaggregation_types").prop("value", JSON.stringify(disagTypes));
+  }
+
+  function addDisagType() {
     countDisaggTypes++;
-    $("#id_disaggregations").append($("#disagg_type_group").clone(false));
-  });
+    $disagTypeGroup = $("<div>")
+      .addClass("row mt-10 disagg_type_group")
+      .attr({ id: `disagg_type_group_${countDisaggTypes}` })
+      .append(
+        $("<div>")
+          .addClass("col-md-6")
+          .append($("<i>").addClass("fa fa-angle-right"))
+          .append(" Disaggregation type")
+      )
+      .append(
+        $("<div>")
+          .addClass("col-md-5")
+          .append(
+            $("<div>")
+              .addClass("form-group-sm")
+              .append(
+                $("<input>")
+                  .attr({
+                    class: "form-control",
+                    type: "text",
+                    autofocus: true,
+                    id: `id_disagg_type_${countDisaggTypes}`
+                  })
+                  .keyup(stringifyDisags.bind(this))
+              )
+          )
+      )
+      .append(
+        $("<div>")
+          .addClass("col-md-1")
+          .append(
+            $("<button>")
+              .attr({ type: "button" })
+              .addClass("btn btn-sm")
+              .append($("<i>").addClass("fa fa-trash"))
+          )
+      )
+      .append(
+        $("<div>")
+          .addClass("col-md-12")
+          .append(
+            $("<button>")
+              .attr({
+                class: "btn btn-xs btn-default",
+                type: "button",
+                id: `id_add_disagg_label_${countDisaggTypes}`
+              })
+              .click(
+                addDisagLabel.bind(
+                  this,
+                  `#id_disagg_labels_${countDisaggTypes}`
+                )
+              )
+              .append($("<i>").addClass("fa fa-plus"))
+              .append(" Add Disaggregation Label")
+          )
+      )
+      .append(
+        $("<div>").attr({
+          id: `id_disagg_labels_${countDisaggTypes}`,
+          class: "col-md-12"
+        })
+      );
 
-  $("#id_add_disagg_label").click(() => {
-    $("#id_disagg_labels").append($("#disagg_label_group").clone());
-  });
+    // attach the group to disaggregations
+    $("#id_disaggregations").append($disagTypeGroup);
+  }
+
+  function addDisagLabel(selector) {
+    $(selector).append(
+      $("<div>")
+        .addClass("row mt-10")
+        .attr({
+          id: "disagg_label_group"
+        })
+        .append(
+          $("<div>")
+            .addClass("col-md-6 text-right")
+            .append($("<small>").text("Disaggregation babel"))
+        )
+        .append(
+          $("<div>")
+            .addClass("col-md-5")
+            .append(
+              $("<div>")
+                .addClass("form-group-sm")
+                .append(
+                  $("<input>")
+                    .addClass("form-control")
+                    .attr({
+                      type: "text",
+                      autofocus: true,
+                      id: `id_disagg_child`
+                    })
+                    .keyup(stringifyDisags.bind(this))
+                )
+            )
+        )
+        .append(
+          $("<div>")
+            .addClass("col-md-1")
+            .append(
+              $("<button>")
+                .attr({ class: "btn btn-sm", type: "button" })
+                .append($("<i>").addClass("fa fa-trash"))
+            )
+        )
+    );
+  }
 </script>

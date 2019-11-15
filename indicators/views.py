@@ -13,7 +13,7 @@ from .tables import IndicatorDataTable
 from .forms import IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
-    CollectedData, IndicatorType, Level, ExternalServiceRecord,
+    DisaggregationType, CollectedData, IndicatorType, Level, ExternalServiceRecord,
     ExternalService, ActivityTable, StrategicObjective, Objective
 )
 
@@ -524,11 +524,26 @@ class IndicatorUpdate(UpdateView):
 
     def form_valid(self, form, **kwargs):
         data = self.request.POST
+        indicator = Indicator.objects.filter(pk=self.kwargs.get('pk'))[0]
 
+        # save the disaggregation types and labels from the frontend
+        disaggs = json.loads(data.get("disaggregation_types", "[]"))
+        for disagg in disaggs:
+            disagg_type = DisaggregationType.objects.create(
+                disaggregation_type=disagg['type']
+            )
+
+            indicator.disaggregation.add(disagg_type,)
+
+            for label in disagg['labels']:
+                DisaggregationLabel.objects.create(
+                    disaggregation_type_id=disagg_type.id,
+                    label=label
+                )
+
+        # save periodic targets from the frontend
         periodic_targets_object = json.loads(
-            data.get("periodic_targets_object", None))
-
-        indicator = Indicator.objects.get(pk=self.kwargs.get('pk'))
+            data.get("periodic_targets_object", "[]"))
 
         for target in periodic_targets_object:
             periodic_target = PeriodicTarget(indicator=indicator, start_date=datetime.strptime(
@@ -556,9 +571,8 @@ class IndicatorUpdate(UpdateView):
         self.object = form.save()
         # periodic_targets = PeriodicTarget.objects.filter(indicator=indicatr)\
         #     .order_by('customsort','create_date', 'period')
-        periodic_targets = PeriodicTarget.objects.filter(indicator=indicator)\
-            .annotate(num_data=Count('collecteddata'))\
-            .order_by('customsort', 'create_date', 'period')
+        periodic_targets = PeriodicTarget.objects.filter(indicator=indicator).annotate(
+            num_data=Count('collecteddata')).order_by('customsort', 'create_date', 'period')
 
         if self.request.is_ajax():
             data = serializers.serialize('json', [self.object])

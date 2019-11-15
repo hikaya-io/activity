@@ -308,7 +308,7 @@ class Indicator(models.Model):
         StrategicObjective, verbose_name="Country Strategic Objective",
         blank=True, related_name="strat_indicator", help_text=" ")
     name = models.CharField(verbose_name="Name",
-                            max_length=255, null=False, help_text=" ")
+                            max_length=255, help_text=" ")
     number = models.CharField(
         max_length=255, null=True, blank=True, help_text=" ")
     source = models.CharField(
@@ -321,7 +321,7 @@ class Indicator(models.Model):
         max_length=135, null=True, blank=True, verbose_name="Unit of measure*",
         help_text=" ")
     disaggregation = models.ManyToManyField(
-        DisaggregationType, blank=True, help_text=" ")
+        DisaggregationType, blank=True, related_name="indicator_disaggregation_types")
     baseline = models.CharField(
         verbose_name="Baseline*", max_length=255, null=True, blank=True,
         help_text=" ")
