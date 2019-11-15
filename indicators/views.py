@@ -335,7 +335,7 @@ class IndicatorCreate(CreateView):
 
     def form_invalid(self, form):
 
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form', fail_silently=False, extra_tags='danger')
 
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -519,7 +519,7 @@ class IndicatorUpdate(UpdateView):
         return kwargs
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form', fail_silently=False, extra_tags='danger')
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form, **kwargs):
@@ -609,7 +609,8 @@ class IndicatorDelete(DeleteView):
 
     def form_invalid(self, form):
 
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form',
+                       fail_silently=False, extra_tags='danger')
 
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -847,7 +848,7 @@ class CollectedDataUpdate(UpdateView):
         return context
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form', fail_silently=False, extra_tags='danger')
         return self.render_to_response(self.get_context_data(form=form))
 
     # add the request to the kwargs
