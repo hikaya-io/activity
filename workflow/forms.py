@@ -1547,8 +1547,8 @@ class ContactForm(forms.ModelForm):
         self.helper.html5_required = True
         self.helper.layout = Layout(
             Row(
-                Column('title', css_class='form-group col-md-6 mb-0'),
                 Column('name', css_class='form-group col-md-6 mb-0'),
+                Column('stakeholder', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
@@ -1561,6 +1561,7 @@ class ContactForm(forms.ModelForm):
                 Column('country', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
+
             'address',
             Reset('reset', 'Close', css_class='btn btn-md btn-close'),
             Submit('submit', 'Save Changes',
