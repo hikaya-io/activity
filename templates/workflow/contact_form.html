@@ -34,5 +34,18 @@
 		{% crispy form %}
 	</div>
 </div>
+<script>
+	$(document).ready(() => {
+		$('#id_stakeholder').select2({
+            theme:'bootstrap'
+		});
+		$('#id_country').select2({
+            theme:'bootstrap'
+		});
+		$('#id_title').select2({
+            theme:'bootstrap'
+        });
+	})
+</script>
 
 {% endblock content %}
