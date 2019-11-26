@@ -1,8 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-from .models import *
 from django.contrib import admin
+
+from .models import (
+    ProgramLinks, ProgramLinksAdmin, Link, LinkAdmin, ProgramNarratives,
+    ProgramNarrativesAdmin, JupyterNotebooks, JupyterNotebooksAdmin
+)
 
 
 class GalleryAdmin(admin.ModelAdmin):

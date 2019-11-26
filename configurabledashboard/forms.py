@@ -2,9 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import *
-from crispy_forms.bootstrap import *
-from crispy_forms.layout import Layout, Submit, Reset
+from crispy_forms.bootstrap import (
+    TabHolder, Tab, PrependedAppendedText, FormActions,
+)
+from crispy_forms.layout import (
+    Layout, Submit, Reset, HTML, Fieldset,
+)
 from django import forms
 from .models import (
     CustomDashboard, DashboardTheme,

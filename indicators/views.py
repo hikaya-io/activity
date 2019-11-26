@@ -10,7 +10,9 @@ import re
 
 from .export import IndicatorResource, CollectedDataResource
 from .tables import IndicatorDataTable
-from .forms import IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm
+from .forms import (
+    IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm
+)
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
     CollectedData, IndicatorType, Level, ExternalServiceRecord,
@@ -33,7 +35,9 @@ from django.shortcuts import render_to_response, redirect
 from django.http import HttpResponse
 from django_tables2 import RequestConfig
 
-from workflow.models import Program, SiteProfile, Country, Sector, ActivitySites, ActivityUser, FormGuidance
+from workflow.models import (
+    Program, SiteProfile, Country, Sector, ActivitySites, FormGuidance,
+)
 from workflow.mixins import AjaxableResponseMixin
 from workflow.admin import CountryResource
 from workflow.forms import FilterForm
@@ -44,9 +48,7 @@ import json
 import requests
 from weasyprint import HTML, CSS
 from datetime import datetime
-from datetime import timedelta
 from dateutil.relativedelta import relativedelta
-import dateutil.parser
 
 
 def generate_periodic_target_single(tf, start_date, nth_target_period,
@@ -114,7 +116,6 @@ def generate_periodic_targets(tf, start_date, num_targets,
         return target_period
 
     for i in range(num_targets):
-        j = i + 1
         target_period = generate_periodic_target_single(
             tf, start_date, i, target_frequency_custom)
         gentargets.append(target_period)
@@ -308,7 +309,7 @@ class IndicatorCreate(CreateView):
 
     # pre-populate parts of the form
     def get_initial(self):
-        user_profile = ActivityUser.objects.get(user=self.request.user)
+        # user_profile = ActivityUser.objects.get(user=self.request.user)
         initial = {
             'program': self.kwargs['id'],
         }
@@ -541,9 +542,9 @@ class IndicatorUpdate(UpdateView):
         # for periodic_target_value in periodic_targets:
 
         generated_targets = []
-        existing_target_frequency = indicator.target_frequency
-        new_target_frequency = form.cleaned_data.get('target_frequency', None)
-        lop = form.cleaned_data.get('lop_target', None)
+        # existing_target_frequency = indicator.target_frequency
+        # new_target_frequency = form.cleaned_data.get('target_frequency', None)
+        # lop = form.cleaned_data.get('lop_target', None)
 
         fields_to_watch = {'indicator_type', 'level', 'name',
                            'number', 'sector'}
@@ -1049,7 +1050,7 @@ def collected_data_json(AjaxableResponseMixin, indicator, program):
     collecteddata_without_periodictargets = CollectedData.objects.filter(
         indicator=indicator, periodic_target__isnull=True)
 
-    detail_url = ''
+    # detail_url = ''
     # try:
     #     for data in collecteddata:
     #         if data.activity_table:
@@ -1154,10 +1155,10 @@ class IndicatorReport(View, AjaxableResponseMixin):
     def get(self, request, *args, **kwargs):
 
         organization = request.user.activity_user.organization
-        get_programs = Program.objects.all().filter(
-            funding_status="Funded", organization=organization)
+        # get_programs = Program.objects.all().filter(
+        #      funding_status="Funded", organization=organization)
 
-        get_indicator_types = IndicatorType.objects.all()
+        # get_indicator_types = IndicatorType.objects.all()
 
         program = int(self.kwargs['program'])
         indicator = int(self.kwargs['indicator'])
@@ -1685,7 +1686,6 @@ class CollectedDataList(ListView):
 
     def get(self, request, *args, **kwargs):
 
-        countries = get_country(request.user)
         organization = request.user.activity_user.organization
         get_programs = Program.objects.all().filter(
             funding_status="Funded", organization=organization)

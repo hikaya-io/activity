@@ -181,8 +181,8 @@ def default_custom_dashboard(request, id=0, status=0):
                     total_budgetted = float(
                         total_budgetted) + float(
                         project.total_estimated_budget)
-                    total_actual = float(total_actual) + \
-                                   float(complete.actual_budget)
+                    total_actual =\
+                        float(total_actual) + float(complete.actual_budget)
 
                     get_project_completed.append(project)
 
@@ -363,15 +363,11 @@ def public_dashboard(request, id=0, public=0):
         'map_api_key': settings.GOOGLE_MAP_API_KEY})
 
 
-"""
-Extremely Customized dashboards
-This section contains custom dashboards or one-off dashboard for demo, 
-or specificcustomer requests outside the scope of customized program dashboards
-"""
-
-
 def survey_public_dashboard(request, id=0):
     """
+    Extremely Customized dashboards
+    This section contains custom dashboards or one-off dashboard for demo,
+    or specificcustomer requests outside the scope of customized program dashboards
     DEMO only survey for Activity survey
     :return:
     """
@@ -587,9 +583,9 @@ def rrima_public_dashboard(request, id=0):
     :return:
     """
     # retrieve program
-    model = Program
-    program_id = id
-    get_program = Program.objects.all().filter(id=program_id)
+    model = Program  # noqa
+    # program_id = id
+    # get_program = Program.objects.all().filter(id=program_id)
 
     # retrieve the coutries the user has data access for
     countries = get_country(request.user)
@@ -639,16 +635,16 @@ def rrima_public_dashboard(request, id=0):
          "site_description": "RRIMA (In partnership with IRC) ",
          "region_name": "Balkans"}]
     # Borrowed data for bar graph
-    color_palettes = {
-        'bright': ['#82BC00', '#C8C500', '#10A400', '#CF102E', '#DB5E11',
-                   '#A40D7A', '#00AFA8', '#1349BB', '#FFD200 ',
-                   '#FF7100', '#FFFD00', '#ABABAB', '#7F7F7F', '#7B5213',
-                   '#C18A34'],
-        'light': ['#BAEE46', '#FDFB4A', '#4BCF3D', '#F2637A', '#FFA268',
-                  '#C451A4', '#4BC3BE', '#5B7FCC', '#9F54CC',
-                  '#FFE464', '#FFA964', '#FFFE64', '#D7D7D7', '#7F7F7F',
-                  '#D2A868', '#FFD592']
-    }
+    # color_palettes = {
+    #     'bright': ['#82BC00', '#C8C500', '#10A400', '#CF102E', '#DB5E11',
+    #                '#A40D7A', '#00AFA8', '#1349BB', '#FFD200 ',
+    #                '#FF7100', '#FFFD00', '#ABABAB', '#7F7F7F', '#7B5213',
+    #                '#C18A34'],
+    #     'light': ['#BAEE46', '#FDFB4A', '#4BCF3D', '#F2637A', '#FFA268',
+    #               '#C451A4', '#4BC3BE', '#5B7FCC', '#9F54CC',
+    #               '#FFE464', '#FFA964', '#FFFE64', '#D7D7D7', '#7F7F7F',
+    #               '#D2A868', '#FFD592']
+    # }
 
     get_notebooks = JupyterNotebooks.objects.all().filter(
         very_custom_dashboard="RRIMA")
@@ -659,8 +655,6 @@ def rrima_public_dashboard(request, id=0):
 
 
 # RRIMA Custom Dashboard Report Page (in use 12/16)
-
-
 def notebook(request, id=0):
     """
     :param request:
@@ -673,8 +667,6 @@ def notebook(request, id=0):
 
 
 # RRIMA JupyterView (in use 12/16)
-
-
 def rrima_jupyter_view1(request, id=0):
     """
     TODO: Migrate this to the existing configurable dashboard
@@ -684,11 +676,11 @@ def rrima_jupyter_view1(request, id=0):
     :return:
     """
     model = Program
-    program_id = 1  # id ##USE TURKEY PROGRAM ID HERE
+    program_id = 1  # id ##USE TURKEY PROGRAM ID HERE # noqa
     # get_program = Program.objects.all().filter(id=program_id)
 
     # retrieve the coutries the user has data access for
-    countries = get_country(request.user)
+    # countries = get_country(request.user)
     with open('static/rrima.html') as myfile:
         data = "\n".join(line for line in myfile)
 

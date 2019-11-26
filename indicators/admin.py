@@ -1,7 +1,15 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+from django.contrib import admin
 
-from .models import *
+from .models import (
+    Indicator, IndicatorType, Objective, StrategicObjective, ReportingFrequency,
+    CollectedData, Level, ActivityTable, DisaggregationType,
+    DisaggregationTypeAdmin, DisaggregationLabel, DisaggregationLabelAdmin,
+    ExternalService, ExternalServiceAdmin, ExternalServiceRecord,
+    ExternalServiceRecordAdmin, PeriodicTarget, PeriodicTargetAdmin,
+    ObjectiveAdmin, DataCollectionFrequency
+)
 from workflow.models import Sector, Program
 from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget

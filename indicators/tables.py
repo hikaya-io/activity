@@ -8,9 +8,9 @@ from .models import Indicator, CollectedData
 
 TEMPLATE = '''
 <div class="btn-group btn-group-xs">
-   <a type="button" class="btn btn-warning" 
+   <a type="button" class="btn btn-warning"
    href="/indicators/indicator_update/{{ record.id }}">Edit</a>
-   <a type="button" class="btn btn-default" 
+   <a type="button" class="btn btn-default"
    href="/indicators/data/{{ record.id }}">View</a>
 </div>
 '''

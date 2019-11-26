@@ -140,8 +140,8 @@ class BeneficiaryTestCase(TestCase):
         new_training = TrainingAttendance.objects.create(
             training_name="testtraining", program=get_program)
         new_training.save()
-        get_training = TrainingAttendance.objects.get(
-            training_name="testtraining")
+        # get_training = TrainingAttendance.objects.get(
+        #     training_name="testtraining")
         new_benny = Beneficiary.objects.create(
             beneficiary_name="Joe Test", father_name="Mr Test", age="42",
             gender="male", signature=False, remarks="life")

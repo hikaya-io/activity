@@ -1,8 +1,12 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+from django.contrib import admin
 
-from .models import *
-
+from .models import (
+    CustomDashboard, DashboardComponent, DashboardComponentAdmin, DashboardTheme,
+    DashboardThemeAdmin, ComponentDataSource, ComponentDataSourceAdmin,
+    CustomDashboardAdmin
+)
 
 admin.site.register(CustomDashboard, CustomDashboardAdmin)
 admin.site.register(DashboardTheme, DashboardThemeAdmin)

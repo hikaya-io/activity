@@ -6,9 +6,9 @@ from django import forms
 from django.db.models import Q
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import *
-from crispy_forms.bootstrap import *
-from crispy_forms.layout import Layout, Submit, Reset, Div
+from crispy_forms.layout import (
+    Layout, Submit, Reset, Row, Column
+)
 
 from functools import partial
 from datetime import datetime
@@ -17,7 +17,7 @@ from indicators.models import (
     Indicator, PeriodicTarget, CollectedData, Objective,
     StrategicObjective, ActivityTable, DisaggregationType
 )
-from workflow.models import Program, SiteProfile, Documentation, \
+from workflow.models import Program, Documentation, \
     ProjectComplete, ActivityUser
 from activity.util import get_country
 

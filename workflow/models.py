@@ -26,7 +26,6 @@ from django.db.models import Q
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
-from django.contrib.postgres.fields import ArrayField
 
 APPROVALS = (
     ('in progress', 'in progress'),

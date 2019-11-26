@@ -3,13 +3,13 @@
 
 import csv
 from django.core.management.base import BaseCommand
-from indicators.models import *
+from indicators.models import Indicator
 
 
 class Command(BaseCommand):
     help = """
-        Update lop, unit_of_measure, and baseline values of indicators based 
-        on a csv file usage: sudo py -W ignore  manage.py update_indicators 
+        Update lop, unit_of_measure, and baseline values of indicators based
+        on a csv file usage: sudo py -W ignore  manage.py update_indicators
         -f ~/country_data.csv
         """
 

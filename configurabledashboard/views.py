@@ -44,7 +44,7 @@ class CustomDashboardList(ListView):
         get_program = Program.objects.all().filter(id=program_id)
 
         # retrieve the coutries the user has data access for
-        countries = get_country(request.user)
+        # countries = get_country(request.user)
 
         # retrieve projects for a program
         # get_projects = ProjectAgreement.objects.all()

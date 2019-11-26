@@ -2,7 +2,16 @@
 # -*- coding: utf-8 -*-
 
 from django.urls import re_path, path
-from .views import *
+from .views import (
+    IndicatorList, add_indicator, indicator_create, IndicatorCreate,
+    IndicatorUpdate, IndicatorDelete, PeriodicTargetDeleteView,
+    PeriodicTargetView, CollectedDataReportData, CollectedDataCreate, CollectedDataDelete,
+    CollectedDataList, CollectedDataUpdate, collecteddata_import, indicator_report,
+    TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
+    program_indicator_report, indicator_data_report, IndicatorExport, service_json,
+    collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
+    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete
+)
 
 urlpatterns = [
 

@@ -16,7 +16,7 @@ from .models import (
     ActivityBookmarks, ActivityUser, Sector
 )
 from formlibrary.models import TrainingAttendance, Distribution
-from indicators.models import CollectedData, ExternalService, StrategicObjective
+from indicators.models import CollectedData, ExternalService
 from django.utils import timezone
 
 from .forms import (
@@ -33,7 +33,6 @@ import pytz
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.db.models import Count
 from django.db.models import Q
 from .tables import ProjectAgreementTable
 from .filters import ProjectAgreementFilter
@@ -42,14 +41,14 @@ import requests
 import logging
 
 from django.core import serializers
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic.detail import View
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.decorators import method_decorator
-from activity.util import get_country, email_group, group_excluded, \
-    group_required, get_organizations
+from activity.util import (
+    get_country, email_group, group_excluded, group_required
+)
 from .mixins import AjaxableResponseMixin
 from .export import ProjectAgreementResource, StakeholderResource, \
     SiteProfileResource
@@ -119,7 +118,6 @@ class ProjectDash(ListView):
 
     def get(self, request, *args, **kwargs):
 
-        countries = get_country(request.user)
         get_programs = Program.objects.all().filter(
             funding_status="Funded",
             organization=request.user.activity_user.organization)
@@ -346,13 +344,13 @@ class ProjectAgreementCreate(CreateView):
         form.save()
 
         # save formset from context
-        context = self.get_context_data()
+        # context = self.get_context_data()
 
         latest = ProjectAgreement.objects.latest('id')
         get_agreement = ProjectAgreement.objects.get(id=latest.id)
 
         # create a new dashbaord entry for the project
-        get_program = Program.objects.get(id=latest.program_id)
+        # get_program = Program.objects.get(id=latest.program_id)
 
         create_checklist = Checklist(agreement=get_agreement)
         create_checklist.save()
@@ -707,7 +705,7 @@ class ProjectCompleteCreate(CreateView):
             get_sites = SiteProfile.objects.filter(
                 projectagreement__id=get_project_agreement.id).values_list(
                 'id', flat=True)
-            site = {'site': [o for o in get_sites]}
+            # site = {'site': [o for o in get_sites]}
             initial['site'] = get_sites
 
         except SiteProfile.DoesNotExist:
@@ -740,7 +738,7 @@ class ProjectCompleteCreate(CreateView):
     def form_valid(self, form):
 
         form.save()
-        context = self.get_context_data()
+        # context = self.get_context_data()
         self.object = form.save()
 
         latest = ProjectComplete.objects.latest('id')
@@ -1312,9 +1310,9 @@ class SiteProfileList(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         if 'report' in request.GET:
-            template_name = 'workflow/site_profile_report.html'
+            self.template_name = 'workflow/site_profile_report.html'
         else:
-            template_name = 'workflow/site_profile_list.html'
+            self.template_name = 'workflow/site_profile_list.html'
         return super(SiteProfileList, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -1477,7 +1475,7 @@ class SiteProfileCreate(CreateView):
         instance.organizations.add(
             self.request.user.activity_user.organization)
         messages.success(self.request, 'Success, Site Profile Created!')
-        latest = SiteProfile.objects.latest('id')
+        # latest = SiteProfile.objects.latest('id')
         redirect_url = '/workflow/siteprofile_list/0/0/list/'
         return HttpResponseRedirect(redirect_url)
 
@@ -2358,8 +2356,6 @@ class ChecklistItemList(ListView):
 
     def get(self, request, *args, **kwargs):
 
-        project_agreement_id = self.kwargs['pk']
-
         if int(self.kwargs['pk']) == 0:
             get_checklist = ChecklistItem.objects.all()
         else:
@@ -2397,11 +2393,6 @@ class ChecklistItemCreate(CreateView):
         kwargs = super(ChecklistItemCreate, self).get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
-
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(ChecklistItemCreate, self).dispatch(request, *args,
-                                                         **kwargs)
 
     def get_initial(self):
         checklist = Checklist.objects.get(agreement=self.kwargs['id'])
@@ -2473,11 +2464,11 @@ def checklist_update_link(AjaxableResponseMixin, pk, type, value):
     """
     value = int(value)
 
-    if type == "in_file":
-        update = ChecklistItem.objects.filter(id=pk).update(in_file=value)
-    elif type == "not_applicable":
-        update = ChecklistItem.objects.filter(id=pk).update(
-            not_applicable=value)
+    # if type == "in_file":
+    #     update = ChecklistItem.objects.filter(id=pk).update(in_file=value)
+    # elif type == "not_applicable":
+    #     update = ChecklistItem.objects.filter(id=pk).update(
+    #         not_applicable=value)
 
     return HttpResponse(value)
 
@@ -2642,7 +2633,7 @@ def import_service(service_id=1, deserialize=True):
         # send json data back not deserialized data
         data = get_json
     # debug the json data string uncomment dump and print
-    data2 = json.dumps(data)  # json formatted string
+    # data2 = json.dumps(data)  # json formatted string
 
     return data
 
@@ -2714,16 +2705,12 @@ class StakeholderObjects(View, AjaxableResponseMixin):
 
     def get(self, request, *args, **kwargs):
 
-        # Check for project filter
-        project_agreement_id = self.kwargs['pk']
         # Check for program filter
 
         if self.kwargs['program_id']:
             program_id = int(self.kwargs['program_id'])
         else:
             program_id = 0
-
-        countries = get_country(request.user)
 
         countries = get_country(request.user)
 
@@ -2759,16 +2746,12 @@ class SiteProfileObjects(View, AjaxableResponseMixin):
 
     def get(self, request, *args, **kwargs):
 
-        # Check for project filter
-        project_agreement_id = self.kwargs['pk']
         # Check for program filter
 
         if self.kwargs['program_id']:
             program_id = int(self.kwargs['program_id'])
         else:
             program_id = 0
-
-        countries = get_country(request.user)
 
         countries = get_country(request.user)
 
@@ -2795,11 +2778,6 @@ class SiteProfileObjects(View, AjaxableResponseMixin):
 class DocumentationListObjects(View, AjaxableResponseMixin):
 
     def get(self, request, *args, **kwargs):
-
-        project_agreement_id = self.kwargs['project']
-        countries = get_country(request.user)
-        get_programs = Program.objects.all().filter(
-            funding_status="Funded", country__in=countries)
 
         if int(self.kwargs['program']) != 0 & int(self.kwargs['project']) == 0:
             get_documentation = Documentation.objects.all().prefetch_related(

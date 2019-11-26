@@ -4,7 +4,9 @@
 import csv
 import re
 from django.core.management.base import BaseCommand
-from workflow.models import *
+from workflow.models import (
+    Province, Country, District, SiteProfile, ProfileType, Office
+)
 from django.utils import timezone
 
 

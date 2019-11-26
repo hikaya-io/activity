@@ -39,7 +39,7 @@ class IndicatorTestCase(TestCase):
         user = User.objects.create_user(
             'john', 'lennon@thebeatles.com', 'johnpassword')
         user.save()
-        get_user = User.objects.get(username='john')
+        # get_user = User.objects.get(username='john')
         new_indicator = Indicator.objects.create(
             name="testindicator",
             number="1.2.3",

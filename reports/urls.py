@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from .views import *
+from .views import (
+    ReportData, ReportHome, IndicatorReportData, CollectedDataReportData, ProjectReportData
+)
 from django.urls import path
 
 

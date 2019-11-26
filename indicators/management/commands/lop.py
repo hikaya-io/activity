@@ -2,18 +2,18 @@
 # -*- coding: utf-8 -*-
 
 from django.core.management.base import BaseCommand
-from indicators.models import *
+from indicators.models import (Indicator, PeriodicTarget, )
 from django.utils import timezone
 
 
 class Command(BaseCommand):
     help = """
-        The script will look at each indicator and check to see if there are 
+        The script will look at each indicator and check to see if there are
         any data records associated with it.
         1. If NO, don't do anything further with this indicator.
         2. If YES, do the following:
             2.1. Set target frequency to "Life of Program only".
-            2.2. Save this target frequency even if other required fields 
+            2.2. Save this target frequency even if other required fields
             have errors or are incomplete.
             2.2. Assign all data records to the Life of Program target.'
         """
@@ -50,7 +50,7 @@ class Command(BaseCommand):
 
                     # just checking to see if lop_target is a numeric value;
                     # if it is not then exception will be raised.
-                    lop = float(ind.lop_target)
+                    # lop = float(ind.lop_target)
 
                     # create a "Life of Program (LOP) Only" target
                     lop_pt = PeriodicTarget.objects.create(

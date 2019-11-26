@@ -1,6 +1,22 @@
 from activity import views
-from activity.views import *
-from feed.views import *
+from activity.views import (
+    BookmarkList, BookmarkCreate, BookmarkDelete, BookmarkUpdate,
+    UserInviteView, PasswordReset,
+)
+from feed.views import (
+    UserViewSet, ProgramViewSet, SectorViewSet, ProjectTypeViewSet,
+    OfficeViewSet, SiteProfileViewSet, CountryViewSet,
+    AgreementViewSet, CompleteViewSet, PeriodicTargetReadOnlyViewSet,
+    ObjectiveViewSet, OrganizationViewSet, LoggedUserViewSet,
+    PogramIndicatorReadOnlyViewSet,ProjectAgreementViewSet, ChecklistViewSet,
+    CollectedDataViewSet, IndicatorViewSet, ReportingFrequencyViewSet,
+    ExternalServiceRecordViewSet, DisaggregationValueViewSet, EvaluateViewSet,
+    CapacityViewSet, ActivityUserViewSet, ProfileTypeViewSet, DistrictViewSet,
+    DocumentationViewSet, IndicatorTypeViewSet, StakeholderTypeViewSet, ContactViewSet,
+    ActivitytableViewSet, VillageViewSet, StrategicObjectiveViewSet, ProvinceViewSet,
+    AdminLevelThreeViewSet, ExternalServiceViewSet, DisaggregationTypeViewSet,
+    LevelViewSet, StakeholderViewSet
+)
 from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 from rest_framework import routers
@@ -8,7 +24,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.authtoken import views as auth_views
 from django.contrib.auth import views as authviews
-
+from django.shortcuts import redirect
 from activity import views as activityviews
 
 # Uncomment the next two lines to enable the admin:

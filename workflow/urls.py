@@ -1,7 +1,27 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from .views import *
+from .views import (
+    list_workflow_level1, add_level2, add_documentation, add_contact,
+    add_stakeholder, delete_stakeholder, ProgramUpdate,
+    ProjectDash, ProgramDash, level1_delete, ProjectAgreementList,
+    ProjectAgreementCreate, ProjectAgreementUpdate,
+    ProjectCompleteBySite, ProjectCompleteDetail,
+    SiteProfileList, SiteProfileCreate, SiteProfileUpdate,
+    delete_project_agreement, ProjectAgreementImport, ProjectAgreementDetail,
+    SiteProfileReport, IndicatorDataBySite, ProjectCompleteList, ProjectCompleteCreate,
+    SiteProfileDelete, MonitorList, MonitorCreate, MonitorUpdate, MonitorDelete,
+    ProjectCompleteUpdate, ProjectCompleteDelete, DocumentationList, DocumentationListObjects,
+    ProjectCompleteImport, DocumentationAgreementList, DocumentationCreate, BenchmarkCreate,
+    QuantitativeOutputsCreate, DocumentationDelete, DocumentationAgreementCreate,
+    export_stakeholders_list, DocumentationAgreementUpdate, DocumentationUpdate, ChecklistItemList,
+    ChecklistItemCreate, ChecklistItemUpdate, ChecklistItemDelete, ContactList,
+    ContactCreate, ContactUpdate, BenchmarkUpdate, BenchmarkDelete, StakeholderList,
+    StakeholderObjects, StakeholderCreate, StakeholderUpdate, province_json, service_json,
+    save_bookmark, district_json, country_json, export_sites_list, ReportData, DocumentationAgreementDelete,
+    QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
+    BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact
+)
 from django.urls import re_path, path
 
 # place app url patterns here
