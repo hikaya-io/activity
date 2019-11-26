@@ -1,4 +1,4 @@
-git name: Activity
+name: Activity
 
 on: 
   push:
