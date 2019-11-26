@@ -45,7 +45,7 @@ class AjaxableResponseMixin(object):
 
 
 class APIDefaultsMixin(object):
-    """Default settings for view authentication, permissions,   
+    """Default settings for view authentication, permissions,
      filtering and pagination."""
 
     authentication_classes = (

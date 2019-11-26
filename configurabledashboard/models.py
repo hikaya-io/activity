@@ -11,7 +11,7 @@ from workflow.models import Program
 try:
     from django.utils import timezone
 except ImportError:
-    from datetime import datetime as timezone
+    from datetime import datetime as timezone  # noqa:F401
 
 
 class DashboardTheme(models.Model):

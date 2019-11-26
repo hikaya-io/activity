@@ -771,7 +771,7 @@ def update_user_access(request, pk, status):
 
 @login_required(login_url='/accounts/login/')
 def add_program(request):
-    """ 
+    """
     Add program
     """
     data = request.POST

@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from .models import TrainingAttendance, Beneficiary, Distribution
-from django.urls import reverse_lazy
 from django.shortcuts import redirect
 
 from .forms import TrainingAttendanceForm, BeneficiaryForm, DistributionForm
@@ -21,7 +20,6 @@ from django.views.generic.detail import View
 from .mixins import AjaxableResponseMixin
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-from django.forms.models import model_to_dict
 
 
 class TrainingList(ListView):
@@ -42,7 +40,7 @@ class TrainingList(ListView):
 
         get_training = TrainingAttendance.objects.all().filter(
             program__organization=request.user.activity_user.organization)
-        
+
         program_id = int(self.kwargs['program'])
         project_id = int(self.kwargs['project'])
 
@@ -385,7 +383,7 @@ class DistributionCreate(CreateView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Success, Distribution Created!')
-        latest = Distribution.objects.latest('id')
+        # latest = Distribution.objects.latest('id')
         redirect_url = '/formlibrary/distribution_list/0/0/'
         return HttpResponseRedirect(redirect_url)
 
@@ -542,7 +540,6 @@ class GetAgreements(View, AjaxableResponseMixin):
     def get(self, request, *args, **kwargs):
 
         program_id = self.kwargs['program']
-        countries = get_country(request.user)
         if program_id != 0:
             get_agreements = ProjectAgreement.objects.all().filter(
                 program=program_id).values('id', 'project_name')

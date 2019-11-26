@@ -8,7 +8,7 @@ from feed.views import (
     OfficeViewSet, SiteProfileViewSet, CountryViewSet,
     AgreementViewSet, CompleteViewSet, PeriodicTargetReadOnlyViewSet,
     ObjectiveViewSet, OrganizationViewSet, LoggedUserViewSet,
-    PogramIndicatorReadOnlyViewSet,ProjectAgreementViewSet, ChecklistViewSet,
+    PogramIndicatorReadOnlyViewSet, ProjectAgreementViewSet, ChecklistViewSet,
     CollectedDataViewSet, IndicatorViewSet, ReportingFrequencyViewSet,
     ExternalServiceRecordViewSet, DisaggregationValueViewSet, EvaluateViewSet,
     CapacityViewSet, ActivityUserViewSet, ProfileTypeViewSet, DistrictViewSet,

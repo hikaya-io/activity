@@ -233,4 +233,3 @@ class HTMLPasswordResetForm(forms.Form):
                 email_txt,
                 email_html
             )
-

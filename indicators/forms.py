@@ -117,7 +117,7 @@ class CollectedDataForm(forms.ModelForm):
         widget=DatePicker.DateInput(), required=True)
 
     def __init__(self, *args, **kwargs):
-        instance = kwargs.get('instance', None)
+        # instance = kwargs.get('instance', None)
         self.helper = FormHelper()
         self.request = kwargs.pop('request')
         self.program = kwargs.pop('program')
@@ -125,7 +125,6 @@ class CollectedDataForm(forms.ModelForm):
         self.activity_table = kwargs.pop('activity_table')
         self.helper.form_method = 'post'
         self.helper.form_error_title = 'Form Errors'
-        
         self.helper.form_id = 'collecteddata_update_form'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
@@ -181,6 +180,7 @@ class CollectedDataForm(forms.ModelForm):
         self.fields['achieved'].label = 'Actual value'
         self.fields['date_collected'].help_text = ' '
         self.fields['evidence'].queryset = Documentation.objects.filter()
+
 
 class StrategicObjectiveForm(forms.ModelForm):
     class Meta:

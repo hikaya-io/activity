@@ -403,7 +403,7 @@ def survey_public_dashboard(request, id=0):
     """
     meaning: all_or_complet,peaceful,global,i_give_up
     join: activity_is_a_myst, i_like_beer,to_meet_the_team,not_sure_what_
-    activity_is: adaptive_manag an_indicator_t 
+    activity_is: adaptive_manag an_indicator_t
         a_data_managem option_4 all_of_the_abo
     """
     meaningcount = dict()
@@ -508,7 +508,7 @@ def survey_talk_public_dashboard(request, id=0):
     meaning: all_or_complet,peaceful,global,i_give_up
     join: activity_is_a_myst, i_like_a_good_power_point,data_is_king,
         not_sure_what_
-    activity_is: adaptive_manag an_indicator_t a_data_managem option_4 
+    activity_is: adaptive_manag an_indicator_t a_data_managem option_4
         all_of_the_abo
     """
     meaningcount = dict()
@@ -592,12 +592,12 @@ def rrima_public_dashboard(request, id=0):
 
     # retrieve projects for a program
     # .filter(program__id=1, program__country__in=1)
-    get_projects = ProjectAgreement.objects.all()
+    # get_projects = ProjectAgreement.objects.all()
 
     page_text = dict()
     page_text['page_title'] = "Refugee Response and Migration News"
     page_text['project_summary'] = {}
-    # TODO : Change this variable 
+    # TODO : Change this variable
     page_map = [
         {"latitude": 39.9334, "longitude": 32.8597, "location_name": "Ankara",
          "site_contact": "Sonal Shinde, Migration Response Director, "
@@ -675,7 +675,7 @@ def rrima_jupyter_view1(request, id=0):
     :param id:
     :return:
     """
-    model = Program
+    model = Program  # noqa
     program_id = 1  # id ##USE TURKEY PROGRAM ID HERE # noqa
     # get_program = Program.objects.all().filter(id=program_id)
 

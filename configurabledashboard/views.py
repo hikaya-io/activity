@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from .mixins import AjaxableResponseMixin
-from activity.util import get_country, group_excluded
+from activity.util import group_excluded
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
@@ -12,7 +12,7 @@ from .models import CustomDashboard, DashboardComponent, ComponentDataSource, \
 from workflow.models import Program, FormGuidance
 from .forms import (
     CustomDashboardCreateForm, CustomDashboardForm, CustomDashboardModalForm,
-    CustomDashboardMapForm, DashboardThemeCreateForm, DashboardThemeForm,
+    DashboardThemeCreateForm, DashboardThemeForm,
     DashboardComponentCreateForm, DashboardComponentForm,
     ComponentDataSourceForm,
     ComponentDataSourceCreateForm
@@ -39,7 +39,7 @@ class CustomDashboardList(ListView):
 
     def get(self, request, *args, **kwargs):
         # retrieve program
-        model = Program
+        model = Program  # noqa
         program_id = int(self.kwargs['pk'])
         get_program = Program.objects.all().filter(id=program_id)
 
@@ -114,7 +114,7 @@ class CustomDashboardCreate(CreateView):
             data.save()
 
         # save formset from context
-        context = self.get_context_data()
+        # context = self.get_context_data()
 
         messages.success(self.request, 'Success, Dashboard Created!')
         redirect_url = '/configurabledashboard/' + str(self.kwargs['pk'])
@@ -202,26 +202,26 @@ class CustomDashboardDetail(DetailView):
         context.update({'get_component_data_maps': get_component_data_maps})
 
         # retrieve data for each componennt in data map
-        try:
-            get_all_component_data = {}
-        #     #iterate through the component maps for each position on the page
-        # for position in get_component_data_maps:
-        #         #iterate through the data sources mapped for each
-        #         components and retrieve data
-        #         for mapped_item, data_source in
-        #           get_component_data_maps[position]['data_map']:
-        #             # get that DataSource by id
-        #             data_source =
-        #               ComponentDataSource.objects.get(data_source)
-        #             #retrieve data
-        #             dataset = data_source.data_source  # do JSON request here
-        #             # filter data by the key to just use subset needed
-        #             filtered_data = dataset[data_source.filter_key]
-        #             get_all_component_data[position]['data_sources']
-        #               ['data_source.name'] = filtered_data
-        except not getDashboardComponentDataMaps:
-            get_all_component_data = None
-        context.update({'get_all_component_data': get_all_component_data})
+        # try:
+        #     get_all_component_data = {}
+        # #     #iterate through the component maps for each position on the page
+        # # for position in get_component_data_maps:
+        # #         #iterate through the data sources mapped for each
+        # #         components and retrieve data
+        # #         for mapped_item, data_source in
+        # #           get_component_data_maps[position]['data_map']:
+        # #             # get that DataSource by id
+        # #             data_source =
+        # #               ComponentDataSource.objects.get(data_source)
+        # #             #retrieve data
+        # #             dataset = data_source.data_source  # do JSON request here
+        # #             # filter data by the key to just use subset needed
+        # #             filtered_data = dataset[data_source.filter_key]
+        # #             get_all_component_data[position]['data_sources']
+        # #               ['data_source.name'] = filtered_data
+        # except not getDashboardComponentDataMaps:
+        #     get_all_component_data = None
+        # context.update({'get_all_component_data': get_all_component_data})
 
         return context
 
@@ -230,33 +230,34 @@ class CustomDashboardDetail(DetailView):
 
 
 # component_map):
-def custom_dashboard_update_components(AjaxableResponseMixin, pk, location,
-                                       type):
-    # (?P<pk>[0-9]+)/(?P<location>[0-9]+)/(?P<type>[-\w]+)/$
-    # form_mapping = component_map
-    mapped = False
-    current_dashboard = CustomDashboard.objects.get(id=self.kwargs['pk'])
-    current_map = current_dashboard.component_map  # .split("]","],")
-    # for mapped_object in current_map:
-    #     if mapping.0 == form_mapping.0
-    #         update = current_dashboard.update(component_map=form_mapping)
-    #         mapped = true
-    # if mapped == false:
-    #     update = current_dashboard.component_map.append(form_mapping)
-    #     current_dashboard.save()
-    return HttpResponse(component_map)
+# def custom_dashboard_update_components(AjaxableResponseMixin, pk, location,
+#                                        type):
+#     # (?P<pk>[0-9]+)/(?P<location>[0-9]+)/(?P<type>[-\w]+)/$
+#     # form_mapping = component_map
+#     mapped = False
+#     current_dashboard = CustomDashboard.objects.get(id=self.kwargs['pk'])
+#     current_map = current_dashboard.component_map  # .split("]","],")
+#     # for mapped_object in current_map:
+#     #     if mapping.0 == form_mapping.0
+#     #         update = current_dashboard.update(component_map=form_mapping)
+#     #         mapped = true
+#     # if mapped == false:
+#     #     update = current_dashboard.component_map.append(form_mapping)
+#     #     current_dashboard.save()
+#     return HttpResponse(component_map)
 
 
 class CustomDashboardUpdate(UpdateView):
     model = CustomDashboard
     form_class = CustomDashboardForm
+    guidance = None
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
-            guidance = FormGuidance.objects.get(form="CustomDashboard")
+            self.guidance = FormGuidance.objects.get(form="CustomDashboard")
         except FormGuidance.DoesNotExist:
-            guidance = None
+            self.guidance = None
 
         return super(CustomDashboardUpdate, self).dispatch(request, *args,
                                                            **kwargs)
@@ -342,7 +343,7 @@ class CustomDashboardUpdate(UpdateView):
             get_component_order = json.loads(
                 get_custom_dashboard.component_map,
                 object_pairs_hook=OrderedDict)
-        except:
+        except Exception as e:
             get_component_order = None
         context.update({'get_component_order': get_component_order})
 
@@ -393,7 +394,7 @@ class CustomDashboardUpdate(UpdateView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-        check_form_type = self.request.get_full_path()
+        # check_form_type = self.request.get_full_path()
         # TODO: Once refactoring is done, revisit
         #  whether checking form type still needed
         # if check_form_type.startswith('/confirgureabledashboard/map'):
@@ -423,7 +424,7 @@ def import_data_filter_options(data_url, column_filter, authorization_token):
     For populating data filters in dropdown --
         retrieve data_source using data_url
     """
-    filter_url = data_url
+    # filter_url = data_url
     headers = {'content-type': 'application/json',
                'Authorization': authorization_token}
     response = requests.get(data_url, headers=headers, verify=False)
@@ -443,9 +444,9 @@ class CustomDashboardDelete(AjaxableResponseMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super(CustomDashboardDelete, self).get_context_data(**kwargs)
-        get_custom_dashboard = CustomDashboard.objects.all().get(
-            id=self.kwargs['pk'])
-        pk = self.kwargs['pk']
+        # get_custom_dashboard = CustomDashboard.objects.all().get(
+        #     id=self.kwargs['pk'])
+        # pk = self.kwargs['pk']
         context.update({'pk': self.kwargs['pk']})
         return context
 
@@ -589,9 +590,9 @@ class DashboardComponentList(ListView):
 
     def get(self, request, *args, **kwargs):
         # retrieve program
-        model = Program
+        model = Program  # noqa
         # retrieve the countries the user has data access for
-        countries = get_country(request.user)
+        # countries = get_country(request.user)
         dashboard_id = int(self.kwargs['pk'])
 
         get_dashboard_list_components = DashboardComponent.objects.all()\
@@ -604,20 +605,21 @@ class DashboardComponentList(ListView):
 class DashboardComponentCreate(CreateView):
     model = DashboardComponent
     template_name = 'configurabledashboard/components/admin/form.html'
+    guidance = None
 
     # add the request to the kwargs
     def get_form_kwargs(self):
         kwargs = super(DashboardComponentCreate, self).get_form_kwargs()
         kwargs['request'] = self.request
-        id = self.kwargs['id']
+        # id = self.kwargs['id']
         return kwargs
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
-            guidance = FormGuidance.objects.get(form="DashboardComponent")
+            self.guidance = FormGuidance.objects.get(form="DashboardComponent")
         except FormGuidance.DoesNotExist:
-            guidance = None
+            self.guidance = None
         return super(DashboardComponentCreate, self).dispatch(request, *args,
                                                               **kwargs)
 
@@ -627,6 +629,7 @@ class DashboardComponentCreate(CreateView):
                 id=self.kwargs['id']),
             'get_component_data_sources': ComponentDataSource.objects.all(),
         }
+        return initial
 
     def get_context_data(self, **kwargs):
         context = super(DashboardComponentCreate,
@@ -646,7 +649,7 @@ class DashboardComponentCreate(CreateView):
 
     def form_valid(self, form):
         form.save()
-        context = self.get_context_data()
+        # context = self.get_context_data()
         messages.success(self.request, 'Success, Component Created!')
         latest_component = DashboardComponent.objects.latest('id')
         get_custom_dashboard = CustomDashboard.objects.get(id=self.kwargs['id'])
@@ -675,7 +678,7 @@ class DashboardComponentUpdate(UpdateView):
         pk = self.kwargs['pk']
         context.update({'pk': pk})
 
-        get_component_data_sources = []
+        # get_component_data_sources = []
         get_component_data_sources = ComponentDataSource.objects.all()
         context.update(
             {'get_component_data_sources': get_component_data_sources})
@@ -770,8 +773,6 @@ class ComponentDataSourceList(ListView):
 
 # CLASS VIEWS FOR THE DATA SOURCE OBJECT
 # ===========================================
-
-
 class ComponentDataSourceCreate(CreateView):
     model = ComponentDataSource
     template_name = 'configurabledashboard/datasource/form.html'
@@ -798,7 +799,7 @@ class ComponentDataSourceCreate(CreateView):
 
     def form_valid(self, form):
         form.save()
-        context = self.get_context_data()
+        # context = self.get_context_data()
         messages.success(self.request, 'Success, Data Source Created!')
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -819,20 +820,21 @@ class ComponentDataSourceDetail(DetailView):
 class ComponentDataSourceUpdate(UpdateView):
     model = ComponentDataSource
     template_name = 'configurabledashboard/datasource/update_form.html'
+    guidance = None
 
     def dispatch(self, request, *args, **kwargs):
         try:
-            guidance = FormGuidance.objects.get(form="ComponentDataSource")
+            self.guidance = FormGuidance.objects.get(form="ComponentDataSource")
         except FormGuidance.DoesNotExist:
-            guidance = None
+            self.guidance = None
         return super(ComponentDataSourceUpdate, self).dispatch(request, *args,
                                                                **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ComponentDataSourceUpdate,
                         self).get_context_data(**kwargs)
-        get_component_data_source = ComponentDataSource.objects.all().get(
-            id=self.kwargs['pk'])
+        # get_component_data_source = ComponentDataSource.objects.all().get(
+        #     id=self.kwargs['pk'])
         pk = self.kwargs['pk']
         context.update({'pk': pk})
 
@@ -873,9 +875,9 @@ class ComponentDataSourceDelete(AjaxableResponseMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(ComponentDataSourceDelete,
                         self).get_context_data(**kwargs)
-        get_data_source = ComponentDataSource.objects.all().get(
-            id=self.kwargs['pk'])
-        pk = self.kwargs['pk']
+        # get_data_source = ComponentDataSource.objects.all().get(
+        #     id=self.kwargs['pk'])
+        # pk = self.kwargs['pk']
         context.update({'pk': self.kwargs['pk']})
         return context
 
