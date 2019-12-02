@@ -10,7 +10,7 @@ from workflow.models import Program, SiteProfile, ProjectAgreement, Office, Prov
 try:
     from django.utils import timezone
 except ImportError:
-    from datetime import datetime as timezone
+    from datetime import datetime as timezone  # noqa
 
 
 class TrainingAttendance(models.Model):

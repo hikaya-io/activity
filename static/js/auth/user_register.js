@@ -1,39 +1,50 @@
 $(document).ready(function() {
+	// Reset form
+	$('#registerForm').trigger('reset');
+	let validInputs = [];
 	validate();
-	$('input').on('keyup', validate);
-	
+
 	// required fields
-	$('#register_first_name').on('input', function() {
-		const username = $(this);
-		if (username.val()) {
+	$('#register_first_name').on('input focus keyup', function() {
+		const firstName = $(this);
+		if (firstName.val()) {
+			validInputs.indexOf('first_name') === -1 ? validInputs.push('first_name') : '';
 			$('#div_first_name')
 				.removeClass('has-error')
 				.addClass('has-success');
 		} else {
+			validInputs = validInputs.filter(item => item !== 'first_name');
 			$('#div_first_name')
 				.removeClass('has-success')
 				.addClass('has-error');
 		}
+		validate();
 	});
 
-	$('#register_username').on('input', function() {
+	$('#register_username').on('input focus', function() {
 		const username = $(this);
+		$('#usernameHelpBlock').addClass('hikaya-hide');
 		if (username.val()) {
+			validInputs.indexOf('username') === -1 ? validInputs.push('username') : '';
+
 			$('#div_username')
 				.removeClass('has-error')
 				.addClass('has-success');
 		} else {
+			validInputs = validInputs.filter(item => item !== 'username');
 			$('#div_username')
 				.removeClass('has-success')
 				.addClass('has-error');
 		}
+		validate();
 	});
 
 	// validate email address
-	$('#register_email_address').on('input', function() {
+	$('#register_email_address').on('input focus keyup', function() {
 		const emailAddressInput = $(this);
 		const emailAddress = emailAddressInput.val();
 		if (emailAddress && isValidEmail(emailAddress)) {
+			validInputs.indexOf('email') === -1 ? validInputs.push('email') : '';
 			$('#div_email_address')
 				.removeClass('has-error')
 				.addClass('has-success');
@@ -41,6 +52,7 @@ $(document).ready(function() {
 				.removeClass('hikaya-show')
 				.addClass('hikaya-hide');
 		} else if (emailAddress && !isValidEmail(emailAddress)) {
+			validInputs = validInputs.filter(item => item !== 'email');
 			$('#div_email_address')
 				.removeClass('has-success')
 				.addClass('has-error');
@@ -48,6 +60,7 @@ $(document).ready(function() {
 				.removeClass('hikaya-hide')
 				.addClass('hikaya-show');
 		} else {
+			validInputs = validInputs.filter(item => item !== 'email');
 			$('#div_email_address')
 				.removeClass('has-success')
 				.addClass('has-error');
@@ -55,11 +68,30 @@ $(document).ready(function() {
 				.removeClass('hikaya-hide')
 				.addClass('hikaya-show');
 		}
+		validate();
 	});
 
-	$('#register_password').keyup(function() {
+	$('#register_password').on('keyup focus input', function() {
 		const password = $(this);
+		const confirmPassword = $('#register_confirm_password').val();
 		$('#passwordHelpBlock').html(checkStrength(password.val()));
+		if (confirmPassword) {
+			if (confirmPassword !== password.val()) {
+				validInputs = validInputs.filter(item => item !== 'password');
+				$('#div_confirm_password')
+					.removeClass('has-success')
+					.addClass('has-error');
+				$('#confirmPasswordHelpBlock').html('Passwords do not match');
+				$('#confirmPasswordHelpBlock').removeClass('hikaya-hide');
+			} else {
+				validInputs.indexOf('password') === -1 ? validInputs.push('password') : '';
+				$('#div_confirm_password')
+					.removeClass('has-error')
+					.addClass('has-success');
+				$('#confirmPasswordHelpBlock').addClass('hikaya-hide');
+			}
+		}
+		validate();
 	});
 
 	function checkStrength(password) {
@@ -75,12 +107,12 @@ $(document).ready(function() {
 			return 'Password too short';
 		}
 
-		//length is ok, lets continue.
+		// length is ok, continue.
 
-		//if length is 8 characters or more, increase strength value
+		// if length is 8 characters or more, increase strength value
 		if (password.length > 7) strength += 1;
 
-		//if password contains both lower and uppercase characters, increase strength value
+		// if password contains both lower and uppercase characters, increase strength value
 		if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 1;
 
 		//if it has numbers and characters, increase strength value
@@ -117,20 +149,25 @@ $(document).ready(function() {
 	}
 
 	// confirm password
-	$('#register_confirm_password').keyup(function() {
+	$('#register_confirm_password').on('keyup focus', function() {
 		const confirmPasswordInput = $(this);
 		const confirmPassword = confirmPasswordInput.val();
 		const password = $('#register_password').val();
 		if (password && confirmPassword !== password) {
+			validInputs = validInputs.filter(item => item !== 'password');
 			$('#div_confirm_password')
 				.removeClass('has-success')
 				.addClass('has-error');
 			$('#confirmPasswordHelpBlock').html('Passwords do not match');
+			$('#confirmPasswordHelpBlock').removeClass('hikaya-hide');
+			validate();
 		} else {
+			validInputs.indexOf('password') === -1 ? validInputs.push('password') : '';
 			$('#div_confirm_password')
 				.removeClass('has-error')
 				.addClass('has-success');
 			$('#confirmPasswordHelpBlock').addClass('hikaya-hide');
+			validate();
 		}
 	});
 
@@ -139,24 +176,15 @@ $(document).ready(function() {
 		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 		return regex.test(email);
 	}
-});
-  
-  function validate() {
-	var inputsWithValues = 0;
-	
-	// get all input fields except for type='submit'
-	var myInputs = $("input:not([type='submit'])");
-  
-	myInputs.each(function(e) {
-	  // if it has a value, increment the counter
-	  if ($(this).val()) {
-		inputsWithValues += 1;
-	  }
-	});
-  
-	if (inputsWithValues == myInputs.length) {
-	  $("input[type=submit]").prop("disabled", false);
-	} else {
-	  $("input[type=submit]").prop("disabled", true);
+
+	function validate() {
+		const isValid = ['first_name', 'email', 'username', 'password'].every(item => {
+			return validInputs.indexOf(item) >= 0;
+		});
+		if (isValid) {
+			$('#register_submit_btn').removeAttr('disabled');
+		} else {
+			$('#register_submit_btn').attr('disabled', 'disabled');
+		}
 	}
-  }
+});

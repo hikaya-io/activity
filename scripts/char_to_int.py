@@ -18,8 +18,8 @@ cursor = connection.cursor()
 def run():
     print("Running Script...")
 
-    trim_list = ['estimated_budget', 'actual_budget', 'total_cost',
-                 'agency_cost', 'local_total_cost', 'local_agency_cost']
+    # trim_list = ['estimated_budget', 'actual_budget', 'total_cost',
+    #              'agency_cost', 'local_total_cost', 'local_agency_cost']
 
     # get all the projects and loop over them
     get_projects = ProjectComplete.objects.all()
@@ -79,8 +79,8 @@ def run():
             ProjectComplete.objects.all().filter(id=item.id).update(
                 local_agency_cost=0.00)
 
-    trim_list = ['total_estimated_budget', 'mc_estimated_budget',
-                 'local_total_estimated_budget', 'local_mc_estimated_budget']
+    # trim_list = ['total_estimated_budget', 'mc_estimated_budget',
+    #              'local_total_estimated_budget', 'local_mc_estimated_budget']
 
     # get all the projects and loop over them
     get_projects_complete = ProjectAgreement.objects.all()

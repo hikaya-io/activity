@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+from smtplib import (SMTPRecipientsRefused)
+
 from django.contrib.auth.tokens import default_token_generator
 from django.template.response import TemplateResponse
 from django.views.generic import RedirectView
@@ -261,6 +263,10 @@ def register(request, invite_uuid):
                 invite_uuid['message_username'] = 'username already exists !'
                 return render(request, 'registration/register.html', invite_uuid)
 
+            except ValueError:
+                messages.error(request, 'Please ensure you fill in all required fields')
+                return render(request, 'registration/register.html')
+
         if user:
             if invite_uuid != 'none':
                 try:
@@ -312,14 +318,24 @@ def register(request, invite_uuid):
                 email_txt = 'emails/registration/email_confirmation.txt'
                 email_html = 'emails/registration/email_confirmation.html'
 
-                send_single_mail(
-                    mail_subject,
-                    'team.hikaya@gmail.com',
-                    [email],
-                    data,
-                    email_txt,
-                    email_html
-                )
+                try:
+                    send_single_mail(
+                        mail_subject,
+                        'team.hikaya@gmail.com',
+                        [email],
+                        data,
+                        email_txt,
+                        email_html
+                    )
+                except SMTPRecipientsRefused:
+                    # delete user if an email can't be sent
+                    user.delete()
+                    messages.error(
+                        request,
+                        'We can not confirmation mail, please check email address and try again',
+                        fail_silently=True
+                    )
+                    return render(request, 'registration/register.html')
 
             activity_user = ActivityUser.objects.create(
                 user=user,
@@ -755,7 +771,7 @@ def update_user_access(request, pk, status):
 
 @login_required(login_url='/accounts/login/')
 def add_program(request):
-    """ 
+    """
     Add program
     """
     data = request.POST

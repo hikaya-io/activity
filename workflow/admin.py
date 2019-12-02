@@ -1,7 +1,19 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from .models import *
+from .models import (
+    admin, Country, Documentation, ProjectType, ProjectAgreement,
+    Program, Benchmarks, Budget, SiteProfile, ActivityUserProxy, Organization,
+    OrganizationAdmin, Evaluate, ProfileType,
+    AdminLevelThree, AdminLevelThreeAdmin, ActivityBookmarksAdmin,
+    ActivitySitesAdmin, ActivityUser, ChecklistAdmin, ChecklistItem,
+    Stakeholder, StakeholderType, Monitor, Currency, ActivityBookmarks,
+    ActivitySites, ActivityUserOrganizationGroup, Office, Province,
+    ProvinceAdmin, Template, Capacity, ApprovalAuthority, User,
+    FormGuidance, Contact, Checklist, ChecklistItemAdmin, ProjectComplete,
+    FormGuidanceAdmin, ContactAdmin, ActivityUserAdmin, ProjectTypeAdmin,
+    OfficeAdmin, District, DistrictAdmin, Village, UserInvite, Sector,
+)
 from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
 from import_export.admin import ImportExportModelAdmin, ExportMixin

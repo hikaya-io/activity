@@ -1,10 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-from .views import *
 from django.urls import path, re_path
 
-# place app url patterns here
+from .views import (
+    CustomDashboardCreate, CustomDashboardDelete, CustomDashboardDetail,
+    CustomDashboardList, CustomDashboardUpdate, custom_dashboard_update_components,
+    DashboardComponentCreate, DashboardComponentDelete, DashboardComponentList,
+    DashboardComponentUpdate, DashboardThemeCreate, DashboardThemeDelete,
+    DashboardThemeList, DashboardThemeUpdate, ComponentDataSourceList,
+    ComponentDataSourceCreate, ComponentDataSourceDelete, ComponentDataSourceDetail,
+    ComponentDataSourceUpdate,
+)
+
 
 urlpatterns = [
     path('<int:pk>/', CustomDashboardList.as_view(),

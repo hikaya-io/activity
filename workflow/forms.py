@@ -1,23 +1,27 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+from django.forms import HiddenInput
+from django.forms.utils import flatatt
+from django.template.loader import render_to_string
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import *
-from crispy_forms.bootstrap import *
-from crispy_forms.layout import Layout, Submit, Reset, Field
-from django.forms import HiddenInput
+from crispy_forms.bootstrap import (
+    PrependedAppendedText, PrependedText, AppendedText,
+    FormActions, Tab, TabHolder, Div, FieldWithButtons, StrictButton
+)
+from crispy_forms.layout import (
+    Layout, Submit, Reset, Field, Column, Row, HTML, Fieldset,)
 from functools import partial
 from .widgets import GoogleMapsWidget
 from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
     Benchmarks, Monitor, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector, FundCode, Country
+    ActivityUser, Contact, Sector, Country
 )
 from indicators.models import CollectedData, Indicator, PeriodicTarget
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
 from activity.util import get_country
-from django_select2.forms import Select2MultipleWidget
 
 # Global for approvals
 APPROVALS = (
@@ -281,7 +285,7 @@ class ProjectAgreementForm(forms.ModelForm):
 
         super(ProjectAgreementForm, self).__init__(*args, **kwargs)
 
-        if not 'Approver' in self.request.user.groups.values_list('name',
+        if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
             APPROVALS = (
                 ('in progress', 'in progress'),
@@ -442,7 +446,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
             country__in=countries)
 
-        if not 'Approver' in self.request.user.groups.values_list('name',
+        if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
             APPROVALS = (
                 ('in progress', 'in progress'),
@@ -461,7 +465,7 @@ class ProjectCompleteCreateForm(forms.ModelForm):
     class Meta:
         model = ProjectComplete
         fields = '__all__'
-        
+
     project_agreement2 = forms.CharField(
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
@@ -856,7 +860,7 @@ class ProjectCompleteForm(forms.ModelForm):
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
             country__in=countries)
 
-        if not 'Approver' in self.request.user.groups.values_list('name',
+        if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
             APPROVALS = (
                 ('in progress', 'in progress'),
@@ -1163,7 +1167,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
             country__in=countries)
 
-        if not 'Approver' in self.request.user.groups.values_list('name',
+        if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
             APPROVALS = (
                 ('in progress', 'in progress'),
@@ -1547,8 +1551,8 @@ class ContactForm(forms.ModelForm):
         self.helper.html5_required = True
         self.helper.layout = Layout(
             Row(
-                Column('title', css_class='form-group col-md-6 mb-0'),
                 Column('name', css_class='form-group col-md-6 mb-0'),
+                Column('stakeholder', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
@@ -1561,6 +1565,7 @@ class ContactForm(forms.ModelForm):
                 Column('country', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
+
             'address',
             Reset('reset', 'Close', css_class='btn btn-md btn-close'),
             Submit('submit', 'Save Changes',

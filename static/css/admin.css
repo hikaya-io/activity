@@ -50,3 +50,16 @@
 .mb-15 {
     margin-bottom: 15px !important;
 }
+
+.coming-soon-container {
+    background-color: rgba(238, 238, 240, 0.6);
+    height: 400px; 
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.coming-soon-logo {
+    width: 96px; padding-bottom: 32px
+}

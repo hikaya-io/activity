@@ -85,6 +85,7 @@ target/
 *.pyc
 __pycache__/
 local.py
+production.py
 
 .env
 db.sqlite3

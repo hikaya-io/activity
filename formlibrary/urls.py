@@ -1,7 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from .views import *
+from .views import (
+    TrainingList, add_training, add_distribution, TrainingListObjects,
+    BeneficiaryList, BeneficiaryCreate, BeneficiaryListObjects,
+    BeneficiaryUpdate, TrainingUpdate, delete_training, delete_beneficiary,
+    TrainingCreate, DistributionList, DistributionCreate, DistributionListObjects,
+    DistributionUpdate, delete_distribution, GetAgreements
+)
 from django.urls import path
 
 # place app url patterns here

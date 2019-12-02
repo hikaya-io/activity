@@ -2,26 +2,41 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 import django_filters
 
-from .serializers import *
-from activity.util import get_country
+from .serializers import (
+    PeriodicTargetSerializer, UserSerializer, ActivitytableSerializer,
+    ActivityUserSerializer, OfficeSerializer, ProjectTypeSerializer,
+    ProgramSerializer, ProgramIndicatorSerializer, SectorSerializer,
+    SiteProfileSerializer, CompleteSerializer, CountrySerializer,
+    StakeholderSerializer, ExternalServiceRecordSerializer, ExternalServiceSerializer,
+    AgreementSerializer, LoggedUserSerializer, IndicatorSerializer, OrganizationSerializer,
+    DocumentationSerializer, IndicatorTypeSerializer, ObjectiveSerializer, EvaluateSerializer,
+    StakeholderTypeSerializer, ProvinceSerializer, DistrictSerializer, ChecklistSerializer,
+    DisaggregationTypeSerializer, DisaggregationValueSerializer, ProfileTypeSerializer,
+    LevelSerializer, StrategicObjectiveSerializer, VillageSerializer, ContactSerializer,
+    AdminLevelThreeSerializer, CollectedDataSerializer, CapacitySerializer,
+    ReportingFrequencySerializer,
 
+)
+
+from activity.util import get_country
 from workflow.mixins import APIDefaultsMixin
 
 from workflow.models import (
     Program, Sector, ProjectType, Office, SiteProfile, Country, ProjectComplete, Checklist,
     ProjectAgreement, Stakeholder, Capacity, Evaluate, ProfileType, Contact, Documentation,
-    Province, District, AdminLevelThree, Village, StakeholderType
+    Province, District, AdminLevelThree, Village, StakeholderType, LoggedUser, Organization
 )
 from indicators.models import (
     Indicator, Objective, ReportingFrequency, ActivityUser, IndicatorType, DisaggregationType,
     Level, ExternalService, ExternalServiceRecord, StrategicObjective, CollectedData,
-    ActivityTable, DisaggregationValue, DisaggregationLabel
+    ActivityTable, DisaggregationValue, PeriodicTarget
 )
 
 
@@ -66,9 +81,8 @@ class PogramIndicatorReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
             'indicator_set__collecteddata_set').all()
         return queryset
 
-# API Classes
 
-
+# API Viewsets
 class UserViewSet(viewsets.ModelViewSet):
     """
     A ViewSet for listing or retrieving users.

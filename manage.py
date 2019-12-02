@@ -4,7 +4,16 @@ import sys
 
 if __name__ == "__main__":
 
-    settings = 'activity.settings.test' if 'test' in sys.argv else 'activity.settings.local'
+    debug = os.environ.get('DEBUG', None)
+
+    if debug is False and debug is not None:
+        settings = 'activity.settings.production'
+
+    elif 'test' in sys.argv:
+        settings = 'activity.settings.test'
+
+    else:
+        settings = 'activity.settings.local'
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings)
 

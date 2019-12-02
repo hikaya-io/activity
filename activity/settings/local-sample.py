@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """Local settings"""
-
 from os import environ
 
-from .base import *
+from .base import *  # noqa: F403
+import os
+
 from django.core.exceptions import ImproperlyConfigured
 
 DEBUG = True
@@ -46,7 +47,7 @@ EMAIL_HOST_USER = environ.get('EMAIL_HOST_USER', 'your_email@example.com')
 EMAIL_PORT = environ.get('EMAIL_PORT', 587)
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
-EMAIL_SUBJECT_PREFIX = '[%s] ' % SITE_NAME
+EMAIL_SUBJECT_PREFIX = '[%s] ' % SITE_NAME  # noqa: F405
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-use-tls
 EMAIL_USE_TLS = True

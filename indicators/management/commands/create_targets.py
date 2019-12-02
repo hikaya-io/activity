@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+from django.core.management.base import BaseCommand
+from django.utils import timezone
 
 import dateutil.parser
 import csv
 from time import strptime
+from datetime import datetime
 
-from django.core.management.base import BaseCommand
-
-from indicators.models import *
+from indicators.models import (Indicator, PeriodicTarget, CollectedData, )
 from indicators.views import generate_periodic_targets
 
 
@@ -164,8 +165,7 @@ class Command(BaseCommand):
                     try:
                         CollectedData.objects.filter(
                             indicator=indicator,
-                            date_collected__range=
-                            [ptarget.start_date, ptarget.end_date])\
+                            date_collected__range=[ptarget.start_date, ptarget.end_date])\
                             .update(periodic_target=ptarget)
                     except Exception as e:
                         self.stdout.write(self.style.ERROR(

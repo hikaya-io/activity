@@ -35,17 +35,16 @@ def get_all_data(url, type, program_country):
     data = json.load(json_file)
     json_file.close()
 
-    #print(data
+    # print(data
 
     # query to mysql database after parsing json data
     def save_countries(keys_to_sql, vars_to_sql):
         # save the original keys list for update in case we need to run that
         save_keys = keys_to_sql
-        keys_to_sql = ", ".join(map(str, keys_to_sql))
+        # keys_to_sql = ", ".join(map(str, keys_to_sql))
 
         query = "INSERT INTO activitydb_country (country,code) " \
-                "VALUES ('%s','%s')" % (
-            vars_to_sql[0], vars_to_sql[1])
+                "VALUES ('%s','%s')" % (vars_to_sql[0], vars_to_sql[1])
         print(query)
 
         try:
@@ -58,8 +57,8 @@ def get_all_data(url, type, program_country):
             country = vars_to_sql[0]
             if type == "country":
                 query_update = "UPDATE activitydb_country set country = %s " \
-                               "where lower(%(type)s) = '%s'" % (
-                    column, value, country.lower())
+                               "where lower(%(type)s) = '%s'" %\
+                               (column, value, country.lower())
             try:
                 cursor.execute(query_update)
                 transaction.commit()
@@ -71,7 +70,7 @@ def get_all_data(url, type, program_country):
     # query to mysql database after parsing json data
     def save_programs(keys_to_sql, vars_to_sql, program_country):
         # save the original keys list for update in case we need to run that
-        save_keys = keys_to_sql
+        # save_keys = keys_to_sql
         keys_to_sql = ", ".join(map(str, keys_to_sql))
 
         var_to_tuple = tuple(vars_to_sql)
@@ -91,8 +90,8 @@ def get_all_data(url, type, program_country):
         latest = Program.objects.latest('id')
 
         query2 = "INSERT INTO activitydb_program_country " \
-                 "(country_id,program_id) VALUES (%s,%s)" % (
-            program_country, latest.id)
+                 "(country_id,program_id) VALUES (%s,%s)" % \
+                 (program_country, latest.id)
 
         print(query2)
         try:

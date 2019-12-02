@@ -20,8 +20,8 @@ def silo_to_dict(silo):
             'NFKD', d.field.name).encode('ascii', 'ignore')
         value = unicodedata.normalize(
             'NFKD', d.char_store).encode('ascii', 'ignore')
-        row = unicodedata.normalize(
-            'NFKD', d.row_number).encode('ascii', 'ignore')
+        # row = unicodedata.normalize(
+        #     'NFKD', d.row_number).encode('ascii', 'ignore')
         parsed_data[key_value] = {label: value}
 
         key_value += 1
@@ -59,7 +59,7 @@ def email_group(country, group, link, subject, message, submiter=None):
     for single_country in country.all():
         country = Country.objects.all().filter(country=single_country)
         get_group_emails = User.objects.all().filter(
-            activity_user=group, 
+            activity_user=group,
             activity_user__country=country).values_list('email', flat=True)
         email_link = link
         formatted_email = email_link
@@ -223,5 +223,3 @@ def send_single_mail(subject, email_from, email_to, data, email_txt, email_html)
     )
     msg.attach_alternative(email_html_content, "text/html")
     msg.send()
-
-

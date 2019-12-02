@@ -6,9 +6,9 @@ from django import forms
 from django.db.models import Q
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import *
-from crispy_forms.bootstrap import *
-from crispy_forms.layout import Layout, Submit, Reset, Div
+from crispy_forms.layout import (
+    Layout, Submit, Reset, Row, Column
+)
 
 from functools import partial
 from datetime import datetime
@@ -17,7 +17,7 @@ from indicators.models import (
     Indicator, PeriodicTarget, CollectedData, Objective,
     StrategicObjective, ActivityTable, DisaggregationType
 )
-from workflow.models import Program, SiteProfile, Documentation, \
+from workflow.models import Program, Documentation, \
     ProjectComplete, ActivityUser
 from activity.util import get_country
 
@@ -37,9 +37,6 @@ class IndicatorForm(forms.ModelForm):
         exclude = ['create_date', 'edit_date']
 
     def __init__(self, *args, **kwargs):
-        # get the user object to check permissions with
-        # print("..................%s..............."
-        #   %kwargs.get('', 'no targets sum found!!!!') )
         indicator = kwargs.get('instance', None)
         self.request = kwargs.pop('request')
         self.program = kwargs.pop('program')
@@ -100,7 +97,7 @@ class CollectedDataForm(forms.ModelForm):
         widget=DatePicker.DateInput(), required=True)
 
     def __init__(self, *args, **kwargs):
-        instance = kwargs.get('instance', None)
+        # instance = kwargs.get('instance', None)
         self.helper = FormHelper()
         self.request = kwargs.pop('request')
         self.program = kwargs.pop('program')
@@ -108,7 +105,6 @@ class CollectedDataForm(forms.ModelForm):
         self.activity_table = kwargs.pop('activity_table')
         self.helper.form_method = 'post'
         self.helper.form_error_title = 'Form Errors'
-
         self.helper.form_id = 'collecteddata_update_form'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True

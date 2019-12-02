@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from os.path import join, normpath
-from base import *
+from .base import *
 
 
 # IN-MEMORY TEST DATABASE
