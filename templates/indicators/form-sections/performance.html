@@ -71,87 +71,122 @@
 </div>
 
 <script>
-  $(document).ready(() => {
-    $("#id_level").select2({
-      theme: "bootstrap"
-    });
-    $("#id_definition").attr("rows", 3);
-    $("#id_justification").attr("rows", 3);
-    $("#id_disaggregation").select2({ theme: "bootstrap" });
-    $("#id_indicator_type").select2({ theme: "bootstrap" });
+  let countDisaggTypes = 0;
 
-    $("#id_disaggregation_types").attr("value", JSON.stringify([]));
+  $(document).ready(() => {
+    $('#id_level').select2({
+      theme: 'bootstrap'
+    });
+    $('#id_definition').attr('rows', 3);
+    $('#id_justification').attr('rows', 3);
+    $('#id_disaggregation').select2({ theme: 'bootstrap' });
+    $('#id_indicator_type').select2({ theme: 'bootstrap' });
+
+    $('#id_disaggregation_types').attr('value', disagTypes);
+
+    // init disag types form
+    initDisagTypes();
   });
 
-  var countDisaggTypes = 0;
-  var disagTypes = [];
+  // get indicator disags from context and process to js compliant json
+  let disagTypes = JSON.parse('{{disaggregations}}'.replace(/&quot;/g, '"'));
+  console.log(disagTypes);
 
   function stringifyDisags() {
     disagTypes = [];
     for (let i = 1; i <= countDisaggTypes; i++) {
-      let disagType = { type: "", labels: [] };
+      let disagType = { type: '', id: null, labels: [] };
 
-      $(`#disagg_type_group_${i} input`).each(function(index, elem) {
-        if (index === 0) {
-          disagType["type"] = $(this).val();
-        } else {
-          disagType["labels"] = [...disagType["labels"], $(this).val()];
-        }
+      // get disag type
+      $(`#disagg_type_group_${i} .type`).each(function(index, elem) {
+        const inputs = elem.getElementsByTagName('input');
+        disagType.type = $(inputs[0]).val();
+        disagType.id = $(inputs[1]).val() || null;
       });
 
+      // get labels for the disag type group
+      $(`#disagg_type_group_${i} .label`).each(function(index, elem) {
+        const inputs = elem.getElementsByTagName('input');
+
+        disagType.labels = [
+          ...disagType.labels,
+          { label: $(inputs[0]).val(), id: $(inputs[1]).val() || null }
+        ];
+      });
+
+      // push the disag type to disag types array
       disagTypes = [...disagTypes, disagType];
     }
 
-    $("#id_disaggregation_types").prop("value", JSON.stringify(disagTypes));
+    // set the disa
+    $('#id_disaggregation_types').prop('value', JSON.stringify(disagTypes));
   }
 
-  function addDisagType() {
+  /**
+   * Init disag types
+   */
+  function initDisagTypes() {
+    for (let i = 0; i < disagTypes.length; i++) {
+      addDisagType(disagTypes[0]);
+    }
+  }
+
+  function addDisagType(type) {
     countDisaggTypes++;
-    $disagTypeGroup = $("<div>")
-      .addClass("row mt-10 disagg_type_group")
+    $disagTypeGroup = $('<div>')
+      .addClass('row mt-10 disagg_type_group')
       .attr({ id: `disagg_type_group_${countDisaggTypes}` })
       .append(
-        $("<div>")
-          .addClass("col-md-6")
-          .append($("<i>").addClass("fa fa-angle-right"))
-          .append(" Disaggregation type")
+        $('<div>')
+          .addClass('col-md-6')
+          .append($('<i>').addClass('fa fa-angle-right'))
+          .append(' Disaggregation type')
       )
       .append(
-        $("<div>")
-          .addClass("col-md-5")
+        $('<div>')
+          .addClass('col-md-5')
           .append(
-            $("<div>")
-              .addClass("form-group-sm")
+            $('<div>')
+              .addClass('type')
               .append(
-                $("<input>")
+                $('<input>')
                   .attr({
-                    class: "form-control",
-                    type: "text",
+                    class: 'form-control',
+                    type: 'text',
                     autofocus: true,
                     id: `id_disagg_type_${countDisaggTypes}`
                   })
+                  .val((type && type.disaggregation_type) || '')
                   .keyup(stringifyDisags.bind(this))
+              )
+              .append(
+                $('<input>')
+                  .attr({
+                    type: 'hidden',
+                    id: `id_disagg_type_id_${countDisaggTypes}`
+                  })
+                  .val((type && type.id) || null)
               )
           )
       )
       .append(
-        $("<div>")
-          .addClass("col-md-1")
+        $('<div>')
+          .addClass('col-md-1')
           .append(
-            $("<button>")
-              .attr({ type: "button" })
-              .addClass("btn btn-sm")
-              .append($("<i>").addClass("fa fa-trash"))
+            $('<button>')
+              .attr({ type: 'button' })
+              .addClass('btn btn-sm')
+              .append($('<i>').addClass('fa fa-trash'))
           )
       )
       .append(
-        $("<div>")
-          .addClass("col-md-12")
+        $('<div>')
+          .addClass('col-md-12')
           .append(
-            $("<button>")
+            $('<button>')
               .attr({
-                class: "btn btn-xs btn-default",
-                type: "button",
+                class: 'btn btn-xs btn-default',
+                type: 'button',
                 id: `id_add_disagg_label_${countDisaggTypes}`
               })
               .click(
@@ -160,58 +195,64 @@
                   `#id_disagg_labels_${countDisaggTypes}`
                 )
               )
-              .append($("<i>").addClass("fa fa-plus"))
-              .append(" Add Disaggregation Label")
+              .append($('<i>').addClass('fa fa-plus'))
+              .append(' Add Disaggregation Label')
           )
       )
       .append(
-        $("<div>").attr({
+        $('<div>').attr({
           id: `id_disagg_labels_${countDisaggTypes}`,
-          class: "col-md-12"
+          class: 'col-md-12'
         })
       );
 
     // attach the group to disaggregations
-    $("#id_disaggregations").append($disagTypeGroup);
+    $('#id_disaggregations').append($disagTypeGroup);
   }
 
-  function addDisagLabel(selector) {
+  function addDisagLabel(selector, label) {
     $(selector).append(
-      $("<div>")
-        .addClass("row mt-10")
+      $('<div>')
+        .addClass('row mt-10 label')
         .attr({
-          id: "disagg_label_group"
+          id: 'disagg_label_group'
         })
         .append(
-          $("<div>")
-            .addClass("col-md-6 text-right")
-            .append($("<small>").text("Disaggregation babel"))
+          $('<div>')
+            .addClass('col-md-6 text-right')
+            .append($('<small>').text('Disaggregation babel'))
         )
         .append(
-          $("<div>")
-            .addClass("col-md-5")
+          $('<div>')
+            .addClass('col-md-5')
             .append(
-              $("<div>")
-                .addClass("form-group-sm")
+              $('<div>')
+                .addClass('form-group-sm')
                 .append(
-                  $("<input>")
-                    .addClass("form-control")
+                  $('<input>')
+                    .addClass('form-control')
                     .attr({
-                      type: "text",
+                      type: 'text',
                       autofocus: true,
                       id: `id_disagg_child`
                     })
                     .keyup(stringifyDisags.bind(this))
                 )
+                .append(
+                  $('<input>').attr({
+                    type: 'hidden',
+                    value: label && label.id
+                  })
+                )
             )
         )
         .append(
-          $("<div>")
-            .addClass("col-md-1")
+          $('<div>')
+            .addClass('col-md-1')
             .append(
-              $("<button>")
-                .attr({ class: "btn btn-sm", type: "button" })
-                .append($("<i>").addClass("fa fa-trash"))
+              $('<button>')
+                .attr({ class: 'btn btn-sm', type: 'button' })
+                .append($('<i>').addClass('fa fa-trash'))
             )
         )
     );

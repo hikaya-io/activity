@@ -157,7 +157,8 @@ class DisaggregationTypeAdmin(admin.ModelAdmin):
 
 class DisaggregationLabel(models.Model):
     disaggregation_type = models.ForeignKey(
-        DisaggregationType, on_delete=models.CASCADE)
+        DisaggregationType, on_delete=models.CASCADE, 
+        related_name='disaggregation_label')
     label = models.CharField(max_length=765, blank=True)
     customsort = models.IntegerField(blank=True, null=True)
     create_date = models.DateTimeField(null=True, blank=True)

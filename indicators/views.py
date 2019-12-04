@@ -49,6 +49,8 @@ import requests
 from weasyprint import HTML, CSS
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from django.forms.models import model_to_dict
+
 
 
 def generate_periodic_target_single(tf, start_date, nth_target_period,
@@ -467,11 +469,23 @@ class IndicatorUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(IndicatorUpdate, self).get_context_data(**kwargs)
         context.update({'id': self.kwargs['pk']})
-        get_indicator = Indicator.objects.get(id=self.kwargs['pk'])
+        get_indicator = Indicator.objects.prefetch_related().filter(id=self.kwargs['pk']).first()
 
+        # create a list of dicts from disag query
+        disaggregations = [
+            dict(
+                disaggregation_type=item.disaggregation_type, 
+                id=item.id, 
+                lables=[
+                    dict(label=label.label, id=label.id) for label in item.disaggregation_label.all()]
+                ) 
+                for item in get_indicator.disaggregation.all()
+            ]
+        
         context.update({'i_name': get_indicator.name})
-        context['program_id'] = get_indicator.program.all()[0].id
+        context['program_id'] = get_indicator.program.all().first().id
         context['active'] = ['indicators']
+        context['disaggregations'] = json.dumps(disaggregations)
         context['periodic_targets'] = PeriodicTarget.objects\
             .filter(indicator=get_indicator)\
             .annotate(num_data=Count('collecteddata'))\
