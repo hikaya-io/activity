@@ -90,7 +90,6 @@
 
   // get indicator disags from context and process to js compliant json
   let disagTypes = JSON.parse('{{disaggregations}}'.replace(/&quot;/g, '"'));
-  console.log(disagTypes);
 
   function stringifyDisags() {
     disagTypes = [];
@@ -105,7 +104,7 @@
       });
 
       // get labels for the disag type group
-      $(`#disagg_type_group_${i} .label`).each(function(index, elem) {
+      $(`#disagg_type_group_${i} .label-group`).each(function(index, elem) {
         const inputs = elem.getElementsByTagName('input');
 
         disagType.labels = [
@@ -127,7 +126,11 @@
    */
   function initDisagTypes() {
     for (let i = 0; i < disagTypes.length; i++) {
-      addDisagType(disagTypes[0]);
+      addDisagType(disagTypes[i]);
+
+      for (let l = 0; l < disagTypes[i].labels.length; l++) {
+        addDisagLabel(`#disagg_type_group_${i + 1}`, disagTypes[i].labels[l]);
+      }
     }
   }
 
@@ -147,7 +150,7 @@
           .addClass('col-md-5')
           .append(
             $('<div>')
-              .addClass('type')
+              .addClass('type form-group-sm')
               .append(
                 $('<input>')
                   .attr({
@@ -213,14 +216,14 @@
   function addDisagLabel(selector, label) {
     $(selector).append(
       $('<div>')
-        .addClass('row mt-10 label')
+        .addClass('row mt-10 label-group')
         .attr({
           id: 'disagg_label_group'
         })
         .append(
           $('<div>')
             .addClass('col-md-6 text-right')
-            .append($('<small>').text('Disaggregation babel'))
+            .append($('<small>').text('Disaggregation label'))
         )
         .append(
           $('<div>')
@@ -236,13 +239,15 @@
                       autofocus: true,
                       id: `id_disagg_child`
                     })
+                    .val((label && label.label) || '')
                     .keyup(stringifyDisags.bind(this))
                 )
                 .append(
-                  $('<input>').attr({
-                    type: 'hidden',
-                    value: label && label.id
-                  })
+                  $('<input>')
+                    .attr({
+                      type: 'hidden'
+                    })
+                    .val((label && label.id) || null)
                 )
             )
         )

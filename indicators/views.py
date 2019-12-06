@@ -476,7 +476,7 @@ class IndicatorUpdate(UpdateView):
             dict(
                 disaggregation_type=item.disaggregation_type, 
                 id=item.id, 
-                lables=[
+                labels=[
                     dict(label=label.label, id=label.id) for label in item.disaggregation_label.all()]
                 ) 
                 for item in get_indicator.disaggregation.all()
@@ -576,18 +576,29 @@ class IndicatorUpdate(UpdateView):
 
         # save the disaggregation types and labels from the frontend
         disaggs = json.loads(data.get("disaggregation_types", "[]"))
+
+        # print(disaggs)
         for disagg in disaggs:
-            disagg_type = DisaggregationType.objects.create(
-                disaggregation_type=disagg['type']
-            )
+            if disagg['id'] is None:
+                disagg_type = DisaggregationType.objects.create(
+                    disaggregation_type=disagg['type'], id=disagg['id']
+                )
+            else:
+                disagg_type = DisaggregationType.objects.filter(id=int(disagg['id'])).first()
+                disagg.update(disaggregation_type=disagg['type'])
 
             indicator.disaggregation.add(disagg_type,)
 
             for label in disagg['labels']:
-                DisaggregationLabel.objects.create(
-                    disaggregation_type_id=disagg_type.id,
-                    label=label
-                )
+                if label['id'] is None: 
+                    DisaggregationLabel.objects.create(
+                        disaggregation_type_id=disagg_type.id,
+                        label=label['label'],
+                        id=label['id']
+                    )
+                else:
+                    get_label = DisaggregationLabel.objects.filter(id=int(label['id']))
+                    get_label.update(label=label['label'])
 
         if self.request.is_ajax():
             data = serializers.serialize('json', [self.object])
