@@ -116,8 +116,6 @@
 
       // push the disag type to disag types array
       disagTypes = [...disagTypes, disagType];
-
-      console.log(disagTypes);
     }
 
     // set the disa
@@ -132,12 +130,11 @@
       addDisagType(disagTypes[i]);
 
       for (let l = 0; l < disagTypes[i].labels.length; l++) {
-        addDisagLabel(`#disagg_type_group_${i + 1}`,  disagTypes[i].labels[l]);
+        addDisagLabel(`#disagg_type_group_${i + 1}`, disagTypes[i].labels[l]);
       }
     }
   }
 
-  
   function addDisagType(type) {
     countDisaggTypes++;
     $disagTypeGroup = $('<div>')
@@ -181,9 +178,12 @@
           .addClass('col-md-1')
           .append(
             $('<button>')
-              .attr({ type: 'button' })
+              .attr({
+                type: 'button'
+              })
               .addClass('btn btn-sm')
               .append($('<i>').addClass('fa fa-trash'))
+              .click(removeDisagType.bind(this, countDisaggTypes))
           )
       )
       .append(
@@ -268,5 +268,27 @@
             )
         )
     );
+  }
+
+  /**
+   * Delete a disag type
+   */
+  function removeDisagType(appendId) {
+    const disagId = $(`#id_disagg_type_id_${appendId}`).val();
+
+    function removeFromTemplate() {
+      $(`#disagg_type_group_${appendId}`).remove();
+    }
+
+    if (disagId) {
+      $.ajax({
+        url: `/indicators/disaggregation_type/delete/${disagId}/`,
+        method: 'DELETE'
+      }).then(_ => {
+        removeFromTemplate();
+      });
+    } else {
+      removeFromTemplate();
+    }
   }
 </script>
