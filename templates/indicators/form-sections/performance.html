@@ -72,6 +72,7 @@
 
 <script>
   let countDisaggTypes = 0;
+  let countLabels = 0;
 
   $(document).ready(() => {
     $('#id_level').select2({
@@ -221,11 +222,12 @@
    * Add disag label to given selector for disag type
    */
   function addDisagLabel(selector, label) {
+    countLabels++;
     $(selector).append(
       $('<div>')
         .addClass('row mt-10 label-group')
         .attr({
-          id: 'disagg_label_group'
+          id: `disagg_label_group_${countLabels}`
         })
         .append(
           $('<div>')
@@ -244,7 +246,7 @@
                     .attr({
                       type: 'text',
                       autofocus: true,
-                      id: `id_disagg_child`
+                      id: `id_disagg_child_${countLabels}`
                     })
                     .val((label && label.label) || '')
                     .keyup(stringifyDisags.bind(this))
@@ -252,7 +254,8 @@
                 .append(
                   $('<input>')
                     .attr({
-                      type: 'hidden'
+                      type: 'hidden',
+                      id: `id_disagg_child_id_${countLabels}`
                     })
                     .val((label && label.id) || null)
                 )
@@ -265,6 +268,7 @@
               $('<button>')
                 .attr({ class: 'btn btn-sm', type: 'button' })
                 .append($('<i>').addClass('fa fa-trash'))
+                .click(removeLabel.bind(this, countLabels))
             )
         )
     );
@@ -295,6 +299,20 @@
       }).then(_ => {
         removeFromTemplate();
       });
+    } else {
+      removeFromTemplate();
+    }
+  }
+
+  function removeLabel(appendId) {
+    const labelId = $(`#id_disagg_child_id_${appendId}`).val();
+
+    function removeFromTemplate() {
+      $(`#id_disagg_child_${appendId}`).remove();
+    }
+
+    if (labelId) {
+      // add ajax logic here
     } else {
       removeFromTemplate();
     }
