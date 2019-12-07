@@ -5,6 +5,7 @@ from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 from urllib.parse import urlparse
 import re
 
@@ -945,6 +946,19 @@ class CollectedDataUpdate(UpdateView):
         return HttpResponseRedirect(redirect_url)
 
     form_class = CollectedDataForm
+
+
+class DisaggregationTypeDeleteView(DeleteView):
+    model = DisaggregationType
+
+    @method_decorator(csrf_exempt)
+    def delete(self, request, *args, **kwargs):
+        try:
+            self.get_object().delete()
+            return JsonResponse(dict(status=204))
+
+        except Exception as e:
+            return JsonResponse(dict(status=400))
 
 
 class CollectedDataDelete(DeleteView):
