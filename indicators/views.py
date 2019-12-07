@@ -581,24 +581,27 @@ class IndicatorUpdate(UpdateView):
         for disagg in disaggs:
             if disagg['id'] is None:
                 disagg_type = DisaggregationType.objects.create(
-                    disaggregation_type=disagg['type'], id=disagg['id']
+                    disaggregation_type=disagg['type'], id=int(disagg['id'])
                 )
             else:
                 disagg_type = DisaggregationType.objects.filter(id=int(disagg['id'])).first()
-                disagg.update(disaggregation_type=disagg['type'])
+                disagg_type.disaggregation_type = disagg['type']
+                disagg_type.save()
 
+            # register disag to the indicator
             indicator.disaggregation.add(disagg_type,)
 
+            # add disag type labels
             for label in disagg['labels']:
                 if label['id'] is None: 
                     DisaggregationLabel.objects.create(
                         disaggregation_type_id=disagg_type.id,
-                        label=label['label'],
-                        id=label['id']
+                        label=label['label']
                     )
                 else:
-                    get_label = DisaggregationLabel.objects.filter(id=int(label['id']))
-                    get_label.update(label=label['label'])
+                    get_label = DisaggregationLabel.objects.filter(id=int(label['id'])).first()
+                    get_label.label=label['label']
+                    get_label.save()
 
         if self.request.is_ajax():
             data = serializers.serialize('json', [self.object])

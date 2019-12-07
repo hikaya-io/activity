@@ -89,7 +89,8 @@
   });
 
   // get indicator disags from context and process to js compliant json
-  let disagTypes = JSON.parse('{{disaggregations}}'.replace(/&quot;/g, '"'));
+  let jsonString = '{{disaggregations}}'.replace(/&quot;/g, '"');
+  let disagTypes = JSON.parse(jsonString);
 
   function stringifyDisags() {
     disagTypes = [];
@@ -115,6 +116,8 @@
 
       // push the disag type to disag types array
       disagTypes = [...disagTypes, disagType];
+
+      console.log(disagTypes);
     }
 
     // set the disa
@@ -129,11 +132,12 @@
       addDisagType(disagTypes[i]);
 
       for (let l = 0; l < disagTypes[i].labels.length; l++) {
-        addDisagLabel(`#disagg_type_group_${i + 1}`, disagTypes[i].labels[l]);
+        addDisagLabel(`#disagg_type_group_${i + 1}`,  disagTypes[i].labels[l]);
       }
     }
   }
 
+  
   function addDisagType(type) {
     countDisaggTypes++;
     $disagTypeGroup = $('<div>')
@@ -195,7 +199,7 @@
               .click(
                 addDisagLabel.bind(
                   this,
-                  `#id_disagg_labels_${countDisaggTypes}`
+                  `#disagg_type_group_${countDisaggTypes}`
                 )
               )
               .append($('<i>').addClass('fa fa-plus'))
@@ -213,6 +217,9 @@
     $('#id_disaggregations').append($disagTypeGroup);
   }
 
+  /**
+   * Add disag label to given selector for disag type
+   */
   function addDisagLabel(selector, label) {
     $(selector).append(
       $('<div>')
