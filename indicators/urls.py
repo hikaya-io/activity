@@ -10,7 +10,8 @@ from .views import (
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
-    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete
+    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete,
+    DisaggregationTypeDeleteView,
 )
 
 urlpatterns = [
@@ -121,5 +122,10 @@ urlpatterns = [
             ObjectiveUpdateView.as_view(),
             name='update_strategic_objective'),
     re_path(r'^objectives/objective_delete/(?P<pk>\w+)/$',
-            objective_delete, name='objective_delete')
+            objective_delete, name='objective_delete'),
+    path(
+        'disaggregation_type/delete/<int:pk>/',
+        DisaggregationTypeDeleteView.as_view(),
+        name='disaggregation_type_delete'
+    )
 ]

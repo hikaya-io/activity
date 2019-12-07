@@ -947,6 +947,18 @@ class CollectedDataUpdate(UpdateView):
     form_class = CollectedDataForm
 
 
+class DisaggregationTypeDeleteView(DeleteView):
+    model = DisaggregationType
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            self.get_object().delete()
+            return JsonResponse(dict(status=204))
+
+        except Exception as e:
+            return JsonResponse(dict(status=400))
+
+
 class CollectedDataDelete(DeleteView):
     """
     CollectedData Delete
