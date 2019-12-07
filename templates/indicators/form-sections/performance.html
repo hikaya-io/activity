@@ -131,7 +131,7 @@
       addDisagType(disagTypes[i]);
 
       for (let l = 0; l < disagTypes[i].labels.length; l++) {
-        addDisagLabel(`#disagg_type_group_${i + 1}`, disagTypes[i].labels[l]);
+        addDisagLabel(`#id_disagg_labels_${i + 1}`, disagTypes[i].labels[l]);
       }
     }
   }
@@ -189,18 +189,18 @@
       )
       .append(
         $('<div>')
-          .addClass('col-md-12')
+          .addClass('col-md-12 disagg_type_top')
           .append(
             $('<button>')
               .attr({
-                class: 'btn btn-xs btn-default',
+                class: 'btn btn-xs btn-default add_disagg_label_btn',
                 type: 'button',
                 id: `id_add_disagg_label_${countDisaggTypes}`
               })
               .click(
                 addDisagLabel.bind(
                   this,
-                  `#disagg_type_group_${countDisaggTypes}`
+                  `#id_disagg_labels_${countDisaggTypes}`
                 )
               )
               .append($('<i>').addClass('fa fa-plus'))
@@ -223,6 +223,7 @@
    */
   function addDisagLabel(selector, label) {
     countLabels++;
+
     $(selector).append(
       $('<div>')
         .addClass('row mt-10 label-group')
@@ -308,11 +309,26 @@
     const labelId = $(`#id_disagg_child_id_${appendId}`).val();
 
     function removeFromTemplate() {
-      $(`#id_disagg_child_${appendId}`).remove();
+      $(`#disagg_label_group_${appendId}`).remove();
     }
+
+    const csrftoken = $('[name=csrfmiddlewaretoken]').val();
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader('X-CSRFToken', csrftoken);
+        }
+      }
+    });
 
     if (labelId) {
       // add ajax logic here
+      $.ajax({
+        method: 'DELETE',
+        url: `/indicators/disaggregation_label/delete/${labelId}/`
+      }).then(_ => {
+        removeFromTemplate();
+      });
     } else {
       removeFromTemplate();
     }

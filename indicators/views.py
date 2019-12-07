@@ -951,7 +951,6 @@ class CollectedDataUpdate(UpdateView):
 class DisaggregationTypeDeleteView(DeleteView):
     model = DisaggregationType
 
-    @method_decorator(csrf_exempt)
     def delete(self, request, *args, **kwargs):
         try:
             self.get_object().delete()
@@ -960,6 +959,17 @@ class DisaggregationTypeDeleteView(DeleteView):
         except Exception as e:
             return JsonResponse(dict(status=400))
 
+
+class DisaggregationLabelDeleteView(DeleteView):
+    model = DisaggregationLabel
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            self.get_object().delete()
+            return JsonResponse(dict(status=204))
+
+        except Exception as e:
+            return JsonResponse(dict(status=400))
 
 class CollectedDataDelete(DeleteView):
     """
