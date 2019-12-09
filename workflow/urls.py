@@ -76,7 +76,7 @@ urlpatterns = [
             SiteProfileList.as_view(), name='siteprofile_list'),
     re_path(r'^siteprofile_report/(?P<pk>\w+)/$',
             SiteProfileReport.as_view(), name='siteprofile_report'),
-    re_path(r'^siteprofile_add', SiteProfileCreate.as_view(),
+    path('siteprofile_add', SiteProfileCreate.as_view(),
             name='siteprofile_add'),
     re_path(r'^siteprofile_update/(?P<pk>\w+)/$',
             SiteProfileUpdate.as_view(), name='siteprofile_update'),

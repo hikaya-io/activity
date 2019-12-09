@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% block content %}
+{% include "./modals/add_site_modal.html" %}
 
 <script>
   $(document).ready(() => {
@@ -111,12 +112,12 @@
             >Export to CSV</a
           > -->
 
-          <a
-            role="button"
-            href="/workflow/siteprofile_add"
+          <button
             class="btn btn-sm btn-primary"
+            data-toggle="modal"
+            data-target="#addLocationModal"
           >
-          <i class="fa fa-plus"></i> {{user.activity_user.organization.site_label}}</a
+          <i class="fa fa-plus"></i> {{user.activity_user.organization.site_label}}</button
           >
         </div>
       </div>
