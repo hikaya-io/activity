@@ -250,7 +250,8 @@ THIRD_PARTY_APPS = (
     'ckeditor_uploader',
     'simplejson',
     'simple_history',
-    'django_select2'
+    'django_select2',
+    'mapwidgets',
 )
 
 # Apps specific for this project go here.
@@ -395,3 +396,14 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 GOOGLE_ANALYTICS_PROPERTY_ID = None  # replaced in private settings file
 GOOGLE_ANALYTICS_DOMAIN = 'example.org'  # replaced in private settings file
+
+MAP_WIDGETS = {
+    "GooglePointFieldWidget": (
+        ("zoom", 15),
+        ("mapCenterLocationName", "london"),
+        ("GooglePlaceAutocompleteOptions", {'componentRestrictions': {'country': 'uk'}}),
+        ("markerFitZoom", 12),
+    ),
+    "GOOGLE_MAP_API_KEY": os.environ.get('GOOGLE_MAP_API_KEY')
+}
+
