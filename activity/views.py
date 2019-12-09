@@ -239,7 +239,7 @@ def register(request, invite_uuid):
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         username = data.get('username')
-        email = data.get('email_address')
+        email = data.get('email_address').lower()
         password = data.get('password')
 
         try:
@@ -400,18 +400,20 @@ def user_login(request):
         password = data.get('password')
 
         # check if user is active
-        is_user_active = User.objects.filter(username=username).first()
-        if is_user_active:
-            if not is_user_active.is_active:
+        try:
+            get_user = User.objects.get(Q(username=username) | Q(email=username.lower()))
+            if not get_user.is_active:
                 messages.error(
                     request,
                     'Please verify your email address then try again.',
                     fail_silently=True
                 )
                 return render(request, 'registration/login.html')
+        except User.DoesNotExist:
+            return render(request, 'registration/login.html')
 
         # proceed to authenticate the user
-        user = authenticate(username=username, password=password)
+        user = authenticate(username=get_user.username, password=password)
 
         if user is not None:
             login(request, user)
