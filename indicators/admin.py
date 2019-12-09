@@ -50,14 +50,13 @@ class IndicatorResource(resources.ModelResource):
 
 class IndicatorAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = IndicatorResource
-    list_display = ('indicator_types', 'name', 'sector',
+    list_display = ('name', 'indicator_types', 'sector',
                     'key_performance_indicator')
     search_fields = ('name', 'number', 'program__name')
     list_filter = ('program', 'key_performance_indicator', 'sector')
     display = 'Indicators'
     filter_horizontal = ('program', 'objectives',
                          'strategic_objectives', 'disaggregation', 'program')
-    pass
 
 
 class ActivityTableResource(resources.ModelResource):
@@ -72,7 +71,6 @@ class ActivityTableAdmin(ImportExportModelAdmin):
     search_fields = ('country__country', 'name')
     list_filter = ('country__country',)
     display = 'Activity Table'
-    pass
 
 
 class CollectedDataResource(resources.ModelResource):
@@ -88,7 +86,6 @@ class CollectedDataAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     list_filter = ('indicator__program__country__country',
                    'program', 'approved_by')
     display = 'Collected Data on Indicators'
-    pass
 
 
 class ReportingFrequencyAdmin(admin.ModelAdmin):

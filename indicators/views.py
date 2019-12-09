@@ -5,6 +5,7 @@ from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 from urllib.parse import urlparse
 import re
 
@@ -15,7 +16,7 @@ from .forms import (
 )
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
-    CollectedData, IndicatorType, Level, ExternalServiceRecord,
+    DisaggregationType, CollectedData, IndicatorType, Level, ExternalServiceRecord,
     ExternalService, ActivityTable, StrategicObjective, Objective
 )
 
@@ -49,6 +50,8 @@ import requests
 from weasyprint import HTML, CSS
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from django.forms.models import model_to_dict
+
 
 
 def generate_periodic_target_single(tf, start_date, nth_target_period,
@@ -336,7 +339,7 @@ class IndicatorCreate(CreateView):
 
     def form_invalid(self, form):
 
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form', fail_silently=False, extra_tags='danger')
 
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -467,11 +470,23 @@ class IndicatorUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(IndicatorUpdate, self).get_context_data(**kwargs)
         context.update({'id': self.kwargs['pk']})
-        get_indicator = Indicator.objects.get(id=self.kwargs['pk'])
+        get_indicator = Indicator.objects.prefetch_related().filter(id=self.kwargs['pk']).first()
 
+        # create a list of dicts from disag query
+        disaggregations = [
+            dict(
+                disaggregation_type=item.disaggregation_type, 
+                id=item.id, 
+                labels=[
+                    dict(label=label.label, id=label.id) for label in item.disaggregation_label.all()]
+                ) 
+                for item in get_indicator.disaggregation.all()
+            ]
+        
         context.update({'i_name': get_indicator.name})
-        context['program_id'] = get_indicator.program.all()[0].id
+        context['program_id'] = get_indicator.program.all().first().id
         context['active'] = ['indicators']
+        context['disaggregations'] = json.dumps(disaggregations)
         context['periodic_targets'] = PeriodicTarget.objects\
             .filter(indicator=get_indicator)\
             .annotate(num_data=Count('collecteddata'))\
@@ -520,16 +535,16 @@ class IndicatorUpdate(UpdateView):
         return kwargs
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form', fail_silently=False, extra_tags='danger')
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form, **kwargs):
         data = self.request.POST
+        indicator = self.get_object()
 
+        # save periodic targets from the frontend
         periodic_targets_object = json.loads(
-            data.get("periodic_targets_object", None))
-
-        indicator = Indicator.objects.get(pk=self.kwargs.get('pk'))
+            data.get("periodic_targets_object", "[]"))
 
         for target in periodic_targets_object:
             periodic_target = PeriodicTarget(indicator=indicator, start_date=datetime.strptime(
@@ -557,9 +572,37 @@ class IndicatorUpdate(UpdateView):
         self.object = form.save()
         # periodic_targets = PeriodicTarget.objects.filter(indicator=indicatr)\
         #     .order_by('customsort','create_date', 'period')
-        periodic_targets = PeriodicTarget.objects.filter(indicator=indicator)\
-            .annotate(num_data=Count('collecteddata'))\
-            .order_by('customsort', 'create_date', 'period')
+        periodic_targets = PeriodicTarget.objects.filter(indicator=indicator).annotate(
+            num_data=Count('collecteddata')).order_by('customsort', 'create_date', 'period')
+
+        # save the disaggregation types and labels from the frontend
+        disaggs = json.loads(data.get("disaggregation_types", "[]"))
+
+        # print(disaggs)
+        for disagg in disaggs:
+            if disagg['id'] is None:
+                disagg_type = DisaggregationType.objects.create(
+                    disaggregation_type=disagg['type'], id=int(disagg['id'])
+                )
+            else:
+                disagg_type = DisaggregationType.objects.filter(id=int(disagg['id'])).first()
+                disagg_type.disaggregation_type = disagg['type']
+                disagg_type.save()
+
+            # register disag to the indicator
+            indicator.disaggregation.add(disagg_type,)
+
+            # add disag type labels
+            for label in disagg['labels']:
+                if label['id'] is None: 
+                    DisaggregationLabel.objects.create(
+                        disaggregation_type_id=disagg_type.id,
+                        label=label['label']
+                    )
+                else:
+                    get_label = DisaggregationLabel.objects.filter(id=int(label['id'])).first()
+                    get_label.label=label['label']
+                    get_label.save()
 
         if self.request.is_ajax():
             data = serializers.serialize('json', [self.object])
@@ -596,7 +639,8 @@ class IndicatorDelete(DeleteView):
 
     def form_invalid(self, form):
 
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form',
+                       fail_silently=False, extra_tags='danger')
 
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -834,7 +878,7 @@ class CollectedDataUpdate(UpdateView):
         return context
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        messages.error(self.request, 'Invalid Form', fail_silently=False, extra_tags='danger')
         return self.render_to_response(self.get_context_data(form=form))
 
     # add the request to the kwargs
@@ -903,6 +947,29 @@ class CollectedDataUpdate(UpdateView):
 
     form_class = CollectedDataForm
 
+
+class DisaggregationTypeDeleteView(DeleteView):
+    model = DisaggregationType
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            self.get_object().delete()
+            return JsonResponse(dict(status=204))
+
+        except Exception as e:
+            return JsonResponse(dict(status=400))
+
+
+class DisaggregationLabelDeleteView(DeleteView):
+    model = DisaggregationLabel
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            self.get_object().delete()
+            return JsonResponse(dict(status=204))
+
+        except Exception as e:
+            return JsonResponse(dict(status=400))
 
 class CollectedDataDelete(DeleteView):
     """

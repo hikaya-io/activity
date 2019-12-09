@@ -37,9 +37,6 @@ class IndicatorForm(forms.ModelForm):
         exclude = ['create_date', 'edit_date']
 
     def __init__(self, *args, **kwargs):
-        # get the user object to check permissions with
-        # print("..................%s..............."
-        #   %kwargs.get('', 'no targets sum found!!!!') )
         indicator = kwargs.get('instance', None)
         self.request = kwargs.pop('request')
         self.program = kwargs.pop('program')
@@ -73,25 +70,8 @@ class IndicatorForm(forms.ModelForm):
             'approval_submitted_by'].queryset = ActivityUser.objects.filter(
             organization=self.request.user.activity_user.organization).distinct()
         self.fields['program'].widget.attrs['readonly'] = "readonly"
-        # self.fields['baseline'].widget.attrs['class'] = 'col-sm-4'
-        # self.fields['target_frequency_start'].widget = DatePicker.DateInput()
-        # self.fields['target_frequency_start'].help_text =
-        #   'This field is required'
-        # self.fields['target_frequency'].required = False
         self.fields['target_frequency_start'].widget.attrs[
             'class'] = 'monthPicker'
-        if self.instance.target_frequency and \
-                self.instance.target_frequency != Indicator.LOP:
-            self.fields['target_frequency'].widget.attrs['readonly'] = \
-                "readonly"
-            # self.fields['target_frequency'].widget.attrs['disabled'] =
-            # "disabled"
-            # self.fields['target_frequency_custom'].widget =
-            # forms.HiddenInput()
-            # self.fields['target_frequency_start'].widget =
-            # forms.HiddenInput()
-            # self.fields['target_frequency_num_periods'].widget =
-            # forms.HiddenInput()
 
 
 class CollectedDataForm(forms.ModelForm):
@@ -165,15 +145,8 @@ class CollectedDataForm(forms.ModelForm):
         self.fields['indicator2'].label = "Indicator"
         self.fields['program'].widget = forms.HiddenInput()
         self.fields['indicator'].widget = forms.HiddenInput()
-        self.fields['target_frequency'].initial = \
-            self.indicator.target_frequency
-        self.fields['target_frequency'].widget = forms.HiddenInput()
-        # override the program queryset to use request.user for country
-        # self.fields['site'].queryset = SiteProfile.objects.filter(
-        #     country__in=countries)
-
-        # self.fields['indicator'].queryset = Indicator.objects\
-        #   .filter(name__isnull=False, program__country__in=countries)
+        self.fields['target_frequency'].required = False
+        self.fields['target_frequency'].initial = self.indicator.target_frequency
         self.fields['activity_table'].queryset = ActivityTable.objects.filter(
             Q(owner=self.request.user.activity_user) | Q(id=self.activity_table))
         self.fields['periodic_target'].label = 'Target Period*'
