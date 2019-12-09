@@ -14,7 +14,7 @@ if __name__ == "__main__":
             settings = 'activity.settings.test'
 
         else:
-            settings = 'activity.settings.local'
+            settings = 'activity.settings.production'
 
     except ModuleNotFoundError:
         settings = 'activity.settings.production'
