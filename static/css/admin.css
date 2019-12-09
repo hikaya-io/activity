@@ -52,7 +52,7 @@
 }
 
 .coming-soon-container {
-    background-color: rgba(238, 238, 240, 0.6);
+    background-color: white;
     height: 400px; 
     display: flex; 
     flex-direction: column;
@@ -61,5 +61,6 @@
 }
 
 .coming-soon-logo {
-    width: 96px; padding-bottom: 32px
+    width: 96px; 
+    padding-bottom: 32px
 }
