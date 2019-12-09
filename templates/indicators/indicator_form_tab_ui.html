@@ -1,73 +1,111 @@
 {% extends "base.html" %} {% block content %}
 <div class="container">
-    {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li><a href="/">My Dashboard</a></li>
-        <li><a href="/indicators/home/0/0/0/">Indicators</a></li>
-        <li class="active">{{ indicator.name }}</li>
-    </ul>
-    {% endblock %}
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="/">My Dashboard</a></li>
+    <li><a href="/indicators/home/0/0/0/">Indicators</a></li>
+    <li class="active">{{ indicator.name }}</li>
+  </ul>
+  {% endblock %}
 
-    <div class="sub-navigation">
-        <div class="sub-navigation-header">
-            <h4 class="page-title">
-                {{ indicator.name }}
-            </h4>
-        </div>
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+        {{ indicator.name }}
+      </h4>
+    </div>
+  </div>
+
+  <form class="bg-white p-10 pt-0" method="POST" novalidate>
+    {% csrf_token %}
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active">
+        <a
+          href="#indicator_summary"
+          aria-controls="indicator_summary"
+          role="tab"
+          data-toggle="tab"
+          >Summary</a
+        >
+      </li>
+      <li role="presentation">
+        <a
+          href="#performance"
+          aria-controls="performance"
+          role="tab"
+          data-toggle="tab"
+          >Performance</a
+        >
+      </li>
+      <li role="presentation">
+        <a href="#targets" aria-controls="targets" role="tab" data-toggle="tab"
+          >Targets</a
+        >
+      </li>
+      <li role="presentation">
+        <a
+          href="#data_acquiscition"
+          aria-controls="data_acquiscition"
+          role="tab"
+          data-toggle="tab"
+          >Data Acquiscition</a
+        >
+      </li>
+
+      <li role="presentation">
+        <a
+          href="#analysis_and_reporting"
+          aria-controls="analysis_and_reporting"
+          role="tab"
+          data-toggle="tab"
+          >Analysis &amp; Reporting</a
+        >
+      </li>
+
+      <li role="presentation">
+        <a
+          href="#approval"
+          aria-controls="approval"
+          role="tab"
+          data-toggle="tab"
+          >Approval</a
+        >
+      </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="indicator_summary">
+        {% include "./form-sections/summary.html" %}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="performance">
+        {% include "./form-sections/performance.html" %}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="targets">
+        {% include "./form-sections/targets.html" %}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="data_acquiscition">
+        {% include "./form-sections/data_acquiscition.html" %}
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="analysis_and_reporting">
+        {% include "./form-sections/analysis_and_reporting.html" %}
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="approval">
+        {% include "./form-sections/approval.html" %}
+      </div>
     </div>
 
-    <form class="bg-white p-10 pt-0" method="POST">
-        {% csrf_token %}
-
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#indicator_summary" aria-controls="indicator_summary"
-                    role="tab" data-toggle="tab">Summary</a></li>
-            <li role="presentation"><a href="#performance" aria-controls="performance" role="tab"
-                    data-toggle="tab">Performance</a>
-            </li>
-            <li role="presentation"><a href="#targets" aria-controls="targets" role="tab" data-toggle="tab">Targets</a>
-            </li>
-            <li role="presentation"><a href="#data_acquiscition" aria-controls="data_acquiscition" role="tab"
-                    data-toggle="tab">Data Acquiscition</a></li>
-
-            <li role="presentation"><a href="#analysis_and_reporting" aria-controls="analysis_and_reporting" role="tab"
-                    data-toggle="tab">Analysis &amp; Reporting</a></li>
-
-            <li role="presentation"><a href="#approval" aria-controls="approval" role="tab"
-                    data-toggle="tab">Approval</a></li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="indicator_summary">
-                {% include "./form-sections/summary.html" %}
-            </div>
-            <div role="tabpanel" class="tab-pane" id="performance">
-                {% include "./form-sections/performance.html" %}
-            </div>
-            <div role="tabpanel" class="tab-pane" id="targets">
-                {% include "./form-sections/targets.html" %}
-            </div>
-            <div role="tabpanel" class="tab-pane" id="data_acquiscition">
-                {% include "./form-sections/data_acquiscition.html" %}
-            </div>
-
-            <div role="tabpanel" class="tab-pane" id="analysis_and_reporting">
-                {% include "./form-sections/analysis_and_reporting.html" %}
-            </div>
-
-            <div role="tabpanel" class="tab-pane" id="approval">
-                {% include "./form-sections/approval.html" %}
-            </div>
-        </div>
-
-        <div class="form-group text-right">
-            <a role="button" href="/indicators/home/0/0/0/" class="btn btn-close">Close</a>
-            <button type="submit" class="btn btn-success">Save Changes</button>
-        </div>
-    </form>
-
+    <div class="form-group text-right">
+      <a role="button" href="/indicators/home/0/0/0/" class="btn btn-close"
+        >Close</a
+      >
+      <button type="submit" class="btn btn-success">Save Changes</button>
+    </div>
+  </form>
 </div>
 
 {% endblock content %}
