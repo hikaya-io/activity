@@ -1,12 +1,13 @@
 {% extends "base.html" %} {% block content %}
+{% load staticfiles %}
 {% include "./modals/add_site_modal.html" %}
+
 
 <script>
   $(document).ready(() => {
     $('#siteProfileTable').DataTable();
   });
 </script>
-
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">

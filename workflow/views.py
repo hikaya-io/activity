@@ -20,14 +20,10 @@ from formlibrary.models import TrainingAttendance, Distribution
 from indicators.models import CollectedData, ExternalService
 from django.utils import timezone
 
-from .forms import (
-    ProjectAgreementForm, ProjectAgreementSimpleForm,
-    ProjectAgreementCreateForm,
-    ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
-    DocumentationForm, SiteProfileForm, MonitorForm, BenchmarkForm, BudgetForm,
-    FilterForm, ProgramForm,
-    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm
-)
+from .forms import (ProjectAgreementForm, ProjectAgreementSimpleForm, ProjectAgreementCreateForm, ProjectCompleteForm,
+                    ProjectCompleteSimpleForm, ProjectCompleteCreateForm, DocumentationForm, SiteProfileForm,
+                    MonitorForm, BenchmarkForm, BudgetForm, FilterForm, ProgramForm, QuantitativeOutputsForm,
+                    ChecklistItemForm, StakeholderForm, ContactForm, SiteProfileQuickEntryForm)
 
 import pytz
 
@@ -1379,6 +1375,8 @@ class SiteProfileList(ListView):
 
         if user_list:
             default_list = int(user_list)
+
+        form = SiteProfileQuickEntryForm()
         return render(request, self.template_name,
                       {
                           'inactive_site': inactive_site,
@@ -1394,6 +1392,7 @@ class SiteProfileList(ListView):
                           'active': ['components'],
                           'map_api_key': settings.GOOGLE_MAP_API_KEY,
                           'get_location_types': get_location_types,
+                          'form': form,
                       })
 
 

@@ -1,6 +1,6 @@
 <script>
 	$(document).ready(() => {
-		$('#type').select2({
+		$('#id_type').select2({
 			placeholder: 'Select Type...',
 			theme: 'bootstrap',
 			dropdownParent: $('#addLocationModal'),
@@ -10,6 +10,26 @@
 		if (url.searchParams.get('quick-modal')) {
 			$('#addLocationModal').modal('show');
 		}
+
+		$(document).on("google_point_map_widget:marker_create", function (e, place, lat, lng, locationInputElem, mapWrapID) {
+			console.log(place); // Google geocoding response object
+			console.log(locationInputElem); // django widget textarea widget (hidden)
+			console.log(lat, lng); // created marker coordinates
+			console.log(mapWrapID); // map widget wrapper element ID
+		});
+		
+		$(document).on("google_point_map_widget:marker_change", function (e, place, lat, lng, locationInputElem, mapWrapID) {
+			console.log(place); // Google geocoding response object
+			console.log(locationInputElem); // django widget textarea widget (hidden)
+			console.log(lat, lng);  // changed marker coordinates
+			console.log(mapWrapID); // map widget wrapper element ID
+		});
+		
+		$(document).on("google_point_map_widget:marker_delete", function (e, lat, lng, locationInputElem, mapWrapID) {
+			console.log(locationInputElem); // django widget textarea widget (hidden)
+			console.log(lat, lng);  // deleted marker coordinates
+			console.log(mapWrapID); // map widget wrapper element ID
+		})
 	});
 
 	var saveLocation = buttonId => {
@@ -70,6 +90,15 @@
 		aria-labelledby="addLocationModalLabel"
 	>
 		<div class="modal-dialog" role="document">
+				<style>
+					.mw-wrap{
+						width: 100% !important;
+						min-width: 400px !important; 
+					}
+					.mw-coordinates-overlay {
+						width: 200px !important;
+					}
+				</style>
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -77,55 +106,10 @@
 					</button>
 					<h4 class="modal-title" id="addLocationModalLabel">Add Location</h4>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body">					
 					{% csrf_token %}
-					<div class="form-group">
-						<label for="name">Site Name</label>
-						<input
-							type="text"
-							id="name"
-							name="name"
-							class="form-control"
-							placeholder="Name"
-						/>
-					</div>
-
-					<div class="form-group">
-						<label for="type">Type</label>
-						<select class="form-control" id="type" name="type">
-							<option value=""></option>
-							{% for item in get_location_types %} {% if item.profile %}
-							<option value="{{ item.id }} ">
-								{{ item.profile | truncatechars:50 }}
-							</option>
-							{% endif %} {% endfor %}
-						</select>
-					</div>
-
-					<div class="form-group">
-						<label for="city">Latitude</label>
-						<input
-							type="text"
-							id="latitude"
-							name="latitude"
-							class="form-control"
-							placeholder="Latitude"
-						/>
-					</div>
-
-					<div class="form-group">
-						<label for="longitude">Longituide</label>
-						<input
-							type="text"
-							id="longitude"
-							name="longitude"
-							class="form-control"
-							placeholder="Longitude"
-						/>
-					</div>
-
-					<div class="form-group">
-					</div>
+					{% load crispy_forms_tags %}
+					{% crispy form %}
 
 				</div>
 				<div class="modal-footer">

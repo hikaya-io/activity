@@ -233,6 +233,7 @@ DJANGO_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'social_django',
+    'mapwidgets',
     # 'social.apps.django_app.default'
 )
 
@@ -250,7 +251,7 @@ THIRD_PARTY_APPS = (
     'ckeditor_uploader',
     'simplejson',
     'simple_history',
-    'django_select2'
+    'django_select2',
 )
 
 # Apps specific for this project go here.

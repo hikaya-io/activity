@@ -12,12 +12,14 @@ from crispy_forms.bootstrap import (
 from crispy_forms.layout import (
     Layout, Submit, Reset, Field, Column, Row, HTML, Fieldset,)
 from functools import partial
+
+from mapwidgets.widgets import GooglePointFieldWidget
 from .widgets import GoogleMapsWidget
 from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
     Benchmarks, Monitor, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector, Country
+    ActivityUser, Contact, Sector, Country, ProfileType,
 )
 from indicators.models import CollectedData, Indicator, PeriodicTarget
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
@@ -1182,6 +1184,45 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                 'approval'].help_text = "Approval level permissions required"
             self.fields['project_agreement'].widget.attrs[
                 'readonly'] = "readonly"
+
+
+class SiteProfileQuickEntryForm(forms.ModelForm):
+    """
+    SiteProfile Quick Entry Form
+    """
+    map = forms.CharField(widget=GooglePointFieldWidget)
+    class Meta:
+        model = SiteProfile
+        fields = ['name', 'type', 'longitude', 'latitude']
+        widgets = {'map': GooglePointFieldWidget, }
+
+    # map = forms.CharField(widget=GoogleMapWidget(zoom=12, size="240x240"))
+
+    def __init__(self):
+        # get the user object from request to check user permissions
+
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.error_text_inline = True
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+
+        # Organize the fields in the site profile form using a layout class
+        self.helper.layout = Layout(
+            'name',
+            'type',
+            Row(
+                Column('longitude', css_class='form-group col-md-6 mb-0'),
+                Column('latitude', css_class='form-group col-md-6 mb-0'),
+                css_class="form-row"
+            ),
+            'map',
+        )
+
+        super(SiteProfileQuickEntryForm, self).__init__()
+        self.fields['type'].queryset = ProfileType.objects.all().distinct()
 
 
 class SiteProfileForm(forms.ModelForm):
