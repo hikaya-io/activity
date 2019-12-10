@@ -1191,12 +1191,11 @@ class SiteProfileQuickEntryForm(forms.ModelForm):
     SiteProfile Quick Entry Form
     """
     map = forms.CharField(widget=GooglePointFieldWidget)
+
     class Meta:
         model = SiteProfile
         fields = ['name', 'type', 'longitude', 'latitude']
         widgets = {'map': GooglePointFieldWidget, }
-
-    # map = forms.CharField(widget=GoogleMapWidget(zoom=12, size="240x240"))
 
     def __init__(self):
         # get the user object from request to check user permissions
@@ -1226,14 +1225,14 @@ class SiteProfileQuickEntryForm(forms.ModelForm):
 
 
 class SiteProfileForm(forms.ModelForm):
+    map = forms.CharField(widget=GooglePointFieldWidget)
+
     class Meta:
         model = SiteProfile
         exclude = ['create_date', 'edit_date']
+        widgets = {'map': GooglePointFieldWidget, }
 
-    map = forms.CharField(widget=GoogleMapsWidget(
-        attrs={'width': 700, 'height': 400, 'longitude': 'longitude',
-               'latitude': 'latitude',
-               'country': 'Find a city or village'}), required=False)
+    forms.CharField(widget=GooglePointFieldWidget)
 
     date_of_firstcontact = forms.DateField(
         widget=DatePicker.DateInput(), required=False)
@@ -1251,8 +1250,8 @@ class SiteProfileForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-3'
-        self.helper.field_class = 'col-sm-9'
+        # self.helper.label_class = 'col-sm-3'
+        # self.helper.field_class = 'col-sm-9'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
@@ -1280,7 +1279,9 @@ class SiteProfileForm(forms.ModelForm):
                              Field('longitude', step="any"),
                              ),
                     Fieldset('Map',
-                             'map',
+                                 Row(
+                                    'map'
+                                 )
                              ),
                     ),
                 Tab('Demographic Information',
