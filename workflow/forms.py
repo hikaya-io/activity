@@ -432,7 +432,9 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
 
         # override the site queryset to use request.user for country
         self.fields['site'].queryset = SiteProfile.objects.filter(
-            organizations=self.request.user.activity_user.organization)
+            organizations=self.request.user.activity_user.organization,
+            status=True
+        )
 
         # override the stakeholder queryset to use request.user for country
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
