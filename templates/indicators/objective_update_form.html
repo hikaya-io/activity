@@ -33,6 +33,11 @@
 	$(document).ready(() => {
 		$('#id_parent').select2({theme: 'bootstrap'});
 		$('#id_program').select2({theme: 'bootstrap'});
+
+		// redirect to objectives list on close
+		$('#reset-id-reset').click(() => {
+			window.location.href = '/indicators/objectives';
+		})
 	});
 </script>
 {% endblock content %}
