@@ -298,6 +298,8 @@ class ProjectAgreementForm(forms.ModelForm):
                 'disabled'] = "disabled"
             self.fields[
                 'approval'].help_text = "Approval level permissions required"
+            self.fields['approved_by'].queryset = ActivityUser.objects.filter(
+                organization=self.request.user.activity_user.organization).distinct()
 
 
 class ProjectAgreementSimpleForm(forms.ModelForm):
@@ -429,10 +431,14 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         self.fields['approval_submitted_by'].label = 'Originated by'
         self.fields['approved_by'].label = 'Approved by'
 
-        self.fields['approved_by'].queryset = ActivityUser.objects.filter(organization=self.request.user.activity_user.organization).distinct()
-        self.fields['reviewed_by'].queryset = ActivityUser.objects.filter(organization=self.request.user.activity_user.organization).distinct()
+        self.fields['approved_by'].queryset = ActivityUser.objects.filter(
+            organization=self.request.user.activity_user.organization).distinct()
+        self.fields['reviewed_by'].queryset = ActivityUser.objects.filter(
+            organization=self.request.user.activity_user.organization).distinct()
         self.fields['estimated_by'].queryset = ActivityUser.objects.filter(
-            country__in=countries).distinct()
+            organization=self.request.user.activity_user.organization).distinct()
+        self.fields['approval_submitted_by'].queryset = ActivityUser.objects.filter(
+            organization=self.request.user.activity_user.organization).distinct()
 
         # override the office queryset to use request.user for country
         self.fields['office'].queryset = Office.objects.filter(
