@@ -132,18 +132,12 @@
 				success: function(resp, status) {
 					if (resp.status === 201) {
                         // notify success
-                        toastr.success('Fund code was saved and added to current Program', `Success!!`);
+                        toastr.success('Fund code was saved ', `Success!!`);
                         addFundCodeOptions(resp.fund_code);
 
-					} else if (resp.status === 204) {
-						toastr.warn(
-							'Fund code was saved but there was an error adding to current Program'
-						);
 					} else {
-						toastr.error('There was an error saving the fund code!');
+						toastr.error('There was an error saving the fund code!', 'Error!!');
 					}
-
-					
 
 					// reset form
 					$('#fundCodeForm').trigger('reset');
@@ -155,7 +149,7 @@
 					}
 				},
 				error: function(xhr, status, error) {
-					toastr.error('There was an error saving the fund code!');
+					toastr.error('There was an error saving the fund code!', 'Error!!');
 				},
 			});
 		});
