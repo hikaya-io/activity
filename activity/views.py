@@ -67,7 +67,8 @@ def index(request, program_id=0):
 
     # get programs belonging to the current organizatiom
     get_programs = Program.objects.filter(
-        organization=request.user.activity_user.organization)
+        organization=request.user.activity_user.organization).exclude(
+        name__isnull=True).exclude(name__exact='')
 
     # get stuff based on the active program
     if int(program_id) == 0:
