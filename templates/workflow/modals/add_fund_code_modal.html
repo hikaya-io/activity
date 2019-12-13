@@ -35,7 +35,7 @@
 						<label class="control-label" for="stakeholder">Stakeholder</label>
 						<select name="stakeholder" id="stakeholder" class="form-control">
 							<option value=""></option>
-							{% for stakeholder in get_stakeholder %}
+							{% for stakeholder in donor_stakeholders %}
 							<option value="{{ stakeholder_type.id }}">
 								{{ stakeholder.name }}
 							</option>
@@ -63,9 +63,19 @@
 	$(document).ready(() => {
 		$('#stakeholder').select2({
 			theme: 'bootstrap',
-        });
-        $('#id_fund_code').select2({ theme: 'bootstrap', placeholder: 'Select fund code(s)' });
+			placeholder: 'Select stakeholder (Donor)'
+		});
+		
+        $('#id_fund_code').select2({ 
+			theme: 'bootstrap', 
+			placeholder: 'Select fund code(s)' 
+		});
 
+		// disable submit buttons until the name is set
+		$('#saveFundCodeAndNew').attr('disabled', true)
+		$('#saveFundCode').attr('disabled', true)
+
+		// validate name field
 		$('#fund_code_name').on('input', function() {
 			const name = $(this);
 			if (name.val()) {
@@ -75,6 +85,8 @@
 				$('#fundCodeNameHelpBlock')
 					.removeClass('hikaya-show')
 					.addClass('hikaya-hide');
+				$('#saveFundCodeAndNew').attr('disabled', false)
+				$('#saveFundCode').attr('disabled', false)
 			} else {
 				$('#div_fund_code_name')
 					.removeClass('has-success')
@@ -83,6 +95,8 @@
 				$('#fundCodeNameHelpBlock')
 					.removeClass('hikaya-hide')
 					.addClass('hikaya-show');
+				$('#saveFundCodeAndNew').attr('disabled', true)
+				$('#saveFundCode').attr('disabled', true)
 			}
 		});
 
@@ -118,7 +132,6 @@
 				success: function(resp, status) {
 					if (resp.status === 201) {
                         // notify success
-                        console.log(resp)
                         toastr.success('Fund code was saved and added to current Program', `Success!!`);
                         addFundCodeOptions(resp.fund_code);
 
@@ -155,10 +168,6 @@
         codeSelect2 = $('#id_fund_code');
         var option = new Option(fundCode.name, fundCode.id, true, true);
         codeSelect2.append(option).trigger('change');
-
-		// manually trigger the `select2:select` event
-		const values = codeSelect2.val();
-		console.log(values)
     }
 
 	$(function() {

@@ -109,6 +109,10 @@ class ProgramUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ProgramUpdate, self).get_context_data(**kwargs)
         context['current_program'] = self.get_object()
+        context['donor_stakeholders'] = Stakeholder.objects.filter(
+            type__name__iexact='donor',
+            organization=self.request.user.activity_user.organization
+        ).distinct()
         context['active'] = ['workflow']
         return context
 
@@ -2877,7 +2881,10 @@ def add_stakeholder(request):
 
 
 class FundCodeCreate(GView):
-    def post(self, request, *args, **kwargs):
+    """
+    View to create FundCode and return Json response
+    """
+    def post(self, request):
         data = request.POST
         stakeholder_id = None
         name = data.get('name')
