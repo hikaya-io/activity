@@ -1556,37 +1556,6 @@ class Benchmarks(models.Model):
         return self.description
 
 
-# TODO Delete not in use
-class Monitor(models.Model):
-    responsible_person = models.CharField(
-        "Person Responsible", max_length=25, blank=True, null=True)
-    frequency = models.CharField(
-        "Frequency", max_length=25, blank=True, null=True)
-    type = models.TextField("Type", null=True, blank=True)
-    agreement = models.ForeignKey(ProjectAgreement, blank=True, null=True,
-                                  verbose_name="Project Initiation",
-                                  on_delete=models.SET_NULL)
-    complete = models.ForeignKey(
-        ProjectComplete, blank=True, null=True, on_delete=models.SET_NULL)
-    create_date = models.DateTimeField(null=True, blank=True)
-    edit_date = models.DateTimeField(null=True, blank=True)
-
-    class Meta:
-        ordering = ('type',)
-        verbose_name_plural = "Monitors"
-
-    # on save add create date or update edit date
-    def save(self, *args, **kwargs):
-        if self.create_date is None:
-            self.create_date = datetime.now()
-        self.edit_date = datetime.now()
-        super(Monitor, self).save()
-
-    # displayed in admin templates
-    def __str__(self):
-        return self.responsible_person
-
-
 class Budget(models.Model):
     contributor = models.CharField(max_length=135, blank=True, null=True)
     description_of_contribution = models.CharField(

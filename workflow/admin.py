@@ -5,7 +5,7 @@ from .models import (
     Country, Documentation, ProjectType, ProjectAgreement, Program, Sector,
     Benchmarks, Budget, SiteProfile, Organization, Evaluate, ProfileType, FundCode,
     AdminLevelThree, ActivityUser, ChecklistItem, Stakeholder, StakeholderType,
-    Monitor, Currency, ActivityBookmarks, ActivitySites, ActivityUserOrganizationGroup,
+    Currency, ActivityBookmarks, ActivitySites, ActivityUserOrganizationGroup,
     Office, Province, Template, Capacity, ApprovalAuthority, User, LandType,
     FormGuidance, Contact, Checklist, ProjectComplete, District, Village, UserInvite,
 )
@@ -277,13 +277,6 @@ class TemplateAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'documentation_type',
                     'file_field', 'create_date', 'edit_date')
     display = 'Template'
-
-
-@admin.register(Monitor)
-class MonitorAdmin(admin.ModelAdmin):
-    list_display = ('responsible_person', 'frequency',
-                    'type', 'create_date', 'edit_date')
-    display = 'Monitor'
 
 
 @admin.register(Budget)

@@ -11,7 +11,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic import View as GView
 from .models import (
     Program, Country, Province, AdminLevelThree, District, ProjectAgreement,
-    ProjectComplete, SiteProfile, Documentation, Monitor, Benchmarks, Budget,
+    ProjectComplete, SiteProfile, Documentation, Benchmarks, Budget,
     ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder, Sector,
     FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
 )
@@ -23,7 +23,7 @@ from .forms import (
     ProjectAgreementForm, ProjectAgreementSimpleForm,
     ProjectAgreementCreateForm,
     ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
-    DocumentationForm, SiteProfileForm, MonitorForm, BenchmarkForm, BudgetForm,
+    DocumentationForm, SiteProfileForm, BenchmarkForm, BudgetForm,
     FilterForm, ProgramForm,
     QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm
 )
@@ -421,13 +421,6 @@ class ProjectAgreementUpdate(UpdateView):
         context.update({'get_quantitative': get_quantitative})
 
         try:
-            get_monitor = Monitor.objects.all().filter(
-                agreement__id=self.kwargs['pk']).order_by('type')
-        except Monitor.DoesNotExist:
-            get_monitor = None
-        context.update({'get_monitor': get_monitor})
-
-        try:
             get_benchmark = Benchmarks.objects.all().filter(
                 agreement__id=self.kwargs['pk']).order_by('description')
         except Benchmarks.DoesNotExist:
@@ -560,13 +553,6 @@ class ProjectAgreementDetail(DetailView):
                         self).get_context_data(**kwargs)
         context['now'] = timezone.now()
         context.update({'id': self.kwargs['pk']})
-
-        try:
-            get_monitor = Monitor.objects.all().filter(
-                agreement__id=self.kwargs['pk'])
-        except Monitor.DoesNotExist:
-            get_monitor = None
-        context.update({'get_monitor': get_monitor})
 
         try:
             get_benchmark = Benchmarks.objects.all().filter(
@@ -1555,116 +1541,6 @@ class SiteProfileDelete(DeleteView):
 
     form_class = SiteProfileForm
 
-
-class MonitorList(ListView):
-    """
-    Monitoring Data
-    """
-    model = Monitor
-    template_name = 'workflow/monitor_list.html'
-
-    def get(self, request, *args, **kwargs):
-
-        project_agreement_id = self.kwargs['pk']
-
-        if int(self.kwargs['pk']) == 0:
-            get_monitor_data = Monitor.objects.all()
-        else:
-            get_monitor_data = Monitor.objects.all().filter(
-                agreement__id=self.kwargs['pk'])
-
-        if int(self.kwargs['pk']) == 0:
-            get_benchmark_data = Benchmarks.objects.all()
-        else:
-            get_benchmark_data = Benchmarks.objects.all().filter(
-                agreement__id=self.kwargs['pk'])
-
-        return render(request, self.template_name,
-                      {'get_monitor_data': get_monitor_data,
-                       'get_benchmark_data': get_benchmark_data,
-                       'project_agreement_id': project_agreement_id})
-
-
-class MonitorCreate(AjaxableResponseMixin, CreateView):
-    """
-    Monitor Form
-    """
-    model = Monitor
-
-    def dispatch(self, request, *args, **kwargs):
-        return super(MonitorCreate, self).dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(MonitorCreate, self).get_context_data(**kwargs)
-        context.update({'id': self.kwargs['id']})
-        return context
-
-    def get_initial(self):
-        initial = {
-            'agreement': self.kwargs['id'],
-        }
-
-        return initial
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Monitor Created!')
-        return self.render_to_response(self.get_context_data(form=form))
-
-    form_class = MonitorForm
-
-
-class MonitorUpdate(AjaxableResponseMixin, UpdateView):
-    """
-    Monitor Form
-    """
-    model = Monitor
-
-    def get_context_data(self, **kwargs):
-        context = super(MonitorUpdate, self).get_context_data(**kwargs)
-        context.update({'id': self.kwargs['pk']})
-        return context
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Monitor Updated!')
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    form_class = MonitorForm
-
-
-class MonitorDelete(AjaxableResponseMixin, DeleteView):
-    """
-    Monitor Form
-    """
-    model = Monitor
-    success_url = '/'
-
-    def get_context_data(self, **kwargs):
-        context = super(MonitorDelete, self).get_context_data(**kwargs)
-        context.update({'id': self.kwargs['pk']})
-        return context
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-
-        messages.success(self.request, 'Success, Monitor Deleted!')
-        return self.render_to_response(self.get_context_data(form=form))
 
 
 class BenchmarkCreate(AjaxableResponseMixin, CreateView):
