@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
+from django.contrib import admin
 from .models import (
-    admin, Country, Documentation, ProjectType, ProjectAgreement, Program, Sector,
+    Country, Documentation, ProjectType, ProjectAgreement, Program, Sector,
     Benchmarks, Budget, SiteProfile, Organization, Evaluate, ProfileType, FundCode,
     AdminLevelThree, ActivityUser, ChecklistItem, Stakeholder, StakeholderType,
     Monitor, Currency, ActivityBookmarks, ActivitySites, ActivityUserOrganizationGroup,
@@ -256,7 +256,7 @@ class ActivityUserOrganizationGroupAdmin(admin.ModelAdmin):
 
 @admin.register(FundCode)
 class FundCodeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'stakeholder__name', 'create_date', 'edit_date')
+    list_display = ('name', 'stakeholder', 'create_date', 'edit_date')
     display = 'Fund Code'
 
 
@@ -392,15 +392,15 @@ class CapacityAdmin(admin.ModelAdmin):
 
 @admin.register(StakeholderType)
 class StakeholderTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'create_date', 'edit_date')
-    display = 'Stakeholder Types'
-    list_filter = 'create_date'
-    search_fields = 'name'
+    list_display = ('name', 'create_date', 'edit_date',)
+    display = 'Stakeholder Types',
+    list_filter = ('create_date',)
+    search_fields = ('name',)
 
 
 @admin.register(Benchmarks)
 class BenchmarksAdmin(admin.ModelAdmin):
-    list_display = ('description', 'agreement__name',
+    list_display = ('description', 'agreement',
                     'create_date', 'edit_date')
     display = 'Project Components'
 
