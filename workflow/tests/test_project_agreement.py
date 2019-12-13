@@ -91,11 +91,6 @@ class AgreementTestCase(TestCase):
             agreement=new_agreement)
         new_budget.save()
 
-        new_monitor = Monitor.objects.create(
-            responsible_person="testmonitor", frequency="freq", type="24",
-            agreement=new_agreement)
-        new_monitor.save()
-
     def test_agreement_exists(self):
         """Check for Agreement object"""
         get_agreement = ProjectAgreement.objects.get(
