@@ -2,17 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from .models import (
-    admin, Country, Documentation, ProjectType, ProjectAgreement,
-    Program, Benchmarks, Budget, SiteProfile, ActivityUserProxy, Organization,
-    OrganizationAdmin, Evaluate, ProfileType,
-    AdminLevelThree, AdminLevelThreeAdmin, ActivityBookmarksAdmin,
-    ActivitySitesAdmin, ActivityUser, ChecklistAdmin, ChecklistItem,
-    Stakeholder, StakeholderType, Monitor, Currency, ActivityBookmarks,
-    ActivitySites, ActivityUserOrganizationGroup, Office, Province,
-    ProvinceAdmin, Template, Capacity, ApprovalAuthority, User,
-    FormGuidance, Contact, Checklist, ChecklistItemAdmin, ProjectComplete,
-    FormGuidanceAdmin, ContactAdmin, ActivityUserAdmin, ProjectTypeAdmin,
-    OfficeAdmin, District, DistrictAdmin, Village, UserInvite, Sector,
+    admin, Country, Documentation, ProjectType, ProjectAgreement, Program, Sector,
+    Benchmarks, Budget, SiteProfile, Organization, Evaluate, ProfileType, FundCode,
+    AdminLevelThree, ActivityUser, ChecklistItem, Stakeholder, StakeholderType,
+    Monitor, Currency, ActivityBookmarks, ActivitySites, ActivityUserOrganizationGroup,
+    Office, Province, Template, Capacity, ApprovalAuthority, User, LandType,
+    FormGuidance, Contact, Checklist, ProjectComplete, District, Village, UserInvite,
 )
 from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
@@ -21,7 +16,15 @@ from activity.util import get_country
 from adminreport.mixins import ChartReportAdmin
 
 
-# Resource for CSV export
+# Proxies
+class ActivityUserProxy(ActivityUser):
+    class Meta:
+        verbose_name, verbose_name_plural = u"Report Activity User", \
+                                            u"Report Activity Users"
+        proxy = True
+
+
+# Resources for CSV exports
 class DocumentationResource(resources.ModelResource):
     country = fields.Field(column_name='country', attribute='country',
                            widget=ForeignKeyWidget(Country, 'country'))
@@ -40,14 +43,6 @@ class DocumentationResource(resources.ModelResource):
         }
 
 
-class DocumentationAdmin(ImportExportModelAdmin):
-    resource_class = DocumentationResource
-    list_display = ('program', 'project')
-    list_filter = ('program__country',)
-    pass
-
-
-# Resource for CSV export
 class ProjectAgreementResource(resources.ModelResource):
     class Meta:
         model = ProjectAgreement
@@ -59,27 +54,6 @@ class ProjectAgreementResource(resources.ModelResource):
         }
 
 
-class ProjectAgreementAdmin(ImportExportModelAdmin):
-    resource_class = ProjectAgreementResource
-    list_display = ('program', 'project_name', 'short', 'create_date')
-    list_filter = ('program__country', 'short')
-    filter_horizontal = ('capacity', 'evaluate', 'site', 'stakeholder')
-
-    def queryset(self, request, queryset):
-        """
-        Returns the filtered queryset based on the value
-        provided in the query string and retrievable via
-        `self.value()`.
-        """
-        # Filter by logged in users allowable countries
-        user_countries = get_country(request.user)
-        # if not request.user.user.is_superuser:
-        return queryset.filter(country__in=user_countries)
-
-    pass
-
-
-# Resource for CSV export
 class ProjectCompleteResource(resources.ModelResource):
     class Meta:
         model = ProjectComplete
@@ -93,93 +67,9 @@ class ProjectCompleteResource(resources.ModelResource):
         }
 
 
-class ProjectCompleteAdmin(ImportExportModelAdmin):
-    resource_class = ProjectCompleteResource
-    list_display = ('program', 'project_name',
-                    'activity_code', 'short', 'create_date')
-    list_filter = ('program__country', 'office', 'short')
-    display = 'project_name'
-
-    def queryset(self, request, queryset):
-        """
-        Returns the filtered queryset based on the value
-        provided in the query string and retrievable via
-        `self.value()`.
-        """
-        # Filter by logged in users allowable countries
-        user_countries = get_country(request.user)
-        # if not request.user.user.is_superuser:
-        return queryset.filter(country__in=user_countries)
-
-    pass
-
-
-# Resource for CSV export
 class CountryResource(resources.ModelResource):
     class Meta:
         model = Country
-
-
-class CountryAdmin(ImportExportModelAdmin):
-    resource_class = CountryResource
-    list_display = ('country', 'code', 'organization',
-                    'create_date', 'edit_date')
-    list_filter = ('country', 'organization__name')
-
-
-# Resource for CSV export
-class SiteProfileResource(resources.ModelResource):
-    country = fields.Field(column_name='country', attribute='country',
-                           widget=ForeignKeyWidget(Country, 'country'))
-    type = fields.Field(column_name='type', attribute='type',
-                        widget=ForeignKeyWidget(ProfileType, 'profile'))
-    office = fields.Field(column_name='office', attribute='office',
-                          widget=ForeignKeyWidget(Office, 'code'))
-    district = fields.Field(column_name='admin level 2',
-                            attribute='district',
-                            widget=ForeignKeyWidget(District, 'name'))
-    province = fields.Field(column_name='admin level 1',
-                            attribute='province',
-                            widget=ForeignKeyWidget(Province, 'name'))
-    admin_level_three = fields.Field(
-        column_name='admin level 3', attribute='admin_level_three',
-        widget=ForeignKeyWidget(AdminLevelThree, 'name'))
-
-    class Meta:
-        model = SiteProfile
-        skip_unchanged = True
-        report_skipped = False
-
-
-class SiteProfileAdmin(ImportExportModelAdmin):
-    resource_class = SiteProfileResource
-    list_display = ('name', 'office', 'country', 'province',
-                    'district', 'admin_level_three', 'village')
-    list_filter = ('country__country',)
-    search_fields = ('office__code', 'country__country')
-    pass
-
-
-class ProgramAdmin(admin.ModelAdmin):
-    list_display = ('id', 'program_uuid', 'name', 'start_date', 'end_date')
-    search_fields = ('name', 'program_uuid')
-    list_filter = ('funding_status', 'country', 'program_uuid', 'start_date')
-    display = 'Program'
-
-
-class ApprovalAuthorityAdmin(admin.ModelAdmin):
-    list_display = ('approval_user', 'budget_limit', 'fund', 'country')
-    display = 'Approval Authority'
-    search_fields = ('approval_user__user__first_name',
-                     'approval_user__user__last_name', 'country__country')
-    list_filter = ('create_date', 'country')
-
-
-class StakeholderAdmin(ImportExportModelAdmin):
-    list_display = ('name', 'type', 'country', 'approval',
-                    'approved_by', 'filled_by', 'create_date')
-    display = 'Stakeholder List'
-    list_filter = ('country', 'type')
 
 
 class ActivityUserProxyResource(resources.ModelResource):
@@ -220,6 +110,132 @@ class ReportActivityUserProxyAdmin(ChartReportAdmin, ExportMixin,
         return email
 
 
+class SiteProfileResource(resources.ModelResource):
+    country = fields.Field(column_name='country', attribute='country',
+                           widget=ForeignKeyWidget(Country, 'country'))
+    type = fields.Field(column_name='type', attribute='type',
+                        widget=ForeignKeyWidget(ProfileType, 'profile'))
+    office = fields.Field(column_name='office', attribute='office',
+                          widget=ForeignKeyWidget(Office, 'code'))
+    district = fields.Field(column_name='admin level 2',
+                            attribute='district',
+                            widget=ForeignKeyWidget(District, 'name'))
+    province = fields.Field(column_name='admin level 1',
+                            attribute='province',
+                            widget=ForeignKeyWidget(Province, 'name'))
+    admin_level_three = fields.Field(
+        column_name='admin level 3', attribute='admin_level_three',
+        widget=ForeignKeyWidget(AdminLevelThree, 'name'))
+
+    class Meta:
+        model = SiteProfile
+        skip_unchanged = True
+        report_skipped = False
+
+
+# Models Registration to the admin site
+@admin.register(Organization)
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'create_date', 'edit_date')
+    display = 'Organization'
+
+
+@admin.register(ActivityUser)
+class ActivityUserAdmin(admin.ModelAdmin):
+    list_display = ('name', 'country')
+    display = 'Activity User'
+    list_filter = ('country', 'user__is_staff',)
+    search_fields = ('name', 'country__country', 'title')
+
+
+@admin.register(Documentation)
+class DocumentationAdmin(ImportExportModelAdmin):
+    resource_class = DocumentationResource
+    list_display = ('program', 'project')
+    list_filter = ('program__country',)
+
+
+@admin.register(ProjectAgreement)
+class ProjectAgreementAdmin(ImportExportModelAdmin):
+    resource_class = ProjectAgreementResource
+    list_display = ('program', 'project_name', 'short', 'create_date')
+    list_filter = ('program__country', 'short')
+    filter_horizontal = ('capacity', 'evaluate', 'site', 'stakeholder')
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        # Filter by logged in users allowable countries
+        user_countries = get_country(request.user)
+        # if not request.user.user.is_superuser:
+        return queryset.filter(country__in=user_countries)
+
+
+@admin.register(ProjectComplete)
+class ProjectCompleteAdmin(ImportExportModelAdmin):
+    resource_class = ProjectCompleteResource
+    list_display = ('program', 'project_name',
+                    'activity_code', 'short', 'create_date')
+    list_filter = ('program__country', 'office', 'short')
+    display = 'project_name'
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        # Filter by logged in users allowable countries
+        user_countries = get_country(request.user)
+        # if not request.user.user.is_superuser:
+        return queryset.filter(country__in=user_countries)
+
+
+@admin.register(Country)
+class CountryAdmin(ImportExportModelAdmin):
+    resource_class = CountryResource
+    list_display = ('country', 'code', 'organization',
+                    'create_date', 'edit_date')
+    list_filter = ('country', 'organization__name')
+
+
+@admin.register(SiteProfile)
+class SiteProfileAdmin(ImportExportModelAdmin):
+    resource_class = SiteProfileResource
+    list_display = ('name', 'office', 'country', 'province',
+                    'district', 'admin_level_three', 'village')
+    list_filter = ('country__country',)
+    search_fields = ('office__code', 'country__country')
+
+
+@admin.register(Program)
+class ProgramAdmin(admin.ModelAdmin):
+    list_display = ('id', 'program_uuid', 'name', 'start_date', 'end_date')
+    search_fields = ('name', 'program_uuid')
+    list_filter = ('funding_status', 'country', 'program_uuid', 'start_date')
+    display = 'Program'
+
+
+@admin.register(ApprovalAuthority)
+class ApprovalAuthorityAdmin(admin.ModelAdmin):
+    list_display = ('approval_user', 'budget_limit', 'fund', 'country')
+    display = 'Approval Authority'
+    search_fields = ('approval_user__user__first_name',
+                     'approval_user__user__last_name', 'country__country')
+    list_filter = ('create_date', 'country')
+
+
+@admin.register(Stakeholder)
+class StakeholderAdmin(ImportExportModelAdmin):
+    list_display = ('name', 'type', 'country', 'approval',
+                    'approved_by', 'filled_by', 'create_date')
+    display = 'Stakeholder List'
+    list_filter = ('country', 'type')
+
+
 @admin.register(Currency)
 class CurrencyAdmin(admin.ModelAdmin):
     list_display = ('name', 'symbol', 'code')
@@ -238,35 +254,164 @@ class ActivityUserOrganizationGroupAdmin(admin.ModelAdmin):
     list_filter = ('activity_user', 'organization')
 
 
-admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(Country, CountryAdmin)
-admin.site.register(Province, ProvinceAdmin)
-admin.site.register(Office, OfficeAdmin)
-admin.site.register(District, DistrictAdmin)
-admin.site.register(AdminLevelThree, AdminLevelThreeAdmin)
-admin.site.register(Village)
-admin.site.register(Program, ProgramAdmin)
-admin.site.register(Sector)
-admin.site.register(ProjectAgreement, ProjectAgreementAdmin)
-admin.site.register(ProjectComplete, ProjectCompleteAdmin)
-admin.site.register(Documentation, DocumentationAdmin)
-admin.site.register(Template)
-admin.site.register(SiteProfile, SiteProfileAdmin)
-admin.site.register(Capacity)
-admin.site.register(Monitor)
-admin.site.register(Benchmarks)
-admin.site.register(Evaluate)
-admin.site.register(ProjectType, ProjectTypeAdmin)
-admin.site.register(Budget)
-admin.site.register(ProfileType)
-admin.site.register(ApprovalAuthority, ApprovalAuthorityAdmin)
-admin.site.register(ChecklistItem, ChecklistItemAdmin)
-admin.site.register(Checklist, ChecklistAdmin)
-admin.site.register(Stakeholder, StakeholderAdmin)
-admin.site.register(Contact, ContactAdmin)
-admin.site.register(StakeholderType)
-admin.site.register(ActivityUser, ActivityUserAdmin)
-admin.site.register(ActivitySites, ActivitySitesAdmin)
-admin.site.register(FormGuidance, FormGuidanceAdmin)
+@admin.register(FundCode)
+class FundCodeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'stakeholder__name', 'create_date', 'edit_date')
+    display = 'Fund Code'
+
+
+@admin.register(Evaluate)
+class EvaluateAdmin(admin.ModelAdmin):
+    list_display = ('evaluate', 'create_date', 'edit_date')
+    display = 'Evaluate'
+
+
+@admin.register(ProjectType)
+class ProjectTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'create_date', 'edit_date')
+    display = 'Project Type'
+
+
+@admin.register(Template)
+class TemplateAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'documentation_type',
+                    'file_field', 'create_date', 'edit_date')
+    display = 'Template'
+
+
+@admin.register(Monitor)
+class MonitorAdmin(admin.ModelAdmin):
+    list_display = ('responsible_person', 'frequency',
+                    'type', 'create_date', 'edit_date')
+    display = 'Monitor'
+
+
+@admin.register(Budget)
+class BudgetAdmin(admin.ModelAdmin):
+    list_display = ('contributor', 'description_of_contribution',
+                    'proposed_value', 'create_date', 'edit_date')
+    display = 'Budget'
+
+
+@admin.register(Checklist)
+class ChecklistAdmin(admin.ModelAdmin):
+    list_display = ('name', 'country')
+    list_filter = ('country', 'agreement')
+
+
+@admin.register(ChecklistItem)
+class ChecklistItemAdmin(admin.ModelAdmin):
+    list_display = ('item', 'checklist', 'in_file')
+    list_filter = ('checklist', 'global_item')
+
+
+@admin.register(ActivitySites)
+class ActivitySitesAdmin(admin.ModelAdmin):
+    list_display = ('name', 'agency_name')
+    display = 'Activity Site'
+    list_filter = ('name',)
+    search_fields = ('name', 'agency_name')
+
+
+@admin.register(FormGuidance)
+class FormGuidanceAdmin(admin.ModelAdmin):
+    list_display = ('form', 'guidance', 'guidance_link', 'create_date',)
+    display = 'Form Guidance'
+
+
+@admin.register(Sector)
+class SectorAdmin(admin.ModelAdmin):
+    list_display = ('sector', 'create_date', 'edit_date')
+    display = 'Sector'
+
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('name', 'country', 'create_date', 'edit_date')
+    display = 'Contact'
+    list_filter = ('create_date', 'country')
+    search_fields = ('name', 'country', 'title', 'city')
+
+
+@admin.register(Office)
+class OfficeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'province', 'create_date', 'edit_date')
+    search_fields = ('name', 'province__name', 'code')
+    list_filter = ('create_date', 'province__country__country')
+    display = 'Office'
+
+
+@admin.register(Province)
+class ProvinceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'country', 'create_date')
+    search_fields = ('name', 'country__country')
+    list_filter = ('create_date', 'country')
+    display = 'Admin Level 1'
+
+
+@admin.register(District)
+class DistrictAdmin(admin.ModelAdmin):
+    list_display = ('name', 'province', 'create_date')
+    search_fields = ('create_date', 'province')
+    list_filter = ('province__country__country', 'province')
+    display = 'Admin Level 2'
+
+
+@admin.register(AdminLevelThree)
+class AdminLevelThreeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'district', 'create_date')
+    search_fields = ('name', 'district__name')
+    list_filter = ('district__province__country__country', 'district')
+    display = 'Admin Level 3'
+
+
+@admin.register(Village)
+class VillageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'district', 'create_date', 'edit_date')
+    list_filter = ('district__province__country__country', 'district')
+    display = 'Admin Level 4'
+
+
+@admin.register(ProfileType)
+class ProfileTypeAdmin(admin.ModelAdmin):
+    list_display = ('profile', 'create_date', 'edit_date')
+    display = 'ProfileType'
+
+
+@admin.register(LandType)
+class LandTypeAdmin(admin.ModelAdmin):
+    list_display = ('classify_land', 'create_date', 'edit_date')
+    display = 'Land Type'
+
+
+@admin.register(Capacity)
+class CapacityAdmin(admin.ModelAdmin):
+    list_display = ('capacity', 'create_date', 'edit_date')
+    display = 'Capacity'
+
+
+@admin.register(StakeholderType)
+class StakeholderTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'create_date', 'edit_date')
+    display = 'Stakeholder Types'
+    list_filter = 'create_date'
+    search_fields = 'name'
+
+
+@admin.register(Benchmarks)
+class BenchmarksAdmin(admin.ModelAdmin):
+    list_display = ('description', 'agreement__name',
+                    'create_date', 'edit_date')
+    display = 'Project Components'
+
+
+@admin.register(ActivityBookmarks)
+class ActivityBookmarksAdmin(admin.ModelAdmin):
+    list_display = ('user', 'name')
+    display = 'Activity User Bookmarks'
+    list_filter = ('user__name',)
+    search_fields = ('name', 'user')
+
+
+# Other Admin site registrations
 admin.site.register(ActivityUserProxy, ReportActivityUserProxyAdmin)
-admin.site.register(ActivityBookmarks, ActivityBookmarksAdmin)
