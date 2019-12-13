@@ -20,7 +20,8 @@ from .views import (
     StakeholderObjects, StakeholderCreate, StakeholderUpdate, province_json, service_json,
     save_bookmark, district_json, country_json, export_sites_list, ReportData, DocumentationAgreementDelete,
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
-    BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact
+    BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
+    FundCodeCreate,
 )
 from django.urls import re_path, path
 
@@ -224,6 +225,8 @@ urlpatterns = [
     # ajax calls
     re_path(r'^service/(?P<service>[-\w]+)/service_json/',
             service_json, name='service_json'),
-    re_path(r'^new_bookmark/$', save_bookmark, name='save_bookmark'),
+    path('new_bookmark/', save_bookmark, name='save_bookmark'),
+    path('fund_code/add/<int:program_id>', FundCodeCreate.as_view(),
+         name='add_fund_code')
 
 ]

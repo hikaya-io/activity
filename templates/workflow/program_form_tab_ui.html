@@ -1,4 +1,6 @@
 {% extends "base.html" %} {% block content %}
+{% include 'workflow/modals/add_fund_code_modal.html' %}
+
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
@@ -44,7 +46,7 @@
       </div>
     </div>
 
-    <div class="form-group text-right">
+    <div class="form-group text-right mt-2">
       <a role="button" class="btn btn-close" href="/workflow/level1">Close</a>
       <button type="submit" class="btn btn-success">Save Changes</button>
     </div>

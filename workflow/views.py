@@ -8,12 +8,12 @@ from functools import reduce
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic import View as GView
 from .models import (
     Program, Country, Province, AdminLevelThree, District, ProjectAgreement,
     ProjectComplete, SiteProfile, Documentation, Monitor, Benchmarks, Budget,
-    ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder,
-    FormGuidance, StakeholderType,
-    ActivityBookmarks, ActivityUser, Sector
+    ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder, Sector,
+    FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
 )
 from formlibrary.models import TrainingAttendance, Distribution
 from indicators.models import CollectedData, ExternalService
@@ -2874,3 +2874,44 @@ def add_stakeholder(request):
         return HttpResponse({'success': True})
 
     return HttpResponse({'success': False})
+
+
+class FundCodeCreate(GView):
+    def __init__(self):
+        self.program_id = 0
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        stakeholder_id = None
+        name = data.get('name')
+        stakeholder = data.get('stakeholder', None)
+
+        if stakeholder is not None and stakeholder != '':
+            stakeholder_id = int(stakeholder)
+
+        fund_code = FundCode.objects.create(
+            name=name, stakeholder_id=stakeholder_id
+        )
+
+        # get the program id from the url
+        self.program_id = kwargs.get('program_id')
+
+        if fund_code:
+            # if self.program_id != 0:
+                # add the created fund code to the current program
+                # try:
+                #     program = Program.objects.get(pk=int(self.program_id))
+                #     program.fund_code.add(fund_code)
+                #
+                # except Program.DoesNotExist:
+                #     return JsonResponse(dict(status=204))
+            return JsonResponse(dict(
+                status=201,
+                fund_code=dict(name=fund_code.name, id=fund_code.id))
+            )
+        else:
+            return JsonResponse(dict(status=401))
+
+
+
+
