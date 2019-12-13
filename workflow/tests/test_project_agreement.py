@@ -4,7 +4,7 @@
 from django.test import TestCase
 from workflow.models import (
     Organization, Program, Country, Province, ProjectAgreement, Sector,
-    ProjectComplete, ProjectType, SiteProfile, Office, Monitor, Benchmarks, Budget
+    ProjectComplete, ProjectType, SiteProfile, Office, Benchmarks, Budget
 )
 
 
@@ -113,11 +113,6 @@ class AgreementTestCase(TestCase):
         """Check for Budget object"""
         get_budget = Budget.objects.get(contributor="testbudget")
         self.assertEqual(Budget.objects.filter(id=get_budget.id).count(), 1)
-
-    def test_monitor_exists(self):
-        """Check for Monitor object"""
-        get_monitor = Monitor.objects.get(responsible_person="testmonitor")
-        self.assertEqual(Monitor.objects.filter(id=get_monitor.id).count(), 1)
 
 
 class CompleteTestCase(TestCase):
