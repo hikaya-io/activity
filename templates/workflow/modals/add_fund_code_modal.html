@@ -64,7 +64,7 @@
 		$('#stakeholder').select2({
 			theme: 'bootstrap',
         });
-        $('#id_fund_code').select2({ theme: 'bootstrap' });
+        $('#id_fund_code').select2({ theme: 'bootstrap', placeholder: 'Select fund code(s)' });
 
 		$('#fund_code_name').on('input', function() {
 			const name = $(this);
@@ -92,7 +92,7 @@
 			$('#fundCodeCreateModal').modal('show');
 		}
 	});
-	let saveFundCode = (buttonId, program_id = 0) => {
+	let saveFundCode = (buttonId) => {
 		$(`#${buttonId}`).click(e => {
 			const formValue = $('#fundCodeForm').serializeArray();
 
@@ -112,7 +112,7 @@
             data = dataObj
 
 			$.ajax({
-				url: `/workflow/fund_code/add/${program_id}`,
+				url: `/workflow/fund_code/add`,
 				type: 'POST',
 				data,
 				success: function(resp, status) {
@@ -120,8 +120,7 @@
                         // notify success
                         console.log(resp)
                         toastr.success('Fund code was saved and added to current Program', `Success!!`);
-                        const values = $('#id_fund_code').val();
-                        addFundCodeOptions(resp.fund_code, values);
+                        addFundCodeOptions(resp.fund_code);
 
 					} else if (resp.status === 204) {
 						toastr.warn(
@@ -152,16 +151,14 @@
     /**
     add the created fundcode to select options
     **/
-    function addFundCodeOptions(fundCode, selectedValues) {
+    function addFundCodeOptions(fundCode) {
         codeSelect2 = $('#id_fund_code');
         var option = new Option(fundCode.name, fundCode.id, true, true);
         codeSelect2.append(option).trigger('change');
 
-
-        // manually trigger the `select2:select` event
-        codeSelect2.select('val', [{text: fundCode.name, value: `${fundCode.id}`}]).trigger('change');
-        $('#id_fund_code').val('1')
-        $('#id_fund_code').trigger('change')
+		// manually trigger the `select2:select` event
+		const values = codeSelect2.val();
+		console.log(values)
     }
 
 	$(function() {

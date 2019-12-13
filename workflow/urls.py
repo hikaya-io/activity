@@ -226,7 +226,7 @@ urlpatterns = [
     re_path(r'^service/(?P<service>[-\w]+)/service_json/',
             service_json, name='service_json'),
     path('new_bookmark/', save_bookmark, name='save_bookmark'),
-    path('fund_code/add/<int:program_id>', FundCodeCreate.as_view(),
+    path('fund_code/add', FundCodeCreate.as_view(),
          name='add_fund_code')
 
 ]

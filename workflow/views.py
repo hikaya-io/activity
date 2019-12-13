@@ -2877,9 +2877,6 @@ def add_stakeholder(request):
 
 
 class FundCodeCreate(GView):
-    def __init__(self):
-        self.program_id = 0
-
     def post(self, request, *args, **kwargs):
         data = request.POST
         stakeholder_id = None
@@ -2893,18 +2890,7 @@ class FundCodeCreate(GView):
             name=name, stakeholder_id=stakeholder_id
         )
 
-        # get the program id from the url
-        self.program_id = kwargs.get('program_id')
-
         if fund_code:
-            # if self.program_id != 0:
-                # add the created fund code to the current program
-                # try:
-                #     program = Program.objects.get(pk=int(self.program_id))
-                #     program.fund_code.add(fund_code)
-                #
-                # except Program.DoesNotExist:
-                #     return JsonResponse(dict(status=204))
             return JsonResponse(dict(
                 status=201,
                 fund_code=dict(name=fund_code.name, id=fund_code.id))
