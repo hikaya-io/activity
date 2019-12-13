@@ -4,7 +4,6 @@ import json
 from urllib.request import urlopen
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.db import models
-from django.contrib import admin
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
 from decimal import Decimal
@@ -73,13 +72,6 @@ class ActivitySites(models.Model):
         else:
             self.updated = datetime.now()
         return super(ActivitySites, self).save(*args, **kwargs)
-
-
-class ActivitySitesAdmin(admin.ModelAdmin):
-    list_display = ('name', 'agency_name')
-    display = 'Activity Site'
-    list_filter = ('name',)
-    search_fields = ('name', 'agency_name')
 
 
 class Currency(models.Model):
@@ -197,11 +189,6 @@ class Organization(models.Model):
         return self.name or ''
 
 
-class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'create_date', 'edit_date')
-    display = 'Organization'
-
-
 class Country(models.Model):
     country = models.CharField("Country Name", max_length=255, blank=True)
     organization = models.ForeignKey(
@@ -315,27 +302,6 @@ class ActivityBookmarks(models.Model):
         super(ActivityBookmarks, self).save()
 
 
-class ActivityBookmarksAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name')
-    display = 'Activity User Bookmarks'
-    list_filter = ('user__name',)
-    search_fields = ('name', 'user')
-
-
-class ActivityUserProxy(ActivityUser):
-    class Meta:
-        verbose_name, verbose_name_plural = u"Report Activity User", \
-                                            u"Report Activity Users"
-        proxy = True
-
-
-class ActivityUserAdmin(admin.ModelAdmin):
-    list_display = ('name', 'country')
-    display = 'Activity User'
-    list_filter = ('country', 'user__is_staff',)
-    search_fields = ('name', 'country__country', 'title')
-
-
 # Form Guidance
 class FormGuidance(models.Model):
     form = models.CharField(max_length=135, null=True, blank=True)
@@ -353,11 +319,6 @@ class FormGuidance(models.Model):
 
     def __str__(self):
         return self.form
-
-
-class FormGuidanceAdmin(admin.ModelAdmin):
-    list_display = ('form', 'guidance', 'guidance_link', 'create_date',)
-    display = 'Form Guidance'
 
 
 class Sector(models.Model):
@@ -378,11 +339,6 @@ class Sector(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.sector or ''
-
-
-class SectorAdmin(admin.ModelAdmin):
-    list_display = ('sector', 'create_date', 'edit_date')
-    display = 'Sector'
 
 
 class Contact(models.Model):
@@ -419,17 +375,13 @@ class Contact(models.Model):
         return u'%s, %s' % (self.name, self.title)
 
 
-class ContactAdmin(admin.ModelAdmin):
-    list_display = ('name', 'country', 'create_date', 'edit_date')
-    display = 'Contact'
-    list_filter = ('create_date', 'country')
-    search_fields = ('name', 'country', 'title', 'city')
-
-
 # For programs that have custom dashboards. The default dashboard for all
 # other programs is 'Program Dashboard'
 class FundCode(models.Model):
-    name = models.CharField("Fund Code", max_length=255, blank=True)
+    name = models.CharField('Fund Code', max_length=255, blank=True)
+    stakeholder = models.ForeignKey(
+        'Stakeholder', related_name='stakeholder', null=True, blank=True,
+        on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -445,12 +397,7 @@ class FundCode(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        return self.name
-
-
-class FundCodeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'program__name', 'create_date', 'edit_date')
-    display = 'Fund Code'
+        return '{}'.format(self.name)
 
 
 class Program(models.Model):
@@ -564,13 +511,6 @@ class Province(models.Model):
         return self.name
 
 
-class ProvinceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'country', 'create_date')
-    search_fields = ('name', 'country__country')
-    list_filter = ('create_date', 'country')
-    display = 'Admin Level 1'
-
-
 class District(models.Model):
     name = models.CharField("Admin Level 2", max_length=255, blank=True)
     province = models.ForeignKey(
@@ -593,13 +533,6 @@ class District(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.name
-
-
-class DistrictAdmin(admin.ModelAdmin):
-    list_display = ('name', 'province', 'create_date')
-    search_fields = ('create_date', 'province')
-    list_filter = ('province__country__country', 'province')
-    display = 'Admin Level 2'
 
 
 class AdminLevelThree(models.Model):
@@ -625,13 +558,6 @@ class AdminLevelThree(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.name
-
-
-class AdminLevelThreeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'district', 'create_date')
-    search_fields = ('name', 'district__name')
-    list_filter = ('district__province__country__country', 'district')
-    display = 'Admin Level 3'
 
 
 class Village(models.Model):
@@ -661,12 +587,6 @@ class Village(models.Model):
         return self.name
 
 
-class VillageAdmin(admin.ModelAdmin):
-    list_display = ('name', 'district', 'create_date', 'edit_date')
-    list_filter = ('district__province__country__country', 'district')
-    display = 'Admin Level 4'
-
-
 class Office(models.Model):
     name = models.CharField("Office Name", max_length=255, blank=True)
     code = models.CharField("Office Code", max_length=255, blank=True)
@@ -691,13 +611,6 @@ class Office(models.Model):
         return new_name
 
 
-class OfficeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'province', 'create_date', 'edit_date')
-    search_fields = ('name', 'province__name', 'code')
-    list_filter = ('create_date', 'province__country__country')
-    display = 'Office'
-
-
 class ProfileType(models.Model):
     profile = models.CharField("Profile Type", max_length=255, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
@@ -718,13 +631,6 @@ class ProfileType(models.Model):
         return self.profile
 
 
-class ProfileTypeAdmin(admin.ModelAdmin):
-    list_display = ('profile', 'create_date', 'edit_date')
-    display = 'ProfileType'
-
-
-# Add land classification - 'Rural', 'Urban', 'Peri-Urban', activity-help
-# issue #162
 class LandType(models.Model):
     classify_land = models.CharField(
         "Land Classification", help_text="Rural, Urban, Peri-Urban",
@@ -745,11 +651,6 @@ class LandType(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.classify_land
-
-
-class LandTypeAdmin(admin.ModelAdmin):
-    list_display = ('classify_land', 'create_date', 'edit_date')
-    display = 'Land Type'
 
 
 class SiteProfileManager(models.Manager):
@@ -910,15 +811,6 @@ class SiteProfile(models.Model):
         return new_name
 
 
-class SiteProfileAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'office', 'country', 'district',
-                    'province', 'village', 'cluster', 'longitude', 'latitude',
-                    'create_date', 'edit_date')
-    list_filter = 'country__country'
-    search_fields = ('code', 'office__code', 'country__country')
-    display = 'SiteProfile'
-
-
 class Capacity(models.Model):
     capacity = models.CharField(
         "Capacity", max_length=255, blank=True, null=True)
@@ -941,11 +833,6 @@ class Capacity(models.Model):
         return self.capacity
 
 
-class CapacityAdmin(admin.ModelAdmin):
-    list_display = ('capacity', 'create_date', 'edit_date')
-    display = 'Capacity'
-
-
 class StakeholderType(models.Model):
     name = models.CharField(
         "Stakeholder Type", max_length=255, blank=True, null=True)
@@ -966,13 +853,6 @@ class StakeholderType(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.name
-
-
-class StakeholderTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'create_date', 'edit_date')
-    display = 'Stakeholder Types'
-    list_filter = 'create_date'
-    search_fields = 'name'
 
 
 class Evaluate(models.Model):
@@ -998,11 +878,6 @@ class Evaluate(models.Model):
         return self.evaluate
 
 
-class EvaluateAdmin(admin.ModelAdmin):
-    list_display = ('evaluate', 'create_date', 'edit_date')
-    display = 'Evaluate'
-
-
 class ProjectType(models.Model):
     name = models.CharField("Type of Activity", max_length=135)
     description = models.CharField(max_length=765)
@@ -1021,11 +896,6 @@ class ProjectType(models.Model):
 
     class Meta:
         ordering = ('name',)
-
-
-class ProjectTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'create_date', 'edit_date')
-    display = 'Project Type'
 
 
 class Template(models.Model):
@@ -1048,12 +918,6 @@ class Template(models.Model):
 
     class Meta:
         ordering = ('name',)
-
-
-class TemplateAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'documentation_type',
-                    'file_field', 'create_date', 'edit_date')
-    display = 'Template'
 
 
 class StakeholderManager(models.Manager):
@@ -1125,12 +989,6 @@ class Stakeholder(models.Model):
         return self.name
 
 
-class StakeholderAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'country', 'create_date')
-    display = 'Stakeholders'
-    list_filter = ('country', 'type', 'sector')
-
-
 class ProjectAgreementManager(models.Manager):
     def get_approved(self):
         return self.filter(approval="approved")
@@ -1156,23 +1014,6 @@ class ProjectAgreementManager(models.Manager):
             'office',
             'approved_by',
             'approval_submitted_by')
-
-
-# Project Initiation, admin is handled in the admin.py
-# TODO: Clean up unused fields and rename model with manual migration file
-"""
-https://docs.djangoproject.com/en/dev/ref/migration-operations/#renamemodel
-
-class Migration(migrations.Migration):
-
-    dependencies = [
-        ('workflow', '0001_initial'),
-    ]
-
-    operations = [
-        operations.RenameModel("ProjectAgreement", "WorkflowLevelOne")
-    ]
-"""
 
 
 class ProjectAgreement(models.Model):
@@ -1451,23 +1292,6 @@ class ProjectAgreement(models.Model):
         return new_name
 
 
-# Project Tracking, admin is handled in the admin.py
-# TODO: Clean up unused fields and rename model with manual migration file
-"""
-https://docs.djangoproject.com/en/dev/ref/migration-operations/#renamemodel
-
-class Migration(migrations.Migration):
-
-    dependencies = [
-        ('workflow', '0001_initial'),
-    ]
-
-    operations = [
-        operations.RenameModel("ProjectComplete", "WorkflowLevelTwo")
-    ]
-"""
-
-
 class ProjectComplete(models.Model):
     short = models.BooleanField(
         default=True, verbose_name="Short Form (recommended)")
@@ -1695,22 +1519,6 @@ class Documentation(models.Model):
         verbose_name_plural = "Documentation"
 
 
-# TODO: Rename model with manual migration file
-"""
-https://docs.djangoproject.com/en/dev/ref/migration-operations/#renamemodel
-
-class Migration(migrations.Migration):
-
-    dependencies = [
-        ('workflow', '0001_initial'),
-    ]
-
-    operations = [
-        operations.RenameModel("Benchmarks", "WorkflowLevelThree")
-    ]
-"""
-
-
 class Benchmarks(models.Model):
     percent_complete = models.IntegerField("% complete", blank=True, null=True)
     percent_cumulative = models.IntegerField(
@@ -1748,49 +1556,6 @@ class Benchmarks(models.Model):
         return self.description
 
 
-class BenchmarksAdmin(admin.ModelAdmin):
-    list_display = ('description', 'agreement__name',
-                    'create_date', 'edit_date')
-    display = 'Project Components'
-
-
-# TODO Delete not in use
-class Monitor(models.Model):
-    responsible_person = models.CharField(
-        "Person Responsible", max_length=25, blank=True, null=True)
-    frequency = models.CharField(
-        "Frequency", max_length=25, blank=True, null=True)
-    type = models.TextField("Type", null=True, blank=True)
-    agreement = models.ForeignKey(ProjectAgreement, blank=True, null=True,
-                                  verbose_name="Project Initiation",
-                                  on_delete=models.SET_NULL)
-    complete = models.ForeignKey(
-        ProjectComplete, blank=True, null=True, on_delete=models.SET_NULL)
-    create_date = models.DateTimeField(null=True, blank=True)
-    edit_date = models.DateTimeField(null=True, blank=True)
-
-    class Meta:
-        ordering = ('type',)
-        verbose_name_plural = "Monitors"
-
-    # on save add create date or update edit date
-    def save(self, *args, **kwargs):
-        if self.create_date is None:
-            self.create_date = datetime.now()
-        self.edit_date = datetime.now()
-        super(Monitor, self).save()
-
-    # displayed in admin templates
-    def __str__(self):
-        return self.responsible_person
-
-
-class MonitorAdmin(admin.ModelAdmin):
-    list_display = ('responsible_person', 'frequency',
-                    'type', 'create_date', 'edit_date')
-    display = 'Monitor'
-
-
 class Budget(models.Model):
     contributor = models.CharField(max_length=135, blank=True, null=True)
     description_of_contribution = models.CharField(
@@ -1821,12 +1586,6 @@ class Budget(models.Model):
         ordering = ('contributor',)
 
 
-class BudgetAdmin(admin.ModelAdmin):
-    list_display = ('contributor', 'description_of_contribution',
-                    'proposed_value', 'create_date', 'edit_date')
-    display = 'Budget'
-
-
 class Checklist(models.Model):
     name = models.CharField(max_length=255, null=True,
                             blank=True, default="Checklist")
@@ -1853,11 +1612,6 @@ class Checklist(models.Model):
         return self.agreement
 
 
-class ChecklistAdmin(admin.ModelAdmin):
-    list_display = ('name', 'country')
-    list_filter = ('country', 'agreement')
-
-
 class ChecklistItem(models.Model):
     item = models.CharField(max_length=255)
     checklist = models.ForeignKey(Checklist, on_delete=models.CASCADE)
@@ -1882,11 +1636,6 @@ class ChecklistItem(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.item
-
-
-class ChecklistItemAdmin(admin.ModelAdmin):
-    list_display = ('item', 'checklist', 'in_file')
-    list_filter = ('checklist', 'global_item')
 
 
 # Logged users

@@ -6,12 +6,11 @@ from .views import (
     add_stakeholder, delete_stakeholder, ProgramUpdate,
     ProjectDash, ProgramDash, level1_delete, ProjectAgreementList,
     ProjectAgreementCreate, ProjectAgreementUpdate,
-    ProjectCompleteBySite, ProjectCompleteDetail,
+    ProjectCompleteBySite, ProjectCompleteDetail, DocumentationListObjects,
     SiteProfileList, SiteProfileCreate, SiteProfileUpdate,
     delete_project_agreement, ProjectAgreementImport, ProjectAgreementDetail,
     SiteProfileReport, IndicatorDataBySite, ProjectCompleteList, ProjectCompleteCreate,
-    SiteProfileDelete, MonitorList, MonitorCreate, MonitorUpdate, MonitorDelete,
-    ProjectCompleteUpdate, ProjectCompleteDelete, DocumentationList, DocumentationListObjects,
+    SiteProfileDelete, ProjectCompleteUpdate, ProjectCompleteDelete, DocumentationList,
     ProjectCompleteImport, DocumentationAgreementList, DocumentationCreate, BenchmarkCreate,
     QuantitativeOutputsCreate, DocumentationDelete, DocumentationAgreementCreate,
     export_stakeholders_list, DocumentationAgreementUpdate, DocumentationUpdate, ChecklistItemList,
@@ -20,7 +19,8 @@ from .views import (
     StakeholderObjects, StakeholderCreate, StakeholderUpdate, province_json, service_json,
     save_bookmark, district_json, country_json, export_sites_list, ReportData, DocumentationAgreementDelete,
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
-    BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact
+    BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
+    FundCodeCreate,
 )
 from django.urls import re_path, path
 
@@ -112,16 +112,6 @@ urlpatterns = [
             DocumentationUpdate.as_view(), name='documentation_update'),
     re_path(r'^documentation_delete/(?P<pk>\w+)/$',
             DocumentationDelete.as_view(), name='documentation_delete'),
-
-    re_path(r'^monitor_list/(?P<pk>\w+)/$',
-            MonitorList.as_view(), name='monitor_list'),
-    re_path(r'^monitor_add/(?P<id>\w+)/$',
-            MonitorCreate.as_view(), name='monitor_add'),
-    re_path(r'^monitor_update/(?P<pk>\w+)/$',
-            MonitorUpdate.as_view(), name='monitor_update'),
-    re_path(r'^monitor_delete/(?P<pk>\w+)/$',
-            MonitorDelete.as_view(), name='monitor_delete'),
-
     re_path(r'^quantitative_add/(?P<id>\w+)/$',
             QuantitativeOutputsCreate.as_view(), name='quantitative_add'),
     re_path(r'^quantitative_update/(?P<pk>\w+)/$',
@@ -224,6 +214,8 @@ urlpatterns = [
     # ajax calls
     re_path(r'^service/(?P<service>[-\w]+)/service_json/',
             service_json, name='service_json'),
-    re_path(r'^new_bookmark/$', save_bookmark, name='save_bookmark'),
+    path('new_bookmark/', save_bookmark, name='save_bookmark'),
+    path('fund_code/add', FundCodeCreate.as_view(),
+         name='add_fund_code')
 
 ]
