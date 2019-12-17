@@ -88,10 +88,6 @@ class CollectedDataForm(forms.ModelForm):
         date_collected = datetime.strftime(date_collected, '%Y-%m-%d')
         return date_collected
 
-    program2 = forms.CharField(widget=forms.TextInput(
-        attrs={'readonly': 'readonly', 'label': 'Program'}))
-    indicator2 = forms.CharField(widget=forms.TextInput(
-        attrs={'readonly': 'readonly', 'label': 'Indicator'}))
     target_frequency = forms.CharField()
     date_collected = forms.DateField(
         widget=DatePicker.DateInput(), required=True)
@@ -132,19 +128,11 @@ class CollectedDataForm(forms.ModelForm):
             .filter(indicator=self.indicator)\
             .order_by('customsort', 'create_date', 'period')
 
-        self.fields['program2'].initial = self.program
-        self.fields['program2'].label = "Program"
-
         try:
             int(self.indicator)
-            self.indicator = Indicator.objects.get(id=self.indicator)
+            self.indicator = Indicator.objects.get(id=int(self.indicator))
         except TypeError as e:
             pass
-
-        self.fields['indicator2'].initial = self.indicator.name
-        self.fields['indicator2'].label = "Indicator"
-        self.fields['program'].widget = forms.HiddenInput()
-        self.fields['indicator'].widget = forms.HiddenInput()
         self.fields['target_frequency'].required = False
         self.fields['target_frequency'].initial = self.indicator.target_frequency
         self.fields['activity_table'].queryset = ActivityTable.objects.filter(
