@@ -533,16 +533,16 @@ class CollectedData(models.Model):
     periodic_target = models.ForeignKey(
         PeriodicTarget, null=True, blank=True, help_text=" ",
         on_delete=models.SET_NULL)
-    targeted = models.DecimalField("Targeted", max_digits=20,
+    targeted = models.DecimalField("Targeted", max_digits=20, null=True, blank=True,
                                    decimal_places=2, default=Decimal('0.00'))
     achieved = models.DecimalField(
-        "Achieved", max_digits=20, decimal_places=2, help_text=" ")
+        "Achieved", max_digits=20, decimal_places=2, blank=True, null=True)
     disaggregation_value = models.ManyToManyField(
         DisaggregationValue, blank=True, help_text=" ")
     description = models.TextField(
         "Remarks/comments", blank=True, null=True, help_text=" ")
     indicator = models.ForeignKey(
-        Indicator, help_text=" ", null=True, on_delete=models.SET_NULL)
+        Indicator, help_text=" ", null=True, blank=True, on_delete=models.SET_NULL)
     agreement = models.ForeignKey(ProjectAgreement, blank=True, null=True,
                                   related_name="q_agreement2",
                                   verbose_name="Project Initiation",

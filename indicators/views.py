@@ -697,10 +697,11 @@ class CollectedDataCreate(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(CollectedDataCreate, self).get_context_data(**kwargs)
+        dissags_list = Indicator.objects.filter(pk=int(self.kwargs['indicator']))\
+            .values_list('disaggregation__id', flat=True).first()
         try:
-            get_disaggregation_label = DisaggregationLabel.objects.all()\
-                .filter(
-                disaggregation_type__indicator__id=self.kwargs['indicator'])
+            get_disaggregation_label = DisaggregationLabel.objects.filter(
+                disaggregation_type__id__in=dissags_list if dissags_list is not None else [])
             get_disaggregation_label_standard = \
                 DisaggregationLabel.objects.all().filter(
                     disaggregation_type__standard=True)
@@ -745,14 +746,17 @@ class CollectedDataCreate(CreateView):
 
     def form_invalid(self, form):
 
+        print(form.errors)
         messages.error(self.request, 'Invalid Form',
                        fail_silently=False, extra_tags='danger')
 
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
+        dissags_list = Indicator.objects.filter(pk=int(self.kwargs['indicator']))\
+            .values_list('disaggregation__id', flat=True).first()
         disaggregation_labels = DisaggregationLabel.objects.filter(
-            Q(disaggregation_type__indicator__id=self.request.POST['indicator']) |
+            Q(disaggregation_type__id__in=dissags_list if dissags_list is not None else []) |
             Q(disaggregation_type__standard=True))
 
         # update the count with the value of Table unique count
@@ -773,6 +777,8 @@ class CollectedDataCreate(CreateView):
             else:
                 count = 0
             form.instance.achieved = count
+            if self.kwargs['indicator'] != 0:
+                form.instance.indicator_id = int(self.kwargs['indicator'])
 
         new = form.save()
 
