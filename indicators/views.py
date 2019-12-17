@@ -441,11 +441,6 @@ class IndicatorUpdate(UpdateView):
 
     object = None
 
-    # def get_template_names(self):
-    #     if self.request.GET.get('modal'):
-    #         return 'indicators/indicator_form_modal.html'
-    #     return 'indicators/indicator_form_tab_ui.html'
-
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
 
@@ -543,15 +538,15 @@ class IndicatorUpdate(UpdateView):
         indicator = self.get_object()
 
         # save periodic targets from the frontend
-        periodic_targets_object = json.loads(
-            data.get("periodic_targets_object", "[]"))
+        periodic_targets_object = data.get("periodic_targets_object", None)
 
-        for target in periodic_targets_object:
-            periodic_target = PeriodicTarget(indicator=indicator, start_date=datetime.strptime(
-                target['start'], "%b %d, %Y").date(), end_date=datetime.strptime(
-                target['end'], "%b %d, %Y").date(), target=target['value'], period=target['period'])
+        if periodic_targets_object is not None:
+            for target in json.loads(periodic_targets_object):
+                periodic_target = PeriodicTarget(indicator=indicator, start_date=datetime.strptime(
+                    target['start'], "%b %d, %Y").date(), end_date=datetime.strptime(
+                    target['end'], "%b %d, %Y").date(), target=target['value'], period=target['period'])
 
-            periodic_target.save()
+                periodic_target.save()
 
         # generate the target periods and assign the values
         # for periodic_target_value in periodic_targets:
@@ -576,33 +571,32 @@ class IndicatorUpdate(UpdateView):
             num_data=Count('collecteddata')).order_by('customsort', 'create_date', 'period')
 
         # save the disaggregation types and labels from the frontend
-        disaggs = json.loads(data.get("disaggregation_types", "[]"))
-
-        # print(disaggs)
-        for disagg in disaggs:
-            if disagg['id'] is None:
-                disagg_type = DisaggregationType.objects.create(
-                    disaggregation_type=disagg['type'], id=int(disagg['id'])
-                )
-            else:
-                disagg_type = DisaggregationType.objects.filter(id=int(disagg['id'])).first()
-                disagg_type.disaggregation_type = disagg['type']
-                disagg_type.save()
-
-            # register disag to the indicator
-            indicator.disaggregation.add(disagg_type,)
-
-            # add disag type labels
-            for label in disagg['labels']:
-                if label['id'] is None: 
-                    DisaggregationLabel.objects.create(
-                        disaggregation_type_id=disagg_type.id,
-                        label=label['label']
+        disaggs = data.get("disaggregation_types", None)
+        if disaggs is not None and disaggs != '':
+            for disagg in json.loads(disaggs):
+                if disagg['id'] is None:
+                    disagg_type = DisaggregationType.objects.create(
+                        disaggregation_type=disagg['type'], id=int(disagg['id'])
                     )
                 else:
-                    get_label = DisaggregationLabel.objects.filter(id=int(label['id'])).first()
-                    get_label.label=label['label']
-                    get_label.save()
+                    disagg_type = DisaggregationType.objects.filter(id=int(disagg['id'])).first()
+                    disagg_type.disaggregation_type = disagg['type']
+                    disagg_type.save()
+
+                # register disag to the indicator
+                indicator.disaggregation.add(disagg_type,)
+
+                # add disag type labels
+                for label in disagg['labels']:
+                    if label['id'] is None:
+                        DisaggregationLabel.objects.create(
+                            disaggregation_type_id=disagg_type.id,
+                            label=label['label']
+                        )
+                    else:
+                        get_label = DisaggregationLabel.objects.filter(id=int(label['id'])).first()
+                        get_label.label=label['label']
+                        get_label.save()
 
         if self.request.is_ajax():
             data = serializers.serialize('json', [self.object])

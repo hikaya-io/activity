@@ -334,7 +334,7 @@ class Indicator(models.Model):
     rationale_for_target = models.TextField(
         max_length=255, null=True, blank=True, help_text=" ")
     target_frequency = models.IntegerField(
-        blank=False, null=True, choices=TARGET_FREQUENCIES,
+        blank=True, null=True, choices=TARGET_FREQUENCIES,
         verbose_name="Target frequency", help_text=" ")
     target_frequency_custom = models.CharField(
         null=True, blank=True, max_length=100,
