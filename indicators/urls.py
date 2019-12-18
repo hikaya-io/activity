@@ -47,7 +47,7 @@ urlpatterns = [
     re_path(
         r'^collecteddata/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
         CollectedDataList.as_view(), name='collecteddata_list'),
-    re_path(r'^collecteddata_add/(?P<program>\w+)/(?P<indicator>\w+)/$',
+    path('collecteddata_add/<slug:program>/<int:indicator>/',
             CollectedDataCreate.as_view(), name='collecteddata_add'),
     re_path(r'^collecteddata_import/$', collecteddata_import,
             name='collecteddata_import'),
