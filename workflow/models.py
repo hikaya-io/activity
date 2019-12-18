@@ -1643,7 +1643,7 @@ class LoggedUser(models.Model):
     username = models.CharField(max_length=30, primary_key=True)
     country = models.CharField(max_length=100, blank=False)
     email = models.CharField(max_length=100, blank=False,
-                             default='user@mercycorps.com')
+                             default='user@hikaya.io')
 
     def __str__(self):
         return self.username
