@@ -317,7 +317,7 @@ class Indicator(models.Model):
     definition = models.TextField(null=True, blank=True, help_text=" ")
     justification = models.TextField(
         max_length=500, null=True, blank=True,
-        verbose_name="Rationale or Justification for Indicator", help_text=" ")
+        verbose_name="Justification for Indicator", help_text=" ")
     unit_of_measure = models.CharField(
         max_length=135, null=True, blank=True, verbose_name="Unit of measure*",
         help_text=" ")
@@ -347,20 +347,20 @@ class Indicator(models.Model):
         help_text=" ")
     means_of_verification = models.CharField(
         max_length=255, null=True, blank=True,
-        verbose_name="Means of Verification / Data Source", help_text=" ")
+        verbose_name="Means of Verification", help_text=" ")
     data_collection_method = models.CharField(
         max_length=255, null=True, blank=True,
         verbose_name="Data Collection Method", help_text=" ")
     data_collection_frequency = models.ForeignKey(
         DataCollectionFrequency, null=True, blank=True,
-        verbose_name="Frequency of Data Collection",
+        verbose_name="Data Collection Frequency",
         help_text=" ", on_delete=models.SET_NULL)
     data_points = models.TextField(
         max_length=500, null=True, blank=True, verbose_name="Data Points",
         help_text=" ")
     responsible_person = models.CharField(
         max_length=255, null=True, blank=True,
-        verbose_name="Responsible Person(s) and Team", help_text=" ")
+        verbose_name="Responsible Person or Team", help_text=" ")
     method_of_analysis = models.CharField(
         max_length=255, null=True, blank=True,
         verbose_name="Method of Analysis", help_text=" ")
@@ -370,7 +370,7 @@ class Indicator(models.Model):
     reporting_frequency = models.ForeignKey(
         ReportingFrequency, null=True,
         blank=True,
-        verbose_name="Frequency of Reporting",
+        verbose_name="Reporting Frequency",
         help_text=" ",
         on_delete=models.SET_NULL)
     quality_assurance = models.TextField(
