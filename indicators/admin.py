@@ -16,7 +16,6 @@ from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from import_export.admin import ImportExportModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
-
 class IndicatorResource(resources.ModelResource):
 
     indicator_type = ManyToManyWidget(
@@ -48,6 +47,13 @@ class IndicatorResource(resources.ModelResource):
             'sector', 'program', 'key_performance_indicator')
 
 
+
+class CollectedDataInline(admin.TabularInline):
+    model = CollectedData
+    fields = ('targeted','achieved','periodic_target','site')
+    extra = 3
+
+
 class IndicatorAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = IndicatorResource
     list_display = ('name', 'indicator_types', 'sector',
@@ -57,6 +63,7 @@ class IndicatorAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     display = 'Indicators'
     filter_horizontal = ('program', 'objectives',
                          'strategic_objectives', 'disaggregation', 'program')
+    inlines = [CollectedDataInline]
 
 
 class ActivityTableResource(resources.ModelResource):
