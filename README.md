@@ -32,21 +32,7 @@ NB: Ensure you have docker installed on your machine
 
 # Local Setup
 
-## Install non-python dependencies
-
-1. **GDAL**
-
-On mac:
-```bash
-$ brew install gdal
-```
-
-2. **pango**
-
-On mac:
-```bash
-$ brew install pango
-```
+See [these instructions for installing known dependencies](#install-non-python-dependencies).
 
 ## Installing virtualenv
 ```bash
@@ -119,6 +105,24 @@ $ sudo pip install --upgrade google-api-python-client
 ``` -->
 
 *HINT:* The 0’s let it run on any local address i.e. `localhost` or `127.0.0.1` etc.
+
+# Extra information
+
+## Install non-python dependencies
+
+1. **GDAL**
+
+On mac:
+```bash
+$ brew install gdal
+```
+
+2. **pango**
+
+On mac:
+```bash
+$ brew install pango
+```
 
 ## Postgresql help
 
