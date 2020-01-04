@@ -1,6 +1,3 @@
-
-
-
 Activity
 ====
 
@@ -90,7 +87,7 @@ $ cp activity/settings/local-sample.py activity/settings/local.py
 ## Modify the config file
 Edit database settings activity/settings/local.py as shown below.
 
-We will change the `ENGINE` parameter to the default value for postgres (although you can also user MySQL or Sqllite3 which is out-of-the-box supported by Django).
+We will change the `ENGINE` parameter to the default value for postgres (although you can also user MySQL or Sqllite3 which is out-of-the-box supported by Django). We also need to add a default database name in the `NAME` option.
 
 Since postgres is the preferred database for this project, we have provided extra instructions to help you set it up. These can be viewed [here](#postgresql-help).
 
@@ -100,6 +97,7 @@ Since postgres is the preferred database for this project, we have provided extr
 49    #'ENGINE': 'django.db.backends.postgresql', # Alternatives: 'postgresql', 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 50    'ENGINE': "django.db.backends.postgresql"
 51    'NAME': os.environ.get('ACTIVITY_CE_DB_NAME', 'mydatabasename'), # replace mydatabasename here with the name of your database
+# The following can be left unchanged for local use:
 52    'USER': os.environ.get('ACTIVITY_CE_DB_USER', ''),
 53    'PASSWORD': os.environ.get('ACTIVITY_CE_DB_PASSWORD', ''),
 54    'HOST': os.environ.get('ACTIVITY_CE_DB_HOST', ''),
@@ -178,10 +176,11 @@ If you get access denied, it means you need to modify the config file and write 
 
 ### Path issue
 
+To fix any issues related to your path that may come up during the django set up, run:
 ```bash
 $ export PATH=$PATH:/usr/local/mysql/bin
 ```
-or whatever path you have to your installed mysql_config file in the bin folder of mysql
+or specify the path you have to your installed mysql_config file in the bin folder of mysql
 
 If you want this environment variable to be automatically set, please include it in your bash_profile or bashrc file.
 
