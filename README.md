@@ -1,4 +1,6 @@
-Activity [![Build Status](https://travis-ci.org/hikaya/Activity-CE.svg?branch=master)](https://travis-ci.org/hikaya/Activity-CE)
+
+
+Activity
 ====
 
 We are developing a tool for humanitarians to manage project activities and indicator results across their programs, including approval workflows and reporting and visualizations. Our goal is to help organizations answer common questions such as:
@@ -7,14 +9,14 @@ We are developing a tool for humanitarians to manage project activities and indi
 * where you work?
 * how do my outputs align with my overall project goal?
 
-## Configuration
+<!-- ## Configuration
 Copy the activity/settings/local-sample.py to local.py and modify for your environment.
 
 ## To deploy changes in activity servers
 Once all your changes have been commited to the repo, and before pushing them, run:
-`. travis.sh`
+`. travis.sh` -->
 
-## To deploy localy via Docker
+<!-- ## To deploy localy via Docker
 Run the following commands from the root of this repository:
 
 NB: Ensure you have docker installed on your machine
@@ -26,62 +28,73 @@ NB: Ensure you have docker installed on your machine
   # start the app
   - `docker-compose up -d --build`
   # open on browser
-  - `http://127.0.0.1:8000/`
+  - `http://127.0.0.1:8000/` -->
 
-## USING virtualenv
-(Install virtualenv)
+# Local Setup
+
+## Install non-python dependencies
+
+1. **GDAL**
+
+On mac:
+```bash
+$ brew install gdal
+```
+
+2. **pango**
+
+On mac:
+```bash
+$ brew install pango
+```
+
+## Installing virtualenv
 ```bash
 $ pip install virtualenv
 ```
 
-
-# Create Virtualenv
+## Create virtualenv
 ```bash
-$ virtualenv --no-site-packages venv
+$ virtualenv --no-site-packages myvirtualenvironmentname
 ```
 * use no site packages to prevent virtualenv from seeing your global packages
-* . venv/bin/activate allows us to just use pip from command line by adding to the path rather then full path
+* . myvirtualenvironmentname/bin/activate allows us to just use pip from command line by adding to the path rather then full path
 
-## Activate Virtualenv
+## Activate virtualenv
 ```bash
-$ source venv/bin/activate
+$ source myvirtualenvironmentname/bin/activate
 ```
 
-
-## Fix probable mysql path issue (for mac)
-export PATH=$PATH:/usr/local/mysql/bin
-* or whatever path you have to your installed mysql_config file in the bin folder of mysql
-
-## Install Requirements
+## Install requirements
 ```bash
 $ pip install -r requirements.txt
 ```
 
+## Create local copy of config file
+Copy the example config.
+
+```bash
+$ cp activity/settings/local-sample.py activity/settings/local.py
+```
 
 ## Modify the config file
-Edit database settings settings/local.py
+Edit database settings activity/settings/local.py as shown below.
+
+We will change the `ENGINE` parameter to the default value for postgres (although you can also user MySQL or Sqllite3 which is out-of-the-box supported by Django).
+
+Since postgres is the preferred database for this project, we have provided extra instructions to help you set it up. These can be viewed [here](#postgresql-help).
 
 ```yaml
 47 DATABASES:
 48  'default': {
-49    #'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+49    #'ENGINE': 'django.db.backends.postgresql', # Alternatives: 'postgresql', 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 50    'ENGINE': "django.db.backends.postgresql"
-51    'NAME': "YOUR_DB_NAME"
-52    'USER': "YOUR_DB_USER"
-53    'PASSWORD': 'YOUR_DB_PASSWORD',
-54    'HOST': "YOUR_DB_HOST" # default localhost
-55    'PORT': 'YOUR_DB_PROT', # 5432 - for postgres
+51    'NAME': os.environ.get('ACTIVITY_CE_DB_NAME', 'mydatabasename'), # replace activity here with the name of your database
+52    'USER': os.environ.get('ACTIVITY_CE_DB_USER', ''),
+53    'PASSWORD': os.environ.get('ACTIVITY_CE_DB_PASSWORD', ''),
+54    'HOST': os.environ.get('ACTIVITY_CE_DB_HOST', ''),
+55    'PORT': os.environ.get('ACTIVITY_CE_DB_PORT', ''),
 ```
-* Replace user and password by your Mysql username and password 
-
-## Set up Django's MySQL backing store
-
-```sql
-CREATE DATABASE 'activity';
-CREATE USER 'root';
-GRANT ALL ON ctivity.* TO 'root'@'localhost' IDENTIFIED BY 'root';
-```
-* When you use these SQL queries, beware of not writting the quotes.
 
 ## Set up DB
 ```bash
@@ -89,16 +102,57 @@ $ python manage.py migrate
 ```
 * If you get access denied, it means you need to modify the config file and write your Mysql username and password in the file
 
-# Run App
-If your using more then one settings file change manage.py to point to local or dev file first
+## Create super user (first run only)
+```bash
+$ python manage.py createsuperuser
+```
+
+# Run the app
+If your using more then one settings file change manage.py to point to local or dev file first.
 ```bash
 $ python manage.py runserver
 ```
 
-
-GOOGLE API
+<!-- ## GOOGLE API
 ```bash
 $ sudo pip install --upgrade google-api-python-client
+``` -->
+
+*HINT:* The 0’s let it run on any local address i.e. `localhost` or `127.0.0.1` etc.
+
+## Postgresql help
+
+### Installing
+
+On mac:
+```bash
+$ brew update
+$ brew install postgresql
+$ initdb /usr/local/var/postgres
+$ pg_ctl -D /usr/local/var/postgres start
+$ createdb mydatabasename
 ```
 
-* 0’s let it run on any local address i.e. localhost,127.0.0.1 etc.
+### Managing
+
+```bash
+pg_ctl -D /usr/local/var/postgres start # to start
+pg_ctl -D /usr/local/var/postgres stop # to stop
+```
+
+## MySQL help
+
+### Fix probable mysql path issue
+```$ export PATH=$PATH:/usr/local/mysql/bin```
+* or whatever path you have to your installed mysql_config file in the bin folder of mysql
+
+### Django settings file
+Replace user and password by your Mysql username and password
+
+### Set up Django's MySQL backing store
+```sql
+CREATE DATABASE 'activity';
+CREATE USER 'root';
+GRANT ALL ON activity.* TO 'root'@'localhost' IDENTIFIED BY 'root';
+```
+*NB:* When you use these SQL queries, beware of not writing the quotes.
