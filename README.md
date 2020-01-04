@@ -1,5 +1,6 @@
 
 
+
 Activity
 ====
 
@@ -13,10 +14,10 @@ We are developing a tool for humanitarians to manage project activities and indi
 Copy the activity/settings/local-sample.py to local.py and modify for your environment.
 
 ## To deploy changes in activity servers
-Once all your changes have been commited to the repo, and before pushing them, run:
+Once all your changes have been committed to the repo, and before pushing them, run:
 `. travis.sh` -->
 
-<!-- ## To deploy localy via Docker
+<!-- ## To deploy locally via Docker
 Run the following commands from the root of this repository:
 
 NB: Ensure you have docker installed on your machine
@@ -32,33 +33,56 @@ NB: Ensure you have docker installed on your machine
 
 # Local Setup
 
+Note: you should use python 3 for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
+
+Open up your terminal and follow the instructions listed below.
+
 See [these instructions for installing known dependencies](#install-non-python-dependencies).
 
-## Installing virtualenv
+## Clone the github repository
+
+Navigate to the folder you want the repository to be stored in.
+
+Run the following command:
+```bash
+$ git clone --branch dev https://github.com/hikaya-io/Activity.git
+```
+
+Once cloned, navigate to the cloned repository with:
+```bash
+$ cd Activity
+```
+or similar.
+
+## Install virtualenv
+
 ```bash
 $ pip install virtualenv
 ```
 
 ## Create virtualenv
+
 ```bash
-$ virtualenv --no-site-packages myvirtualenvironmentname
+$ virtualenv --no-site-packages <myvirtualenvironmentname>
 ```
 * use no site packages to prevent virtualenv from seeing your global packages
-* . myvirtualenvironmentname/bin/activate allows us to just use pip from command line by adding to the path rather then full path
+* . <myvirtualenvironmentname>/bin/activate allows us to just use pip from the command-line by adding to the path rather then full path.
 
 ## Activate virtualenv
+
 ```bash
-$ source myvirtualenvironmentname/bin/activate
+$ source <myvirtualenvironmentname>/bin/activate
 ```
 
 ## Install requirements
+
 ```bash
 $ pip install -r requirements.txt
 ```
 
 ## Create local copy of config file
-Copy the example config.
 
+Copy the example config:
 ```bash
 $ cp activity/settings/local-sample.py activity/settings/local.py
 ```
@@ -75,7 +99,7 @@ Since postgres is the preferred database for this project, we have provided extr
 48  'default': {
 49    #'ENGINE': 'django.db.backends.postgresql', # Alternatives: 'postgresql', 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 50    'ENGINE': "django.db.backends.postgresql"
-51    'NAME': os.environ.get('ACTIVITY_CE_DB_NAME', 'mydatabasename'), # replace activity here with the name of your database
+51    'NAME': os.environ.get('ACTIVITY_CE_DB_NAME', 'mydatabasename'), # replace mydatabasename here with the name of your database
 52    'USER': os.environ.get('ACTIVITY_CE_DB_USER', ''),
 53    'PASSWORD': os.environ.get('ACTIVITY_CE_DB_PASSWORD', ''),
 54    'HOST': os.environ.get('ACTIVITY_CE_DB_HOST', ''),
@@ -83,17 +107,19 @@ Since postgres is the preferred database for this project, we have provided extr
 ```
 
 ## Set up DB
+
 ```bash
 $ python manage.py migrate
 ```
-* If you get access denied, it means you need to modify the config file and write your Mysql username and password in the file
 
 ## Create super user (first run only)
+
 ```bash
 $ python manage.py createsuperuser
 ```
 
-# Run the app
+# Run the app locally
+
 If your using more then one settings file change manage.py to point to local or dev file first.
 ```bash
 $ python manage.py runserver
@@ -126,7 +152,7 @@ $ brew install pango
 
 ## Postgresql help
 
-### Installing
+### Install
 
 On mac:
 ```bash
@@ -134,10 +160,10 @@ $ brew update
 $ brew install postgresql
 $ initdb /usr/local/var/postgres
 $ pg_ctl -D /usr/local/var/postgres start
-$ createdb mydatabasename
+$ createdb <mydatabasename>
 ```
 
-### Managing
+### Manage
 
 ```bash
 pg_ctl -D /usr/local/var/postgres start # to start
@@ -146,9 +172,18 @@ pg_ctl -D /usr/local/var/postgres stop # to stop
 
 ## MySQL help
 
-### Fix probable mysql path issue
-```$ export PATH=$PATH:/usr/local/mysql/bin```
-* or whatever path you have to your installed mysql_config file in the bin folder of mysql
+### Django migrate access denied
+
+If you get access denied, it means you need to modify the config file and write your Mysql username and password in the file
+
+### Path issue
+
+```bash
+$ export PATH=$PATH:/usr/local/mysql/bin
+```
+or whatever path you have to your installed mysql_config file in the bin folder of mysql
+
+If you want this environment variable to be automatically set, please include it in your bash_profile or bashrc file.
 
 ### Django settings file
 Replace user and password by your Mysql username and password
