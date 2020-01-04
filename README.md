@@ -97,11 +97,11 @@ Since postgres is the preferred database for this project, we have provided extr
 49    #'ENGINE': 'django.db.backends.postgresql', # Alternatives: 'postgresql', 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
 50    'ENGINE': "django.db.backends.postgresql"
 51    'NAME': os.environ.get('ACTIVITY_CE_DB_NAME', 'mydatabasename'), # replace mydatabasename here with the name of your database
-# The following can be left unchanged for local use:
-52    'USER': os.environ.get('ACTIVITY_CE_DB_USER', ''),
-53    'PASSWORD': os.environ.get('ACTIVITY_CE_DB_PASSWORD', ''),
-54    'HOST': os.environ.get('ACTIVITY_CE_DB_HOST', ''),
-55    'PORT': os.environ.get('ACTIVITY_CE_DB_PORT', ''),
+52    # The following can be left unchanged for local use:
+53    'USER': os.environ.get('ACTIVITY_CE_DB_USER', ''),
+54    'PASSWORD': os.environ.get('ACTIVITY_CE_DB_PASSWORD', ''),
+55    'HOST': os.environ.get('ACTIVITY_CE_DB_HOST', ''),
+56    'PORT': os.environ.get('ACTIVITY_CE_DB_PORT', ''),
 ```
 
 ## Set up DB
@@ -118,7 +118,7 @@ $ python manage.py createsuperuser
 
 # Run the app locally
 
-If your using more then one settings file change manage.py to point to local or dev file first.
+If you're using more then one settings file change manage.py to point to local or dev file first.
 ```bash
 $ python manage.py runserver
 ```
