@@ -130,7 +130,7 @@ $ python manage.py runserver
 $ sudo pip install --upgrade google-api-python-client
 ``` -->
 
-*HINT:* The 0’s let it run on any local address i.e. `localhost` or `127.0.0.1` etc.
+This will run the server on http://127.0.0.1:8000. You can configure the host and port as needed.
 
 # Extra information
 
