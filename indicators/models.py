@@ -26,6 +26,10 @@ class ActivityTable(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'Activity Table'
+        verbose_name_plural = 'Activity Tables'
+
     def __str__(self):
         return self.name
 
@@ -43,6 +47,10 @@ class IndicatorType(models.Model):
     description = models.TextField(max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('indicator_type',)
+        verbose_name_plural = 'Indicator Types'
 
     def __str__(self):
         return self.indicator_type
@@ -68,6 +76,7 @@ class StrategicObjective(models.Model):
 
     class Meta:
         ordering = ('country', 'name')
+        verbose_name_plural = 'Strategic Objectives'
 
     def __str__(self):
         return self.name
@@ -144,6 +153,11 @@ class DisaggregationType(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        ordering = 'country', 'disaggregation_type'
+        verbose_name = 'Disaggregation Type'
+        verbose_name_plural = 'Disaggregation Types'
+
     def __str__(self):
         return self.disaggregation_type
 
@@ -163,6 +177,11 @@ class DisaggregationLabel(models.Model):
     customsort = models.IntegerField(blank=True, null=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('customsort',)
+        verbose_name = 'Disaggregation Label'
+        verbose_name_plural = 'Disaggregation Labels'
 
     def __str__(self):
         return self.label
@@ -200,6 +219,11 @@ class ReportingFrequency(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        ordering = ('frequency',)
+        verbose_name = 'Reporting Frequency'
+        verbose_name_plural = 'Reporting Frequencies'
+
     def __str__(self):
         return self.frequency
 
@@ -211,6 +235,11 @@ class DataCollectionFrequency(models.Model):
         default=0, verbose_name="Frequency in number of days")
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('frequency',)
+        verbose_name = 'Data Collection Frequency'
+        verbose_name_plural = 'Data Collection Frequencies'
 
     def __str__(self):
         return self.frequency
@@ -243,6 +272,10 @@ class ExternalService(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'External Service'
+        verbose_name_plural = 'External Services'
+
     def __str__(self):
         return self.name
 
@@ -259,6 +292,10 @@ class ExternalServiceRecord(models.Model):
     record_id = models.CharField("Unique ID", max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'External Service Record'
+        verbose_name_plural = 'External Service Records'
 
     def __str__(self):
         return self.full_url
@@ -498,6 +535,8 @@ class PeriodicTarget(models.Model):
 
     class Meta:
         ordering = ('customsort', '-create_date')
+        verbose_name = 'Periodic Target'
+        verbose_name_plural = 'Periodic Targets'
 
     @property
     def start_date_formatted(self):
@@ -579,7 +618,7 @@ class CollectedData(models.Model):
 
     class Meta:
         ordering = ('agreement', 'indicator', 'date_collected', 'create_date')
-        verbose_name_plural = "Indicator Output/Outcome Collected Data"
+        verbose_name_plural = "Collected Data"
 
     # onsave add create date or update edit date
     def save(self, *args, **kwargs):
@@ -613,4 +652,4 @@ class CollectedData(models.Model):
 class CollectedDataAdmin(admin.ModelAdmin):
     list_display = ('indicator', 'date_collected', 'create_date', 'edit_date')
     list_filter = ['indicator__program__country__country']
-    display = 'Indicator Output/Outcome Collected Data'
+    display = 'Collected Data'
