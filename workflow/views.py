@@ -21,7 +21,6 @@ from django.utils import timezone
 
 from .forms import (
     ProjectAgreementForm, ProjectAgreementSimpleForm,
-    ProjectAgreementCreateForm,
     ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
     DocumentationForm, SiteProfileForm, BenchmarkForm, BudgetForm,
     FilterForm, ProgramForm,
@@ -289,88 +288,6 @@ class ProjectAgreementImport(ListView):
                       {'get_programs': get_programs,
                        'get_services': get_services,
                        'get_countries': get_countries})
-
-
-class ProjectAgreementCreate(CreateView):
-    """
-    Project Agreement Form
-    :param request:
-    :param id:
-    This is only used in case of an error incomplete form submission fro
-    m the simple form in the project dashboard
-    """
-
-    model = ProjectAgreement
-    template_name = 'workflow/projectagreement_form.html'
-    guidance = None
-
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="Agreement")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(ProjectAgreementCreate, self) \
-            .dispatch(request, *args, **kwargs)
-
-    # add the request to the kwargs
-    def get_form_kwargs(self):
-        kwargs = super(ProjectAgreementCreate, self).get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
-
-    # get shared data from project agreement and pre-populate form with it
-    def get_initial(self):
-
-        initial = {
-            'approved_by': self.request.user,
-            'estimated_by': self.request.user,
-            'checked_by': self.request.user,
-            'reviewed_by': self.request.user,
-            'approval_submitted_by': self.request.user,
-        }
-
-        return initial
-
-    def get_context_data(self, **kwargs):
-        context = super(ProjectAgreementCreate,
-                        self).get_context_data(**kwargs)
-        return context
-
-    def form_invalid(self, form):
-
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-
-        form.save()
-
-        # save formset from context
-        # context = self.get_context_data()
-
-        latest = ProjectAgreement.objects.latest('id')
-        get_agreement = ProjectAgreement.objects.get(id=latest.id)
-
-        # create a new dashbaord entry for the project
-        # get_program = Program.objects.get(id=latest.program_id)
-
-        create_checklist = Checklist(agreement=get_agreement)
-        create_checklist.save()
-
-        get_checklist = Checklist.objects.get(id=create_checklist.id)
-        get_globals = ChecklistItem.objects.all().filter(global_item=True)
-        for item in get_globals:
-            ChecklistItem.objects.create(
-                checklist=get_checklist, item=item.item)
-
-        messages.success(self.request, 'Success, Initiation Created!')
-
-        redirect_url = '/workflow/dashboard/project/' + str(latest.id)
-        return HttpResponseRedirect(redirect_url)
-
-    form_class = ProjectAgreementCreateForm
 
 
 class ProjectAgreementUpdate(UpdateView):

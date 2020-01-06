@@ -5,7 +5,7 @@ from .views import (
     list_workflow_level1, add_level2, add_documentation, add_contact,
     add_stakeholder, delete_stakeholder, ProgramUpdate,
     ProjectDash, ProgramDash, level1_delete, ProjectAgreementList,
-    ProjectAgreementCreate, ProjectAgreementUpdate,
+    ProjectAgreementUpdate,
     ProjectCompleteBySite, ProjectCompleteDetail, DocumentationListObjects,
     SiteProfileList, SiteProfileCreate, SiteProfileUpdate,
     delete_project_agreement, ProjectAgreementImport, ProjectAgreementDetail,
@@ -48,8 +48,6 @@ urlpatterns = [
 
     re_path(r'^(?P<pk>\w+)/$',
             ProjectAgreementList.as_view(), name='projectagreement_list'),
-    re_path(r'^projectagreement_add/$',
-            ProjectAgreementCreate.as_view(), name='projectagreement_add'),
     re_path(r'^projectagreement_update/(?P<pk>\w+)/$',
             ProjectAgreementUpdate.as_view(), name='projectagreement_update'),
     re_path(r'^projectagreement_delete/(?P<pk>\w+)/$',
