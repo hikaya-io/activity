@@ -107,7 +107,7 @@ def index(request, program_id=0):
 
         get_projects_new_count = ProjectAgreement.objects.filter(
             Q(program__organization=request.user.activity_user.organization) &
-            (Q(approval='') | Q(approval=None) | Q(approval='New'))).count()
+            (Q(approval='') | Q(approval=None) | Q(approval='New') | Q(approval='new'))).count()
 
         get_projects_in_progress_count = ProjectAgreement.objects.filter(
             program__organization=request.user.activity_user.organization,
