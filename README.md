@@ -1,11 +1,11 @@
-Activity
-====
+# Activity
 
 We are developing a tool for humanitarians to manage project activities and indicator results across their programs, including approval workflows and reporting and visualizations. Our goal is to help organizations answer common questions such as:
-* who are funding your projects?
-* who you work with?
-* where you work?
-* how do my outputs align with my overall project goal?
+
+- who are funding your projects?
+- who you work with?
+- where you work?
+- how do my outputs align with my overall project goal?
 
 <!-- ## Configuration
 Copy the activity/settings/local-sample.py to local.py and modify for your environment.
@@ -41,14 +41,17 @@ See [these instructions for installing known dependencies](#install-non-python-d
 Navigate to the folder you want the repository to be stored in.
 
 Run the following command:
+
 ```bash
 $ git clone --branch dev https://github.com/hikaya-io/Activity.git
 ```
 
 Once cloned, navigate to the cloned repository with:
+
 ```bash
 $ cd Activity
 ```
+
 or similar.
 
 ## Install virtualenv
@@ -62,8 +65,9 @@ $ pip install virtualenv
 ```bash
 $ virtualenv --no-site-packages <myvirtualenvironmentname>
 ```
-* use no site packages to prevent virtualenv from seeing your global packages
-* . <myvirtualenvironmentname>/bin/activate allows us to just use pip from the command-line by adding to the path rather then full path.
+
+- use no site packages to prevent virtualenv from seeing your global packages
+- . <myvirtualenvironmentname>/bin/activate allows us to just use pip from the command-line by adding to the path rather then full path.
 
 ## Activate virtualenv
 
@@ -80,11 +84,13 @@ $ pip install -r requirements.txt
 ## Create local copy of config file
 
 Copy the example config:
+
 ```bash
 $ cp activity/settings/local-sample.py activity/settings/local.py
 ```
 
 ## Modify the config file
+
 Edit database settings activity/settings/local.py as shown below.
 
 We will change the `ENGINE` parameter to the default value for postgres (although you can also user MySQL or Sqllite3 which is out-of-the-box supported by Django). We also need to add a default database name in the `NAME` option.
@@ -110,7 +116,7 @@ Since postgres is the preferred database for this project, we have provided extr
 $ python manage.py migrate
 ```
 
-## Create super user (first run only)
+## Create super user (first time only)
 
 ```bash
 $ python manage.py createsuperuser
@@ -119,16 +125,18 @@ $ python manage.py createsuperuser
 # Run the app locally
 
 If you're using more then one settings file change manage.py to point to local or dev file first.
+
 ```bash
 $ python manage.py runserver
 ```
 
-<!-- ## GOOGLE API
-```bash
-$ sudo pip install --upgrade google-api-python-client
-``` -->
-
 This will run the server on http://127.0.0.1:8000. You can configure the host and port as needed.
+
+# Create an activity user
+
+Once you have created your user account, you need to create an `activity user` that is linked to this user account.
+
+Go to http://127.0.0.1:8000/admin and sign in using your superuser account. Under the `workflow` model, you'll find `activity user`. Create a new activity user making sure you associate your user under the `user` attribute.
 
 # Extra information
 
@@ -137,6 +145,7 @@ This will run the server on http://127.0.0.1:8000. You can configure the host an
 1. **GDAL**
 
 On mac:
+
 ```bash
 $ brew install gdal
 ```
@@ -144,6 +153,7 @@ $ brew install gdal
 2. **pango**
 
 On mac:
+
 ```bash
 $ brew install pango
 ```
@@ -153,6 +163,7 @@ $ brew install pango
 ### Install
 
 On mac:
+
 ```bash
 $ brew update
 $ brew install postgresql
@@ -177,20 +188,25 @@ If you get access denied, it means you need to modify the config file and write 
 ### Path issue
 
 To fix any issues related to your path that may come up during the django set up, run:
+
 ```bash
 $ export PATH=$PATH:/usr/local/mysql/bin
 ```
+
 or specify the path you have to your installed mysql_config file in the bin folder of mysql
 
 If you want this environment variable to be automatically set, please include it in your bash_profile or bashrc file.
 
 ### Django settings file
+
 Replace user and password by your Mysql username and password
 
 ### Set up Django's MySQL backing store
+
 ```sql
 CREATE DATABASE 'activity';
 CREATE USER 'root';
 GRANT ALL ON activity.* TO 'root'@'localhost' IDENTIFIED BY 'root';
 ```
-*NB:* When you use these SQL queries, beware of not writing the quotes.
+
+_NB:_ When you use these SQL queries, beware of not writing the quotes.
