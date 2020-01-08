@@ -5,7 +5,7 @@
   {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="/">My Dashboard</a></li>
-    <li><a href="/workflow/level1">Programs</a></li>
+    <li><a href="/workflow/level1">{{ user.activity_user.organization.level_1_label }}</a></li>
     <li class="active">{{ program.name }}</li>
   </ul>
   {% endblock %}

@@ -1,7 +1,7 @@
 <script>
   $(document).ready(() => {
     $('#program').select2({
-      placeholder: 'Select program...',
+      placeholder: 'Select {{ request.user.activity_user.organization.level_1_label }}...',
       theme: 'bootstrap',
       dropdownParent: $('#addProjectModal'),
     });
@@ -91,7 +91,7 @@
           </div>
 
           <div class="form-group">
-            <label for="program">Program</label>
+            <label for="program">{{ request.user.activity_user.organization.level_1_label }}</label>
             <select class="form-control" id="program" name="program" required>
               <option value=""></option>
               {% for item in get_programs %} {% if item.name %}
