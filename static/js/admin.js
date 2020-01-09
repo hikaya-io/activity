@@ -79,7 +79,7 @@ $('form#inviteUserForm').submit(e => {
 					}, 3000);
 				} else {
 					toastr.success(
-						`You have successfuly invited ${data.user_email_list.length} user(s)`,
+						`You have successfully invited ${data.user_email_list.length} user(s)`,
 						'Invitation Successful'
 					);
 					setTimeout(() => {

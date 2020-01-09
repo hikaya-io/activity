@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin
 from django.utils import timezone
 
 import uuid
@@ -34,14 +33,6 @@ class ActivityTable(models.Model):
         return self.name
 
 
-class ActivityTableAdmin(admin.ModelAdmin):
-    list_display = ('name', 'country', 'owner',
-                    'url', 'create_date', 'edit_date')
-    search_fields = ('country', 'name')
-    list_filter = ('country__country',)
-    display = 'Activity Table'
-
-
 class IndicatorType(models.Model):
     indicator_type = models.CharField(max_length=135, blank=True)
     description = models.TextField(max_length=765, blank=True)
@@ -54,12 +45,6 @@ class IndicatorType(models.Model):
 
     def __str__(self):
         return self.indicator_type
-
-
-class IndicatorTypeAdmin(admin.ModelAdmin):
-    list_display = ('indicator_type', 'description',
-                    'create_date', 'edit_date')
-    display = 'Indicator Type'
 
 
 class StrategicObjective(models.Model):
@@ -87,13 +72,6 @@ class StrategicObjective(models.Model):
         super(StrategicObjective, self).save()
 
 
-class StrategicObjectiveAdmin(admin.ModelAdmin):
-    list_display = ('country', 'name')
-    search_fields = ('country__country', 'name')
-    list_filter = ('country__country',)
-    display = 'Strategic Objectives'
-
-
 class Objective(models.Model):
     name = models.CharField(max_length=135, blank=True)
     program = models.ForeignKey(
@@ -116,13 +94,6 @@ class Objective(models.Model):
         super(Objective, self).save()
 
 
-class ObjectiveAdmin(admin.ModelAdmin):
-    list_display = ('program', 'name')
-    search_fields = ('name', 'program__name')
-    list_filter = ('program__country__country',)
-    display = 'Objectives'
-
-
 class Level(models.Model):
     name = models.CharField(max_length=135, blank=True)
     description = models.TextField(max_length=765, blank=True)
@@ -136,11 +107,6 @@ class Level(models.Model):
         if self.create_date is None:
             self.create_date = datetime.now()
         super(Level, self).save()
-
-
-class LevelAdmin(admin.ModelAdmin):
-    list_display = 'name'
-    display = 'Levels'
 
 
 class DisaggregationType(models.Model):
@@ -162,16 +128,9 @@ class DisaggregationType(models.Model):
         return self.disaggregation_type
 
 
-class DisaggregationTypeAdmin(admin.ModelAdmin):
-    list_display = ('disaggregation_type', 'country',
-                    'standard', 'description')
-    list_filter = ('country', 'standard', 'disaggregation_type')
-    display = 'Disaggregation Type'
-
-
 class DisaggregationLabel(models.Model):
     disaggregation_type = models.ForeignKey(
-        DisaggregationType, on_delete=models.CASCADE, 
+        DisaggregationType, on_delete=models.CASCADE,
         related_name='disaggregation_label')
     label = models.CharField(max_length=765, blank=True)
     customsort = models.IntegerField(blank=True, null=True)
@@ -187,12 +146,6 @@ class DisaggregationLabel(models.Model):
         return self.label
 
 
-class DisaggregationLabelAdmin(admin.ModelAdmin):
-    list_display = ('disaggregation_type', 'customsort', 'label',)
-    display = 'Disaggregation Label'
-    list_filter = ('disaggregation_type__disaggregation_type',)
-
-
 class DisaggregationValue(models.Model):
     disaggregation_label = models.ForeignKey(
         DisaggregationLabel, on_delete=models.CASCADE)
@@ -202,15 +155,6 @@ class DisaggregationValue(models.Model):
 
     def __str__(self):
         return self.value
-
-
-class DisaggregationValueAdmin(admin.ModelAdmin):
-    list_display = ('disaggregation_label', 'value',
-                    'create_date', 'edit_date')
-    list_filter = (
-        'disaggregation_label__disaggregation_type__disaggregation_type',
-        'disaggregation_label')
-    display = 'Disaggregation Value'
 
 
 class ReportingFrequency(models.Model):
@@ -245,11 +189,6 @@ class DataCollectionFrequency(models.Model):
         return self.frequency
 
 
-class DataCollectionFrequencyAdmin(admin.ModelAdmin):
-    list_display = ('frequency', 'description', 'create_date', 'edit_date')
-    display = 'Data Collection Frequency'
-
-
 class ReportingPeriod(models.Model):
     frequency = models.ForeignKey(
         ReportingFrequency, null=True, on_delete=models.SET_NULL)
@@ -258,11 +197,6 @@ class ReportingPeriod(models.Model):
 
     def __str__(self):
         return self.frequency
-
-
-class ReportingPeriodAdmin(admin.ModelAdmin):
-    list_display = ('frequency', 'create_date', 'edit_date')
-    display = 'Reporting Frequency'
 
 
 class ExternalService(models.Model):
@@ -280,11 +214,6 @@ class ExternalService(models.Model):
         return self.name
 
 
-class ExternalServiceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'url', 'feed_url', 'create_date', 'edit_date')
-    display = 'External Indicator Data Service'
-
-
 class ExternalServiceRecord(models.Model):
     external_service = models.ForeignKey(
         ExternalService, blank=True, null=True, on_delete=models.SET_NULL)
@@ -299,12 +228,6 @@ class ExternalServiceRecord(models.Model):
 
     def __str__(self):
         return self.full_url
-
-
-class ExternalServiceRecordAdmin(admin.ModelAdmin):
-    list_display = ('external_service', 'full_url',
-                    'record_id', 'create_date', 'edit_date')
-    display = 'External Indicator Data Service'
 
 
 class IndicatorManager(models.Manager):
@@ -551,12 +474,6 @@ class PeriodicTarget(models.Model):
         return self.end_date
 
 
-class PeriodicTargetAdmin(admin.ModelAdmin):
-    list_display = ('period', 'target', 'customsort',)
-    display = 'Indicator Periodic Target'
-    list_filter = ('period',)
-
-
 class CollectedDataManager(models.Manager):
     def get_queryset(self):
         return super(CollectedDataManager,
@@ -647,9 +564,3 @@ class CollectedData(models.Model):
         return ', '.join(
             [y.disaggregation_label.label + ': ' + y.value for y in
              self.disaggregation_value.all()])
-
-
-class CollectedDataAdmin(admin.ModelAdmin):
-    list_display = ('indicator', 'date_collected', 'create_date', 'edit_date')
-    list_filter = ['indicator__program__country__country']
-    display = 'Collected Data'
