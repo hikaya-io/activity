@@ -54,13 +54,14 @@ $ cd Activity
 
 or similar.
 
-## Install virtualenv
+## Setting up on Virtual Environment
+### Install virtualenv
 
 ```bash
 $ pip install virtualenv
 ```
 
-## Create virtualenv
+### Create virtualenv
 
 ```bash
 $ virtualenv --no-site-packages <myvirtualenvironmentname>
@@ -69,19 +70,19 @@ $ virtualenv --no-site-packages <myvirtualenvironmentname>
 - use no site packages to prevent virtualenv from seeing your global packages
 - . <myvirtualenvironmentname>/bin/activate allows us to just use pip from the command-line by adding to the path rather then full path.
 
-## Activate virtualenv
+### Activate virtualenv
 
 ```bash
 $ source <myvirtualenvironmentname>/bin/activate
 ```
 
-## Install requirements
+### Install requirements
 
 ```bash
 $ pip install -r requirements.txt
 ```
 
-## Create local copy of config file
+### Create local copy of config file
 
 Copy the example config:
 
@@ -89,7 +90,7 @@ Copy the example config:
 $ cp activity/settings/local-sample.py activity/settings/local.py
 ```
 
-## Modify the config file
+### Modify the config file
 
 Edit database settings activity/settings/local.py as shown below.
 
@@ -110,19 +111,19 @@ Since postgres is the preferred database for this project, we have provided extr
 56    'PORT': os.environ.get('ACTIVITY_CE_DB_PORT', ''),
 ```
 
-## Set up DB
+### Set up DB
 
 ```bash
 $ python manage.py migrate
 ```
 
-## Create super user (first time only)
+### Create super user (first time only)
 
 ```bash
 $ python manage.py createsuperuser
 ```
 
-# Run the app locally
+### Run the app locally
 
 If you're using more then one settings file change manage.py to point to local or dev file first.
 
@@ -132,11 +133,42 @@ $ python manage.py runserver
 
 This will run the server on http://127.0.0.1:8000. You can configure the host and port as needed.
 
-# Create an activity user
+### Create an activity user
 
 Once you have created your user account, you need to create an `activity user` that is linked to this user account.
 
 Go to http://127.0.0.1:8000/admin and sign in using your superuser account. Under the `workflow` model, you'll find `activity user`. Create a new activity user making sure you associate your user under the `user` attribute.
+
+## Set up locally using Docker
+Ensure docker is installed on your local computer!
+
+### Build the docker image
+```bash
+$ docker-compose build
+```
+
+### Run the container
+```bash
+$ docker-compose up 
+```
+you can add the `-d` flag to run the container in detached mode
+
+### Run and Build at the same time
+```bash
+$ docker-compose up -d --build
+
+```
+
+### Create Superuser
+```bash
+$ docker-compose exec web python manage.py createsuperuser
+```
+
+### To run any other django commands
+```bash
+$ docker-compose exec web python manage.py [operation]
+```
+The `operation` in this case can be: `makemigrations`, `migrate`, `collectstatic` etc
 
 # Extra information
 
