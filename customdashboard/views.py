@@ -375,7 +375,7 @@ def survey_public_dashboard(request, id=0):
     # get all countires
     countries = Country.objects.all()
     # TODO : change this url
-    filter_url = "http://activity-tables.mercycorps.org/api/silo/430/data/"
+    filter_url = "https://tables.hikaya.app/api/silo/430/data/"
     token = ActivitySites.objects.get(site_id=1)
     if token.activity_tables_token:
         headers = {'content-type': 'application/json',
@@ -598,53 +598,7 @@ def rrima_public_dashboard(request, id=0):
     page_text['page_title'] = "Refugee Response and Migration News"
     page_text['project_summary'] = {}
     # TODO : Change this variable
-    page_map = [
-        {"latitude": 39.9334, "longitude": 32.8597, "location_name": "Ankara",
-         "site_contact": "Sonal Shinde, Migration Response Director, "
-                         "sshinde@mercycorps.org",
-         "site_description": "Migration Response Coordination",
-         "region_name": "Turkey"},
-        {"latitude": 38.4237, "longitude": 27.1428, "location_name": "Izmir",
-         "site_contact": "Tracy Lucas, Emergency Program Manager, ECHO Aegean "
-                         "Response, tlucas@mercycorps.org",
-         "site_description": "Cash, Information Dissemination, "
-                             "Youth, Protection",
-         "region_name": "Turkey"},
-        {"latitude": 37.0660, "longitude": 37.3781,
-         "location_name": "Gaziantep",
-         "site_contact": "Jihane Nami, Director of Programs Turkey, "
-                         "jnami@mercycorps.org",
-         "site_description": "Cash, NFI, Shelter, Protection,"
-                             " Information Dissemination",
-         "region_name": "Turkey"},
-        {"latitude": 39.2645, "longitude": 26.2777, "location_name": "Lesvos",
-         "site_contact": "Chiara Bogoni, Island Emergency Program Manager, "
-                         "cbogoni@mercycorps.org",
-         "site_description": "Cash, Youth Programs, Food",
-         "region_link": "Greece"},
-        {"latitude": 37.9838, "longitude": 23.7275, "location_name": "Athens",
-         "site_contact": "Josh Kreger, Team Leader - Greece, "
-                         "jkreger@mercycorps.org and Kaja Wislinska, " +
-                         "Team Leader - Athens and Mainland, "
-                         "kwislinska@mercycorps.org",
-         "site_description": "Cash, Youth Psychosocial Support, Legal Support",
-         "region_link": "Greece"},
-        {"latitude": 44.7866, "longitude": 20.4489,
-         "location_name": "Belgrade",
-         "site_contact": "",
-         "site_description": "RRIMA (In partnership with IRC) ",
-         "region_name": "Balkans"}]
-    # Borrowed data for bar graph
-    # color_palettes = {
-    #     'bright': ['#82BC00', '#C8C500', '#10A400', '#CF102E', '#DB5E11',
-    #                '#A40D7A', '#00AFA8', '#1349BB', '#FFD200 ',
-    #                '#FF7100', '#FFFD00', '#ABABAB', '#7F7F7F', '#7B5213',
-    #                '#C18A34'],
-    #     'light': ['#BAEE46', '#FDFB4A', '#4BCF3D', '#F2637A', '#FFA268',
-    #               '#C451A4', '#4BC3BE', '#5B7FCC', '#9F54CC',
-    #               '#FFE464', '#FFA964', '#FFFE64', '#D7D7D7', '#7F7F7F',
-    #               '#D2A868', '#FFD592']
-    # }
+    page_map = []
 
     get_notebooks = JupyterNotebooks.objects.all().filter(
         very_custom_dashboard="RRIMA")

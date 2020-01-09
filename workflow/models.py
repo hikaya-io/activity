@@ -27,6 +27,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
 
 APPROVALS = (
+    ('new', 'new'),
     ('in progress', 'in progress'),
     ('awaiting approval', 'awaiting approval'),
     ('approved', 'approved'),
@@ -1206,7 +1207,7 @@ class ProjectAgreement(models.Model):
         Capacity, verbose_name="Sustainability Plan", blank=True)
     evaluate = models.ManyToManyField(Evaluate, blank=True)
     approval = models.CharField(
-        "Approval Status", choices=APPROVALS, default='New',
+        "Approval Status", choices=APPROVALS, default='new',
         max_length=255, blank=True, null=True)
     approved_by = models.ForeignKey(ActivityUser, blank=True, null=True,
                                     related_name="approving_agreement",

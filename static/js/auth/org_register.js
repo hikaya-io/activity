@@ -19,5 +19,5 @@ $(document).ready(function() {
 });
 
 function cleanName(name) {
-	return name.replace(' ', '-').toLowerCase();
+	return name.replace(/ /g, '-').toLowerCase();
 }

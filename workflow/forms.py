@@ -29,7 +29,7 @@ APPROVALS = (
     ('awaiting approval', 'awaiting approval'),
     ('approved', 'approved'),
     ('rejected', 'rejected'),
-    ('new', 'New'),
+    ('new', 'new'),
 )
 
 # Global for Budget Variance
@@ -156,27 +156,6 @@ class ProgramForm(forms.ModelForm):
         # filter(organization=self.request.user.activity_user.organization)
 
 
-class ProjectAgreementCreateForm(forms.ModelForm):
-    class Meta:
-        model = ProjectAgreement
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        # get the user object from request to check permissions
-        self.request = kwargs.pop('request')
-        self.helper = FormHelper()
-        self.helper.form_method = 'post'
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-2'
-        self.helper.field_class = 'col-sm-6'
-        self.helper.form_error_title = 'Form Errors'
-        self.helper.error_text_inline = True
-        self.helper.help_text_inline = True
-        self.helper.html5_required = True
-        self.helper.form_tag = True
-        super(ProjectAgreementCreateForm, self).__init__(*args, **kwargs)
-
-
 class ProjectAgreementForm(forms.ModelForm):
     class Meta:
         model = ProjectAgreement
@@ -253,7 +232,7 @@ class ProjectAgreementForm(forms.ModelForm):
 
     approval = forms.ChoiceField(
         choices=APPROVALS,
-        initial='in progress',
+        initial='new',
         required=False,
     )
 
@@ -274,9 +253,12 @@ class ProjectAgreementForm(forms.ModelForm):
         if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
             APPROVALS = (
+                ('new', 'new'),
                 ('in progress', 'in progress'),
                 ('awaiting approval', 'awaiting approval'),
+                ('approved', 'approved'),
                 ('rejected', 'rejected'),
+
             )
             self.fields['approval'].choices = APPROVALS
             # self.fields['approved_by'].widget.attrs['disabled'] = "disabled"
@@ -330,7 +312,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
 
     approval = forms.ChoiceField(
         choices=APPROVALS,
-        initial='in progress',
+        initial='new',
         required=False,
         label="Project Status"
     )
@@ -384,6 +366,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
                 ('in progress', 'in progress'),
                 ('awaiting approval', 'awaiting approval'),
                 ('rejected', 'rejected'),
+                ('new', 'new')
             )
             self.fields['approval'].choices = APPROVALS
             # self.fields['approved_by'].widget.attrs['disabled'] = "disabled"
