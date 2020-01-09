@@ -1,0 +1,12 @@
+{% extends 'base.html' %} {% block title %}Invalid Invitation Link{% endblock %} {% block content %}
+<div class="container">
+    <br><br><br>
+	<div class="alert alert-danger" role="alert">
+		<h3>Invalid Invitation Link</h3>
+		<p>
+			Kindly contact the organization admin. Otherwise proceed to
+			<a href="{% url 'register' 'none' %}"><strong>Register</strong> </a>.
+		</p>
+	</div>
+</div>
+{% endblock %}

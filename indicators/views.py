@@ -5,7 +5,7 @@ from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_exempt
+
 from urllib.parse import urlparse
 import re
 
@@ -50,8 +50,6 @@ import requests
 from weasyprint import HTML, CSS
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from django.forms.models import model_to_dict
-
 
 
 def generate_periodic_target_single(tf, start_date, nth_target_period,
