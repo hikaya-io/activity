@@ -14,20 +14,6 @@ Copy the activity/settings/local-sample.py to local.py and modify for your envir
 Once all your changes have been committed to the repo, and before pushing them, run:
 `. travis.sh` -->
 
-<!-- ## To deploy locally via Docker
-Run the following commands from the root of this repository:
-
-NB: Ensure you have docker installed on your machine
-  - `docker-compose build .`
-  # run  migrations
-  - `docker-compose run web python /code/manage.py migrate --noinput`
-  # create superuser
-  - `docker-compose run web python /code/manage.py createsuperuser`
-  # start the app
-  - `docker-compose up -d --build`
-  # open on browser
-  - `http://127.0.0.1:8000/` -->
-
 # Local Setup
 
 Note: you should use python 3 for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
@@ -163,6 +149,8 @@ $ docker-compose up -d --build
 ```bash
 $ docker-compose exec web python manage.py createsuperuser
 ```
+
+navigate to admin, login and create a `activity_user`
 
 ### To run any other django commands
 ```bash
