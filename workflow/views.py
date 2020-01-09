@@ -103,6 +103,7 @@ class ProgramUpdate(UpdateView):
     def get_form_kwargs(self):
         kwargs = super(ProgramUpdate, self).get_form_kwargs()
         kwargs['request'] = self.request
+        kwargs['organization'] = self.request.user.activity_user.organization
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -365,6 +366,7 @@ class ProjectAgreementUpdate(UpdateView):
     def get_form_kwargs(self):
         kwargs = super(ProjectAgreementUpdate, self).get_form_kwargs()
         kwargs['request'] = self.request
+        # kwargs['organization'] = self.request.user.activity_user.organization
         return kwargs
 
     def form_invalid(self, form):

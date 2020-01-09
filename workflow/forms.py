@@ -139,6 +139,7 @@ class ProgramForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
+        self.organization = kwargs.pop('organization')
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_error_title = 'Form Errors'
@@ -154,6 +155,8 @@ class ProgramForm(forms.ModelForm):
 
         self.fields['sector'].queryset = Sector.objects.all()
         # filter(organization=self.request.user.activity_user.organization)
+        self.fields['name'].label = '{} Name'.format(self.organization.level_1_label)
+        self.fields['description'].label = '{} Description'.format(self.organization.level_1_label)
 
 
 class ProjectAgreementForm(forms.ModelForm):
@@ -267,7 +270,7 @@ class ProjectAgreementForm(forms.ModelForm):
             self.fields[
                 'approval'].help_text = "Approval level permissions required"
             self.fields['approved_by'].queryset = ActivityUser.objects.filter(
-                organization=self.request.user.activity_user.organization).distinct()
+                organization=self.request.user.activity_user.organization).distinct()           
 
 
 class ProjectAgreementSimpleForm(forms.ModelForm):
@@ -355,6 +358,17 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
             organizations=self.request.user.activity_user.organization,
             status=True
         )
+        self.fields['program'].label = '{}'.format(
+            self.request.user.activity_user.organization.level_1_label) 
+        self.fields['project_name'].label = '{} Name'.format(
+            self.request.user.activity_user.organization.level_2_label) 
+        self.fields['activity_code'].label = '{} Code'.format(
+            self.request.user.activity_user.organization.level_2_label) 
+        self.fields['total_estimated_budget'].label = 'Total {} Budget'.format(
+            self.request.user.activity_user.organization.level_2_label) 
+        self.fields['approval'].label = '{} Status'.format(
+            self.request.user.activity_user.organization.level_2_label)
+
 
         # override the stakeholder queryset to use request.user for country
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
