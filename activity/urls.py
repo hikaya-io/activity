@@ -120,11 +120,6 @@ urlpatterns = [  # rest framework
 
     # app include of workflow urls
     path('formlibrary/', include('formlibrary.urls')),
-
-    # app include of configurable dashboard urls
-    # path('configurabledashboard/',
-    #       include('configurabledashboard.urls')),
-
     # local login
     path('login/', authviews.LoginView.as_view(), name='login'),
     path('accounts/login/', views.user_login, name='login'),
@@ -176,13 +171,10 @@ urlpatterns = [  # rest framework
     # Auth backend URL's
     path('', include(('django.contrib.auth.urls',
                       "django.contrib.auth"), namespace='auth')),
-    # path('',
-    #      include('social.apps.django_app.urls', namespace='social')),
-    path('', include('social_django.urls', namespace='social')),
     re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]'
             r'{1,13}-[0-9A-Za-z]{1,20})/$',
             views.activate_acccount, name='activate'),
-    # path('oauth/',
-    #       include('social_django.urls', namespace='social')),
+    path('oauth/',
+          include('social_django.urls', namespace='social')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -47,16 +47,16 @@ MANAGERS = ADMINS
 
 # DATABASE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.',
+#         'NAME': '',
+#         'USER': '',
+#         'PASSWORD': '',
+#         'HOST': '',
+#         'PORT': '',
+#     }
+# }
 # END DATABASE CONFIGURATION
 
 
@@ -277,7 +277,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.open_id.OpenIdAuth',
     # 'social_core.backends.google.GoogleOpenId',
-    # 'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
     # 'social_core.backends.google.GoogleOAuth',
     # 'social_core.backends.twitter.TwitterOAuth',
     # 'social_core.backends.yahoo.YahooOpenId',
@@ -407,3 +407,6 @@ MAP_WIDGETS = {
     "GOOGLE_MAP_API_KEY": os.environ.get('GOOGLE_MAP_API_KEY')
 }
 
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET =  os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
