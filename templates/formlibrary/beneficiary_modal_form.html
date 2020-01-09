@@ -2,7 +2,7 @@
   $(document).ready(() => {
     $('#program').select2({
       theme: 'bootstrap',
-      placeholder: 'Select program...',
+      placeholder: 'Select {{user.activity_user.organization.level_1_label}}...',
       allowClear: true,
       dropdownParent: $('#addBeneficiaryModal')
     });
