@@ -250,7 +250,6 @@ THIRD_PARTY_APPS = (
     'simplejson',
     'simple_history',
     'django_select2',
-    'mapwidgets',
 )
 
 # Apps specific for this project go here.

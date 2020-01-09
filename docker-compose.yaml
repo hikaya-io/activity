@@ -4,25 +4,32 @@ version: '3.7'
 services:
 
   web:
-    build: ./code
+    build: .
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./code/:/usr/src/code/
+      - .:/usr/src/Activity/
     ports:
       - 8000:8000
     depends_on:
       - db
     env_file:
-    - ./.env.dev
+      - ./.env.dev
 
   db:
     image: postgres:12.0-alpine
     volumes:
-    - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data/
     environment:
-    - POSTGRES_USER=activity
-    - POSTGRES_PASSWORD=activity
-    - POSTGRES_DB=activity_dev
+      - POSTGRES_USER=activity
+      - POSTGRES_PASSWORD=activity
+      - POSTGRES_DB=activity_dev
 
+  migration:
+    build: .
+    command: python manage.py migrate --noinput
+    volumes:
+      - .:/usr/src/Activity/
+    depends_on:
+      - db
 volumes:
   postgres_data:
