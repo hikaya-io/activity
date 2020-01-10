@@ -3,7 +3,6 @@
 
 from __future__ import unicode_literals
 from django.db import models
-from django.contrib import admin
 from datetime import datetime
 from workflow.models import Program, SiteProfile, ProjectAgreement, Office, Province
 
@@ -58,13 +57,6 @@ class TrainingAttendance(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.training_name
-
-
-class TrainingAttendanceAdmin(admin.ModelAdmin):
-    list_display = ('training_name', 'program',
-                    'project_agreement', 'create_date', 'edit_date')
-    display = 'Training Attendance'
-    list_filter = ('program__country', 'program')
 
 
 class Distribution(models.Model):
@@ -134,12 +126,6 @@ class Distribution(models.Model):
         return self.distribution_name
 
 
-class DistributionAdmin(admin.ModelAdmin):
-    list_display = ('distribution_name', 'program',
-                    'initiation', 'create_date', 'edit_date')
-    display = 'Program Dashboard'
-
-
 class Beneficiary(models.Model):
     beneficiary_name = models.CharField(max_length=255, null=True, blank=True)
     training = models.ManyToManyField(TrainingAttendance, blank=True)
@@ -167,14 +153,6 @@ class Beneficiary(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        # TODO : Keep or delete this check, it helps avoiding getting
-        #  error when deleting a beneficiary
         if self.beneficiary_name is None:
             return "NULL"
         return self.beneficiary_name
-
-
-class BeneficiaryAdmin(admin.ModelAdmin):
-    list_display = ('site', 'beneficiary_name',)
-    display = 'Beneficiary'
-    list_filter = ('site', 'beneficiary_name')
