@@ -117,15 +117,14 @@ STATICFILES_FINDERS = (
 
 # SECRET CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-# Note: This key should only be used for development and testing.
-SECRET_KEY = r"!0^+)=t*ly6ycprf9@kfw$6fsjd0xoh#pa*2erx1m*lp5k9ko7"
+SECRET_KEY = os.environ.get('SECRET_KEY', '!0^+)=t*ly6ycprf9@kfw$6fsjd0xoh#pa*2erx1m*lp5k9ko7')
 # END SECRET CONFIGURATION
 
 
 # SITE CONFIGURATION
 # Hosts/domain names that are valid for this site
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
 # END SITE CONFIGURATION
 
 
@@ -251,7 +250,6 @@ THIRD_PARTY_APPS = (
     'simplejson',
     'simple_history',
     'django_select2',
-    'mapwidgets',
 )
 
 # Apps specific for this project go here.
