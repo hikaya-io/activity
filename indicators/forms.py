@@ -40,6 +40,7 @@ class IndicatorForm(forms.ModelForm):
         indicator = kwargs.get('instance', None)
         self.request = kwargs.pop('request')
         self.program = kwargs.pop('program')
+        self.organization = kwargs.pop('organization')
         self.program_id = kwargs.pop('program_id')
         self.helper = FormHelper()
         self.helper.form_method = 'post'
@@ -72,6 +73,9 @@ class IndicatorForm(forms.ModelForm):
         self.fields['program'].widget.attrs['readonly'] = "readonly"
         self.fields['target_frequency_start'].widget.attrs[
             'class'] = 'monthPicker'
+        self.fields['key_performance_indicator'].label = 'Key Performance Indicator for this {}'.format(self.organization.level_1_label)
+        self.fields['objectives'].label = '{} Objective'.format(self.organization.level_1_label)
+        self.fields['program'].label = '{}'.format(self.organization.level_1_label)
 
 
 class CollectedDataForm(forms.ModelForm):

@@ -525,6 +525,7 @@ class IndicatorUpdate(UpdateView):
         program = Indicator.objects.all().filter(
             id=self.kwargs['pk']).values_list("program__id", flat=True)
         kwargs['program'] = program
+        kwargs['organization'] = self.request.user.activity_user.organization
         return kwargs
 
     def form_invalid(self, form):
