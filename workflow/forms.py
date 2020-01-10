@@ -13,7 +13,6 @@ from crispy_forms.layout import (
     Layout, Submit, Reset, Field, Column, Row, HTML, Fieldset,)
 from functools import partial
 
-from mapwidgets.widgets import GooglePointFieldWidget
 from .widgets import GoogleMapsWidget
 from django import forms
 from .models import (
@@ -1119,7 +1118,7 @@ class SiteProfileQuickEntryForm(forms.ModelForm):
     """
     SiteProfile Quick Entry Form
     """
-    map = forms.CharField(widget=GooglePointFieldWidget)
+    map = forms.CharField()
 
     class Meta:
         model = SiteProfile
@@ -1154,14 +1153,11 @@ class SiteProfileQuickEntryForm(forms.ModelForm):
 
 
 class SiteProfileForm(forms.ModelForm):
-    map = forms.CharField(widget=GooglePointFieldWidget)
+    map = forms.CharField()
 
     class Meta:
         model = SiteProfile
         exclude = ['create_date', 'edit_date']
-        widgets = {'map': GooglePointFieldWidget, }
-
-    forms.CharField(widget=GooglePointFieldWidget)
 
     date_of_firstcontact = forms.DateField(
         widget=DatePicker.DateInput(), required=False)
