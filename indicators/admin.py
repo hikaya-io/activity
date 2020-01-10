@@ -3,12 +3,9 @@
 from django.contrib import admin
 
 from .models import (
-    Indicator, IndicatorType, Objective, StrategicObjective, ReportingFrequency,
-    CollectedData, Level, ActivityTable, DisaggregationType,
-    DisaggregationTypeAdmin, DisaggregationLabel, DisaggregationLabelAdmin,
-    ExternalService, ExternalServiceAdmin, ExternalServiceRecord,
-    ExternalServiceRecordAdmin, PeriodicTarget, PeriodicTargetAdmin,
-    ObjectiveAdmin, DataCollectionFrequency
+    Indicator, IndicatorType, Objective, StrategicObjective, ReportingPeriod, ReportingFrequency,
+    CollectedData, Level, ActivityTable, DisaggregationType, DisaggregationLabel, DisaggregationValue,
+    ExternalService, ExternalServiceRecord, PeriodicTarget, DataCollectionFrequency
 )
 from workflow.models import Sector, Program
 from import_export import resources, fields
@@ -48,6 +45,13 @@ class IndicatorResource(resources.ModelResource):
             'sector', 'program', 'key_performance_indicator')
 
 
+class CollectedDataInline(admin.TabularInline):
+    model = CollectedData
+    fields = ('targeted', 'achieved', 'periodic_target', 'site')
+    extra = 3
+
+
+@admin.register(Indicator)
 class IndicatorAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = IndicatorResource
     list_display = ('name', 'indicator_types', 'sector',
@@ -57,6 +61,7 @@ class IndicatorAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     display = 'Indicators'
     filter_horizontal = ('program', 'objectives',
                          'strategic_objectives', 'disaggregation', 'program')
+    inlines = [CollectedDataInline]
 
 
 class ActivityTableResource(resources.ModelResource):
@@ -66,6 +71,7 @@ class ActivityTableResource(resources.ModelResource):
         fields = ('id', 'name', 'table_id', 'owner', 'remote_owner', 'url')
 
 
+@admin.register(ActivityTable)
 class ActivityTableAdmin(ImportExportModelAdmin):
     list_display = ('name', 'owner', 'url', 'create_date', 'edit_date')
     search_fields = ('country__country', 'name')
@@ -79,6 +85,7 @@ class CollectedDataResource(resources.ModelResource):
         model = CollectedData
 
 
+@admin.register(CollectedData)
 class CollectedDataAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = CollectedDataResource
     list_display = ('indicator', 'program', 'agreement')
@@ -88,6 +95,7 @@ class CollectedDataAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     display = 'Collected Data on Indicators'
 
 
+@admin.register(ReportingFrequency)
 class ReportingFrequencyAdmin(admin.ModelAdmin):
     list_display = ('frequency', 'description', 'create_date', 'edit_date')
     display = 'Reporting Frequency'
@@ -100,16 +108,79 @@ class StrategicObjectiveAdmin(admin.ModelAdmin):
     display = 'Objectives'
 
 
-admin.site.register(IndicatorType)
-admin.site.register(Indicator, IndicatorAdmin)
-admin.site.register(ReportingFrequency)
-admin.site.register(DisaggregationType, DisaggregationTypeAdmin)
-admin.site.register(DisaggregationLabel, DisaggregationLabelAdmin)
-admin.site.register(CollectedData, CollectedDataAdmin)
-admin.site.register(Objective, ObjectiveAdmin)
-admin.site.register(Level)
-admin.site.register(ExternalService, ExternalServiceAdmin)
-admin.site.register(ExternalServiceRecord, ExternalServiceRecordAdmin)
-admin.site.register(ActivityTable, ActivityTableAdmin)
-admin.site.register(DataCollectionFrequency)
-admin.site.register(PeriodicTarget, PeriodicTargetAdmin)
+@admin.register(PeriodicTarget)
+class PeriodicTargetAdmin(admin.ModelAdmin):
+    list_display = ('period', 'target', 'customsort',)
+    display = 'Indicator Periodic Target'
+    list_filter = ('period',)
+
+
+@admin.register(ExternalServiceRecord)
+class ExternalServiceRecordAdmin(admin.ModelAdmin):
+    list_display = ('external_service', 'full_url',
+                    'record_id', 'create_date', 'edit_date')
+    display = 'External Indicator Data Service'
+
+
+@admin.register(ExternalService)
+class ExternalServiceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'url', 'feed_url', 'create_date', 'edit_date')
+    display = 'External Indicator Data Service'
+
+
+@admin.register(DisaggregationLabel)
+class DisaggregationLabelAdmin(admin.ModelAdmin):
+    list_display = ('disaggregation_type', 'customsort', 'label',)
+    display = 'Disaggregation Label'
+    list_filter = ('disaggregation_type__disaggregation_type',)
+
+
+@admin.register(DisaggregationType)
+class DisaggregationTypeAdmin(admin.ModelAdmin):
+    list_display = ('disaggregation_type', 'country',
+                    'standard', 'description')
+    list_filter = ('country', 'standard', 'disaggregation_type')
+    display = 'Disaggregation Type'
+
+
+@admin.register(DisaggregationValue)
+class DisaggregationValueAdmin(admin.ModelAdmin):
+    list_display = ('disaggregation_label', 'value',
+                    'create_date', 'edit_date')
+    list_filter = (
+        'disaggregation_label__disaggregation_type__disaggregation_type',
+        'disaggregation_label')
+    display = 'Disaggregation Value'
+
+
+@admin.register(DataCollectionFrequency)
+class DataCollectionFrequencyAdmin(admin.ModelAdmin):
+    list_display = ('frequency', 'description', 'create_date', 'edit_date')
+    display = 'Data Collection Frequency'
+
+
+@admin.register(ReportingPeriod)
+class ReportingPeriodAdmin(admin.ModelAdmin):
+    list_display = ('frequency', 'create_date', 'edit_date')
+    display = 'Reporting Frequency'
+
+
+@admin.register(Objective)
+class ObjectiveAdmin(admin.ModelAdmin):
+    list_display = ('program', 'name')
+    search_fields = ('name', 'program__name')
+    list_filter = ('program__country__country',)
+    display = 'Objectives'
+
+
+@admin.register(Level)
+class LevelAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    display = 'Levels'
+
+
+@admin.register(IndicatorType)
+class IndicatorTypeAdmin(admin.ModelAdmin):
+    list_display = ('indicator_type', 'description',
+                    'create_date', 'edit_date')
+    display = 'Indicator Type'

@@ -69,7 +69,7 @@ def email_group(country, group, link, subject, message, submiter=None):
         to = [str(item) for item in get_group_emails]
         if submiter:
             to.append(submiter)
-        email = EmailMessage(subject, message, 'systems@mercycorps.org', to)
+        email = EmailMessage(subject, message, 'admin@hikaya.io', to)
         email.send()
     mail_admins(subject, message, fail_silently=False)
 

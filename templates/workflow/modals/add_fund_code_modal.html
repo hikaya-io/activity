@@ -1,0 +1,171 @@
+<div
+	class="modal fade"
+	id="fundCodeCreateModal"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="fundCodeCreateModalLabel"
+>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="fundCodeCreateModalLabel">Add Fund Code</h4>
+			</div>
+			<div class="modal-body">
+				<form id="fundCodeForm">
+					{% csrf_token %}
+					<div class="form-group" id="div_fund_code_name">
+						<label class="control-label" for="name">Fund Code*</label>
+						<input
+							type="text"
+							id="fund_code_name"
+							name="name"
+							class="form-control"
+							placeholder="Fund code"
+							autocomplete="off"
+						/>
+						<span id="fundCodeNameHelpBlock" class="help-block hikaya-hide"
+							>Fund code required</span
+						>
+					</div>
+
+					<div class="form-group" id="div_stakeholder">
+						<label class="control-label" for="stakeholder">Stakeholder</label>
+						<select name="stakeholder" id="stakeholder" class="form-control">
+							<option value=""></option>
+							{% for stakeholder in donor_stakeholders %}
+							<option value="{{ stakeholder_type.id }}">
+								{{ stakeholder.name }}
+							</option>
+							{% endfor %}
+						</select>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-close" data-dismiss="modal">
+					Close
+				</button>
+				<button type="button" class="btn btn-outline-success" id="saveFundCodeAndNew">
+					Save &amp; New
+				</button>
+
+				<button type="button" class="btn btn-success" id="saveFundCode">
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(() => {
+		$('#stakeholder').select2({
+			theme: 'bootstrap',
+			placeholder: 'Select stakeholder (Donor)'
+		});
+		
+        $('#id_fund_code').select2({ 
+			theme: 'bootstrap', 
+			placeholder: 'Select fund code(s)' 
+		});
+
+		// disable submit buttons until the name is set
+		$('#saveFundCodeAndNew').attr('disabled', true)
+		$('#saveFundCode').attr('disabled', true)
+
+		// validate name field
+		$('#fund_code_name').on('input', function() {
+			const name = $(this);
+			if (name.val()) {
+				$('#div_fund_code_name')
+					.removeClass('has-error')
+					.addClass('has-success');
+				$('#fundCodeNameHelpBlock')
+					.removeClass('hikaya-show')
+					.addClass('hikaya-hide');
+				$('#saveFundCodeAndNew').attr('disabled', false)
+				$('#saveFundCode').attr('disabled', false)
+			} else {
+				$('#div_fund_code_name')
+					.removeClass('has-success')
+					.addClass('has-error');
+
+				$('#fundCodeNameHelpBlock')
+					.removeClass('hikaya-hide')
+					.addClass('hikaya-show');
+				$('#saveFundCodeAndNew').attr('disabled', true)
+				$('#saveFundCode').attr('disabled', true)
+			}
+		});
+
+		// show quick add modal if quick-modal to true
+		const url = new URL(window.location.href);
+		if (url.searchParams.get('quick-modal')) {
+			$('#fundCodeCreateModal').modal('show');
+		}
+	});
+	let saveFundCode = (buttonId) => {
+		$(`#${buttonId}`).click(e => {
+			const formValue = $('#fundCodeForm').serializeArray();
+
+			const dataObj = {};
+
+			formValue.forEach(item => {
+				dataObj[item.name] = item.value;
+			});
+
+			$.ajaxSetup({
+				beforeSend: function(xhr, settings) {
+					if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+						xhr.setRequestHeader('X-CSRFToken', dataObj.csrfmiddlewaretoken);
+					}
+				},
+            });
+            data = dataObj
+
+			$.ajax({
+				url: `/workflow/fund_code/add`,
+				type: 'POST',
+				data,
+				success: function(resp, status) {
+					if (resp.status === 201) {
+                        // notify success
+                        toastr.success('Fund code was saved ', `Success!!`);
+                        addFundCodeOptions(resp.fund_code);
+
+					} else {
+						toastr.error('There was an error saving the fund code!', 'Error!!');
+					}
+
+					// reset form
+					$('#fundCodeForm').trigger('reset');
+
+					const urlWithoutQueryString = window.location.href.split('?')[0];
+					if (buttonId === 'saveFundCode') {
+						//close modal
+						$('#fundCodeCreateModal').modal('hide');
+					}
+				},
+				error: function(xhr, status, error) {
+					toastr.error('There was an error saving the fund code!', 'Error!!');
+				},
+			});
+		});
+    };
+    
+    /**
+    add the created fundcode to select options
+    **/
+    function addFundCodeOptions(fundCode) {
+        codeSelect2 = $('#id_fund_code');
+        var option = new Option(fundCode.name, fundCode.id, true, true);
+        codeSelect2.append(option).trigger('change');
+    }
+
+	$(function() {
+		saveFundCode('saveFundCodeAndNew');
+		saveFundCode('saveFundCode');
+	});
+</script>

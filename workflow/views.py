@@ -8,22 +8,24 @@ from functools import reduce
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic import View as GenView
+from django.views.generic import View as GView
 from .models import (
     Program, Country, Province, AdminLevelThree, District, ProjectAgreement,
-    ProjectComplete, SiteProfile, Documentation, Monitor, Benchmarks, Budget,
-    ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder,
-    FormGuidance, StakeholderType, ActivityBookmarks, ActivityUser, Sector,
-    ProfileType,
+    ProjectComplete, SiteProfile, Documentation, Benchmarks, Budget, ProfileType,
+    ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder, Sector,
+    FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
 )
 from formlibrary.models import TrainingAttendance, Distribution
 from indicators.models import CollectedData, ExternalService
 from django.utils import timezone
 
-from .forms import (ProjectAgreementForm, ProjectAgreementSimpleForm, ProjectAgreementCreateForm, ProjectCompleteForm,
-                    ProjectCompleteSimpleForm, ProjectCompleteCreateForm, DocumentationForm, SiteProfileForm,
-                    MonitorForm, BenchmarkForm, BudgetForm, FilterForm, ProgramForm, QuantitativeOutputsForm,
-                    ChecklistItemForm, StakeholderForm, ContactForm, SiteProfileQuickEntryForm)
+from .forms import (
+    ProjectAgreementForm, ProjectAgreementSimpleForm,
+    ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
+    DocumentationForm, SiteProfileForm, BenchmarkForm, BudgetForm,
+    FilterForm, ProgramForm, SiteProfileQuickEntryForm,
+    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm
+)
 
 import pytz
 
@@ -101,11 +103,16 @@ class ProgramUpdate(UpdateView):
     def get_form_kwargs(self):
         kwargs = super(ProgramUpdate, self).get_form_kwargs()
         kwargs['request'] = self.request
+        kwargs['organization'] = self.request.user.activity_user.organization
         return kwargs
 
     def get_context_data(self, **kwargs):
         context = super(ProgramUpdate, self).get_context_data(**kwargs)
         context['current_program'] = self.get_object()
+        context['donor_stakeholders'] = Stakeholder.objects.filter(
+            type__name__iexact='donor',
+            organization=self.request.user.activity_user.organization
+        ).distinct()
         context['active'] = ['workflow']
         return context
 
@@ -284,88 +291,6 @@ class ProjectAgreementImport(ListView):
                        'get_countries': get_countries})
 
 
-class ProjectAgreementCreate(CreateView):
-    """
-    Project Agreement Form
-    :param request:
-    :param id:
-    This is only used in case of an error incomplete form submission fro
-    m the simple form in the project dashboard
-    """
-
-    model = ProjectAgreement
-    template_name = 'workflow/projectagreement_form.html'
-    guidance = None
-
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="Agreement")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(ProjectAgreementCreate, self) \
-            .dispatch(request, *args, **kwargs)
-
-    # add the request to the kwargs
-    def get_form_kwargs(self):
-        kwargs = super(ProjectAgreementCreate, self).get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
-
-    # get shared data from project agreement and pre-populate form with it
-    def get_initial(self):
-
-        initial = {
-            'approved_by': self.request.user,
-            'estimated_by': self.request.user,
-            'checked_by': self.request.user,
-            'reviewed_by': self.request.user,
-            'approval_submitted_by': self.request.user,
-        }
-
-        return initial
-
-    def get_context_data(self, **kwargs):
-        context = super(ProjectAgreementCreate,
-                        self).get_context_data(**kwargs)
-        return context
-
-    def form_invalid(self, form):
-
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-
-        form.save()
-
-        # save formset from context
-        # context = self.get_context_data()
-
-        latest = ProjectAgreement.objects.latest('id')
-        get_agreement = ProjectAgreement.objects.get(id=latest.id)
-
-        # create a new dashbaord entry for the project
-        # get_program = Program.objects.get(id=latest.program_id)
-
-        create_checklist = Checklist(agreement=get_agreement)
-        create_checklist.save()
-
-        get_checklist = Checklist.objects.get(id=create_checklist.id)
-        get_globals = ChecklistItem.objects.all().filter(global_item=True)
-        for item in get_globals:
-            ChecklistItem.objects.create(
-                checklist=get_checklist, item=item.item)
-
-        messages.success(self.request, 'Success, Initiation Created!')
-
-        redirect_url = '/workflow/dashboard/project/' + str(latest.id)
-        return HttpResponseRedirect(redirect_url)
-
-    form_class = ProjectAgreementCreateForm
-
-
 class ProjectAgreementUpdate(UpdateView):
     """
     Project Initiation Form
@@ -414,13 +339,6 @@ class ProjectAgreementUpdate(UpdateView):
         context.update({'get_quantitative': get_quantitative})
 
         try:
-            get_monitor = Monitor.objects.all().filter(
-                agreement__id=self.kwargs['pk']).order_by('type')
-        except Monitor.DoesNotExist:
-            get_monitor = None
-        context.update({'get_monitor': get_monitor})
-
-        try:
             get_benchmark = Benchmarks.objects.all().filter(
                 agreement__id=self.kwargs['pk']).order_by('description')
         except Benchmarks.DoesNotExist:
@@ -448,6 +366,7 @@ class ProjectAgreementUpdate(UpdateView):
     def get_form_kwargs(self):
         kwargs = super(ProjectAgreementUpdate, self).get_form_kwargs()
         kwargs['request'] = self.request
+        # kwargs['organization'] = self.request.user.activity_user.organization
         return kwargs
 
     def form_invalid(self, form):
@@ -553,13 +472,6 @@ class ProjectAgreementDetail(DetailView):
                         self).get_context_data(**kwargs)
         context['now'] = timezone.now()
         context.update({'id': self.kwargs['pk']})
-
-        try:
-            get_monitor = Monitor.objects.all().filter(
-                agreement__id=self.kwargs['pk'])
-        except Monitor.DoesNotExist:
-            get_monitor = None
-        context.update({'get_monitor': get_monitor})
 
         try:
             get_benchmark = Benchmarks.objects.all().filter(
@@ -1431,7 +1343,7 @@ class SiteProfileReport(ListView):
                        'country': countries})
 
 
-class SiteProfileCreate(GenView):
+class SiteProfileCreate(GView):
     """
     Create a SiteProfile
     """
@@ -1523,116 +1435,6 @@ class SiteProfileDelete(DeleteView):
 
     form_class = SiteProfileForm
 
-
-class MonitorList(ListView):
-    """
-    Monitoring Data
-    """
-    model = Monitor
-    template_name = 'workflow/monitor_list.html'
-
-    def get(self, request, *args, **kwargs):
-
-        project_agreement_id = self.kwargs['pk']
-
-        if int(self.kwargs['pk']) == 0:
-            get_monitor_data = Monitor.objects.all()
-        else:
-            get_monitor_data = Monitor.objects.all().filter(
-                agreement__id=self.kwargs['pk'])
-
-        if int(self.kwargs['pk']) == 0:
-            get_benchmark_data = Benchmarks.objects.all()
-        else:
-            get_benchmark_data = Benchmarks.objects.all().filter(
-                agreement__id=self.kwargs['pk'])
-
-        return render(request, self.template_name,
-                      {'get_monitor_data': get_monitor_data,
-                       'get_benchmark_data': get_benchmark_data,
-                       'project_agreement_id': project_agreement_id})
-
-
-class MonitorCreate(AjaxableResponseMixin, CreateView):
-    """
-    Monitor Form
-    """
-    model = Monitor
-
-    def dispatch(self, request, *args, **kwargs):
-        return super(MonitorCreate, self).dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(MonitorCreate, self).get_context_data(**kwargs)
-        context.update({'id': self.kwargs['id']})
-        return context
-
-    def get_initial(self):
-        initial = {
-            'agreement': self.kwargs['id'],
-        }
-
-        return initial
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Monitor Created!')
-        return self.render_to_response(self.get_context_data(form=form))
-
-    form_class = MonitorForm
-
-
-class MonitorUpdate(AjaxableResponseMixin, UpdateView):
-    """
-    Monitor Form
-    """
-    model = Monitor
-
-    def get_context_data(self, **kwargs):
-        context = super(MonitorUpdate, self).get_context_data(**kwargs)
-        context.update({'id': self.kwargs['pk']})
-        return context
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Monitor Updated!')
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    form_class = MonitorForm
-
-
-class MonitorDelete(AjaxableResponseMixin, DeleteView):
-    """
-    Monitor Form
-    """
-    model = Monitor
-    success_url = '/'
-
-    def get_context_data(self, **kwargs):
-        context = super(MonitorDelete, self).get_context_data(**kwargs)
-        context.update({'id': self.kwargs['pk']})
-        return context
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-
-        messages.success(self.request, 'Success, Monitor Deleted!')
-        return self.render_to_response(self.get_context_data(form=form))
 
 
 class BenchmarkCreate(AjaxableResponseMixin, CreateView):
@@ -2846,3 +2648,33 @@ def add_stakeholder(request):
         return HttpResponse({'success': True})
 
     return HttpResponse({'success': False})
+
+
+class FundCodeCreate(GView):
+    """
+    View to create FundCode and return Json response
+    """
+    def post(self, request):
+        data = request.POST
+        stakeholder_id = None
+        name = data.get('name')
+        stakeholder = data.get('stakeholder', None)
+
+        if stakeholder is not None and stakeholder != '':
+            stakeholder_id = int(stakeholder)
+
+        fund_code = FundCode.objects.create(
+            name=name, stakeholder_id=stakeholder_id
+        )
+
+        if fund_code:
+            return JsonResponse(dict(
+                status=201,
+                fund_code=dict(name=fund_code.name, id=fund_code.id))
+            )
+        else:
+            return JsonResponse(dict(status=401))
+
+
+
+
