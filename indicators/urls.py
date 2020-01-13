@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from django.urls import re_path, path
+from django.urls import path
 from .views import (
     IndicatorList, add_indicator, indicator_create, IndicatorCreate,
     IndicatorUpdate, IndicatorDelete, PeriodicTargetDeleteView,
@@ -18,119 +18,103 @@ urlpatterns = [
 
     # INDICATOR PLANING TOOL
     # Home
-    re_path(r'^home/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
-            IndicatorList.as_view(), name='indicator_list'),
+    path('home/<int:program>/<int:indicator>/<int:type>/',
+         IndicatorList.as_view(), name='indicator_list'),
 
     path('add-indicator', add_indicator, name='add-indicator'),
 
     # Indicator Form
-    re_path(r'^indicator_list/(?P<pk>\w+)/$',
-            IndicatorList.as_view(), name='indicator_list'),
-    re_path(r'^indicator_create/(?P<id>\w+)/$',
-            indicator_create, name='indicator_create'),
-    re_path(r'^indicator_add/(?P<id>\w+)/$',
-            IndicatorCreate.as_view(), name='indicator_add'),
-    re_path(r'^indicator_update/(?P<pk>\w+)/$',
-            IndicatorUpdate.as_view(), name='indicator_update'),
-    re_path(r'^indicator_delete/(?P<pk>\w+)/$',
-            IndicatorDelete.as_view(), name='indicator_delete'),
+    path('indicator_list/<int:pk>/',
+         IndicatorList.as_view(), name='indicator_list'),
+    path('indicator_create/<int:id>/',
+         indicator_create, name='indicator_create'),
+    path('indicator_add/<int:id>/',
+         IndicatorCreate.as_view(), name='indicator_add'),
+    path('indicator_update/<int:pk>/',
+         IndicatorUpdate.as_view(), name='indicator_update'),
+    path('indicator_delete/<int:pk>/',
+         IndicatorDelete.as_view(), name='indicator_delete'),
 
-    re_path(r'^periodic_target_delete/(?P<pk>\w+)/$',
-            PeriodicTargetDeleteView.as_view(), name='pt_delete'),
-    re_path(r'^periodic_target_generate/(?P<indicator>\w+)/$',
-            PeriodicTargetView.as_view(), name='pt_generate'),
-    re_path(
-        r'^periodic_target_deleteall/(?P<indicator>\w+)/(?P<deleteall>\w+)/$',
-        PeriodicTargetView.as_view(), name='pt_deleteall'),
+    path('periodic_target_delete/<int:pk>/',
+         PeriodicTargetDeleteView.as_view(), name='pt_delete'),
+    path('periodic_target_generate/<int:indicator>/',
+         PeriodicTargetView.as_view(), name='pt_generate'),
+    path('periodic_target_deleteall/<int:indicator>/<slug:deleteall>/',
+         PeriodicTargetView.as_view(), name='pt_deleteall'),
 
     # Collected Data List
-    re_path(
-        r'^collecteddata/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
-        CollectedDataList.as_view(), name='collecteddata_list'),
-    path('collecteddata_add/<slug:program>/<int:indicator>/',
-            CollectedDataCreate.as_view(), name='collecteddata_add'),
-    re_path(r'^collecteddata_import/$', collecteddata_import,
-            name='collecteddata_import'),
-    re_path(r'^collecteddata_update/(?P<pk>\w+)/$',
-            CollectedDataUpdate.as_view(), name='collecteddata_update'),
-    re_path(r'^collecteddata_delete/(?P<pk>\w+)/$',
-            CollectedDataDelete.as_view(), name='collecteddata_delete'),
-    re_path(r'^collecteddata_export/(?P<program>\w+)/(?P<indicator>\w+)/$',
-            CollectedDataList.as_view(), name='collecteddata_list'),
+    path('collecteddata/<slug:program>/<int:indicator>/<int:type>/',
+         CollectedDataList.as_view(), name='collecteddata_list'),
+    path('collecteddata_add/<program>/<indicator>/',
+         CollectedDataCreate.as_view(), name='collecteddata_add'),
+    path('collecteddata_import/', collecteddata_import,
+         name='collecteddata_import'),
+    path('collecteddata_update/<int:pk>/',
+         CollectedDataUpdate.as_view(), name='collecteddata_update'),
+    path('collecteddata_delete/<int:pk>/',
+         CollectedDataDelete.as_view(), name='collecteddata_delete'),
+    path('collecteddata_export/<program>/<indicator>/',
+         CollectedDataList.as_view(), name='collecteddata_list'),
 
     # Indicator Report
-    re_path(r'^report/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
-            indicator_report, name='indicator_report'),
-    re_path(r'^tvareport/$', TVAReport.as_view(), name='tvareport'),
-    re_path(r'^tvaprint/(?P<program>\w+)/$',
-            TVAPrint.as_view(), name='tvaprint'),
-    re_path(r'^disrep/(?P<program>\w+)/$',
-            DisaggregationReport.as_view(), name='disrep'),
-    re_path(r'^disrepprint/(?P<program>\w+)/$',
-            DisaggregationPrint.as_view(), name='disrepprint'),
-    re_path(
-        r'^report_table/(?P<program>\w+)/(?P<indicator>\w+)/(?P<type>\w+)/$',
-        IndicatorReport.as_view(), name='indicator_table'),
-    re_path(r'^program_report/(?P<program>\w+)/$',
-            program_indicator_report, name='program_indicator_report'),
+    path('report/<program>/<indicator>/<type>/',
+         indicator_report, name='indicator_report'),
+    path('tvareport/', TVAReport.as_view(), name='tvareport'),
+    path('tvaprint/<program>/',
+         TVAPrint.as_view(), name='tvaprint'),
+    path('disrep/<program>/',
+         DisaggregationReport.as_view(), name='disrep'),
+    path('disrepprint/<program>/',
+         DisaggregationPrint.as_view(), name='disrepprint'),
+    path('report_table/<program>/<indicator>/<type>/',
+         IndicatorReport.as_view(), name='indicator_table'),
+    path('program_report/<program>/',
+         program_indicator_report, name='program_indicator_report'),
 
     # Indicator Data Report
-    re_path(r'^data/(?P<id>\w+)/(?P<program>\w+)/(?P<type>\w+)/$',
-            indicator_data_report, name='indicator_data_report'),
-    re_path(r'^data/(?P<id>\w+)/(?P<program>\w+)/(?P<type>\w+)/map/$',
-            indicator_data_report, name='indicator_data_report'),
-    re_path(r'^data/(?P<id>\w+)/(?P<program>\w+)/(?P<type>\w+)/graph/$',
-            indicator_data_report, name='indicator_data_report'),
-    re_path(r'^data/(?P<id>\w+)/(?P<program>\w+)/(?P<type>\w+)/table/$',
-            indicator_data_report, name='indicator_data_report'),
-    re_path(r'^data/(?P<id>\w+)/(?P<program>\w+)/$',
-            indicator_data_report, name='indicator_data_report'),
-    re_path(r'^data/(?P<id>\w+)/$', indicator_data_report,
-            name='indicator_data_report'),
-    re_path(r'^export/(?P<id>\w+)/(?P<program>\w+)/(?P<indicator_type>\w+)/$',
-            IndicatorExport.as_view(), name='indicator_export'),
+    path('data/<id>/<program>/<type>/',
+         indicator_data_report, name='indicator_data_report'),
+    path('data/<id>/<program>/<type>/map/',
+         indicator_data_report, name='indicator_data_report'),
+    path('data/<id>/<program>/<type>/graph/',
+         indicator_data_report, name='indicator_data_report'),
+    path('data/<id>/<program>/<type>/table/',
+         indicator_data_report, name='indicator_data_report'),
+    path('data/<id>/<program>/',
+         indicator_data_report, name='indicator_data_report'),
+    path('data/<id>/', indicator_data_report,
+         name='indicator_data_report'),
+    path('export/<id>/<program>/<indicator_type>/',
+         IndicatorExport.as_view(), name='indicator_export'),
 
     # ajax calls
-    re_path(r'^service/(?P<service>[-\w]+)/service_json/',
-            service_json, name='service_json'),
-    re_path(
-        r'^collected_data_table/(?P<indicator>[-\w]+)/(?P<program>[-\w]+)/',
-        collected_data_json, name='collected_data_json'),
-    re_path(
-        r'^program_indicators/(?P<program>[-\w]+)/'
-        r'(?P<indicator>[-\w]+)/(?P<type>[-\w]+)',
-        program_indicators_json, name='program_indicators_json'),
-    re_path(r'^report_data/(?P<id>\w+)/(?P<program>\w+)/(?P<type>\w+)/$',
-            IndicatorReportData.as_view(), name='indicator_report_data'),
-    re_path(
-        r'^report_data/(?P<id>\w+)/(?P<program>\w+)/'
-        r'(?P<indicator_type>\w+)/export/$',
-        IndicatorExport.as_view(), name='indicator_export'),
-    re_path(
-        r'^collecteddata_report_data/(?P<program>\w+)/'
-        r'(?P<indicator>\w+)/(?P<type>\w+)/$',
-        CollectedDataReportData.as_view(), name='collecteddata_report_data'),
-    re_path(
-        r'^collecteddata_report_data/(?P<program>\w+)/'
-        r'(?P<indicator>\w+)/(?P<type>\w+)/export/$',
-        IndicatorDataExport.as_view(), name='collecteddata_report_data'),
+    path('service/<service>/service_json/',
+         service_json, name='service_json'),
+    path('collected_data_table/<indicator>/<program>/',
+         collected_data_json, name='collected_data_json'),
+    path('program_indicators/program>/<indicator>/<type>/',
+         program_indicators_json, name='program_indicators_json'),
+    path('report_data/<int:id>/<program>/<type>/',
+         IndicatorReportData.as_view(), name='indicator_report_data'),
+    path('report_data/<int:id>/<program>/<indicator_type>/export/',
+         IndicatorExport.as_view(), name='indicator_export'),
+    path('collecteddata_report_data/<program>)/<indicator>/<type>/',
+         CollectedDataReportData.as_view(), name='collecteddata_report_data'),
+    path('collecteddata_report_data/<program>/<indicator>)/<type>)/export/',
+         IndicatorDataExport.as_view(), name='collecteddata_report_data'),
 
     # objectives
     path('objectives', objectives_list, name='objectives'),
     path('objectives/tree', objectives_tree, name='objectives-tree'),
-    re_path(r'^objectives/edit/(?P<pk>\w+)/$',
-            ObjectiveUpdateView.as_view(),
-            name='update_strategic_objective'),
-    re_path(r'^objectives/objective_delete/(?P<pk>\w+)/$',
-            objective_delete, name='objective_delete'),
-    path(
-        'disaggregation_type/delete/<int:pk>/',
-        DisaggregationTypeDeleteView.as_view(),
-        name='disaggregation_type_delete'
-    ),
+    path('objectives/edit/<int:pk>/', ObjectiveUpdateView.as_view(),
+         name='update_strategic_objective'),
+    path('objectives/objective_delete/<int:pk>/', objective_delete,
+         name='objective_delete'),
+    path('disaggregation_type/delete/<int:pk>/',
+         DisaggregationTypeDeleteView.as_view(),
+         name='disaggregation_type_delete'),
     path(
         'disaggregation_label/delete/<int:pk>/',
         DisaggregationLabelDeleteView.as_view(),
-        name='disaggregation_label_delete'
-    )
+        name='disaggregation_label_delete')
 ]
