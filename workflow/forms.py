@@ -12,12 +12,13 @@ from crispy_forms.bootstrap import (
 from crispy_forms.layout import (
     Layout, Submit, Reset, Field, Column, Row, HTML, Fieldset,)
 from functools import partial
+
 from .widgets import GoogleMapsWidget
 from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
     Benchmarks, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector, Country
+    ActivityUser, Contact, Sector, Country, ProfileType,
 )
 from indicators.models import CollectedData, Indicator, PeriodicTarget
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
@@ -1113,15 +1114,50 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                 'readonly'] = "readonly"
 
 
+class SiteProfileQuickEntryForm(forms.ModelForm):
+    """
+    SiteProfile Quick Entry Form
+    """
+    map = forms.CharField()
+
+    class Meta:
+        model = SiteProfile
+        fields = ['name', 'type', 'longitude', 'latitude']
+        # widgets = {'map': GooglePointFieldWidget, }
+
+    def __init__(self):
+        # get the user object from request to check user permissions
+
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.error_text_inline = True
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+
+        # Organize the fields in the site profile form using a layout class
+        self.helper.layout = Layout(
+            'name',
+            'type',
+            Row(
+                Column('longitude', css_class='form-group col-md-6 mb-0'),
+                Column('latitude', css_class='form-group col-md-6 mb-0'),
+                css_class="form-row"
+            ),
+            # 'map',
+        )
+
+        super(SiteProfileQuickEntryForm, self).__init__()
+        self.fields['type'].queryset = ProfileType.objects.all().distinct()
+
+
 class SiteProfileForm(forms.ModelForm):
+    map = forms.CharField()
+
     class Meta:
         model = SiteProfile
         exclude = ['create_date', 'edit_date']
-
-    map = forms.CharField(widget=GoogleMapsWidget(
-        attrs={'width': 700, 'height': 400, 'longitude': 'longitude',
-               'latitude': 'latitude',
-               'country': 'Find a city or village'}), required=False)
 
     date_of_firstcontact = forms.DateField(
         widget=DatePicker.DateInput(), required=False)
@@ -1139,8 +1175,8 @@ class SiteProfileForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-3'
-        self.helper.field_class = 'col-sm-9'
+        # self.helper.label_class = 'col-sm-3'
+        # self.helper.field_class = 'col-sm-9'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
@@ -1168,7 +1204,9 @@ class SiteProfileForm(forms.ModelForm):
                              Field('longitude', step="any"),
                              ),
                     Fieldset('Map',
-                             'map',
+                                 Row(
+                                    'map'
+                                 )
                              ),
                     ),
                 Tab('Demographic Information',
