@@ -35,11 +35,11 @@ urlpatterns = [
     path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
     path('stakeholder/delete_stakeholder/<slug:pk>/',
          delete_stakeholder, name='delete_stakeholder'),
-    path('level1/edit/<slug:pk>/', ProgramUpdate.as_view()
+    path('level1/edit/<slug:pk>/', ProgramUpdate.as_view(),
         name='level1_edit'),
     path('level2/project/<slug:pk>/', ProjectDash.as_view(),
         name='project_dashboard'),
-    path('level2/project/<slug:pk>/', ProejctDash.as_view(),
+    path('level2/project/<slug:pk>/', ProjectDash.as_view(),
         name='project_dashboard'),
     path('level2/list/<slug:program>/<slug:status>/', ProgramDash.as_view(),
         name='projects_list'),
@@ -58,7 +58,7 @@ urlpatterns = [
     path('projectcomplete_list/<slug:pk>/', ProjectCompleteList.as_view(),
         name='projectcomplete_list'),
     path('projectcomplete_add/<slug:pk>/', ProjectCompleteCreate.as_view(),
-        name='projectcomplete_add'),,
+        name='projectcomplete_add'),
     path('projectcomplete_update/<slug:pk>/', ProjectCompleteUpdate.as_view(),
         name='proejctcomplete_update'),
     path('projectcomplete_delete/<slug:pk>/', ProjectCompleteDelete.as_view(),
@@ -81,7 +81,7 @@ urlpatterns = [
         name='siteprofile_delete'),
     path('site_indicatordata/<slug:site_ide>/', IndicatorDataBySite.as_view(),
         name='site_indicatordata'),
-    path('site_projectscomplete/<slug:site_id>/', ProjectCompleteBySite.as_view()
+    path('site_projectscomplete/<slug:site_id>/', ProjectCompleteBySite.as_view(),
         name='site_projectscomplete'),
 
     # documentation
@@ -183,7 +183,7 @@ urlpatterns = [
     path('budget_add/<slug:id>/', BudgetCreate.as_view(),
         name='budget_add'),
     path('budget_update/<slug:pk>/', BudgetUpdate.as_view(),
-        name='budget_update'),,
+        name='budget_update'),
     path('budget_delete/<slug:pk>/', BudgetDelete.as_view(),
         name='budget_delete'),
 
