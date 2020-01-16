@@ -81,7 +81,15 @@
                   </div> -->
               </div>
             </form>
-            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login with Google</a>
+            <div id="gSignInWrapper"
+>
+              <!-- <span class="label">Sign in with:</span> -->
+              <div id="customBtn" class="customGPlusSignIn">
+                <span class="icon"></span>
+                <span class="buttonText"><a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login with Google</a></span>
+              </div>
+            </div>
+            
             <div class="col-md-12 text-center">
               <a class="forgot-password" href="/accounts/user/password_reset/">
                 Forgot password?
