@@ -157,12 +157,7 @@ def get_all_data(url, type, program_country):
 print("Program")
 get_countries = Country.objects.all()
 for country in get_countries:
-    print(country.country)
     safe_country = urllib.quote_plus(country.country)
-    program_url = \
-        "http://mcapi.mercycorps.org/gaitprogram/?country=%s&format=json" % (
-            safe_country)
-    print(program_url)
-    get_all_data(program_url, "Program", int(country.id))
+    get_all_data('', "Program", int(country.id))
 
 print("Alright, all done.")

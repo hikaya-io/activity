@@ -20,14 +20,15 @@ class TimingMiddleware(object):
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
-        setattr(request, self.REQUEST_ATTR, time.clock())
+        # NOTE:- time.clock() is deprecated in python 3.8
+        setattr(request, self.REQUEST_ATTR, time.perf_counter())
 
         response = self.get_response(request)
         # Code to be executed for each request/response after
         # the view is called.
         start = getattr(request, self.REQUEST_ATTR, None)
         if start:
-            length = time.clock() - start
+            length = time.perf_counter() - start
             response[self.RESPONSE_HEADER] = "%i" % (length * 1000)
 
         return response

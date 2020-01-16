@@ -12,12 +12,13 @@ from crispy_forms.bootstrap import (
 from crispy_forms.layout import (
     Layout, Submit, Reset, Field, Column, Row, HTML, Fieldset,)
 from functools import partial
+
 from .widgets import GoogleMapsWidget
 from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
-    Benchmarks, Monitor, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector, Country
+    Benchmarks, Budget, Office, ChecklistItem, Province, Stakeholder,
+    ActivityUser, Contact, Sector, Country, ProfileType,
 )
 from indicators.models import CollectedData, Indicator, PeriodicTarget
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
@@ -29,7 +30,7 @@ APPROVALS = (
     ('awaiting approval', 'awaiting approval'),
     ('approved', 'approved'),
     ('rejected', 'rejected'),
-    ('new', 'New'),
+    ('new', 'new'),
 )
 
 # Global for Budget Variance
@@ -139,6 +140,7 @@ class ProgramForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
+        self.organization = kwargs.pop('organization')
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_error_title = 'Form Errors'
@@ -146,20 +148,6 @@ class ProgramForm(forms.ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.form_tag = True
-        self.helper.layout = Layout(
-            TabHolder(
-                Tab('Details', Fieldset('', 'name',
-                                        'description', Row(
-                                            Column(
-                                                'start_date', css_class='form-group col-md-6 mb-0'),
-                                            Column('end_date', css_class='form-group col-md-6 mb-0')), 'sector')),
-                Tab('Funding',  Fieldset('', 'fund_code',
-                                         'funding_status', 'cost_center')),
-                Tab('Access', Fieldset('', 'user_access', Row(
-                    Column('budget_check', css_class='form-group col-md-4'),
-                    Column('public_dashboard', css_class='form-group col-md-4'))))
-            )
-        )
 
         super(ProgramForm, self).__init__(*args, **kwargs)
 
@@ -168,27 +156,8 @@ class ProgramForm(forms.ModelForm):
 
         self.fields['sector'].queryset = Sector.objects.all()
         # filter(organization=self.request.user.activity_user.organization)
-
-
-class ProjectAgreementCreateForm(forms.ModelForm):
-    class Meta:
-        model = ProjectAgreement
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        # get the user object from request to check permissions
-        self.request = kwargs.pop('request')
-        self.helper = FormHelper()
-        self.helper.form_method = 'post'
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-2'
-        self.helper.field_class = 'col-sm-6'
-        self.helper.form_error_title = 'Form Errors'
-        self.helper.error_text_inline = True
-        self.helper.help_text_inline = True
-        self.helper.html5_required = True
-        self.helper.form_tag = True
-        super(ProjectAgreementCreateForm, self).__init__(*args, **kwargs)
+        self.fields['name'].label = '{} Name'.format(self.organization.level_1_label)
+        self.fields['description'].label = '{} Description'.format(self.organization.level_1_label)
 
 
 class ProjectAgreementForm(forms.ModelForm):
@@ -267,7 +236,7 @@ class ProjectAgreementForm(forms.ModelForm):
 
     approval = forms.ChoiceField(
         choices=APPROVALS,
-        initial='in progress',
+        initial='new',
         required=False,
     )
 
@@ -288,9 +257,12 @@ class ProjectAgreementForm(forms.ModelForm):
         if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
             APPROVALS = (
+                ('new', 'new'),
                 ('in progress', 'in progress'),
                 ('awaiting approval', 'awaiting approval'),
+                ('approved', 'approved'),
                 ('rejected', 'rejected'),
+
             )
             self.fields['approval'].choices = APPROVALS
             # self.fields['approved_by'].widget.attrs['disabled'] = "disabled"
@@ -298,6 +270,8 @@ class ProjectAgreementForm(forms.ModelForm):
                 'disabled'] = "disabled"
             self.fields[
                 'approval'].help_text = "Approval level permissions required"
+            self.fields['approved_by'].queryset = ActivityUser.objects.filter(
+                organization=self.request.user.activity_user.organization).distinct()           
 
 
 class ProjectAgreementSimpleForm(forms.ModelForm):
@@ -340,71 +314,9 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
     documentation_government_approval = forms.FileField(required=False)
     documentation_community_approval = forms.FileField(required=False)
 
-    effect_or_impact = forms.CharField(
-        label="Relation to Project Logic",
-        help_text="Please do not include outputs and keep less than 120 "
-                  "words. Describe the logic that will link this "
-                  "project/activity to the proposed desired outcome/goal. "
-                  "Note any assumptions that are critical in this logic "
-                  "chain.", widget=forms.Textarea,
-        required=False)
-    justification_background = forms.CharField(
-        help_text="As someone would write a background and problem statement "
-                  "in a proposal, this should be described here. What is "
-                  "the situation in this community where the project is "
-                  "proposed and what is the problem facing them that this "
-                  "project will help solve",
-        widget=forms.Textarea, required=False)
-    justification_description_community_selection = forms.CharField(
-        help_text="How was this community selected for this project. "
-                  "It may be it was already selected as part of the project "
-                  "(like CDP-2, KIWI-2), but others may need to describe,"
-                  " out of an entire cluster, why this community? This can't "
-                  "be just 'because they wanted it', or "
-                  "'because they are poor.' It must refer to a needs "
-                  "assessment, some kind of selection criteria, maybe "
-                  "identification by the government, or some formal process.",
-        widget=forms.Textarea,
-        required=False)
-    description_of_project_activities = forms.CharField(
-        help_text="Briefly describe the day to day work you plan to complete "
-                  "in order to accomplish this project. Include rationale "
-                  "for budget, scope, timeframe as well as staff and "
-                  "stakeholders that will be necessary to seeing this "
-                  "project is effectively implemented. Site any "
-                  "documentation/monitoring efforts that you'll need to do "
-                  "before completion.",
-        widget=forms.Textarea, required=False)
-    description_of_government_involvement = forms.CharField(
-        help_text="This is an open-text field for describing the project. "
-                  "It does not need to be too long, but this is where you "
-                  "WILL be the main description and the main description that "
-                  "will be in the database. Please make this a description "
-                  "from which someone can understand what this project is "
-                  "doing. You do not need to list all activities, such as "
-                  "those that will appear on your benchmark list. Just "
-                  "describe what you are doing. You should attach technical "
-                  "drawings, technical appraisals, bill of quantity or any "
-                  "other appropriate documentation",
-        widget=forms.Textarea, required=False)
-    documentation_government_approval = forms.CharField(
-        help_text="Check the box if there IS documentation to show government "
-                  "request for or approval of the project. This should be "
-                  "attached to the proposal, and also kept in "
-                  "the program file.",
-        widget=forms.Textarea, required=False)
-    description_of_community_involvement = forms.CharField(
-        help_text="How the community is involved in the planning, approval,"
-                  " or implementation of this project should be described. "
-                  "Indicate their approval (copy of a signed MOU, or their "
-                  "signed Project Prioritization request, etc.). But also "
-                  "describe how they will be involved in the implementation "
-                  "- supplying laborers, getting training, etc.",
-        widget=forms.Textarea, required=False)
-
     approval = forms.ChoiceField(
         choices=APPROVALS,
-        initial='in progress',
+        initial='new',
         required=False,
         label="Project Status"
     )
@@ -429,10 +341,14 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         self.fields['approval_submitted_by'].label = 'Originated by'
         self.fields['approved_by'].label = 'Approved by'
 
-        self.fields['approved_by'].queryset = ActivityUser.objects.filter(organization=self.request.user.activity_user.organization).distinct()
-        self.fields['reviewed_by'].queryset = ActivityUser.objects.filter(organization=self.request.user.activity_user.organization).distinct()
+        self.fields['approved_by'].queryset = ActivityUser.objects.filter(
+            organization=self.request.user.activity_user.organization).distinct()
+        self.fields['reviewed_by'].queryset = ActivityUser.objects.filter(
+            organization=self.request.user.activity_user.organization).distinct()
         self.fields['estimated_by'].queryset = ActivityUser.objects.filter(
-            country__in=countries).distinct()
+            organization=self.request.user.activity_user.organization).distinct()
+        self.fields['approval_submitted_by'].queryset = ActivityUser.objects.filter(
+            organization=self.request.user.activity_user.organization).distinct()
 
         # override the office queryset to use request.user for country
         self.fields['office'].queryset = Office.objects.filter(
@@ -440,11 +356,24 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
 
         # override the site queryset to use request.user for country
         self.fields['site'].queryset = SiteProfile.objects.filter(
-            country__in=countries)
+            organizations=self.request.user.activity_user.organization,
+            status=True
+        )
+        self.fields['program'].label = '{}'.format(
+            self.request.user.activity_user.organization.level_1_label) 
+        self.fields['project_name'].label = '{} Name'.format(
+            self.request.user.activity_user.organization.level_2_label) 
+        self.fields['activity_code'].label = '{} Code'.format(
+            self.request.user.activity_user.organization.level_2_label) 
+        self.fields['total_estimated_budget'].label = 'Total {} Budget'.format(
+            self.request.user.activity_user.organization.level_2_label) 
+        self.fields['approval'].label = '{} Status'.format(
+            self.request.user.activity_user.organization.level_2_label)
+
 
         # override the stakeholder queryset to use request.user for country
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
-            country__in=countries)
+            organization=self.request.user.activity_user.organization)
 
         if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
@@ -452,6 +381,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
                 ('in progress', 'in progress'),
                 ('awaiting approval', 'awaiting approval'),
                 ('rejected', 'rejected'),
+                ('new', 'new')
             )
             self.fields['approval'].choices = APPROVALS
             # self.fields['approved_by'].widget.attrs['disabled'] = "disabled"
@@ -1184,15 +1114,50 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                 'readonly'] = "readonly"
 
 
+class SiteProfileQuickEntryForm(forms.ModelForm):
+    """
+    SiteProfile Quick Entry Form
+    """
+    map = forms.CharField()
+
+    class Meta:
+        model = SiteProfile
+        fields = ['name', 'type', 'longitude', 'latitude']
+        # widgets = {'map': GooglePointFieldWidget, }
+
+    def __init__(self):
+        # get the user object from request to check user permissions
+
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.error_text_inline = True
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+
+        # Organize the fields in the site profile form using a layout class
+        self.helper.layout = Layout(
+            'name',
+            'type',
+            Row(
+                Column('longitude', css_class='form-group col-md-6 mb-0'),
+                Column('latitude', css_class='form-group col-md-6 mb-0'),
+                css_class="form-row"
+            ),
+            # 'map',
+        )
+
+        super(SiteProfileQuickEntryForm, self).__init__()
+        self.fields['type'].queryset = ProfileType.objects.all().distinct()
+
+
 class SiteProfileForm(forms.ModelForm):
+    map = forms.CharField()
+
     class Meta:
         model = SiteProfile
         exclude = ['create_date', 'edit_date']
-
-    map = forms.CharField(widget=GoogleMapsWidget(
-        attrs={'width': 700, 'height': 400, 'longitude': 'longitude',
-               'latitude': 'latitude',
-               'country': 'Find a city or village'}), required=False)
 
     date_of_firstcontact = forms.DateField(
         widget=DatePicker.DateInput(), required=False)
@@ -1210,8 +1175,8 @@ class SiteProfileForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-3'
-        self.helper.field_class = 'col-sm-9'
+        # self.helper.label_class = 'col-sm-3'
+        # self.helper.field_class = 'col-sm-9'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
@@ -1239,7 +1204,9 @@ class SiteProfileForm(forms.ModelForm):
                              Field('longitude', step="any"),
                              ),
                     Fieldset('Map',
-                             'map',
+                                 Row(
+                                    'map'
+                                 )
                              ),
                     ),
                 Tab('Demographic Information',
@@ -1279,7 +1246,7 @@ class SiteProfileForm(forms.ModelForm):
                   <div class='panel panel-default'>
 
                   <!-- Default panel contents -->
-                  <div class='panel-heading'>Projects in this Site</div>
+                  <div class='panel-heading'>{{request.user.activity_user.organization.level_1_label}} in this Site</div>
                     {% if get_projects %}
                       <!-- Table -->
                       <table class="table">
@@ -1478,34 +1445,6 @@ class BenchmarkForm(forms.ModelForm):
 
         self.fields['agreement'].widget = HiddenInput()
         self.fields['complete'].widget = HiddenInput()
-
-
-class MonitorForm(forms.ModelForm):
-    class Meta:
-        model = Monitor
-        exclude = ['create_date', 'edit_date']
-
-    def __init__(self, *args, **kwargs):
-        self.helper = FormHelper()
-        self.helper.form_method = 'post'
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-2'
-        self.helper.field_class = 'col-sm-6'
-        self.helper.form_error_title = 'Form Errors'
-        self.helper.error_text_inline = True
-        self.helper.help_text_inline = True
-        self.helper.html5_required = True
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-
-            HTML("""<br/>"""),
-
-            'responsible_person', 'frequency', Field(
-                'type', rows="3", css_class='input-xlarge'), 'agreement',
-
-        )
-
-        super(MonitorForm, self).__init__(*args, **kwargs)
 
 
 class ChecklistItemForm(forms.ModelForm):

@@ -40,6 +40,7 @@ class IndicatorForm(forms.ModelForm):
         indicator = kwargs.get('instance', None)
         self.request = kwargs.pop('request')
         self.program = kwargs.pop('program')
+        self.organization = kwargs.pop('organization')
         self.program_id = kwargs.pop('program_id')
         self.helper = FormHelper()
         self.helper.form_method = 'post'
@@ -72,6 +73,9 @@ class IndicatorForm(forms.ModelForm):
         self.fields['program'].widget.attrs['readonly'] = "readonly"
         self.fields['target_frequency_start'].widget.attrs[
             'class'] = 'monthPicker'
+        self.fields['key_performance_indicator'].label = 'Key Performance Indicator for this {}'.format(self.organization.level_1_label)
+        self.fields['objectives'].label = '{} Objective'.format(self.organization.level_1_label)
+        self.fields['program'].label = '{}'.format(self.organization.level_1_label)
 
 
 class CollectedDataForm(forms.ModelForm):
@@ -88,10 +92,6 @@ class CollectedDataForm(forms.ModelForm):
         date_collected = datetime.strftime(date_collected, '%Y-%m-%d')
         return date_collected
 
-    program2 = forms.CharField(widget=forms.TextInput(
-        attrs={'readonly': 'readonly', 'label': 'Program'}))
-    indicator2 = forms.CharField(widget=forms.TextInput(
-        attrs={'readonly': 'readonly', 'label': 'Indicator'}))
     target_frequency = forms.CharField()
     date_collected = forms.DateField(
         widget=DatePicker.DateInput(), required=True)
@@ -132,19 +132,11 @@ class CollectedDataForm(forms.ModelForm):
             .filter(indicator=self.indicator)\
             .order_by('customsort', 'create_date', 'period')
 
-        self.fields['program2'].initial = self.program
-        self.fields['program2'].label = "Program"
-
         try:
             int(self.indicator)
-            self.indicator = Indicator.objects.get(id=self.indicator)
+            self.indicator = Indicator.objects.get(id=int(self.indicator))
         except TypeError as e:
             pass
-
-        self.fields['indicator2'].initial = self.indicator.name
-        self.fields['indicator2'].label = "Indicator"
-        self.fields['program'].widget = forms.HiddenInput()
-        self.fields['indicator'].widget = forms.HiddenInput()
         self.fields['target_frequency'].required = False
         self.fields['target_frequency'].initial = self.indicator.target_frequency
         self.fields['activity_table'].queryset = ActivityTable.objects.filter(

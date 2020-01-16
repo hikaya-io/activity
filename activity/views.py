@@ -67,7 +67,8 @@ def index(request, program_id=0):
 
     # get programs belonging to the current organizatiom
     get_programs = Program.objects.filter(
-        organization=request.user.activity_user.organization)
+        organization=request.user.activity_user.organization).exclude(
+        name__isnull=True).exclude(name__exact='')
 
     # get stuff based on the active program
     if int(program_id) == 0:
@@ -106,7 +107,7 @@ def index(request, program_id=0):
 
         get_projects_new_count = ProjectAgreement.objects.filter(
             Q(program__organization=request.user.activity_user.organization) &
-            (Q(approval='') | Q(approval=None) | Q(approval='New'))).count()
+            (Q(approval='') | Q(approval=None) | Q(approval='New') | Q(approval='new'))).count()
 
         get_projects_in_progress_count = ProjectAgreement.objects.filter(
             program__organization=request.user.activity_user.organization,
@@ -233,12 +234,23 @@ def register(request, invite_uuid):
     if request.user.is_authenticated:
         return redirect('/')
 
+    # check if a user is invited
+    if invite_uuid != 'none':
+        try:
+            user_invite = UserInvite.objects.get(invite_uuid=invite_uuid)
+        except UserInvite.DoesNotExist:
+            return render(request, 'admin/invalid_invitation.html')
+
+    else:
+        user_invite = None
+
     # privacy = ActivitySites.objects.get(id=1)
     if request.method == 'POST':
         data = request.POST
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         username = data.get('username')
+        # always change the mail address to LowerCase
         email = data.get('email_address').lower()
         password = data.get('password')
 
@@ -268,45 +280,39 @@ def register(request, invite_uuid):
                 return render(request, 'registration/register.html')
 
         if user:
-            if invite_uuid != 'none':
-                try:
-                    invite = UserInvite.objects.get(invite_uuid=invite_uuid)
-                    # activate invited user accounts
-                    user.is_active = True
-                    user.save()
-                    activity_user = ActivityUser.objects.create(
-                        user=user,
-                        organization_id=invite.organization.id,
-                        name='{} {}'.format(user.first_name, user.last_name)
-                    )
+            if user_invite is not None:
+                # activate invited user accounts
+                user.is_active = True
+                user.save()
+                activity_user = ActivityUser.objects.create(
+                    user=user,
+                    organization_id=user_invite.organization.id,
+                    name='{} {}'.format(user.first_name, user.last_name)
+                )
 
-                    # add organization to user organizations
-                    activity_user.organizations.add(invite.organization)
+                # add organization to user organizations
+                activity_user.organizations.add(user_invite.organization)
 
-                    # define user organization access groups
-                    user_org_access = ActivityUserOrganizationGroup.objects.create(
-                        activity_user=activity_user,
-                        organization=invite.organization,
-                    )
-                    # set default permission to editor on invite
-                    group = Group.objects.get(name='Editor')
-                    user_org_access.group = group
-                    user_org_access.save()
-                    if activity_user:
-                        # delete the invitation
-                        invite.delete()
+                # define user organization access groups
+                user_org_access = ActivityUserOrganizationGroup.objects.create(
+                    activity_user=activity_user,
+                    organization=user_invite.organization,
+                )
+                # set default permission to editor on invite
+                group = Group.objects.get(name='Editor')
+                user_org_access.group = group
+                user_org_access.save()
+                if activity_user:
+                    # delete the invitation
+                    user_invite.delete()
 
-                        # send welcome email
-                        send_welcome_email(request, user)
+                    # send welcome email
+                    send_welcome_email(request, user)
 
-                        messages.success(
-                            request, 'Thanks, your email address has been confirmed')
-                        return render(request, 'registration/login.html', {'invite_uuid': 'none'})
+                    messages.success(
+                        request, 'Thanks, your email address has been confirmed')
+                    return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
-                except UserInvite.DoesNotExist:
-                    return HttpResponse({
-                        'invalid_invite': 'Invalid invitation code. Please contact Organization admin'
-                    })
             else:
                 mail_subject = 'Please confirm your email address'
                 data = {

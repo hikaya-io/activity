@@ -194,7 +194,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('username', models.CharField(max_length=30, primary_key=True, serialize=False)),
                 ('country', models.CharField(max_length=100)),
-                ('email', models.CharField(default='user@mercycorps.com', max_length=100)),
+                ('email', models.CharField(default='user@hikaya.io', max_length=100)),
             ],
         ),
         migrations.CreateModel(

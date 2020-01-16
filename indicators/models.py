@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib import admin
 from django.utils import timezone
 
 import uuid
@@ -26,16 +25,12 @@ class ActivityTable(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'Activity Table'
+        verbose_name_plural = 'Activity Tables'
+
     def __str__(self):
         return self.name
-
-
-class ActivityTableAdmin(admin.ModelAdmin):
-    list_display = ('name', 'country', 'owner',
-                    'url', 'create_date', 'edit_date')
-    search_fields = ('country', 'name')
-    list_filter = ('country__country',)
-    display = 'Activity Table'
 
 
 class IndicatorType(models.Model):
@@ -44,14 +39,12 @@ class IndicatorType(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        ordering = ('indicator_type',)
+        verbose_name_plural = 'Indicator Types'
+
     def __str__(self):
         return self.indicator_type
-
-
-class IndicatorTypeAdmin(admin.ModelAdmin):
-    list_display = ('indicator_type', 'description',
-                    'create_date', 'edit_date')
-    display = 'Indicator Type'
 
 
 class StrategicObjective(models.Model):
@@ -68,6 +61,7 @@ class StrategicObjective(models.Model):
 
     class Meta:
         ordering = ('country', 'name')
+        verbose_name_plural = 'Strategic Objectives'
 
     def __str__(self):
         return self.name
@@ -76,13 +70,6 @@ class StrategicObjective(models.Model):
         if self.create_date is None:
             self.create_date = datetime.now()
         super(StrategicObjective, self).save()
-
-
-class StrategicObjectiveAdmin(admin.ModelAdmin):
-    list_display = ('country', 'name')
-    search_fields = ('country__country', 'name')
-    list_filter = ('country__country',)
-    display = 'Strategic Objectives'
 
 
 class Objective(models.Model):
@@ -107,13 +94,6 @@ class Objective(models.Model):
         super(Objective, self).save()
 
 
-class ObjectiveAdmin(admin.ModelAdmin):
-    list_display = ('program', 'name')
-    search_fields = ('name', 'program__name')
-    list_filter = ('program__country__country',)
-    display = 'Objectives'
-
-
 class Level(models.Model):
     name = models.CharField(max_length=135, blank=True)
     description = models.TextField(max_length=765, blank=True)
@@ -129,11 +109,6 @@ class Level(models.Model):
         super(Level, self).save()
 
 
-class LevelAdmin(admin.ModelAdmin):
-    list_display = 'name'
-    display = 'Levels'
-
-
 class DisaggregationType(models.Model):
     disaggregation_type = models.CharField(max_length=135, blank=True)
     description = models.CharField(max_length=765, blank=True)
@@ -144,34 +119,31 @@ class DisaggregationType(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        ordering = 'country', 'disaggregation_type'
+        verbose_name = 'Disaggregation Type'
+        verbose_name_plural = 'Disaggregation Types'
+
     def __str__(self):
         return self.disaggregation_type
 
 
-class DisaggregationTypeAdmin(admin.ModelAdmin):
-    list_display = ('disaggregation_type', 'country',
-                    'standard', 'description')
-    list_filter = ('country', 'standard', 'disaggregation_type')
-    display = 'Disaggregation Type'
-
-
 class DisaggregationLabel(models.Model):
     disaggregation_type = models.ForeignKey(
-        DisaggregationType, on_delete=models.CASCADE, 
+        DisaggregationType, on_delete=models.CASCADE,
         related_name='disaggregation_label')
     label = models.CharField(max_length=765, blank=True)
     customsort = models.IntegerField(blank=True, null=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        ordering = ('customsort',)
+        verbose_name = 'Disaggregation Label'
+        verbose_name_plural = 'Disaggregation Labels'
+
     def __str__(self):
         return self.label
-
-
-class DisaggregationLabelAdmin(admin.ModelAdmin):
-    list_display = ('disaggregation_type', 'customsort', 'label',)
-    display = 'Disaggregation Label'
-    list_filter = ('disaggregation_type__disaggregation_type',)
 
 
 class DisaggregationValue(models.Model):
@@ -185,20 +157,16 @@ class DisaggregationValue(models.Model):
         return self.value
 
 
-class DisaggregationValueAdmin(admin.ModelAdmin):
-    list_display = ('disaggregation_label', 'value',
-                    'create_date', 'edit_date')
-    list_filter = (
-        'disaggregation_label__disaggregation_type__disaggregation_type',
-        'disaggregation_label')
-    display = 'Disaggregation Value'
-
-
 class ReportingFrequency(models.Model):
     frequency = models.CharField(max_length=135, blank=True)
     description = models.CharField(max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('frequency',)
+        verbose_name = 'Reporting Frequency'
+        verbose_name_plural = 'Reporting Frequencies'
 
     def __str__(self):
         return self.frequency
@@ -212,13 +180,13 @@ class DataCollectionFrequency(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        ordering = ('frequency',)
+        verbose_name = 'Data Collection Frequency'
+        verbose_name_plural = 'Data Collection Frequencies'
+
     def __str__(self):
         return self.frequency
-
-
-class DataCollectionFrequencyAdmin(admin.ModelAdmin):
-    list_display = ('frequency', 'description', 'create_date', 'edit_date')
-    display = 'Data Collection Frequency'
 
 
 class ReportingPeriod(models.Model):
@@ -231,11 +199,6 @@ class ReportingPeriod(models.Model):
         return self.frequency
 
 
-class ReportingPeriodAdmin(admin.ModelAdmin):
-    list_display = ('frequency', 'create_date', 'edit_date')
-    display = 'Reporting Frequency'
-
-
 class ExternalService(models.Model):
     name = models.CharField(max_length=255, blank=True)
     url = models.CharField(max_length=765, blank=True)
@@ -243,13 +206,12 @@ class ExternalService(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'External Service'
+        verbose_name_plural = 'External Services'
+
     def __str__(self):
         return self.name
-
-
-class ExternalServiceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'url', 'feed_url', 'create_date', 'edit_date')
-    display = 'External Indicator Data Service'
 
 
 class ExternalServiceRecord(models.Model):
@@ -260,14 +222,12 @@ class ExternalServiceRecord(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'External Service Record'
+        verbose_name_plural = 'External Service Records'
+
     def __str__(self):
         return self.full_url
-
-
-class ExternalServiceRecordAdmin(admin.ModelAdmin):
-    list_display = ('external_service', 'full_url',
-                    'record_id', 'create_date', 'edit_date')
-    display = 'External Indicator Data Service'
 
 
 class IndicatorManager(models.Manager):
@@ -317,7 +277,7 @@ class Indicator(models.Model):
     definition = models.TextField(null=True, blank=True, help_text=" ")
     justification = models.TextField(
         max_length=500, null=True, blank=True,
-        verbose_name="Rationale or Justification for Indicator", help_text=" ")
+        verbose_name="Justification for Indicator", help_text=" ")
     unit_of_measure = models.CharField(
         max_length=135, null=True, blank=True, verbose_name="Unit of measure*",
         help_text=" ")
@@ -334,7 +294,7 @@ class Indicator(models.Model):
     rationale_for_target = models.TextField(
         max_length=255, null=True, blank=True, help_text=" ")
     target_frequency = models.IntegerField(
-        blank=False, null=True, choices=TARGET_FREQUENCIES,
+        blank=True, null=True, choices=TARGET_FREQUENCIES,
         verbose_name="Target frequency", help_text=" ")
     target_frequency_custom = models.CharField(
         null=True, blank=True, max_length=100,
@@ -347,20 +307,20 @@ class Indicator(models.Model):
         help_text=" ")
     means_of_verification = models.CharField(
         max_length=255, null=True, blank=True,
-        verbose_name="Means of Verification / Data Source", help_text=" ")
+        verbose_name="Means of Verification", help_text=" ")
     data_collection_method = models.CharField(
         max_length=255, null=True, blank=True,
         verbose_name="Data Collection Method", help_text=" ")
     data_collection_frequency = models.ForeignKey(
         DataCollectionFrequency, null=True, blank=True,
-        verbose_name="Frequency of Data Collection",
+        verbose_name="Data Collection Frequency",
         help_text=" ", on_delete=models.SET_NULL)
     data_points = models.TextField(
         max_length=500, null=True, blank=True, verbose_name="Data Points",
         help_text=" ")
     responsible_person = models.CharField(
         max_length=255, null=True, blank=True,
-        verbose_name="Responsible Person(s) and Team", help_text=" ")
+        verbose_name="Responsible Person or Team", help_text=" ")
     method_of_analysis = models.CharField(
         max_length=255, null=True, blank=True,
         verbose_name="Method of Analysis", help_text=" ")
@@ -370,7 +330,7 @@ class Indicator(models.Model):
     reporting_frequency = models.ForeignKey(
         ReportingFrequency, null=True,
         blank=True,
-        verbose_name="Frequency of Reporting",
+        verbose_name="Reporting Frequency",
         help_text=" ",
         on_delete=models.SET_NULL)
     quality_assurance = models.TextField(
@@ -498,6 +458,8 @@ class PeriodicTarget(models.Model):
 
     class Meta:
         ordering = ('customsort', '-create_date')
+        verbose_name = 'Periodic Target'
+        verbose_name_plural = 'Periodic Targets'
 
     @property
     def start_date_formatted(self):
@@ -510,12 +472,6 @@ class PeriodicTarget(models.Model):
         if self.end_date:
             return self.end_date.strftime('%b %d, %Y').replace(" 0", " ")
         return self.end_date
-
-
-class PeriodicTargetAdmin(admin.ModelAdmin):
-    list_display = ('period', 'target', 'customsort',)
-    display = 'Indicator Periodic Target'
-    list_filter = ('period',)
 
 
 class CollectedDataManager(models.Manager):
@@ -533,16 +489,16 @@ class CollectedData(models.Model):
     periodic_target = models.ForeignKey(
         PeriodicTarget, null=True, blank=True, help_text=" ",
         on_delete=models.SET_NULL)
-    targeted = models.DecimalField("Targeted", max_digits=20,
+    targeted = models.DecimalField("Targeted", max_digits=20, null=True, blank=True,
                                    decimal_places=2, default=Decimal('0.00'))
     achieved = models.DecimalField(
-        "Achieved", max_digits=20, decimal_places=2, help_text=" ")
+        "Achieved", max_digits=20, decimal_places=2, blank=True, null=True)
     disaggregation_value = models.ManyToManyField(
         DisaggregationValue, blank=True, help_text=" ")
     description = models.TextField(
         "Remarks/comments", blank=True, null=True, help_text=" ")
     indicator = models.ForeignKey(
-        Indicator, help_text=" ", null=True, on_delete=models.SET_NULL)
+        Indicator, help_text=" ", null=True, blank=True, on_delete=models.SET_NULL)
     agreement = models.ForeignKey(ProjectAgreement, blank=True, null=True,
                                   related_name="q_agreement2",
                                   verbose_name="Project Initiation",
@@ -579,7 +535,7 @@ class CollectedData(models.Model):
 
     class Meta:
         ordering = ('agreement', 'indicator', 'date_collected', 'create_date')
-        verbose_name_plural = "Indicator Output/Outcome Collected Data"
+        verbose_name_plural = "Collected Data"
 
     # onsave add create date or update edit date
     def save(self, *args, **kwargs):
@@ -608,9 +564,3 @@ class CollectedData(models.Model):
         return ', '.join(
             [y.disaggregation_label.label + ': ' + y.value for y in
              self.disaggregation_value.all()])
-
-
-class CollectedDataAdmin(admin.ModelAdmin):
-    list_display = ('indicator', 'date_collected', 'create_date', 'edit_date')
-    list_filter = ['indicator__program__country__country']
-    display = 'Indicator Output/Outcome Collected Data'
