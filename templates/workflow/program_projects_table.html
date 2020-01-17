@@ -6,9 +6,9 @@
           title="{{ project.project_name }}">{{ project.project_name | truncatechars:50 }}</a>
     </td>
     <td>{{ project.cod_num }}</td>
-    <td>{{ project.create_date|date:"d-m-Y" }}</td>
-    <td>{% if item.short %} Short {% else %} Long {% endif %}</td>
-    <td>
+    <td title="{{ project.program.name}}">{{ project.program.name | truncatechars:50 }}</td>
+    <td>{{ project.approval|capfirst }}</td>
+    {% comment %} <td>
         {% if item.projectcomplete %} 
           Tracking 
           {% if item.projectcomplete.approval  %}
@@ -23,7 +23,7 @@
           {% else %} 
             Open 
           {% endif %} 
-        {% endif %}</td>
+        {% endif %}</td> {% endcomment %}
     <td class="text-right">
         <div class="btn-group">
           <a role="button" href="" class="btn btn-default btn-sm disabled">More</a>

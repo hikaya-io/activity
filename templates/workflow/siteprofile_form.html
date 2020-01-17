@@ -38,6 +38,15 @@
       {% endfor %}
   {% endif %}
   <div class="admin-content">
+      <style>
+					.mw-wrap{
+						width: 100% !important;
+						min-width: 400px !important; 
+					}
+					.mw-coordinates-overlay {
+						width: 200px !important;
+					}
+			</style>
     {% csrf_token %}
     {% load crispy_forms_tags %}
     {% crispy form %}

@@ -11,7 +11,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic import View as GView
 from .models import (
     Program, Country, Province, AdminLevelThree, District, ProjectAgreement,
-    ProjectComplete, SiteProfile, Documentation, Benchmarks, Budget,
+    ProjectComplete, SiteProfile, Documentation, Benchmarks, Budget, ProfileType,
     ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder, Sector,
     FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
 )
@@ -23,7 +23,7 @@ from .forms import (
     ProjectAgreementForm, ProjectAgreementSimpleForm,
     ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
     DocumentationForm, SiteProfileForm, BenchmarkForm, BudgetForm,
-    FilterForm, ProgramForm,
+    FilterForm, ProgramForm, SiteProfileQuickEntryForm,
     QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm
 )
 
@@ -1283,9 +1283,12 @@ class SiteProfileList(ListView):
         default_list = 10  # default number of site profiles per page
         # user defined number of site profiles per page, 10, 20, 30
         user_list = request.GET.get('user_list')
+        get_location_types = ProfileType.objects.all()
 
         if user_list:
             default_list = int(user_list)
+
+        form = SiteProfileQuickEntryForm()
         return render(request, self.template_name,
                       {
                           'inactive_site': inactive_site,
@@ -1299,7 +1302,9 @@ class SiteProfileList(ListView):
                           'helper': FilterForm.helper,
                           'program_id': program_id,
                           'active': ['components'],
-                          'map_api_key': settings.GOOGLE_MAP_API_KEY
+                          'map_api_key': settings.GOOGLE_MAP_API_KEY,
+                          'get_location_types': get_location_types,
+                          'form': form,
                       })
 
 
@@ -1338,57 +1343,27 @@ class SiteProfileReport(ListView):
                        'country': countries})
 
 
-class SiteProfileCreate(CreateView):
+class SiteProfileCreate(GView):
     """
-    Using SiteProfile Form, create a new site profile
+    Create a SiteProfile
     """
-    model = SiteProfile
-    guidance = None
+    def post(self, request):
+        data = request.POST
+        location = SiteProfile.objects.create(
+            name=data.get('name', ''),
+            type_id=int(data.get('type', None)),
+            longitude=data.get('longitude', None),
+            latitude=data.get('latitude', None)
+        )
 
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="SiteProfile")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(SiteProfileCreate, self).dispatch(request, *args,
-                                                       **kwargs)
+        if location:
+            # tie current user organization to the created location
+            location.organizations.add(request.user.activity_user.organization)
 
-    # add the request to the kwargs
-    def get_form_kwargs(self):
-        kwargs = super(SiteProfileCreate, self).get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
+            return JsonResponse(dict(status=201))
 
-    def get_initial(self):
-        countries = get_country(self.request.user)
-        default_country = None
-        if countries:
-            default_country = countries[0]
-        initial = {
-            'approved_by': self.request.user,
-            'filled_by': self.request.user,
-            'country': default_country,
-        }
-
-        return initial
-
-    def form_invalid(self, form):
-
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        instance = form.save()
-        instance.organizations.add(
-            self.request.user.activity_user.organization)
-        messages.success(self.request, 'Success, Site Profile Created!')
-        # latest = SiteProfile.objects.latest('id')
-        redirect_url = '/workflow/siteprofile_list/0/0/list/'
-        return HttpResponseRedirect(redirect_url)
-
-    form_class = SiteProfileForm
+        else:
+            return JsonResponse(dict(status=400))
 
 
 class SiteProfileUpdate(UpdateView):

@@ -17,7 +17,7 @@ from feed.views import (
     AdminLevelThreeViewSet, ExternalServiceViewSet, DisaggregationTypeViewSet,
     LevelViewSet, StakeholderViewSet
 )
-from django.urls import include, path, re_path
+from django.urls import include, path
 from django.views.generic import TemplateView
 from rest_framework import routers
 from django.conf import settings
@@ -81,7 +81,7 @@ router.register(r'periodictargets', PeriodicTargetReadOnlyViewSet,
 
 
 urlpatterns = [  # rest framework
-    re_path(r'^select2/', include('django_select2.urls')),
+    path('select2/', include('django_select2.urls')),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls',
                               namespace='rest_framework')),
@@ -93,12 +93,12 @@ urlpatterns = [  # rest framework
     # enable the admin:
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
-    re_path(r'^(?P<selected_countries>\w+)/$',
-            views.index, name='index'),
+    path('<slug:selected_countries>/',
+         views.index, name='index'),
 
     # index
-    re_path(r'^dashboard/(?P<program_id>\w+)/$',
-            activityviews.index, name='home_dashboard'),
+    path('dashboard/<int:program_id>/',
+         activityviews.index, name='home_dashboard'),
 
     # base template for layout
     path('', TemplateView.as_view(template_name='base.html')),
@@ -138,16 +138,16 @@ urlpatterns = [  # rest framework
     path('accounts/user/password_update/', views.change_password, name='change_password'),
 
     # accounts
-    re_path('accounts/organization/(?P<org_id>\w+)/$',
-            views.switch_organization, name='switch_organization'),
+    path('accounts/organization/<int:org_id>/',
+         views.switch_organization, name='switch_organization'),
     path('accounts/profile/', views.profile, name='profile'),
     path('accounts/admin_dashboard/', views.admin_dashboard,
          name='admin_dashboard'),
     path('accounts/admin/users/<slug:role>/<slug:status>/', views.admin_user_management,
          name='admin_user_management'),
-    path('accounts/admin/user/edit/<slug:pk>/', views.admin_user_edit,
+    path('accounts/admin/user/edit/<int:pk>/', views.admin_user_edit,
          name='admin_user_edit'),
-    path('accounts/admin/user/updatestatus/<slug:pk>/<slug:status>/', views.update_user_access,
+    path('accounts/admin/user/updatestatus/<int:pk>/<slug:status>/', views.update_user_access,
          name='user_status_update'),
     path('accounts/admin/configurations', views.admin_configurations,
          name='admin_configurations'),
@@ -163,18 +163,17 @@ urlpatterns = [  # rest framework
     path('bookmark_list', BookmarkList.as_view(),
          name='bookmark_list'),
     path('bookmark_add', BookmarkCreate.as_view(), name='bookmark_add'),
-    re_path(r'^bookmark_update/(?P<pk>\w+)/$',
-            BookmarkUpdate.as_view(), name='bookmark_update'),
-    re_path(r'^bookmark_delete/(?P<pk>\w+)/$',
-            BookmarkDelete.as_view(), name='bookmark_delete'),
+    path('bookmark_update/<int:pk>/',
+         BookmarkUpdate.as_view(), name='bookmark_update'),
+    path('bookmark_delete/<int:pk>/',
+         BookmarkDelete.as_view(), name='bookmark_delete'),
 
     # Auth backend URL's
     path('', include(('django.contrib.auth.urls',
                       "django.contrib.auth"), namespace='auth')),
-    re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]'
-            r'{1,13}-[0-9A-Za-z]{1,20})/$',
-            views.activate_acccount, name='activate'),
+    path('activate/<slug:uidb64>/<slug:token>/',
+         views.activate_acccount, name='activate'),
     path('oauth/',
-          include('social_django.urls', namespace='social')),
+         include('social_django.urls', namespace='social')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
