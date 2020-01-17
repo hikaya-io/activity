@@ -145,9 +145,9 @@ urlpatterns = [  # rest framework
          name='admin_dashboard'),
     path('accounts/admin/users/<slug:role>/<slug:status>/', views.admin_user_management,
          name='admin_user_management'),
-    path('accounts/admin/user/edit/<slug:pk>/', views.admin_user_edit,
+    path('accounts/admin/user/edit/<int:pk>/', views.admin_user_edit,
          name='admin_user_edit'),
-    path('accounts/admin/user/updatestatus/<slug:pk>/<slug:status>/', views.update_user_access,
+    path('accounts/admin/user/updatestatus/<int:pk>/<slug:status>/', views.update_user_access,
          name='user_status_update'),
     path('accounts/admin/configurations', views.admin_configurations,
          name='admin_configurations'),
@@ -163,9 +163,9 @@ urlpatterns = [  # rest framework
     path('bookmark_list', BookmarkList.as_view(),
          name='bookmark_list'),
     path('bookmark_add', BookmarkCreate.as_view(), name='bookmark_add'),
-    path('bookmark_update/<slug:pk>/',
+    path('bookmark_update/<int:pk>/',
          BookmarkUpdate.as_view(), name='bookmark_update'),
-    path('bookmark_delete/<slug:pk>/',
+    path('bookmark_delete/<int:pk>/',
          BookmarkDelete.as_view(), name='bookmark_delete'),
 
     # Auth backend URL's
