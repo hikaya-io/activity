@@ -93,11 +93,11 @@ urlpatterns = [  # rest framework
     # enable the admin:
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
-    path('<selected_countries>/',
+    path('<slug:selected_countries>/',
          views.index, name='index'),
 
     # index
-    path('dashboard/<program_id>/',
+    path('dashboard/<int:program_id>/',
          activityviews.index, name='home_dashboard'),
 
     # base template for layout
@@ -138,7 +138,7 @@ urlpatterns = [  # rest framework
     path('accounts/user/password_update/', views.change_password, name='change_password'),
 
     # accounts
-    path('accounts/organization/<org_id>/',
+    path('accounts/organization/<int:org_id>/',
          views.switch_organization, name='switch_organization'),
     path('accounts/profile/', views.profile, name='profile'),
     path('accounts/admin_dashboard/', views.admin_dashboard,
@@ -163,15 +163,15 @@ urlpatterns = [  # rest framework
     path('bookmark_list', BookmarkList.as_view(),
          name='bookmark_list'),
     path('bookmark_add', BookmarkCreate.as_view(), name='bookmark_add'),
-    path('bookmark_update/<pk>/',
+    path('bookmark_update/<slug:pk>/',
          BookmarkUpdate.as_view(), name='bookmark_update'),
-    path('bookmark_delete/<pk>/',
+    path('bookmark_delete/<slug:pk>/',
          BookmarkDelete.as_view(), name='bookmark_delete'),
 
     # Auth backend URL's
     path('', include(('django.contrib.auth.urls',
                       "django.contrib.auth"), namespace='auth')),
-    path('activate/<uidb64>/<token>/',
+    path('activate/<slug:uidb64>/<slug:token>/',
          views.activate_acccount, name='activate'),
     path('oauth/',
          include('social_django.urls', namespace='social')),
