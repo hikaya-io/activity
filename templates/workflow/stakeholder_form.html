@@ -24,7 +24,7 @@
 	<div class="sub-navigation">
 		<div class="sub-navigation-header">
 			<h4 class="page-title">
-			 {% if stakeholder_name %} {{stakeholder_name}}{% else %}Stakeholder Form{% endif %}
+			 {% if current_stakeholder %} {{current_stakeholder.name}}{% else %}Stakeholder Form{% endif %}
 			</h4>
 		</div>
 		<div class="sub-navigation-actions">
@@ -35,6 +35,7 @@
 		{% csrf_token %}
 		{% load crispy_forms_tags %}
 		{% crispy form %}
+		{% include './modals/add_contact_modal.html' %}
 	</div>
 </div>
 <script>

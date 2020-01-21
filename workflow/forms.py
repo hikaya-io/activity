@@ -1550,16 +1550,22 @@ class StakeholderForm(forms.ModelForm):
             HTML("""<br/>"""),
             TabHolder(
                 Tab('Details',
-                    Fieldset('Details',
-                             'name', 'type', 'contact',
-                             HTML("""<a onclick="window.open('
-                             /workflow/contact_add/%s/0/').focus();">
-                                    Add New Contact</a>""" % pkval), 'country',
-                             'sectors',
-                             PrependedText('stakeholder_register', ''),
-                             'formal_relationship_document',
-                             'vetting_document', 'notes',
-                             ),
+                    Fieldset(
+                        'Details',
+                        'name',
+                        'type',
+                        'contact',
+                        HTML("""
+                                <a href="" data-toggle="modal" 
+                                data-target="#addContactModal">
+                                Add New Contact</a>
+                                """),
+                        'country',
+                        'sectors',
+                        PrependedText('stakeholder_register', ''),
+                        'formal_relationship_document',
+                        'vetting_document', 'notes',
+                        ),
                     ),
 
                 Tab('Approvals',

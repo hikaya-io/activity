@@ -1798,9 +1798,17 @@ class StakeholderUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(StakeholderUpdate, self).get_context_data(**kwargs)
-        stakeholder = Stakeholder.objects.get(pk=int(self.kwargs['pk']))
-        context.update({'id': self.kwargs['pk']})
+        stakeholder = Stakeholder.objects.get(pk=int(self.kwargs.get('pk')))
+        context.update({'id': self.kwargs.get('pk',  None)})
         context.update({'stakeholder_name': stakeholder.name})
+        context.update({'current_stakeholder': self.get_object()})
+        context.update(
+            {
+                'get_stakeholders': Stakeholder.objects.filter(
+                    organization=self.request.user.activity_user.organization
+                )
+            }
+        )
         return context
 
     def form_invalid(self, form):
