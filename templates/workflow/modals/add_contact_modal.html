@@ -19,7 +19,7 @@
 				var option = new Option(stakeholder_name, +stakeholder_id, true, true);
 				stakeSelect2.append(option).trigger('change');
 
-				stakeSelect2.prop('disabled', true);
+				stakeSelect2.attr('readonly', true);
 			}
 		 });
 	});
