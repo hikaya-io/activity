@@ -112,21 +112,11 @@
 						<select class="form-control" id="stakeholder" name="stakeholder">
 							<option value=""></option>
 							{% for item in get_stakeholders %} 
-							{% if item.name %}
-								{% if current_stakeholder %}
-									<option 
-										value="{{ item.id }}" 
-										{% if item.id == '3' %} 
-											selected="selected"
-										{% endif %}>
-											{{ item.name | truncatechars:50 }}
-									</option>
-								{% else %}
+								{% if item.name %}
 									<option value="{{ item.id }} ">
 										{{ item.name | truncatechars:50 }}
 									</option>
-								{% endif %}
-							{% endif %} 
+								{% endif %} 
 							{% endfor %}
 						</select>
 					</div>
