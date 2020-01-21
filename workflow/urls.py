@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from .views import (
-    list_workflow_level1, add_level2, add_documentation, add_contact,
+    list_workflow_level1, add_level2, add_documentation,
     add_stakeholder, delete_stakeholder, ProgramUpdate,
     ProjectDash, ProgramDash, level1_delete, ProjectAgreementList,
     ProjectAgreementUpdate,
@@ -31,7 +31,7 @@ urlpatterns = [
     path('level1_delete/<int:pk>/', level1_delete, name='level1_delete'),
     path('level2/add', add_level2, name='add-level2'),
     path('documentation/add', add_documentation, name='add-documentation'),
-    path('contact/add', add_contact, name='add-contact'),
+    path('contact/add', ContactCreate.as_view(), name='add-contact'),
     path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
     path('stakeholder/delete_stakeholder/<int:pk>/',
          delete_stakeholder, name='delete_stakeholder'),

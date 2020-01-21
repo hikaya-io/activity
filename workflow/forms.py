@@ -1544,7 +1544,6 @@ class StakeholderForm(forms.ModelForm):
         self.helper.add_input(
             Submit('submit', 'Save', css_class='btn-success')),
 
-        pkval = kwargs['instance'].pk if kwargs['instance'] else 0
         self.helper.layout = Layout(
 
             HTML("""<br/>"""),
@@ -1593,6 +1592,9 @@ class StakeholderForm(forms.ModelForm):
         self.fields[
             'vetting_document'].queryset = Documentation.objects.filter(
             program__organization=self.request.user.activity_user.organization)
+        self.fields['contact'].queryset = Contact.objects.filter(
+            organization=self.request.user.activity_user.organization
+        )
 
 
 class FilterForm(forms.Form):
