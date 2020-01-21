@@ -14,13 +14,16 @@
 		$('#addContactModal').on('shown.bs.modal', function() {
 			const stakeholder_id = '{{current_stakeholder.id}}';
 			const stakeholder_name = '{{current_stakeholder.name}}';
-			if(stakeholder && stakeholder.id) {
+			if(stakeholder_id) {
 				stakeSelect2 = $('#stakeholder');
 				var option = new Option(stakeholder_name, +stakeholder_id, true, true);
 				stakeSelect2.append(option).trigger('change');
-
+				/** 
+				set stakehollder field to readOnly 
+				when Contact is created from Stakeholder details view
+				*/
 				stakeSelect2.attr('readonly', true);
-			}
+			} 
 		 });
 	});
 
@@ -38,8 +41,16 @@
 				type: 'POST',
 				data: obj,
 				success: function(resp, status) {
-					// notify success
-					toastr.success('Contact was added sucessfully');
+					if(resp.success) {
+						// notify success
+						toastr.success('Contact was added sucessfully');
+					} else if (resp.stakeholder) {
+						// warn failure to tie the contact to stakeholder
+						toastr.warn('Contact was not tied to  the Stakeholder');
+					} else {
+						// Saving failed
+						toastr.error('The Contact was not added', 'Failed');
+					}
 					//close modal
 					$('#addContactModal').modal('hide');
 					// reset form

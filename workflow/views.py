@@ -1610,12 +1610,12 @@ class ContactCreate(GView):
                 try:
                     stakeholder = Stakeholder.objects.get(pk=int(stakeholder_id))
                     stakeholder.contact.add(contact)
-                    return HttpResponse({'success': True})
+                    return JsonResponse({'success': True})
                 except Stakeholder.DoesNotExist:
-                    return HttpResponse(
+                    return JsonResponse(
                         {'stakeholder': 'Attached stakeholder no-longer exist'}
                     )
-        return HttpResponse({'success': False})
+        return JsonResponse({'success': False})
 
 
 class ContactUpdate(UpdateView):
