@@ -1555,9 +1555,13 @@ class StakeholderForm(forms.ModelForm):
                         'type',
                         'contact',
                         HTML("""
-                                <a href="" data-toggle="modal" 
-                                data-target="#addContactModal">
-                                Add New Contact</a>
+                                <a 
+                                    role="button" 
+                                    class="btn btn-sm btn-default"
+                                    href="" data-toggle="modal" 
+                                    data-target="#addContactModal"
+                                    >
+                                    <i class="fa fa-plus"></i>&nbsp;&nbsp;Contact</a>
                                 """),
                         'country',
                         'sectors',

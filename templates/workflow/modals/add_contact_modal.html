@@ -9,22 +9,12 @@
 		const url = new URL(window.location.href);
 		if (url.searchParams.get('quick-modal')) {
 			$('#addContactModal').modal('show');
+			setStakeholderOption();
 		}
 
 		$('#addContactModal').on('shown.bs.modal', function() {
-			const stakeholder_id = '{{current_stakeholder.id}}';
-			const stakeholder_name = '{{current_stakeholder.name}}';
-			if(stakeholder_id) {
-				stakeSelect2 = $('#stakeholder');
-				var option = new Option(stakeholder_name, +stakeholder_id, true, true);
-				stakeSelect2.append(option).trigger('change');
-				/** 
-				set stakehollder field to readOnly 
-				when Contact is created from Stakeholder details view
-				*/
-				stakeSelect2.attr('readonly', true);
-			} 
-		 });
+			setStakeholderOption();
+		});
 	});
 
 	var saveContact = buttonId => {
@@ -41,7 +31,7 @@
 				type: 'POST',
 				data: obj,
 				success: function(resp, status) {
-					if(resp.success) {
+					if (resp.success) {
 						// notify success
 						toastr.success('Contact was added sucessfully');
 					} else if (resp.stakeholder) {
@@ -71,6 +61,24 @@
 			});
 		});
 	};
+
+	/**
+	set stakeholder field if a contact is added from stakeholder detail page
+	*/
+	function setStakeholderOption() {
+		const stakeholder_id = '{{current_stakeholder.id}}';
+		const stakeholder_name = '{{current_stakeholder.name}}';
+		if (stakeholder_id) {
+			stakeSelect2 = $('#stakeholder');
+			var option = new Option(stakeholder_name, +stakeholder_id, true, true);
+			stakeSelect2.append(option).trigger('change');
+			/** 
+			set stakehollder field to readOnly 
+			when Contact is created from Stakeholder details view
+			*/
+			stakeSelect2.attr('readonly', true);
+		}
+	}
 
 	$(() => {
 		saveContact('saveContactAndNew');
@@ -111,13 +119,11 @@
 						<label for="stakeholder">Stakeholder</label>
 						<select class="form-control" id="stakeholder" name="stakeholder">
 							<option value=""></option>
-							{% for item in get_stakeholders %} 
-								{% if item.name %}
-									<option value="{{ item.id }} ">
-										{{ item.name | truncatechars:50 }}
-									</option>
-								{% endif %} 
-							{% endfor %}
+							{% for item in get_stakeholders %} {% if item.name %}
+							<option value="{{ item.id }} ">
+								{{ item.name | truncatechars:50 }}
+							</option>
+							{% endif %} {% endfor %}
 						</select>
 					</div>
 
