@@ -149,6 +149,8 @@ you can add the `-d` flag to run the container in detached mode
 ```bash
 $ docker-compose up -d --build
 
+If docker is exiting due to postgres connection issues. Stop your local postgres instance, then rerun the above command
+
 ```
 
 ### Create Superuser
