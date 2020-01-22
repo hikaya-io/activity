@@ -1,29 +1,30 @@
 .btn-close {
-  color: #25ced1;
+  color: #737581;
   background-color: transparent;
-  border-color: #25ced1;
+  border-color: #ffffff;
 }
 
 .btn-close:focus,
 .btn-close.focus {
-  color: #333;
+  color: #737581;
   background-color: transparent;
-  border-color: #acacac;
+  border-color: #ffffff;
 }
 
 .btn-close:hover {
-  color: #333;
-  background-color: transparent;
-  border-color: #acacac;
+  color: #737581;
+  background-color: #f4f5f7;
+  border-color: #f4f5f7;
 }
 
 .btn-close:active,
 .btn-close.active,
 .open > .dropdown-toggle.btn-close {
   color: #25ced1;
-  background-color: #fff;
+  background-color: #d3f5f5;
   background-image: none;
-  border-color: #25ced1;
+  border-color: #d3f5f5;
+  box-shadow: none;
 }
 
 .btn-close:active:hover,
@@ -36,8 +37,9 @@
 .btn-close.active.focus,
 .open > .dropdown-toggle.btn-close.focus {
   color: #25ced1;
-  background-color: #ffffff;
-  border-color: #25ced1;
+  background-color: #d3f5f5;
+  border-color: #d3f5f5;
+  box-shadow: none;
 }
 
 .btn-close.disabled:hover,
@@ -51,6 +53,7 @@ fieldset[disabled] .btn-close:focus,
 fieldset[disabled] .btn-close.focus {
   background-color: #fff;
   border-color: #25ced1;
+  box-shadow: none;
 }
 
 .btn-close .badge {
@@ -121,29 +124,31 @@ fieldset[disabled] .btn-primary.focus {
 .btn-success {
   color: #fff;
   background-color: #2ac27f;
-  border-color: #27b476;
+  border-color: #2ac27f;
 }
 
 .btn-success:focus,
 .btn-success.focus {
   color: #fff;
-  background-color: #449d44;
-  border-color: #255625;
+  background-color: #2ac27f;
+  border-color: #2ac27f;
+  box-shadow: none;
 }
 
 .btn-success:hover {
   color: #fff;
   background-color: #24a66d;
-  border-color: #219964;
+  border-color: #24a66d;
 }
 
 .btn-success:active,
 .btn-success.active,
 .open > .dropdown-toggle.btn-success {
   color: #fff;
-  background-color: #24a66d;
+  background-color: #1b7950;
   background-image: none;
-  border-color: #219964;
+  border-color: #1b7950;
+  box-shadow: none;
 }
 
 .btn-success:active:hover,
@@ -156,8 +161,9 @@ fieldset[disabled] .btn-primary.focus {
 .btn-success.active.focus,
 .open > .dropdown-toggle.btn-success.focus {
   color: #fff;
-  background-color: #24a66d;
-  border-color: #219964;
+  background-color: #1b7950;
+  border-color: #1b7950;
+  box-shadow: none;
 }
 
 .btn-success.disabled:hover,
@@ -169,12 +175,12 @@ fieldset[disabled] .btn-success:focus,
 .btn-success.disabled.focus,
 .btn-success[disabled].focus,
 fieldset[disabled] .btn-success.focus {
-  background-color: #24a66d;
-  border-color: #219964;
+  background-color: #1b7950;
+  border-color: #1b7950;
 }
 
 .btn-success .badge {
-  color: #24a66d;
+  color: #2ac27f;
   background-color: #fff;
 }
 
@@ -446,31 +452,32 @@ input[type="button"].btn-block {
 }
 
 .btn-outline-success {
-  color: #27b476;
+  color: #2ac27f;
   background-color: transparent;
-  border-color: #27b476;
+  border-color: #2ac27f;
 }
 
 .btn-outline-success:focus,
 .btn-outline-success.focus {
-  color: #fff;
-  background-color: #449d44;
-  border-color: #255625;
+  color: #ffffff;
+  background-color: #2ac27f;
+  border-color: #2ac27f;
 }
 
 .btn-outline-success:hover {
-  color: #fff;
+  color: #ffffff;
   background-color: #24a66d;
-  border-color: #219964;
+  border-color: #24a66d;
 }
 
 .btn-outline-success:active,
 .btn-outline-success.active,
 .open > .dropdown-toggle.btn-outline-success {
-  color: #fff;
-  background-color: #24a66d;
+  color: #ffffff;
+  background-color: #1b7950;
   background-image: none;
-  border-color: #219964;
+  border-color: #1b7950;
+  box-shadow: none;
 }
 
 .btn-outline-success:active:hover,
@@ -482,9 +489,10 @@ input[type="button"].btn-block {
 .btn-outline-success:active.focus,
 .btn-outline-success.active.focus,
 .open > .dropdown-toggle.btn-outline-success.focus {
-  color: #fff;
-  background-color: #24a66d;
-  border-color: #219964;
+  color: #ffffff;
+  background-color: #1b7950;
+  border-color: #1b7950;
+  box-shadow: none;
 }
 
 .btn-outline-success.disabled:hover,
@@ -496,11 +504,12 @@ fieldset[disabled] .btn-outline-success:focus,
 .btn-outline-success.disabled.focus,
 .btn-success[disabled].focus,
 fieldset[disabled] .btn-outline-success.focus {
-  background-color: #24a66d;
-  border-color: #219964;
+  background-color: #1b7950;
+  border-color: #1b7950;
+  box-shadow: none;
 }
 
 .btn-outline-success .badge {
-  color: #24a66d;
-  background-color: #fff;
+  color: #2ac27f;
+  background-color: #ffffff;
 }
