@@ -373,7 +373,7 @@ class Contact(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        return u'%s, %s' % (self.name, self.title)
+        return f'{self.name}'
 
 
 # For programs that have custom dashboards. The default dashboard for all

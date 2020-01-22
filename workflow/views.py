@@ -1436,7 +1436,6 @@ class SiteProfileDelete(DeleteView):
     form_class = SiteProfileForm
 
 
-
 class BenchmarkCreate(AjaxableResponseMixin, CreateView):
     """
     Benchmark Form
@@ -1585,52 +1584,38 @@ class ContactList(ListView):
         })
 
 
-class ContactCreate(CreateView):
+class ContactCreate(GView):
     """
-    Contact Form
+    create Contact View
+    : returns success: Json object { 'success': True/False }
     """
-    model = Contact
-    stakeholder_id = None
-    guidance = None
+    def post(self, request):
+        data = request.POST
 
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="Contact")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(ContactCreate, self).dispatch(request, *args, **kwargs)
+        user = ActivityUser.objects.filter(user=request.user).first()
 
-    def get_context_data(self, **kwargs):
-        context = super(ContactCreate, self).get_context_data(**kwargs)
-        context.update({'id': self.kwargs['id']})
-        context.update({'stakeholder_id': self.kwargs['stakeholder_id']})
-        return context
+        contact = Contact.objects.create(
+            name=data.get('name'),
+            city=data.get('city', ''),
+            address=data.get('address', ''),
+            phone=data.get('phone_number', ''),
+            organization=user.organization,
+            stakeholder_id=data.get('stakeholder'),
+            email=data.get('email', ''),
+        )
 
-    def get_initial(self):
-        country = get_country(self.request.user)[0]
-        initial = {
-            'agreement': self.kwargs['id'],
-            'country': country,
-        }
-
-        return initial
-
-    def form_invalid(self, form):
-
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Contact Created!')
-        latest = Contact.objects.latest('id')
-        redirect_url = '/workflow/contact_update/' + \
-                       self.kwargs['stakeholder_id'] + '/' + str(latest.id)
-        return HttpResponseRedirect(redirect_url)
-
-    form_class = ContactForm
+        if contact:
+            stakeholder_id = data.get('stakeholder', None)
+            if stakeholder_id is not None:
+                try:
+                    stakeholder = Stakeholder.objects.get(pk=int(stakeholder_id))
+                    stakeholder.contact.add(contact)
+                    return JsonResponse({'success': True})
+                except Stakeholder.DoesNotExist:
+                    return JsonResponse(
+                        {'stakeholder': 'Attached stakeholder no-longer exist'}
+                    )
+        return JsonResponse({'success': False})
 
 
 class ContactUpdate(UpdateView):
@@ -1798,9 +1783,17 @@ class StakeholderUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(StakeholderUpdate, self).get_context_data(**kwargs)
-        stakeholder = Stakeholder.objects.get(pk=int(self.kwargs['pk']))
-        context.update({'id': self.kwargs['pk']})
+        stakeholder = Stakeholder.objects.get(pk=int(self.kwargs.get('pk')))
+        context.update({'id': self.kwargs.get('pk',  None)})
         context.update({'stakeholder_name': stakeholder.name})
+        context.update({'current_stakeholder': self.get_object()})
+        context.update(
+            {
+                'get_stakeholders': Stakeholder.objects.filter(
+                    organization=self.request.user.activity_user.organization
+                )
+            }
+        )
         return context
 
     def form_invalid(self, form):
@@ -2604,27 +2597,6 @@ def add_documentation(request):
         'name'), url=data.get('url'), program=program)
 
     if documentation.save():
-        return HttpResponse({'success': True})
-
-    return HttpResponse({'success': False})
-
-
-def add_contact(request):
-    data = request.POST
-
-    user = ActivityUser.objects.filter(user=request.user).first()
-
-    contact = Contact(
-        name=data.get('name'),
-        city=data.get('city'),
-        address=data.get('address'),
-        phone=data.get('phone_number'),
-        organization=user.organization,
-        stakeholder_id=data.get('stakeholder'),
-        email=data.get('email'),
-    )
-
-    if contact.save():
         return HttpResponse({'success': True})
 
     return HttpResponse({'success': False})
