@@ -687,8 +687,8 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .btn-info {
-  background-color: #ff8360;
-  border-color: #ff8360;
+  background-color: #FE5F55;
+  border-color: #FE5F55;
 }
 
 .btn-success {
@@ -702,8 +702,8 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .btn-warning {
-  background-color: #ffbe0b;
-  border-color: #ffbe0b;
+  background-color: #F9C80E;
+  border-color: #F9C80E;
 }
 
 .table > tbody > tr:last-child > td {
