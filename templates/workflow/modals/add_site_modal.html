@@ -90,7 +90,10 @@
 					{% csrf_token %}
 					{% load crispy_forms_tags %}
 					{% crispy form %}
-					<div id="add-site-modal-map" style="height:250px; width:550px; z:1000;"></div>
+					<div class="add-location">
+						<div id="add-site-modal-map"></div>
+					</div> 
+					{% comment %} <div id="add-site-modal-map" style="height:250px; width:550px; z:1000;"></div> {% endcomment %}
 				</div>
 
 				<div class="modal-footer">
