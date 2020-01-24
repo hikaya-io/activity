@@ -10,7 +10,7 @@ from .views import (
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
-    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete,
+    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete,LevelListView,
     DisaggregationTypeDeleteView, DisaggregationLabelDeleteView
 )
 
@@ -116,5 +116,8 @@ urlpatterns = [
     path(
         'disaggregation_label/delete/<int:pk>/',
         DisaggregationLabelDeleteView.as_view(),
-        name='disaggregation_label_delete')
+        name='disaggregation_label_delete'),
+    
+    #levels
+    path('levels', LevelListView.as_view(), name='levels_list'),
 ]
