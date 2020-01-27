@@ -11,7 +11,7 @@ body {
   /* Margin bottom by footer height */
   height: 100%;
   margin-bottom: 60px;
-  font-family: 'Lato', sans-serif !important;
+  font-family: "Lato", sans-serif !important;
   background-color: #f5f5f5;
   font-size: 16px;
   color: #737581;
@@ -63,7 +63,7 @@ button:focus,
 }
 
 .breadcrumb > li + li:before {
-  content: '\203A';
+  content: "\203A";
   font-weight: 900;
 }
 
@@ -71,7 +71,7 @@ button:focus,
   background-color: #fff;
   border: none;
   color: #737581;
-  font-family: 'Inconsolata', monospace !important;
+  font-family: "Inconsolata", monospace !important;
   font-size: 18px;
 }
 
@@ -105,7 +105,7 @@ button:focus,
 .navbar-default .navbar-nav > li.active > a:hover,
 .navbar-default .navbar-nav > li.active > a:focus,
 .navbar-default .navbar-nav .dropdown.open a.dropdown-toggle {
-  color: #fff;
+  color: #25ced1;
   background-color: rgba(0, 0, 0, 0.15);
 }
 
@@ -118,11 +118,17 @@ button:focus,
   margin-top: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 .dropdown-menu > .active > a {
-  background: #25ced1;
+  color: #25ced1;
+  background: #d3f5f5;
+}
+
+.dropdown-menu > .active > a:hover {
+  color: #25ced1;
+  background: #d3f5f5;
 }
 
 #user-initial {
@@ -146,7 +152,7 @@ button:focus,
 
 .dropdown-bubble .dropdown-menu:before,
 .dropdown-bubble .dropdown-menu:after {
-  content: ' ';
+  content: " ";
   display: block;
   border-style: solid;
   border-width: 0 0.5em 0.8em 0.5em;
@@ -184,7 +190,7 @@ button:focus,
 }
 
 .navbar-default .navbar-nav > li > a:hover {
-  border-bottom: 2px solid #9b9b9b;
+  border-bottom: 2px solid #737581;
 }
 
 .navbar-default .navbar-nav > li > a:hover,
@@ -194,14 +200,14 @@ button:focus,
 .navbar-default .navbar-nav > li.active > a:focus,
 .navbar-default .navbar-nav .dropdown.open a.dropdown-toggle {
   background: none;
-  color: #000000;
+  color: #737581;
   border-bottom: 2px solid #25ced1;
 }
 
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus,
 .navbar-default .navbar-nav .dropdown.open a.dropdown-toggle {
-  border-bottom: 2px solid #9b9b9b;
+  border-bottom: 2px solid #737581;
 }
 
 .open>.drop
@@ -223,7 +229,7 @@ nav>div>.container {
 
 #footer > .container {
   padding: 10px;
-  font-family: 'Inconsolata', monospace !important;
+  font-family: "Inconsolata", monospace !important;
 }
 
 .filter {
@@ -256,11 +262,10 @@ nav>div>.container {
 }
 
 .close {
-  font-size: 21px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 400;
   line-height: 0px;
-  color: #000;
-  text-shadow: 0 1px 0 #fff;
+  text-shadow: none;
 }
 
 .actions > span {
@@ -269,11 +274,43 @@ nav>div>.container {
 
 .modal-header .close {
   width: 30px;
-  background: #808080;
   height: 30px;
-  border-radius: 50%;
+  border-radius: 10%;
   display: flex;
   justify-content: center;
+  color: #737581;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.close:hover {
+  color: #737581;
+  background-color: #f4f5f7;
+  border-color: #f4f5f7;
+}
+
+.close:active,
+.close.active,
+.open > .dropdown-toggle.close {
+  color: #737581;
+  background-color: #e1e1e1;
+  background-image: none;
+  border-color: #e1e1e1;
+}
+
+.close:active:hover,
+.close.active:hover,
+.open > .dropdown-toggle.close:hover,
+.close:active:focus,
+.close.active:focus,
+.open > .dropdown-toggle.close:focus,
+.close:active.focus,
+.close.active.focus,
+.open > .dropdown-toggle.close.focus {
+  color: #737581;
+  background-color: #e1e1e1;
+  border-color: #e1e1e1;
+  box-shadow: none;
 }
 
 .jumbotron.dashboard {
@@ -299,7 +336,7 @@ nav>div>.container {
   left: 0;
   height: 100%;
   width: 100%;
-  background: rgba(255, 255, 255, 0.8) url('../img/ajax-loader.gif') 50% 50%
+  background: rgba(255, 255, 255, 0.8) url("../img/ajax-loader.gif") 50% 50%
     no-repeat;
 }
 
@@ -343,7 +380,7 @@ body.loading .ajax_loading {
 }
 
 .map-marker:after {
-  content: '';
+  content: "";
   width: 10px;
   height: 10px;
   margin: 5px 0 0 5px;
@@ -552,12 +589,12 @@ from being applied when there is no value */
 }
 
 /* turn off arrows from input[type=number] */
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -682,18 +719,19 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .btn-primary {
-  background-color: #25ced1;
-  border-color: #25ced1;
+  color: #737581;
+  background-color: #f4f5f7;
+  border-color: #f4f5f7;
 }
 
 .btn-info {
-  background-color: #ff8360;
-  border-color: #ff8360;
+  background-color: #FE5F55;
+  border-color: #FE5F55;
 }
 
 .btn-success {
-  background-color: #2ac27f;
-  border-color: #2ac27f;
+  background-color: #f4f5f7;
+  border-color: #f4f5f7;
 }
 
 .btn-danger {
@@ -702,8 +740,8 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .btn-warning {
-  background-color: #ffbe0b;
-  border-color: #ffbe0b;
+  background-color: #F9C80E;
+  border-color: #F9C80E;
 }
 
 .table > tbody > tr:last-child > td {
@@ -854,7 +892,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .panel-dashboard .panel-title {
-  font-family: 'lato-light', sans-serif !important;
+  font-family: "lato-light", sans-serif !important;
   font-size: 22px;
   font-weight: 100;
 }
@@ -899,7 +937,7 @@ select[readonly].select2-hidden-accessible
 /*Select2 ReadOnly End*/
 
 .text-filter {
-  font-family: 'lato-light', sans-serif;
+  font-family: "lato-light", sans-serif;
   text-transform: uppercase;
   font-weight: 100;
   font-size: 10px;
@@ -958,6 +996,17 @@ select[readonly].select2-hidden-accessible
   font-size: 12px;
 }
 
+.pagination > .active > a {
+  color: #25ced1;
+  background-color: #d3f5f5;
+  border-color: #e1e1e1;
+}
+
+.pagination > .active > a:focus,
+.pagination > .active > a:hover {
+  background-color: #25ced1;
+  border-color: #e1e1e1;
+}
 div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   padding-top: 6px;
 }
@@ -1080,4 +1129,19 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
 .error-button {
   margin-left: 25%;
   padding: 8px 24px;
+}
+
+/* Location */
+.add-location {
+  height:250px; 
+  width:550px;
+}
+
+#add-site-modal-map {
+  display: flex;
+	position: absolute;
+	width: 95%;
+	height: inherit;
+	justify-content: flex-end;
+	align-items: center;
 }

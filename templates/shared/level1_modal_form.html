@@ -1,12 +1,42 @@
 <script>
   $(document).ready(() => {
+    let startDate = undefined;
+    let endDate = undefined;
+
     $('#sectors').select2({
       theme: 'bootstrap',
       placeholder: 'Select sectors...',
       allowClear: true,
     });
-    $('#startDate').datepicker({ dateFormat: 'dd.mm.yy' });
-    $('#endDate').datepicker({ dateFormat: 'dd.mm.yy' });
+    $('#startDate').datepicker({
+        dateFormat: 'dd.mm.yy',
+        onSelect: function (dateText, inst) {
+          let date = $(this).datepicker('getDate');
+          if (endDate === undefined) {
+              $('#endDate').datepicker('option', 'minDate', date);
+          }
+          startDate = date;
+        }
+    });
+    $('#endDate').datepicker({
+        dateFormat: 'dd.mm.yy',
+        onSelect: function (dateText) {
+          let date = $(this).datepicker('getDate');
+          if (startDate === undefined) {
+              $('#startDate').datepicker('option', 'maxDate', date);
+          }
+          endDate = date;
+        }
+    });
+
+    $('#addProgramModal').on('hidden.bs.modal', function () {
+        $('form#addProgramForm').trigger('reset');
+        startDate = undefined;
+        endDate = undefined;
+        $('#startDate').datepicker('option', 'maxDate', null);
+        $('#endDate').datepicker('option', 'minDate', null);
+
+    });
 
     // show the modal if program modal is set to true
     const url = new URL(window.location.href);
@@ -67,7 +97,7 @@
         },
       });
     });
-  }
+  };
 
   $(function () {
     save('saveAndNew');
@@ -122,7 +152,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-close" data-dismiss="modal">
+        <button type="button" class="btn btn-close" data-dismiss="modal" id="close">
           Close
         </button>
         <button type="submit" class="btn btn-outline-success" id="saveAndNew">
