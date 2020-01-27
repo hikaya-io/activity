@@ -189,7 +189,7 @@ fieldset[disabled] .btn-success.focus {
 
 .btn-info {
   color: #fff;
-  background-color: #FE5F55;
+  background-color: #fe5f55;
   border-color: #fe5c2e;
 }
 
@@ -249,7 +249,7 @@ fieldset[disabled] .btn-info.focus {
 
 .btn-warning {
   color: #fff;
-  background-color: #F9C80E;
+  background-color: #f9c80e;
   border-color: #f7b500;
 }
 
@@ -516,4 +516,20 @@ fieldset[disabled] .btn-outline-success.focus {
 .btn-outline-success .badge {
   color: #25ced1;
   background-color: #fff;
+}
+
+/* for site model active status button */
+.badge {
+  display: inline-block;
+  min-width: 10px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  color: #2ac27f;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-color: #d8f3e7;
+  border-radius: 10px;
 }
