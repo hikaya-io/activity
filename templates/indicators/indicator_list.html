@@ -3,7 +3,37 @@
 
 <script>
   $(document).ready(() => {
-    $('#indicatorsTable').DataTable();
+    const table = $('#indicatorsTable').DataTable();
+
+    function format(indicatorId, programId) {
+          let div = $('<div />');
+          $.ajax({
+            url: `/indicators/collected_data_table/${indicatorId}/${programId}/`,
+            type: 'GET',
+            success: function(result) {
+               div.html(result);
+			},
+			error: (error) => {
+				toastr.error('There was a problem loading the collected data.');
+			}
+          });
+        return div
+    }
+
+    $('#indicatorsTable tbody').on('click', 'td.details-control', function () {
+        let indicatorId = $(this).data('indicator-id');
+        let programId = $(this).data('program-id');
+        let tr = $(this).closest('tr');
+        let row = table.row(tr);
+        if ( row.child.isShown() ) {
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            row.child(format(indicatorId, programId)).show();
+            tr.addClass('shown');
+        }
+    })
   })
 </script>
 
@@ -73,7 +103,7 @@
     {% for indicator in get_indicators %}
     <tbody>
       <tr>
-        <td>
+        <td class="details-control" data-indicator-id="{{ indicator.id }}" data-program-id="{{ program_id }}">
           <span class="expandable collapsed" data-toggle="collapse" href="#row-{{indicator.id}}" aria-expanded="false"
             aria-controls="row-{{indicator.id}}">
             <button class="btn btn-link"><i class="fa fa-angle-right"></i></button>
@@ -118,12 +148,6 @@
 
     <tbody id="row-{{indicator.id}}" class="collapse expanded">
       <tr>
-        <td colspan="6">
-          <div class="text-right">
-            <a href="/indicators/collecteddata_add/{{program_id}}/{{indicator.id}}" role="button"
-              class="btn btn-sm btn-success">Add Collected Data</a>
-          </div>
-        </td>
       </tr>
     </tbody>
     {% endfor %}
