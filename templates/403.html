@@ -1,14 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Addtional Permissions Required{% endblock %}
+{% block title %}Additional Permissions Required{% endblock %}
 
 {% block page_title %}You don't appear to have the proper permissions to access this page.{% endblock page_title %}
 
 {% block content %}
-<p>
-    Please check with your organization or country admin if you think you should have access to this section.
-    <br/>
-    <a href="http://www.hikaya.io">Hikaya</a>
-</p>
-<img src="{{ STATIC_URL }}img/denied.jpg" border="1">
+
+<div class="error-page">
+    <div class="error-page-content">
+        <img src="{{ STATIC_URL }}img/error-strokes.png" class="error-page-image"/>
+        <p class="text-center error-code">403</p>
+        <p class="text-center error-message">You don't have the proper permissions <br /> to access this page. 
+            <br /> Contact your organization or country admin</p>
+        <a href="/dashboard/0/" class="btn btn-success error-button">Go to home page</a>
+    </div>
+</div>
+
 {% endblock content %}
+
+
