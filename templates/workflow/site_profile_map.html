@@ -149,45 +149,29 @@
 
 	let locations = [];
 
-	let marker_nairobi = L.marker([Number('-1.2921'), Number('36.8219')], {
-		draggable:false
-	});
-	marker_nairobi.addTo(map);
-	locations.push(marker_nairobi);
-	marker_nairobi.url = 'https://en.wikipedia.org/wiki/Nairobi'
-	marker_nairobi.on('click', function(){
-		window.location = (this.url);
-	})
+	//for each site we create a marker, add it to the map and a list
+	{% for site in get_site_profile %}
+		let marker{{ forloop.counter0 }} = L.marker([Number('{{site.latitude}}'), Number('{{site.longitude}}')], {
+				draggable:false
+		});
 
-	let marker_berlin = L.marker([Number('52.5200'), Number('13.4050')], {
-		draggable:false
-	});
-	marker_berlin.addTo(map);
-	locations.push(marker_berlin);
-	marker_berlin.url = 'https://en.wikipedia.org/wiki/Berlin'
-	marker_berlin.on('click', function(){
-		window.location = (this.url);
-	})
+		marker{{ forloop.counter0 }}.url = '/workflow/siteprofile_update/{{ site.id }}/';
+		marker{{ forloop.counter0 }}.on('click', function(){
+			window.location.pathname = (this.url);
+		});
 
-	// for each site we create a marker, add it to the map and a list
-	// {% for site in get_site_profile %}
-	// 	let marker{{ forloop.counter0 }} = L.marker([Number('{{site.latitude}}'), Number('{{site.longitude}}')], {
-	// 			draggable:false
-	// 	});
-	// 	marker{{ forloop.counter0 }}.url = 'www.google.com'
-	// 	marker{{ forloop.counter0 }}.addTo(map);
-	// 	marker{{ forloop.counter0 }}.on('click', function(){
-	// 		window.location = (this.url);
-	// 	});
-	// 	locations.push(marker{{ forloop.counter0 }})
-	// {% endfor %}
+		marker{{ forloop.counter0 }}.addTo(map);
+		locations.push(marker{{ forloop.counter0 }})
+	{% endfor %}
 
 	locations = [...locations];
+
+	// we use the list of site markers to autozoom the map
+	// (featureGroup leaflet.js)
 
 	// this check will catch empty lists that cause the following function
 	// to break the rendering of the map
 	if (locations !== undefined || locations.length != 0) {
-		// we use the list of site markers to autozoom the map
 		let group = new L.featureGroup(
 			locations
 		);
