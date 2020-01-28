@@ -373,7 +373,7 @@ class Contact(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        return u'%s, %s' % (self.name, self.title)
+        return f'{self.name}'
 
 
 # For programs that have custom dashboards. The default dashboard for all
@@ -760,11 +760,11 @@ class SiteProfile(models.Model):
         "Administrative Level 4", help_text="", max_length=255, null=True,
         blank=True)
     latitude = models.DecimalField(
-        "Latitude (Decimal Coordinates)", decimal_places=16, max_digits=25,
-        default=Decimal("0.00"))
+        "Latitude", decimal_places=16, max_digits=25,
+        default=Decimal("0.00"), null=True, blank=True)
     longitude = models.DecimalField(
-        "Longitude (Decimal Coordinates)", decimal_places=16, max_digits=25,
-        default=Decimal("0.00"))
+        "Longitude", decimal_places=16, max_digits=25,
+        default=Decimal("0.00"), null=True, blank=True)
     status = models.BooleanField("Site Active", default=True)
     approval = models.CharField(
         "Approval", default="in progress", max_length=255, blank=True,

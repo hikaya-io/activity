@@ -136,50 +136,46 @@
 </div>
 
 <script>
-  function initMap() {
-  	// The map, centered at Uluru
-  	var map = new google.maps.Map(document.getElementById('map'), {
-  		zoom: 3,
-        center: locations[0] ? locations[0] : { lat: 0, lng: 0 }
-  	});
+	let map = L.map('map').setView([-1.2921, 36.8219], 13);
+	let my_divicon = L.divIcon({
+			className: 'arrow_box'
+	});
 
-  	// Create an array of alphabetical characters used to label the markers.
-  	var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	L.tileLayer(
+		'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+			'attribution': 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
+		}
+	).addTo(map);
 
-  	// Add some markers to the map.
-  	// Note: The code uses the JavaScript Array.prototype.map() method to
-  	// create an array of markers based on a given "locations" array.
-  	// The map() method here has nothing to do with the Google Maps API.
-  	var markers = locations.map(function(location, i) {
-  		return new google.maps.Marker({
-  			position: location,
-  			label: labels[i % labels.length],
-  		});
-  	});
+	let locations = [];
 
-  	// Add a marker clusterer to manage the markers.
-  	var markerCluster = new MarkerClusterer(map, markers, {
-  		imagePath:
-  			'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
-  	});
-     }
-        var locations = [];
-        {% for site in get_site_profile %}
-         locations.push({lat: Number('{{site.latitude}}'), lng: Number('{{site.longitude}}')})
-        {% endfor %}
+	//for each site we create a marker, add it to the map and a list
+	{% for site in get_site_profile %}
+		let marker{{ forloop.counter0 }} = L.marker([Number('{{site.latitude}}'), Number('{{site.longitude}}')], {
+				draggable:false
+		});
 
-         locations = [...locations];
+		marker{{ forloop.counter0 }}.url = '/workflow/siteprofile_update/{{ site.id }}/';
+		marker{{ forloop.counter0 }}.on('click', function(){
+			window.location.pathname = (this.url);
+		});
+
+		marker{{ forloop.counter0 }}.addTo(map);
+		locations.push(marker{{ forloop.counter0 }})
+	{% endfor %}
+
+	locations = [...locations];
+
+	// we use the list of site markers to autozoom the map
+	// (featureGroup leaflet.js)
+
+	// this check will catch empty lists that cause the following function
+	// to break the rendering of the map
+	if (locations !== undefined || locations.length != 0) {
+		let group = new L.featureGroup(
+			locations
+		);
+		map.fitBounds(group.getBounds());
+	}
 </script>
-<!--Load the API from the specified URL
-* The async attribute allows the browser to render the page while the API loads
-* The key parameter will contain your own API key (which is not needed for this tutorial)
-* The callback parameter executes the initMap() function
--->
-<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-<script
-  async
-  defer
-  src="https://maps.googleapis.com/maps/api/js?key={{map_api_key}}&callback=initMap"
-></script>
 {% endblock %}
-

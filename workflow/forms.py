@@ -1544,22 +1544,31 @@ class StakeholderForm(forms.ModelForm):
         self.helper.add_input(
             Submit('submit', 'Save', css_class='btn-success')),
 
-        pkval = kwargs['instance'].pk if kwargs['instance'] else 0
         self.helper.layout = Layout(
 
             HTML("""<br/>"""),
             TabHolder(
                 Tab('Details',
-                    Fieldset('Details',
-                             'name', 'type', 'contact',
-                             HTML("""<a onclick="window.open('
-                             /workflow/contact_add/%s/0/').focus();">
-                                    Add New Contact</a>""" % pkval), 'country',
-                             'sectors',
-                             PrependedText('stakeholder_register', ''),
-                             'formal_relationship_document',
-                             'vetting_document', 'notes',
-                             ),
+                    Fieldset(
+                        'Details',
+                        'name',
+                        'type',
+                        'contact',
+                        HTML("""
+                                <a 
+                                    role="button" 
+                                    class="btn btn-sm btn-default"
+                                    href="" data-toggle="modal" 
+                                    data-target="#addContactModal"
+                                    >
+                                    <i class="fa fa-plus"></i>&nbsp;&nbsp;Contact</a>
+                                """),
+                        'country',
+                        'sectors',
+                        PrependedText('stakeholder_register', ''),
+                        'formal_relationship_document',
+                        'vetting_document', 'notes',
+                        ),
                     ),
 
                 Tab('Approvals',
@@ -1587,6 +1596,9 @@ class StakeholderForm(forms.ModelForm):
         self.fields[
             'vetting_document'].queryset = Documentation.objects.filter(
             program__organization=self.request.user.activity_user.organization)
+        self.fields['contact'].queryset = Contact.objects.filter(
+            organization=self.request.user.activity_user.organization
+        )
 
 
 class FilterForm(forms.Form):

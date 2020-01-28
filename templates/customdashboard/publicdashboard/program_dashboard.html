@@ -21,10 +21,10 @@
   rel="stylesheet"
   href="{{ STATIC_URL }}publicdashboard/css/leaflet-sidebar.css"
 />
-<link
+<!-- <link
   rel="stylesheet"
   href="{{ STATIC_URL }}js/highcharts/api/css/font-awesome.css"
-/>
+/> -->
 <link
   href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.10.4.min.css"
   rel="stylesheet"
@@ -541,7 +541,7 @@
   <div>{% include "customdashboard/charts/public_Kpi_bar.html" %}</div>
   <div>{% include "customdashboard/charts/public_horizontal_bar.html" %}</div>
   <div>{% include "customdashboard/charts/line_graph_with_slider.html" %}</div>
-  <div>{% include "customdashboard/charts/indicator_sparklines.html" %}</div>
+  <!-- <div>{# include "customdashboard/charts/indicator_sparklines.html" #}</div> -->
   <div>
     {% include "customdashboard/charts/evidence_line_donought_chart.html" %}
   </div>
@@ -550,7 +550,7 @@
       STATIC_URL
     }}publicdashboard/js/vendor/jquery-1.11.1.min.js"></script>
   <script src="{{ STATIC_URL }}publicdashboard/js/plugins.js"></script>
-  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
 
   <div id="result"></div>
 </div>

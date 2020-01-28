@@ -117,13 +117,19 @@ If you're using more then one settings file change manage.py to point to local o
 $ python manage.py runserver
 ```
 
-This will run the server on http://127.0.0.1:8000. You can configure the host and port as needed.
+This will run the server on http://127.0.0.1:8000 (Don't open the link in your browser yet). You can configure the host and port as needed.
 
 ### Create an activity user
 
 Once you have created your user account, you need to create an `activity user` that is linked to this user account.
 
 Go to http://127.0.0.1:8000/admin and sign in using your superuser account. Under the `workflow` model, you'll find `activity user`. Create a new activity user making sure you associate your user under the `user` attribute.
+### Open the dashboard
+
+Before launching the dashboard on http://127.0.0.1:8000, you need to log out of the admin account first.
+This is to avoid an `AttributeError`. 
+
+Use the same admin credentials on the dashboard login page.
 
 ## Set up locally using Docker
 Ensure docker is installed on your local computer!
@@ -142,6 +148,8 @@ you can add the `-d` flag to run the container in detached mode
 ### Run and Build at the same time
 ```bash
 $ docker-compose up -d --build
+
+If docker is exiting due to postgres connection issues. Stop your local postgres instance, then rerun the above command
 
 ```
 

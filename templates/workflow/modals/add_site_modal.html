@@ -33,7 +33,7 @@
                         $('#addLocationModal').modal('hide');
                         // reset form
                         $('#addLocationForm').trigger('reset');
-    
+
                         const urlWithoutQueryString = window.location.href.split('?')[0];
                         if (buttonId === 'saveLocationAndNew') {
                             window.location.replace(`${urlWithoutQueryString}?quick-modal=true`);
@@ -73,7 +73,7 @@
 				<style>
 					.mw-wrap{
 						width: 100% !important;
-						min-width: 400px !important; 
+						min-width: 400px !important;
 					}
 					.mw-coordinates-overlay {
 						width: 200px !important;
@@ -86,12 +86,16 @@
 					</button>
 					<h4 class="modal-title" id="addLocationModalLabel">Add Location</h4>
 				</div>
-				<div class="modal-body">					
+				<div class="modal-body">
 					{% csrf_token %}
 					{% load crispy_forms_tags %}
 					{% crispy form %}
-
+					<div class="add-location">
+						<div id="add-site-modal-map"></div>
+					</div> 
+					{% comment %} <div id="add-site-modal-map" style="height:250px; width:550px; z:1000;"></div> {% endcomment %}
 				</div>
+
 				<div class="modal-footer">
 					<button type="button" class="btn btn-close" data-dismiss="modal">
 						Close
@@ -107,4 +111,41 @@
 			</div>
 		</div>
 	</div>
+	<script>
+		let map = L.map('add-site-modal-map').setView([-1.2921, 36.8219], 13);
+		let my_divicon = L.divIcon({
+				className: 'arrow_box'
+		});
+		let marker = L.marker([-1.2921, 36.8219], {
+				draggable:true
+		});
+
+		// L.tileLayer(
+		//  'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		//    'attribution': 'Map data, copyright <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+		//  }
+		// ).addTo(map);
+
+		L.tileLayer(
+			'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+				'attribution': 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
+			}
+		).addTo(map);
+
+		function addToTextBox(lt,ln){
+				document.getElementById('id_latitude').value = (lt).toFixed(7);
+				document.getElementById('id_longitude').value = (ln).toFixed(7);
+		}
+
+		// adds listener for drag end event
+		marker.on('dragend', function(event){
+				let marker = event.target;
+				let location = marker.getLatLng();
+				let lat = location.lat;
+				let lon = location.lng;
+				addToTextBox(lat,lon);
+		});
+
+		marker.addTo(map);
+	</script>
 </form>
