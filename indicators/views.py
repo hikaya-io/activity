@@ -2046,3 +2046,20 @@ class LevelListView(ListView):
             'active': ['indicators'],
         }
         return render(request, 'components/levels.html', context)
+
+ 
+class LevelCreateView(CreateView):
+    """Veiw class to create a level"""
+    model = Level
+    template_name = 'components/modal/add_level_modal.html'
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        level = Level(
+            name=data.get('level_name'),
+            description=data.get('description')
+        )
+        level.save()
+        if (data.get('saveLevelAndNew')):
+            return HttpResponseRedirect('/indicators/levels?quick-action=true')
+        return HttpResponseRedirect('/indicators/levels')
