@@ -2034,3 +2034,15 @@ def objective_delete(request, pk):
     objective = StrategicObjective.objects.get(pk=int(pk))
     objective.delete()
     return redirect('/workflow/objectives')
+
+
+class LevelListView(ListView):
+    """Veiw class to get a list of levels"""
+
+    def get(self, request, *args, **kwargs):
+        get_all_levels = Level.objects.all()
+        context = {
+            'get_all_levels': get_all_levels,
+            'active': ['indicators'],
+        }
+        return render(request, 'components/levels.html', context)
