@@ -4,6 +4,14 @@ $(document).ready(function() {
 	let validInputs = [];
 	validate();
 
+	if ($('#register_email_address').val()) {
+		validInputs.indexOf('email') === -1 ? validInputs.push('email') : '';
+	}
+
+	if ($('#register_username').val()) {
+		validInputs.indexOf('username') === -1 ? validInputs.push('username') : '';
+	}
+
 	// required fields
 	$('#register_first_name').on('input focus keyup', function() {
 		const firstName = $(this);
