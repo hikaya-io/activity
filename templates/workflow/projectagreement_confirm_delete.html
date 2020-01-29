@@ -20,7 +20,7 @@
 				<div class="text-right">
 					<button 
 						type="submit"
-						class="btn btn-secondary" 
+						class="btn btn-close" 
 						onclick="deleteCancel()">
 						Cancel
 					</button>
@@ -52,7 +52,7 @@
 	 * Redirect to the page to delete the item
 	 **/
 	function deleteItem() {
-		toastr.success('You have successfully delete this Item');
+		toastr.success('You have successfully delete this item');
 		setTimeout(() => {
 			window.location.href = `/workflow/projectagreement_delete/${itemId}/`;
 		}, 2000);

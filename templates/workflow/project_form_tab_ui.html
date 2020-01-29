@@ -1,79 +1,136 @@
 {% extends "base.html" %} {% block content %}
 
 <div class="container">
-    {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li><a href="/">My Dashboard</a></li>
-        <li><a href="/workflow/level2/list/0/none/">{{user.activity_user.organization.level_2_label}}</a></li>
-        <li class="active">{{ project.project_name }}</li>
-    </ul>
-    {% endblock %}
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="/">My Dashboard</a></li>
+    <li>
+      <a href="/workflow/level2/list/0/none/"
+        >{{user.activity_user.organization.level_2_label}}</a
+      >
+    </li>
+    <li class="active">{{ project.project_name }}</li>
+  </ul>
+  {% endblock %}
 
-    <div class="sub-navigation">
-        <div class="sub-navigation-header">
-            <h4 class="page-title">
-                {{ project.project_name }}
-            </h4>
-        </div>
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+        {{ project.project_name }}
+      </h4>
+    </div>
+  </div>
+
+  <form method="POST" class="bg-white p-10 pt-0">
+    {% csrf_token %}
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active">
+        <a
+          href="#project_details"
+          aria-controls="project_details"
+          role="tab"
+          data-toggle="tab"
+          >Details</a
+        >
+      </li>
+      <li role="presentation">
+        <a
+          href="#project_financials"
+          aria-controls="project_financials"
+          role="tab"
+          data-toggle="tab"
+          >Financials</a
+        >
+      </li>
+      <li role="presentation">
+        <a
+          href="#project_components"
+          aria-controls="project_components"
+          role="tab"
+          data-toggle="tab"
+          >Components</a
+        >
+      </li>
+      <li role="presentation">
+        <a
+          href="#project_locations"
+          aria-controls="project_locations"
+          role="tab"
+          data-toggle="tab"
+          >Locations</a
+        >
+      </li>
+
+      <li role="presentation">
+        <a
+          href="#project_stakeholders"
+          aria-controls="project_stakeholders"
+          role="tab"
+          data-toggle="tab"
+          >Stakeholders</a
+        >
+      </li>
+
+      <li role="presentation">
+        <a
+          href="#project_rationale"
+          aria-controls="project_rationale"
+          role="tab"
+          data-toggle="tab"
+          >Rationale</a
+        >
+      </li>
+
+      <li role="presentation">
+        <a
+          href="#project_approval"
+          aria-controls="project_approval"
+          role="tab"
+          data-toggle="tab"
+          >Approval</a
+        >
+      </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="project_details">
+        {% include "./project-form-sections/project_details.html" %}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="project_financials">
+        {% include "./project-form-sections/project_financials.html" %}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="project_components">
+        {% include "./project-form-sections/project_components.html" %}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="project_locations">
+        {% include "./project-form-sections/project_locations.html" %}
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="project_stakeholders">
+        {% include "./project-form-sections/project_stakeholders.html" %}
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="project_rationale">
+        {% include "./project-form-sections/project_rationale.html" %}
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="project_approval">
+        {% include "./project-form-sections/project_approval.html" %}
+      </div>
     </div>
 
-    <form method="POST" class="bg-white p-10 pt-0">
-        {% csrf_token %}
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#project_details" aria-controls="project_details" role="tab"
-                    data-toggle="tab">Details</a></li>
-            <li role="presentation"><a href="#project_financials" aria-controls="project_financials" role="tab"
-                    data-toggle="tab">Financials</a>
-            </li>
-            <li role="presentation"><a href="#project_components" aria-controls="project_components" role="tab"
-                    data-toggle="tab">Components</a></li>
-            <li role="presentation"><a href="#project_locations" aria-controls="project_locations" role="tab"
-                    data-toggle="tab">Locations</a></li>
-
-            <li role="presentation"><a href="#project_stakeholders" aria-controls="project_stakeholders" role="tab"
-                    data-toggle="tab">Stakeholders</a></li>
-
-            <li role="presentation"><a href="#project_rationale" aria-controls="project_rationale" role="tab"
-                    data-toggle="tab">Rationale</a></li>
-
-            <li role="presentation"><a href="#project_approval" aria-controls="project_approval" role="tab"
-                    data-toggle="tab">Approval</a></li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="project_details">
-                {% include "./project-form-sections/project_details.html" %}
-            </div>
-            <div role="tabpanel" class="tab-pane" id="project_financials">
-                {% include "./project-form-sections/project_financials.html" %}
-            </div>
-            <div role="tabpanel" class="tab-pane" id="project_components">
-                {% include "./project-form-sections/project_components.html" %}
-            </div>
-            <div role="tabpanel" class="tab-pane" id="project_locations">
-                {% include "./project-form-sections/project_locations.html" %}
-            </div>
-
-            <div role="tabpanel" class="tab-pane" id="project_stakeholders">
-                {% include "./project-form-sections/project_stakeholders.html" %}
-            </div>
-
-            <div role="tabpanel" class="tab-pane" id="project_rationale">
-                {% include "./project-form-sections/project_rationale.html" %}
-            </div>
-
-            <div role="tabpanel" class="tab-pane" id="project_approval">
-                {% include "./project-form-sections/project_approval.html" %}
-            </div>
-        </div>
-
-        <div class="form-group text-right">
-            <a href="/workflow/level2/list/0/none/" role="button" class="btn btn-close">Close</a>
-            <button type="submit" class="btn btn-success">Save Changes</button>
-        </div>
-    </form>
+    <div class="form-group text-right">
+      <a
+        href="/workflow/level2/list/0/none/"
+        role="button"
+        class="btn btn-close"
+        >Cancel</a
+      >
+      <button type="submit" class="btn btn-success">Save</button>
+    </div>
+  </form>
 </div>
 
 {% endblock %}
