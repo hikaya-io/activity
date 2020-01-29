@@ -19,7 +19,7 @@
         <div class="btn-group" role="group">
           <a
             type="button"
-            class="btn btn-primary btn-sm"
+            class="btn btn-login btn-sm"
             href="/accounts/register/user/none/"
             ><strong>Register</strong></a
           >
@@ -33,7 +33,11 @@
         </div>
         <div class="panel-body">
           <div class="auth-form">
-            <form action="/accounts/register/user/{{invite_uuid}}/" method="POST" id="registerForm">
+            <form
+              action="/accounts/register/user/{{invite_uuid}}/"
+              method="POST"
+              id="registerForm"
+            >
               {% csrf_token %}
               <div class="row">
                 <div class="col-md-6 form-group" id="div_first_name">
@@ -70,13 +74,13 @@
                   </span>
                   {% if message_username %}
                   <script>
-                    $('#div_username')
-                      .removeClass('has-success')
-                      .addClass('has-error');
-                    $('#usernameHelpBlock')
-                      .removeClass('hikaya-hide')
-                      .addClass('hikaya-show')
-                      .text('{{ message_username }}');
+                    $("#div_username")
+                      .removeClass("has-success")
+                      .addClass("has-error");
+                    $("#usernameHelpBlock")
+                      .removeClass("hikaya-hide")
+                      .addClass("hikaya-show")
+                      .text("{{ message_username }}");
                   </script>
 
                   {% endif %}
@@ -109,13 +113,13 @@
                   >
                   {% if message_email %}
                   <script>
-                    $('#div_email_address')
-                      .removeClass('has-success')
-                      .addClass('has-error');
-                    $('#emailHelpBlock')
-                      .removeClass('hikaya-hide')
-                      .addClass('hikaya-show')
-                      .text('{{ message_email }}');
+                    $("#div_email_address")
+                      .removeClass("has-success")
+                      .addClass("has-error");
+                    $("#emailHelpBlock")
+                      .removeClass("hikaya-hide")
+                      .addClass("hikaya-show")
+                      .text("{{ message_email }}");
                   </script>
 
                   {% endif %}
