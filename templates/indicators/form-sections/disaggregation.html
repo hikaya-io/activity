@@ -1,42 +1,6 @@
 {% load crispy_forms_tags %}
 
-<div class="row">
-  <div class="col-md-4">
-    <div class="form-group">
-      {{ form.level | as_crispy_field }}
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="form-group">
-      {{ form.number | as_crispy_field }}
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="form-group">
-      {{ form.source | as_crispy_field }}
-    </div>
-  </div>
-</div>
-
-<div class="form-group">
-  {{ form.definition | as_crispy_field }}
-</div>
-
-<div class="form-group">
-  {{ form.justification | as_crispy_field }}
-</div>
-
-<div class="form-group">
-    {{ form.indicator_type | as_crispy_field }}
-</div>
-
-<div class="form-group">
-  {{ form.key_performance_indicator | as_crispy_field }}
-</div>
-
-{% comment %} <input type="hidden" name="disaggregation_types" id="id_disaggregation_types" />
+<input type="hidden" name="disaggregation_types" id="id_disaggregation_types" />
 
 <hr />
 
@@ -56,13 +20,13 @@
       </small>
     </h4>
   </div>
-</div> {% endcomment %}
+</div>
 
-{% comment %} <div class="row">
+<div class="row">
   <div class="col-md-6" id="id_disaggregations"></div>
-</div> {% endcomment %}
+</div>
 
-{% comment %} <script>
+<script>
   let countDisaggTypes = 0;
   let countLabels = 0;
 
@@ -328,4 +292,4 @@
       removeFromTemplate();
     }
   }
-</script> {% endcomment %}
+</script>
