@@ -38,7 +38,8 @@
               <option value=""></option>
             </select>
             <span id="emailsHelpBlock" class="help-block">
-              Multiple email addresses can be added. To save, click ‘ENTER’ once you are done typing an email address.
+              Multiple email addresses can be added. To save, click ‘ENTER’ once
+              you are done typing an email address.
             </span>
           </div>
 
@@ -51,18 +52,18 @@
               required
             >
               <option value=""></option>
-              {% for item in organizations.all %} 
-                {% if item.name %}
-                <option value="{{ item.id }}">{{ item.name | truncatechars:50 }}</option>
-                {% endif %}
-              {% endfor %}
+              {% for item in organizations.all %} {% if item.name %}
+              <option value="{{ item.id }}"
+                >{{ item.name | truncatechars:50 }}</option
+              >
+              {% endif %} {% endfor %}
             </select>
           </div>
         </div>
 
         <div class="modal-footer">
           <button type="reset" class="btn btn-close" data-dismiss="modal">
-            Close
+            Cancel
           </button>
           <button type="submit" class="btn btn-success" id="inviteUser">
             Invite

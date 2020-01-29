@@ -739,6 +739,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .btn-success {
   background-color: #25ced1;
   border-color: #25ced1;
+  margin-left: 5px;
 }
 
 .btn-danger {
