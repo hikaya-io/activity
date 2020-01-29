@@ -1567,7 +1567,7 @@ class StakeholderForm(forms.ModelForm):
                         'sectors',
                         PrependedText('stakeholder_register', ''),
                         'formal_relationship_document',
-                        'vetting_document', 'notes',
+                        'vetting_document', 'notes', 'organization',
                         ),
                     ),
 
@@ -1599,6 +1599,7 @@ class StakeholderForm(forms.ModelForm):
         self.fields['contact'].queryset = Contact.objects.filter(
             organization=self.request.user.activity_user.organization
         )
+        self.fields['organization'].widget = forms.HiddenInput()
 
 
 class FilterForm(forms.Form):
