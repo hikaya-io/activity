@@ -551,12 +551,9 @@ class IndicatorUpdate(UpdateView):
         # for periodic_target_value in periodic_targets:
 
         generated_targets = []
-        # existing_target_frequency = indicator.target_frequency
-        # new_target_frequency = form.cleaned_data.get('target_frequency', None)
-        # lop = form.cleaned_data.get('lop_target', None)
-
-        fields_to_watch = {'indicator_type', 'level', 'name',
-                           'number', 'sector'}
+        fields_to_watch = set(
+            ['indicator_type', 'level', 'name', 'number', 'sector']
+        )
         changed_fields = set(form.changed_data)
         if fields_to_watch.intersection(changed_fields):
             update_indicator_row = '1'
@@ -573,9 +570,9 @@ class IndicatorUpdate(UpdateView):
         disaggs = data.get("disaggregation_types", None)
         if disaggs is not None and disaggs != '':
             for disagg in json.loads(disaggs):
-                if disagg['id'] is None:
+                if disagg.get('id', None) is None:
                     disagg_type = DisaggregationType.objects.create(
-                        disaggregation_type=disagg['type'], id=int(disagg['id'])
+                        disaggregation_type=disagg['type']
                     )
                 else:
                     disagg_type = DisaggregationType.objects.filter(id=int(disagg['id'])).first()
