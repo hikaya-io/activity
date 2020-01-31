@@ -11,11 +11,11 @@ body {
   /* Margin bottom by footer height */
   height: 100%;
   margin-bottom: 60px;
-  font-family: "Lato", sans-serif !important;
+  font-family: "Lato", system-ui, sans-serif !important;
   background-color: #f5f5f5;
-  font-size: 16px;
+  font-size: 14px;
   color: #737581;
-  font-weight: 100;
+  font-weight: 400;
 }
 
 #footer {
@@ -283,19 +283,26 @@ nav>div>.container {
   border-color: transparent;
 }
 
-.close:hover {
+.close:focus,
+.close.focus {
   color: #737581;
   background-color: #f4f5f7;
   border-color: #f4f5f7;
 }
 
+.close:hover {
+  color: #737581;
+  background-color: #e1e1e1;
+  border-color: #e1e1e1;
+}
+
 .close:active,
 .close.active,
 .open > .dropdown-toggle.close {
-  color: #737581;
-  background-color: #e1e1e1;
+  color: #25ced1;
+  background-color: #d3f5f5;
   background-image: none;
-  border-color: #e1e1e1;
+  border-color: #d3f5f5;
 }
 
 .close:active:hover,
@@ -307,9 +314,9 @@ nav>div>.container {
 .close:active.focus,
 .close.active.focus,
 .open > .dropdown-toggle.close.focus {
-  color: #737581;
-  background-color: #e1e1e1;
-  border-color: #e1e1e1;
+  color: #25ced1;
+  background-color: #d3f5f5;
+  border-color: #d3f5f5;
   box-shadow: none;
 }
 
@@ -719,29 +726,32 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .btn-primary {
-  color: #737581;
-  background-color: #f4f5f7;
-  border-color: #f4f5f7;
+  color: #ffffff;
+  background-color: #25ced1;
+  border-color: #25ced1;
 }
 
 .btn-info {
-  background-color: #FE5F55;
-  border-color: #FE5F55;
+  background-color: #fe5f55;
+  border-color: #fe5f55;
 }
 
 .btn-success {
-  background-color: #f4f5f7;
-  border-color: #f4f5f7;
+  background-color: #25ced1;
+  border-color: #25ced1;
+  margin-left: 5px;
 }
 
 .btn-danger {
   background-color: #e52c2c;
   border-color: #e52c2c;
+  margin-left: 5px;
 }
 
 .btn-warning {
-  background-color: #F9C80E;
-  border-color: #F9C80E;
+  background-color: #f9c80e;
+  border-color: #f9c80e;
+  margin-left: 5px;
 }
 
 .table > tbody > tr:last-child > td {
@@ -1096,8 +1106,8 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
 
 /* Error Pages*/
 .error-page {
-  background: #F5F5F5;
-  display: flex; 
+  background: #f5f5f5;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -1133,15 +1143,15 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
 
 /* Location */
 .add-location {
-  height:250px; 
-  width:550px;
+  height: 250px;
+  width: 550px;
 }
 
 #add-site-modal-map {
   display: flex;
-	position: absolute;
-	width: 95%;
-	height: inherit;
-	justify-content: flex-end;
-	align-items: center;
+  position: absolute;
+  width: 95%;
+  height: inherit;
+  justify-content: flex-end;
+  align-items: center;
 }

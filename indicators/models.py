@@ -3,6 +3,7 @@
 
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 
 import uuid
 from simple_history.models import HistoricalRecords
@@ -107,6 +108,9 @@ class Level(models.Model):
         if self.create_date is None:
             self.create_date = datetime.now()
         super(Level, self).save()
+    
+    def get_absolute_url(self):
+        return reverse('levels_list')
 
 
 class DisaggregationType(models.Model):
