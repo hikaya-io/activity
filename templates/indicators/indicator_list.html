@@ -1,5 +1,6 @@
 {% extends "base.html" %} {% block content %}
 {% include './add_indicator_modal.html' %}
+{% include './add_collecteddata_modal.html' %}
 
 <script>
   $(document).ready(() => {
@@ -35,6 +36,15 @@
         }
     })
   })
+
+  $(document).on("click", ".collectdata", function () {
+    var setTarget = $(this).data('settarget');
+    var indicatorId = $(this).data('indicator');
+    var programId = $(this).data('program')
+    $("#id_target").val(setTarget);
+    $("#id_periodic_target").attr('data-tag',indicatorId );
+    $("#id_periodic_target").attr('data-tag2',programId );
+})
 </script>
 
 <div class="container">
