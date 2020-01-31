@@ -174,8 +174,8 @@
         {% endif %}
     </table>
     <div class="text-right">
-        <a href="/indicators/collecteddata_add/{{ program_id }}/{{ indicator.id }}" role="button"
-           class="btn btn-sm btn-success">Add Collected Data</a>
+        <button data-toggle="modal" data-settarget="{{indicator.lop_target}}" data-target="#addCollectedDataModal" data-program="{{program_id}}" data-indicator="{{indicator.id}}" role="button"
+        class="btn btn-sm btn-success collectdata">Add Collected Data</button>
     </div>
 {% else %}
     <table class="table table-condensed table-bordered" id="">
@@ -191,7 +191,7 @@
         </tr>
     </table>
     <div class="text-right">
-        <a href="/indicators/collecteddata_add/{{ program_id }}/{{ indicator.id }}" role="button"
-           class="btn btn-sm btn-success">Add Collected Data</a>
+            <button data-toggle="modal" data-settarget="{{indicator.lop_target}}" data-target="#addCollectedDataModal" data-program="{{program_id}}" data-indicator="{{indicator.id}}" role="button"
+              class="btn btn-sm btn-success collectdata">Add Collected Data</button>
     </div>
 {% endif %}
