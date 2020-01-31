@@ -148,7 +148,9 @@ def get_nav_links(nav):
          'link': '/accounts/admin/configurations'},
         {'label': 'People', 'status': '',
          'link': '/accounts/admin/users/all/all/'},
-        {'label': 'Usage', 'status': '', 'link': '/accounts/admin_dashboard'}
+        {'label': 'Usage', 'status': '', 'link': '/accounts/admin_dashboard'},
+        {'label': 'Component', 'status': '', 
+         'link': '/accounts/admin/component_settings'}
     ]
     for item in nav_links:
         if item['label'] == nav:

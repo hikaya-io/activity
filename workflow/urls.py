@@ -20,7 +20,7 @@ from .views import (
     save_bookmark, district_json, country_json, export_sites_list, ReportData, DocumentationAgreementDelete,
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
-    FundCodeCreate,
+    FundCodeCreate, ProfileTypeCreate,
 )
 from django.urls import re_path, path
 
@@ -211,5 +211,8 @@ urlpatterns = [
         name='service_json'),
     path('new_bookmark/', save_bookmark, name='save_bookmark'),
     path('fund_code/add', FundCodeCreate.as_view(),
-         name='add_fund_code')
+         name='add_fund_code'),
+
+    # profile type
+    path('profile_type/add', ProfileTypeCreate.as_view(), name='add_profile_type')
 ]

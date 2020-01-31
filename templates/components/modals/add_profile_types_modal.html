@@ -1,0 +1,128 @@
+<script>
+  $(document).ready(() => {
+    // show quick add modal if quick-modal to true
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('quick-modal')) {
+      $('#addProfileTypesModal').modal('show');
+    }
+  });
+
+  var saveProfileType = buttonId => {
+    $(`#${buttonId}`).click(e => {
+      e.preventDefault();
+      const formValue = $('#addProfileTypesForm').serializeArray();
+      const obj = {};
+      formValue.forEach(item => {
+        obj[item.name] = item.value;
+      });
+
+      $.ajax({
+        url: "{% url 'add_profile_type' %}",
+        type: 'POST',
+        data: obj,
+        success: function(resp, status) {
+          if (resp.success) {
+            // notify success
+            toastr.success(
+              '{{ user.activity_user.organization.site_label }} Type was added sucessfully',
+            );
+          } else {
+            // Saving failed
+            toastr.error(
+              'The {{ user.activity_user.organization.site_label }} Type was not added',
+              'Failed',
+            );
+          }
+          //close modal
+          $('#addProfileTypesModal').modal('hide');
+          // reset form
+          $('#addProfileTypesModal').trigger('reset');
+
+          const urlWithoutQueryString = window.location.href.split('?')[0];
+          if (buttonId === 'saveProfileTypeAndNew') {
+            window.location.replace(
+              `${urlWithoutQueryString}?quick-modal=true`,
+            );
+          } else {
+            setTimeout(() => {
+              window.location.replace(urlWithoutQueryString);
+            }, 2000);
+          }
+        },
+        error: function(xhr, status, error) {
+          toastr.error(error, 'Failed');
+        },
+      });
+    });
+  };
+
+  $(() => {
+    saveProfileType('saveProfileTypeAndNew');
+    saveProfileType('saveProfileType');
+  });
+</script>
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/admin.js"></script>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="addProfileTypesModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addProgramModalLabel"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="addProgramModalLabel">
+          Add {{ user.activity_user.organization.site_label }} type
+        </h4>
+      </div>
+      <form id="addProfileTypesForm" method="POST">
+        <div class="modal-body">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="profileType"
+              >{{ user.activity_user.organization.site_label }} Type*</label
+            >
+            <input
+              type="text"
+              id="profileType"
+              name="profile"
+              class="form-control"
+              placeholder="{{ user.activity_user.organization.site_label }} Type"
+            />
+          </div>
+        </div>
+      </form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-close" data-dismiss="modal">
+            Close
+            </button>
+            <button
+            type="button"
+            class="btn btn-outline-success"
+            id="saveProfileTypeAndNew"
+            >
+            Save &amp; New
+            </button>
+            <button
+            type="button"
+            class="btn btn-success"
+            id="saveProfileType"
+            >
+            Save
+            </button>
+        </div>
+    </div>
+  </div>
+</div>
