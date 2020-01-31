@@ -11,8 +11,8 @@ from .views import (
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
     objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelListView, 
-    LevelCreateView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, LevelUpdateView,
-    IndicatorTarget,
+    LevelCreateView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, LevelUpdateView,level_delete,
+    IndicatorTarget
 )
 
 urlpatterns = [
@@ -126,5 +126,6 @@ urlpatterns = [
     #levels
     path('levels', LevelListView.as_view(), name='levels_list'),
     path('levels_create', LevelCreateView.as_view(), name='levels_create'),
-    path('levels/<pk>/update',LevelUpdateView.as_view(), name='update_view' )
+    path('levels/<pk>/update',LevelUpdateView.as_view(), name='update_view' ),
+     path('levels/delete/<int:pk>/',level_delete, name='level_delete'),
 ]

@@ -2109,4 +2109,10 @@ class LevelUpdateView(UpdateView):
     model = Level
     form_class = LevelForm
     template_name_suffix = '_update_form'
-  
+
+def level_delete(request, pk):
+    """View to delete a level"""
+    level = Level.objects.get(pk=int(pk))
+    level.delete()
+    return redirect('/indicators/levels')
+
