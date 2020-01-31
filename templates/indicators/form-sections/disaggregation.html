@@ -1,0 +1,295 @@
+{% load crispy_forms_tags %}
+
+<input type="hidden" name="disaggregation_types" id="id_disaggregation_types" />
+
+<hr />
+
+<div class="row">
+  <div class="col-md-6">
+    <h4>
+      Disaggregations
+      <small class="">
+        <button
+          class="btn btn-default btn-sm"
+          type="button"
+          id="add_disaggregation_btn"
+          onclick="addDisagType();"
+        >
+          <i class="fa fa-plus"></i> Add Disaggregation Type
+        </button>
+      </small>
+    </h4>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6" id="id_disaggregations"></div>
+</div>
+
+<script>
+  let countDisaggTypes = 0;
+  let countLabels = 0;
+
+  $(document).ready(() => {
+    $('#id_level').select2({
+      theme: 'bootstrap'
+    });
+    $('#id_definition').attr('rows', 3);
+    $('#id_justification').attr('rows', 3);
+    $('#id_disaggregation').select2({ theme: 'bootstrap' });
+    $('#id_indicator_type').select2({ theme: 'bootstrap' });
+
+    $('#id_disaggregation_types').attr('value', disagTypes);
+
+    // init disag types form
+    initDisagTypes();
+  });
+
+  // get indicator disags from context and process to js compliant json
+  let jsonString = '{{disaggregations}}'.replace(/&quot;/g, '"');
+  let disagTypes = JSON.parse(jsonString);
+
+  function stringifyDisags() {
+    disagTypes = [];
+    for (let i = 1; i <= countDisaggTypes; i++) {
+      let disagType = { type: '', id: null, labels: [] };
+
+      // get disag type
+      $(`#disagg_type_group_${i} .type`).each(function(index, elem) {
+        const inputs = elem.getElementsByTagName('input');
+        disagType.type = $(inputs[0]).val();
+        disagType.id = $(inputs[1]).val() || null;
+      });
+
+      // get labels for the disag type group
+      $(`#disagg_type_group_${i} .label-group`).each(function(index, elem) {
+        const inputs = elem.getElementsByTagName('input');
+
+        disagType.labels = [
+          ...disagType.labels,
+          { label: $(inputs[0]).val(), id: $(inputs[1]).val() || null }
+        ];
+      });
+
+      // push the disag type to disag types array
+      disagTypes = [...disagTypes, disagType];
+    }
+
+    // set the disa
+    $('#id_disaggregation_types').prop('value', JSON.stringify(disagTypes));
+  }
+
+  /**
+   * Init disag types
+   */
+  function initDisagTypes() {
+    for (let i = 0; i < disagTypes.length; i++) {
+      addDisagType(disagTypes[i]);
+
+      for (let l = 0; l < disagTypes[i].labels.length; l++) {
+        addDisagLabel(`#id_disagg_labels_${i + 1}`, disagTypes[i].labels[l]);
+      }
+    }
+  }
+
+  function addDisagType(type) {
+    countDisaggTypes++;
+    $disagTypeGroup = $('<div>')
+      .addClass('row mt-10 disagg_type_group')
+      .attr({ id: `disagg_type_group_${countDisaggTypes}` })
+      .append(
+        $('<div>')
+          .addClass('col-md-6')
+          .append($('<i>').addClass('fa fa-angle-right'))
+          .append(' Disaggregation type')
+      )
+      .append(
+        $('<div>')
+          .addClass('col-md-5')
+          .append(
+            $('<div>')
+              .addClass('type form-group-sm')
+              .append(
+                $('<input>')
+                  .attr({
+                    class: 'form-control',
+                    type: 'text',
+                    autofocus: true,
+                    id: `id_disagg_type_${countDisaggTypes}`
+                  })
+                  .val((type && type.disaggregation_type) || '')
+                  .keyup(stringifyDisags.bind(this))
+              )
+              .append(
+                $('<input>')
+                  .attr({
+                    type: 'hidden',
+                    id: `id_disagg_type_id_${countDisaggTypes}`
+                  })
+                  .val((type && type.id) || null)
+              )
+          )
+      )
+      .append(
+        $('<div>')
+          .addClass('col-md-1')
+          .append(
+            $('<button>')
+              .attr({
+                type: 'button',
+                title: "Delete disaggregation type"
+              })
+              .addClass('btn btn-sm btn-danger')
+              .append($('<i>').addClass('fa fa-trash'))
+              .click(removeDisagType.bind(this, countDisaggTypes))
+          )
+      )
+      .append(
+        $('<div>')
+          .addClass('col-md-12 disagg_type_top')
+          .append(
+            $('<button>')
+              .attr({
+                class: 'btn btn-xs btn-default add_disagg_label_btn',
+                type: 'button',
+                id: `id_add_disagg_label_${countDisaggTypes}`
+              })
+              .click(
+                addDisagLabel.bind(
+                  this,
+                  `#id_disagg_labels_${countDisaggTypes}`
+                )
+              )
+              .append($('<i>').addClass('fa fa-plus'))
+              .append(' Add Disaggregation Label')
+          )
+      )
+      .append(
+        $('<div>').attr({
+          id: `id_disagg_labels_${countDisaggTypes}`,
+          class: 'col-md-12'
+        })
+      );
+
+    // attach the group to disaggregations
+    $('#id_disaggregations').append($disagTypeGroup);
+  }
+
+  /**
+   * Add disag label to given selector for disag type
+   */
+  function addDisagLabel(selector, label) {
+    countLabels++;
+
+    $(selector).append(
+      $('<div>')
+        .addClass('row mt-10 label-group')
+        .attr({
+          id: `disagg_label_group_${countLabels}`
+        })
+        .append(
+          $('<div>')
+            .addClass('col-md-6 text-right')
+            .append($('<small>').text('Disaggregation label'))
+        )
+        .append(
+          $('<div>')
+            .addClass('col-md-5')
+            .append(
+              $('<div>')
+                .addClass('form-group-sm')
+                .append(
+                  $('<input>')
+                    .addClass('form-control')
+                    .attr({
+                      type: 'text',
+                      autofocus: true,
+                      id: `id_disagg_child_${countLabels}`
+                    })
+                    .val((label && label.label) || '')
+                    .keyup(stringifyDisags.bind(this))
+                )
+                .append(
+                  $('<input>')
+                    .attr({
+                      type: 'hidden',
+                      id: `id_disagg_child_id_${countLabels}`
+                    })
+                    .val((label && label.id) || null)
+                )
+            )
+        )
+        .append(
+          $('<div>')
+            .addClass('col-md-1')
+            .append(
+              $('<button>')
+                .attr({ class: 'btn btn-sm', type: 'button', title: "Delete disaggregation label" })
+                .append($('<i>').addClass('fa fa-trash text-danger'))
+                .click(removeLabel.bind(this, countLabels))
+            )
+        )
+    );
+  }
+
+  /**
+   * Delete a disag type
+   */
+  function removeDisagType(appendId) {
+    const disagId = $(`#id_disagg_type_id_${appendId}`).val();
+    const csrftoken = $('[name=csrfmiddlewaretoken]').val();
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader('X-CSRFToken', csrftoken);
+        }
+      }
+    });
+
+    function removeFromTemplate() {
+      $(`#disagg_type_group_${appendId}`).remove();
+      toastr.success("Disaggregation type has been removed!");
+    }
+
+    if (disagId) {
+      $.ajax({
+        url: `/indicators/disaggregation_type/delete/${disagId}/`,
+        method: 'DELETE'
+      }).then(_ => {
+        removeFromTemplate();
+      });
+    } else {
+      removeFromTemplate();
+    }
+  }
+
+  function removeLabel(appendId) {
+    const labelId = $(`#id_disagg_child_id_${appendId}`).val();
+
+    function removeFromTemplate() {
+      $(`#disagg_label_group_${appendId}`).remove();
+      toastr.success("Label has been removed!");
+    }
+
+    const csrftoken = $('[name=csrfmiddlewaretoken]').val();
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader('X-CSRFToken', csrftoken);
+        }
+      }
+    });
+
+    if (labelId) {
+      // add ajax logic here
+      $.ajax({
+        method: 'DELETE',
+        url: `/indicators/disaggregation_label/delete/${labelId}/`
+      }).then(_ => {
+        removeFromTemplate();
+      });
+    } else {
+      removeFromTemplate();
+    }
+  }
+</script>
