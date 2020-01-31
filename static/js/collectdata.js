@@ -92,6 +92,11 @@ var saveCollectedData = buttonId => {
 
         data['indicator'] = indicatorId
         data['program'] = programId
+        
+        if (data.documentation == ''){
+            data['documentation'] = 0
+        }
+
         if (data.date_collected=='' || data.actual == '' || data.periodic_target == '') {
             if(data.date_collected==''){    
                 $('#div_date_collected')
