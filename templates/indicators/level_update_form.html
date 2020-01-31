@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% block content %} {% load crispy_forms_tags %}
+<div class="container">
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'index' %}">My Dashboard</a></li>
+        <li class="active">
+            <a href="/indicators/home/0/0/0/">
+                {{ request.user.activity_user.organization.indicator_label }}
+            </a>
+        </li>
+        <li><a href="/indicators/levels">Levels</a></li>
+        <li class="active">Details</li>
+    </ul>
+    {% endblock %}
+
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+        <div class="sub-navigation-header">
+            <h4 class="page-title">
+                {% if  level.name %}
+                {{ level.name }}
+                {% else %}
+                Level Edit Form
+                {% endif %}
+            </h4>
+        </div>
+    </div>
+    <div class="admin-content">
+        {% block editform %} {% crispy form %} {% endblock editform %}
+    </div>
+</div>
+{% endblock content %}

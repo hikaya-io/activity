@@ -15,7 +15,7 @@ from datetime import datetime
 
 from indicators.models import (
     Indicator, PeriodicTarget, CollectedData, Objective,
-    StrategicObjective, ActivityTable, DisaggregationType
+    StrategicObjective, ActivityTable, DisaggregationType, Level
 )
 from workflow.models import Program, Documentation, \
     ProjectComplete, ActivityUser
@@ -222,3 +222,29 @@ class ObjectiveForm(forms.ModelForm):
         self.fields['parent'].queryset = Objective.objects.\
             filter(program__organization=self.request.user.activity_user.organization).\
             exclude(pk=self.current_objective.id)
+
+
+class LevelForm(forms.ModelForm):
+    class Meta:
+        model = Level
+        exclude = ('create_date', 'edit_date')
+
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.form_tag = True
+        self.helper.layout = Layout(
+            Row(
+                Column('name', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('description', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+            Reset('reset', 'Close', css_class='btn-md btn-close'),
+            Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
+        )
+        super(LevelForm, self).__init__(*args, **kwargs)
+

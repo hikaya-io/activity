@@ -12,7 +12,7 @@ import re
 from .export import IndicatorResource, CollectedDataResource
 from .tables import IndicatorDataTable
 from .forms import (
-    IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm
+    IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
 )
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
@@ -2060,3 +2060,9 @@ class LevelCreateView(CreateView):
         if (data.get('saveLevelAndNew')):
             return HttpResponseRedirect('/indicators/levels?quick-action=true')
         return HttpResponseRedirect('/indicators/levels')
+
+class LevelUpdateView(UpdateView):
+    model = Level
+    form_class = LevelForm
+    template_name_suffix = '_update_form'
+  
