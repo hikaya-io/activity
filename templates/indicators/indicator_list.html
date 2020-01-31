@@ -100,8 +100,9 @@
         <th class="text-right">Actions</th>
       </tr>
     </thead>
-    {% for indicator in get_indicators %}
     <tbody>
+      {% for indicator in get_indicators %}
+
       <tr>
         <td class="details-control" data-indicator-id="{{ indicator.id }}" data-program-id="{{ program_id }}">
           <span class="expandable collapsed" data-toggle="collapse" href="#row-{{indicator.id}}" aria-expanded="false"
@@ -144,13 +145,8 @@
           </div>
         </td>
       </tr>
+      {% endfor %}
     </tbody>
-
-    <tbody id="row-{{indicator.id}}" class="collapse expanded">
-      <tr>
-      </tr>
-    </tbody>
-    {% endfor %}
   </table>
 
   <div class="modal fade" role="dialog" id="conform_modal_div" aria-labelledby="mySmallModalLabel">
