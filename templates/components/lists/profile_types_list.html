@@ -6,38 +6,37 @@
   });
 </script>
 
-<div class="container">
 
   <!-- Sub navigation -->
-  <div class="sub-navigation">
+<div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">{{ user.activity_user.organization.site_label }} List</h4>
+        <h4 class="page-title">{{ user.activity_user.organization.site_label }} List</h4>
     </div>
     <div class="sub-navigation-actions"> 
-      <div class="sub-nav-item">
+        <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
-          <a
+            <a
             role="button"
             class="btn btn-sm btn-primary"
             data-toggle="modal"
             data-target="#addProfileTypesModal"
-          >
-           <i class="fa fa-plus"></i> {{ user.activity_user.organization.site_label }} Type
-          </a>
+            >
+            <i class="fa fa-plus"></i> {{ user.activity_user.organization.site_label }} Type
+            </a>
         </div>
-      </div>
+        </div>
     </div>
-  </div>
+</div>
 
-  <!-- Table -->
-  <table class="table" id="profileTypeTable">
+<!-- Table -->
+<table class="table" id="profileTypeTable">
     <thead>
-      <tr>
+        <tr>
         <th>Type</th>
         <th>Create Date</th>
         <th>Edit Date</th>
         <th></th>
-      </tr>
+        </tr>
     </thead>
 
     <tbody>
@@ -87,5 +86,4 @@
       {% endif %} {% endfor %}
     </tbody>
   </table>
-</div>
 
