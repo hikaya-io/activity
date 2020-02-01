@@ -16,12 +16,10 @@
     <div class="sub-navigation">
       <div class="sub-navigation-header">
         <h4 class="page-title">
-          {% if site_name %}{{ site_name }} {% else %} Site Profile Form {% endif %} 
+          {% if site_name %}{{ site_name }} {% else %} Site Profile Form {% endif %}
         </h4>
       </div>
     </div>
-  
-
 
   {% if form.errors %}
       <div class="help-block">
@@ -41,7 +39,7 @@
       <style>
 					.mw-wrap{
 						width: 100% !important;
-						min-width: 400px !important; 
+						min-width: 400px !important;
 					}
 					.mw-coordinates-overlay {
 						width: 200px !important;
@@ -52,5 +50,39 @@
     {% crispy form %}
   </div>
 </div>
+
+<script>
+  document.getElementById('div_id_map').setAttribute("style","height:500px");
+  
+  let map = L.map('div_id_map').setView([-1.2921, 36.8219], 13);
+  let my_divicon = L.divIcon({
+      className: 'arrow_box'
+  });
+  let marker = L.marker([-1.2921, 36.8219], {
+      draggable:true
+  });
+
+  L.tileLayer(
+    'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+      'attribution': 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
+    }
+  ).addTo(map);
+
+  function addToTextBox(lt,ln){
+      document.getElementById('id_latitude').value = (lt).toFixed(7);
+      document.getElementById('id_longitude').value = (ln).toFixed(7);
+  }
+
+  // adds listener for drag end event
+  marker.on('dragend', function(event){
+      let marker = event.target;
+      let location = marker.getLatLng();
+      let lat = location.lat;
+      let lon = location.lng;
+      addToTextBox(lat,lon);
+  });
+
+  marker.addTo(map);
+</script>
 
 {% endblock content %}
