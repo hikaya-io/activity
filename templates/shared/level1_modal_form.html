@@ -1,8 +1,5 @@
 <script>
   $(document).ready(() => {
-    let startDate = undefined;
-    let endDate = undefined;
-
     $('#sectors').select2({
       theme: 'bootstrap',
       placeholder: 'Select sectors...',
@@ -12,9 +9,8 @@
         dateFormat: 'dd.mm.yy',
         onSelect: function (dateText, inst) {
           let date = $(this).datepicker('getDate');
-          if (endDate === undefined) {
-              $('#endDate').datepicker('option', 'minDate', date);
-          }
+          date.setDate(date.getDate() + 1);
+          $('#endDate').datepicker('option', 'minDate', date);
           startDate = date;
         }
     });
@@ -22,17 +18,13 @@
         dateFormat: 'dd.mm.yy',
         onSelect: function (dateText) {
           let date = $(this).datepicker('getDate');
-          if (startDate === undefined) {
-              $('#startDate').datepicker('option', 'maxDate', date);
-          }
-          endDate = date;
+          date.setDate(date.getDate() - 1);
+          $('#startDate').datepicker('option', 'maxDate', date);
         }
     });
 
     $('#addProgramModal').on('hidden.bs.modal', function () {
         $('form#addProgramForm').trigger('reset');
-        startDate = undefined;
-        endDate = undefined;
         $('#startDate').datepicker('option', 'maxDate', null);
         $('#endDate').datepicker('option', 'minDate', null);
 
