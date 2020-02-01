@@ -69,19 +69,18 @@
             </button>
             <ul class="dropdown-menu">
               <li><a href="/workflow/profile_type_update/{{profile_type.id}}/">Edit</a></li>
-              {% comment %} <li>
+              <li>
                 <a 
                   class="text-danger"
                   href="#deleteItemModal{{ profile_type.id }}"
                   data-toggle="modal"
                   onclick="setItemToDelete({{ profile_type.id }})"
                   data-target="#deleteItemModal{{ profile_type.id }}"
-                >Delete</a></li> {% endcomment %}
-                <li><a class="text-danger">Delete</a></li>
+                >Delete</a></li> 
             </ul>
           </div>
         </td>
-        {% comment %} {% include 'workflow/deletemodals/stakeholder_confirm_delete.html' %} {% endcomment %}
+        {% include 'components/deletemodals/profile_type_confirm_delete.html' %}
       </tr>
       {% endif %} {% endfor %}
     </tbody>

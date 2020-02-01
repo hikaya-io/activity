@@ -1,0 +1,67 @@
+<div
+  class="modal fade"
+  id="deleteItemModal{{profile_type.id}}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteItemModalLabel"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+          Confirm {{ user.activity_user.organization.site_label }} Type Delete
+        </h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          Are you sure you want to delete "<strong
+            >{{ profile_type.profile }}"</strong
+          >
+        </p>
+        <div class="text-right">
+          <button type="submit" class="btn btn-close" data-dismiss="modal">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn btn-danger"
+            onclick="deleteItem()"
+            id="deleteItem{{ profile_type.id }}"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var itemId;
+  var activeButton;
+  /**
+   * Set the Item to delete
+   **/
+  function setItemToDelete(id) {
+    itemId = id;
+  }
+
+  /**
+   * Redirect to the page to delete the item
+   **/
+  function deleteItem() {
+    toastr.success('You have successfully deleted the {{ user.activity_user.organization.site_label }} Type');
+    setTimeout(() => {
+      window.location.href = `/workflow/profile_type/delete_profile_type/${itemId}/`;
+    }, 2000);
+  }
+  $(document).ready(() => {});
+</script>

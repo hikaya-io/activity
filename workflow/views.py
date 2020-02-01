@@ -1243,6 +1243,19 @@ class ProfileTypeCreate(GView):
             return JsonResponse({'error': 'Error saving profile type'})
 
 
+def delete_profile_type(request, pk):
+    """
+    delete Profile Type
+    :param request:
+    :param pk: Primary key of the profile type to be deleted
+    :return redirect:
+    """
+    profile_type = ProfileType.objects.get(pk=int(pk))
+    profile_type.delete()
+
+    return redirect('/accounts/admin/component_settings')
+
+
 class SiteProfileList(ListView):
     """
     SiteProfile list creates a map and list of sites by user country access

@@ -20,7 +20,7 @@ from .views import (
     save_bookmark, district_json, country_json, export_sites_list, ReportData, DocumentationAgreementDelete,
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
-    FundCodeCreate, ProfileTypeCreate,
+    FundCodeCreate, ProfileTypeCreate, delete_profile_type
 )
 from django.urls import re_path, path
 
@@ -214,5 +214,7 @@ urlpatterns = [
          name='add_fund_code'),
 
     # profile type
-    path('profile_type/add', ProfileTypeCreate.as_view(), name='add_profile_type')
+    path('profile_type/add', ProfileTypeCreate.as_view(), name='add_profile_type'),
+    path('profile_type/delete_profile_type/<int:pk>/',
+         delete_profile_type, name='delete_profile_type')
 ]
