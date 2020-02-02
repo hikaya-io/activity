@@ -1253,7 +1253,7 @@ def delete_profile_type(request, pk):
     profile_type = ProfileType.objects.get(pk=int(pk))
     profile_type.delete()
 
-    return redirect('/accounts/admin/component_settings')
+    return redirect('/accounts/admin/component_admin')
 
 
 class SiteProfileList(ListView):

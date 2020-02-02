@@ -215,6 +215,8 @@ urlpatterns = [
 
     # profile type
     path('profile_type/add', ProfileTypeCreate.as_view(), name='add_profile_type'),
+    path('profile_type_update/<int:pk>/', StakeholderUpdate.as_view(),
+        name='profile_type_update'),
     path('profile_type/delete_profile_type/<int:pk>/',
          delete_profile_type, name='delete_profile_type')
 ]

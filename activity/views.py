@@ -662,7 +662,7 @@ def admin_user_management(request, role, status):
     })
 
 @login_required(login_url='/accounts/login/')
-def admin_component_settings(request):
+def admin_component_admin(request):
     user = get_object_or_404(ActivityUser, user=request.user)
     organization = user.organization
     profile_types = ProfileType.objects.all()
@@ -670,10 +670,10 @@ def admin_component_settings(request):
     nav_links = get_nav_links('Component')
     return render(
         request,
-        'admin/component_settings.html',
+        'admin/component_admin.html',
         {'organization': organization, 
         'get_profile_types': profile_types,
-        'active': 'component_settings'}
+        'active': 'component_admin'}
     )
 
 
