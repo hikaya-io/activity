@@ -1287,6 +1287,27 @@ class SiteProfileForm(forms.ModelForm):
             country__in=countries).distinct()
 
 
+class ProfileTypeForm(forms.ModelForm):
+    class Meta:
+        model = ProfileType
+        exclude = ('create_date', 'edit_date')
+
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.form_tag = True
+        self.helper.layout = Layout(
+            Row(
+                Column('profile', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+            Reset('reset', 'Close', css_class='btn-md btn-close'),
+            Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
+        )
+        super(ProfileTypeForm, self).__init__(*args, **kwargs)
+
+
 class DocumentationForm(forms.ModelForm):
     class Meta:
         model = Documentation
