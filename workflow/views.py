@@ -1208,6 +1208,54 @@ class ProjectCompleteBySite(ListView):
         return q
 
 
+class ProfileTypeList(ListView):
+    """
+    get_profile types
+    """
+    model = ProfileType
+    template_name = 'workflow/profile_type_list.html'
+
+    def get(self, request, *args, **kwargs):
+        get_profile_types = ProfileType.objects.all()
+
+        return render(request, self.template_name,
+                      {'get_profile_types': get_profile_types,
+                       'active': ['components', 'profile_type_list']})
+
+
+class ProfileTypeCreate(GView):
+    """
+    create ProfileType View
+    : returns success: Json object { 'success': True/False }
+    """
+    def post(self, request):
+        data = request.POST
+
+        user = ActivityUser.objects.filter(user=request.user).first()
+
+        profileType = ProfileType.objects.create(
+            profile=data.get('profile')
+        )
+
+        if profileType:
+            return JsonResponse({'success': True})
+        else: 
+            return JsonResponse({'error': 'Error saving profile type'})
+
+
+def delete_profile_type(request, pk):
+    """
+    delete Profile Type
+    :param request:
+    :param pk: Primary key of the profile type to be deleted
+    :return redirect:
+    """
+    profile_type = ProfileType.objects.get(pk=int(pk))
+    profile_type.delete()
+
+    return redirect('/accounts/admin/component_admin')
+
+
 class SiteProfileList(ListView):
     """
     SiteProfile list creates a map and list of sites by user country access
