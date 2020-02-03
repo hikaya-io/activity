@@ -24,7 +24,7 @@ from .forms import (
     ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
     DocumentationForm, SiteProfileForm, BenchmarkForm, BudgetForm,
     FilterForm, ProgramForm, SiteProfileQuickEntryForm,
-    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm
+    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm, ProfileTypeForm
 )
 
 import pytz
@@ -1241,6 +1241,47 @@ class ProfileTypeCreate(GView):
             return JsonResponse({'success': True})
         else: 
             return JsonResponse({'error': 'Error saving profile type'})
+
+
+# class ProfileTypeUpdate(UpdateView):
+#     model = ProfileType
+#     form_class = ProfileTypeForm
+    # template_name_suffix = '_form'
+
+class ProfileTypeUpdate(UpdateView):
+    """
+    Profile Type Form
+    """
+    model = ProfileType
+    guidance = None
+    template_name = 'components/lists/profile_type_form.html'
+
+    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            self.guidance = FormGuidance.objects.get(form="ProfileTypeForm")
+        except FormGuidance.DoesNotExist:
+            self.guidance = None
+        return super(ProfileTypeUpdate, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileTypeUpdate, self).get_context_data(**kwargs)
+        profile_type = ProfileType.objects.get(pk=int(self.kwargs['pk']))
+        context.update({'profile_name': profile_type.profile})
+        context.update({'id': self.kwargs['pk']})
+        return context
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Success, ' + self.request.user.activity_user.organization.site_label + ' Type Updated!')
+
+        return redirect('/accounts/admin/component_admin')
+
+    form_class = ProfileTypeForm
 
 
 def delete_profile_type(request, pk):
