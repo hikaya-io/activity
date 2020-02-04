@@ -251,7 +251,7 @@ class Indicator(models.Model):
     EVENT = 8
 
     TARGET_FREQUENCIES = (
-        (LOP, 'Life of Program (LoP) only'),
+        (LOP, 'Life of Program only'),
         (MID_END, 'Midline and endline'),
         (ANNUAL, 'Annual'),
         (SEMI_ANNUAL, 'Semi-annual'),
@@ -267,32 +267,32 @@ class Indicator(models.Model):
         IndicatorType, blank=True, help_text=" ")
     level = models.ManyToManyField(Level, blank=True, help_text=" ")
     objectives = models.ManyToManyField(
-        Objective, blank=True, verbose_name="Program Objective",
+        Objective, blank=True, verbose_name="Objective",
         related_name="obj_indicator", help_text=" ")
     strategic_objectives = models.ManyToManyField(
-        StrategicObjective, verbose_name="Country Strategic Objective",
+        StrategicObjective, verbose_name="Strategic objective",
         blank=True, related_name="strat_indicator", help_text=" ")
     name = models.CharField(verbose_name="Name",
                             max_length=255, help_text=" ")
     number = models.CharField(
         max_length=255, null=True, blank=True, help_text=" ")
     source = models.CharField(
-        max_length=255, null=True, blank=True, help_text=" ")
+        max_length=255, null=True, blank=True, verbose_name="Data source", help_text=" ")
     definition = models.TextField(null=True, blank=True, help_text=" ")
     justification = models.TextField(
         max_length=500, null=True, blank=True,
-        verbose_name="Justification for Indicator", help_text=" ")
+        verbose_name="Justification for indicator", help_text=" ")
     unit_of_measure = models.CharField(
-        max_length=135, null=True, blank=True, verbose_name="Unit of measure*",
+        max_length=135, null=True, blank=True, verbose_name="Unit of measure",
         help_text=" ")
     disaggregation = models.ManyToManyField(
         DisaggregationType, blank=True, related_name="indicator_disaggregation_types")
     baseline = models.CharField(
-        verbose_name="Baseline*", max_length=255, null=True, blank=True,
+        verbose_name="Baseline", max_length=255, null=True, blank=True,
         help_text=" ")
     baseline_na = models.BooleanField(
         verbose_name="Not applicable", default=False, help_text=" ")
-    lop_target = models.CharField(verbose_name="Life of Program (LoP) target*",
+    lop_target = models.CharField(verbose_name="Overall target",
                                   max_length=255, null=True, blank=True,
                                   help_text=" ")
     rationale_for_target = models.TextField(
@@ -311,41 +311,41 @@ class Indicator(models.Model):
         help_text=" ")
     means_of_verification = models.CharField(
         max_length=255, null=True, blank=True,
-        verbose_name="Means of Verification", help_text=" ")
+        verbose_name="Means of verification", help_text=" ")
     data_collection_method = models.CharField(
         max_length=255, null=True, blank=True,
-        verbose_name="Data Collection Method", help_text=" ")
+        verbose_name="Data collection method", help_text=" ")
     data_collection_frequency = models.ForeignKey(
         DataCollectionFrequency, null=True, blank=True,
-        verbose_name="Data Collection Frequency",
+        verbose_name="Data collection frequency",
         help_text=" ", on_delete=models.SET_NULL)
     data_points = models.TextField(
-        max_length=500, null=True, blank=True, verbose_name="Data Points",
+        max_length=500, null=True, blank=True, verbose_name="Data points",
         help_text=" ")
     responsible_person = models.CharField(
         max_length=255, null=True, blank=True,
-        verbose_name="Responsible Person or Team", help_text=" ")
+        verbose_name="Responsible person or team", help_text=" ")
     method_of_analysis = models.CharField(
         max_length=255, null=True, blank=True,
-        verbose_name="Method of Analysis", help_text=" ")
+        verbose_name="Method of analysis", help_text=" ")
     information_use = models.CharField(
-        max_length=255, null=True, blank=True, verbose_name="Information Use",
+        max_length=255, null=True, blank=True, verbose_name="Information use",
         help_text=" ")
     reporting_frequency = models.ForeignKey(
         ReportingFrequency, null=True,
         blank=True,
-        verbose_name="Reporting Frequency",
+        verbose_name="Reporting frequency",
         help_text=" ",
         on_delete=models.SET_NULL)
     quality_assurance = models.TextField(
         max_length=500, null=True, blank=True,
-        verbose_name="Quality Assurance Measures", help_text=" ")
+        verbose_name="Quality assurance measures", help_text=" ")
     data_issues = models.TextField(
-        max_length=500, null=True, blank=True, verbose_name="Data Issues",
+        max_length=500, null=True, blank=True, verbose_name="Data issues",
         help_text=" ")
     indicator_changes = models.TextField(
         max_length=500, null=True, blank=True,
-        verbose_name="Changes to Indicator", help_text=" ")
+        verbose_name="Changes to indicator", help_text=" ")
     comments = models.TextField(
         max_length=255, null=True, blank=True, help_text=" ")
     program = models.ManyToManyField(Program, help_text=" ")

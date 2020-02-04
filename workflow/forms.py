@@ -1237,8 +1237,8 @@ class SiteProfileForm(forms.ModelForm):
 
             ),
             FormActions(
-                Reset('reset', 'Close', css_class='btn-close'),
-                Submit('submit', 'Save', css_class='btn-default')
+                Reset('reset', 'Cancel', css_class='btn-md btn-close'),
+                Submit('submit', 'Save', css_class='btn-md btn-success')
             ),
 
             HTML("""
@@ -1302,8 +1302,8 @@ class ProfileTypeForm(forms.ModelForm):
                 Column('profile', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
-            Reset('reset', 'Close', css_class='btn-md btn-close'),
-            Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
+            Reset('reset', 'Cancel', css_class='btn-md btn-close'),
+            Submit('submit', 'Save', css_class='btn-md btn-success'),
         )
         super(ProfileTypeForm, self).__init__(*args, **kwargs)
 
@@ -1334,8 +1334,8 @@ class DocumentationForm(forms.ModelForm):
                 Column('project', css_class='form-group col-md-6 mb-0'),
                 css_class="form-row"
             ),
-            Reset('reset', 'Close', css_class='btn-md btn-close'),
-            Submit('submit', 'Save Changes', css_class='btn-md btn-success')
+            Reset('reset', 'Cancel', css_class='btn-md btn-close'),
+            Submit('submit', 'Save', css_class='btn-md btn-success')
 
         )
 
@@ -1527,8 +1527,8 @@ class ContactForm(forms.ModelForm):
             ),
 
             'address',
-            Reset('reset', 'Close', css_class='btn btn-md btn-close'),
-            Submit('submit', 'Save Changes',
+            Reset('reset', 'Cancel', css_class='btn btn-md btn-close'),
+            Submit('submit', 'Save',
                    css_class='btn btn-md btn-success'),
         )
 
@@ -1561,7 +1561,7 @@ class StakeholderForm(forms.ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.add_input(
-            Reset('reset', 'Close', css_class='btn-close')),
+            Reset('reset', 'Cancel', css_class='btn-close')),
         self.helper.add_input(
             Submit('submit', 'Save', css_class='btn-success')),
 
