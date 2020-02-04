@@ -3,21 +3,22 @@
 <div class="row">
   <div class="col-md-4">
     <div class="form-group">
-      {{ form.level | as_crispy_field }}
+      {{ form.indicator_type | as_crispy_field }}
     </div>
   </div>
+    <div class="col-md-8">
+      <div class="form-group">
+        {{ form.unit_of_measure | as_crispy_field }}
+      </div>
+    </div>
+</div>
 
-  <div class="col-md-4">
-    <div class="form-group">
-      {{ form.number | as_crispy_field }}
-    </div>
-  </div>
+<div class="form-group">
+  {{ form.source | as_crispy_field }}
+</div>
 
-  <div class="col-md-4">
-    <div class="form-group">
-      {{ form.source | as_crispy_field }}
-    </div>
-  </div>
+<div class="form-group">
+  {{ form.means_of_verification | as_crispy_field }}
 </div>
 
 <div class="form-group">
@@ -26,10 +27,6 @@
 
 <div class="form-group">
   {{ form.justification | as_crispy_field }}
-</div>
-
-<div class="form-group">
-    {{ form.indicator_type | as_crispy_field }}
 </div>
 
 <div class="form-group">

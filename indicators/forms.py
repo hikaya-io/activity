@@ -74,7 +74,7 @@ class IndicatorForm(forms.ModelForm):
         self.fields['target_frequency_start'].widget.attrs[
             'class'] = 'monthPicker'
         self.fields['key_performance_indicator'].label = 'Key Performance Indicator for this {}'.format(self.organization.level_1_label)
-        self.fields['objectives'].label = '{} Objective'.format(self.organization.level_1_label)
+        self.fields['objectives'].label = '{} objective'.format(self.organization.level_1_label)
         self.fields['program'].label = '{}'.format(self.organization.level_1_label)
 
 
