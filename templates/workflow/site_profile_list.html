@@ -150,13 +150,13 @@
         {% if item.status == 1 %}
         <td>
           <a href="/workflow/siteprofile_update/{{ item.id }}"
-            ><span class="badge">Active</span></a
+            ><span class="badge site-active">Active</span></a
           >
         </td>
         {% else %}
         <td>
           <a href="/workflow/siteprofile_update/{{ item.id }}"
-            ><span class="badge">Inactive</span></a
+            ><span class="badge site-inactive">Inactive</span></a
           >
         </td>
         {% endif %}

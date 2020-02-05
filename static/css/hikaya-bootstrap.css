@@ -529,18 +529,3 @@ fieldset[disabled] .btn-outline-success.focus {
   box-shadow: none;
 }
 
-/* for site model active status button */
-.badge {
-  display: inline-block;
-  min-width: 10px;
-  padding: 4px 8px;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1;
-  color: #2ac27f;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  background-color: #d8f3e7;
-  border-radius: 10px;
-}
