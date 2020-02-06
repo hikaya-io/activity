@@ -30,7 +30,7 @@ from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, ActivityUser, ActivityBookmarks, FormGuidance,
     Organization, UserInvite, Stakeholder, Contact, Documentation,
-    ActivityUserOrganizationGroup
+    ActivityUserOrganizationGroup, ProfileType,
 )
 from activity.util import get_nav_links, send_invite_emails, \
     send_single_mail
@@ -660,6 +660,21 @@ def admin_user_management(request, role, status):
         'organizations': user_organizations,
         'active': 'people'
     })
+
+@login_required(login_url='/accounts/login/')
+def admin_component_admin(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+    profile_types = ProfileType.objects.all()
+
+    nav_links = get_nav_links('Component')
+    return render(
+        request,
+        'admin/component_admin.html',
+        {'organization': organization, 
+        'get_profile_types': profile_types,
+        'active': 'component_admin'}
+    )
 
 
 @login_required(login_url='/accounts/login/')

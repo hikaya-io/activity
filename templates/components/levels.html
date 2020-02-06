@@ -64,7 +64,7 @@
       {% for level in get_all_levels %}
       <tr>
         <td>
-            <a href="" data-toggle="tooltip"
+            <a href="{% url 'update_view' level.pk%}" data-toggle="tooltip"
             title="{{ level.name }}">{{ level.name | truncatechars:25 }}</a>
         </td>
         <td>{{ level.description | truncatechars:75}}</td>
@@ -81,10 +81,20 @@
             </button>
             <!-- drop down for edit and delete functionality-->
             <ul class="dropdown-menu">
+              <li><a href="{% url 'update_view' level.pk %}">Edit</a></li>
+              <li>
+                <a href="#deletelevelModal{{ level.id }}" 
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{ level.id }})"
+                  data-target="#deletelevelModal{{ level.id }}"
+                  class="text-danger">
+                  Delete
+                </a>
+              </li>
             </ul>
           </div>
         </td>
-
+        {% include './modals/level_delete_modal.html'%}
       </tr>
       {% endfor %}
     </tbody>

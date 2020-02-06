@@ -1,9 +1,9 @@
 <div
   class="modal fade"
-  id="revokeInviteModal{{item.id}}"
+  id="deleteItemModal{{profile_type.id}}"
   tabindex="-1"
   role="dialog"
-  aria-labelledby="revokeInviteModalLabel"
+  aria-labelledby="deleteItemModalLabel"
 >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -16,14 +16,14 @@
         >
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" id="addBenerficiaryModalLabel">
-          Confirm Revoke
+        <h4 class="modal-title">
+          Confirm {{ user.activity_user.organization.site_label }} Type Delete
         </h4>
       </div>
       <div class="modal-body">
         <p>
-          Are you sure you want to revoke invation to "<strong
-            >{{ item.email }}"</strong
+          Are you sure you want to delete "<strong
+            >{{ profile_type.profile }}"</strong
           >
         </p>
         <div class="text-right">
@@ -34,9 +34,9 @@
             type="submit"
             class="btn btn-danger"
             onclick="deleteItem()"
-            id="revokeInvite{{ item.id }}"
+            id="deleteItem{{ profile_type.id }}"
           >
-            Revoke
+            Delete
           </button>
         </div>
       </div>
@@ -58,22 +58,10 @@
    * Redirect to the page to delete the item
    **/
   function deleteItem() {
-    $.ajax({
-      url: `/accounts/admin/invitations/?revoke_invite=${itemId}`,
-      type: "GET",
-      success: function(result) {
-        if (result === "success") {
-          toastr.success("You have successfully revoked the invitation");
-          setTimeout(() => {
-            window.location.href = `/accounts/admin/users/invitations/list/0/`;
-          }, 2000);
-        } else {
-          toastr.error("There was a problem revoking the invitation");
-        }
-      },
-      error: error => {
-        toastr.error("There was a problem revoking the invitation");
-      }
-    });
+    toastr.success('You have successfully deleted the {{ user.activity_user.organization.site_label }} Type');
+    setTimeout(() => {
+      window.location.href = `/workflow/profile_type/delete_profile_type/${itemId}/`;
+    }, 2000);
   }
+  $(document).ready(() => {});
 </script>

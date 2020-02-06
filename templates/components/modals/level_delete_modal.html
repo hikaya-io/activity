@@ -1,6 +1,6 @@
 <div
 	class="modal fade"
-	id="deleteItemModal{{contact.id}}"
+	id="deletelevelModal{{level.id}}"
 	tabindex="-1"
 	role="dialog"
 	aria-labelledby="deleteItemModalLabel"
@@ -15,20 +15,20 @@
 			</div>
 			<div class="modal-body">
 				<p>
-					Are you sure you want to delete "<strong>{{ contact.name }}"</strong>
+					Are you sure you want to delete "<strong>{{ level.name }}"</strong>
 				</p>
 				<div class="text-right">
 					<button 
 						type="submit"
 						class="btn btn-secondary" 
-						data-dismiss="modal">
+						onclick="deleteCancel()">
 						Cancel
 					</button>
 					<button
 						type="submit"
 						class="btn btn-danger"
 						onclick="deleteItem()"
-						id="deleteItem{{ contact.id }}"
+						id="deleteItem{{ level.id }}"
 					>
 						Delete
 					</button>
@@ -52,10 +52,17 @@
 	 * Redirect to the page to delete the item
 	 **/
 	function deleteItem() {
-		toastr.success('You have successfully delete this item');
+		toastr.success('You have successfully delete this Item');
 		setTimeout(() => {
-			window.location.href = `/workflow/contact_delete/${itemId}/`;
+			window.location.href = `/indicators/levels/delete/${itemId}/`;
 		}, 2000);
+	}
+
+	/**
+	 * reload the page to close the modal
+	 **/
+	function deleteCancel() {
+		window.location.reload();
 	}
 	$(document).ready(() => {});
 </script>

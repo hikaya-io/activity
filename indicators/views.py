@@ -12,7 +12,7 @@ import re
 from .export import IndicatorResource, CollectedDataResource
 from .tables import IndicatorDataTable
 from .forms import (
-    IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm
+    IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
 )
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
@@ -24,6 +24,7 @@ from django.db.models import Count, Sum, Min, Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.detail import View
+from django.views.generic import View as GView
 from django.views.generic import TemplateView
 from django.utils.decorators import method_decorator
 from django.utils import timezone
@@ -38,6 +39,7 @@ from django_tables2 import RequestConfig
 
 from workflow.models import (
     Program, SiteProfile, Country, Sector, ActivitySites, FormGuidance,
+    Documentation
 )
 from workflow.mixins import AjaxableResponseMixin
 from workflow.admin import CountryResource
@@ -155,6 +157,8 @@ class IndicatorList(ListView):
         get_indicators = Indicator.objects.distinct().filter(
             program__organization=organization)
         get_indicator_types = IndicatorType.objects.all()
+        get_documentation = Documentation.objects.all()
+        get_periodic_target = PeriodicTarget.objects.order_by('customsort', 'create_date', 'period')
 
         program_id = int(self.kwargs['program'])
         indicator_id = int(self.kwargs['indicator'])
@@ -181,11 +185,24 @@ class IndicatorList(ListView):
             'get_programs': get_programs,
             'get_indicators': get_indicators,
             'get_indicator_types': get_indicator_types,
+            'get_periodic_target': get_periodic_target,
+            'get_documentation': get_documentation,
             'program_id': program_id,
             'indicator_id': indicator_id,
             'type_id': type_id,
             'programs': programs,
             'active': ['indicators']})
+
+
+class IndicatorTarget(GView):
+    def get(self, request, *args, **kwargs):
+        indicator_id = int(self.kwargs['indicator_id'])
+        periodic_targets = PeriodicTarget.objects.filter(indicator=indicator_id).order_by('customsort', 'create_date', 'period')
+        targets = []
+        for target in periodic_targets:
+            targets.append({"pk": target.id, "period": str(target)})
+
+        return JsonResponse({"data": targets})
 
 
 def import_indicator(service=1, deserialize=True):
@@ -468,14 +485,14 @@ class IndicatorUpdate(UpdateView):
         # create a list of dicts from disag query
         disaggregations = [
             dict(
-                disaggregation_type=item.disaggregation_type, 
-                id=item.id, 
+                disaggregation_type=item.disaggregation_type,
+                id=item.id,
                 labels=[
                     dict(label=label.label, id=label.id) for label in item.disaggregation_label.all()]
-                ) 
-                for item in get_indicator.disaggregation.all()
+                )
+            for item in get_indicator.disaggregation.all()
             ]
-        
+
         context.update({'i_name': get_indicator.name})
         context['program_id'] = get_indicator.program.all().first().id
         context['active'] = ['indicators']
@@ -591,7 +608,7 @@ class IndicatorUpdate(UpdateView):
                         )
                     else:
                         get_label = DisaggregationLabel.objects.filter(id=int(label['id'])).first()
-                        get_label.label=label['label']
+                        get_label.label = label['label']
                         get_label.save()
 
         if self.request.is_ajax():
@@ -667,6 +684,32 @@ class PeriodicTargetDeleteView(DeleteView):
         return JsonResponse({"status": "success",
                              "msg": "Periodic Target deleted successfully.",
                              "targets_sum": targets_sum})
+
+
+class CollectedDataAdd(GView):
+    """
+    Add Collected Data
+    """
+    def post(self, request):
+        data = request.POST
+
+        # print(data.get('periodic_target', ''))
+        # peridoic_target=PeriodicTarget.objects.filter(id=int(data.get('periodic_target', ''))))
+
+        collected_data = CollectedData.objects.create(
+            achieved=data.get('actual', ''),
+            targeted=data.get('target', ''),
+            date_collected=data.get('date_collected', None),
+            periodic_target=PeriodicTarget.objects.filter(id=int(data.get('periodic_target', ''))).first(),
+            indicator=Indicator.objects.filter(id=int(data.get('indicator', ''))).first(),
+            evidence=Documentation.objects.filter(id=int(data.get('documentation', None))).first(),
+            program=Program.objects.filter(id=int(data.get('program', ''))).first(),
+        )
+
+        if collected_data:
+            return JsonResponse(dict(status=201))
+        else:
+            return JsonResponse(dict(status=400))
 
 
 class CollectedDataCreate(CreateView):
@@ -966,6 +1009,7 @@ class DisaggregationLabelDeleteView(DeleteView):
 
         except Exception as e:
             return JsonResponse(dict(status=400))
+
 
 class CollectedDataDelete(DeleteView):
     """
@@ -2060,3 +2104,15 @@ class LevelCreateView(CreateView):
         if (data.get('saveLevelAndNew')):
             return HttpResponseRedirect('/indicators/levels?quick-action=true')
         return HttpResponseRedirect('/indicators/levels')
+
+class LevelUpdateView(UpdateView):
+    model = Level
+    form_class = LevelForm
+    template_name_suffix = '_update_form'
+
+def level_delete(request, pk):
+    """View to delete a level"""
+    level = Level.objects.get(pk=int(pk))
+    level.delete()
+    return redirect('/indicators/levels')
+

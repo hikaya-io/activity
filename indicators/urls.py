@@ -6,12 +6,13 @@ from .views import (
     IndicatorList, add_indicator, indicator_create, IndicatorCreate,
     IndicatorUpdate, IndicatorDelete, PeriodicTargetDeleteView,
     PeriodicTargetView, CollectedDataReportData, CollectedDataCreate, CollectedDataDelete,
-    CollectedDataList, CollectedDataUpdate, collecteddata_import, indicator_report,
+    CollectedDataList, CollectedDataUpdate, CollectedDataAdd, collecteddata_import, indicator_report,
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
-    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete,LevelListView, 
-    LevelCreateView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView
+    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelListView, 
+    LevelCreateView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, LevelUpdateView,level_delete,
+    IndicatorTarget
 )
 
 urlpatterns = [
@@ -47,6 +48,8 @@ urlpatterns = [
          CollectedDataList.as_view(), name='collecteddata_list'),
     path('collecteddata_add/<program>/<indicator>/',
          CollectedDataCreate.as_view(), name='collecteddata_add'),
+    path('collecteddata/add',
+         CollectedDataAdd.as_view(), name='add-collected-data'),
     path('collecteddata_import/', collecteddata_import,
          name='collecteddata_import'),
     path('collecteddata_update/<int:pk>/',
@@ -102,6 +105,8 @@ urlpatterns = [
          CollectedDataReportData.as_view(), name='collecteddata_report_data'),
     path('collecteddata_report_data/<program>/<indicator>)/<type>)/export/',
          IndicatorDataExport.as_view(), name='collecteddata_report_data'),
+    path('get_target/<int:indicator_id>/', IndicatorTarget.as_view(),
+         name='indicator-targets'),
 
     # objectives
     path('objectives', objectives_list, name='objectives'),
@@ -121,4 +126,6 @@ urlpatterns = [
     #levels
     path('levels', LevelListView.as_view(), name='levels_list'),
     path('levels_create', LevelCreateView.as_view(), name='levels_create'),
+    path('levels/<pk>/update',LevelUpdateView.as_view(), name='update_view' ),
+     path('levels/delete/<int:pk>/',level_delete, name='level_delete'),
 ]

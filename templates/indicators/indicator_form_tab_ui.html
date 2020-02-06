@@ -40,6 +40,15 @@
         >
       </li>
       <li role="presentation">
+        <a
+          href="#disaggregation"
+          aria-controls="disaggregation"
+          role="tab"
+          data-toggle="tab"
+          >Disaggregation</a
+        >
+      </li>
+      <li role="presentation">
         <a href="#targets" aria-controls="targets" role="tab" data-toggle="tab"
           >Targets</a
         >
@@ -83,6 +92,9 @@
       <div role="tabpanel" class="tab-pane" id="performance">
         {% include "./form-sections/performance.html" %}
       </div>
+      <div role="tabpanel" class="tab-pane" id="disaggregation">
+        {% include "./form-sections/disaggregation.html" %}
+      </div>
       <div role="tabpanel" class="tab-pane" id="targets">
         {% include "./form-sections/targets.html" %}
       </div>
@@ -101,9 +113,9 @@
 
     <div class="form-group text-right">
       <a role="button" href="/indicators/home/0/0/0/" class="btn btn-close"
-        >Close</a
+        >Cancel</a
       >
-      <button type="submit" class="btn btn-success">Save Changes</button>
+      <button type="submit" class="btn btn-success">Save</button>
     </div>
   </form>
 </div>

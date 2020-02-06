@@ -1,15 +1,29 @@
-{% if view.guidance %}
-    {% if view.guidance.guidance_link %}
-        <span style="float: right;"><a onclick="newPopup('{{ view.guidance.guidance_link }}','Form Help/Guidance'); return false;" href="#" style="color: #888888" class="btn btn-link">Help</a></span>
-    {% endif %}
-    {% if view.guidance.guidance %}
-        <span style="float: right;" onclick="document.getElementById('guidance').style.display = 'block'"><a href="#" style="color: #888888" class="btn btn-link">Help</a></span>
-        <span id="guidance">
-            {{ view.guidance.guidance }}
-            <br/>
-            <a href="#" class="btn btn-link" onclick="document.getElementById('guidance').style.display = 'None'">Close</a>
-        </span>
-    {% endif %}
-{% else %}
-    <span style="float: right;">No Help Available</span>
+{% if view.guidance %} {% if view.guidance.guidance_link %}
+<span style="float: right;"
+  ><a
+    onclick="newPopup('{{ view.guidance.guidance_link }}','Form Help/Guidance'); return false;"
+    href="#"
+    style="color: #888888"
+    class="btn btn-link"
+    >Help</a
+  ></span
+>
+{% endif %} {% if view.guidance.guidance %}
+<span
+  style="float: right;"
+  onclick="document.getElementById('guidance').style.display = 'block'"
+  ><a href="#" style="color: #888888" class="btn btn-link">Help</a></span
+>
+<span id="guidance">
+  {{ view.guidance.guidance }}
+  <br />
+  <a
+    href="#"
+    class="btn btn-link"
+    onclick="document.getElementById('guidance').style.display = 'None'"
+    >Cancel</a
+  >
+</span>
+{% endif %} {% else %}
+<span style="float: right;"></span>
 {% endif %}

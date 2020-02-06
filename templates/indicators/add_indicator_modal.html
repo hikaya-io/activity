@@ -1,166 +1,166 @@
 <script>
-	$(document).ready(() => {
-		$('#indicatorWorkflowLevel1').select2({
-			theme: 'bootstrap'
-		});
+  $(document).ready(() => {
+    $('#indicatorWorkflowLevel1').select2({
+      theme: 'bootstrap'
+    });
 
-		$('#indicatorName').on('input', function () {
-			const name = $(this);
-			if (name.val()) {
-				$('#div_indicator_name')
-					.removeClass('has-error')
-					.addClass('has-success');
-				$('#nameHelpBlock')
-					.removeClass('hikaya-show')
-					.addClass('hikaya-hide');
-			} else {
-				$('#div_indicator_name')
-					.removeClass('has-success')
-					.addClass('has-error');
-			}
-		});
-		$('#indicatorWorkflowLevel1').on('change', function () {
-			const type = $(this);
-			if (type.val()) {
-				$('#div_indicator_program')
-					.removeClass('has-error')
-					.addClass('has-success');
-				$('#programHelpBlock')
-					.removeClass('hikaya-show')
-					.addClass('hikaya-hide');
-			} else {
-				$('#div_indicator_program')
-					.removeClass('has-success')
-					.addClass('has-error');
-			}
-		});
+    $('#indicatorName').on('input', function () {
+      const name = $(this);
+      if (name.val()) {
+        $('#div_indicator_name')
+          .removeClass('has-error')
+          .addClass('has-success');
+        $('#nameHelpBlock')
+          .removeClass('hikaya-show')
+          .addClass('hikaya-hide');
+      } else {
+        $('#div_indicator_name')
+          .removeClass('has-success')
+          .addClass('has-error');
+      }
+    });
+    $('#indicatorWorkflowLevel1').on('change', function () {
+      const type = $(this);
+      if (type.val()) {
+        $('#div_indicator_program')
+          .removeClass('has-error')
+          .addClass('has-success');
+        $('#programHelpBlock')
+          .removeClass('hikaya-show')
+          .addClass('hikaya-hide');
+      } else {
+        $('#div_indicator_program')
+          .removeClass('has-success')
+          .addClass('has-error');
+      }
+    });
 
-		// show quick add modal if quick-modal to true
-		const url = new URL(window.location.href);
-		if (url.searchParams.get('quick-modal')) {
-			$('#addIndicatorModal').modal('show');
-		}
-	});
+    // show quick add modal if quick-modal to true
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('quick-modal')) {
+      $('#addIndicatorModal').modal('show');
+    }
+  });
 
-	var saveIndicator = (buttonId) => {
-		$(`#${buttonId}`).click(() => {
-			const formValue = $('#addIndicatorForm').serializeArray();
+  var saveIndicator = (buttonId) => {
+    $(`#${buttonId}`).click(() => {
+      const formValue = $('#addIndicatorForm').serializeArray();
 
-			const indicator = {};
+      const indicator = {};
 
-			formValue.forEach(item => {
-				indicator[item.name] = item.value;
-			});
+      formValue.forEach(item => {
+        indicator[item.name] = item.value;
+      });
 
-			// validate input
-			if (indicator.indicator_name == '' || indicator.workflowlevel1 == '') {
-				if (indicator.indicator_name == '') {
-					$('#div_indicator_name')
-						.removeClass('has-success')
-						.addClass('has-error');
-					$('#nameHelpBlock')
-						.removeClass('hikaya-hide')
-						.addClass('hikaya-show');
-				}
-				if (indicator.workflowlevel1 == '') {
-					$('#div_indicator_program')
-						.removeClass('has-success')
-						.addClass('has-error');
-					$('#programHelpBlock')
-						.removeClass('hikaya-hide')
-						.addClass('hikaya-show');
-				}
-				toastr.error('Fill in all required fields');
-			} else {
-				$.ajax({
-					url: "{% url 'add-indicator' %}",
-					type: 'POST',
-					data: indicator,
-					success: function (resp, status) {
-						// notify success
-						toastr.success('Indicator was added sucessfully', `${resp}`);
+      // validate input
+      if (indicator.indicator_name == '' || indicator.workflowlevel1 == '') {
+        if (indicator.indicator_name == '') {
+          $('#div_indicator_name')
+            .removeClass('has-success')
+            .addClass('has-error');
+          $('#nameHelpBlock')
+            .removeClass('hikaya-hide')
+            .addClass('hikaya-show');
+        }
+        if (indicator.workflowlevel1 == '') {
+          $('#div_indicator_program')
+            .removeClass('has-success')
+            .addClass('has-error');
+          $('#programHelpBlock')
+            .removeClass('hikaya-hide')
+            .addClass('hikaya-show');
+        }
+        toastr.error('Fill in all required fields');
+      } else {
+        $.ajax({
+          url: "{% url 'add-indicator' %}",
+          type: 'POST',
+          data: indicator,
+          success: function (resp, status) {
+            // notify success
+            toastr.success('Indicator was added sucessfully', `${resp}`);
 
-						//close modal
-						$('#addIndicatorModal').modal('hide');
+            //close modal
+            $('#addIndicatorModal').modal('hide');
 
-						// reset form
-						$('#addIndicatorForm').trigger('reset');
-						$('#sectors')
-							.select('val', '')
-							.trigger('change');
+            // reset form
+            $('#addIndicatorForm').trigger('reset');
+            $('#sectors')
+              .select('val', '')
+              .trigger('change');
 
-						const urlWithoutQueryString = window.location.href.split('?')[0];
-						if (buttonId === 'createNewIndicatorAndNew') {
-							window.location.replace(`${urlWithoutQueryString}?quick-modal=true`);
-						} else {
-							setTimeout(() => {
-								window.location.replace(urlWithoutQueryString);
-							}, 2000);
-						}
-					},
-					error: function (xhr, status, error) {
-						toastr.error(error, 'Failed');
-					},
-				});
-			}
-		});
-	}
+            const urlWithoutQueryString = window.location.href.split('?')[0];
+            if (buttonId === 'createNewIndicatorAndNew') {
+              window.location.replace(`${urlWithoutQueryString}?quick-modal=true`);
+            } else {
+              setTimeout(() => {
+                window.location.replace(urlWithoutQueryString);
+              }, 2000);
+            }
+          },
+          error: function (xhr, status, error) {
+            toastr.error(error, 'Failed');
+          },
+        });
+      }
+    });
+  }
 
-	$(() => {
-		saveIndicator('createNewIndicator');
-		saveIndicator('createNewIndicatorAndNew');
-	});
+  $(() => {
+    saveIndicator('createNewIndicator');
+    saveIndicator('createNewIndicatorAndNew');
+  });
 </script>
 
 <!-- Modal for captring data -->
 <div class="modal fade" tabindex="-1" role="dialog" id="addIndicatorModal" aria-labelledby="addIndicatorModal">
-	<div class="modal-dialog modal-md" role="form">
-		<div class="modal-content">
-			<form id="addIndicatorForm">
-				{% csrf_token %}
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h4 class="modal-title"><i class="fa fa-bar-chart-o"></i> New Indicator</h4>
-				</div>
-				<div class="modal-body">
-					<div class="form-group" id="div_indicator_name">
-						<label class="control-label" for="indicatorName">Indicator Name*</label>
-						<input type="text" class="form-control" name="indicator_name" id="indicatorName"
-							autocomplete="off" placeholder="Indicator Name" />
-						<span id="nameHelpBlock" class="help-block hikaya-hide">Name is required</span>
-					</div>
+  <div class="modal-dialog modal-md" role="form">
+    <div class="modal-content">
+      <form id="addIndicatorForm">
+        {% csrf_token %}
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title"><i class="fa fa-bar-chart-o"></i> New Indicator</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group" id="div_indicator_name">
+            <label class="control-label" for="indicatorName">Indicator Name*</label>
+            <input type="text" class="form-control" name="indicator_name" id="indicatorName" autocomplete="off"
+              placeholder="Indicator Name" />
+            <span id="nameHelpBlock" class="help-block hikaya-hide">Name is required</span>
+          </div>
 
-					<div class="form-group" id="div_indicator_program">
-						<label for="indicatorWorkflowLevel1" class="control-label">
-							{{ user.activity_user.organization.level_1_label }}*</label>
-						<select name="workflowlevel1" id="indicatorWorkflowLevel1" class="form-control">
-							<option value=""></option>
-							{% for program in get_programs %} {% if program.name %}
-							<option value="{{ program.id }}">{{ program.name }}</option>
-							{% endif %} {% endfor %}
-						</select>
-						<span id="programHelpBlock"
-							class="help-block hikaya-hide">{{ user.activity_user.level_1_label }} is required</span>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-close" data-dismiss="modal">
-						Close
-					</button>
-					<button id="createNewIndicatorAndNew" type="button" class="btn btn-outline-success">
-						Save &amp; New
-					</button>
+          <div class="form-group" id="div_indicator_program">
+            <label for="indicatorWorkflowLevel1" class="control-label">
+              {{ user.activity_user.organization.level_1_label }}*</label>
+            <select name="workflowlevel1" id="indicatorWorkflowLevel1" class="form-control">
+              <option value=""></option>
+              {% for program in get_programs %} {% if program.name %}
+              <option value="{{ program.id }}">{{ program.name }}</option>
+              {% endif %} {% endfor %}
+            </select>
+            <span id="programHelpBlock" class="help-block hikaya-hide">{{ user.activity_user.level_1_label }} is
+              required</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-close" data-dismiss="modal">
+            Cancel
+          </button>
+          <button id="createNewIndicatorAndNew" type="button" class="btn btn-outline-success">
+            Save &amp; New
+          </button>
 
-					<button id="createNewIndicator" type="button" class="btn btn-success">
-						Save
-					</button>
-				</div>
-			</form>
-		</div>
-		<!-- /.modal-content -->
-	</div>
-	<!-- /.modal-dialog -->
+          <button id="createNewIndicator" type="button" class="btn btn-success">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
