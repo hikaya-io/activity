@@ -2072,9 +2072,10 @@ def objective_delete(request, pk):
     :param pk:
     :return:
     """
-    objective = StrategicObjective.objects.get(pk=int(pk))
+    objective = Objective.objects.get(pk=int(pk))
     objective.delete()
-    return redirect('/workflow/objectives')
+    
+    return redirect('/indicators/objectives')
 
 
 class LevelListView(ListView):
