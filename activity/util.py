@@ -142,19 +142,40 @@ def group_required(*group_names, url):
 
 def get_nav_links(nav):
     nav_links = [
-        {'label': 'Profile', 'status': '',
-         'link': '/accounts/admin/profile_settings'},
-        {'label': 'Configurations', 'status': '',
-         'link': '/accounts/admin/configurations'},
-        {'label': 'People', 'status': '',
-         'link': '/accounts/admin/users/all/all/'},
-        {'label': 'Usage', 'status': '', 'link': '/accounts/admin_dashboard'},
-        {'label': 'Component', 'status': '', 
-         'link': '/accounts/admin/component_admin'}
+        {
+            'label': 'Profile',
+            'status': '',
+            'link': '/accounts/admin/profile_settings'
+        },
+        {
+            'label': 'Configurations',
+            'status': '',
+            'link': '/accounts/admin/configurations'
+        },
+        {
+            'label': 'People',
+            'status': '',
+            'link': '/accounts/admin/users/all/all/'
+        },
+        {
+            'label': 'Usage',
+            'status': '',
+            'link': '/accounts/admin_dashboard'
+        },
+        {
+            'label': 'Component',
+            'status': '',
+            'link': '/accounts/admin/component_admin'
+        },
+        {
+            'label': 'Indicator Configurations',
+            'status': '',
+            'link': '/accounts/admin/indicator_configs_admin'
+        }
     ]
     for item in nav_links:
         if item['label'] == nav:
-            item['status'] = 'hikaya-active'
+            item['status'] = 'active'
     return nav_links
 
 
