@@ -693,13 +693,15 @@ class CollectedDataAdd(GView):
     def post(self, request):
         data = request.POST
 
-        # print(data.get('periodic_target', ''))
-        # peridoic_target=PeriodicTarget.objects.filter(id=int(data.get('periodic_target', ''))))
+        if data.get('date_collected') == "":
+            date = None
+        else:
+            date = data.get('date_collected')
 
         collected_data = CollectedData.objects.create(
             achieved=data.get('actual', ''),
             targeted=data.get('target', ''),
-            date_collected=data.get('date_collected', None),
+            date_collected=date,
             periodic_target=PeriodicTarget.objects.filter(id=int(data.get('periodic_target', ''))).first(),
             indicator=Indicator.objects.filter(id=int(data.get('indicator', ''))).first(),
             evidence=Documentation.objects.filter(id=int(data.get('documentation', None))).first(),

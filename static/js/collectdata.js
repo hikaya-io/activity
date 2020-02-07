@@ -1,26 +1,15 @@
 $(document).ready(() => {
+    $("#dateCollected").datepicker({ dateFormat: "yy-mm-dd" });
+
     $('#id_evidence').select2({
         theme: 'bootstrap'
     });
+
     $('#addCollectedDataModal').on('hidden.bs.modal', function(e){ 
         $(".target_period").html("");
         $('#addCollectedDataForm').trigger('reset');
     });
-$('#id_date_collected').on('input', function () {
-    const name = $(this);
-    if (name.val()) {
-        $('#div_date_collected')
-            .removeClass('has-error')
-            .addClass('has-success');
-        $('#dateHelpBlock')
-            .removeClass('hikaya-show')
-            .addClass('hikaya-hide');
-    } else {
-        $('#div_date_collected')
-            .removeClass('has-success')
-            .addClass('has-error');
-        }
-    });
+
 $('#id_actual').on('input', function () {
     const name = $(this);
     if (name.val()) {
@@ -97,15 +86,7 @@ var saveCollectedData = buttonId => {
             data['documentation'] = 0
         }
 
-        if (data.date_collected=='' || data.actual == '' || data.periodic_target == '') {
-            if(data.date_collected==''){    
-                $('#div_date_collected')
-                .removeClass('has-success')
-                .addClass('has-error');
-                $('#dateHelpBlock')
-                .removeClass('hikaya-hide')
-                .addClass('hikaya-show');
-            }
+        if (data.actual == '' || data.periodic_target == '') {
             if(data.actual == ''){
                 $('#div_actual_value')
                 .removeClass('has-success')
