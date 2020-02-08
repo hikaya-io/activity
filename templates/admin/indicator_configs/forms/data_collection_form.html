@@ -15,7 +15,7 @@
               'is-danger': errors.has('frequency') 
             }"   
           v-model="frequency" 
-          v-validate="'required|alpha'"
+          v-validate="'required'"
           placeholder="Enter frequency"
         />
         <span v-show="errors.has('frequency')" class="help is-danger">[[ errors.first('frequency') ]]</span>

@@ -11,13 +11,20 @@ Vue.component('modal', {
       showModal: false,
       frequency: '',
       frequencies: [],
+      isEdit: false,
+      currentFrequency: null,
+      modalHeader:'Add Data Collection Frequency',
     }, 
     beforeMount: function(){
         axios.get('/indicators/data_collection_frequency/list')
         .then(response => {
             if(response.data) {
                 this.frequencies = response.data.sort((a, b) => b.id - a.id)
-                console.log(this.frequenccies)
+                $(document).ready(() => {
+                    $('#dataCollectionFrequencyTable').DataTable({
+                        "pageLength": 5
+                    });
+                });
             }
             
         })
@@ -26,19 +33,33 @@ Vue.component('modal', {
         })
     },
     methods: {
-        toggleModal: function() {
+        toggleModal: function(item=null) {
             this.showModal = !this.showModal
+            if(item) {
+                this.isEdit = true;
+                this.modalHeader = `Edit ${item.frequency}`
+                this.currentFrequency = item;
+                this.frequency = item.frequency;
+            }
         },
-        processForm: function() {
+        processForm: function(saveNew=false) {
 
             this.$validator.validateAll().then((result) => {
                 if (result) {
-                    this.postData()
+                    if (this.currentFrequency && this.currentFrequency.id) {
+                        this.updateFrequency()
+                    } else {
+                        if(saveNew) {
+                            this.postData(saveNew);
+                        } else {
+                            this.postData();
+                        }
+                    }
                 }
             });
         },
 
-        postData() {
+        postData(saveNew) {
             axios.defaults.xsrfHeaderName = "X-CSRFToken"
             axios.defaults.xsrfCookieName = 'csrftoken' 
             axios.post(
@@ -47,18 +68,56 @@ Vue.component('modal', {
               )
                 .then(response => {
                     if(response.data) {
+                        toastr.success('Frequency Successfuly Saved');
                         this.frequencies.unshift(response.data);
+                        if(!saveNew) {
+                            this.toggleModal();
+                        }
+                        // resetting the form
+                        this.frequency = '';
+                        this.$validator.reset();
                     }
                 })
                 .catch(e => {
-                    console.log(e);
+                    toastr.error('There was a problem saving your data!!');
                 })
+        },
+
+        updateFrequency() {
+            axios.defaults.xsrfHeaderName = "X-CSRFToken"
+            axios.defaults.xsrfCookieName = 'csrftoken' 
+            axios.put(
+                `/indicators/data_collection_frequency/edit/${this.currentFrequency.id}`, 
+                { frequency: this.frequency }
+              )
+                .then(response => {
+                    if(response.data) {
+                        toastr.success('Frequency was successfuly Updated');
+                        const newFrequencies = this.frequencies.filter(
+                             item => { 
+                                 return item.id != this.currentFrequency.id
+                                }
+                        );
+                        this.frequencies = newFrequencies
+                         this.frequencies.unshift(response.data)
+                        this.isEdit = false;
+                        this.frequency = null;
+                        this.modalHeader = 'Add Data Collection Frequency';
+                        this.toggleModal();
+                    }
+                })
+                .catch(e => {
+                    toastr.error('There was a problem updating your data!!');
+                })
+
         }
+
     },
 
     computed: {
         isFormValid () {
           return this.frequency;
+          
         }
       }
   })

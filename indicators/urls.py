@@ -12,7 +12,7 @@ from .views import (
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
     objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelListView, 
     LevelCreateView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, LevelUpdateView,level_delete,
-    IndicatorTarget, DataCollectionFrequencyCreate, DataCollectionFrequencyList,
+    IndicatorTarget, DataCollectionFrequencyCreate, DataCollectionFrequencyList, DataCollectionFrequencyUpdate,
 )
 
 urlpatterns = [
@@ -139,5 +139,10 @@ urlpatterns = [
         'data_collection_frequency/list',
         DataCollectionFrequencyList.as_view(),
         name='data_collection_frequency_list'
+    ),
+    path(
+        'data_collection_frequency/edit/<int:id>',
+        DataCollectionFrequencyUpdate.as_view(),
+        name='data_collection_frequency_edit'
     )
 ]

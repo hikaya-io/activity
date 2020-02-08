@@ -190,7 +190,7 @@ class DataCollectionFrequency(models.Model):
         verbose_name_plural = 'Data Collection Frequencies'
 
     def __str__(self):
-        return self.frequency
+        return self.frequency or ''
 
 
 class ReportingPeriod(models.Model):

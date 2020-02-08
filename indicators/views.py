@@ -2150,3 +2150,24 @@ class DataCollectionFrequencyList(GView):
             return JsonResponse(list(frequencies), safe=False)
         else:
             return JsonResponse(dict(error='Failed'))
+
+
+class DataCollectionFrequencyUpdate(GView):
+    """
+    View to Update DataCollectionFrequency and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        frequency_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        frequency = data.get('frequency')
+        collection_frequency = DataCollectionFrequency.objects.get(
+            id=frequency_id
+        )
+
+        collection_frequency.frequency = frequency
+        collection_frequency.save()
+
+        if collection_frequency:
+            return JsonResponse(model_to_dict(collection_frequency))
+        else:
+            return JsonResponse(dict(error='Failed'))
