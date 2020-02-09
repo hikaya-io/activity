@@ -149,6 +149,12 @@ def get_nav_links(nav):
         {'label': 'People', 'status': '',
          'link': '/accounts/admin/users/all/all/'},
         {'label': 'Usage', 'status': '', 'link': '/accounts/admin_dashboard'},
+        {'label': 'Workflow', 'status': '', 
+         'link': '/accounts/admin/workflow_settings'},
+        {'label': 'Indicator', 'status': '', 
+         'link': '/accounts/admin/indicator_settings'},
+        {'label': 'FormLibrary', 'status': '', 
+         'link': '/accounts/admin/form_library_settings'},
         {'label': 'Component', 'status': '', 
          'link': '/accounts/admin/component_admin'}
     ]

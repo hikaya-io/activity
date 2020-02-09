@@ -18,9 +18,11 @@ from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
     Benchmarks, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector, Country, ProfileType,
+    ActivityUser, Contact, Sector, Country, ProfileType, 
 )
-from indicators.models import CollectedData, Indicator, PeriodicTarget
+from indicators.models import (
+    CollectedData, Indicator, PeriodicTarget, Level,
+)
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
 from activity.util import get_country
 
