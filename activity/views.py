@@ -684,6 +684,7 @@ def admin_component_admin(request):
             'nav_links': nav_links,
             'organization': organization,
             'get_profile_types': profile_types,
+            'get_all_levels': levels,
             'active': 'component_admin'
         }
     )
@@ -705,12 +706,6 @@ def admin_indicator_config(request):
             'get_collection_frequencies': get_collection_frequencies,
             'active': 'indicator_config'
         }
-        {
-            'organization': organization,
-            'get_profile_types': profile_types,
-            'get_all_levels': levels,
-            'active': 'component_admin'
-            }
     )
 
 
