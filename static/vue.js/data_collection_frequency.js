@@ -16,7 +16,7 @@ Vue.component('modal', {
       modalHeader:'Add Data Collection Frequency',
     }, 
     beforeMount: function(){
-        axios.get('/indicators/data_collection_frequency/list')
+        this.makeRequest('GET', '/indicators/data_collection_frequency/list')
         .then(response => {
             if(response.data) {
                 this.frequencies = response.data.sort((a, b) => b.id - a.id)
@@ -60,9 +60,8 @@ Vue.component('modal', {
         },
 
         postData(saveNew) {
-            axios.defaults.xsrfHeaderName = "X-CSRFToken"
-            axios.defaults.xsrfCookieName = 'csrftoken' 
-            axios.post(
+            this.makeRequest(
+                'POST',
                 `/indicators/data_collection_frequency/add`, 
                 { frequency: this.frequency }
               )
@@ -84,9 +83,8 @@ Vue.component('modal', {
         },
 
         updateFrequency() {
-            axios.defaults.xsrfHeaderName = "X-CSRFToken"
-            axios.defaults.xsrfCookieName = 'csrftoken' 
-            axios.put(
+            this.makeRequest(
+                'PUT',
                 `/indicators/data_collection_frequency/edit/${this.currentFrequency.id}`, 
                 { frequency: this.frequency }
               )
@@ -110,6 +108,12 @@ Vue.component('modal', {
                     toastr.error('There was a problem updating your data!!');
                 })
 
+        },
+
+        makeRequest(method, url, data=null) {
+            axios.defaults.xsrfHeaderName = "X-CSRFToken"
+            axios.defaults.xsrfCookieName = 'csrftoken' 
+            return axios({method, url, data, })
         }
 
     },
