@@ -18,12 +18,16 @@
 		<div class="mb-15">
 			{% include 'admin/sections/side-nav.html' %}
 		</div>
-
-        <div >
+	</div>
+        <div class="bg-white mt-10 p-10 pt-0">
             {% include 'components/lists/profile_types_list.html' %}
+		</div>
+		
+		<div class="bg-white mt-10 p-10 pt-0">
+            {% include 'components/lists/levels_list.html' %}
         </div>
 
-	</div>
+	
 </div>
 <script>
 	$('#reset-config-form').click(() => {

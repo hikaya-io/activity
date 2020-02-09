@@ -16,7 +16,7 @@ from .models import (
     FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
 )
 from formlibrary.models import TrainingAttendance, Distribution
-from indicators.models import CollectedData, ExternalService
+from indicators.models import CollectedData, ExternalService, Level
 from django.utils import timezone
 
 from .forms import (
@@ -24,7 +24,7 @@ from .forms import (
     ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
     DocumentationForm, SiteProfileForm, BenchmarkForm, BudgetForm,
     FilterForm, ProgramForm, SiteProfileQuickEntryForm,
-    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm, ProfileTypeForm
+    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm, ProfileTypeForm,
 )
 
 import pytz
@@ -1208,21 +1208,6 @@ class ProjectCompleteBySite(ListView):
         return q
 
 
-class ProfileTypeList(ListView):
-    """
-    get_profile types
-    """
-    model = ProfileType
-    template_name = 'workflow/profile_type_list.html'
-
-    def get(self, request, *args, **kwargs):
-        get_profile_types = ProfileType.objects.all()
-
-        return render(request, self.template_name,
-                      {'get_profile_types': get_profile_types,
-                       'active': ['components', 'profile_type_list']})
-
-
 class ProfileTypeCreate(GView):
     """
     create ProfileType View
@@ -1242,11 +1227,6 @@ class ProfileTypeCreate(GView):
         else: 
             return JsonResponse({'error': 'Error saving profile type'})
 
-
-# class ProfileTypeUpdate(UpdateView):
-#     model = ProfileType
-#     form_class = ProfileTypeForm
-    # template_name_suffix = '_form'
 
 class ProfileTypeUpdate(UpdateView):
     """

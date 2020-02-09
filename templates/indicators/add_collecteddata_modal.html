@@ -13,7 +13,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Add Collected Data</h4>
+                    <h4 class="modal-title">Add Results</h4>
                 </div>
                 <div class="modal-body">
                     <div>
@@ -28,9 +28,8 @@
                             </div>
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group" id="div_date_collected">
-                                    <label for="id_date_collected">Date Collected*</label>
-                                    <input type="date" id="id_date_collected" name="date_collected" class="form-control">
-                                    <span id="dateHelpBlock" class="help-block hikaya-hide">Collection date is required</span>
+                                    <label for="dateCollected">Date Collected</label>
+                                    <input type="text" id="dateCollected" name="date_collected" class="form-control" placeholder="Date Collected" autocomplete="off"/>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +39,7 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
                                 <div class="form-group">
-                                    <label for="id_target">Target*</label>
+                                    <label for="id_target">Target</label>
                                     <input type="number" id="id_target" name="target" class="form-control"
                                         value="" readonly>
                                 </div>

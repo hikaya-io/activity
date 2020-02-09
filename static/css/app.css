@@ -1155,3 +1155,54 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   justify-content: flex-end;
   align-items: center;
 }
+
+/* for site model active status button */
+.badge {
+  display: inline-block;
+  min-width: 10px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  color: #2ac27f;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-color: #d8f3e7;
+  border-radius: 10px;
+}
+
+.site-active {
+  color: #2ac27f;
+  background-color: #d8f3e7;
+}
+
+.site-inactive {
+  color: #737581;
+  background-color: #f4f5f7;
+}
+
+.project-status__new {
+  background-color: #f4f5f7;
+  color: #737581
+}
+
+.project-status__in-progress {
+  background-color: #e5d8f5;
+  color: #742dc8
+}
+
+.project-status__awaiting-approval {
+  background-color: #e5d8f5;
+  color: #742dc8
+}
+
+.project-status__rejected {
+  background-color: #fad8d8;
+  color: #e52c2c
+}
+
+.project-status__approved {
+  background-color: #d8f3e7;
+  color: #2ac27f
+}

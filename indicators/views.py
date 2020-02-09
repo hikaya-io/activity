@@ -695,13 +695,15 @@ class CollectedDataAdd(GView):
     def post(self, request):
         data = request.POST
 
-        # print(data.get('periodic_target', ''))
-        # peridoic_target=PeriodicTarget.objects.filter(id=int(data.get('periodic_target', ''))))
+        if data.get('date_collected') == "":
+            date = None
+        else:
+            date = data.get('date_collected')
 
         collected_data = CollectedData.objects.create(
             achieved=data.get('actual', ''),
             targeted=data.get('target', ''),
-            date_collected=data.get('date_collected', None),
+            date_collected=date,
             periodic_target=PeriodicTarget.objects.filter(id=int(data.get('periodic_target', ''))).first(),
             indicator=Indicator.objects.filter(id=int(data.get('indicator', ''))).first(),
             evidence=Documentation.objects.filter(id=int(data.get('documentation', None))).first(),
@@ -2074,9 +2076,10 @@ def objective_delete(request, pk):
     :param pk:
     :return:
     """
-    objective = StrategicObjective.objects.get(pk=int(pk))
+    objective = Objective.objects.get(pk=int(pk))
     objective.delete()
-    return redirect('/workflow/objectives')
+    
+    return redirect('/indicators/objectives')
 
 
 class LevelListView(ListView):
@@ -2090,35 +2093,40 @@ class LevelListView(ListView):
         }
         return render(request, 'components/levels.html', context)
 
- 
-class LevelCreateView(CreateView):
-    """Veiw class to create a level"""
-    model = Level
-    template_name = 'components/modal/add_level_modal.html'
 
-    def post(self, request, *args, **kwargs):
+class LevelCreateView(CreateView):
+     """
+     create Level View
+     : returns success: Json object { 'success': True/False }
+     """
+     def post(self, request):
         data = request.POST
+        
         level = Level(
             name=data.get('level_name'),
             description=data.get('description')
         )
         level.save()
-        if (data.get('saveLevelAndNew')):
-            return HttpResponseRedirect('/indicators/levels?quick-action=true')
-        return HttpResponseRedirect('/indicators/levels')
+
+        if level:
+            return JsonResponse({'success': True})
+        else: 
+            return JsonResponse({'error': 'Error saving level'})
+
 
 
 class LevelUpdateView(UpdateView):
     model = Level
     form_class = LevelForm
     template_name_suffix = '_update_form'
+    success_url = '/accounts/admin/component_admin'
 
 
 def level_delete(request, pk):
     """View to delete a level"""
     level = Level.objects.get(pk=int(pk))
     level.delete()
-    return redirect('/indicators/levels')
+    return redirect('/accounts/admin/component_admin')
 
 
 # Vue.js Views

@@ -27,6 +27,7 @@ from django.core.exceptions import MultipleObjectsReturned
 
 from indicators.models import (
     CollectedData, Indicator, DataCollectionFrequency,
+    Level,
 )
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
@@ -673,6 +674,7 @@ def admin_component_admin(request):
     user = get_object_or_404(ActivityUser, user=request.user)
     organization = user.organization
     profile_types = ProfileType.objects.all()
+    levels = Level.objects.all()
 
     nav_links = get_nav_links('Component')
     return render(
@@ -703,6 +705,54 @@ def admin_indicator_config(request):
             'get_collection_frequencies': get_collection_frequencies,
             'active': 'indicator_config'
         }
+        {
+            'organization': organization,
+            'get_profile_types': profile_types,
+            'get_all_levels': levels,
+            'active': 'component_admin'
+            }
+    )
+
+
+@login_required(login_url='/accounts/login/')
+def admin_form_library_settings(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+
+    nav_links = get_nav_links('FormLibrary')
+    return render(
+        request,
+        'admin/form_library_settings.html',
+        {'organization': organization, 
+        'active': 'form_library_settings'}
+    )
+
+
+@login_required(login_url='/accounts/login/')
+def admin_workflow_settings(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+
+    nav_links = get_nav_links('Workflow')
+    return render(
+        request,
+        'admin/workflow_settings.html',
+        {'organization': organization, 
+        'active': 'workflow_settings'}
+    )
+
+
+@login_required(login_url='/accounts/login/')
+def admin_indicator_settings(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+
+    nav_links = get_nav_links('Indicator')
+    return render(
+        request,
+        'admin/indicator_settings.html',
+        {'organization': organization, 
+        'active': 'indicator_settings'}
     )
 
 

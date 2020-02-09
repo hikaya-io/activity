@@ -171,7 +171,22 @@ def get_nav_links(nav):
             'label': 'Indicator Configurations',
             'status': '',
             'link': '/accounts/admin/indicator_configs_admin'
-        }
+        },
+        {
+            'label': 'Workflow',
+            'status': '',
+            'link': '/accounts/admin/workflow_settings'
+        },
+         {
+             'label': 'Indicator',
+             'status': '',
+            'link': '/accounts/admin/indicator_settings'
+            },
+        {
+            'label': 'FormLibrary',
+            'status': '',
+            'link': '/accounts/admin/form_library_settings'
+            },
     ]
     for item in nav_links:
         if item['label'] == nav:
