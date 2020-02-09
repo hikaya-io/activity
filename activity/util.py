@@ -163,9 +163,9 @@ def get_nav_links(nav):
             'link': '/accounts/admin_dashboard'
         },
         {
-            'label': 'Component',
+            'label': 'Workflows',
             'status': '',
-            'link': '/accounts/admin/component_admin'
+            'link': '/accounts/admin/workflow_settings'
         },
         {
             'label': 'Indicator Configurations',
@@ -173,20 +173,15 @@ def get_nav_links(nav):
             'link': '/accounts/admin/indicator_configs_admin'
         },
         {
-            'label': 'Workflow',
-            'status': '',
-            'link': '/accounts/admin/workflow_settings'
-        },
-         {
-             'label': 'Indicator',
-             'status': '',
-            'link': '/accounts/admin/indicator_settings'
-            },
-        {
-            'label': 'FormLibrary',
+            'label': 'Form Library',
             'status': '',
             'link': '/accounts/admin/form_library_settings'
-            },
+        },
+        {
+            'label': 'Components',
+            'status': '',
+            'link': '/accounts/admin/component_admin'
+        },
     ]
     for item in nav_links:
         if item['label'] == nav:
