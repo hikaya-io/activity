@@ -2114,12 +2114,40 @@ class LevelCreateView(CreateView):
             return JsonResponse({'error': 'Error saving level'})
 
 
-
 class LevelUpdateView(UpdateView):
+    """
+    Level Form
+    """
     model = Level
+    guidance = None
+    template_name = 'indicators/level_update_form.html'
+
+    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            self.guidance = FormGuidance.objects.get(form="LevelForm")
+        except FormGuidance.DoesNotExist:
+            self.guidance = None
+        return super(LevelUpdateView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(LevelUpdateView, self).get_context_data(**kwargs)
+        level = Level.objects.get(pk=int(self.kwargs['pk']))
+        context.update({'name': level.name})
+        context.update({'id': self.kwargs['pk']})
+        return context
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid Form', fail_silently=False)
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Success, Level Updated!')
+
+        return redirect('/accounts/admin/component_admin')
+
     form_class = LevelForm
-    template_name_suffix = '_update_form'
-    success_url = '/accounts/admin/component_admin'
 
 
 def level_delete(request, pk):
