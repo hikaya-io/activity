@@ -142,25 +142,50 @@ def group_required(*group_names, url):
 
 def get_nav_links(nav):
     nav_links = [
-        {'label': 'Profile', 'status': '',
-         'link': '/accounts/admin/profile_settings'},
-        {'label': 'Configurations', 'status': '',
-         'link': '/accounts/admin/configurations'},
-        {'label': 'People', 'status': '',
-         'link': '/accounts/admin/users/all/all/'},
-        {'label': 'Usage', 'status': '', 'link': '/accounts/admin_dashboard'},
-        {'label': 'Workflow', 'status': '', 
-         'link': '/accounts/admin/workflow_settings'},
-        {'label': 'Indicator', 'status': '', 
-         'link': '/accounts/admin/indicator_settings'},
-        {'label': 'FormLibrary', 'status': '', 
-         'link': '/accounts/admin/form_library_settings'},
-        {'label': 'Component', 'status': '', 
-         'link': '/accounts/admin/component_admin'}
+        {
+            'label': 'Profile',
+            'status': '',
+            'link': '/accounts/admin/profile_settings'
+        },
+        {
+            'label': 'Configurations',
+            'status': '',
+            'link': '/accounts/admin/configurations'
+        },
+        {
+            'label': 'People',
+            'status': '',
+            'link': '/accounts/admin/users/all/all/'
+        },
+        {
+            'label': 'Usage',
+            'status': '',
+            'link': '/accounts/admin_dashboard'
+        },
+        {
+            'label': 'Workflows',
+            'status': '',
+            'link': '/accounts/admin/workflow_settings'
+        },
+        {
+            'label': 'Indicator Configurations',
+            'status': '',
+            'link': '/accounts/admin/indicator_configs_admin'
+        },
+        {
+            'label': 'Form Library',
+            'status': '',
+            'link': '/accounts/admin/form_library_settings'
+        },
+        {
+            'label': 'Components',
+            'status': '',
+            'link': '/accounts/admin/component_admin'
+        },
     ]
     for item in nav_links:
         if item['label'] == nav:
-            item['status'] = 'hikaya-active'
+            item['status'] = 'active'
     return nav_links
 
 

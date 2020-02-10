@@ -166,6 +166,11 @@ urlpatterns = [  # rest framework
          name="admin_form_library_settings"),
     path('accounts/admin/component_admin', views.admin_component_admin,
          name="admin_component_admin"),
+    path(
+        'accounts/admin/indicator_configs_admin',
+        views.admin_indicator_config,
+        name='indicator_configs_admin'
+    ),
 
     # bookmarks
     path('bookmark_list', BookmarkList.as_view(),

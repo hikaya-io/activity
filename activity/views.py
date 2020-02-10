@@ -26,13 +26,14 @@ from django.views.decorators.csrf import csrf_protect
 from django.core.exceptions import MultipleObjectsReturned
 
 from indicators.models import (
-    CollectedData, Indicator, Level,
+    CollectedData, Indicator, DataCollectionFrequency,
+    Level,
 )
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, ActivityUser, ActivityBookmarks, FormGuidance,
     Organization, UserInvite, Stakeholder, Contact, Documentation,
-    ActivityUserOrganizationGroup, ProfileType, 
+    ActivityUserOrganizationGroup, ProfileType,
 )
 from activity.util import get_nav_links, send_invite_emails, \
     send_single_mail
@@ -615,7 +616,11 @@ def admin_profile_settings(request):
     return render(
         request,
         'admin/profile_settings.html',
-        {'nav_links': nav_links, 'organization': organization, 'active': 'profile'}
+        {
+            'nav_links': nav_links,
+            'organization': organization,
+            'active': 'profile'
+        }
     )
 
 
@@ -663,6 +668,7 @@ def admin_user_management(request, role, status):
         'active': 'people'
     })
 
+
 @login_required(login_url='/accounts/login/')
 def admin_component_admin(request):
     user = get_object_or_404(ActivityUser, user=request.user)
@@ -674,11 +680,34 @@ def admin_component_admin(request):
     return render(
         request,
         'admin/component_admin.html',
-        {'organization': organization, 
-        'get_profile_types': profile_types,
-        'get_all_levels': levels,
-        'active': 'component_admin'}
+        {
+            'nav_links': nav_links,
+            'organization': organization,
+            'get_profile_types': profile_types,
+            'get_all_levels': levels,
+            'active': 'component_admin'
+        }
     )
+
+
+@login_required(login_url='/accounts/login/')
+def admin_indicator_config(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+    get_collection_frequencies = DataCollectionFrequency.objects.all()
+
+    nav_links = get_nav_links('Indicator Configurations')
+    return render(
+        request,
+        'admin/indicator_configs.html',
+        {
+            'nav_links': nav_links,
+            'organization': organization,
+            'get_collection_frequencies': get_collection_frequencies,
+            'active': 'indicator_config'
+        }
+    )
+
 
 @login_required(login_url='/accounts/login/')
 def admin_form_library_settings(request):

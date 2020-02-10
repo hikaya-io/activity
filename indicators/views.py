@@ -5,9 +5,11 @@ from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.forms.models import model_to_dict
 
 from urllib.parse import urlparse
 import re
+import json
 
 from .export import IndicatorResource, CollectedDataResource
 from .tables import IndicatorDataTable
@@ -17,7 +19,7 @@ from .forms import (
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
     DisaggregationType, CollectedData, IndicatorType, Level, ExternalServiceRecord,
-    ExternalService, ActivityTable, StrategicObjective, Objective
+    ExternalService, ActivityTable, StrategicObjective, Objective, DataCollectionFrequency,
 )
 
 from django.db.models import Count, Sum, Min, Q
@@ -2112,11 +2114,13 @@ class LevelCreateView(CreateView):
             return JsonResponse({'error': 'Error saving level'})
 
 
+
 class LevelUpdateView(UpdateView):
     model = Level
     form_class = LevelForm
     template_name_suffix = '_update_form'
     success_url = '/accounts/admin/component_admin'
+
 
 def level_delete(request, pk):
     """View to delete a level"""
@@ -2124,3 +2128,54 @@ def level_delete(request, pk):
     level.delete()
     return redirect('/accounts/admin/component_admin')
 
+
+# Vue.js Views
+class DataCollectionFrequencyCreate(GView):
+    """
+    View to create DataCollectionFrequency and return Json response
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        frequency = data.get('frequency')
+        collection_frequency = DataCollectionFrequency.objects.create(
+            frequency=frequency
+        )
+
+        if collection_frequency:
+            return JsonResponse(model_to_dict(collection_frequency))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class DataCollectionFrequencyList(GView):
+    """
+    View to create DataCollectionFrequency and return Json response
+    """
+    def get(self, request):
+
+        frequencies = DataCollectionFrequency.objects.values()
+        if frequencies:
+            return JsonResponse(list(frequencies), safe=False)
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class DataCollectionFrequencyUpdate(GView):
+    """
+    View to Update DataCollectionFrequency and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        frequency_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        frequency = data.get('frequency')
+        collection_frequency = DataCollectionFrequency.objects.get(
+            id=frequency_id
+        )
+
+        collection_frequency.frequency = frequency
+        collection_frequency.save()
+
+        if collection_frequency:
+            return JsonResponse(model_to_dict(collection_frequency))
+        else:
+            return JsonResponse(dict(error='Failed'))

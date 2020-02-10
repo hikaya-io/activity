@@ -1,0 +1,24 @@
+<form id="addProfileTypesForm" method="POST">
+    <div class="modal-body">
+      {% csrf_token %}
+      <div :class="{
+          'form-group': true, 
+          'has-error': errors.has('frequency')
+        }">
+        <label for="frequency">Frequency*</label
+        >
+        <input
+          type="text"
+          name="frequency"
+          :class="{ 
+              'form-control': true, 
+              'is-danger': errors.has('frequency') 
+            }"   
+          v-model="frequency" 
+          v-validate="'required'"
+          placeholder="Enter frequency"
+        />
+        <span v-show="errors.has('frequency')" class="help is-danger">[[ errors.first('frequency') ]]</span>
+      </div>
+    </div>
+  </form>

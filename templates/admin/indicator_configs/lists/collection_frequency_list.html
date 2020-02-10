@@ -1,0 +1,96 @@
+{% include 'components/modals/add_profile_types_modal.html' %}
+
+<div id="data_collection_frequency">
+  <!-- Sub navigation -->
+<div class="sub-navigation">
+    <div class="sub-navigation-header">
+        <h4 class="page-title">Data Collection Frequency List</h4>
+    </div>
+    <div class="sub-navigation-actions"> 
+        <div class="sub-nav-item">
+          <div class="btn-group" role="group" aria-label="...">
+              <a
+              role="button"
+              class="btn btn-sm btn-primary"
+              id="show-modal" 
+              @click="showModal = true"
+              >
+              <i class="fa fa-plus"></i> Data Collection Frequency
+              </a>
+          </div>
+          <modal v-if="showModal" @close="showModal = false">
+            <div slot="body">
+              {% include 'admin/indicator_configs/forms/data_collection_form.html' %}
+            </div>
+            <div slot="footer">
+              {% include 'admin/indicator_configs/forms/form_footer.html' %}
+            </div>
+            <h4 slot="header">[[modalHeader]]</h4>
+          </modal>
+        </div>
+    </div>
+</div>
+
+<!-- Table -->
+<table class="table" id="dataCollectionFrequencyTable" v-if="frequencies.length">
+    <thead>
+        <tr>
+        <th>Frequency</th>
+        <th>Number of days</th>
+        <th>Create Date</th>
+        <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+      <tr v-cloak v-for="frequency in frequencies" v-if="frequency.frequency">
+        <td>
+          <a href="/workflow/profile_type_update/{{profile_type.id}}/" data-toggle="tooltip" title="{{profile_type.profile}}">
+            [[ frequency.frequency ]]
+          </a>
+        </td>
+        <td>
+           [[ frequency.create_date ]]
+        </td>
+        <td>
+            [[frequency.edit_date]]
+          </td>
+        <td class="text-right">
+          <!-- Split button -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm disabled">Actions</button>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a 
+                @click=toggleModal(frequency)
+                >Edit</a></li>
+              <li>
+                <a 
+                  class="text-danger"
+                  href="#deleteItemModal{{ profile_type.id }}"
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{ profile_type.id }})"
+                  data-target="#deleteItemModal{{ profile_type.id }}"
+                >Delete</a></li> 
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% include 'ui-components/vue_modal.html'%}
+
+{% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}vue.js/data_collection_frequency.js"></script>
+{% endblock extra_js_in_body %}
+

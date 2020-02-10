@@ -38,7 +38,7 @@
   <link href="{% static 'css/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
 
   <!-- jsTree -->
-  <link rel="styleshee" href="{% static 'jstree/dist/themes/default/style.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'jstree/dist/themes/default/style.min.css' %}" />
 
   <!-- hierachy chart -->
   <link rel="stylesheet" href="{% static 'hierachy_chart/jquery.orgchart.css' %}" />
@@ -50,6 +50,7 @@
   <link rel="stylesheet" href="{% static 'css/select2.min.css' %} " />
 
   <link href="{% static 'css/admin.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'css/vue_modal.css' %}" rel="stylesheet" type="text/css" />
   <link href="{% static 'css/components.css' %}" rel="stylesheet" type="text/css" />
 
   <link href="{% static 'css/hikaya-bootstrap.css' %}" rel="stylesheet" type="text/css" />
@@ -80,7 +81,12 @@
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
    crossorigin=""></script>
-
+   
+   <!-- Vue.js scripts -->
+   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+   <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
+   <script src="https://cdn.jsdelivr.net/npm/vee-validate@2.0.0/dist/vee-validate.js"></script>
+   <!-- end of Vue.js scripts -->
   {% endblock %}
   {{ form.media }}
 </head>
