@@ -168,7 +168,7 @@ def get_nav_links(nav):
             'link': '/accounts/admin/workflow_settings'
         },
         {
-            'label': 'Indicator Configurations',
+            'label': 'Indicators',
             'status': '',
             'link': '/accounts/admin/indicator_configs_admin'
         },
