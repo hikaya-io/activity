@@ -884,7 +884,7 @@ class CollectedDataUpdate(UpdateView):
         try:
             get_disaggregation_label = DisaggregationLabel.objects.all()\
                 .filter(
-                disaggregation_type__indicator__id=get_indicator.indicator_id)
+                disaggregation_type__indicator__id=get_indicator.indicator__id)
             get_disaggregation_label_standard = \
                 DisaggregationLabel.objects.all().filter(
                     disaggregation_type__standard=True)
