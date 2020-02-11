@@ -1206,3 +1206,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   background-color: #d8f3e7;
   color: #2ac27f
 }
+
+.force-link {
+  cursor: pointer;
+}

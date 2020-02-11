@@ -13,6 +13,7 @@ from .views import (
     objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelListView, 
     LevelCreateView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, LevelUpdateView,level_delete,
     IndicatorTarget, DataCollectionFrequencyCreate, DataCollectionFrequencyList, DataCollectionFrequencyUpdate,
+    DataCollectionFrequencyDelete,
 )
 
 urlpatterns = [
@@ -144,5 +145,10 @@ urlpatterns = [
         'data_collection_frequency/edit/<int:id>',
         DataCollectionFrequencyUpdate.as_view(),
         name='data_collection_frequency_edit'
-    )
+    ),
+    path(
+            'data_collection_frequency/delete/<int:id>',
+            DataCollectionFrequencyDelete.as_view(),
+            name='data_collection_frequency_delete'
+        )
 ]

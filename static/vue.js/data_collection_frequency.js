@@ -9,10 +9,12 @@ Vue.component('modal', {
     el: '#data_collection_frequency',
     data: {
       showModal: false,
+      showDeleteModal: false,
       frequency: '',
       frequencies: [],
       isEdit: false,
       currentFrequency: null,
+      itemToDelete: null,
       modalHeader:'Add Data Collection Frequency',
     }, 
     beforeMount: function(){
@@ -42,6 +44,14 @@ Vue.component('modal', {
                 this.frequency = item.frequency;
             }
         },
+
+        toggleDeleteModal: function(data) {
+            this.showDeleteModal = !this.showDeleteModal;
+            console.log('Item:::', data);
+            this.modalHeader = 'Confirm delete';
+            this.itemToDelete = data;
+        },
+
         processForm: function(saveNew=false) {
 
             this.$validator.validateAll().then((result) => {
@@ -108,6 +118,25 @@ Vue.component('modal', {
                     toastr.error('There was a problem updating your data!!');
                 })
 
+        },
+
+        deleteFrequency(id) {
+            this.makeRequest(
+                'DELETE',
+                `/indicators/data_collection_frequency/delete/${id}`
+                )
+                .then(response => {
+                    if(response.data.success) {
+                        toastr.success('Frequency was successfuly Deleted');
+                        this.frequencies = this.frequencies.filter(item => +item.id !== +id)
+                        this.showDeleteModal = !this.showDeleteModal;
+                    } else {
+                        toastr.error('There was a problem Deleting frequency!!');
+                    }
+                })
+                .catch(e => {
+                    toastr.error('There was a server error!!');
+                })
         },
 
         makeRequest(method, url, data=null) {
