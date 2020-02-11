@@ -882,12 +882,17 @@ class CollectedDataUpdate(UpdateView):
         get_indicator = CollectedData.objects.get(id=self.kwargs['pk'])
 
         try:
-            get_disaggregation_label = DisaggregationLabel.objects.all()\
-                .filter(
-                disaggregation_type__indicator__id=get_indicator.indicator__id)
+            if get_indicator.indicator is not None:
+                get_disaggregation_label = DisaggregationLabel.objects.all()\
+                    .filter(
+                    disaggregation_type__indicator__id=get_indicator.indicator.id)
+            else:
+                get_disaggregation_label = None
+
             get_disaggregation_label_standard = \
                 DisaggregationLabel.objects.all().filter(
                     disaggregation_type__standard=True)
+
         except DisaggregationLabel.DoesNotExist:
             get_disaggregation_label = None
             get_disaggregation_label_standard = None
@@ -942,7 +947,7 @@ class CollectedDataUpdate(UpdateView):
         get_collected_data = CollectedData.objects.get(id=self.kwargs['pk'])
         get_disaggregation_label = DisaggregationLabel.objects.all()\
             .filter(
-            Q(disaggregation_type__indicator__id=self.request.POST['indicator']) |
+            Q(disaggregation_type__indicator__id=self.request.POST.get('indicator')) |
             Q(disaggregation_type__standard=True)).distinct()
 
         get_indicator = CollectedData.objects.get(id=self.kwargs['pk'])
@@ -984,8 +989,7 @@ class CollectedDataUpdate(UpdateView):
 
         messages.success(self.request, 'Success, Data Updated!')
 
-        redirect_url = '/indicators/home/0/0/0/#hidden-' + \
-            str(get_indicator.program.id)
+        redirect_url = '/indicators/home/0/0/0/'
         return HttpResponseRedirect(redirect_url)
 
     form_class = CollectedDataForm
