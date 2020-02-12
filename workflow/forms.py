@@ -266,6 +266,7 @@ class ProjectAgreementForm(forms.ModelForm):
                 ('rejected', 'rejected'),
 
             )
+
             self.fields['approval'].choices = APPROVALS
             # self.fields['approved_by'].widget.attrs['disabled'] = "disabled"
             self.fields['approval_remarks'].widget.attrs[
@@ -379,9 +380,11 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
 
         if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
+            # Status field for new project initiation form
             APPROVALS = (
                 ('in progress', 'in progress'),
                 ('awaiting approval', 'awaiting approval'),
+                ('approved', 'approved'),
                 ('rejected', 'rejected'),
                 ('new', 'new')
             )
@@ -1155,7 +1158,7 @@ class SiteProfileQuickEntryForm(forms.ModelForm):
 
 
 class SiteProfileForm(forms.ModelForm):
-    map = forms.CharField()
+    map = forms.CharField(required=False)
 
     class Meta:
         model = SiteProfile
@@ -1193,12 +1196,6 @@ class SiteProfileForm(forms.ModelForm):
                     Fieldset('Description',
                              'name', 'type', 'office', 'status',
                              ),
-                    Fieldset('Contact Info',
-                             'contact_leader', 'date_of_firstcontact',
-                             'contact_number', 'num_members',
-                             ),
-                    ),
-                Tab('Location',
                     Fieldset('Places',
                              'country', 'province', 'district',
                              'admin_level_three', 'village',
@@ -1206,9 +1203,13 @@ class SiteProfileForm(forms.ModelForm):
                              Field('longitude', step="any"),
                              ),
                     Fieldset('Map',
-                                 Row(
-                                    'map'
-                                 )
+                                HTML("""<div id="div_id_map"></div>"""),
+                             ),
+                    ),
+                Tab('Contact',
+                    Fieldset('Contact Info',
+                             'contact_leader', 'date_of_firstcontact',
+                             'contact_number', 'num_members',
                              ),
                     ),
                 Tab('Demographic Information',
@@ -1287,6 +1288,7 @@ class SiteProfileForm(forms.ModelForm):
             country__in=countries).distinct()
         self.fields['filled_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
+        self.fields['map'].widget = HiddenInput()
 
 
 class ProfileTypeForm(forms.ModelForm):
