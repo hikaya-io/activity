@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='organization',
             name='activity_url',
-            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='activity URL'),
+            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Activity URL'),
         ),
         migrations.AddField(
             model_name='organization',

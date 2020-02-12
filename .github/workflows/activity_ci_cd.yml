@@ -1,4 +1,4 @@
-name: activity
+name: Activity
 
 on: 
   push:

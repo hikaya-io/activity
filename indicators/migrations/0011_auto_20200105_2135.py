@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='activitytable',
-            options={'verbose_name': 'activity Table', 'verbose_name_plural': 'activity Tables'},
+            options={'verbose_name': 'Activity Table', 'verbose_name_plural': 'Activity Tables'},
         ),
         migrations.AlterModelOptions(
             name='collecteddata',

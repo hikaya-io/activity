@@ -61,7 +61,7 @@ class ActivitySites(models.Model):
     updated = models.DateTimeField(auto_now=False, blank=True, null=True)
 
     class Meta:
-        verbose_name_plural = "activity Sites"
+        verbose_name_plural = "Activity Sites"
 
     def __str__(self):
         return self.name
@@ -124,7 +124,7 @@ class Organization(models.Model):
     organization_url = models.CharField(
         'URL', blank=True, null=True, max_length=255)
     activity_url = models.CharField(
-        'activity URL', blank=True, null=True, max_length=255)
+        'Activity URL', blank=True, null=True, max_length=255)
     location = models.CharField(
         'Location', blank=True, null=True, max_length=255)
     level_1_label = models.CharField(
@@ -474,7 +474,7 @@ class ApprovalAuthority(models.Model):
 
     class Meta:
         ordering = ('approval_user',)
-        verbose_name_plural = "activity Approval Authority"
+        verbose_name_plural = "Activity Approval Authority"
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
@@ -880,7 +880,7 @@ class Evaluate(models.Model):
 
 
 class ProjectType(models.Model):
-    name = models.CharField("Type of activity", max_length=135)
+    name = models.CharField("Type of Activity", max_length=135)
     description = models.CharField(max_length=765)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
@@ -1038,7 +1038,7 @@ class ProjectAgreement(models.Model):
                                      blank=True, null=True,
                                      on_delete=models.SET_NULL)
     project_activity = models.CharField(
-        "Project activity",
+        "Project Activity",
         help_text='This should come directly from the activities '
                   'listed in the Logframe',
         max_length=255, blank=True, null=True)
@@ -1059,7 +1059,7 @@ class ProjectAgreement(models.Model):
         "Sector", verbose_name="Sector", blank=True, null=True,
         on_delete=models.SET_NULL)
     project_design = models.CharField(
-        "activity design for", max_length=255, blank=True, null=True)
+        "Activity design for", max_length=255, blank=True, null=True)
     account_code = models.CharField(
         "Fund Code", help_text='', max_length=255, blank=True, null=True)
     lin_code = models.CharField(
@@ -1308,7 +1308,7 @@ class ProjectComplete(models.Model):
     project_name = models.CharField(
         "Project Name", max_length=255, blank=True, null=True)
     project_activity = models.CharField(
-        "Project activity", max_length=255, blank=True, null=True)
+        "Project Activity", max_length=255, blank=True, null=True)
     project_type = models.ForeignKey(
         ProjectType, max_length=255, blank=True, null=True,
         on_delete=models.SET_NULL)

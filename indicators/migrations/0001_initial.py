@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('disaggregation_type', models.CharField(blank=True, max_length=135)),
                 ('description', models.CharField(blank=True, max_length=765)),
-                ('standard', models.BooleanField(default=False, verbose_name='Standard (activity Admins Only)')),
+                ('standard', models.BooleanField(default=False, verbose_name='Standard (Activity Admins Only)')),
                 ('create_date', models.DateTimeField(blank=True, null=True)),
                 ('edit_date', models.DateTimeField(blank=True, null=True)),
             ],

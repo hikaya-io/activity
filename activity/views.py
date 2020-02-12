@@ -364,7 +364,7 @@ def register(request, invite_uuid):
 
 
 def send_welcome_email(request, user):
-    mail_subject = 'Welcome to activity'
+    mail_subject = 'Welcome to Activity'
     data = {'user': user, 'domain': request.build_absolute_uri('/').strip('/')}
     email_txt = 'emails/registration/welcome.txt'
     email_html = 'emails/registration/welcome.html'
@@ -518,7 +518,7 @@ def profile(request):
             user = User.objects.get(pk=request.user.id)
             if user:
 
-                # save activity user after updating name
+                # save Activity user after updating name
                 activity_user = ActivityUser.objects.get(user=request.user)
                 activity_user.organization = Organization.objects.get(
                     pk=int(activity_user_object['organization']))
@@ -804,7 +804,7 @@ def admin_user_edit(request, pk):
         User.objects.filter(pk=user_obj.id).update(**user_object)
         user = User.objects.get(pk=user_obj.pk)
         if user:
-            # save activity user after updating name
+            # save Activity user after updating name
             activity_user = activity_user_obj
             activity_user.employee_number = activity_user_object['employee_number']
             activity_user.organization = Organization.objects.get(
@@ -1075,7 +1075,7 @@ def invite_user(request):
                     failed_invites.append(email)
 
         # send invitation mails
-        mail_subject = 'Invitation to Join activity'
+        mail_subject = 'Invitation to Join Activity'
         email_from = 'team.hikaya@gmail.com'
         domain = request.build_absolute_uri('/').strip('/')
         data = {
@@ -1184,7 +1184,7 @@ class UserInviteView(View):
         :param user_invites:
         :param link:
         """
-        mail_subject = 'Invitation to Join activity'
+        mail_subject = 'Invitation to Join Activity'
         email_from = 'team.hikaya@gmail.com'
         domain = self.request.build_absolute_uri('/').strip('/')
         data = {'link': '{}{}'.format(domain, link)}

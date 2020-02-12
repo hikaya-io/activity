@@ -18,7 +18,7 @@ def home(request):
 
 def import_table(request):
     """
-    import collected data from activity Tables
+    import collected data from Activity Tables
     """
     owner = request.user
     service = ExternalService.objects.get(name="activitytables")

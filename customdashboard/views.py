@@ -368,7 +368,7 @@ def survey_public_dashboard(request, id=0):
     Extremely Customized dashboards
     This section contains custom dashboards or one-off dashboard for demo,
     or specificcustomer requests outside the scope of customized program dashboards
-    DEMO only survey for activity survey
+    DEMO only survey for Activity survey
     :return:
     """
 
@@ -471,7 +471,7 @@ def survey_public_dashboard(request, id=0):
 
 def survey_talk_public_dashboard(request, id=0):
     """
-    DEMO only survey for use with public talks about activity
+    DEMO only survey for use with public talks about Activity
     Share URL to survey and data will be aggregated in activitytables
     then imported to this dashboard
     :return:

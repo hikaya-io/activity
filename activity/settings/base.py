@@ -160,7 +160,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
-                'activity.processor.google_analytics',
+                'Activity.processor.google_analytics',
             ],
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
@@ -187,7 +187,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
-    'activity.middleware.TimingMiddleware'
+    'Activity.middleware.TimingMiddleware'
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 # END MIDDLEWARE CONFIGURATION
@@ -256,7 +256,7 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     'workflow',
     'formlibrary',
-    'activity',
+    'Activity',
     'feed',
     'indicators',
     'customdashboard',
@@ -280,7 +280,7 @@ AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.twitter.TwitterOAuth',
     # 'social_core.backends.yahoo.YahooOpenId',
     # 'django.contrib.auth.backends.ModelBackend',
-    'activity.middlewares.custom_middlewares.EmailOrUsernameBackend',
+    'Activity.middlewares.custom_middlewares.EmailOrUsernameBackend',
 )
 
 SOCIAL_AUTH_PIPELINE = (

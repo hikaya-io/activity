@@ -7,7 +7,7 @@ services:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/usr/src/activity/
+      - .:/usr/src/Activity/
     ports:
       - 8000:8000
     depends_on:
@@ -20,15 +20,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=activity
-      - POSTGRES_PASSWORD=activity
+      - POSTGRES_USER=Activity
+      - POSTGRES_PASSWORD=Activity
       - POSTGRES_DB=activity_dev
 
   migration:
     build: .
     command: python manage.py migrate --noinput
     volumes:
-      - .:/usr/src/activity/
+      - .:/usr/src/Activity/
     depends_on:
       - db
 volumes:
