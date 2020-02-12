@@ -18,9 +18,9 @@
 
     <table class="table" id="collectedDataTable">
         <tr>
-            <th class="align-bottom" style="min-width:180px;">Target Period</th>
+            <th class="align-bottom" style="min-width:180px;">Target period</th>
             <th class="text-right align-bottom">Target</th>
-            <th class="align-bottom" style="min-width: 125px;">Date Collected</th>
+            <th class="align-bottom" style="min-width: 125px;">Date collected</th>
             <th class="text-right align-bottom">Actual</th>
             <th class="text-right align-bottom" style="width: 65px">% Met</th>
             <th class="align-bottom">Evidence</th>
@@ -153,9 +153,9 @@
                     style="color:red; border-color: #f9f9f9; border-left: 0px solid; border-right: 0px solid; border-bottom: 0px solid;">
                     <small>
                         {% ifequal err 'Error_1' %}
-                            Targets are not set up for this indicator.
+                            Targets periods are not defined for this indicator.
                             <strong><a href="{% url 'indicator_update' indicator.id %}" data-tab="#targets"
-                                       class="indicator-link">Start by selecting a target frequency.</a></strong>
+                                       class="indicator-link">Start by creating target periods.</a></strong>
                         {% endifequal %}
 
                         {% ifequal err 'Error_2' %}
@@ -166,7 +166,7 @@
                         {% ifequal err 'Error_3' %}
                             This date falls outside the range of your target periods. You can change the date or
                             <strong><a href="{% url 'indicator_update' indicator.id %}" data-tab="#targets"
-                                       class="indicator-link">create additional target periods.</a></strong>
+                                       class="indicator-link">Create additional target periods.</a></strong>
                         {% endifequal %}
                     </small>
                 </td>
@@ -175,23 +175,22 @@
     </table>
     <div class="text-right">
         <button data-toggle="modal" data-settarget="{{indicator.lop_target}}" data-target="#addCollectedDataModal" data-program="{{program_id}}" data-indicator="{{indicator.id}}" role="button"
-        class="btn btn-sm btn-success collectdata">Add Results</button>
+        class="btn btn-sm btn-success collectdata">Add results</button>
     </div>
 {% else %}
     <table class="table table-condensed table-bordered" id="">
         <tr>
             <td valign="top" style="padding:2px;">
-                <img src="/static/img/target.png" class="img-responsive center-block" height="85" width="85">
+                <img src="/static/img/target.png" class="img-responsive center-block" height="35" width="35">
             </td>
-            <td valign="top" style="padding-left:10px; padding-top: 38px; font-size: 21px; color: #54585A;">
-                Organize your data for this indicator. <a href="{% url 'indicator_update' indicator.id %}"
-                                                          data-tab="#targets" class="indicator-link">Set a target
-                frequency.</a>
+            <td valign="top" style="padding-left:10px; font-size: 16px; color: #54585A;">
+                Before you can add results to this indicator, target periods need to be defined. <a href="{% url 'indicator_update' indicator.id %}"
+            data-tab="#targets" class="indicator-link">Set target periods.</a>
             </td>
         </tr>
     </table>
     <div class="text-right">
             <button data-toggle="modal" data-settarget="{{indicator.lop_target}}" data-target="#addCollectedDataModal" data-program="{{program_id}}" data-indicator="{{indicator.id}}" role="button"
-              class="btn btn-sm btn-success collectdata">Add Results</button>
+              class="btn btn-sm btn-success collectdata">Add results</button>
     </div>
 {% endif %}
