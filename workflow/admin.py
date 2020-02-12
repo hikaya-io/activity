@@ -19,8 +19,8 @@ from adminreport.mixins import ChartReportAdmin
 # Proxies
 class ActivityUserProxy(ActivityUser):
     class Meta:
-        verbose_name, verbose_name_plural = u"Report Activity User", \
-                                            u"Report Activity Users"
+        verbose_name, verbose_name_plural = u"Report activity User", \
+                                            u"Report activity Users"
         proxy = True
 
 
@@ -143,7 +143,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 @admin.register(ActivityUser)
 class ActivityUserAdmin(admin.ModelAdmin):
     list_display = ('name', 'country')
-    display = 'Activity User'
+    display = 'activity User'
     list_filter = ('country', 'user__is_staff',)
     search_fields = ('name', 'country__country', 'title')
 
@@ -301,7 +301,7 @@ class ChecklistItemAdmin(admin.ModelAdmin):
 @admin.register(ActivitySites)
 class ActivitySitesAdmin(admin.ModelAdmin):
     list_display = ('name', 'agency_name')
-    display = 'Activity Site'
+    display = 'activity Site'
     list_filter = ('name',)
     search_fields = ('name', 'agency_name')
 
@@ -401,7 +401,7 @@ class BenchmarksAdmin(admin.ModelAdmin):
 @admin.register(ActivityBookmarks)
 class ActivityBookmarksAdmin(admin.ModelAdmin):
     list_display = ('user', 'name')
-    display = 'Activity User Bookmarks'
+    display = 'activity User Bookmarks'
     list_filter = ('user__name',)
     search_fields = ('name', 'user')
 

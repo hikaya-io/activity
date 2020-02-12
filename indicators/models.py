@@ -27,8 +27,8 @@ class ActivityTable(models.Model):
     edit_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Activity Table'
-        verbose_name_plural = 'Activity Tables'
+        verbose_name = 'activity Table'
+        verbose_name_plural = 'activity Tables'
 
     def __str__(self):
         return self.name
@@ -122,7 +122,7 @@ class DisaggregationType(models.Model):
     country = models.ForeignKey(
         Country, null=True, blank=True, on_delete=models.SET_NULL)
     standard = models.BooleanField(
-        default=False, verbose_name="Standard (Activity Admins Only)")
+        default=False, verbose_name="Standard (activity Admins Only)")
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 

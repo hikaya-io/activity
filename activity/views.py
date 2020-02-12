@@ -364,7 +364,7 @@ def register(request, invite_uuid):
 
 
 def send_welcome_email(request, user):
-    mail_subject = 'Welcome to Activity'
+    mail_subject = 'Welcome to activity'
     data = {'user': user, 'domain': request.build_absolute_uri('/').strip('/')}
     email_txt = 'emails/registration/welcome.txt'
     email_html = 'emails/registration/welcome.html'
@@ -1075,7 +1075,7 @@ def invite_user(request):
                     failed_invites.append(email)
 
         # send invitation mails
-        mail_subject = 'Invitation to Join Activity'
+        mail_subject = 'Invitation to Join activity'
         email_from = 'team.hikaya@gmail.com'
         domain = request.build_absolute_uri('/').strip('/')
         data = {
@@ -1184,7 +1184,7 @@ class UserInviteView(View):
         :param user_invites:
         :param link:
         """
-        mail_subject = 'Invitation to Join Activity'
+        mail_subject = 'Invitation to Join activity'
         email_from = 'team.hikaya@gmail.com'
         domain = self.request.build_absolute_uri('/').strip('/')
         data = {'link': '{}{}'.format(domain, link)}

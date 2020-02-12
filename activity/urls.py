@@ -30,9 +30,9 @@ from activity import views as activityviews
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
-admin.site.site_header = 'Activity Settings'
-admin.site.site_title = 'Activity Settings Page'
-admin.site.index_title = 'Welcome to Activity Settings'
+admin.site.site_header = 'activity Settings'
+admin.site.site_title = 'activity Settings Page'
+admin.site.index_title = 'Welcome to activity Settings'
 
 # REST FRAMEWORK
 router = routers.DefaultRouter()

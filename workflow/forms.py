@@ -1255,7 +1255,7 @@ class SiteProfileForm(forms.ModelForm):
                        <tr>
                          <th>Project Name</th>
                          <th>Program</th>
-                         <th>Activity Code</th>
+                         <th>activity Code</th>
                          <th>View</th>
                        </tr>
 

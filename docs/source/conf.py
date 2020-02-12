@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Activity documentation build configuration file, created by
+# activity documentation build configuration file, created by
 # sphinx-quickstart on Tue Jan 24 14:45:55 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -50,7 +50,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Activity'
+project = u'activity'
 copyright = u'2019, Hikaya'
 author = u'Hikaya'
 

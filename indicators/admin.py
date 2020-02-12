@@ -76,7 +76,7 @@ class ActivityTableAdmin(ImportExportModelAdmin):
     list_display = ('name', 'owner', 'url', 'create_date', 'edit_date')
     search_fields = ('country__country', 'name')
     list_filter = ('country__country',)
-    display = 'Activity Table'
+    display = 'activity Table'
 
 
 class CollectedDataResource(resources.ModelResource):

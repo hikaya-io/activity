@@ -1074,7 +1074,7 @@ def merge_two_dicts(x, y):
 
 def collecteddata_import(request):
     """
-    Import collected data from Activity Tables
+    Import collected data from activity Tables
     :param request:
     :return:
     """
