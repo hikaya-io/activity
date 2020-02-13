@@ -160,7 +160,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
-                'Activity.processor.google_analytics',
+                'activity.processor.google_analytics',
             ],
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
@@ -187,7 +187,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
-    'Activity.middleware.TimingMiddleware'
+    'activity.middleware.TimingMiddleware'
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 # END MIDDLEWARE CONFIGURATION
@@ -256,7 +256,7 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     'workflow',
     'formlibrary',
-    'Activity',
+    'activity',
     'feed',
     'indicators',
     'customdashboard',
