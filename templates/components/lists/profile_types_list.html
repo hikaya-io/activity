@@ -34,12 +34,12 @@
 <!-- Table -->
 <table class="table" id="profileTypeTable">
     <thead>
-        <tr>
+      <tr>
         <th>Type</th>
         <th>Create Date</th>
         <th>Edit Date</th>
         <th></th>
-        </tr>
+      </tr>
     </thead>
 
     <tbody>
@@ -54,8 +54,8 @@
           {{ profile_type.create_date|date }}
         </td>
         <td>
-            {{ profile_type.edit_date|date }}
-          </td>
+          {{ profile_type.edit_date|date }}
+        </td>
         <td class="text-right">
           <!-- Split button -->
           <div class="btn-group">
@@ -75,10 +75,10 @@
               <li>
                 <a 
                   class="text-danger"
-                  href="#deleteItemModal{{ profile_type.id }}"
+                  href="#deleteProfileTypeModal{{ profile_type.id }}"
                   data-toggle="modal"
                   onclick="setItemToDelete({{ profile_type.id }})"
-                  data-target="#deleteItemModal{{ profile_type.id }}"
+                  data-target="#deleteProfileTypeModal{{ profile_type.id }}"
                 >Delete</a></li> 
             </ul>
           </div>

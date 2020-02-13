@@ -61,10 +61,6 @@ def index(request, program_id=0):
     Home page
     get count of agreements approved and total for dashboard
     """
-    # add program
-    if request.method == 'POST' and request.is_ajax:
-        return add_program(request)
-
     # set the selected program
     selected_program = Program.objects.filter(id=program_id).first()
 
@@ -671,23 +667,21 @@ def admin_user_management(request, role, status):
 
 @login_required(login_url='/accounts/login/')
 def admin_component_admin(request):
-    user = get_object_or_404(ActivityUser, user=request.user)
-    organization = user.organization
     profile_types = ProfileType.objects.all()
     levels = Level.objects.all()
-
     nav_links = get_nav_links('Components')
+    
     return render(
         request,
         'admin/component_admin.html',
         {
             'nav_links': nav_links,
-            'organization': organization,
             'get_profile_types': profile_types,
             'get_all_levels': levels,
             'active': 'components'
         }
     )
+
 
 @login_required(login_url='/accounts/login/')
 def admin_indicator_config(request):
@@ -863,27 +857,6 @@ def update_user_access(request, pk, status):
     return redirect('/accounts/admin/users/all/all/')
 
 
-@login_required(login_url='/accounts/login/')
-def add_program(request):
-    """
-    Add program
-    """
-    data = request.POST
-    activity_user = ActivityUser.objects.filter(user=request.user).first()
-    program = Program(name=data.get(
-        'program_name'), start_date=data.get('start_date'),
-        end_date=data.get('end_date'), organization=activity_user.organization)
-
-    try:
-        program.save()
-
-        sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
-        program.sector.set(sectors)
-
-        # Return a "created" (201) response code.
-        return HttpResponse(program)
-    except Exception as ex:
-        raise Exception(ex)
 
 
 class BookmarkList(ListView):
