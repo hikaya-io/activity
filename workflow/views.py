@@ -99,7 +99,6 @@ class ProgramCreate(GView):
     """
     def post(self,request):
         data = request.POST
-        print('program : ', data)
 
         activity_user = ActivityUser.objects.filter(user=request.user).first()
         program = Program(
