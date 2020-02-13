@@ -103,8 +103,8 @@ class ProgramCreate(GView):
         activity_user = ActivityUser.objects.filter(user=request.user).first()
         program = Program(
             name=data.get('program_name'),
-            start_date=data.get('start_date') if data.get('start_date') is not '' else None,
-            end_date=data.get('end_date') if data.get('end_date') is not '' else None,
+            start_date=data.get('start_date') if data.get('start_date') != '' else None,
+            end_date=data.get('end_date') if data.get('end_date') != '' else None,
             organization=activity_user.organization
         )
         program.save()
