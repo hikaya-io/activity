@@ -1337,7 +1337,7 @@ class SiteProfileList(ListView):
         inactive_site = pytz.UTC.localize(
             datetime.now()) - relativedelta(months=3)
 
-        # Filter SiteProfile list and map by activity or program
+        # Filter SiteProfile list and map by Activity or program
         if activity_id != 0:
             get_site_profile = SiteProfile.objects.all().prefetch_related(
                 'country', 'district',

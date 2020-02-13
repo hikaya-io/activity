@@ -116,6 +116,9 @@ class Level(models.Model):
 class DisaggregationType(models.Model):
     disaggregation_type = models.CharField(max_length=135, blank=True)
     description = models.CharField(max_length=765, blank=True)
+    indicator = models.ForeignKey(
+        'indicators.Indicator', on_delete=models.SET_NULL,
+        related_name='disaggregation_label', null=True, blank=True)
     country = models.ForeignKey(
         Country, null=True, blank=True, on_delete=models.SET_NULL)
     standard = models.BooleanField(

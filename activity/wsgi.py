@@ -27,9 +27,9 @@ path.append(SITE_ROOT)
 # debug = os.environ.get('DEBUG', False)
 #
 # if debug is False:
-#     settings = "activity.settings.production"
+#     settings = "Activity.settings.production"
 # else:
-#     settings = "activity.settings.local"
+#     settings = "Activity.settings.local"
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
 # if running multiple sites in the same mod_wsgi process. To fix this, use

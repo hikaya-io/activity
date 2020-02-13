@@ -138,7 +138,10 @@ class CollectedDataForm(forms.ModelForm):
         except TypeError as e:
             pass
         self.fields['target_frequency'].required = False
-        self.fields['target_frequency'].initial = self.indicator.target_frequency
+
+        if self.indicator is not None:
+            self.fields['target_frequency'].initial = self.indicator.target_frequency
+
         self.fields['activity_table'].queryset = ActivityTable.objects.filter(
             Q(owner=self.request.user.activity_user) | Q(id=self.activity_table))
         self.fields['periodic_target'].label = 'Target Period*'

@@ -27,6 +27,25 @@
             </div>
             <h4 slot="header">[[modalHeader]]</h4>
           </modal>
+          <modal v-if=showDeleteModal @close="showDeleteModal = false">
+            <div slot="body">
+              <p>Are you sure you want to delete <b>[[ itemToDelete.frequency ]]</b></p>
+            </div>
+            <div slot="footer">
+              <div class="text-right">
+                <button type="submit" class="btn btn-close" @click="showDeleteModal = false">
+                  Cancel
+                </button>
+                <button
+                  class="btn btn-danger"
+                  @click=deleteFrequency(itemToDelete.id)
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+            <h4 slot="header">[[modalHeader]]</h4>
+          </modal>
         </div>
     </div>
 </div>
@@ -71,16 +90,15 @@
             </button>
             <ul class="dropdown-menu">
               <li><a 
+                class="force-link"
                 @click=toggleModal(frequency)
                 >Edit</a></li>
               <li>
                 <a 
-                  class="text-danger"
-                  href="#deleteItemModal{{ profile_type.id }}"
-                  data-toggle="modal"
-                  onclick="setItemToDelete({{ profile_type.id }})"
-                  data-target="#deleteItemModal{{ profile_type.id }}"
-                >Delete</a></li> 
+                  class="text-danger force-link"
+                  @click=toggleDeleteModal(frequency)
+                >Delete</a>
+              </li> 
             </ul>
           </div>
         </td>

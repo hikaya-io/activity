@@ -16,9 +16,9 @@
 #
 #     for app in app_models:
 #         name = str(app._meta.db_table)
-#         new_appname = "activity." + name
+#         new_appname = "Activity." + name
 #         temp = name.split("_")
-#         old_appname = "activity.activitydb_" + temp[1]
+#         old_appname = "Activity.activitydb_" + temp[1]
 #
 #         sql_query = "RENAME TABLE %s TO %s" % (old_appname, new_appname)
 #
@@ -48,8 +48,8 @@
 #         ]
 #
 #         for name in name_list:
-#             old_appname = "activity.activitydb_" + name
-#             new_appname = "activity.workflow_" + name
+#             old_appname = "Activity.activitydb_" + name
+#             new_appname = "Activity.workflow_" + name
 #             sql_query = "RENAME TABLE %s TO %s" % (old_appname, new_appname)
 #             try:
 #                 # Renaming model from 'Foo' to 'Bar'

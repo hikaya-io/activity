@@ -35,7 +35,7 @@ $ git clone --branch dev https://github.com/hikaya-io/Activity.git
 Once cloned, navigate to the cloned repository with:
 
 ```bash
-$ cd Activity
+$ cd activity
 ```
 
 or similar.

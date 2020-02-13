@@ -514,7 +514,7 @@ def profile(request):
             user = User.objects.get(pk=request.user.id)
             if user:
 
-                # save activity user after updating name
+                # save Activity user after updating name
                 activity_user = ActivityUser.objects.get(user=request.user)
                 activity_user.organization = Organization.objects.get(
                     pk=int(activity_user_object['organization']))
@@ -795,7 +795,7 @@ def admin_user_edit(request, pk):
         User.objects.filter(pk=user_obj.id).update(**user_object)
         user = User.objects.get(pk=user_obj.pk)
         if user:
-            # save activity user after updating name
+            # save Activity user after updating name
             activity_user = activity_user_obj
             activity_user.employee_number = activity_user_object['employee_number']
             activity_user.organization = Organization.objects.get(

@@ -14,7 +14,7 @@
 user=
 password=
 host="localhost"
-db_name="activity"
+db_name="Activity"
 
 
 backup_path="$HOME/sqlbackups"
