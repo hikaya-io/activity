@@ -676,7 +676,7 @@ def admin_component_admin(request):
     profile_types = ProfileType.objects.all()
     levels = Level.objects.all()
 
-    nav_links = get_nav_links('Component')
+    nav_links = get_nav_links('Components')
     return render(
         request,
         'admin/component_admin.html',
@@ -685,10 +685,9 @@ def admin_component_admin(request):
             'organization': organization,
             'get_profile_types': profile_types,
             'get_all_levels': levels,
-            'active': 'component_admin'
+            'active': 'components'
         }
     )
-
 
 @login_required(login_url='/accounts/login/')
 def admin_indicator_config(request):
@@ -696,7 +695,7 @@ def admin_indicator_config(request):
     organization = user.organization
     get_collection_frequencies = DataCollectionFrequency.objects.all()
 
-    nav_links = get_nav_links('Indicator Configurations')
+    nav_links = get_nav_links('Indicators')
     return render(
         request,
         'admin/indicator_configs.html',
@@ -704,36 +703,34 @@ def admin_indicator_config(request):
             'nav_links': nav_links,
             'organization': organization,
             'get_collection_frequencies': get_collection_frequencies,
-            'active': 'indicator_config'
+            'active': 'indicators'
         }
     )
 
 
 @login_required(login_url='/accounts/login/')
 def admin_form_library_settings(request):
-    user = get_object_or_404(ActivityUser, user=request.user)
-    organization = user.organization
-
-    nav_links = get_nav_links('FormLibrary')
+    nav_links = get_nav_links('Form Library')
     return render(
         request,
         'admin/form_library_settings.html',
-        {'organization': organization, 
-        'active': 'form_library_settings'}
+        {
+            'nav_links': nav_links, 
+            'active': 'form_library'
+        }
     )
 
 
 @login_required(login_url='/accounts/login/')
 def admin_workflow_settings(request):
-    user = get_object_or_404(ActivityUser, user=request.user)
-    organization = user.organization
-
-    nav_links = get_nav_links('Workflow')
+    nav_links = get_nav_links('Workflows')
     return render(
         request,
         'admin/workflow_settings.html',
-        {'organization': organization, 
-        'active': 'workflow_settings'}
+        {
+            'nav_links': nav_links, 
+            'active': 'workflows'
+        }
     )
 
 

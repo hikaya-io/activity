@@ -32,6 +32,7 @@ APPROVALS = (
     ('awaiting approval', 'awaiting approval'),
     ('approved', 'approved'),
     ('rejected', 'rejected'),
+    ('Not approved', 'not approved'),
 )
 
 

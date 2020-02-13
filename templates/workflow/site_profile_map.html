@@ -1,4 +1,7 @@
 {% extends "base.html" %} {% block content %}
+{% load staticfiles %}
+{% include "./modals/add_site_modal.html" %}
+
 <style>
 	#map {
 		height: 70vh !important;
@@ -119,14 +122,12 @@
             class="btn btn-sm btn-default"
             >Export to CSV</a
           >
-
-          <a
-            role="button"
-            href="/workflow/siteprofile_add"
-            class="btn btn-sm btn-primary"
+          <button
+          class="btn btn-sm btn-primary"
+          data-toggle="modal"
+          data-target="#addLocationModal"
           >
-            <i class="fa fa-plus"></i> {{user.activity_user.organization.site_label}}
-          </a>
+          <i class="fa fa-plus"></i> {{user.activity_user.organization.site_label}}</button>
         </div>
       </div>
     </div>
