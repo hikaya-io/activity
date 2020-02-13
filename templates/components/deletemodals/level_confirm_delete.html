@@ -33,8 +33,8 @@
           <button
             type="submit"
             class="btn btn-danger"
-            onclick="deleteItem()"
-            id="deleteItem{{ profile_type.id }}"
+            onclick="deleteLevel()"
+            id="deleteLevel{{ profile_type.id }}"
           >
             Delete
           </button>
@@ -57,7 +57,7 @@
   /**
    * Redirect to the page to delete the item
    **/
-  function deleteItem() {
+  function deleteLevel() {
     toastr.success('You have successfully deleted the Level');
     setTimeout(() => {
       window.location.href = `/indicators/levels/delete/${itemId}/`;

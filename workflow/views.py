@@ -93,6 +93,32 @@ def level1_delete(request, pk):
     return redirect('/workflow/level1')
 
 
+class ProgramCreate(GView):
+    """
+    Add program
+    """
+    def post(self,request):
+        data = request.POST
+        activity_user = ActivityUser.objects.filter(user=request.user).first()
+        program = Program(
+            name=data.get('program_name'),
+            start_date=data.get('start_date'),
+            end_date=data.get('end_date'),
+            organization=activity_user.organization
+        )
+        
+        try:
+            program.save()
+
+            sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
+            program.sector.set(sectors)
+
+            # Return a "created" (201) response code.
+            return JsonResponse(dict(success=True))
+        except Exception as ex:
+            return JsonResponse(dict(success=False))
+
+
 class ProgramUpdate(UpdateView):
     model = Program
     template_name = 'workflow/program_form_tab_ui.html'
@@ -1215,8 +1241,6 @@ class ProfileTypeCreate(GView):
     """
     def post(self, request):
         data = request.POST
-
-        user = ActivityUser.objects.filter(user=request.user).first()
 
         profileType = ProfileType.objects.create(
             profile=data.get('profile')

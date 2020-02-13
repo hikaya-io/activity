@@ -1,6 +1,6 @@
 <div
   class="modal fade"
-  id="deleteItemModal{{profile_type.id}}"
+  id="deleteProfileTypeModal{{profile_type.id}}"
   tabindex="-1"
   role="dialog"
   aria-labelledby="deleteItemModalLabel"
@@ -33,7 +33,7 @@
           <button
             type="submit"
             class="btn btn-danger"
-            onclick="deleteItem()"
+            onclick="deleteProfileType()"
             id="deleteItem{{ profile_type.id }}"
           >
             Delete
@@ -57,7 +57,7 @@
   /**
    * Redirect to the page to delete the item
    **/
-  function deleteItem() {
+  function deleteProfileType() {
     toastr.success('You have successfully deleted the {{ user.activity_user.organization.site_label }} Type');
     setTimeout(() => {
       window.location.href = `/workflow/profile_type/delete_profile_type/${itemId}/`;
