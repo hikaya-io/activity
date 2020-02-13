@@ -99,21 +99,20 @@ class ProgramCreate(GView):
     """
     def post(self,request):
         data = request.POST
+        print('program : ', data)
+
         activity_user = ActivityUser.objects.filter(user=request.user).first()
         program = Program(
             name=data.get('program_name'),
-            start_date=data.get('start_date'),
-            end_date=data.get('end_date'),
+            start_date=data.get('start_date') if data.get('start_date') is not '' else None,
+            end_date=data.get('end_date') if data.get('end_date') is not '' else None,
             organization=activity_user.organization
         )
-        
+        program.save()
         try:
-            program.save()
-
             sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
             program.sector.set(sectors)
 
-            # Return a "created" (201) response code.
             return JsonResponse(dict(success=True))
         except Exception as ex:
             return JsonResponse(dict(success=False))

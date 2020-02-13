@@ -49,17 +49,14 @@
       });
 
       // set sectors and format dates
-      data = {
-        ...obj,
-        sectors: $('#sectors').val(),
-        start_date: obj.start_date ? moment(obj.start_date, 'DD.MM.YYYY').format() : '',
-        end_date: obj.end_date ? moment(obj.end_date, 'DD.MM.YYYY').format() : '',
-      };
+    
+      obj.start_date = obj.start_date ? moment(obj.start_date, 'DD.MM.YYYY').format() : null,
+      obj.end_date = obj.end_date ? moment(obj.end_date, 'DD.MM.YYYY').format() : null,
 
       $.ajax({
         url: "{% url 'add_level1' %}",
         type: 'POST',
-        data,
+        data: obj,
         success: function(resp, status) {
           // notify success
         if (resp.success) {
@@ -90,9 +87,9 @@
               `${urlWithoutQueryString}?program-modal=true`,
             );
           } else {
-            {% comment %} setTimeout(() => {
+            setTimeout(() => {
               window.location.replace(urlWithoutQueryString);
-            }, 2000); {% endcomment %}
+            }, 2000);
           }
         },
         error: function(xhr, status, error) {
@@ -124,7 +121,7 @@
           <form id="addProgramForm">
             {% csrf_token %}
             <div class="form-group">
-              <label for="programName">{{ user.activity_user.organization.level_1_label }} Name</label>
+              <label for="programName">{{ user.activity_user.organization.level_1_label }} Name*</label>
               <input type="text" id="programName" name="program_name" class="form-control" placeholder="{{user.activity_user.organization.level_1_label}}" />
             </div>
   
