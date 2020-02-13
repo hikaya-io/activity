@@ -2211,3 +2211,23 @@ class DataCollectionFrequencyUpdate(GView):
             return JsonResponse(model_to_dict(collection_frequency))
         else:
             return JsonResponse(dict(error='Failed'))
+
+
+class DataCollectionFrequencyDelete(GView):
+    """
+    View to Delete DataCollectionFrequency and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        frequency_id = int(self.kwargs.get('id'))
+        frequency = DataCollectionFrequency.objects.get(
+            id=int(frequency_id)
+        )
+        frequency.delete()
+
+        try:
+            DataCollectionFrequency.objects.get(id=int(frequency_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except DataCollectionFrequency.DoesNotExist:
+
+            return JsonResponse(dict(success=True))

@@ -178,7 +178,7 @@ class ProjectAgreementForm(forms.ModelForm):
     effect_or_impact = forms.CharField(
         help_text="Please do not include outputs and keep less than 120 "
                   "words. Describe the logic that will link this "
-                  "project/activity to the proposed desired outcome/goal. "
+                  "project/Activity to the proposed desired outcome/goal. "
                   "Note any assumptions that are critical in this logic "
                   "chain.", widget=forms.Textarea,
         required=False)

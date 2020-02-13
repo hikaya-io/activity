@@ -2,7 +2,7 @@
 FROM python:3.8.0-alpine
 
 # set work directory
-WORKDIR /usr/src/Activity
+WORKDIR /usr/src/activity
 
 RUN apk --update --upgrade add gcc musl-dev jpeg-dev zlib-dev libffi-dev cairo-dev pango-dev gdk-pixbuf
 
@@ -23,8 +23,8 @@ ENV ACTIVITY_CE_DB_PORT=5432
 
 # Install dependencies
 RUN pip install --upgrade pip
-COPY ./requirements.txt /usr/src/Activity/requirements.txt
+COPY ./requirements.txt /usr/src/activity/requirements.txt
 RUN pip install -r requirements.txt
 
 # Copy project
-COPY . /usr/src/Activity/
+COPY . /usr/src/activity/

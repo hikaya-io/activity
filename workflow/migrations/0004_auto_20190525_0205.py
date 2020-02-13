@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='organization',
             name='logo',
-            field=models.ImageField(default='images/hikaya-activity-logo.png', help_text='Image of minimum 2000 width and 500 height, maximum of 100 ko', upload_to='images/', validators=[workflow.models.validate_image]),
+            field=models.ImageField(default='images/hikaya-Activity-logo.png', help_text='Image of minimum 2000 width and 500 height, maximum of 100 ko', upload_to='images/', validators=[workflow.models.validate_image]),
         ),
     ]

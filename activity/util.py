@@ -101,7 +101,7 @@ def get_table(url, data=None):
 
 def user_to_activity(user, response):
 
-    # Add a google auth user to the activity profile
+    # Add a google auth user to the Activity profile
     default_country = Country.objects.first()
     userprofile, created = ActivityUser.objects.get_or_create(
         user=user)
