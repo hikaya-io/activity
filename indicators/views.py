@@ -203,7 +203,7 @@ class IndicatorTarget(GView):
         periodic_targets = PeriodicTarget.objects.filter(indicator=indicator_id).order_by('customsort', 'create_date', 'period')
         targets = []
         for target in periodic_targets:
-            targets.append({"pk": target.id, "period": str(target)})
+            targets.append({"pk": target.id, "period": str(target), "target": target.target})
 
         return JsonResponse({"data": targets})
 
@@ -694,27 +694,81 @@ class CollectedDataAdd(GView):
     Add Collected Data
     """
     def post(self, request):
-        data = request.POST
+        data = json.loads(request.body.decode('utf-8'))
 
         if data.get('date_collected') == "":
             date = None
         else:
             date = data.get('date_collected')
 
+        if data.get('documentation') == "":
+            documentation = None
+        else:
+            documentation = int(data.get('documentation'))
+
         collected_data = CollectedData.objects.create(
             achieved=data.get('actual', ''),
             targeted=data.get('target', ''),
             date_collected=date,
-            periodic_target=PeriodicTarget.objects.filter(id=int(data.get('periodic_target', ''))).first(),
+            periodic_target=PeriodicTarget.objects.filter(id=int(data.get('period', ''))).first(),
             indicator=Indicator.objects.filter(id=int(data.get('indicator', ''))).first(),
-            evidence=Documentation.objects.filter(id=int(data.get('documentation', None))).first(),
+            evidence=Documentation.objects.filter(id=documentation).first(),
             program=Program.objects.filter(id=int(data.get('program', ''))).first(),
         )
 
         if collected_data:
-            return JsonResponse(dict(status=201))
+            return JsonResponse(model_to_dict(collected_data))
         else:
-            return JsonResponse(dict(status=400))
+            return JsonResponse(dict(error='Failed'))
+
+
+class CollectedDataEdit(GView):
+    def put(self, request, *args, **kwargs):
+        result_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        collected_data = CollectedData.objects.get(
+            id=result_id
+        )
+
+        if data.get('date_collected') == "":
+            date = None
+        else:
+            date = data.get('date_collected')
+
+        if data.get('documentation') == "":
+            documentation = None
+        else:
+            documentation = int(data.get('documentation'))
+            evidence = Documentation.objects.filter(id=documentation).first()
+            collected_data.evidence = evidence
+
+        achieved = data.get('actual', '')
+
+        collected_data.date_collected = date
+        collected_data.achieved = achieved
+        collected_data.save()
+
+        if collected_data:
+            return JsonResponse(model_to_dict(collected_data))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class CollectedDataDeleteVue(GView):
+    def delete(self, request, *args, **kwargs):
+        result_id = int(self.kwargs.get('id'))
+        result = CollectedData.objects.get(
+            id=int(result_id)
+        )
+        result.delete()
+
+        try:
+            CollectedData.objects.get(id=int(result_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except CollectedData.DoesNotExist:
+
+            return JsonResponse(dict(success=True))
 
 
 class CollectedDataCreate(CreateView):
@@ -790,7 +844,6 @@ class CollectedDataCreate(CreateView):
 
     def form_invalid(self, form):
 
-        print(form.errors)
         messages.error(self.request, 'Invalid Form',
                        fail_silently=False, extra_tags='danger')
 
