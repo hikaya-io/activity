@@ -1,18 +1,18 @@
 # Activity
 
 <p align="center">
-  <img src="[ACTIVITY-LOGO]" height="29" />
+  <img src="static/img/activity_primary_color.png" height="29" />
 </p>
 <p align="center">
-  <i>A modern way for nonprofits to manage project activities and indicator results.<br/>Try out Activity using our hosted version at <a href="https://hikaya.io">www.hikaya.io</a>.</i>
+  <i>A modern way for nonprofits to manage project activities and indicator results.<br/>Try out Activity using our hosted version at <a href="https://hikaya.io">hikaya.io</a>.</i>
   <br/>
-  <img src="[activity screenshot]" alt="Activity" width="800" />
+  <img src="static/img/example_app.png" alt="Activity" width="800" />
 </p>
 <p align="center">
   <a href="https://spectrum.chat/hikaya" rel="nofollow"><img src="https://withspectrum.github.io/badge/badge.svg" alt="Join the community on Spectrum"/></a>
 </p>
 
-This is the source code that runs [**Activity**](https://www.hikaya.io). If you want to use Activity then you don't need to run this code, we offer a hosted version of the app at [activity.hikaya.app](https://www.activity.hikaya.app).
+This is the source code that runs [**Activity**](https://hikaya.io). If you want to use Activity then you don't need to run this code, we offer a hosted version of the app at [activity.hikaya.app](https://activity.hikaya.app).
 
 If you'd like to run your own copy of Activity or contribute to development then this is the place for you.
 
