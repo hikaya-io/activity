@@ -1,8 +1,9 @@
-# Activity
-
+<br/>
+<br/>
 <p align="center">
-  <img src="static/img/activity_primary_color.png" height="29" />
+  <img src="static/img/activity_primary_color.png" height="45" />
 </p>
+<br/>
 <p align="center">
   <i>A modern way for nonprofits to manage project activities and indicator results.<br/>Try out Activity using our hosted version at <a href="https://hikaya.io">hikaya.io</a>.</i>
   <br/>
@@ -24,7 +25,7 @@ Once all your changes have been committed to the repo, and before pushing them, 
 
 # Local Setup
 
-Note: you should use python 3 for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
+Note: you should use `Python 3.7.5` for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
 
 Open up your terminal and follow the instructions listed below.
 
