@@ -1,15 +1,22 @@
 # Activity
 
-We are developing a tool for humanitarians to manage project activities and indicator results across their programs, including approval workflows and reporting and visualizations. Our goal is to help organizations answer common questions such as:
+<p align="center">
+  <img src="[ACTIVITY-LOGO]" height="29" />
+</p>
+<p align="center">
+  <i>A modern way for nonprofits to manage project activities and indicator results.<br/>Try out Activity using our hosted version at <a href="https://hikaya.io">www.hikaya.io</a>.</i>
+  <br/>
+  <img src="[activity screenshot]" alt="Activity" width="800" />
+</p>
+<p align="center">
+  <a href="https://spectrum.chat/hikaya" rel="nofollow"><img src="https://withspectrum.github.io/badge/badge.svg" alt="Join the community on Spectrum"/></a>
+</p>
 
-- who are funding your projects?
-- who you work with?
-- where you work?
-- how do my outputs align with my overall project goal?
+This is the source code that runs [**Activity**](https://www.hikaya.io). If you want to use Activity then you don't need to run this code, we offer a hosted version of the app at [activity.hikaya.app](https://www.activity.hikaya.app).
+
+If you'd like to run your own copy of Activity or contribute to development then this is the place for you.
 
 <!-- ## Configuration
-Copy the activity/settings/local-sample.py to local.py and modify for your environment.
-
 ## To deploy changes in activity servers
 Once all your changes have been committed to the repo, and before pushing them, run:
 `. travis.sh` -->
