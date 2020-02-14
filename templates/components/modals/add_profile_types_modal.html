@@ -17,12 +17,11 @@
       });
 
       $.ajax({
-        url: "{% url 'add_profile_type' %}",
         type: 'POST',
         data: obj,
         success: function(resp, status) {
           if (resp.success) {
-            // notify success
+            // notify success url: "{% url 'add_profile_type' %}",
             toastr.success(
               '{{ user.activity_user.organization.site_label }} Type was added sucessfully',
             );

@@ -42,6 +42,7 @@ import logging
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic.detail import View
+from django.forms.models import model_to_dict
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.decorators import method_decorator
@@ -1230,73 +1231,6 @@ class ProjectCompleteBySite(ListView):
         q = ProjectComplete.objects.filter(
             site__id=self.kwargs.get('site_id')).order_by('program')
         return q
-
-
-class ProfileTypeCreate(GView):
-    """
-    create ProfileType View
-    : returns success: Json object { 'success': True/False }
-    """
-    def post(self, request):
-        data = request.POST
-
-        profileType = ProfileType.objects.create(
-            profile=data.get('profile')
-        )
-
-        if profileType:
-            return JsonResponse({'success': True})
-        else: 
-            return JsonResponse({'error': 'Error saving profile type'})
-
-
-class ProfileTypeUpdate(UpdateView):
-    """
-    Profile Type Form
-    """
-    model = ProfileType
-    guidance = None
-    template_name = 'components/lists/profile_type_form.html'
-
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="ProfileTypeForm")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(ProfileTypeUpdate, self).dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(ProfileTypeUpdate, self).get_context_data(**kwargs)
-        profile_type = ProfileType.objects.get(pk=int(self.kwargs['pk']))
-        context.update({'profile_name': profile_type.profile})
-        context.update({'id': self.kwargs['pk']})
-        return context
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, ' + self.request.user.activity_user.organization.site_label + ' Type Updated!')
-
-        return redirect('/accounts/admin/component_admin')
-
-    form_class = ProfileTypeForm
-
-
-def delete_profile_type(request, pk):
-    """
-    delete Profile Type
-    :param request:
-    :param pk: Primary key of the profile type to be deleted
-    :return redirect:
-    """
-    profile_type = ProfileType.objects.get(pk=int(pk))
-    profile_type.delete()
-
-    return redirect('/accounts/admin/component_admin')
 
 
 class SiteProfileList(ListView):
@@ -2740,4 +2674,151 @@ class FundCodeCreate(GView):
 
 
 
+# Vue.js Views
+"""
+ProfileType views
+"""
+class ProfileTypeCreate(GView):
+    """
+    View to create ProfileType and return Json response
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        profile = data.get('profile')
+        profileType = ProfileType.objects.create(
+            profile=profile
+        )
 
+        if profileType:
+            return JsonResponse(model_to_dict(profileType))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class ProfileTypeList(GView):
+    """
+    View to create ProfileType and return Json response
+    """
+    def get(self, request):
+
+        profile_types = ProfileType.objects.values()
+        print('profile_types : ', profile_types)
+        if profile_types:
+            activity_user = ActivityUser.objects.get(user=request.user)
+            return JsonResponse(
+                dict(
+                    profile_types=list(profile_types),
+                    site_label=activity_user.organization.site_label
+                ),
+                safe=False
+            )
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class ProfileTypeUpdate(GView):
+    """
+    View to Update ProfileType and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        profile_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        profile_name = data.get('profile')
+        profile = ProfileType.objects.get(
+            id=profile_id
+        )
+
+        profile.profile = profile_name
+        profile.save()
+
+        if profile:
+            return JsonResponse(model_to_dict(profile))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class ProfileTypeDelete(GView):
+    """
+    View to Delete ProfileType and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        profile_id = int(self.kwargs.get('id'))
+        profile = ProfileType.objects.get(
+            id=int(profile_id)
+        )
+        profile.delete()
+
+        try:
+            ProfileType.objects.get(id=int(profile_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except ProfileType.DoesNotExist:
+
+            return JsonResponse(dict(success=True))
+
+
+# class ProfileTypeCreate(GView):
+#     """
+#     create ProfileType View
+#     : returns success: Json object { 'success': True/False }
+#     """
+#     def post(self, request):
+#         data = request.POST
+
+#         profileType = ProfileType.objects.create(
+#             profile=data.get('profile')
+#         )
+
+#         if profileType:
+#             return JsonResponse({'success': True})
+#         else: 
+#             return JsonResponse({'error': 'Error saving profile type'})
+
+
+# class ProfileTypeUpdate(UpdateView):
+#     """
+#     Profile Type Form
+#     """
+#     model = ProfileType
+#     guidance = None
+#     template_name = 'components/lists/profile_type_form.html'
+
+#     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
+#     def dispatch(self, request, *args, **kwargs):
+#         try:
+#             self.guidance = FormGuidance.objects.get(form="ProfileTypeForm")
+#         except FormGuidance.DoesNotExist:
+#             self.guidance = None
+#         return super(ProfileTypeUpdate, self).dispatch(request, *args, **kwargs)
+
+#     def get_context_data(self, **kwargs):
+#         context = super(ProfileTypeUpdate, self).get_context_data(**kwargs)
+#         profile_type = ProfileType.objects.get(pk=int(self.kwargs['pk']))
+#         context.update({'profile_name': profile_type.profile})
+#         context.update({'id': self.kwargs['pk']})
+#         return context
+
+#     def form_invalid(self, form):
+#         messages.error(self.request, 'Invalid Form', fail_silently=False)
+#         return self.render_to_response(self.get_context_data(form=form))
+
+#     def form_valid(self, form):
+#         form.save()
+#         messages.success(self.request, 'Success, ' + self.request.user.activity_user.organization.site_label + ' Type Updated!')
+
+#         return redirect('/accounts/admin/component_admin')
+
+#     form_class = ProfileTypeForm
+
+
+# def delete_profile_type(request, pk):
+#     """
+#     delete Profile Type
+#     :param request:
+#     :param pk: Primary key of the profile type to be deleted
+#     :return redirect:
+#     """
+#     profile_type = ProfileType.objects.get(pk=int(pk))
+#     profile_type.delete()
+
+#     return redirect('/accounts/admin/component_admin')

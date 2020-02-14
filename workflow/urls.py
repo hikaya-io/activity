@@ -20,7 +20,7 @@ from .views import (
     save_bookmark, district_json, country_json, export_sites_list, ReportData, DocumentationAgreementDelete,
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
-    FundCodeCreate, ProfileTypeCreate, ProfileTypeUpdate, delete_profile_type
+    FundCodeCreate, ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete
 )
 from django.urls import re_path, path
 
@@ -218,7 +218,29 @@ urlpatterns = [
 
     # profile type
     path('profile_type/add', ProfileTypeCreate.as_view(), name='add_profile_type'),
-    path('profile_type/profile_type_update/<int:pk>/',ProfileTypeUpdate.as_view(), name='profile_type_update'),
-    path('profile_type/delete_profile_type/<int:pk>/',
-         delete_profile_type, name='delete_profile_type')
+    # path('profile_type/profile_type_update/<int:pk>/',ProfileTypeUpdate.as_view(), name='profile_type_update'),
+    # path('profile_type/delete_profile_type/<int:pk>/',
+    #      delete_profile_type, name='delete_profile_type')
+
+    # ProfileType Urls
+    path(
+        'profile_type/add',
+        ProfileTypeCreate.as_view(),
+        name='profile_type_add'
+    ),
+    path(
+        'profile_type/list',
+        ProfileTypeList.as_view(),
+        name='profile_type_list'
+    ),
+    path(
+        'profile_type/edit/<int:id>',
+        ProfileTypeUpdate.as_view(),
+        name='profile_type_edit'
+    ),
+    path(
+        'profile_type/delete/<int:id>',
+        ProfileTypeDelete.as_view(),
+        name='profile_type_delete'
+    )
 ]

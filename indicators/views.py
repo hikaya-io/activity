@@ -2162,6 +2162,9 @@ def level_delete(request, pk):
 
 
 # Vue.js Views
+"""
+DataCollectionFrequency views
+"""
 class DataCollectionFrequencyCreate(GView):
     """
     View to create DataCollectionFrequency and return Json response
