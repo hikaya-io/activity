@@ -6,6 +6,7 @@
 <p align="center">
   <i>A modern way for nonprofits to manage project activities and indicator results.<br/>Try out Activity using our hosted version at <a href="https://hikaya.io">hikaya.io</a>.</i>
   <br/>
+  <br/>
   <img src="static/img/example_app.png" alt="Activity" width="800" />
 </p>
 <p align="center">
