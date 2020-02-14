@@ -22,7 +22,7 @@
               {% include 'admin/component_configs/forms/profile_type_form.html' %}
             </div>
             <div slot="footer">
-              {% include 'admin/indicator_configs/forms/form_footer.html' %}
+              {% include 'ui-components/quick_entry_modal_footer.html' %}
             </div>
             <h4 slot="header">[[modalHeader]]</h4>
           </modal>
@@ -69,10 +69,10 @@
           </a>
         </td>
         <td>
-           [[ profileType.create_date ]]
+           [[ formatDate(profileType.create_date) ]]
         </td>
         <td>
-            [[profileType.edit_date]]
+            [[ formatDate(profileType.edit_date) ]]
           </td>
         <td class="text-right">
           <!-- Split button -->

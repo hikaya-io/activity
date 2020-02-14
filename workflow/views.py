@@ -2702,7 +2702,6 @@ class ProfileTypeList(GView):
     def get(self, request):
 
         profile_types = ProfileType.objects.values()
-        print('profile_types : ', profile_types)
         if profile_types:
             activity_user = ActivityUser.objects.get(user=request.user)
             return JsonResponse(
@@ -2755,70 +2754,3 @@ class ProfileTypeDelete(GView):
         except ProfileType.DoesNotExist:
 
             return JsonResponse(dict(success=True))
-
-
-# class ProfileTypeCreate(GView):
-#     """
-#     create ProfileType View
-#     : returns success: Json object { 'success': True/False }
-#     """
-#     def post(self, request):
-#         data = request.POST
-
-#         profileType = ProfileType.objects.create(
-#             profile=data.get('profile')
-#         )
-
-#         if profileType:
-#             return JsonResponse({'success': True})
-#         else: 
-#             return JsonResponse({'error': 'Error saving profile type'})
-
-
-# class ProfileTypeUpdate(UpdateView):
-#     """
-#     Profile Type Form
-#     """
-#     model = ProfileType
-#     guidance = None
-#     template_name = 'components/lists/profile_type_form.html'
-
-#     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-#     def dispatch(self, request, *args, **kwargs):
-#         try:
-#             self.guidance = FormGuidance.objects.get(form="ProfileTypeForm")
-#         except FormGuidance.DoesNotExist:
-#             self.guidance = None
-#         return super(ProfileTypeUpdate, self).dispatch(request, *args, **kwargs)
-
-#     def get_context_data(self, **kwargs):
-#         context = super(ProfileTypeUpdate, self).get_context_data(**kwargs)
-#         profile_type = ProfileType.objects.get(pk=int(self.kwargs['pk']))
-#         context.update({'profile_name': profile_type.profile})
-#         context.update({'id': self.kwargs['pk']})
-#         return context
-
-#     def form_invalid(self, form):
-#         messages.error(self.request, 'Invalid Form', fail_silently=False)
-#         return self.render_to_response(self.get_context_data(form=form))
-
-#     def form_valid(self, form):
-#         form.save()
-#         messages.success(self.request, 'Success, ' + self.request.user.activity_user.organization.site_label + ' Type Updated!')
-
-#         return redirect('/accounts/admin/component_admin')
-
-#     form_class = ProfileTypeForm
-
-
-# def delete_profile_type(request, pk):
-#     """
-#     delete Profile Type
-#     :param request:
-#     :param pk: Primary key of the profile type to be deleted
-#     :return redirect:
-#     """
-#     profile_type = ProfileType.objects.get(pk=int(pk))
-#     profile_type.delete()
-
-#     return redirect('/accounts/admin/component_admin')
