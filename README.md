@@ -1,12 +1,12 @@
 # Activity
 
 <p align="center">
-  <img src="/assets/img/activity_primary_color.png" height="29" />
+  <img src="assets/img/activity_primary_color.png" height="29" />
 </p>
 <p align="center">
   <i>A modern way for nonprofits to manage project activities and indicator results.<br/>Try out Activity using our hosted version at <a href="https://hikaya.io">www.hikaya.io</a>.</i>
   <br/>
-  <img src="/assets/img/example_app.png" alt="Activity" width="800" />
+  <img src="assets/img/example_app.png" alt="Activity" width="800" />
 </p>
 <p align="center">
   <a href="https://spectrum.chat/hikaya" rel="nofollow"><img src="https://withspectrum.github.io/badge/badge.svg" alt="Join the community on Spectrum"/></a>
