@@ -280,7 +280,7 @@ AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.twitter.TwitterOAuth',
     # 'social_core.backends.yahoo.YahooOpenId',
     # 'django.contrib.auth.backends.ModelBackend',
-    'Activity.middlewares.custom_middlewares.EmailOrUsernameBackend',
+    'activity.middlewares.custom_middlewares.EmailOrUsernameBackend',
 )
 
 SOCIAL_AUTH_PIPELINE = (

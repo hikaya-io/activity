@@ -20,8 +20,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=Activity
-      - POSTGRES_PASSWORD=Activity
+      - POSTGRES_USER=activity
+      - POSTGRES_PASSWORD=activity
       - POSTGRES_DB=activity_dev
 
   migration:
