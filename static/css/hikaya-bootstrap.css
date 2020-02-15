@@ -2,6 +2,7 @@
   color: #737581;
   background-color: transparent;
   border-color: #ffffff;
+  border-radius: 0.2rem;
 }
 
 .btn-close:focus,
@@ -65,6 +66,7 @@ fieldset[disabled] .btn-close.focus {
   color: #ffffff;
   background-color: #25ced1;
   border-color: #25ced1;
+  border-radius: 0.2rem;
 }
 
 .btn-primary:focus,
@@ -128,6 +130,7 @@ fieldset[disabled] .btn-primary.focus {
   color: #ffffff;
   background-color: #25ced1;
   border-color: #25ced1;
+  border-radius: 0.2rem;
 }
 
 .btn-success:focus,
@@ -191,6 +194,7 @@ fieldset[disabled] .btn-success.focus {
   color: #ffffff;
   background-color: #fe5f55;
   border-color: #fe5c2e;
+  border-radius: 0.2rem;
 }
 
 .btn-info:focus,
@@ -251,6 +255,7 @@ fieldset[disabled] .btn-info.focus {
   color: #ffffff;
   background-color: #f9c80e;
   border-color: #f7b500;
+  border-radius: 0.2rem;
 }
 
 .btn-warning:focus,
@@ -321,6 +326,7 @@ fieldset[disabled] .btn-warning.focus {
   color: #ffffff;
   background-color: #e52c2c;
   border-color: #e21b1b;
+  border-radius: 0.2rem;
 }
 
 .btn-danger:focus,
@@ -459,6 +465,7 @@ input[type="button"].btn-block {
   color: #25ced1;
   background-color: transparent;
   border-color: #25ced1;
+  border-radius: 0.2rem;
 }
 
 .btn-outline-success:focus,
@@ -527,5 +534,6 @@ fieldset[disabled] .btn-outline-success.focus {
   background-color: #d3f5f5;
   border-color: #74dfe1;
   box-shadow: none;
+  border-radius: 0.2rem;
 }
 
