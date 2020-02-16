@@ -1,18 +1,25 @@
 {% extends "base.html" %} {% block content %}
 {% include './add_indicator_modal.html' %}
 {% include './add_collecteddata_modal.html' %}
+{% include './collected_data_table2.html'%}
 
 <script>
   $(document).ready(() => {
     const table = $('#indicatorsTable').DataTable();
 
     function format(indicatorId, programId) {
-          let div = $('<div />');
+          let div = $(`<div id="details-${indicatorId}"></div>`);
           $.ajax({
             url: `/indicators/collected_data_table/${indicatorId}/${programId}/`,
             type: 'GET',
             success: function(result) {
-               div.html(result);
+              console.log(result);
+               new detailComponent({
+                 delimiters: ['[[', ']]'],
+                 data: {
+                   collectedData: result
+                 }
+               }).$mount(`#details-${indicatorId}`);
 			},
 			error: (error) => {
 				toastr.error('There was a problem loading the collected data.');
@@ -34,20 +41,20 @@
             row.child(format(indicatorId, programId)).show();
             tr.addClass('shown');
         }
-    })
-  })
+    });
+  });
 
   $(document).on("click", ".collectdata", function () {
     var setTarget = $(this).data('settarget');
     var indicatorId = $(this).data('indicator');
-    var programId = $(this).data('program')
+    var programId = $(this).data('program');
     $("#id_target").val(setTarget);
     $("#id_periodic_target").attr('data-tag',indicatorId );
     $("#id_periodic_target").attr('data-tag2',programId );
 })
 </script>
 
-<div class="container">
+<div id="indicators_list" class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">My Dashboard</a></li>
@@ -122,6 +129,8 @@
           <a href="{% url 'indicator_update' indicator.id %}" data-toggle="tooltip" title="{{ indicator.name }}">
             {{ indicator.name | truncatechars:50}}
           </a>
+          <!-- Needed to rotate icon on click -->
+          <div class="collapsed" id="row-{{indicator.id}}"></div>
         </td>
         <td>
           {{indicator.levels}}
@@ -184,3 +193,7 @@
   </div>
 </div>
 {% endblock content %}
+
+{% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}vue.js/collected_data_table.js"></script>
+{% endblock extra_js_in_body %}

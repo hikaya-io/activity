@@ -12,6 +12,7 @@ import re
 import json
 
 from .export import IndicatorResource, CollectedDataResource
+from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer
 from .tables import IndicatorDataTable
 from .forms import (
     IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
@@ -1147,45 +1148,28 @@ def service_json(request, service):
 
 
 def collected_data_json(AjaxableResponseMixin, indicator, program):
-    # TODO : Fix this function (problem with collecteddata
-    #  (commented for which reason ?)
     ind = Indicator.objects.get(pk=indicator)
-    template_name = 'indicators/collected_data_table.html'
 
-    # collecteddata = CollectedData.objects\
-    #     .filter(indicator=indicator)\
-    #     .select_related('indicator')\
-    #     .prefetch_related('evidence', 'periodic_target',
-    #       'disaggregation_value')\
-    #     .order_by('periodic_target__customsort', 'date_collected')
-
-    periodictargets = PeriodicTarget.objects.filter(
+    periodic_targets = PeriodicTarget.objects.filter(
         indicator=indicator).prefetch_related('collecteddata_set')\
         .order_by('customsort')
-    collecteddata_without_periodictargets = CollectedData.objects.filter(
-        indicator=indicator, periodic_target__isnull=True)
 
-    # detail_url = ''
-    # try:
-    #     for data in collecteddata:
-    #         if data.activity_table:
-    #             data.activity_table.detail_url = const_table_det_url(
-    #                 str(data.activity_table.url))
-    # except Exception as e:
-    #     pass
+    collected_data_without_periodic_targets = CollectedData.objects.filter(
+        indicator=indicator, periodic_target__isnull=True)
 
     collected_sum = CollectedData.objects\
         .select_related('periodic_target')\
         .filter(indicator=indicator)\
         .aggregate(Sum('periodic_target__target'), Sum('achieved'))
 
-    return render_to_response(template_name, {
-        'periodictargets': periodictargets,
-        'collecteddata_without_periodictargets':
-            collecteddata_without_periodictargets,
+    return JsonResponse({
+        'periodictargets': PeriodicTargetSerializer(periodic_targets, many=True).data,
+        'collecteddata_without_periodictargets': CollectedDataSerializer(collected_data_without_periodic_targets, many=True).data,
         'collected_sum': collected_sum,
-        'indicator': ind,
-        'program_id': program})
+        'indicator': IndicatorSerializer(ind).data,
+        'program_id': program
+    })
+
 
 
 def program_indicators_json(AjaxableResponseMixin, program, indicator, type):
