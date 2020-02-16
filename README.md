@@ -132,7 +132,8 @@ This will run the server on http://127.0.0.1:8000 (Don't open the link in your b
 
 Once you have created your user account, you need to create an `activity user` that is linked to this user account.
 
-Go to http://127.0.0.1:8000/admin and sign in using your superuser account. Under the `workflow` model, you'll find `activity user`. Create a new activity user making sure you associate your user under the `user` attribute.
+Go to http://127.0.0.1:8000/admin and sign in using your superuser account. Under the `Workflow` model, you'll find `Activity users`. Create a new activity user making sure you associate your user under the `User` attribute.
+
 ### Open the dashboard
 
 Before launching the dashboard on http://127.0.0.1:8000, you need to log out of the admin account first.
@@ -167,7 +168,14 @@ If docker is exiting due to postgres connection issues. Stop your local postgres
 $ docker-compose exec web python manage.py createsuperuser
 ```
 
-navigate to admin, login and create a `activity_user`
+### Create 'Activity users'
+- Before logging in to the application you will need to go to the admin console (http://localhost:8000/admin/).
+- Navigate to `Workflow > Activity users` and add an Activity user.
+- Make to sure to select the superuser name you created earlier.
+
+### Open the dashboard
+- Please make sure to log out of the admin console to avoid `AttributeError`.
+- Go back to the main page to log in and create an organization to access the main dashboard (http://localhost:8000/)
 
 ### To run any other django commands
 ```bash
