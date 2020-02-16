@@ -1,22 +1,31 @@
-# Activity
+<br/>
+<br/>
+<p align="center">
+  <img src="static/img/activity_primary_color.png" height="45" />
+</p>
+<br/>
+<p align="center">
+  <i>A modern way for nonprofits to manage project activities and indicator results.<br/>Try out Activity using our hosted version at <a href="https://hikaya.io">hikaya.io</a>.</i>
+  <br/>
+  <br/>
+  <img src="static/img/example_app.png" alt="Activity" width="800" />
+</p>
+<p align="center">
+  <a href="https://spectrum.chat/hikaya" rel="nofollow"><img src="https://withspectrum.github.io/badge/badge.svg" alt="Join the community on Spectrum"/></a>
+</p>
 
-We are developing a tool for humanitarians to manage project activities and indicator results across their programs, including approval workflows and reporting and visualizations. Our goal is to help organizations answer common questions such as:
+This is the source code that runs [**Activity**](https://hikaya.io). If you want to use Activity then you don't need to run this code, we offer a hosted version of the app at [activity.hikaya.app](https://activity.hikaya.app).
 
-- who are funding your projects?
-- who you work with?
-- where you work?
-- how do my outputs align with my overall project goal?
+If you'd like to run your own copy of Activity or contribute to development then this is the place for you.
 
 <!-- ## Configuration
-Copy the activity/settings/local-sample.py to local.py and modify for your environment.
-
 ## To deploy changes in activity servers
 Once all your changes have been committed to the repo, and before pushing them, run:
 `. travis.sh` -->
 
 # Local Setup
 
-Note: you should use python 3 for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
+Note: you should use `Python 3.7.5` for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
 
 Open up your terminal and follow the instructions listed below.
 
