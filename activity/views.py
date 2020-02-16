@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from smtplib import (SMTPRecipientsRefused)
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.template.response import TemplateResponse
 from django.views.generic import RedirectView
@@ -433,14 +434,13 @@ def user_login(request):
     return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
 
-@login_required
-def register_organization(request):
-    """
-    register organization
-    : param request:
-    : return org profile page
-    """
-    if request.method == 'POST':
+class RegisterOrganization(LoginRequiredMixin, View):
+    """Register organization view"""
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'registration/organization_register.html')
+
+    def post(self, request, *args, **kwargs):
         data = request.POST
         name = data.get('name')
         description = data.get('description')
@@ -474,8 +474,6 @@ def register_organization(request):
             return redirect('/')
         else:
             return redirect('register_organization')
-    else:
-        return render(request, 'registration/organization_register.html')
 
 
 @login_required(login_url='/accounts/login/')
