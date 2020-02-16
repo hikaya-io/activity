@@ -1,0 +1,156 @@
+<script type="text/x-template" id="collected-data-table-template">
+    <div>
+        <div v-if="collectedData.indicator.target_frequency">
+            <table class="table" id="collectedDataTable">
+                <tbody>
+                <tr>
+                    <th class="align-bottom" style="min-width:180px;">Target period</th>
+                    <th class="text-right align-bottom">Target</th>
+                    <th class="align-bottom" style="min-width: 125px;">Date collected</th>
+                    <th class="text-right align-bottom">Actual</th>
+                    <th class="text-right align-bottom" style="width: 65px">% Met</th>
+                    <th class="align-bottom">Evidence</th>
+                    <th class="align-bottom" style="width: 80px"></th>
+                </tr>
+                <template v-for="item in collectedData.periodictargets">
+                    <tr>
+                        <td v-if="item"
+                            :rowspan="item.collecteddata_set.length || 1"
+                            min-width="170">
+                            <strong>[[ item.period ]]</strong><br>
+                            <small>[[ item.start_date || '' ]] - [[ item.end_date || '' ]]</small>
+                        </td>
+                        <td v-if="item"
+                            :rowspan="item.collecteddata_set.length || 1"
+                            align="right">
+                            [[ Math.floor(item.target) ]]
+                        </td>
+                        <!-- Display first row only to comoplete complete columns -->
+                        <template v-if="item.collecteddata_set.length">
+                            <template v-for="(cdata, index) in item.collecteddata_set">
+                                <template v-if="index === 0">
+                                    <td :style="!cdata.periodic_target ? 'border: 3px solid red;' : false">
+                                        <a :href="'/indicators/collecteddata_update/' + cdata.id"
+                                           class="collecteddata-link"
+                                           :id="'collected-' + cdata.id">
+                                            [[ cdata.date_collected || '' ]]
+                                        </a>
+                                    </td>
+                                    <td align="right"> [[ Math.floor(cdata.achieved) ]]</td>
+                                    <td align="right"> [[ Math.floor((cdata.achieved / item.target) * 100)
+                                        ]]%
+                                    </td>
+                                    <td>
+                                        <template v-if="cdata.evidence && cdata.evidence.url">
+                                            <a :href="cdata.evidence.url">[[ cdata.evidence.url || '' ]]</a>
+                                        </template>
+                                        <template v-if="cdata.activity_table">
+                                            <a :href="cdata.activity_table.detail_url" target="_blank">[[
+                                                cdata.activity_table
+                                                ]]</a>
+                                        </template>
+                                    </td>
+                                    <td align="right">
+                                        <a :href="'/indicators/collecteddata_delete/' + cdata.id"
+                                           style="color:red; vertical-align: middle;">
+                                            <span alt="Delete" class="glyphicon glyphicon-remove"></span>
+                                        </a>
+                                        <a :href="'/indicators/collecteddata_update/' + cdata.id"
+                                           class="collecteddata-link"
+                                           style="padding-left: 30px; vertical-align: middle">
+                                            <span alt="Edit" class="glyphicon glyphicon-edit"></span>
+                                        </a>
+                                    </td>
+                                </template>
+                            </template>
+                        </template>
+                        <template v-if="!item.collecteddata_set.length">
+                            <td style="border-right: 0px solid; text-align: center" colspan="6">No data collected
+                            </td>
+                        </template>
+                    </tr>
+                    <template v-if="item.collecteddata_set.length > 1">
+                        <!-- Display remaining rows -->
+                        <template v-for="(cdata, index) in item.collecteddata_set">
+                            <tr v-if="index > 0">
+                                <td :style="!cdata.periodic_target ? 'border: 3px solid red;' : false">
+                                    <a :href="'/indicators/collecteddata_update/' + cdata.id" class="collecteddata-link"
+                                       :id="'collected-' + cdata.id">
+                                        [[ cdata.date_collected || '' ]]
+                                    </a>
+                                </td>
+                                <td align="right"> [[ Math.floor(cdata.achieved) ]]</td>
+                                <td align="right"> [[ Math.floor((cdata.achieved / item.target) * 100)
+                                    ]]%
+                                </td>
+                                <td>
+                                    <template v-if="cdata.evidence && cdata.evidence.url">
+                                        <a :href="cdata.evidence.url">[[ cdata.evidence.url || '' ]]</a>
+                                    </template>
+                                    <template v-if="cdata.activity_table">
+                                        <a :href="cdata.activity_table.detail_url" target="_blank">[[
+                                            cdata.activity_table
+                                            ]]</a>
+                                    </template>
+                                </td>
+                                <td align="right">
+                                    <a :href="'/indicators/collecteddata_delete/' + cdata.id"
+                                       style="color:red; vertical-align: middle;">
+                                        <span alt="Delete" class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                    <a :href="'/indicators/collecteddata_update/' + cdata.id" class="collecteddata-link"
+                                       style="padding-left: 30px; vertical-align: middle">
+                                        <span alt="Edit" class="glyphicon glyphicon-edit"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </template>
+                    </template>
+                </template>
+                <tr style="background-color: #f5f5f5;">
+                    <td><strong>Life of Program</strong></td>
+                    <td align="right"><strong>[[ Math.floor(collectedData.indicator.lop_target) ]]</strong></td>
+                    <!-- {{ collected_sum.periodic_target__target__sum }} -->
+                    <td></td>
+                    <td align="right"><strong>[[ Math.floor(collectedData.collected_sum.achieved__sum) ]]</strong></td>
+                    <td align="right"><strong>[[ Math.floor((collectedData.collected_sum.achieved__sum /
+                        collectedData.indicator.lop_target) * 100)
+                        ]]</strong>
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
+                </tbody>
+
+            </table>
+            <div class="text-right">
+                <button data-toggle="modal" v-bind:data-settarget="collectedData.indicator.lop_target"
+                        data-target="#addCollectedDataModal" v-bind:data-program="collectedData.program"
+                        v-bind:data-indicator="collectedData.indicator.pk" role="button"
+                        class="btn btn-sm btn-success collectdata">Add results
+                </button>
+            </div>
+        </div>
+        <div v-else>
+            <table class="table table-condensed table-bordered" id="">
+                <tr>
+                    <td valign="top" style="padding:2px;">
+                        <img src="/static/img/target.png" class="img-responsive center-block" height="35" width="35">
+                    </td>
+                    <td valign="top" style="padding-left:10px; font-size: 16px; color: #54585A;">
+                        Before you can add results to this indicator, target periods need to be defined. <a
+                            :href="'/indicators/indicator_update/' + collectedData.indicator.pk"
+                            data-tab="#targets" class="indicator-link">Set target periods.</a>
+                    </td>
+                </tr>
+            </table>
+            <div class="text-right">
+                <button data-toggle="modal" v-bind:data-settarget="collectedData.indicator.lop_target"
+                        data-target="#addCollectedDataModal" v-bind:data-program="collectedData.program"
+                        v-bind:data-indicator="collectedData.indicator.pk" role="button"
+                        class="btn btn-sm btn-success collectdata">Add results
+                </button>
+            </div>
+        </div>
+    </div>
+
+</script>
