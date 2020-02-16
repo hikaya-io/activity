@@ -1,8 +1,8 @@
-<div id="data_collection_frequency">
+<div id="profile_type">
   <!-- Sub navigation -->
 <div class="sub-navigation">
     <div class="sub-navigation-header">
-        <h4 class="page-title">Data Collection Frequency List</h4>
+        <h4 class="page-title">{{user.activity_user.organization.site_label}} Types List</h4>
     </div>
     <div class="sub-navigation-actions"> 
         <div class="sub-nav-item">
@@ -13,21 +13,23 @@
               id="show-modal" 
               @click="showModal = true"
               >
-              <i class="fa fa-plus"></i> Data Collection Frequency
+              <i class="fa fa-plus"></i> {{user.activity_user.organization.site_label}} Type
               </a>
           </div>
+          <!-- Profile Type create modal -->
           <modal v-if="showModal" @close="showModal = false">
             <div slot="body">
-              {% include 'admin/indicator_configs/forms/data_collection_form.html' %}
+              {% include 'admin/component_configs/forms/profile_type_form.html' %}
             </div>
             <div slot="footer">
               {% include 'ui-components/quick_entry_modal_footer.html' %}
             </div>
             <h4 slot="header">[[modalHeader]]</h4>
           </modal>
+          <!-- Profile Type delete modal -->
           <modal v-if=showDeleteModal @close="showDeleteModal = false">
             <div slot="body">
-              <p>Are you sure you want to delete <b>[[ itemToDelete.frequency ]]</b></p>
+              <p>Are you sure you want to delete <b>[[ itemToDelete.profile ]]</b></p>
             </div>
             <div slot="footer">
               <div class="text-right">
@@ -36,7 +38,7 @@
                 </button>
                 <button
                   class="btn btn-danger"
-                  @click=deleteFrequency(itemToDelete.id)
+                  @click=deleteProfileType(itemToDelete.id)
                 >
                   Delete
                 </button>
@@ -49,28 +51,28 @@
 </div>
 
 <!-- Table -->
-<table class="table" id="dataCollectionFrequencyTable" v-if="frequencies.length">
+<table class="table" id="profileTypesTable" v-if="profileTypes.length">
     <thead>
         <tr>
-        <th>Frequency</th>
-        <th>Number of days</th>
+        <th>Type</th>
         <th>Create Date</th>
+        <th>Edit Date</th>
         <th></th>
         </tr>
     </thead>
 
     <tbody>
-      <tr v-cloak v-for="frequency in frequencies" v-if="frequency.frequency">
+      <tr v-cloak v-for="profileType in profileTypes" v-if="profileType.profile">
         <td>
-          <a href="/workflow/profile_type_update/{{profile_type.id}}/" data-toggle="tooltip" title="{{profile_type.profile}}">
-            [[ frequency.frequency ]]
+          <a href="/workflow/profile_type_update/{{profile_type.id}}/" data-toggle="tooltip" title="{{profileType.profile}}">
+            [[ profileType.profile ]]
           </a>
         </td>
         <td>
-           [[ frequency.create_date ]]
+           [[ formatDate(profileType.create_date) ]]
         </td>
         <td>
-            [[frequency.edit_date]]
+            [[ formatDate(profileType.edit_date) ]]
           </td>
         <td class="text-right">
           <!-- Split button -->
@@ -89,12 +91,12 @@
             <ul class="dropdown-menu">
               <li><a 
                 class="force-link"
-                @click=toggleModal(frequency)
+                @click=toggleModal(profileType)
                 >Edit</a></li>
               <li>
                 <a 
                   class="text-danger force-link"
-                  @click=toggleDeleteModal(frequency)
+                  @click=toggleDeleteModal(profileType)
                 >Delete</a>
               </li> 
             </ul>
@@ -107,6 +109,6 @@
 {% include 'ui-components/vue_modal.html'%}
 
 {% block extra_js_in_body %}
-<script src="{{ STATIC_URL }}vue.js/data_collection_frequency.js"></script>
+<script src="{{ STATIC_URL }}vue.js/profile_type.js"></script>
 {% endblock extra_js_in_body %}
 

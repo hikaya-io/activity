@@ -6,59 +6,70 @@ Vue.component('modal', {
 // start app
 new Vue({
 	delimiters: ['[[', ']]'],
-	el: '#data_collection_frequency',
+	el: '#profile_type',
 	data: {
 		showModal: false,
 		showDeleteModal: false,
-		frequency: '',
-		frequencies: [],
+		profile: '',
+		profileTypes: [],
 		isEdit: false,
-		currentFrequency: null,
-		itemToDelete: null,
-		modalHeader: 'Add Data Collection Frequency',
+		currentProfileType: null,
+        itemToDelete: null,
+        siteLabel: '',
+		modalHeader: '',
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/indicators/data_collection_frequency/list')
+		this.makeRequest('GET', '/workflow/profile_type/list')
 			.then(response => {
 				if (response.data) {
-					this.frequencies = response.data.sort((a, b) => b.id - a.id);
+                    this.profileTypes = response.data.profile_types.sort((a, b) => b.id - a.id);
+                    this.siteLabel = response.data.site_label;
+                    this.modalHeader = `Add ${this.siteLabel} Type`; 
 					$(document).ready(() => {
-						$('#dataCollectionFrequencyTable').DataTable({
-							pageLength: 5,
-							lengthMenu: [5, 10, 15, 20]
+						$('#profileTypesTable').DataTable({
+                            pageLength: 5,
+                            lengthMenu: [5, 10, 15, 20]
 						});
 					});
 				}
 			})
 			.catch(e => {
-				oastr.error('There was a problem loading frequencies from the database!!');
-				this.frequencies = [];
+				oastr.error('There was a problem loading profile types from the database!!');
+				this.profileTypes = [];
 			});
 	},
 	methods: {
         /**
-         * open or close the frequency form modal
-         * @param { object } item - frequency item
+         * open or close the profile type form modal
+         * @param { object } item - profile type item
          */
 		toggleModal: function(item = null) {
 			this.showModal = !this.showModal;
 			if (item) {
 				this.isEdit = true;
-				this.modalHeader = `Edit ${item.frequency}`;
-				this.currentFrequency = item;
-				this.frequency = item.frequency;
+				this.modalHeader = `Edit ${item.profile}`;
+				this.currentProfileType = item;
+				this.profile = item.profile;
 			}
 		},
 
         /**
-         * open or close the frequency delete modal
-         * @param { object } data - frequency item
+         * open or close the profile type delete modal
+         * @param { object } data - profile type item
          */
 		toggleDeleteModal: function(data) {
 			this.showDeleteModal = !this.showDeleteModal;
 			this.modalHeader = 'Confirm delete';
 			this.itemToDelete = data;
-		},
+        },
+        
+        /**
+         * Format date
+         * @param {string} date - date to be formatted
+         */
+        formatDate: function(date) {
+            return moment(date, 'YYYY-MM-DDThh:mm:ssZ').format('YYYY-MM-DD');
+        },
 
         /**
          * process form data
@@ -67,8 +78,8 @@ new Vue({
 		processForm: function(saveNew = false) {
 			this.$validator.validateAll().then(result => {
 				if (result) {
-					if (this.currentFrequency && this.currentFrequency.id) {
-						this.updateFrequency();
+					if (this.currentProfileType && this.currentProfileType.id) {
+						this.updateProfileType();
 					} else {
 						if (saveNew) {
 							this.postData(saveNew);
@@ -81,26 +92,26 @@ new Vue({
 		},
 
         /**
-         * create new Data Collection Frequencies
+         * create new profile type
          * @param { boolean } saveNew - true if a user wants to make multiple posts
          */
 		async postData(saveNew) {
 			try {
 				const response = await this.makeRequest(
 					'POST',
-					`/indicators/data_collection_frequency/add`,
+					`/workflow/profile_type/add`,
 					{
-						frequency: this.frequency,
+						profile: this.profile,
 					}
 				);
 				if (response) {
-                    toastr.success('Frequency Successfuly Saved');
-					this.frequencies.unshift(response.data);
+                    toastr.success('Profile Type Successfuly Saved');
+					this.profileTypes.unshift(response.data);
 					if (!saveNew) {
 						this.toggleModal();
 					}
 					// resetting the form
-					this.frequency = '';
+					this.profile = '';
 					this.$validator.reset();
 				}
 			} catch (error) {
@@ -109,25 +120,25 @@ new Vue({
 		},
 
         /**
-         * edit Data Collection Frequency item
+         * edit Profile Type item
          */
-		async updateFrequency() {
+		async updateProfileType() {
 			try {
 				const response = await this.makeRequest(
 					'PUT',
-					`/indicators/data_collection_frequency/edit/${this.currentFrequency.id}`,
-					{ frequency: this.frequency }
+					`/workflow/profile_type/edit/${this.currentProfileType.id}`,
+					{ profile: this.profile }
 				);
 				if (response) {
-					toastr.success('Frequency was successfuly Updated');
-					const newFrequencies = this.frequencies.filter(item => {
-						return item.id != this.currentFrequency.id;
+					toastr.success('Profile Type was successfuly Updated');
+					const newProfileTypes = this.profileTypes.filter(item => {
+						return item.id != this.currentProfileType.id;
 					});
-					this.frequencies = newFrequencies;
-					this.frequencies.unshift(response.data);
+					this.profileTypes = newProfileTypes;
+					this.profileTypes.unshift(response.data);
 					this.isEdit = false;
-					this.frequency = null;
-					this.modalHeader = 'Add Data Collection Frequency';
+					this.profile = null;
+					this.modalHeader = 'Add Profile Type';
 					this.toggleModal();
 				}
 			} catch (e) {
@@ -136,21 +147,21 @@ new Vue({
 		},
 
         /**
-         * delete collection data frequency
-         * @param { number } id - id of the frequency to be deleted
+         * delete profile type
+         * @param { number } id - id of the profile type to be deleted
          */
-		async deleteFrequency(id) {
+		async deleteProfileType(id) {
 			try {
 				const response = await this.makeRequest(
 					'DELETE',
-					`/indicators/data_collection_frequency/delete/${id}`
+					`/workflow/profile_type/delete/${id}`
 				);
 				if (response.data.success) {
-					toastr.success('Frequency was successfuly Deleted');
-					this.frequencies = this.frequencies.filter(item => +item.id !== +id);
+					toastr.success('Profile Type was successfuly Deleted');
+					this.profileTypes = this.profileTypes.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
 				} else {
-					toastr.error('There was a problem Deleting frequency!!');
+					toastr.error('There was a problem deleting profile type!!');
 				}
 			} catch (error) {
 				toastr.error('There was a server error!!');
@@ -173,10 +184,10 @@ new Vue({
 
 	computed: {
         /**
-         * Check if frequency form is valid
+         * Check if profile type form is valid
          */
 		isFormValid() {
-			return this.frequency;
+			return this.profile;
 		},
 	},
 });
