@@ -389,21 +389,17 @@ def set_invite_uuid(invite_uuid):
     return invite_uuid
 
 
-def user_login(request):
-    """
-    override django in-built login
-    :param request:
-    :return:
-    """
-    # redirect to homepage if user is logged in
-    if request.user.is_authenticated:
-        return redirect('/')
+class  UserLogin(View):
+    """User login class view"""
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/')
+        return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
-    if request.method == 'POST':
+    def post(self,request, *args, **kwargs):
         data = request.POST
-        username = data.get('username')
-        password = data.get('password')
-
+        username = data.get('username', None)
+        password = data.get('password', None)
         # check if user is active
         try:
             get_user = User.objects.get(Q(username=username) | Q(email=username.lower()))
@@ -416,7 +412,6 @@ def user_login(request):
                 return render(request, 'registration/login.html')
         except User.DoesNotExist:
             return render(request, 'registration/login.html')
-
         # proceed to authenticate the user
         user = authenticate(username=get_user.username, password=password)
 
@@ -430,7 +425,6 @@ def user_login(request):
 
         else:
             return render(request, 'registration/login.html')
-    return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
 
 @login_required
