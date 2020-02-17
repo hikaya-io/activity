@@ -456,6 +456,7 @@ class IndicatorUpdate(UpdateView):
     model = Indicator
     guidance = None
     template_name = 'indicators/indicator_form_tab_ui.html'
+    form_class = IndicatorForm
 
     object = None
 
@@ -633,7 +634,6 @@ class IndicatorUpdate(UpdateView):
         else:
             messages.success(self.request, 'Success, Indicator Updated!')
         return redirect('/indicators/home/0/0/0/')
-    form_class = IndicatorForm
 
 
 class IndicatorDelete(DeleteView):
@@ -2066,7 +2066,7 @@ def objective_delete(request, pk):
     """
     objective = Objective.objects.get(pk=int(pk))
     objective.delete()
-    
+
     return redirect('/indicators/objectives')
 
 
@@ -2089,7 +2089,7 @@ class LevelCreateView(CreateView):
      """
      def post(self, request):
         data = request.POST
-        
+
         level = Level(
             name=data.get('level_name'),
             description=data.get('description')
@@ -2098,7 +2098,7 @@ class LevelCreateView(CreateView):
 
         if level:
             return JsonResponse({'success': True})
-        else: 
+        else:
             return JsonResponse({'error': 'Error saving level'})
 
 
