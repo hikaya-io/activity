@@ -10,8 +10,8 @@ from .views import (
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
-    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelListView, 
-    LevelCreateView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, LevelUpdateView,level_delete,
+    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelList, LevelCreate,  
+    LevelUpdate, LevelDelete, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, 
     IndicatorTarget, DataCollectionFrequencyCreate, DataCollectionFrequencyList, DataCollectionFrequencyUpdate,
     DataCollectionFrequencyDelete,
 )
@@ -123,12 +123,28 @@ urlpatterns = [
         'disaggregation_label/delete/<int:pk>/',
         DisaggregationLabelDeleteView.as_view(),
         name='disaggregation_label_delete'),
-    
-    #levels
-    path('levels', LevelListView.as_view(), name='levels_list'),
-    path('levels_create', LevelCreateView.as_view(), name='levels_create'),
-    path('levels/<pk>/update',LevelUpdateView.as_view(), name='update_view' ),
-    path('levels/delete/<int:pk>/',level_delete, name='level_delete'),
+
+    # Levels Urls
+    path(     
+        'level/list',
+        LevelList.as_view(),
+        name='level_list'
+    ),
+    path(
+        'level/add',
+        LevelCreate.as_view(),
+        name='level_add'
+    ),
+    path(
+        'level/edit/<int:id>',
+        LevelUpdate.as_view(),
+        name='level_edit'
+    ),
+    path(
+         'level/delete/<int:id>',
+         LevelDelete.as_view(),
+         name='level_delete'
+     ),
 
     # Data DataCollectionFrequency Urls
     path(
