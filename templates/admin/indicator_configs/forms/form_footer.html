@@ -5,7 +5,7 @@
         data-dismiss="modal"
         @click="toggleModal()"
     >
-        Close
+        Cancel
     </button>
 
     <button
@@ -20,7 +20,7 @@
     <button
         v-if="!isEdit"
         type="button"
-        class="btn btn-success"
+        class="btn btn-primary"
         :disabled="errors.any() || !isFormValid"
         @click=processForm()
     >
@@ -29,7 +29,7 @@
     <button
         v-if="isEdit"
         type="button"
-        class="btn btn-success"
+        class="btn btn-primary"
         :disabled="errors.any() || !isFormValid"
         @click=processForm()
     >

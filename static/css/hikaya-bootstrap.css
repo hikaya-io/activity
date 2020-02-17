@@ -516,9 +516,10 @@ fieldset[disabled] .btn-outline-success:focus,
 .btn-outline-success.disabled.focus,
 .btn-success[disabled].focus,
 fieldset[disabled] .btn-outline-success.focus {
-  background-color: #9be8ea;
   border-color: #9be8ea;
+  background-color: #ffffff;
   box-shadow: none;
+  color:#afedee;
 }
 
 .btn-outline-success .badge {
