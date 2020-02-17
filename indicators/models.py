@@ -100,6 +100,7 @@ class Level(models.Model):
     description = models.TextField(max_length=765, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
+    sort = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -108,7 +109,7 @@ class Level(models.Model):
         if self.create_date is None:
             self.create_date = datetime.now()
         super(Level, self).save()
-    
+
     def get_absolute_url(self):
         return reverse('levels_list')
 
