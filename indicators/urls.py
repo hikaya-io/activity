@@ -10,10 +10,10 @@ from .views import (
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
-    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelList, LevelCreate,  
-    LevelUpdate, LevelDelete, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, 
+    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelList, LevelCreate,
+    LevelUpdate, LevelDelete, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
     IndicatorTarget, DataCollectionFrequencyCreate, DataCollectionFrequencyList, DataCollectionFrequencyUpdate,
-    DataCollectionFrequencyDelete,
+    DataCollectionFrequencyDelete, IndicatorTypeList, IndicatorTypeCreate, IndicatorTypeUpdate, IndicatorTypeDelete,
 )
 
 urlpatterns = [
@@ -124,6 +124,7 @@ urlpatterns = [
         DisaggregationLabelDeleteView.as_view(),
         name='disaggregation_label_delete'),
 
+
     # Levels Urls
     path(     
         'level/list',
@@ -163,8 +164,30 @@ urlpatterns = [
         name='data_collection_frequency_edit'
     ),
     path(
-            'data_collection_frequency/delete/<int:id>',
-            DataCollectionFrequencyDelete.as_view(),
-            name='data_collection_frequency_delete'
-        )
+          'data_collection_frequency/delete/<int:id>',
+          DataCollectionFrequencyDelete.as_view(),
+          name='data_collection_frequency_delete'
+    ),
+
+    # Indicator Types Urls
+    path(
+          'indicator_type/list',
+          IndicatorTypeList.as_view(),
+          name='indicator_type_list'
+    ),
+    path(
+          'indicator_type/add',
+          IndicatorTypeCreate.as_view(),
+          name='indicator_type_add'
+    ),
+    path(
+        'indicator_type/edit/<int:id>',
+        IndicatorTypeUpdate.as_view(),
+        name='indicator_type_edit'
+    ),
+    path(
+         'indicator_type/delete/<int:id>',
+         IndicatorTypeDelete.as_view(),
+         name='indicator_type_delete'
+     ),
 ]

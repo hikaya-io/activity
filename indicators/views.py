@@ -2149,6 +2149,8 @@ class DataCollectionFrequencyDelete(GView):
 """
 Level views
 """
+
+
 class LevelCreate(CreateView):
     """
     create Level View
@@ -2206,7 +2208,7 @@ class LevelUpdate(GView):
 
 class LevelDelete(GView):
     """
-    View to Delete ProfileType and return Json response
+    View to Delete Level and return Json response
     """
     def delete(self, request, *args, **kwargs):
         level_id = int(self.kwargs.get('id'))
@@ -2221,3 +2223,84 @@ class LevelDelete(GView):
 
         except Level.DoesNotExist:
             return JsonResponse(dict(success=True))
+
+
+# Indicator Type Views
+"""
+Indicator Type views
+"""
+
+
+class IndicatorTypeCreate(CreateView):
+    """
+    create Indicator Type View
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        
+        indicatorType = IndicatorType(
+            indicator_type=data.get('name'),
+            description=data.get('description')
+        )
+        indicatorType.save()
+        
+        if indicatorType:
+            return JsonResponse(model_to_dict(indicatorType))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class IndicatorTypeList(GView):
+    """
+    View to fetch Indicator Types
+    """
+    def get(self, request):
+
+        indicator_types = IndicatorType.objects.values()
+        if indicator_types:
+            return JsonResponse(list(indicator_types), safe=False)
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class IndicatorTypeUpdate(GView):
+    """
+    View to Update IndicatorType and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        indicator_type_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        indicator_type_name = data.get('name')
+        indicator_type_description = data.get('description')
+        indicatorType = IndicatorType.objects.get(
+            id=indicator_type_id
+        )
+
+        indicatorType.indicator_type = indicator_type_name
+        indicatorType.description = indicator_type_description
+        indicatorType.save()
+
+        if indicatorType:
+            return JsonResponse(model_to_dict(indicatorType))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class IndicatorTypeDelete(GView):
+    """
+    View to Delete IndicatorType and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        indicator_type_id = int(self.kwargs.get('id'))
+        indicator_type = IndicatorType.objects.get(
+            id=int(indicator_type_id)
+        )
+        indicator_type.delete()
+
+        try:
+            IndicatorType.objects.get(id=int(indicator_type_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except IndicatorType.DoesNotExist:
+            return JsonResponse(dict(success=True))
+
