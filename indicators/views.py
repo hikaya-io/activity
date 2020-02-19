@@ -2066,83 +2066,7 @@ def objective_delete(request, pk):
     """
     objective = Objective.objects.get(pk=int(pk))
     objective.delete()
-
     return redirect('/indicators/objectives')
-
-
-class LevelListView(ListView):
-    """Veiw class to get a list of levels"""
-
-    def get(self, request, *args, **kwargs):
-        get_all_levels = Level.objects.all()
-        context = {
-            'get_all_levels': get_all_levels,
-            'active': ['indicators'],
-        }
-        return render(request, 'components/levels.html', context)
-
-
-class LevelCreateView(CreateView):
-     """
-     create Level View
-     : returns success: Json object { 'success': True/False }
-     """
-     def post(self, request):
-        data = request.POST
-
-        level = Level(
-            name=data.get('level_name'),
-            description=data.get('description')
-        )
-        level.save()
-
-        if level:
-            return JsonResponse({'success': True})
-        else:
-            return JsonResponse({'error': 'Error saving level'})
-
-
-class LevelUpdateView(UpdateView):
-    """
-    Level Form
-    """
-    model = Level
-    guidance = None
-    template_name = 'indicators/level_update_form.html'
-
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="LevelForm")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(LevelUpdateView, self).dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(LevelUpdateView, self).get_context_data(**kwargs)
-        level = Level.objects.get(pk=int(self.kwargs['pk']))
-        context.update({'name': level.name})
-        context.update({'id': self.kwargs['pk']})
-        return context
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Level Updated!')
-
-        return redirect('/accounts/admin/component_admin')
-
-    form_class = LevelForm
-
-
-def level_delete(request, pk):
-    """View to delete a level"""
-    level = Level.objects.get(pk=int(pk))
-    level.delete()
-    return redirect('/accounts/admin/component_admin')
 
 
 # Vue.js Views
@@ -2218,3 +2142,164 @@ class DataCollectionFrequencyDelete(GView):
         except DataCollectionFrequency.DoesNotExist:
 
             return JsonResponse(dict(success=True))
+
+
+# Level Views
+"""
+Level views
+"""
+
+
+class LevelCreate(CreateView):
+    """
+    create Level View
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        
+        level = Level(
+            name=data.get('name'),
+            description=data.get('description')
+        )
+        level.save()
+        
+        if level:
+            return JsonResponse(model_to_dict(level))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class LevelList(GView):
+    """
+    View to fetch levels
+    """
+    def get(self, request):
+
+        levels = Level.objects.values()
+        if levels:
+            return JsonResponse(list(levels), safe=False)
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class LevelUpdate(GView):
+    """
+    View to Update Level and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        level_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        level_name = data.get('name')
+        level_description = data.get('description')
+        level = Level.objects.get(
+            id=level_id
+        )
+
+        level.name = level_name
+        level.description = level_description
+        level.save()
+
+        if level:
+            return JsonResponse(model_to_dict(level))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class LevelDelete(GView):
+    """
+    View to Delete Level and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        level_id = int(self.kwargs.get('id'))
+        level = Level.objects.get(
+            id=int(level_id)
+        )
+        level.delete()
+
+        try:
+            Level.objects.get(id=int(level_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except Level.DoesNotExist:
+            return JsonResponse(dict(success=True))
+
+
+# Indicator Type Views
+"""
+Indicator Type views
+"""
+
+
+class IndicatorTypeCreate(CreateView):
+    """
+    create Indicator Type View
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        
+        indicatorType = IndicatorType(
+            indicator_type=data.get('name'),
+            description=data.get('description')
+        )
+        indicatorType.save()
+        
+        if indicatorType:
+            return JsonResponse(model_to_dict(indicatorType))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class IndicatorTypeList(GView):
+    """
+    View to fetch Indicator Types
+    """
+    def get(self, request):
+
+        indicator_types = IndicatorType.objects.values()
+        if indicator_types:
+            return JsonResponse(list(indicator_types), safe=False)
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class IndicatorTypeUpdate(GView):
+    """
+    View to Update IndicatorType and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        indicator_type_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        indicator_type_name = data.get('name')
+        indicator_type_description = data.get('description')
+        indicatorType = IndicatorType.objects.get(
+            id=indicator_type_id
+        )
+
+        indicatorType.indicator_type = indicator_type_name
+        indicatorType.description = indicator_type_description
+        indicatorType.save()
+
+        if indicatorType:
+            return JsonResponse(model_to_dict(indicatorType))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class IndicatorTypeDelete(GView):
+    """
+    View to Delete IndicatorType and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        indicator_type_id = int(self.kwargs.get('id'))
+        indicator_type = IndicatorType.objects.get(
+            id=int(indicator_type_id)
+        )
+        indicator_type.delete()
+
+        try:
+            IndicatorType.objects.get(id=int(indicator_type_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except IndicatorType.DoesNotExist:
+            return JsonResponse(dict(success=True))
+

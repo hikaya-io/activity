@@ -62,7 +62,7 @@
     <tbody>
       <tr v-cloak v-for="frequency in frequencies" v-if="frequency.frequency">
         <td>
-          <a href="/workflow/profile_type_update/{{profile_type.id}}/" data-toggle="tooltip" title="{{profile_type.profile}}">
+          <a @click="toggleModal(frequency)" data-toggle="tooltip" title="{{profile_type.profile}}">
             [[ frequency.frequency ]]
           </a>
         </td>
@@ -107,6 +107,6 @@
 {% include 'ui-components/vue_modal.html'%}
 
 {% block extra_js_in_body %}
-<script src="{{ STATIC_URL }}vue.js/data_collection_frequency.js"></script>
+<script src="{{ STATIC_URL }}vue.js/indicators/data_collection_frequency.js"></script>
 {% endblock extra_js_in_body %}
 

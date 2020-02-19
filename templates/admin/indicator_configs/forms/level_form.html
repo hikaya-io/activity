@@ -1,0 +1,38 @@
+<form method="POST">
+    <div class="modal-body">
+        {% csrf_token %}
+        <div :class="{ 
+            'form-group': true, 
+            'has-error': errors.has('name')
+        }">
+            <label for="name">Level*</label
+            >
+            <input
+                type="text"
+                name="name"
+                :class="{ 
+                    'form-control': true, 
+                    'is-danger': errors.has('name') 
+                }"   
+                v-model="name" 
+                v-validate="'required'"
+                placeholder="Level"
+            />
+            <span v-show="errors.has('level')" class="help is-danger">[[ errors.first('level') ]]</span>
+        </div>
+        <div :class="{
+            'form-group': true
+        }">
+            <label for="description">Description</label>
+            <textarea
+                rows="3"
+                name="description"
+                :class="{ 
+                    'form-control': true, 
+                }"   
+                v-model="description" 
+                placeholder="Description"
+            ></textarea>
+        </div>
+    </div>
+</form>
