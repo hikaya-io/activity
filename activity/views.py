@@ -659,17 +659,16 @@ def admin_user_management(request, role, status):
 
 @login_required(login_url='/accounts/login/')
 def admin_component_admin(request):
-    profile_types = ProfileType.objects.all()
-    levels = Level.objects.all()
+    user = ActivityUser.objects.filter(user=request.user).first()
+    stakeholders = Stakeholder.objects.filter(organization=user.organization)
     nav_links = get_nav_links('Components')
-    
+    print('stakeholders : ', stakeholders)
     return render(
         request,
         'admin/component_admin.html',
         {
             'nav_links': nav_links,
-            'get_profile_types': profile_types,
-            'get_all_levels': levels,
+            'get_stakeholders': stakeholders,
             'active': 'components'
         }
     )

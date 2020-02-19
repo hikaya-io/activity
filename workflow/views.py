@@ -2647,33 +2647,6 @@ def add_stakeholder(request):
     return HttpResponse({'success': False})
 
 
-class FundCodeCreate(GView):
-    """
-    View to create FundCode and return Json response
-    """
-    def post(self, request):
-        data = request.POST
-        stakeholder_id = None
-        name = data.get('name')
-        stakeholder = data.get('stakeholder', None)
-
-        if stakeholder is not None and stakeholder != '':
-            stakeholder_id = int(stakeholder)
-
-        fund_code = FundCode.objects.create(
-            name=name, stakeholder_id=stakeholder_id
-        )
-
-        if fund_code:
-            return JsonResponse(dict(
-                status=201,
-                fund_code=dict(name=fund_code.name, id=fund_code.id))
-            )
-        else:
-            return JsonResponse(dict(status=401))
-
-
-
 # Vue.js Views
 """
 ProfileType views
@@ -2752,5 +2725,99 @@ class ProfileTypeDelete(GView):
             return JsonResponse(dict(error='Failed'))
 
         except ProfileType.DoesNotExist:
+
+            return JsonResponse(dict(success=True))
+
+
+"""
+FundCode views
+"""
+class FundCodeCreate(CreateView):
+    """
+    create Fund Code View
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        
+        fund_code = FundCode(
+            name=data.get('name'),
+            stakeholder_id=data.get('stakeholder')
+        )
+        fund_code.save()
+        
+        if fund_code:
+            return JsonResponse(
+                dict(
+                    id=fund_code.id,
+                    name=fund_code.name,
+                    stakeholder__name=fund_code.stakeholder.name,
+                    stakeholder=fund_code.stakeholder.id
+                )
+            )
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class FundCodeList(GView):
+    """
+    View to fetch Fund Codes
+    """
+    def get(self, request):
+
+        user = ActivityUser.objects.filter(user=request.user).first()
+        fund_codes = FundCode.objects.values('id', 'name', 'stakeholder__name', 'stakeholder')
+        stakeholders_list = Stakeholder.objects.filter(organization=user.organization).values()
+        if fund_codes:
+            # return JsonResponse(list(fund_codes), safe=False)
+            return JsonResponse(
+                dict(
+                    fund_codes=list(fund_codes),
+                    stakeholders=list(stakeholders_list)
+                ),
+                safe=False
+            )
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class FundCodeUpdate(GView):
+    """
+    View to Update FundCode and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        fund_code_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        name = data.get('name')
+        stakeholder = data.get('stakeholder')
+        fund_code = FundCode.objects.get(
+            id=fund_code_id
+        )
+
+        fund_code.name = name
+        fund_code.stakeholder = stakeholder
+        fund_code.save()
+
+        if fund_code:
+            return JsonResponse(model_to_dict(fund_code))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class FundCodeDelete(GView):
+    """
+    View to Delete FundCode and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        fund_code_id = int(self.kwargs.get('id'))
+        fund_code = FundCode.objects.get(
+            id=int(fund_code_id)
+        )
+        fund_code.delete()
+
+        try:
+            FundCode.objects.get(id=int(fund_code_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except FundCode.DoesNotExist:
 
             return JsonResponse(dict(success=True))

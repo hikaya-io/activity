@@ -2145,12 +2145,10 @@ class DataCollectionFrequencyDelete(GView):
             return JsonResponse(dict(success=True))
 
 
-# Level Views
+
 """
 Level views
 """
-
-
 class LevelCreate(CreateView):
     """
     create Level View
@@ -2225,12 +2223,9 @@ class LevelDelete(GView):
             return JsonResponse(dict(success=True))
 
 
-# Indicator Type Views
 """
 Indicator Type views
 """
-
-
 class IndicatorTypeCreate(CreateView):
     """
     create Indicator Type View
