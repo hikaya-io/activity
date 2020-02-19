@@ -6,27 +6,26 @@ Vue.component('modal', {
 // start app
 new Vue({
 	delimiters: ['[[', ']]'],
-	el: '#profile_type',
+	el: '#level',
 	data: {
 		showModal: false,
 		showDeleteModal: false,
-		profile: '',
-		profileTypes: [],
+		levels: [],
+        name: '',
+        description: '',
 		isEdit: false,
-		currentProfileType: null,
+		currentLevel: null,
         itemToDelete: null,
-        siteLabel: '',
 		modalHeader: '',
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/workflow/profile_type/list')
+		this.makeRequest('GET', '/indicators/level/list')
 			.then(response => {
 				if (response.data) {
-                    this.profileTypes = response.data.profile_types.sort((a, b) => b.id - a.id);
-                    this.siteLabel = response.data.site_label;
-                    this.modalHeader = `Add ${this.siteLabel} Type`; 
+                    this.levels = response.data.sort((a, b) => b.id - a.id);
+                    this.modalHeader = 'Add Level'; 
 					$(document).ready(() => {
-						$('#profileTypesTable').DataTable({
+						$('#levelsTable').DataTable({
                             pageLength: 5,
                             lengthMenu: [5, 10, 15, 20]
 						});
@@ -34,28 +33,29 @@ new Vue({
 				}
 			})
 			.catch(e => {
-				oastr.error('There was a problem loading profile types from the database!!');
-				this.profileTypes = [];
+				toastr.error('There was a problem loading levels from the database!!');
+				this.levels = [];
 			});
 	},
 	methods: {
         /**
-         * open or close the profile type form modal
-         * @param { object } item - profile type item
+         * open or close the level form modal
+         * @param { object } item - level item
          */
 		toggleModal: function(item = null) {
-			this.showModal = !this.showModal;
+            this.showModal = !this.showModal;
 			if (item) {
 				this.isEdit = true;
-				this.modalHeader = `Edit ${item.profile}`;
-				this.currentProfileType = item;
-				this.profile = item.profile;
+				this.modalHeader = `Edit ${item.name}`;
+				this.currentLevel = item;
+                this.name = item.name;
+                this.description = item.description;
 			}
 		},
 
         /**
-         * open or close the profile type delete modal
-         * @param { object } data - profile type item
+         * open or close the level delete modal
+         * @param { object } data - level item
          */
 		toggleDeleteModal: function(data) {
 			this.showDeleteModal = !this.showDeleteModal;
@@ -73,13 +73,13 @@ new Vue({
 
         /**
          * process form data
-         * @param { boolen } saveNew - true to keep the modal open for additional posts
+         * @param { boolean } saveNew - true to keep the modal open for additional posts
          */
 		processForm: function(saveNew = false) {
 			this.$validator.validateAll().then(result => {
 				if (result) {
-					if (this.currentProfileType && this.currentProfileType.id) {
-						this.updateProfileType();
+					if (this.currentLevel && this.currentLevel.id) {
+						this.updateLevel();
 					} else {
 						if (saveNew) {
 							this.postData(saveNew);
@@ -92,26 +92,28 @@ new Vue({
 		},
 
         /**
-         * create new profile type
+         * create new level
          * @param { boolean } saveNew - true if a user wants to make multiple posts
          */
 		async postData(saveNew) {
 			try {
 				const response = await this.makeRequest(
 					'POST',
-					`/workflow/profile_type/add`,
+					`/indicators/level/add`,
 					{
-						profile: this.profile,
+                        name: this.name,
+                        description: this.description
 					}
-				);
+                );
 				if (response) {
-                    toastr.success('Profile Type Successfuly Saved');
-					this.profileTypes.unshift(response.data);
+                    toastr.success('Level successfuly saved');
+					this.levels.unshift(response.data);
 					if (!saveNew) {
 						this.toggleModal();
 					}
 					// resetting the form
-					this.profile = '';
+                    this.name = '';
+                    this.description = '';
 					this.$validator.reset();
 				}
 			} catch (error) {
@@ -120,25 +122,29 @@ new Vue({
 		},
 
         /**
-         * edit Profile Type item
+         * edit Level item
          */
-		async updateProfileType() {
+		async updateLevel() {
 			try {
 				const response = await this.makeRequest(
 					'PUT',
-					`/workflow/profile_type/edit/${this.currentProfileType.id}`,
-					{ profile: this.profile }
+					`/indicators/level/edit/${this.currentLevel.id}`,
+					{ 
+                        name: this.name, 
+                        description: this.description,
+                    }
 				);
 				if (response) {
-					toastr.success('Profile Type was successfuly Updated');
-					const newProfileTypes = this.profileTypes.filter(item => {
-						return item.id != this.currentProfileType.id;
+					toastr.success('Level was successfuly updated');
+					const newLevels = this.levels.filter(item => {
+						return item.id != this.currentLevel.id;
 					});
-					this.profileTypes = newProfileTypes;
-					this.profileTypes.unshift(response.data);
+					this.levels = newLevels;
+					this.levels.unshift(response.data);
 					this.isEdit = false;
-					this.profile = null;
-					this.modalHeader = 'Add Profile Type';
+                    this.name = null;
+                    this.description = null;
+					this.modalHeader = 'Add Level';
 					this.toggleModal();
 				}
 			} catch (e) {
@@ -147,21 +153,21 @@ new Vue({
 		},
 
         /**
-         * delete profile type
-         * @param { number } id - id of the profile type to be deleted
+         * delete level
+         * @param { number } id - id of the level to be deleted
          */
 		async deleteProfileType(id) {
 			try {
 				const response = await this.makeRequest(
 					'DELETE',
-					`/workflow/profile_type/delete/${id}`
+					`/indicators/level/delete/${id}`
 				);
 				if (response.data.success) {
-					toastr.success('Profile Type was successfuly Deleted');
-					this.profileTypes = this.profileTypes.filter(item => +item.id !== +id);
+					toastr.success('Level was successfuly deleted');
+					this.levels = this.levels.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
 				} else {
-					toastr.error('There was a problem deleting profile type!!');
+					toastr.error('There was a problem deleting level!!');
 				}
 			} catch (error) {
 				toastr.error('There was a server error!!');
@@ -184,10 +190,10 @@ new Vue({
 
 	computed: {
         /**
-         * Check if profile type form is valid
+         * Check if level form is valid
          */
 		isFormValid() {
-			return this.profile;
+			return this.name;
 		},
 	},
 });
