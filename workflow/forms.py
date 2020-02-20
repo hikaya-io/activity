@@ -18,10 +18,10 @@ from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
     Benchmarks, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector, Country, ProfileType, 
+    ActivityUser, Contact, Sector, Country, ProfileType,
 )
 from indicators.models import (
-    CollectedData, Indicator, PeriodicTarget, Level,
+    CollectedData, Indicator, PeriodicTarget,
 )
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
 from activity.util import get_country
@@ -274,7 +274,7 @@ class ProjectAgreementForm(forms.ModelForm):
             self.fields[
                 'approval'].help_text = "Approval level permissions required"
             self.fields['approved_by'].queryset = ActivityUser.objects.filter(
-                organization=self.request.user.activity_user.organization).distinct()           
+                organization=self.request.user.activity_user.organization).distinct()
 
 
 class ProjectAgreementSimpleForm(forms.ModelForm):
@@ -363,16 +363,15 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
             status=True
         )
         self.fields['program'].label = '{}'.format(
-            self.request.user.activity_user.organization.level_1_label) 
+            self.request.user.activity_user.organization.level_1_label)
         self.fields['project_name'].label = '{} Name'.format(
-            self.request.user.activity_user.organization.level_2_label) 
+            self.request.user.activity_user.organization.level_2_label)
         self.fields['activity_code'].label = '{} Code'.format(
-            self.request.user.activity_user.organization.level_2_label) 
+            self.request.user.activity_user.organization.level_2_label)
         self.fields['total_estimated_budget'].label = 'Total {} Budget'.format(
-            self.request.user.activity_user.organization.level_2_label) 
+            self.request.user.activity_user.organization.level_2_label)
         self.fields['approval'].label = '{} Status'.format(
             self.request.user.activity_user.organization.level_2_label)
-
 
         # override the stakeholder queryset to use request.user for country
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
@@ -1162,7 +1161,7 @@ class SiteProfileForm(forms.ModelForm):
 
     class Meta:
         model = SiteProfile
-        exclude = ['create_date', 'edit_date']
+        exclude = ['create_date', 'edit_date', 'organizations']
 
     date_of_firstcontact = forms.DateField(
         widget=DatePicker.DateInput(), required=False)
@@ -1203,7 +1202,7 @@ class SiteProfileForm(forms.ModelForm):
                              Field('longitude', step="any"),
                              ),
                     Fieldset('Map',
-                                HTML("""<div id="div_id_map"></div>"""),
+                             HTML("""<div id="div_id_map"></div>"""),
                              ),
                     ),
                 Tab('Contact',
@@ -1580,10 +1579,10 @@ class StakeholderForm(forms.ModelForm):
                         'type',
                         'contact',
                         HTML("""
-                                <a 
-                                    role="button" 
+                                <a
+                                    role="button"
                                     class="btn btn-sm btn-default"
-                                    href="" data-toggle="modal" 
+                                    href="" data-toggle="modal"
                                     data-target="#addContactModal"
                                     >
                                     <i class="fa fa-plus"></i>&nbsp;&nbsp;Contact</a>
