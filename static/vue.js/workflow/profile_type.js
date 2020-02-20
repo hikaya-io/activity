@@ -138,6 +138,7 @@ new Vue({
 					this.profileTypes.unshift(response.data);
 					this.isEdit = false;
 					this.profile = null;
+					this.currentProfileType = null;
 					this.modalHeader = 'Add Profile Type';
 					this.toggleModal();
 				}

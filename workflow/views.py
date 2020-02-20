@@ -2741,7 +2741,7 @@ class FundCodeCreate(CreateView):
         
         fund_code = FundCode(
             name=data.get('name'),
-            stakeholder_id=data.get('stakeholder')
+            stakeholder_id=data.get('stakeholder'),
         )
         fund_code.save()
         

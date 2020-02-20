@@ -144,6 +144,7 @@ new Vue({
 					this.isEdit = false;
                     this.name = null;
                     this.description = null;
+                    this.currentIndicatorType = null;
 					this.modalHeader = 'Add Indicator Type';
 					this.toggleModal();
 				}

@@ -6,7 +6,7 @@ Vue.component('modal', {
 // start app
 new Vue({
 	delimiters: ['[[', ']]'],
-	el: '#fund_code',
+	el: '#program_fund_code',
 	data: {
 		showModal: false,
 		showDeleteModal: false,
@@ -26,12 +26,12 @@ new Vue({
                     this.fundCodes = response.data.fund_codes.sort((a, b) => b.id - a.id);
                     this.stakeholders = response.data.stakeholders;
                     this.modalHeader = 'Add Fund Code'; 
-					$(document).ready(() => {
-						$('#fundCodesTable').DataTable({
-                            pageLength: 5,
-                            lengthMenu: [5, 10, 15, 20]
-						});
-					});
+					// $(document).ready(() => {
+					// 	$('#fundCodesTable').DataTable({
+                    //         pageLength: 5,
+                    //         lengthMenu: [5, 10, 15, 20]
+					// 	});
+					// });
 				}
 			})
 			.catch(e => {
@@ -120,60 +120,6 @@ new Vue({
 				}
 			} catch (error) {
 				toastr.error('There was a problem saving your data!!');
-			}
-		},
-
-        /**
-         * edit Fund Code item
-         */
-		async updateFundCode() {
-			try {
-				const response = await this.makeRequest(
-					'PUT',
-					`/workflow/fund_code/edit/${this.currentFundCode.id}`,
-					{ 
-                        name: this.name, 
-                        stakeholder: this.stakeholder,
-                    }
-				);
-				if (response) {
-					toastr.success('Fund code was successfuly updated');
-					const existingFundCodes = this.fundCodes.filter(item => {
-						return item.id != this.currentFundCode.id;
-					});
-					this.fundCodes = existingFundCodes;
-					this.fundCodes.unshift(response.data);
-					this.isEdit = false;
-                    this.name = null;
-                    this.stakeholder = null;
-                    this.currentFundCode = null;
-					this.modalHeader = 'Add Fund Code';
-					this.toggleModal();
-				}
-			} catch (e) {
-				toastr.error('There was a problem updating your data!!');
-			}
-		},
-
-        /**
-         * delete fund code
-         * @param { number } id - id of the fund code to be deleted
-         */
-		async deleteProfileType(id) {
-			try {
-				const response = await this.makeRequest(
-					'DELETE',
-					`/workflow/fund_code/delete/${id}`
-				);
-				if (response.data.success) {
-					toastr.success('Fund Code was successfuly deleted');
-					this.fundCodes = this.fundCodes.filter(item => +item.id !== +id);
-					this.showDeleteModal = !this.showDeleteModal;
-				} else {
-					toastr.error('There was a problem deleting fund Code!!');
-				}
-			} catch (error) {
-				toastr.error('There was a server error!!');
 			}
 		},
 

@@ -34,5 +34,20 @@
                 placeholder="Description"
             ></textarea>
         </div>
+        <div :class="{ 
+            'form-group': true
+        }">
+            <label for="name">Sort</label
+            >
+            <input
+                type="number"
+                name="sort"
+                :class="{ 
+                    'form-control': true
+                }"   
+                v-model="sort" 
+                placeholder="Sort"
+            />
+        </div>
     </div>
 </form>
