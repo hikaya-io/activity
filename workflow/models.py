@@ -594,6 +594,8 @@ class Office(models.Model):
     code = models.CharField("Office Code", max_length=255, blank=True)
     province = models.ForeignKey(
         Province, verbose_name="Admin Level 1", on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 

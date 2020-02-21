@@ -31,7 +31,7 @@ new Vue({
 				}
 			})
 			.catch(e => {
-				oastr.error('There was a problem loading frequencies from the database!!');
+				toastr.error('There was a problem loading frequencies from the database!!');
 				this.frequencies = [];
 			});
 	},
