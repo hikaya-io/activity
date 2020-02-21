@@ -662,7 +662,6 @@ def admin_component_admin(request):
     user = ActivityUser.objects.filter(user=request.user).first()
     stakeholders = Stakeholder.objects.filter(organization=user.organization)
     nav_links = get_nav_links('Components')
-    print('stakeholders : ', stakeholders)
     return render(
         request,
         'admin/component_admin.html',
