@@ -19,8 +19,3 @@ transform: rotateZ(135deg);transform-origin: 50% 50% 0;transition: transform eas
 .vue-tree .node .node-body .node-add{height:20%;line-height: 2em;overflow: hidden;width:100%;background:#F4F5F7;position:relative;cursor:pointer;display: none}
 .vue-tree .node .node-body:hover > .node-add{display: block}
 .vue-tree .node .node-body .node-add span{color:#737581;position: absolute;top:50%;left:50%;transform:translate(-50%, -50%);}
-.vue-tree .landscape{transform:translate(-100%,0) rotate(-90deg);transform-origin: 100% 0;}
-.vue-tree .landscape .node{text-align: left;height: 8em;width:8em;}
-.vue-tree .landscape .node-body{position: relative; transform: rotate(90deg);padding-left: 4.5em;height: 4em;top:4em;left: -1em;}
-.vue-tree .landscape .node-body .avat{position: absolute;left: 0;}
-.vue-tree .landscape .node-body .name{height: 4em; line-height: 4em;}
