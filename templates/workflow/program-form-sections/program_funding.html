@@ -2,16 +2,28 @@
 
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="form-group" id="program_fund_code">
       {{ form.fund_code | as_crispy_field }}
       <p>
-        <a 
-          role="button" 
+        <a
+          role="button"
           class="btn btn-sm btn-default"
-          data-toggle="modal"
-          data-target="#fundCodeCreateModal">
-          <i class="fa fa-plus"></i> Fund code</a>
+          id="show-modal"
+          @click="showModal = true"
+        >
+          <i class="fa fa-plus"></i> Fund Code
+        </a>
       </p>
+      <!-- Fund Code create modal -->
+			<modal v-if="showModal" @close="showModal = false">
+          <h4 slot="header">[[modalHeader]]</h4>
+          <div slot="body">
+            {% include 'admin/component_configs/forms/fund_code_form.html' %}
+          </div>
+          <div slot="footer">
+            {% include 'ui-components/quick_entry_modal_footer.html' %}
+          </div>
+      </modal>
     </div>
   </div>
 
@@ -32,3 +44,9 @@
     $('#id_funding_status').select2({ theme: 'bootstrap' });
   });
 </script>
+
+{% include 'ui-components/vue_modal.html'%}
+
+{% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}vue.js/workflow/program_fund_code.js"></script>
+{% endblock extra_js_in_body %}

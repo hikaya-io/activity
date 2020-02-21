@@ -2144,12 +2144,10 @@ class DataCollectionFrequencyDelete(GView):
             return JsonResponse(dict(success=True))
 
 
-# Level Views
+
 """
 Level views
 """
-
-
 class LevelCreate(CreateView):
     """
     create Level View
@@ -2159,7 +2157,8 @@ class LevelCreate(CreateView):
         
         level = Level(
             name=data.get('name'),
-            description=data.get('description')
+            description=data.get('description'),
+            sort=data.get('sort')
         )
         level.save()
         
@@ -2191,12 +2190,14 @@ class LevelUpdate(GView):
         data = json.loads(request.body.decode('utf-8'))
         level_name = data.get('name')
         level_description = data.get('description')
+        level_sort = data.get('sort')
         level = Level.objects.get(
             id=level_id
         )
 
         level.name = level_name
         level.description = level_description
+        level.sort = level_sort
         level.save()
 
         if level:
@@ -2224,12 +2225,9 @@ class LevelDelete(GView):
             return JsonResponse(dict(success=True))
 
 
-# Indicator Type Views
 """
 Indicator Type views
 """
-
-
 class IndicatorTypeCreate(CreateView):
     """
     create Indicator Type View
