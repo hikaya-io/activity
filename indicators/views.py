@@ -1999,20 +1999,37 @@ def objectives_tree(request):
     get_all_objectives = Objective.objects.filter(
         program__organization=request.user.activity_user.organization)
 
-    objectives_as_json = [{'id': 0, 'name': 'Strategic Objectives'}]
+    objectives_as_json = {
+        '0': {
+            'name': 'Strategic Objectives',
+            'children': []
+        }
+    }
+
+    get_programs = Program.objects.all().filter(
+        organization=request.user.activity_user.organization).distinct()
 
     for objective in get_all_objectives:
-        data = {'id': objective.id, 'name': objective.name}
+        data = {'name': objective.name, 'program': objective.program.name, 'children': []}
+
+        if str(objective.id) not in objectives_as_json:
+            objectives_as_json[str(objective.id)] = data
 
         if objective.parent is None:
-            data['parent'] = 0
+            objectives_as_json['0']['children'].append(objective.id)
         else:
-            data['parent'] = objective.parent.id
-
-        objectives_as_json.append(data)
+            if str(objective.parent.id) not in objectives_as_json:
+                objectives_as_json[str(objective.parent.id)] = {
+                    'name': objective.parent.name,
+                    'program': objective.parent.program.name,
+                    'children': [objective.id]
+                }
+            else:
+                objectives_as_json[str(objective.parent.id)]['children'].append(objective.id)
 
     context = {'get_all_objectives': get_all_objectives,
-               'objectives_as_json': objectives_as_json}
+               'objectives_as_json': objectives_as_json,
+               'get_programs': get_programs}
 
     return render(request, 'components/objectives-tree.html', context)
 

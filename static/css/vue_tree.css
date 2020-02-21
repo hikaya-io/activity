@@ -1,0 +1,25 @@
+.vue-tree table{border-collapse: separate!important;border-spacing: 0!important;margin:auto;}
+.vue-tree td{position: relative; vertical-align: top;padding:0 0 50px 0;text-align: center; }
+.vue-tree .extend_handle{position: absolute;left:50%;bottom:30px; width:10px;height: 10px;transform: translate3d(-50%,0,0);cursor: pointer;}
+.vue-tree .extend_handle:before{content:""; display: block; width:100%;height: 100%;box-sizing: border-box; border:2px solid;border-color:#000 #000 transparent transparent;
+transform: rotateZ(135deg);transform-origin: 50% 50% 0;transition: transform ease 300ms;}
+.vue-tree .extend_handle:hover:before{border-color:#333 #333 transparent transparent;}
+.vue-tree .extend .extend_handle:before{transform: rotateZ(-45deg);}
+.vue-tree .extend::after{content: "";position: absolute;left:50%;bottom:15px;height:15px;border-left:2px solid #000;transform: translate3d(-1px,0,0)}
+.vue-tree .childLevel::before{content: "";position: absolute;left:50%;bottom:100%;height:15px;border-left:2px solid #000;transform: translate3d(-1px,0,0)}
+.vue-tree .childLevel::after{content: "";position: absolute;left:0;right:0;top:-15px;border-top:2px solid #000;}
+.vue-tree .childLevel:first-child:before, .childLevel:last-child:before{display: none;}
+.vue-tree .childLevel:first-child:after{left:50%;height:15px; border:2px solid;border-color:#000 transparent transparent #000;transform: translate3d(1px,0,0)}
+.vue-tree .childLevel:last-child:after{right:50%;height:15px; border:2px solid;border-color:#000 #000 transparent transparent;transform: translate3d(-1px,0,0)}
+.vue-tree .childLevel:first-child.childLevel:last-child::after{left:auto;border-radius: 0;border-color:transparent #000 transparent transparent;transform: translate3d(1px,0,0)}
+.vue-tree .node{position: relative; display: inline-block;width: 13em;box-sizing: border-box; text-align: center;}
+.vue-tree .node .node-body{position: relative; display: inline-block;z-index: 2;width:10em; height: 8em; overflow: hidden;}
+.vue-tree .node .node-body .node-label{width:100%;height: 50%;overflow:hidden; background:#fff;position: relative}
+.vue-tree .node .node-body .node-label span{position: absolute;top:50%;left:50%;transform:translate(-50%, -50%);}
+.vue-tree .node .node-body .node-add{height:50%;line-height: 2em;overflow: hidden;width:100%;background:#E8E8E8;position:relative;cursor:pointer;}
+.vue-tree .node .node-body .node-add span{color:black;position: absolute;top:50%;left:50%;transform:translate(-50%, -50%);}
+.vue-tree .landscape{transform:translate(-100%,0) rotate(-90deg);transform-origin: 100% 0;}
+.vue-tree .landscape .node{text-align: left;height: 8em;width:8em;}
+.vue-tree .landscape .node-body{position: relative; transform: rotate(90deg);padding-left: 4.5em;height: 4em;top:4em;left: -1em;}
+.vue-tree .landscape .node-body .avat{position: absolute;left: 0;}
+.vue-tree .landscape .node-body .name{height: 4em; line-height: 4em;}
