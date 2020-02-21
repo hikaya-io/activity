@@ -384,6 +384,8 @@ class FundCode(models.Model):
     stakeholder = models.ForeignKey(
         'Stakeholder', related_name='stakeholder', null=True, blank=True,
         on_delete=models.SET_NULL)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
