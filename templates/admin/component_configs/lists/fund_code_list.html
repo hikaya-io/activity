@@ -1,0 +1,119 @@
+<div id="fund_code">
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">Fund Code List</h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <a
+            role="button"
+            class="btn btn-sm btn-primary"
+            id="show-modal"
+            @click="showModal = true"
+          >
+            <i class="fa fa-plus"></i> Fund Code
+          </a>
+        </div>
+        <!-- Fund Code create modal -->
+        <modal v-if="showModal" @close="showModal = false">
+          <h4 slot="header">[[modalHeader]]</h4>
+          <div slot="body">
+            {% include 'admin/component_configs/forms/fund_code_form.html' %}
+          </div>
+          <div slot="footer">
+            {% include 'ui-components/quick_entry_modal_footer.html' %}
+          </div>
+        </modal>
+        <!-- Fund Code delete modal -->
+        <modal v-if="showDeleteModal" @close="showDeleteModal = false">
+          <div slot="body">
+            <p>
+              Are you sure you want to delete <b>[[ itemToDelete.name ]]</b>?
+            </p>
+          </div>
+          <div slot="footer">
+            <div class="text-right">
+              <button
+                type="submit"
+                class="btn btn-close"
+                @click="showDeleteModal = false"
+              >
+                Cancel
+              </button>
+              <button
+                class="btn btn-danger"
+                @click="deleteProfileType(itemToDelete.id)"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+          <h4 slot="header">[[modalHeader]]</h4>
+        </modal>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <table class="table" id="fundCodesTable" v-if="fundCodes.length">
+    <thead>
+      <tr>
+        <th>Fund Code</th>
+        <th>Stakeholder</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr v-cloak v-for="fundCode in fundCodes" v-if="fundCode.name">
+        <td>
+          <a
+            @click="toggleModal(fundCode)"
+            data-toggle="tooltip"
+            title="{{ fundCode.name }}"
+          >
+            [[ fundCode.name ]]
+          </a>
+        </td>
+        <td>
+          [[ fundCode.stakeholder__name ]]
+        </td>
+        <td class="text-right">
+          <!-- Split button -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm disabled">
+              Actions
+            </button>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="force-link" @click="toggleModal(fundCode)">Edit</a>
+              </li>
+              <li>
+                <a
+                  class="text-danger force-link"
+                  @click="toggleDeleteModal(fundCode)"
+                  >Delete</a
+                >
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% include 'ui-components/vue_modal.html'%} {% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}vue.js/workflow/fund_code.js"></script>
+{% endblock extra_js_in_body %}
