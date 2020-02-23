@@ -1257,6 +1257,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   color: #25ced1;
   background-color: #EFFBFB;
   border-color: #EFFBFB;
+  border-bottom: 2px solid #25ced1;
 }
 
 /* modifiying dropdown select in django forms - ovverrides select2-bootstrap-theme*/

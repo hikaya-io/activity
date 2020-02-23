@@ -22,4 +22,4 @@ class PeriodicTargetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PeriodicTarget
-        fields = ['period', 'start_date', 'end_date', 'target', 'collecteddata_set']
+        fields = ['id', 'period', 'start_date', 'end_date', 'target', 'collecteddata_set']
