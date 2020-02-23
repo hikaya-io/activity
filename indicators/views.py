@@ -20,7 +20,7 @@ from .forms import (
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
     DisaggregationType, CollectedData, IndicatorType, Level, ExternalServiceRecord,
-    ExternalService, ActivityTable, StrategicObjective, Objective, DataCollectionFrequency,
+    ExternalService, ActivityTable, StrategicObjective, Objective, DataCollectionFrequency, ActivityUser
 )
 
 from django.db.models import Count, Sum, Min, Q
@@ -1961,7 +1961,9 @@ def add_indicator(request):
     return HttpResponse({'success': True})
 
 
+##############
 # Objectives
+##############
 
 class ObjectiveList(GView):
     """
@@ -1969,46 +1971,72 @@ class ObjectiveList(GView):
     """
     def get(self, request):
 
-        objectives = Objective.objects.filter(
-         program__organization=request.user.activity_user.organization
-        ).values()
+        user = ActivityUser.objects.filter(user=request.user).first()
+        programs_list = Program.objects.filter(organization=user.organization).values()
+        objectives = Objective.objects.filter(program__organization=request.user.activity_user.organization).values()
         if objectives:
-            return JsonResponse(list(objectives), safe=False)
+            return JsonResponse(
+                dict(
+                    objectives=list(objectives),
+                    programs_list=list(programs_list)
+                ),
+                safe=False
+            )
         else:
             return JsonResponse(dict(error='Failed'))
 
-# def objectives_list(request):
-#     if request.method == 'POST':
-#         data = request.POST
+class ObjectiveCreate(GView):
+    """
+    View to create Objective and return Json response
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        objective = Objective(
+            name=data.get('name'),
+            description=data.get('description'),
+            program_id=int(data.get('program')),
+            parent_id=int(data.get('parent')) if data.get('parent') else None
+        )
+        objective.save()
 
-#         objective = Objective(
-#             name=data.get('objective_name'),
-#             description=data.get('description'),
-#             program_id=int(data.get('program')),
-#             parent_id=int(
-#                 data.get('parent_objective')) if data.get('parent_objective') else None
-#         )
+        if objective:
+            return JsonResponse(model_to_dict(objective))
+        else:
+            return JsonResponse(dict(error='Failed'))
 
-#         objective.save()
 
-#         if (data.get('saveObjectiveAndNew')):
-#             return HttpResponseRedirect('/indicators/objectives?quick-action=true')
+def objectives_list(request):
+    if request.method == 'POST':
+        data = request.POST
 
-#         return HttpResponseRedirect('/indicators/objectives')
+        objective = Objective(
+            name=data.get('objective_name'),
+            description=data.get('description'),
+            program_id=int(data.get('program')),
+            parent_id=int(
+                data.get('parent_objective')) if data.get('parent_objective') else None
+        )
 
-    # get_all_objectives = Objective.objects.filter(
-    #     program__organization=request.user.activity_user.organization
-    # )
-#     get_programs = Program.objects.filter(
-#         organization=request.user.activity_user.organization)
+        objective.save()
 
-#     context = {
-#         'get_all_objectives': get_all_objectives,
-#         'active': ['indicators'],
-#         'get_programs': get_programs
-#     }
+        if (data.get('saveObjectiveAndNew')):
+            return HttpResponseRedirect('/indicators/objectives?quick-action=true')
 
-#     return render(request, 'components/objectives.html', context)
+        return HttpResponseRedirect('/indicators/objectives')
+
+    get_all_objectives = Objective.objects.filter(
+        program__organization=request.user.activity_user.organization
+    )
+    get_programs = Program.objects.filter(
+        organization=request.user.activity_user.organization)
+
+    context = {
+        'get_all_objectives': get_all_objectives,
+        'active': ['indicators'],
+        'get_programs': get_programs
+    }
+
+    return render(request, 'components/objectives.html', context)
 
 
 def objectives_tree(request):

@@ -1,4 +1,91 @@
-<!-- Modal -->
+<!-- Add Objective modal body -->
+
+<form method="POST">
+  <div class="modal-body">
+    {% csrf_token %}
+    <div
+      :class="{ 
+          'form-group': true, 
+          'has-error': errors.has('name')
+      }"
+    >
+      <label for="name">Objective name*</label>
+      <input
+        type="text"
+        name="name"
+        :class="{ 
+                  'form-control': true, 
+                  'is-danger': errors.has('name') 
+              }"
+        v-model="name"
+        v-validate="'required'"
+        placeholder="Enter objective"
+      />
+      <span v-show="errors.has('name')" class="help is-danger"
+        >[[ errors.first('name') ]]</span
+      >
+    </div>
+    <div
+      :class="{
+            'form-group': true
+        }"
+    >
+      <label for="parent">Parent objective</label>
+      <select
+        id="parent"
+        :class="{ 
+                'form-control': true, 
+            }"
+        v-model="parent"
+        placeholder="Choose a parent objective"
+      >
+        <option v-for="objective in objectives" v-bind:value="objective.id">[[ objective.name ]]</option>
+      </select>
+    </div>
+    <div
+      :class="{
+            'form-group': true,
+            'has-error': errors.has('program')
+        }"
+    >
+      <label for="program"
+        >{{ user.activity_user.organization.level_1_label }}*</label
+      >
+      <select
+        id="program"
+        :class="{ 
+                'form-control': true
+            }"
+        v-model="program"
+        v-validate="'required'"
+        placeholder="Choose a {{ user.activity_user.organization.level_1_label }}"
+      >
+        <option v-for="program in programs_list" v-bind:value="program.id">[[ program.name ]]</option>
+      </select>
+      <span v-show="errors.has('program')" class="help is-danger"
+        >[[ errors.first('program') ]]</span
+      >
+    </div>
+    <div
+      :class="{
+          'form-group': true
+      }"
+    >
+      <label for="description">Description</label>
+      <textarea
+        rows="3"
+        name="description"
+        :class="{ 
+                  'form-control': true, 
+              }"
+        v-model="description"
+        placeholder="Add description"
+      ></textarea>
+    </div>
+  </div>
+</form>
+
+<!-- Modal
 <div
   class="modal fade"
   id="addObjectiveModal"
@@ -97,4 +184,4 @@
       </form>
     </div>
   </div>
-</div>
+</div> -->
