@@ -50,7 +50,6 @@ from workflow.forms import FilterForm
 from feed.serializers import FlatJsonSerializer
 from activity.util import get_country, get_table
 
-import json
 import requests
 from weasyprint import HTML, CSS
 from datetime import datetime
@@ -1224,7 +1223,6 @@ def collected_data_json(AjaxableResponseMixin, indicator, program):
     })
 
 
-
 def program_indicators_json(AjaxableResponseMixin, program, indicator, type):
     template_name = 'indicators/program_indicators_table.html'
 
@@ -2143,6 +2141,8 @@ def objective_delete(request, pk):
 """
 DataCollectionFrequency views
 """
+
+
 class DataCollectionFrequencyCreate(GView):
     """
     View to create DataCollectionFrequency and return Json response
@@ -2218,24 +2218,25 @@ class DataCollectionFrequencyDelete(GView):
             return JsonResponse(dict(success=True))
 
 
-
 """
 Level views
 """
+
+
 class LevelCreate(CreateView):
     """
     create Level View
     """
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
-        
+
         level = Level(
             name=data.get('name'),
             description=data.get('description'),
             sort=data.get('sort')
         )
         level.save()
-        
+
         if level:
             return JsonResponse(model_to_dict(level))
         else:
@@ -2302,19 +2303,21 @@ class LevelDelete(GView):
 """
 Indicator Type views
 """
+
+
 class IndicatorTypeCreate(CreateView):
     """
     create Indicator Type View
     """
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
-        
+
         indicatorType = IndicatorType(
             indicator_type=data.get('name'),
             description=data.get('description')
         )
         indicatorType.save()
-        
+
         if indicatorType:
             return JsonResponse(model_to_dict(indicatorType))
         else:
@@ -2374,4 +2377,3 @@ class IndicatorTypeDelete(GView):
 
         except IndicatorType.DoesNotExist:
             return JsonResponse(dict(success=True))
-

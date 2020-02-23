@@ -9,8 +9,6 @@ const detailComponent = Vue.component('collected-data-table', {
 
 $(document).ready(() => {
 	const table = $('#indicatorsTable').DataTable();
-	
-
     function format(indicatorId, programId) {
 		  let div = $(`<div id="details-${indicatorId}"></div>`);
           $.ajax({
@@ -90,11 +88,6 @@ $(document).ready(() => {
 						this.itemToDelete = data;
 					},
 
-					toggleDeleteModal: function(data) {
-						this.showDeleteModal = !this.showDeleteModal;
-						this.modalHeader = 'Confirm delete';
-						this.itemToDelete = data;
-					},
 
 					setTarget: function(event){
 						this.targets.forEach( tag =>{
@@ -142,7 +135,7 @@ $(document).ready(() => {
 								}
 							);
 							if (response) {
-								toastr.success('Result Successfuly Saved');
+								toastr.success('Result successfuly saved');
 								this.collectedData.periodictargets.forEach(periodictarget => {
 									if (periodictarget.id == response.data.periodic_target) {
 										periodictarget.collecteddata_set.push(response.data);		
@@ -152,15 +145,14 @@ $(document).ready(() => {
 									this.toggleResultModal();
 								}
 								// resetting the form
-								this.period='';
 				   				this.date_collected= '';
 				   				this.target= '';
-				   				this.actual= '';
+				   				this.actual= 0;
 				   				this.documentation= '';
 								this.$validator.reset();
 							};
 						} catch (error) {
-								toastr.error('There was a problem saving your data!!');
+								toastr.error('There was a problem saving your result');
 							}
 					},
 
@@ -178,7 +170,7 @@ $(document).ready(() => {
 								 }
 							);
 							if (response) {
-								toastr.success('Result was successfuly Updated');
+								toastr.success('Result was successfuly updated');
 								this.collectedData.periodictargets.forEach(periodictarget => {
 									if (periodictarget.id == response.data.periodic_target) {
 										periodictarget.collecteddata_set = periodictarget.collecteddata_set.filter(item => +item.id !== +this.currentResult.id )
@@ -190,7 +182,7 @@ $(document).ready(() => {
 								this.toggleResultModal();
 							}
 						} catch (e) {
-							toastr.error('There was a problem updating your data!!');
+							toastr.error('There was a problem updating your results');
 						}
 					},
 
@@ -210,10 +202,11 @@ $(document).ready(() => {
 								this.showDeleteModal = !this.showDeleteModal;
 								this.modalHeader = 'Add Result';
 							} else {
-								toastr.error('There was a problem Deleting frequency!!');
+								this.modalHeader = 'Add Result';
+								toastr.error('There was a problem deleting the result');
 							}
 						} catch (error) {
-							toastr.error('There was a server error!!');
+							toastr.error('There was a server error');
 						}
 					},
 

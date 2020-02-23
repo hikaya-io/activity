@@ -11,13 +11,8 @@ from .views import (
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
-<<<<<<< HEAD
     objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelList, LevelCreate,
     LevelUpdate, LevelDelete, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
-=======
-    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelListView,
-    LevelCreateView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, LevelUpdateView, level_delete,
->>>>>>> add result modal
     IndicatorTarget, DataCollectionFrequencyCreate, DataCollectionFrequencyList, DataCollectionFrequencyUpdate,
     DataCollectionFrequencyDelete, IndicatorTypeList, IndicatorTypeCreate, IndicatorTypeUpdate, IndicatorTypeDelete,
 )
@@ -67,7 +62,7 @@ urlpatterns = [
          CollectedDataList.as_view(), name='collecteddata_list'),
     path('collected_data/edit/<int:id>',
          CollectedDataEdit.as_view(), name='edit-collected-data'),
-    path('collected_data/delete/<int:id>', 
+    path('collected_data/delete/<int:id>',
          CollectedDataDeleteVue.as_view(), name='delete-collected-data'),
 
     # Indicator Report
@@ -136,7 +131,7 @@ urlpatterns = [
 
 
     # Levels Urls
-    path(     
+    path(
         'level/list',
         LevelList.as_view(),
         name='level_list'
