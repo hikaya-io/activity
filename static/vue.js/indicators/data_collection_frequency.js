@@ -16,7 +16,7 @@ new Vue({
 		isEdit: false,
 		currentFrequency: null,
 		itemToDelete: null,
-		modalHeader: 'Add Data Collection Frequency',
+		modalHeader: 'Add data collection frequency',
 	},
 	beforeMount: function() {
 		this.makeRequest('GET', '/indicators/data_collection_frequency/list')
@@ -32,7 +32,7 @@ new Vue({
 				}
 			})
 			.catch(e => {
-				oastr.error('There was a problem loading frequencies from the database!!');
+				toastr.error('There was a problem loading frequencies from the database');
 				this.frequencies = [];
 			});
 	},
@@ -64,7 +64,7 @@ new Vue({
 
         /**
          * process form data
-         * @param { boolen } saveNew - true to keep the modal open for additional posts
+         * @param { boolean } saveNew - true to keep the modal open for additional posts
          */
 		processForm: function(saveNew = false) {
 			this.$validator.validateAll().then(result => {
@@ -97,7 +97,7 @@ new Vue({
 					}
 				);
 				if (response) {
-                    toastr.success('Frequency Successfuly Saved');
+                    toastr.success('Data collection frequency is saved');
 					this.frequencies.unshift(response.data);
 					if (!saveNew) {
 						this.toggleModal();
@@ -108,7 +108,7 @@ new Vue({
 					this.$validator.reset();
 				}
 			} catch (error) {
-				toastr.error('There was a problem saving your data!!');
+				toastr.error('There was a problem saving');
 			}
 		},
 
@@ -123,7 +123,7 @@ new Vue({
 					{ frequency: this.frequency, description: this.description }
 				);
 				if (response) {
-					toastr.success('Frequency was successfuly Updated');
+					toastr.success('Data collection frequency is updated');
 					const newFrequencies = this.frequencies.filter(item => {
 						return item.id != this.currentFrequency.id;
 					});
@@ -131,13 +131,14 @@ new Vue({
 					this.frequencies.unshift(response.data);
 					this.isEdit = false;
 					this.frequency = null;
+					this.modalHeader = 'Add data collection frequency';
 					this.description = null;
 					this.currentFrequency = null;
-					this.modalHeader = 'Add Data Collection Frequency';
+
 					this.toggleModal();
 				}
 			} catch (e) {
-				toastr.error('There was a problem updating your data!!');
+				toastr.error('There was a problem updating this');
 			}
 		},
 
@@ -152,14 +153,16 @@ new Vue({
 					`/indicators/data_collection_frequency/delete/${id}`
 				);
 				if (response.data.success) {
-					toastr.success('Frequency was successfuly Deleted');
+					toastr.success('Data collection frequency is deleted');
 					this.frequencies = this.frequencies.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
 				} else {
-					toastr.error('There was a problem deleting frequency!!');
+
+					toastr.error('There was a problem deleting this');
+
 				}
 			} catch (error) {
-				toastr.error('There was a server error!!');
+				toastr.error('There was a server error');
 			}
 		},
 
@@ -168,7 +171,7 @@ new Vue({
          * @param { string } method - request method
          * @param { string } url  - request url
          * @param { string } data - request payload
-         * @return { Promise } - axios respons ePromise
+         * @return { Promise } - axios response ePromise
          */
 		makeRequest(method, url, data = null) {
 			axios.defaults.xsrfHeaderName = 'X-CSRFToken';
