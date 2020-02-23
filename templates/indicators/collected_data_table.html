@@ -15,7 +15,6 @@
 </script>
 {% load assign %}
 {% if indicator.target_frequency %}
-
     <table class="table" id="collectedDataTable">
         <tr>
             <th class="align-bottom" style="min-width:180px;">Target period</th>
@@ -190,7 +189,12 @@
         </tr>
     </table>
     <div class="text-right">
-            <button data-toggle="modal" data-settarget="{{indicator.lop_target}}" data-target="#addCollectedDataModal" data-program="{{program_id}}" data-indicator="{{indicator.id}}" role="button"
-              class="btn btn-sm btn-success collectdata">Add results</button>
+        <a 
+            id="result-modal" 
+            @click=toggleResultModal()
+            role="button"
+            class="btn btn-sm btn-success">
+            [[1+1]]
+        </a>
     </div>
 {% endif %}
