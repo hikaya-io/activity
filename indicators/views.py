@@ -50,7 +50,6 @@ from workflow.forms import FilterForm
 from feed.serializers import FlatJsonSerializer
 from activity.util import get_country, get_table
 
-import json
 import requests
 from weasyprint import HTML, CSS
 from datetime import datetime
@@ -203,7 +202,7 @@ class IndicatorTarget(GView):
         periodic_targets = PeriodicTarget.objects.filter(indicator=indicator_id).order_by('customsort', 'create_date', 'period')
         targets = []
         for target in periodic_targets:
-            targets.append({"pk": target.id, "period": str(target)})
+            targets.append({"pk": target.id, "period": str(target), "target": target.target})
 
         return JsonResponse({"data": targets})
 
@@ -694,27 +693,81 @@ class CollectedDataAdd(GView):
     Add Collected Data
     """
     def post(self, request):
-        data = request.POST
+        data = json.loads(request.body.decode('utf-8'))
 
         if data.get('date_collected') == "":
             date = None
         else:
             date = data.get('date_collected')
 
+        if data.get('documentation') == "":
+            documentation = None
+        else:
+            documentation = int(data.get('documentation'))
+
         collected_data = CollectedData.objects.create(
             achieved=data.get('actual', ''),
             targeted=data.get('target', ''),
             date_collected=date,
-            periodic_target=PeriodicTarget.objects.filter(id=int(data.get('periodic_target', ''))).first(),
+            periodic_target=PeriodicTarget.objects.filter(id=int(data.get('period', ''))).first(),
             indicator=Indicator.objects.filter(id=int(data.get('indicator', ''))).first(),
-            evidence=Documentation.objects.filter(id=int(data.get('documentation', None))).first(),
+            evidence=Documentation.objects.filter(id=documentation).first(),
             program=Program.objects.filter(id=int(data.get('program', ''))).first(),
         )
 
         if collected_data:
-            return JsonResponse(dict(status=201))
+            return JsonResponse(model_to_dict(collected_data))
         else:
-            return JsonResponse(dict(status=400))
+            return JsonResponse(dict(error='Failed'))
+
+
+class CollectedDataEdit(GView):
+    def put(self, request, *args, **kwargs):
+        result_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        collected_data = CollectedData.objects.get(
+            id=result_id
+        )
+
+        if data.get('date_collected') == "":
+            date = None
+        else:
+            date = data.get('date_collected')
+
+        if data.get('documentation') == "":
+            documentation = None
+        else:
+            documentation = int(data.get('documentation'))
+            evidence = Documentation.objects.filter(id=documentation).first()
+            collected_data.evidence = evidence
+
+        achieved = data.get('actual', '')
+
+        collected_data.date_collected = date
+        collected_data.achieved = achieved
+        collected_data.save()
+
+        if collected_data:
+            return JsonResponse(model_to_dict(collected_data))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class CollectedDataDeleteVue(GView):
+    def delete(self, request, *args, **kwargs):
+        result_id = int(self.kwargs.get('id'))
+        result = CollectedData.objects.get(
+            id=int(result_id)
+        )
+        result.delete()
+
+        try:
+            CollectedData.objects.get(id=int(result_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except CollectedData.DoesNotExist:
+
+            return JsonResponse(dict(success=True))
 
 
 class CollectedDataCreate(CreateView):
@@ -790,7 +843,6 @@ class CollectedDataCreate(CreateView):
 
     def form_invalid(self, form):
 
-        print(form.errors)
         messages.error(self.request, 'Invalid Form',
                        fail_silently=False, extra_tags='danger')
 
@@ -1169,7 +1221,6 @@ def collected_data_json(AjaxableResponseMixin, indicator, program):
         'indicator': IndicatorSerializer(ind).data,
         'program_id': program
     })
-
 
 
 def program_indicators_json(AjaxableResponseMixin, program, indicator, type):
@@ -1999,20 +2050,37 @@ def objectives_tree(request):
     get_all_objectives = Objective.objects.filter(
         program__organization=request.user.activity_user.organization)
 
-    objectives_as_json = [{'id': 0, 'name': 'Strategic Objectives'}]
+    objectives_as_json = {
+        '0': {
+            'name': 'Strategic Objectives',
+            'children': []
+        }
+    }
+
+    get_programs = Program.objects.all().filter(
+        organization=request.user.activity_user.organization).distinct()
 
     for objective in get_all_objectives:
-        data = {'id': objective.id, 'name': objective.name}
+        data = {'name': objective.name, 'program': objective.program.name, 'children': []}
+
+        if str(objective.id) not in objectives_as_json:
+            objectives_as_json[str(objective.id)] = data
 
         if objective.parent is None:
-            data['parent'] = 0
+            objectives_as_json['0']['children'].append(objective.id)
         else:
-            data['parent'] = objective.parent.id
-
-        objectives_as_json.append(data)
+            if str(objective.parent.id) not in objectives_as_json:
+                objectives_as_json[str(objective.parent.id)] = {
+                    'name': objective.parent.name,
+                    'program': objective.parent.program.name,
+                    'children': [objective.id]
+                }
+            else:
+                objectives_as_json[str(objective.parent.id)]['children'].append(objective.id)
 
     context = {'get_all_objectives': get_all_objectives,
-               'objectives_as_json': objectives_as_json}
+               'objectives_as_json': objectives_as_json,
+               'get_programs': get_programs}
 
     return render(request, 'components/objectives-tree.html', context)
 
@@ -2073,6 +2141,8 @@ def objective_delete(request, pk):
 """
 DataCollectionFrequency views
 """
+
+
 class DataCollectionFrequencyCreate(GView):
     """
     View to create DataCollectionFrequency and return Json response
@@ -2080,9 +2150,12 @@ class DataCollectionFrequencyCreate(GView):
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
         organization = request.user.activity_user.organization
-        frequency = data.get('frequency')
+
+        frequency_name = data.get('frequency')
+        frequency_description = data.get('description')
         collection_frequency = DataCollectionFrequency.objects.create(
-            frequency=frequency,
+            frequency=frequency_name,
+            description=frequency_description,
             organization=organization
         )
 
@@ -2115,11 +2188,13 @@ class DataCollectionFrequencyUpdate(GView):
         data = json.loads(request.body.decode('utf-8'))
         organization = request.user.activity_user.organization
         frequency = data.get('frequency')
+        description = data.get('description')
         collection_frequency = DataCollectionFrequency.objects.get(
             id=frequency_id
         )
 
         collection_frequency.frequency = frequency
+        collection_frequency.description = description
         collection_frequency.organization = organization
         collection_frequency.save()
 
@@ -2149,24 +2224,25 @@ class DataCollectionFrequencyDelete(GView):
             return JsonResponse(dict(success=True))
 
 
-
 """
 Level views
 """
+
+
 class LevelCreate(CreateView):
     """
     create Level View
     """
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
-        
+
         level = Level(
             name=data.get('name'),
             description=data.get('description'),
             sort=data.get('sort')
         )
         level.save()
-        
+
         if level:
             return JsonResponse(model_to_dict(level))
         else:
@@ -2233,6 +2309,8 @@ class LevelDelete(GView):
 """
 Indicator Type views
 """
+
+
 class IndicatorTypeCreate(CreateView):
     """
     create Indicator Type View
@@ -2240,13 +2318,14 @@ class IndicatorTypeCreate(CreateView):
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
         organization = request.user.activity_user.organization
+
         indicatorType = IndicatorType(
             indicator_type=data.get('name'),
             description=data.get('description'),
             organization=organization
         )
         indicatorType.save()
-        
+
         if indicatorType:
             return JsonResponse(model_to_dict(indicatorType))
         else:
@@ -2309,4 +2388,3 @@ class IndicatorTypeDelete(GView):
 
         except IndicatorType.DoesNotExist:
             return JsonResponse(dict(success=True))
-
