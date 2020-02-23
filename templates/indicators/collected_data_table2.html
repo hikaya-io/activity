@@ -1,5 +1,5 @@
 <script type="text/x-template" id="collected-data-table-template">
-    <div>
+    <div id="results_table">
         <div v-if="collectedData.indicator.target_frequency">
             <table class="table" id="collectedDataTable">
                 <tbody>
@@ -51,13 +51,14 @@
                                         </template>
                                     </td>
                                     <td align="right">
-                                        <a :href="'/indicators/collecteddata_delete/' + cdata.id"
-                                           style="color:red; vertical-align: middle;">
+                                        <a  class="text-danger force-link"
+                                            @click=toggleDeleteModal(cdata)
+                                            style="color:red; vertical-align: middle;">
                                             <span alt="Delete" class="glyphicon glyphicon-remove"></span>
                                         </a>
-                                        <a :href="'/indicators/collecteddata_update/' + cdata.id"
-                                           class="collecteddata-link"
-                                           style="padding-left: 30px; vertical-align: middle">
+                                        <a style="padding-left: 30px; vertical-align: middle"
+                                            class="force-link"
+                                            @click="toggleResultModal(cdata); getTargets(cdata);">
                                             <span alt="Edit" class="glyphicon glyphicon-edit"></span>
                                         </a>
                                     </td>
@@ -94,12 +95,14 @@
                                     </template>
                                 </td>
                                 <td align="right">
-                                    <a :href="'/indicators/collecteddata_delete/' + cdata.id"
-                                       style="color:red; vertical-align: middle;">
+                                    <a  class="text-danger force-link"
+                                        @click=toggleDeleteModal(cdata)
+                                        style="color:red; vertical-align: middle;">
                                         <span alt="Delete" class="glyphicon glyphicon-remove"></span>
                                     </a>
-                                    <a :href="'/indicators/collecteddata_update/' + cdata.id" class="collecteddata-link"
-                                       style="padding-left: 30px; vertical-align: middle">
+                                    <a style="padding-left: 30px; vertical-align: middle"
+                                        class="force-link"
+                                        @click="toggleResultModal(cdata); getTargets(cdata);">
                                         <span alt="Edit" class="glyphicon glyphicon-edit"></span>
                                     </a>
                                 </td>
@@ -123,10 +126,9 @@
 
             </table>
             <div class="text-right">
-                <button data-toggle="modal" v-bind:data-settarget="collectedData.indicator.lop_target"
-                        data-target="#addCollectedDataModal" v-bind:data-program="collectedData.program"
-                        v-bind:data-indicator="collectedData.indicator.pk" role="button"
-                        class="btn btn-sm btn-success collectdata">Add results
+                <button @click="toggleResultModal(); getTargets();"
+                         role="button"
+                        class="btn btn-sm btn-success">[[modalHeader]]
                 </button>
             </div>
         </div>
@@ -138,19 +140,46 @@
                     </td>
                     <td valign="top" style="padding-left:10px; font-size: 16px; color: #54585A;">
                         Before you can add results to this indicator, target periods need to be defined. <a
-                            :href="'/indicators/indicator_update/' + collectedData.indicator.pk"
+                            :href="'/indicators/indicator_update/' + collectedData.indicator.id"
                             data-tab="#targets" class="indicator-link">Set target periods.</a>
                     </td>
                 </tr>
             </table>
             <div class="text-right">
-                <button data-toggle="modal" v-bind:data-settarget="collectedData.indicator.lop_target"
-                        data-target="#addCollectedDataModal" v-bind:data-program="collectedData.program"
-                        v-bind:data-indicator="collectedData.indicator.pk" role="button"
-                        class="btn btn-sm btn-success collectdata">Add results
+                <button @click="toggleResultModal(); getTargets();"
+                        role="button"
+                        class="btn btn-sm btn-success">[[modalHeader]]
                 </button>
             </div>
         </div>
-    </div>
-
+        <modal v-if="showModal" @close="showModal = false">
+            <div slot="body">
+              {% include 'indicators/forms/results_modal.html' %}
+            </div>
+            <div slot="footer">
+              {% include 'indicators/forms/form_footer.html' %}
+            </div>
+            <h4 slot="header">[[modalHeader]]</h4>
+        </modal>
+        <modal v-if=showDeleteModal @close="showDeleteModal = false">
+            <div slot="body">
+              <p>Are you sure you want to delete this result</p>
+            </div>
+            <div slot="footer">
+              <div class="text-right">
+                <button type="submit" class="btn btn-close" @click="showDeleteModal = false">
+                  Cancel
+                </button>
+                <button
+                  class="btn btn-danger"
+                  @click=deleteResult(itemToDelete)
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+            <h4 slot="header">[[modalHeader]]</h4>
+          </modal>
+    </div>  
 </script>
+

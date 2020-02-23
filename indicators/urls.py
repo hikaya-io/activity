@@ -6,7 +6,8 @@ from .views import (
     IndicatorList, add_indicator, indicator_create, IndicatorCreate,
     IndicatorUpdate, IndicatorDelete, PeriodicTargetDeleteView,
     PeriodicTargetView, CollectedDataReportData, CollectedDataCreate, CollectedDataDelete,
-    CollectedDataList, CollectedDataUpdate, CollectedDataAdd, collecteddata_import, indicator_report,
+    CollectedDataList, CollectedDataUpdate, CollectedDataAdd, CollectedDataEdit,
+    CollectedDataDeleteVue, collecteddata_import, indicator_report,
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
@@ -59,6 +60,10 @@ urlpatterns = [
          CollectedDataDelete.as_view(), name='collecteddata_delete'),
     path('collecteddata_export/<program>/<indicator>/',
          CollectedDataList.as_view(), name='collecteddata_list'),
+    path('collected_data/edit/<int:id>',
+         CollectedDataEdit.as_view(), name='edit-collected-data'),
+    path('collected_data/delete/<int:id>',
+         CollectedDataDeleteVue.as_view(), name='delete-collected-data'),
 
     # Indicator Report
     path('report/<program>/<indicator>/<type>/',
@@ -148,7 +153,7 @@ urlpatterns = [
      
 
     # Levels Urls
-    path(     
+    path(
         'level/list',
         LevelList.as_view(),
         name='level_list'
