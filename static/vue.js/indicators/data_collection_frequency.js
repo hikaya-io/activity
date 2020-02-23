@@ -11,6 +11,7 @@ new Vue({
 		showModal: false,
 		showDeleteModal: false,
 		frequency: '',
+		description: '',
 		frequencies: [],
 		isEdit: false,
 		currentFrequency: null,
@@ -47,6 +48,7 @@ new Vue({
 				this.modalHeader = `Edit ${item.frequency}`;
 				this.currentFrequency = item;
 				this.frequency = item.frequency;
+				this.description = item.description;
 			}
 		},
 
@@ -91,6 +93,7 @@ new Vue({
 					`/indicators/data_collection_frequency/add`,
 					{
 						frequency: this.frequency,
+						description: this.description
 					}
 				);
 				if (response) {
@@ -101,6 +104,7 @@ new Vue({
 					}
 					// resetting the form
 					this.frequency = '';
+					this.description = '';
 					this.$validator.reset();
 				}
 			} catch (error) {
@@ -116,7 +120,7 @@ new Vue({
 				const response = await this.makeRequest(
 					'PUT',
 					`/indicators/data_collection_frequency/edit/${this.currentFrequency.id}`,
-					{ frequency: this.frequency }
+					{ frequency: this.frequency, description: this.description }
 				);
 				if (response) {
 					toastr.success('Data collection frequency is updated');
@@ -128,6 +132,9 @@ new Vue({
 					this.isEdit = false;
 					this.frequency = null;
 					this.modalHeader = 'Add data collection frequency';
+					this.description = null;
+					this.currentFrequency = null;
+
 					this.toggleModal();
 				}
 			} catch (e) {
@@ -150,7 +157,9 @@ new Vue({
 					this.frequencies = this.frequencies.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
 				} else {
+
 					toastr.error('There was a problem deleting this');
+
 				}
 			} catch (error) {
 				toastr.error('There was a server error');

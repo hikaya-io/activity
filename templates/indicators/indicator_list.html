@@ -1,58 +1,7 @@
 {% extends "base.html" %} {% block content %}
 {% include './add_indicator_modal.html' %}
-{% include './add_collecteddata_modal.html' %}
 {% include './collected_data_table2.html'%}
-
-<script>
-  $(document).ready(() => {
-    const table = $('#indicatorsTable').DataTable();
-
-    function format(indicatorId, programId) {
-          let div = $(`<div id="details-${indicatorId}"></div>`);
-          $.ajax({
-            url: `/indicators/collected_data_table/${indicatorId}/${programId}/`,
-            type: 'GET',
-            success: function(result) {
-              console.log(result);
-               new detailComponent({
-                 delimiters: ['[[', ']]'],
-                 data: {
-                   collectedData: result
-                 }
-               }).$mount(`#details-${indicatorId}`);
-			},
-			error: (error) => {
-				toastr.error('There was a problem loading the collected data.');
-			}
-          });
-        return div
-    }
-
-    $('#indicatorsTable tbody').on('click', 'td.details-control', function () {
-        let indicatorId = $(this).data('indicator-id');
-        let programId = $(this).data('program-id');
-        let tr = $(this).closest('tr');
-        let row = table.row(tr);
-        if ( row.child.isShown() ) {
-            row.child.hide();
-            tr.removeClass('shown');
-        }
-        else {
-            row.child(format(indicatorId, programId)).show();
-            tr.addClass('shown');
-        }
-    });
-  });
-
-  $(document).on("click", ".collectdata", function () {
-    var setTarget = $(this).data('settarget');
-    var indicatorId = $(this).data('indicator');
-    var programId = $(this).data('program');
-    $("#id_target").val(setTarget);
-    $("#id_periodic_target").attr('data-tag',indicatorId );
-    $("#id_periodic_target").attr('data-tag2',programId );
-})
-</script>
+{% include 'ui-components/vue_modal.html'%}
 
 <div id="indicators_list" class="container">
   {% block breadcrumbs %}
@@ -193,7 +142,7 @@
   </div>
 </div>
 {% endblock content %}
-
+{% include 'ui-components/vue_modal.html'%}
 {% block extra_js_in_body %}
 <script src="{{ STATIC_URL }}vue.js/collected_data_table.js"></script>
 {% endblock extra_js_in_body %}
