@@ -207,11 +207,6 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Country'),
         ),
         migrations.AddField(
-            model_name='disaggregationtype',
-            name='indicator',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='disaggregation_label', to='indicators.Indicator'),
-        ),
-        migrations.AddField(
             model_name='disaggregationlabel',
             name='disaggregation_type',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='disaggregation_label', to='indicators.DisaggregationType'),

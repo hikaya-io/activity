@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from smtplib import (SMTPRecipientsRefused)
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.template.response import TemplateResponse
 from django.views.generic import RedirectView
@@ -389,21 +390,17 @@ def set_invite_uuid(invite_uuid):
     return invite_uuid
 
 
-def user_login(request):
-    """
-    override django in-built login
-    :param request:
-    :return:
-    """
-    # redirect to homepage if user is logged in
-    if request.user.is_authenticated:
-        return redirect('/')
+class  UserLogin(View):
+    """User login class view"""
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/')
+        return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
-    if request.method == 'POST':
+    def post(self,request, *args, **kwargs):
         data = request.POST
-        username = data.get('username')
-        password = data.get('password')
-
+        username = data.get('username', None)
+        password = data.get('password', None)
         # check if user is active
         try:
             get_user = User.objects.get(Q(username=username) | Q(email=username.lower()))
@@ -416,7 +413,6 @@ def user_login(request):
                 return render(request, 'registration/login.html')
         except User.DoesNotExist:
             return render(request, 'registration/login.html')
-
         # proceed to authenticate the user
         user = authenticate(username=get_user.username, password=password)
 
@@ -430,17 +426,15 @@ def user_login(request):
 
         else:
             return render(request, 'registration/login.html')
-    return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
 
-@login_required
-def register_organization(request):
-    """
-    register organization
-    : param request:
-    : return org profile page
-    """
-    if request.method == 'POST':
+class RegisterOrganization(LoginRequiredMixin, View):
+    """Register organization view"""
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'registration/organization_register.html')
+
+    def post(self, request, *args, **kwargs):
         data = request.POST
         name = data.get('name')
         description = data.get('description')
@@ -474,8 +468,6 @@ def register_organization(request):
             return redirect('/')
         else:
             return redirect('register_organization')
-    else:
-        return render(request, 'registration/organization_register.html')
 
 
 @login_required(login_url='/accounts/login/')
@@ -667,17 +659,15 @@ def admin_user_management(request, role, status):
 
 @login_required(login_url='/accounts/login/')
 def admin_component_admin(request):
-    profile_types = ProfileType.objects.all()
-    levels = Level.objects.all()
+    user = ActivityUser.objects.filter(user=request.user).first()
+    stakeholders = Stakeholder.objects.filter(organization=user.organization)
     nav_links = get_nav_links('Components')
-    
     return render(
         request,
         'admin/component_admin.html',
         {
             'nav_links': nav_links,
-            'get_profile_types': profile_types,
-            'get_all_levels': levels,
+            'get_stakeholders': stakeholders,
             'active': 'components'
         }
     )

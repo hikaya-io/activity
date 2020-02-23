@@ -122,14 +122,14 @@ urlpatterns = [  # rest framework
     path('formlibrary/', include('formlibrary.urls')),
     # local login
     path('login/', authviews.LoginView.as_view(), name='login'),
-    path('accounts/login/', views.user_login, name='login'),
+    path('accounts/login/', views.UserLogin.as_view(), name='login'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/logout/', views.logout_view, name='logout'),
     # register
     path('accounts/register/user/<slug:invite_uuid>/', views.register, name='register'),
     path('accounts/join/organization/<slug:invite_uuid>/', views.invite_existing_user,
          name='join_organization'),
-    path('accounts/register/organization', views.register_organization,
+    path('accounts/register/organization', views.RegisterOrganization.as_view(),
          name='register_organization'),
 
     # password reset

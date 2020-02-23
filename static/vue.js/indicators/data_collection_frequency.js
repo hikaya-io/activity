@@ -25,6 +25,7 @@ new Vue({
 					$(document).ready(() => {
 						$('#dataCollectionFrequencyTable').DataTable({
 							pageLength: 5,
+							lengthMenu: [5, 10, 15, 20]
 						});
 					});
 				}
