@@ -10,7 +10,7 @@ from .views import (
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
-    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelList, LevelCreate,
+    ObjectiveList, objectives_tree, ObjectiveUpdateView, objective_delete, LevelList, LevelCreate,
     LevelUpdate, LevelDelete, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
     IndicatorTarget, DataCollectionFrequencyCreate, DataCollectionFrequencyList, DataCollectionFrequencyUpdate,
     DataCollectionFrequencyDelete, IndicatorTypeList, IndicatorTypeCreate, IndicatorTypeUpdate, IndicatorTypeDelete,
@@ -110,7 +110,27 @@ urlpatterns = [
          name='indicator-targets'),
 
     # objectives
-    path('objectives', objectives_list, name='objectives'),
+     path(     
+        'objectives',
+        ObjectiveList.as_view(),
+        name='objective_list'
+    ),
+#     path(
+#         'level/add',
+#         LevelCreate.as_view(),
+#         name='level_add'
+#     ),
+#     path(
+#         'level/edit/<int:id>',
+#         LevelUpdate.as_view(),
+#         name='level_edit'
+#     ),
+#     path(
+#          'level/delete/<int:id>',
+#          LevelDelete.as_view(),
+#          name='level_delete'
+#      ),
+#     path('objectives', objectives_list, name='objectives'),
     path('objectives/tree', objectives_tree, name='objectives-tree'),
     path('objectives/edit/<int:pk>/', ObjectiveUpdateView.as_view(),
          name='update_strategic_objective'),
