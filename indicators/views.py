@@ -2096,9 +2096,11 @@ class DataCollectionFrequencyCreate(GView):
     """
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
-        frequency = data.get('frequency')
+        frequency_name = data.get('frequency')
+        frequency_description = data.get('description')
         collection_frequency = DataCollectionFrequency.objects.create(
-            frequency=frequency
+            frequency=frequency_name,
+            description=frequency_description
         )
 
         if collection_frequency:
@@ -2128,11 +2130,13 @@ class DataCollectionFrequencyUpdate(GView):
         frequency_id = int(self.kwargs.get('id'))
         data = json.loads(request.body.decode('utf-8'))
         frequency = data.get('frequency')
+        description = data.get('description')
         collection_frequency = DataCollectionFrequency.objects.get(
             id=frequency_id
         )
 
         collection_frequency.frequency = frequency
+        collection_frequency.description = description
         collection_frequency.save()
 
         if collection_frequency:
