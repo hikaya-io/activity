@@ -46,6 +46,7 @@
         </modal>
         <!-- Objective delete modal -->
         <modal v-if="showDeleteModal" @close="showDeleteModal = false">
+          <h4 slot="header">[[modalHeader]]</h4>
           <div slot="body">
             <p>
               Are you sure you want to delete <b>[[ itemToDelete.name ]]</b>?
@@ -62,13 +63,12 @@
               </button>
               <button
                 class="btn btn-danger"
-                @click="deleteProfileType(itemToDelete.id)"
+                @click="deleteObjective(itemToDelete.id)"
               >
                 Delete
               </button>
             </div>
           </div>
-          <h4 slot="header">[[modalHeader]]</h4>
         </modal>
       </div>
     </div>
@@ -78,8 +78,9 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>Parent</th>
-        <th>Create Date</th>
+        <th>{{ user.activity_user.organization.level_1_label }}</th>
+        <th>Parent objective</th>
+        <!-- <th>Create Date</th> -->
         <th class="text-right"></th>
       </tr>
     </thead>
@@ -95,6 +96,12 @@
           </a>
         </td>
         <td
+          v-for="program in programs_list"
+          v-if="objective.program_id===program.id"
+        >
+          [[ program.name ]]
+        </td>
+        <td
           v-for="objparent in objectives"
           v-if="objective.parent_id===objparent.id"
         >
@@ -103,7 +110,7 @@
         <td v-if="objective.parent_id===null">
           ---
         </td>
-        <td>[[ formatDate(objective.create_date) ]]</td>
+        <!-- <td>[[ formatDate(objective.create_date) ]]</td> -->
         <td class="text-right">
           <!-- Action buttons -->
           <div class="btn-group">

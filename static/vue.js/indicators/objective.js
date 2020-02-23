@@ -24,6 +24,7 @@ new Vue({
   beforeMount: function() {
     this.makeRequest('GET', '/indicators/objective/list')
       .then(response => {
+        console.log('objective list', response.data);
         if (response.data) {
           this.objectives = response.data.objectives.sort(
             (a, b) => b.id - a.id
@@ -58,8 +59,15 @@ new Vue({
         this.currentObjective = item;
         this.name = item.name;
         this.description = item.description;
-        this.program = item.program;
-        this.parent = item.parent;
+        this.program = item.program_id;
+        this.parent = item.parent_id;
+      } else {
+        this.isEdit = false;
+        this.name = '';
+        this.description = '';
+        this.program = '';
+        this.parent = '';
+        this.modalHeader = 'Add objective';
       }
     },
 
@@ -114,11 +122,11 @@ new Vue({
             name: this.name,
             description: this.description,
             parent: this.parent,
-            program: this.program,
+            program: this.program
           }
         );
         if (response) {
-          toastr.success('Objective successfully saved');
+          toastr.success('Objective is saved');
           this.objectives.unshift(response.data);
           if (!saveNew) {
             this.toggleModal();
@@ -131,7 +139,7 @@ new Vue({
           this.$validator.reset();
         }
       } catch (error) {
-        toastr.error('There was a problem saving your data');
+        toastr.error('There was a problem saving');
       }
     },
 
@@ -139,17 +147,20 @@ new Vue({
      * Edit objective item
      */
     async updateObjective() {
+        console.log()
       try {
         const response = await this.makeRequest(
           'PUT',
           `/indicators/objective/edit/${this.currentObjective.id}`,
           {
             name: this.name,
-            description: this.description
+            description: this.description,
+            parent: this.parent,
+            program: this.program
           }
         );
         if (response) {
-          toastr.success('Objective successfully updated');
+          toastr.success('Objective is updated');
           const newObjectives = this.objectives.filter(item => {
             return item.id != this.currentObjective.id;
           });
@@ -165,7 +176,7 @@ new Vue({
           this.toggleModal();
         }
       } catch (e) {
-        toastr.error('There was a problem updating your data');
+        toastr.error('There was a problem updating this');
       }
     },
 
@@ -173,18 +184,18 @@ new Vue({
      * Delete objective
      * @param { number } id - id of the objective to be deleted
      */
-    async deleteProfileType(id) {
+    async deleteObjective(id) {
       try {
         const response = await this.makeRequest(
           'DELETE',
           `/indicators/objective/delete/${id}`
         );
         if (response.data.success) {
-          toastr.success('Objective successfully deleted');
+          toastr.success('Objective is deleted');
           this.objectives = this.objectives.filter(item => +item.id !== +id);
           this.showDeleteModal = !this.showDeleteModal;
         } else {
-          toastr.error('There was a problem deleting your data');
+          toastr.error('There was a problem deleting this');
         }
       } catch (error) {
         toastr.error('There was a server error');

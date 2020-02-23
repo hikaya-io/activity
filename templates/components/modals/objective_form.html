@@ -39,7 +39,7 @@
         v-model="parent"
         placeholder="Choose a parent objective"
       >
-        <option v-for="objective in objectives" v-bind:value="objective.id">[[ objective.name ]]</option>
+        <option v-for="objective in objectives" selected="currentObjective.parent_id === objective.id ? true : false" :value="objective.id">[[ objective.name ]]</option>
       </select>
     </div>
     <div
@@ -60,7 +60,7 @@
         v-validate="'required'"
         placeholder="Choose a {{ user.activity_user.organization.level_1_label }}"
       >
-        <option v-for="program in programs_list" v-bind:value="program.id">[[ program.name ]]</option>
+        <option v-for="program in programs_list" selected="currentObjective.program_id === program.id ? true : false" :value="program.id">[[ program.name ]]</option>
       </select>
       <span v-show="errors.has('program')" class="help is-danger"
         >[[ errors.first('program') ]]</span
