@@ -2745,6 +2745,7 @@ class FundCodeCreate(CreateView):
             stakeholder_id=data.get('stakeholder'),
             organization=organization
         )
+
         fund_code.save()
         
         if fund_code:
@@ -2795,7 +2796,7 @@ class FundCodeUpdate(GView):
         )
 
         fund_code.name = name
-        fund_code.stakeholder = stakeholder
+        fund_code.stakeholder_id = stakeholder
         fund_code.organization = organization
         fund_code.save()
 
