@@ -12,7 +12,8 @@ new Vue({
 		showDeleteModal: false,
 		levels: [],
         name: '',
-        description: '',
+		description: '',
+		sort: null,
 		isEdit: false,
 		currentLevel: null,
         itemToDelete: null,
@@ -49,7 +50,8 @@ new Vue({
 				this.modalHeader = `Edit ${item.name}`;
 				this.currentLevel = item;
                 this.name = item.name;
-                this.description = item.description;
+				this.description = item.description;
+				this.sort = item.sort;
 			}
 		},
 
@@ -102,7 +104,8 @@ new Vue({
 					`/indicators/level/add`,
 					{
                         name: this.name,
-                        description: this.description
+						description: this.description,
+						sort: this.sort
 					}
                 );
 				if (response) {
@@ -113,7 +116,8 @@ new Vue({
 					}
 					// resetting the form
                     this.name = '';
-                    this.description = '';
+					this.description = '';
+					this.sort = null;
 					this.$validator.reset();
 				}
 			} catch (error) {
@@ -131,7 +135,8 @@ new Vue({
 					`/indicators/level/edit/${this.currentLevel.id}`,
 					{ 
                         name: this.name, 
-                        description: this.description,
+						description: this.description,
+						sort: this.sort
                     }
 				);
 				if (response) {
@@ -142,8 +147,10 @@ new Vue({
 					this.levels = newLevels;
 					this.levels.unshift(response.data);
 					this.isEdit = false;
-                    this.name = null;
-                    this.description = null;
+                    this.name = '';
+					this.description = '';
+					this.sort = null;
+					this.currentLevel = null;
 					this.modalHeader = 'Add Level';
 					this.toggleModal();
 				}
