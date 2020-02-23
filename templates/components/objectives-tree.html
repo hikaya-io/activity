@@ -1,9 +1,9 @@
 {% extends "base.html" %} {% load static %} {% block content %}
+{% include 'ui-components/vue_tree.html' %}
 
-<script src="{% static 'hierachy_chart/jquery-1.11.1.min.js' %}"></script>
-<script src="{% static 'hierachy_chart/jquery.orgchart.js' %}"></script>
+{{ objectives_as_json|json_script:"objectives-data" }}
 
-<div class="container">
+<div class="container" id="objectives_tree">
     {% block breadcrumbs %}
     <ul class="breadcrumb">
       <li><a href="{% url 'index' %}">Home Dashboard</a></li>
@@ -39,37 +39,44 @@
           </a>
         </div>
       </div>
-
       <div class="sub-nav-item">
-        <div class="btn-group" role="group" aria-label="">
-          <!-- <button
-            class="btn btn-sm hikaya-btn-secondary"
-            data-toggle="modal"
-            data-target="#addObjectiveModal"
-          >
-            <i class="fa fa-plus"></i> Add New Objective -->
-          </button>
+        <span class="text-filter">Filter by</span>
+      </div>
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-sm btn-default dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              {{ user.activity_user.organization.level_1_label }}
+              <span class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
+            </button>
+            <ul class="dropdown-menu">
+              {% for program in get_programs %}
+              {% if program.name %}
+              <li class="{% if program_id == program.id %} active {% endif%}" @click="setProgram('{{ program.name }}')">
+                <a>{{ program.name | truncatechars:30 }}</a>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div id="objectivesChart"></div>
+  <div v-if="Object.keys(treeData).length" class="text-center">
+    <tree-chart :json="treeData" style="margin: auto"></tree-chart>
+  </div>
+  <div class="text-center" v-else><h3>Please select a program.</h3></div>
 </div>
-
 {% endblock %}
 
-<script type="text/javascript">
-  let chartData = '{{objectives_as_json}}';
 
-  $(function() {
-    let org_chart = $('#objectivesChart').orgChart({
-      data: chartData, // your data
-      showControls: true, // display add or remove node button.
-      allowEdit: true, // click the node's title to edit
-      onAddNode: function(node) {},
-      onDeleteNode: function(node) {},
-      onClickNode: function(node) {},
-      newNodeText: 'Add Child', // text of add button
-    });
-  });
-</script>
+{% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}vue.js/objectives_tree.js"></script>
+{% endblock extra_js_in_body %}
