@@ -2738,10 +2738,12 @@ class FundCodeCreate(CreateView):
     """
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
         
         fund_code = FundCode(
             name=data.get('name'),
             stakeholder_id=data.get('stakeholder'),
+            organization=organization
         )
         fund_code.save()
         
@@ -2764,20 +2766,18 @@ class FundCodeList(GView):
     """
     def get(self, request):
 
-        user = ActivityUser.objects.filter(user=request.user).first()
-        fund_codes = FundCode.objects.values('id', 'name', 'stakeholder__name', 'stakeholder')
-        stakeholders_list = Stakeholder.objects.filter(organization=user.organization).values()
-        if fund_codes:
-            # return JsonResponse(list(fund_codes), safe=False)
-            return JsonResponse(
-                dict(
-                    fund_codes=list(fund_codes),
-                    stakeholders=list(stakeholders_list)
-                ),
-                safe=False
-            )
-        else:
-            return JsonResponse(dict(error='Failed'))
+        organization = request.user.activity_user.organization
+        fund_codes = FundCode.objects.filter(organization=organization).values('id', 'name', 'stakeholder__name', 'stakeholder')
+        stakeholders_list = Stakeholder.objects.filter(organization=organization).values()
+
+        return JsonResponse(
+            dict(
+                fund_codes=list(fund_codes),
+                stakeholders=list(stakeholders_list)
+            ),
+            safe=False
+        )
+
 
 
 class FundCodeUpdate(GView):
@@ -2787,6 +2787,7 @@ class FundCodeUpdate(GView):
     def put(self, request, *args, **kwargs):
         fund_code_id = int(self.kwargs.get('id'))
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
         name = data.get('name')
         stakeholder = data.get('stakeholder')
         fund_code = FundCode.objects.get(
@@ -2795,6 +2796,7 @@ class FundCodeUpdate(GView):
 
         fund_code.name = name
         fund_code.stakeholder = stakeholder
+        fund_code.organization = organization
         fund_code.save()
 
         if fund_code:

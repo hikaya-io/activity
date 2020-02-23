@@ -17,7 +17,7 @@ new Vue({
 		isEdit: false,
 		currentFundCode: null,
         itemToDelete: null,
-		modalHeader: '',
+		modalHeader: 'Add Fund Code',
 	},
 	beforeMount: function() {
 		this.makeRequest('GET', '/workflow/fund_code/list')
@@ -25,7 +25,6 @@ new Vue({
 				if (response.data) {
                     this.fundCodes = response.data.fund_codes.sort((a, b) => b.id - a.id);
                     this.stakeholders = response.data.stakeholders;
-                    this.modalHeader = 'Add Fund Code'; 
 					$(document).ready(() => {
 						$('#fundCodesTable').DataTable({
                             pageLength: 5,
