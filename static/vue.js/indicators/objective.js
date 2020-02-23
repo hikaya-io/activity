@@ -24,7 +24,6 @@ new Vue({
   beforeMount: function() {
     this.makeRequest('GET', '/indicators/objective/list')
       .then(response => {
-        console.log('response list', response.data);
         if (response.data) {
           this.objectives = response.data.objectives.sort(
             (a, b) => b.id - a.id

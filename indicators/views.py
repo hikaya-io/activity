@@ -1961,9 +1961,7 @@ def add_indicator(request):
     return HttpResponse({'success': True})
 
 
-##############
 # Objectives
-##############
 
 class ObjectiveList(GView):
     """

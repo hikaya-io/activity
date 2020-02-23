@@ -109,19 +109,7 @@ urlpatterns = [
     path('get_target/<int:indicator_id>/', IndicatorTarget.as_view(),
          name='indicator-targets'),
 
-    # objectives
-     
-#    
-#     path(
-#         'level/edit/<int:id>',
-#         LevelUpdate.as_view(),
-#         name='level_edit'
-#     ),
-#     path(
-#          'level/delete/<int:id>',
-#          LevelDelete.as_view(),
-#          name='level_delete'
-#      ),
+# Objectives
      path(     
         'objective/list',
         ObjectiveList.as_view(),
