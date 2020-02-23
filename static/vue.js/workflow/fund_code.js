@@ -6,26 +6,28 @@ Vue.component('modal', {
 // start app
 new Vue({
 	delimiters: ['[[', ']]'],
-	el: '#indicator_type',
+	el: '#fund_code',
 	data: {
 		showModal: false,
-        showDeleteModal: false,
-        indicatorTypes: [],
+		showDeleteModal: false,
+        fundCodes: [],
+        stakeholders: [],
         name: '',
-        description: '',
+        stakeholder: '',
 		isEdit: false,
-		currentIndicatorType: null,
+		currentFundCode: null,
         itemToDelete: null,
 		modalHeader: '',
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/indicators/indicator_type/list')
+		this.makeRequest('GET', '/workflow/fund_code/list')
 			.then(response => {
 				if (response.data) {
-                    this.indicatorTypes = response.data.sort((a, b) => b.id - a.id);
-                    this.modalHeader = 'Add Indicator Type'; 
+                    this.fundCodes = response.data.fund_codes.sort((a, b) => b.id - a.id);
+                    this.stakeholders = response.data.stakeholders;
+                    this.modalHeader = 'Add Fund Code'; 
 					$(document).ready(() => {
-						$('#indicatorTypesTable').DataTable({
+						$('#fundCodesTable').DataTable({
                             pageLength: 5,
                             lengthMenu: [5, 10, 15, 20]
 						});
@@ -33,29 +35,29 @@ new Vue({
 				}
 			})
 			.catch(e => {
-				toastr.error('There was a problem loading indicator types from the database!!');
-				this.indicatorTypes = [];
+				toastr.error('There was a problem loading fund codes from the database!!');
+				this.fundCodes = [];
 			});
 	},
 	methods: {
         /**
-         * open or close the indicator type form modal
-         * @param { object } item - indicator type item
+         * open or close the fund code form modal
+         * @param { object } item - fund code item
          */
 		toggleModal: function(item = null) {
             this.showModal = !this.showModal;
 			if (item) {
-                this.isEdit = true;
-				this.modalHeader = `Edit ${item.indicator_type}`;
-				this.currentIndicatorType = item;
-                this.name = item.indicator_type;
-                this.description = item.description;
+				this.isEdit = true;
+				this.modalHeader = `Edit ${item.name}`;
+				this.currentFundCode = item;
+                this.name = item.name;
+                this.stakeholder = item.stakeholder;
 			}
 		},
 
         /**
-         * open or close the indicator type delete modal
-         * @param { object } data - indicator type item
+         * open or close the fund code delete modal
+         * @param { object } data - fund code item
          */
 		toggleDeleteModal: function(data) {
 			this.showDeleteModal = !this.showDeleteModal;
@@ -78,8 +80,8 @@ new Vue({
 		processForm: function(saveNew = false) {
 			this.$validator.validateAll().then(result => {
 				if (result) {
-					if (this.currentIndicatorType && this.currentIndicatorType.id) {
-						this.updateIndicatorType();
+					if (this.currentFundCode && this.currentFundCode.id) {
+						this.updateFundCode();
 					} else {
 						if (saveNew) {
 							this.postData(saveNew);
@@ -92,28 +94,28 @@ new Vue({
 		},
 
         /**
-         * create new indicator type
+         * create new fund code
          * @param { boolean } saveNew - true if a user wants to make multiple posts
          */
 		async postData(saveNew) {
 			try {
 				const response = await this.makeRequest(
 					'POST',
-					`/indicators/indicator_type/add`,
+					`/workflow/fund_code/add`,
 					{
                         name: this.name,
-                        description: this.description
+                        stakeholder: this.stakeholder
 					}
                 );
 				if (response) {
-                    toastr.success('Indicator type successfuly saved');
-					this.indicatorTypes.unshift(response.data);
+                    toastr.success('Fund Code successfuly saved');
+					this.fundCodes.unshift(response.data);
 					if (!saveNew) {
 						this.toggleModal();
 					}
 					// resetting the form
                     this.name = '';
-                    this.description = '';
+                    this.stakeholder = '';
 					this.$validator.reset();
 				}
 			} catch (error) {
@@ -122,30 +124,30 @@ new Vue({
 		},
 
         /**
-         * edit indicator type item
+         * edit Fund Code item
          */
-		async updateIndicatorType() {
+		async updateFundCode() {
 			try {
 				const response = await this.makeRequest(
 					'PUT',
-					`/indicators/indicator_type/edit/${this.currentIndicatorType.id}`,
+					`/workflow/fund_code/edit/${this.currentFundCode.id}`,
 					{ 
                         name: this.name, 
-                        description: this.description,
+                        stakeholder: this.stakeholder,
                     }
 				);
 				if (response) {
-					toastr.success('Indicator type was successfuly updated');
-					const newIndicatorTypes = this.indicatorTypes.filter(item => {
-						return item.id != this.currentIndicatorType.id;
+					toastr.success('Fund code was successfuly updated');
+					const existingFundCodes = this.fundCodes.filter(item => {
+						return item.id != this.currentFundCode.id;
 					});
-					this.indicatorTypes = newIndicatorTypes;
-					this.indicatorTypes.unshift(response.data);
+					this.fundCodes = existingFundCodes;
+					this.fundCodes.unshift(response.data);
 					this.isEdit = false;
                     this.name = null;
-                    this.description = null;
-                    this.currentIndicatorType = null;
-					this.modalHeader = 'Add Indicator Type';
+                    this.stakeholder = null;
+                    this.currentFundCode = null;
+					this.modalHeader = 'Add Fund Code';
 					this.toggleModal();
 				}
 			} catch (e) {
@@ -154,21 +156,21 @@ new Vue({
 		},
 
         /**
-         * delete indicator type
-         * @param { number } id - id of the indicator type to be deleted
+         * delete fund code
+         * @param { number } id - id of the fund code to be deleted
          */
 		async deleteProfileType(id) {
 			try {
 				const response = await this.makeRequest(
 					'DELETE',
-					`/indicators/indicator_type/delete/${id}`
+					`/workflow/fund_code/delete/${id}`
 				);
 				if (response.data.success) {
-					toastr.success('Indicator type was successfuly deleted');
-					this.indicatorTypes = this.indicatorTypes.filter(item => +item.id !== +id);
+					toastr.success('Fund Code was successfuly deleted');
+					this.fundCodes = this.fundCodes.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
 				} else {
-					toastr.error('There was a problem deleting indicator type!!');
+					toastr.error('There was a problem deleting fund Code!!');
 				}
 			} catch (error) {
 				toastr.error('There was a server error!!');
@@ -191,7 +193,7 @@ new Vue({
 
 	computed: {
         /**
-         * Check if indicator type form is valid
+         * Check if fund code form is valid
          */
 		isFormValid() {
 			return this.name;

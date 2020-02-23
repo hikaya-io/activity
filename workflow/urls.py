@@ -20,9 +20,10 @@ from .views import (
     save_bookmark, district_json, country_json, export_sites_list, ReportData, DocumentationAgreementDelete,
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
-    FundCodeCreate, ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete
+    ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete,
+    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete
 )
-from django.urls import re_path, path
+from django.urls import path
 
 # place app url patterns here
 
@@ -38,12 +39,9 @@ urlpatterns = [
     path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
     path('stakeholder/delete_stakeholder/<int:pk>/',
          delete_stakeholder, name='delete_stakeholder'),
-    path('level1/edit/<int:pk>/', ProgramUpdate.as_view(),
-        name='level1_edit'),
-    path('level2/project/<int:pk>/', ProjectDash.as_view(),
-        name='project_dashboard'),
-    path('level2/project/<int:pk>/', ProjectDash.as_view(),
-        name='project_dashboard'),
+    path('level1/edit/<int:pk>/', ProgramUpdate.as_view(), name='level1_edit'),
+    path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
+    path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/list/<slug:program>/<slug:status>/', ProgramDash.as_view(),
         name='projects_list'),
 
@@ -193,28 +191,20 @@ urlpatterns = [
     # reports
     path('report/export/', Report.as_view(), name='report'),
     path('report/<int:pk>/<slug:status>/', Report.as_view(), name='report'),
-    path('report_table/<int:pk>/<slug:status>/', ReportData.as_view(),
-        name='report_data'),
+    path('report_table/<int:pk>/<slug:status>/', ReportData.as_view(), name='report_data'),
 
     # exports
-    path('export_stakeholders_list/', export_stakeholders_list,
-        name='export_stakeholders_list'),
+    path('export_stakeholders_list/', export_stakeholders_list, name='export_stakeholders_list'),
     path('export_sites_list/', export_sites_list, name='export_sites_list'),
 
     # geography level jsons
-    path('province/<slug:province>/province_json/', province_json,
-        name='province_json'),
-    path('country/<slug:country>/country_json/', country_json,
-        name='country_json'),
-    path('district/<slug:district>/district_json/', district_json,
-        name='district_json'),
+    path('province/<slug:province>/province_json/', province_json, name='province_json'),
+    path('country/<slug:country>/country_json/', country_json, name='country_json'),
+    path('district/<slug:district>/district_json/', district_json, name='district_json'),
 
     # ajax calls
-    path('service/<slug:service>/service_json/', service_json,
-        name='service_json'),
+    path('service/<slug:service>/service_json/', service_json, name='service_json'),
     path('new_bookmark/', save_bookmark, name='save_bookmark'),
-    path('fund_code/add', FundCodeCreate.as_view(),
-         name='add_fund_code'),
 
 
     # ProfileType Urls
@@ -237,5 +227,27 @@ urlpatterns = [
         'profile_type/delete/<int:id>',
         ProfileTypeDelete.as_view(),
         name='profile_type_delete'
+    ),
+
+    # ProfileType Urls
+    path(
+        'fund_code/add',
+        FundCodeCreate.as_view(),
+        name='fund_code_add'
+    ),
+    path(
+        'fund_code/list',
+        FundCodeList.as_view(),
+        name='fund_code_list'
+    ),
+    path(
+        'fund_code/edit/<int:id>',
+        FundCodeUpdate.as_view(),
+        name='fund_code_edit'
+    ),
+    path(
+        'fund_code/delete/<int:id>',
+        FundCodeDelete.as_view(),
+        name='fund_code_delete'
     )
 ]
