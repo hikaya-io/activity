@@ -19,11 +19,11 @@ new Vue({
 		modalHeader: '',
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/indicators/indicator_type/list')
+		this.makeRequest('GET', '/indicators/indicator_types/')
 			.then(response => {
 				if (response.data) {
                     this.indicatorTypes = response.data.sort((a, b) => b.id - a.id);
-                    this.modalHeader = 'Add Indicator Type'; 
+                    this.modalHeader = 'Add Indicator Type';
 					$(document).ready(() => {
 						$('#indicatorTypesTable').DataTable({
                             pageLength: 5,
@@ -62,7 +62,7 @@ new Vue({
 			this.modalHeader = 'Confirm delete';
 			this.itemToDelete = data;
         },
-        
+
         /**
          * Format date
          * @param {string} date - date to be formatted
@@ -99,9 +99,9 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'POST',
-					`/indicators/indicator_type/add`,
+					`/indicators/indicator_types/`,
 					{
-                        name: this.name,
+                        indicator_type: this.name,
                         description: this.description
 					}
                 );
@@ -127,10 +127,10 @@ new Vue({
 		async updateIndicatorType() {
 			try {
 				const response = await this.makeRequest(
-					'PUT',
-					`/indicators/indicator_type/edit/${this.currentIndicatorType.id}`,
-					{ 
-                        name: this.name, 
+					'PATCH',
+					`/indicators/indicator_types/${this.currentIndicatorType.id}`,
+					{
+                        indicator_type: this.name,
                         description: this.description,
                     }
 				);
@@ -161,9 +161,9 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'DELETE',
-					`/indicators/indicator_type/delete/${id}`
+					`/indicators/indicator_types/${id}`
 				);
-				if (response.data.success) {
+				if (response.status === 204) {
 					toastr.success('Indicator type was successfuly deleted');
 					this.indicatorTypes = this.indicatorTypes.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
