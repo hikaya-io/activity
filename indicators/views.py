@@ -2118,7 +2118,7 @@ class ObjectiveList(GView):
         user = ActivityUser.objects.filter(user=request.user).first()
         programs_list = Program.objects.filter(organization=user.organization).values()
         objectives = Objective.objects.filter(program__organization=request.user.activity_user.organization).values()
-        if objectives:
+        if objectives or programs_list:
             return JsonResponse(
                 dict(
                     objectives=list(objectives),

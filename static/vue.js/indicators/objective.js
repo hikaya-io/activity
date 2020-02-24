@@ -19,7 +19,7 @@ new Vue({
     isEdit: false,
     currentObjective: null,
     itemToDelete: null,
-    modalHeader: ''
+    modalHeader: 'Add objective'
   },
   beforeMount: function() {
     this.makeRequest('GET', '/indicators/objective/list')
@@ -37,7 +37,7 @@ new Vue({
               lengthMenu: [5, 10, 15, 20]
             });
           });
-        }
+        } 
       })
       .catch(e => {
         toastr.error(
@@ -45,6 +45,20 @@ new Vue({
         );
         this.objectives = [];
       });
+
+    //   this.makeRequest('GET', '/indicators/objective/programs')
+    //   .then(response => {
+    //     console.log('objective list', response.data);
+    //     if (response.data) {
+    //       this.programs_list = response.data.programs_list;
+    //     } 
+    //   })
+    //   .catch(e => {
+    //     toastr.error(
+    //       'There was a problem loading objectives from the database'
+    //     );
+    //     this.objectives = [];
+    //   });
   },
   methods: {
     /**
@@ -147,7 +161,7 @@ new Vue({
      * Edit objective item
      */
     async updateObjective() {
-        console.log()
+      console.log();
       try {
         const response = await this.makeRequest(
           'PUT',

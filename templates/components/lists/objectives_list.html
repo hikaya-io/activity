@@ -146,6 +146,9 @@
       </tr>
     </tbody>
   </table>
+  <div style="text-align:center">
+    <h4 v-if="!objectives.length">No objectives are added</h4>
+  </div>
 </div>
 
 {% include 'ui-components/vue_modal.html'%} {% block extra_js_in_body %}
