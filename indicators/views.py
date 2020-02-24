@@ -11,6 +11,8 @@ from urllib.parse import urlparse
 import re
 import json
 
+from rest_framework.permissions import IsAuthenticated
+
 from .export import IndicatorResource, CollectedDataResource
 from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer
 from .tables import IndicatorDataTable
@@ -2409,4 +2411,4 @@ class IndicatorTypeView(generics.ListCreateAPIView,
                         generics.RetrieveUpdateDestroyAPIView):
     queryset = IndicatorType.objects.all()
     serializer_class = IndicatorTypeSerializer
-
+    permission_classes = [IsAuthenticated]
