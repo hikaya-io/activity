@@ -2172,11 +2172,12 @@ class DataCollectionFrequencyList(GView):
     def get(self, request):
 
         organization = request.user.activity_user.organization
-        frequencies = DataCollectionFrequency.objects.filter(organization=organization).values()
-        if frequencies:
+
+        try:
+            frequencies = DataCollectionFrequency.objects.filter(organization=organization).values()
             return JsonResponse(list(frequencies), safe=False)
-        else:
-            return JsonResponse(dict(error='Failed'))
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
 
 
 class DataCollectionFrequencyUpdate(GView):
@@ -2339,11 +2340,12 @@ class IndicatorTypeList(GView):
     def get(self, request):
 
         organization = request.user.activity_user.organization
-        indicator_types = IndicatorType.objects.filter(organization=organization).values()
-        if indicator_types:
+
+        try:
+            indicator_types = IndicatorType.objects.filter(organization=organization).values()
             return JsonResponse(list(indicator_types), safe=False)
-        else:
-            return JsonResponse(dict(error='Failed'))
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
 
 
 class IndicatorTypeUpdate(GView):
