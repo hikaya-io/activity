@@ -57,7 +57,7 @@
               <button
                 type="submit"
                 class="btn btn-close"
-                @click="showDeleteModal = false"
+                @click="toggleDeleteModal();"
               >
                 Cancel
               </button>
@@ -142,7 +142,6 @@
             </ul>
           </div>
         </td>
-        {% include 'components/objective_delete_confirm_modal.html'%}
       </tr>
     </tbody>
   </table>

@@ -2138,13 +2138,16 @@ class ObjectiveCreate(GView):
         objective = Objective(
             name=data.get('name'),
             description=data.get('description'),
-            program_id=int(data.get('program')),
-            parent_id=int(data.get('parent')) if data.get('parent') else None
+            program_id=int(data.get('program_id')),
+            parent_id=int(data.get('parent_id')) if data.get('parent_id') else None
         )
         objective.save()
+        obj = model_to_dict(objective)
+        obj['program_id'] = obj.pop('program')
+        obj['parent_id'] = obj.pop('parent')
 
         if objective:
-            return JsonResponse(model_to_dict(objective))
+            return JsonResponse(obj)
         else:
             return JsonResponse(dict(error='Failed'))
 

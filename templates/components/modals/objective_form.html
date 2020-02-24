@@ -22,8 +22,7 @@
         placeholder="Enter objective"
       />
       <span v-show="errors.has('name')" class="help is-danger"
-        >[[ errors.first('name') ]]</span
-      >
+        >[[ errors.first('name') ]]</span>
     </div>
     <div
       :class="{
@@ -32,11 +31,11 @@
     >
       <label for="parent">Parent objective</label>
       <select
-        id="parent"
+        name="parent"
         :class="{ 
                 'form-control': true, 
             }"
-        v-model="parent"
+        v-model="parent_id"
         placeholder="Choose a parent objective"
       >
         <option v-for="objective in objectives" selected="currentObjective.parent_id === objective.id ? true : false" :value="objective.id">[[ objective.name ]]</option>
@@ -52,11 +51,11 @@
         >{{ user.activity_user.organization.level_1_label }}*</label
       >
       <select
-        id="program"
+        name="program"
         :class="{ 
                 'form-control': true
             }"
-        v-model="program"
+        v-model="program_id"
         v-validate="'required'"
         placeholder="Choose a {{ user.activity_user.organization.level_1_label }}"
       >

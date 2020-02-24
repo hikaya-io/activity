@@ -14,8 +14,8 @@ new Vue({
     programs_list: [],
     name: '',
     description: '',
-    parent: '',
-    program: '',
+    parent_id: '',
+    program_id: '',
     isEdit: false,
     currentObjective: null,
     itemToDelete: null,
@@ -24,7 +24,6 @@ new Vue({
   beforeMount: function() {
     this.makeRequest('GET', '/indicators/objective/list')
       .then(response => {
-        console.log('objective list', response.data);
         if (response.data) {
           this.objectives = response.data.objectives.sort(
             (a, b) => b.id - a.id
@@ -33,11 +32,11 @@ new Vue({
           this.modalHeader = 'Add objective';
           $(document).ready(() => {
             $('#objectivesTable').DataTable({
-              pageLength: 5,
-              lengthMenu: [5, 10, 15, 20]
+              pageLength: 10,
+              lengthMenu: [10, 20, 30, 40]
             });
           });
-        } 
+        }
       })
       .catch(e => {
         toastr.error(
@@ -45,20 +44,6 @@ new Vue({
         );
         this.objectives = [];
       });
-
-    //   this.makeRequest('GET', '/indicators/objective/programs')
-    //   .then(response => {
-    //     console.log('objective list', response.data);
-    //     if (response.data) {
-    //       this.programs_list = response.data.programs_list;
-    //     } 
-    //   })
-    //   .catch(e => {
-    //     toastr.error(
-    //       'There was a problem loading objectives from the database'
-    //     );
-    //     this.objectives = [];
-    //   });
   },
   methods: {
     /**
@@ -73,14 +58,14 @@ new Vue({
         this.currentObjective = item;
         this.name = item.name;
         this.description = item.description;
-        this.program = item.program_id;
-        this.parent = item.parent_id;
+        this.program_id = item.program_id;
+        this.parent_id = item.parent_id;
       } else {
         this.isEdit = false;
         this.name = '';
         this.description = '';
-        this.program = '';
-        this.parent = '';
+        this.program_id = '';
+        this.parent_id = '';
         this.modalHeader = 'Add objective';
       }
     },
@@ -91,8 +76,12 @@ new Vue({
      */
     toggleDeleteModal: function(data) {
       this.showDeleteModal = !this.showDeleteModal;
-      this.modalHeader = 'Confirm delete';
-      this.itemToDelete = data;
+      if (data) {
+        this.modalHeader = 'Confirm delete';
+        this.itemToDelete = data;
+      } else {
+        this.modalHeader = 'Add objective';
+      }
     },
 
     /**
@@ -135,8 +124,8 @@ new Vue({
           {
             name: this.name,
             description: this.description,
-            parent: this.parent,
-            program: this.program
+            parent_id: this.parent_id,
+            program_id: this.program_id
           }
         );
         if (response) {
@@ -148,8 +137,8 @@ new Vue({
           // resetting the form
           this.name = '';
           this.description = '';
-          this.program = '';
-          this.parent = '';
+          this.program_id = '';
+          this.parent_id = '';
           this.$validator.reset();
         }
       } catch (error) {
@@ -169,8 +158,8 @@ new Vue({
           {
             name: this.name,
             description: this.description,
-            parent: this.parent,
-            program: this.program
+            parent_id: this.parent_id,
+            program_id: this.program_id
           }
         );
         if (response) {
@@ -183,8 +172,8 @@ new Vue({
           this.isEdit = false;
           this.name = '';
           this.description = '';
-          this.program = '';
-          this.parent = '';
+          this.program_id = '';
+          this.parent_id = '';
           this.currentObjective = null;
           this.modalHeader = 'Add Objective';
           this.toggleModal();
@@ -208,6 +197,7 @@ new Vue({
           toastr.success('Objective is deleted');
           this.objectives = this.objectives.filter(item => +item.id !== +id);
           this.showDeleteModal = !this.showDeleteModal;
+          this.modalHeader = 'Add Objective';
         } else {
           toastr.error('There was a problem deleting this');
         }

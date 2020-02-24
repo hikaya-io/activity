@@ -1,27 +1,5 @@
 {% extends "base.html" %} {% block content %} 
 
-<!--
-<script>
-  $(document).ready(() => {
-    $('#parentObjective').select2({
-      theme: 'bootstrap',
-      dropdownParent: $('#addObjectiveModal')
-    });
-    $('#program').select2({
-      theme: 'bootstrap',
-      dropdownParent: $('#addObjectiveModal')
-    });
-    $('#objectivesTable').DataTable();
-
-    // show quick add modal if quick-modal to true
-    const url = new URL(window.location.href);
-    if (url.searchParams.get('quick-action')) {
-      $('#addObjectiveModal').modal('show');
-    }
-  });
-</script>
--->
-
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
