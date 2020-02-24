@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from django.urls import path
+from django.urls import path, re_path
 from .views import (
     IndicatorList, add_indicator, indicator_create, IndicatorCreate,
     IndicatorUpdate, IndicatorDelete, PeriodicTargetDeleteView,
@@ -14,8 +14,7 @@ from .views import (
     ObjectiveList, ObjectiveCreate, ObjectiveUpdate, ObjectiveDelete, objectives_list, objectives_tree, LevelList, LevelCreate,
     LevelUpdate, LevelDelete, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
     IndicatorTarget, DataCollectionFrequencyCreate, DataCollectionFrequencyList, DataCollectionFrequencyUpdate,
-    DataCollectionFrequencyDelete, IndicatorTypeList, IndicatorTypeCreate, IndicatorTypeUpdate, IndicatorTypeDelete,
-)
+    DataCollectionFrequencyDelete, IndicatorTypeView)
 
 urlpatterns = [
 
@@ -190,24 +189,9 @@ urlpatterns = [
     ),
 
     # Indicator Types Urls
-    path(
-          'indicator_type/list',
-          IndicatorTypeList.as_view(),
+    re_path(
+          r'indicator_types/(?P<pk>.*)',
+          IndicatorTypeView.as_view(),
           name='indicator_type_list'
     ),
-    path(
-          'indicator_type/add',
-          IndicatorTypeCreate.as_view(),
-          name='indicator_type_add'
-    ),
-    path(
-        'indicator_type/edit/<int:id>',
-        IndicatorTypeUpdate.as_view(),
-        name='indicator_type_edit'
-    ),
-    path(
-         'indicator_type/delete/<int:id>',
-         IndicatorTypeDelete.as_view(),
-         name='indicator_type_delete'
-     ),
 ]

@@ -12,7 +12,7 @@ import re
 import json
 
 from .export import IndicatorResource, CollectedDataResource
-from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer
+from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer
 from .tables import IndicatorDataTable
 from .forms import (
     IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
@@ -54,6 +54,7 @@ import requests
 from weasyprint import HTML, CSS
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from rest_framework import generics
 
 
 def generate_periodic_target_single(tf, start_date, nth_target_period,
@@ -2163,7 +2164,7 @@ class ObjectiveUpdate(GView):
         objective_description = data.get('description')
         objective_parent = int(data.get('parent')) if data.get('parent') else None
         objective_program = int(data.get('program'))
-        
+
         objective = Objective.objects.get(
             id=objective_id
         )
@@ -2404,81 +2405,8 @@ Indicator Type views
 """
 
 
-class IndicatorTypeCreate(CreateView):
-    """
-    create Indicator Type View
-    """
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        organization = request.user.activity_user.organization
+class IndicatorTypeView(generics.ListCreateAPIView,
+                        generics.RetrieveUpdateDestroyAPIView):
+    queryset = IndicatorType.objects.all()
+    serializer_class = IndicatorTypeSerializer
 
-        indicatorType = IndicatorType(
-            indicator_type=data.get('name'),
-            description=data.get('description'),
-            organization=organization
-        )
-        indicatorType.save()
-
-        if indicatorType:
-            return JsonResponse(model_to_dict(indicatorType))
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-
-class IndicatorTypeList(GView):
-    """
-    View to fetch Indicator Types
-    """
-    def get(self, request):
-
-        organization = request.user.activity_user.organization
-
-        try:
-            indicator_types = IndicatorType.objects.filter(organization=organization).values()
-            return JsonResponse(list(indicator_types), safe=False)
-        except Exception as e:
-            return JsonResponse(dict(error=str(e)))
-
-
-class IndicatorTypeUpdate(GView):
-    """
-    View to Update IndicatorType and return Json response
-    """
-    def put(self, request, *args, **kwargs):
-        indicator_type_id = int(self.kwargs.get('id'))
-        data = json.loads(request.body.decode('utf-8'))
-        organization = request.user.activity_user.organization
-        indicator_type_name = data.get('name')
-        indicator_type_description = data.get('description')
-        indicatorType = IndicatorType.objects.get(
-            id=indicator_type_id
-        )
-
-        indicatorType.indicator_type = indicator_type_name
-        indicatorType.description = indicator_type_description
-        indicatorType.organization = organization
-        indicatorType.save()
-
-        if indicatorType:
-            return JsonResponse(model_to_dict(indicatorType))
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-
-class IndicatorTypeDelete(GView):
-    """
-    View to Delete IndicatorType and return Json response
-    """
-    def delete(self, request, *args, **kwargs):
-        indicator_type_id = int(self.kwargs.get('id'))
-        indicator_type = IndicatorType.objects.get(
-            id=int(indicator_type_id)
-        )
-        indicator_type.delete()
-
-        try:
-            IndicatorType.objects.get(id=int(indicator_type_id))
-            return JsonResponse(dict(error='Failed'))
-
-        except IndicatorType.DoesNotExist:
-            return JsonResponse(dict(success=True))
