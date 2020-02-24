@@ -3,10 +3,8 @@
         type="button" 
         class="btn btn-close" 
         data-dismiss="modal"
-        @click="toggleModal()"
-    >
-        Cancel
-    </button>
+        @click="toggleResultModal()" 
+    >Close</button>
 
     <button
         v-if="!isEdit"
@@ -14,25 +12,22 @@
         class="btn btn-outline-success"
         :disabled="errors.any() || !isFormValid"
         @click=processForm(true)
-    >
-        Save &amp; New
-    </button>
+    >Save &amp; New</button>
+
     <button
         v-if="!isEdit"
         type="button"
         class="btn btn-success"
         :disabled="errors.any() || !isFormValid"
         @click=processForm()
-    >
-        Save
-    </button>
+    >Save</button>
+
     <button
         v-if="isEdit"
         type="button"
         class="btn btn-success"
         :disabled="errors.any() || !isFormValid"
         @click=processForm()
-    >
-        Update
-    </button>
+    >Update</button>
+    
 </div>

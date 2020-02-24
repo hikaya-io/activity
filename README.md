@@ -14,9 +14,9 @@
   <a href="https://spectrum.chat/hikaya" rel="nofollow"><img src="https://withspectrum.github.io/badge/badge.svg" alt="Join the community on Spectrum"/></a>
 </p>
 
-This is the source code that runs [**Activity**](https://hikaya.io). If you want to use Activity then you don't need to run this code, we offer a hosted version of the app at [activity.hikaya.app](https://activity.hikaya.app).
+This is the source code that runs the [**Activity**](https://hikaya.io/index#content4-8) application. If you want to use Activity then you don't need to run this code, we offer a hosted version of the app at [activity.hikaya.app](https://activity.hikaya.app).
 
-If you'd like to run your own copy of Activity or contribute to development then this is the place for you.
+If you'd like to run your own copy of Activity or contribute to its development then this is the place for you.
 
 <!-- ## Configuration
 ## To deploy changes in activity servers
@@ -25,11 +25,11 @@ Once all your changes have been committed to the repo, and before pushing them, 
 
 # Local Setup
 
-Note: you should use `Python 3.7.5` for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
+**Note**: You should use `Python 3.7.5` for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
 
 Open up your terminal and follow the instructions listed below.
 
-See [these instructions for installing known dependencies](#install-non-python-dependencies).
+See [these instructions for addtional information](#extra-information).
 
 ## Clone the github repository
 
@@ -38,7 +38,7 @@ Navigate to the folder you want the repository to be stored in.
 Run the following command:
 
 ```bash
-$ git clone --branch dev https://github.com/hikaya-io/Activity.git
+$ git clone --branch dev https://github.com/hikaya-io/activity.git
 ```
 
 Once cloned, navigate to the cloned repository with:
@@ -47,7 +47,7 @@ Once cloned, navigate to the cloned repository with:
 $ cd activity
 ```
 
-or similar.
+or similar for your OS.
 
 ## Setting up on Virtual Environment
 ### Install virtualenv
@@ -71,11 +71,44 @@ $ virtualenv --no-site-packages <myvirtualenvironmentname>
 $ source <myvirtualenvironmentname>/bin/activate
 ```
 
+for Windows users:
+
+```bash
+$ source <myvirtualenvironmentname>/script/activate
+```
+
 ### Install requirements
 
 ```bash
 $ pip install -r requirements.txt
 ```
+
+### Install non-python dependencies
+
+1. **GDAL**
+
+On MacOs:
+
+```bash
+$ brew install gdal
+```
+
+On Windows:
+- You will need to donwload gdal core and gdal installer for your version of python.
+- Please read the following [instructions](https://pypi.org/project/GDAL/#windows) on how to properly install and test gdal.
+
+2. **Pango**
+
+On MacOs:
+
+```bash
+$ brew install pango
+```
+
+On Windows:
+- You will need Pango and Cairo for the application to run.
+- The runtime installer can be found [here](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases)
+- Download and install GTK+-3. 
 
 ### Create local copy of config file
 
@@ -185,29 +218,11 @@ The `operation` in this case can be: `makemigrations`, `migrate`, `collectstatic
 
 # Extra information
 
-## Install non-python dependencies
-
-1. **GDAL**
-
-On mac:
-
-```bash
-$ brew install gdal
-```
-
-2. **pango**
-
-On mac:
-
-```bash
-$ brew install pango
-```
-
 ## Postgresql help
 
 ### Install
 
-On mac:
+On MacOS:
 
 ```bash
 $ brew update
@@ -215,6 +230,13 @@ $ brew install postgresql
 $ initdb /usr/local/var/postgres
 $ pg_ctl -D /usr/local/var/postgres start
 $ createdb <mydatabasename>
+```
+On Windows:
+- Download and install the latest stable installer for PostgreSQL
+- You can use the SQL Shell that comes along with the application to run the following commands
+- To create a database run the command
+```bash
+$ create database <mydatabasename>;
 ```
 
 ### Manage
@@ -255,3 +277,7 @@ GRANT ALL ON activity.* TO 'root'@'localhost' IDENTIFIED BY 'root';
 ```
 
 _NB:_ When you use these SQL queries, beware of not writing the quotes.
+
+
+# Contributing
+Activity is built and maintain by the team at Hikaya. We are always looking for a fresh set of :eyes: who want to contribute to **Activity**. Feel free to checkout our contributing page or reach out by creating an issue and we'll help you get started!

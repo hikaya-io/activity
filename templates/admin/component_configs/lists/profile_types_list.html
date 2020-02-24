@@ -64,7 +64,7 @@
     <tbody>
       <tr v-cloak v-for="profileType in profileTypes" v-if="profileType.profile">
         <td>
-          <a href="/workflow/profile_type_update/{{profile_type.id}}/" data-toggle="tooltip" title="{{profileType.profile}}">
+          <a @click="toggleModal(profileType)" data-toggle="tooltip" title="{{profileType.profile}}">
             [[ profileType.profile ]]
           </a>
         </td>
@@ -109,6 +109,6 @@
 {% include 'ui-components/vue_modal.html'%}
 
 {% block extra_js_in_body %}
-<script src="{{ STATIC_URL }}vue.js/profile_type.js"></script>
+<script src="{{ STATIC_URL }}vue.js/workflow/profile_type.js"></script>
 {% endblock extra_js_in_body %}
 
