@@ -181,12 +181,12 @@ fieldset[disabled] .btn-success:focus,
 .btn-success.disabled.focus,
 .btn-success[disabled].focus,
 fieldset[disabled] .btn-success.focus {
-  background-color: #9ee3c4;
-  border-color: #9ee3c4;
+  background-color: #9be8ea;
+  border-color: #9be8ea;
 }
 
 .btn-success .badge {
-  color: #2ac27f;
+  color: #25ced1;
   background-color: #ffffff;
 }
 
@@ -516,9 +516,10 @@ fieldset[disabled] .btn-outline-success:focus,
 .btn-outline-success.disabled.focus,
 .btn-success[disabled].focus,
 fieldset[disabled] .btn-outline-success.focus {
-  background-color: #9be8ea;
   border-color: #9be8ea;
+  background-color: #ffffff;
   box-shadow: none;
+  color:#afedee;
 }
 
 .btn-outline-success .badge {
