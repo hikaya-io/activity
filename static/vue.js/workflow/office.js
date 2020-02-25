@@ -20,7 +20,7 @@ new Vue({
 		modalHeader: '',
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/workflow/office/list')
+		this.makeRequest('GET', '/workflow/office/')
 			.then(response => {
 				if (response.data) {
                     this.offices = response.data.offices.sort((a, b) => b.id - a.id);
@@ -64,14 +64,6 @@ new Vue({
 			this.modalHeader = 'Confirm delete';
 			this.itemToDelete = data;
         },
-        
-        /**
-         * Format date
-         * @param {string} date - date to be formatted
-         */
-        formatDate: function(date) {
-            return moment(date, 'YYYY-MM-DDThh:mm:ssZ').format('YYYY-MM-DD');
-        },
 
         /**
          * process form data
@@ -101,7 +93,7 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'POST',
-					`/workflow/office/add`,
+					`/workflow/office/`,
 					{
                         name: this.name,
                         code: this.code
@@ -130,7 +122,7 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'PUT',
-					`/workflow/office/edit/${this.currentOffice.id}`,
+					`/workflow/office/${this.currentOffice.id}`,
 					{ 
                         name: this.name, 
                         code: this.code,
@@ -159,11 +151,11 @@ new Vue({
          * delete fund code
          * @param { number } id - id of the fund code to be deleted
          */
-		async deleteProfileType(id) {
+		async deleteOffice(id) {
 			try {
 				const response = await this.makeRequest(
 					'DELETE',
-					`/workflow/office/delete/${id}`
+					`/workflow/office/${id}`
 				);
 				if (response.data.success) {
 					toastr.success('Office was successfuly deleted');

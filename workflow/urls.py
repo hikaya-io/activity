@@ -21,9 +21,9 @@ from .views import (
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
     ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete,
-    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeList, OfficeCreate, OfficeUpdate, OfficeDelete
+    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView
 )
-from django.urls import path
+from django.urls import path, re_path
 
 # place app url patterns here
 
@@ -252,24 +252,34 @@ urlpatterns = [
     ),
 
     #Office Urls
-    path(
-        'office/add',
-        OfficeCreate.as_view(),
-        name='office_add'
-    ),
-    path(
-        'office/list',
-        OfficeList.as_view(),
+    # path(
+    #     'office/add',
+    #     OfficeCreate.as_view(),
+    #     name='office_add'
+    # ),
+    # path(
+    #     'office/list',
+    #     OfficeList.as_view(),
+    #     name='office_list'
+    # ),
+    # path(
+    #     'office/edit/<int:id>',
+    #     OfficeUpdate.as_view(),
+    #     name='office_edit'
+    # ),
+    # path(
+    #     'office/delete/<int:id>',
+    #     OfficeDelete.as_view(),
+    #     name='office_delete'
+    # ),
+    # path(
+    #     'office/<int:id>',
+    #     OfficeView.as_view(),
+    #     name='office_list'
+    # ),
+    re_path(
+        r'office/(?P<pk>.*)',
+        OfficeView.as_view(),
         name='office_list'
-    ),
-    path(
-        'office/edit/<int:id>',
-        OfficeUpdate.as_view(),
-        name='office_edit'
-    ),
-    path(
-        'office/delete/<int:id>',
-        OfficeDelete.as_view(),
-        name='office_delete'
-    ),
+    )
 ]
