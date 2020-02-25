@@ -1,8 +1,8 @@
 # Contributing to Hikaya
  
-Thanks for checking out Activity. Activity is an open source project currently maintained by Hikaya.
- 
-## Table of Contents
+Thanks for checking out Activity. Activity is an open source project currently maintained by the team at [Hikaya](https://hikaya.io/team).
+
+# Table of Contents
  
 - [Contributing to Hikaya](#contributing-to-hikaya)
   - [Table of Contents](#table-of-contents)
@@ -16,8 +16,8 @@ Thanks for checking out Activity. Activity is an open source project currently m
     - [Code standards](#code-standards)
     - [CI/CD](#cicd)
   - [Community](#community)
- 
-## Ground rules & expectations
+
+# Ground rules & expectations
  
 Before we get started, here are a few things we expect from you (and that you should expect from others):
  
@@ -25,8 +25,8 @@ Before we get started, here are a few things we expect from you (and that you sh
 - Activity Community Versions are released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By participating in this project, you agree to abide by its terms.
 - If you open a pull request, please ensure that your contribution passes all tests. If there are test failures, you will need to address them before we can merge your contribution.
 - When adding content, please consider if it is widely valuable. Please don't add references or links to things you or your employer have created as others will do so if they appreciate it.
- 
-## How to contribute
+
+# How to contribute
   - Look through the [issues](https://github.com/hikaya/activity/issues). 
  
 If you'd like to contribute, start by searching through the [issues](https://github.com/hikaya/activity/issues) and [pull requests](https://github.com/hikaya/activity/pulls) to see whether someone else has raised a similar idea or question. If you see none, feel free to reach out to us on [Spectrum]("https://spectrum.chat/hikaya)
@@ -34,7 +34,7 @@ If you'd like to contribute, start by searching through the [issues](https://git
   - If you find an issue you would like to work on, feel free to assign it to yourself.
   - If you don't find one you would like to work on, create an issue, assign a label and @mention one of the maintainers to let them know about the issue.
  
-## Our development process
+# Our development process
  
 **Source control:** Git
  
@@ -77,13 +77,13 @@ We have 3 main branches in our repo:
   - We will set up a CI/CD process for deployment to all our environments
   - Any developer is allowed to deploy their changes to `dev` environment. To request access, contact one of the maintainers.
  
-## Contribution review process
+# Contribution review process
  
 This repo is currently maintained by Hikaya, who have commit access. They will likely review your contribution. If you haven't heard from anyone in 5 days, feel free to bump the thread or @-mention a maintainer to review your contribution.
  
-## Coding Conventions
+# Coding conventions
  
-### Github Labels
+## Github labels
   - ```Good first issue``` - Good for newcomers
   - ```bug``` - Something isn't working
   - ```defect``` - Something isn't working right
@@ -99,11 +99,12 @@ This repo is currently maintained by Hikaya, who have commit access. They will l
   - ```level 4``` - Very complext task
  
  
-### Naming conventions
+## Naming conventions
   - All folder names should only contain lowercase characters.
   - All file names should have only lowercase characters and spaces should be substituted with underscores.
  
-### Code standards
+## Code standards
+We'll continue updating this section as our product matures and more standards are established. We welcome any new suggestions!
  
   **Django views**
     - Views should be implemented using class-based views instead of function-based views.
@@ -115,12 +116,12 @@ This repo is currently maintained by Hikaya, who have commit access. They will l
     - Code submitted in a PR should be free of linting issues and adhere to `PEP8` standards.
     - The project uses `Flake8` for python code linting.
  
-### CI/CD
+## CI/CD
   - We are currently using Github Actions for simple build checks.
   - In the future, we will introduce more rigorous checks including unit tests, integration tests, end-to-end tests, and automatic deployments to `dev`.
  
-## Community
+# Community
  
-Discussions about Activity take place in the Issues sections for each repo, as well as on [Spectrum](https://spectrum.chat/hikaya). Anybody is welcome to join these conversations.
+Discussions about Activity take place in the `Issues` sections for each repo, as well as on [Spectrum](https://spectrum.chat/hikaya). Anybody is welcome to join these conversations.
  
 Thanks for contributing!
