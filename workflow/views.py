@@ -2661,9 +2661,11 @@ class ProfileTypeCreate(GView):
     """
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
         profile = data.get('profile')
         profileType = ProfileType.objects.create(
-            profile=profile
+            profile=profile,
+            organization=organization
         )
 
         if profileType:
@@ -2677,9 +2679,10 @@ class ProfileTypeList(GView):
     View to create ProfileType and return Json response
     """
     def get(self, request):
+        organization = request.user.activity_user.organization
 
-        profile_types = ProfileType.objects.values()
-        if profile_types:
+        try:
+            profile_types = ProfileType.objects.filter(organization=organization).values()
             activity_user = ActivityUser.objects.get(user=request.user)
             return JsonResponse(
                 dict(
@@ -2688,8 +2691,8 @@ class ProfileTypeList(GView):
                 ),
                 safe=False
             )
-        else:
-            return JsonResponse(dict(error='Failed'))
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
 
 
 class ProfileTypeUpdate(GView):
@@ -2699,12 +2702,14 @@ class ProfileTypeUpdate(GView):
     def put(self, request, *args, **kwargs):
         profile_id = int(self.kwargs.get('id'))
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
         profile_name = data.get('profile')
         profile = ProfileType.objects.get(
             id=profile_id
         )
 
         profile.profile = profile_name
+        profile.organization = organization
         profile.save()
 
         if profile:
@@ -2742,11 +2747,14 @@ class FundCodeCreate(CreateView):
     """
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
         
         fund_code = FundCode(
             name=data.get('name'),
             stakeholder_id=data.get('stakeholder'),
+            organization=organization
         )
+
         fund_code.save()
         
         if fund_code:
@@ -2768,11 +2776,12 @@ class FundCodeList(GView):
     """
     def get(self, request):
 
-        user = ActivityUser.objects.filter(user=request.user).first()
-        fund_codes = FundCode.objects.values('id', 'name', 'stakeholder__name', 'stakeholder')
-        stakeholders_list = Stakeholder.objects.filter(organization=user.organization).values()
-        if fund_codes:
-            # return JsonResponse(list(fund_codes), safe=False)
+        organization = request.user.activity_user.organization
+
+        try:
+            fund_codes = FundCode.objects.filter(organization=organization).values('id', 'name', 'stakeholder__name', 'stakeholder')
+            stakeholders_list = Stakeholder.objects.filter(organization=organization).values()
+
             return JsonResponse(
                 dict(
                     fund_codes=list(fund_codes),
@@ -2780,8 +2789,9 @@ class FundCodeList(GView):
                 ),
                 safe=False
             )
-        else:
-            return JsonResponse(dict(error='Failed'))
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
+
 
 
 class FundCodeUpdate(GView):
@@ -2791,6 +2801,7 @@ class FundCodeUpdate(GView):
     def put(self, request, *args, **kwargs):
         fund_code_id = int(self.kwargs.get('id'))
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
         name = data.get('name')
         stakeholder = data.get('stakeholder')
         fund_code = FundCode.objects.get(
@@ -2798,11 +2809,19 @@ class FundCodeUpdate(GView):
         )
 
         fund_code.name = name
-        fund_code.stakeholder = stakeholder
+        fund_code.stakeholder_id = stakeholder
+        fund_code.organization = organization
         fund_code.save()
 
         if fund_code:
-            return JsonResponse(model_to_dict(fund_code))
+            return JsonResponse(
+                dict(
+                    id=fund_code.id,
+                    name=fund_code.name,
+                    stakeholder__name=fund_code.stakeholder.name,
+                    stakeholder=fund_code.stakeholder.id
+                )
+            )
         else:
             return JsonResponse(dict(error='Failed'))
 
