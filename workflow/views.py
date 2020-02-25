@@ -42,7 +42,7 @@ import requests
 import logging
 
 from django.core import serializers
-from .serializers import OfficeSerializer
+from .serializers import OfficeSerializer, StakeholderTypeSerializer
 from rest_framework import generics
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic.detail import View
@@ -2855,7 +2855,7 @@ class FundCodeDelete(GView):
 
 
 """
-Office views
+Office view
 """
 class OfficeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Office.objects.all()
@@ -2869,3 +2869,20 @@ class OfficeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIVi
     def get_queryset(self):
         organization = self.request.user.activity_user.organization.id
         return Office.objects.filter(organization=organization)
+
+
+"""
+Stakeholder type view
+"""
+class StakeholderTypeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = StakeholderType.objects.all()
+    serializer_class = StakeholderTypeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return StakeholderType.objects.filter(organization=organization)

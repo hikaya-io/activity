@@ -846,6 +846,8 @@ class Capacity(models.Model):
 class StakeholderType(models.Model):
     name = models.CharField(
         "Stakeholder Type", max_length=255, blank=True, null=True)
+    organization = models.ForeignKey(
+        Organization, blank=True, null=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
