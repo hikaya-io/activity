@@ -384,6 +384,8 @@ class FundCode(models.Model):
     stakeholder = models.ForeignKey(
         'Stakeholder', related_name='stakeholder', null=True, blank=True,
         on_delete=models.SET_NULL)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -594,6 +596,8 @@ class Office(models.Model):
     code = models.CharField("Office Code", max_length=255, blank=True)
     province = models.ForeignKey(
         Province, verbose_name="Admin Level 1", on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -617,6 +621,8 @@ class ProfileType(models.Model):
     profile = models.CharField("Profile Type", max_length=255, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ('profile',)

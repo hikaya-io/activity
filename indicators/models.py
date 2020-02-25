@@ -37,6 +37,8 @@ class ActivityTable(models.Model):
 class IndicatorType(models.Model):
     indicator_type = models.CharField(max_length=135, blank=True)
     description = models.TextField(max_length=765, blank=True)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -185,6 +187,8 @@ class DataCollectionFrequency(models.Model):
     description = models.CharField(max_length=255, blank=True, null=True)
     numdays = models.PositiveIntegerField(
         default=0, verbose_name="Frequency in number of days")
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 

@@ -2241,11 +2241,14 @@ class DataCollectionFrequencyCreate(GView):
     """
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
+
         frequency_name = data.get('frequency')
         frequency_description = data.get('description')
         collection_frequency = DataCollectionFrequency.objects.create(
             frequency=frequency_name,
-            description=frequency_description
+            description=frequency_description,
+            organization=organization
         )
 
         if collection_frequency:
@@ -2260,11 +2263,13 @@ class DataCollectionFrequencyList(GView):
     """
     def get(self, request):
 
-        frequencies = DataCollectionFrequency.objects.values()
-        if frequencies:
+        organization = request.user.activity_user.organization
+
+        try:
+            frequencies = DataCollectionFrequency.objects.filter(organization=organization).values()
             return JsonResponse(list(frequencies), safe=False)
-        else:
-            return JsonResponse(dict(error='Failed'))
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
 
 
 class DataCollectionFrequencyUpdate(GView):
@@ -2274,6 +2279,7 @@ class DataCollectionFrequencyUpdate(GView):
     def put(self, request, *args, **kwargs):
         frequency_id = int(self.kwargs.get('id'))
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
         frequency = data.get('frequency')
         description = data.get('description')
         collection_frequency = DataCollectionFrequency.objects.get(
@@ -2282,6 +2288,7 @@ class DataCollectionFrequencyUpdate(GView):
 
         collection_frequency.frequency = frequency
         collection_frequency.description = description
+        collection_frequency.organization = organization
         collection_frequency.save()
 
         if collection_frequency:
@@ -2403,10 +2410,12 @@ class IndicatorTypeCreate(CreateView):
     """
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
 
         indicatorType = IndicatorType(
             indicator_type=data.get('name'),
-            description=data.get('description')
+            description=data.get('description'),
+            organization=organization
         )
         indicatorType.save()
 
@@ -2422,11 +2431,13 @@ class IndicatorTypeList(GView):
     """
     def get(self, request):
 
-        indicator_types = IndicatorType.objects.values()
-        if indicator_types:
+        organization = request.user.activity_user.organization
+
+        try:
+            indicator_types = IndicatorType.objects.filter(organization=organization).values()
             return JsonResponse(list(indicator_types), safe=False)
-        else:
-            return JsonResponse(dict(error='Failed'))
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
 
 
 class IndicatorTypeUpdate(GView):
@@ -2436,6 +2447,7 @@ class IndicatorTypeUpdate(GView):
     def put(self, request, *args, **kwargs):
         indicator_type_id = int(self.kwargs.get('id'))
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
         indicator_type_name = data.get('name')
         indicator_type_description = data.get('description')
         indicatorType = IndicatorType.objects.get(
@@ -2444,6 +2456,7 @@ class IndicatorTypeUpdate(GView):
 
         indicatorType.indicator_type = indicator_type_name
         indicatorType.description = indicator_type_description
+        indicatorType.organization = organization
         indicatorType.save()
 
         if indicatorType:
