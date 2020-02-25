@@ -52,6 +52,13 @@ new Vue({
                 this.name = item.name;
 				this.description = item.description;
 				this.sort = item.sort;
+			} else {
+				this.isEdit = false;
+				this.modalHeader = 'Add Level';
+				this.currentLevel = null;
+                this.name = null;
+				this.description = null;
+				this.sort = null;
 			}
 		},
 
@@ -173,6 +180,8 @@ new Vue({
 					toastr.success('Level was successfuly deleted');
 					this.levels = this.levels.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
+					this.modalHeader = 'Add Level';
+					this.itemToDelete = null;
 				} else {
 					toastr.error('There was a problem deleting level!!');
 				}

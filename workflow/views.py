@@ -2748,13 +2748,16 @@ class FundCodeCreate(CreateView):
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
         organization = request.user.activity_user.organization
+        try:
+            stakeholder_id = int(data.get('stakeholder'))
+        except (ValueError, TypeError):
+            stakeholder_id = None
         
         fund_code = FundCode(
             name=data.get('name'),
-            stakeholder_id=data.get('stakeholder'),
+            stakeholder_id=stakeholder_id,
             organization=organization
         )
-
         fund_code.save()
         
         if fund_code:
@@ -2762,8 +2765,8 @@ class FundCodeCreate(CreateView):
                 dict(
                     id=fund_code.id,
                     name=fund_code.name,
-                    stakeholder__name=fund_code.stakeholder.name,
-                    stakeholder=fund_code.stakeholder.id
+                    stakeholder__name=fund_code.stakeholder.name if stakeholder_id is not None else '',
+                    stakeholder=fund_code.stakeholder.id if stakeholder_id is not None else None
                 )
             )
         else:
@@ -2803,13 +2806,18 @@ class FundCodeUpdate(GView):
         data = json.loads(request.body.decode('utf-8'))
         organization = request.user.activity_user.organization
         name = data.get('name')
-        stakeholder = data.get('stakeholder')
+        # stakeholder = data.get('stakeholder')
+        try:
+            stakeholder_id = int(data.get('stakeholder'))
+        except (ValueError, TypeError):
+            stakeholder_id = None
+
         fund_code = FundCode.objects.get(
             id=fund_code_id
         )
 
         fund_code.name = name
-        fund_code.stakeholder_id = stakeholder
+        fund_code.stakeholder_id = stakeholder_id
         fund_code.organization = organization
         fund_code.save()
 
@@ -2818,8 +2826,8 @@ class FundCodeUpdate(GView):
                 dict(
                     id=fund_code.id,
                     name=fund_code.name,
-                    stakeholder__name=fund_code.stakeholder.name,
-                    stakeholder=fund_code.stakeholder.id
+                    stakeholder__name=fund_code.stakeholder.name if stakeholder_id is not None else '',
+                    stakeholder=fund_code.stakeholder.id if stakeholder_id is not None else None
                 )
             )
         else:

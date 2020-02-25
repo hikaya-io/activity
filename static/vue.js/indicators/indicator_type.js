@@ -33,7 +33,7 @@ new Vue({
 				}
 			})
 			.catch(e => {
-				toastr.error('There was a problem loading indicator types from the database!!');
+				toastr.error('There was a problem loading indicator types from the database');
 				this.indicatorTypes = [];
 			});
 	},
@@ -50,6 +50,12 @@ new Vue({
 				this.currentIndicatorType = item;
                 this.name = item.indicator_type;
                 this.description = item.description;
+			} else {
+				this.isEdit = false;
+				this.modalHeader = 'Add Indicator Type';
+				this.currentIndicatorType = null;
+                this.name = null;
+                this.description = null;
 			}
 		},
 
@@ -167,6 +173,8 @@ new Vue({
 					toastr.success('Indicator type was successfuly deleted');
 					this.indicatorTypes = this.indicatorTypes.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
+					this.modalHeader = 'Add Indicator Type';
+					this.itemToDelete = null;
 				} else {
 					toastr.error('There was a problem deleting indicator type!!');
 				}

@@ -49,6 +49,12 @@ new Vue({
 				this.currentFrequency = item;
 				this.frequency = item.frequency;
 				this.description = item.description;
+			} else {
+				this.isEdit = false;
+				this.modalHeader = `Add data collection frequency`;
+				this.currentFrequency = null;
+				this.frequency = null;
+				this.description = null;
 			}
 		},
 
@@ -156,10 +162,10 @@ new Vue({
 					toastr.success('Data collection frequency is deleted');
 					this.frequencies = this.frequencies.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
+					this.modalHeader = 'Add data collection frequency';
+					this.itemToDelete = null;
 				} else {
-
 					toastr.error('There was a problem deleting this');
-
 				}
 			} catch (error) {
 				toastr.error('There was a server error');

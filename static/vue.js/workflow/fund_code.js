@@ -51,6 +51,12 @@ new Vue({
 				this.currentFundCode = item;
                 this.name = item.name;
                 this.stakeholder = item.stakeholder;
+			} else {
+				this.isEdit = false;
+				this.modalHeader = `Add Fund Code`;
+				this.currentFundCode = null;
+                this.name = null;
+                this.stakeholder = null;
 			}
 		},
 
@@ -168,6 +174,8 @@ new Vue({
 					toastr.success('Fund Code was successfuly deleted');
 					this.fundCodes = this.fundCodes.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
+					this.modalHeader = `Add Fund Code`;
+					this.itemToDelete = null;
 				} else {
 					toastr.error('There was a problem deleting fund Code!!');
 				}

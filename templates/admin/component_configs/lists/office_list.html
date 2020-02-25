@@ -11,7 +11,7 @@
             role="button"
             class="btn btn-sm btn-primary"
             id="show-modal"
-            @click="showModal = true"
+            @click="toggleModal()"
           >
             <i class="fa fa-plus"></i> Office
           </a>
@@ -80,9 +80,6 @@
         <td>
           [[ office.code ]]
         </td>
-        <!-- <td>
-          [[ fundCode.stakeholder__name ]]
-        </td> -->
         <td class="text-right">
           <!-- Split button -->
           <div class="btn-group">

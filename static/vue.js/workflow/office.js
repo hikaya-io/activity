@@ -52,6 +52,12 @@ new Vue({
 				this.currentOffice = item;
                 this.name = item.name;
                 this.code = item.code;
+			} else {
+				this.isEdit = false;
+				this.modalHeader = 'Add Office';
+				this.currentOffice = null;
+                this.name = null;
+                this.code = null;
 			}
 		},
 
@@ -161,6 +167,8 @@ new Vue({
 					toastr.success('Office was successfuly deleted');
 					this.offices = this.offices.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
+					this.modalHeader = 'Add Office';
+					this.itemToDelete = null;
 				} else {
 					toastr.error('There was a problem deleting office');
 				}
