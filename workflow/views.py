@@ -2849,95 +2849,15 @@ class FundCodeDelete(GView):
 """
 Office views
 """
-# class OfficeCreate(CreateView):
-#     """
-#     create Office View
-#     """
-#     def post(self, request):
-#         data = json.loads(request.body.decode('utf-8'))
-#         organization = request.user.activity_user.organization
-#         office_name = data.get('name')
-#         office_code = data.get('code')
-
-#         office = Office.objects.create(
-#             name=office_name,
-#             code=office_code,
-#             organization=organization
-#         )
-        
-#         if office:
-#             return JsonResponse(model_to_dict(office))
-#         else:
-#             return JsonResponse(dict(error='Failed'))
-
-
-# class OfficeList(GView):
-#     """
-#     View to fetch Offices
-#     """
-#     def get(self, request):
-
-#         organization = request.user.activity_user.organization
-
-#         try:
-#             offices = Office.objects.filter(organization=organization).values()
-#             admin_levels = Province.objects.filter(organization=organization).values()
-
-#             return JsonResponse(
-#                 dict(
-#                     offices=list(offices),
-#                     admin_levels=list(admin_levels)
-#                 ),
-#                 safe=False
-#             )
-#         except Exception as e:
-#             return JsonResponse(dict(error=str(e)))
-
-
-# class OfficeUpdate(GView):
-#     """
-#     View to Update Office and return Json response
-#     """
-#     def put(self, request, *args, **kwargs):
-#         office_id = int(self.kwargs.get('id'))
-#         data = json.loads(request.body.decode('utf-8'))
-#         name = data.get('name')
-#         code = data.get('code')
-#         office = Office.objects.get(
-#             id=office_id
-#         )
-
-#         office.name = name
-#         office.code = code
-#         office.save()
-
-#         if office:
-#             return JsonResponse(model_to_dict(office))
-#         else:
-#             return JsonResponse(dict(error='Failed'))
-
-
-# class OfficeDelete(GView):
-#     """
-#     View to Delete Office and return Json response
-#     """
-#     def delete(self, request, *args, **kwargs):
-#         office_id = int(self.kwargs.get('id'))
-#         office = Office.objects.get(
-#             id=int(office_id)
-#         )
-#         office.delete()
-
-#         try:
-#             Office.objects.get(id=int(office_id))
-#             return JsonResponse(dict(error='Failed'))
-
-#         except Office.DoesNotExist:
-#             return JsonResponse(dict(success=True))
-
-
 class OfficeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
-    def get(self, request):
-        organization = request.user.activity_user.organization
-        queryset = Office.objects.filter(organization=organization).values()
-        permission_classes = [IsAuthenticated]
+    queryset = Office.objects.all()
+    serializer_class = OfficeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return Office.objects.filter(organization=organization)

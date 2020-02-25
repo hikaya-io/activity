@@ -23,8 +23,8 @@ new Vue({
 		this.makeRequest('GET', '/workflow/office/')
 			.then(response => {
 				if (response.data) {
-                    this.offices = response.data.offices.sort((a, b) => b.id - a.id);
-                    this.adminLevels = response.data.adminLevels;
+                    this.offices = response.data.sort((a, b) => b.id - a.id);
+                    // this.adminLevels = response.data.adminLevels;
                     this.modalHeader = 'Add Office'; 
 					$(document).ready(() => {
 						$('#officesTable').DataTable({
@@ -157,7 +157,7 @@ new Vue({
 					'DELETE',
 					`/workflow/office/${id}`
 				);
-				if (response.data.success) {
+				if (response.status === 204) {
 					toastr.success('Office was successfuly deleted');
 					this.offices = this.offices.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
