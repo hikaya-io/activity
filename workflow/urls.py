@@ -21,7 +21,7 @@ from .views import (
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
     ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete,
-    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete
+    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeList, OfficeCreate, OfficeUpdate, OfficeDelete
 )
 from django.urls import path
 
@@ -249,5 +249,27 @@ urlpatterns = [
         'fund_code/delete/<int:id>',
         FundCodeDelete.as_view(),
         name='fund_code_delete'
-    )
+    ),
+
+    #Office Urls
+    path(
+        'office/add',
+        OfficeCreate.as_view(),
+        name='office_add'
+    ),
+    path(
+        'office/list',
+        OfficeList.as_view(),
+        name='office_list'
+    ),
+    path(
+        'office/edit/<int:id>',
+        OfficeUpdate.as_view(),
+        name='office_edit'
+    ),
+    path(
+        'office/delete/<int:id>',
+        OfficeDelete.as_view(),
+        name='office_delete'
+    ),
 ]

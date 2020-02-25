@@ -493,6 +493,8 @@ class ApprovalAuthority(models.Model):
 class Province(models.Model):
     name = models.CharField("Admin Level 1", max_length=255, blank=True)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -593,7 +595,9 @@ class Office(models.Model):
     name = models.CharField("Office Name", max_length=255, blank=True)
     code = models.CharField("Office Code", max_length=255, blank=True)
     province = models.ForeignKey(
-        Province, verbose_name="Admin Level 1", on_delete=models.CASCADE)
+        Province, verbose_name="Admin Level 1", on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
