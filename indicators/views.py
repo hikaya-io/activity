@@ -2412,3 +2412,11 @@ class IndicatorTypeView(generics.ListCreateAPIView,
     queryset = IndicatorType.objects.all()
     serializer_class = IndicatorTypeSerializer
     permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return IndicatorType.objects.filter(organization=organization)
