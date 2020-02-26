@@ -21,7 +21,6 @@ new Vue({
 	beforeMount: function() {
 		this.makeRequest('GET', '/indicators/indicator_types/')
 			.then(response => {
-				console.log("H1")
 				if (response.data) {
                     this.indicatorTypes = response.data.sort((a, b) => b.id - a.id);
                     this.modalHeader = 'Add Indicator Type';
