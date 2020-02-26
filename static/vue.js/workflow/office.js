@@ -6,27 +6,28 @@ Vue.component('modal', {
 // start app
 new Vue({
 	delimiters: ['[[', ']]'],
-	el: '#level',
+	el: '#office',
 	data: {
 		showModal: false,
 		showDeleteModal: false,
-		levels: [],
+        offices: [],
+        adminLevels: [],
         name: '',
-		description: '',
-		sort: null,
+        code: '',
 		isEdit: false,
-		currentLevel: null,
+		currentOffice: null,
         itemToDelete: null,
 		modalHeader: '',
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/indicators/level/list')
+		this.makeRequest('GET', '/workflow/office/')
 			.then(response => {
 				if (response.data) {
-                    this.levels = response.data.sort((a, b) => b.id - a.id);
-                    this.modalHeader = 'Add Level'; 
+                    this.offices = response.data.sort((a, b) => b.id - a.id);
+                    // this.adminLevels = response.data.adminLevels;
+                    this.modalHeader = 'Add Office'; 
 					$(document).ready(() => {
-						$('#levelsTable').DataTable({
+						$('#officesTable').DataTable({
                             pageLength: 5,
                             lengthMenu: [5, 10, 15, 20]
 						});
@@ -34,50 +35,40 @@ new Vue({
 				}
 			})
 			.catch(e => {
-				toastr.error('There was a problem loading levels from the database!!');
-				this.levels = [];
+				toastr.error('There was a problem loading offices from the database');
+				this.offices = [];
 			});
 	},
 	methods: {
         /**
-         * open or close the level form modal
-         * @param { object } item - level item
+         * open or close the fund code form modal
+         * @param { object } item - fund code item
          */
 		toggleModal: function(item = null) {
             this.showModal = !this.showModal;
 			if (item) {
 				this.isEdit = true;
 				this.modalHeader = `Edit ${item.name}`;
-				this.currentLevel = item;
+				this.currentOffice = item;
                 this.name = item.name;
-				this.description = item.description;
-				this.sort = item.sort;
+                this.code = item.code;
 			} else {
 				this.isEdit = false;
-				this.modalHeader = 'Add Level';
-				this.currentLevel = null;
+				this.modalHeader = 'Add Office';
+				this.currentOffice = null;
                 this.name = null;
-				this.description = null;
-				this.sort = null;
+                this.code = null;
 			}
 		},
 
         /**
-         * open or close the level delete modal
-         * @param { object } data - level item
+         * open or close the fund code delete modal
+         * @param { object } data - fund code item
          */
 		toggleDeleteModal: function(data) {
 			this.showDeleteModal = !this.showDeleteModal;
 			this.modalHeader = 'Confirm delete';
 			this.itemToDelete = data;
-        },
-        
-        /**
-         * Format date
-         * @param {string} date - date to be formatted
-         */
-        formatDate: function(date) {
-            return moment(date, 'YYYY-MM-DDThh:mm:ssZ').format('YYYY-MM-DD');
         },
 
         /**
@@ -87,8 +78,8 @@ new Vue({
 		processForm: function(saveNew = false) {
 			this.$validator.validateAll().then(result => {
 				if (result) {
-					if (this.currentLevel && this.currentLevel.id) {
-						this.updateLevel();
+					if (this.currentOffice && this.currentOffice.id) {
+						this.updateFundCode();
 					} else {
 						if (saveNew) {
 							this.postData(saveNew);
@@ -101,30 +92,28 @@ new Vue({
 		},
 
         /**
-         * create new level
+         * create new fund code
          * @param { boolean } saveNew - true if a user wants to make multiple posts
          */
 		async postData(saveNew) {
 			try {
 				const response = await this.makeRequest(
 					'POST',
-					`/indicators/level/add`,
+					`/workflow/office/`,
 					{
                         name: this.name,
-						description: this.description,
-						sort: this.sort
+                        code: this.code
 					}
                 );
 				if (response) {
-                    toastr.success('Level successfuly saved');
-					this.levels.unshift(response.data);
+                    toastr.success('Fund Code successfuly saved');
+					this.offices.unshift(response.data);
 					if (!saveNew) {
 						this.toggleModal();
 					}
 					// resetting the form
                     this.name = '';
-					this.description = '';
-					this.sort = null;
+                    this.code = '';
 					this.$validator.reset();
 				}
 			} catch (error) {
@@ -133,57 +122,55 @@ new Vue({
 		},
 
         /**
-         * edit Level item
+         * edit Fund Code item
          */
-		async updateLevel() {
+		async updateFundCode() {
 			try {
 				const response = await this.makeRequest(
 					'PUT',
-					`/indicators/level/edit/${this.currentLevel.id}`,
+					`/workflow/office/${this.currentOffice.id}`,
 					{ 
                         name: this.name, 
-						description: this.description,
-						sort: this.sort
+                        code: this.code,
                     }
 				);
 				if (response) {
-					toastr.success('Level was successfuly updated');
-					const newLevels = this.levels.filter(item => {
-						return item.id != this.currentLevel.id;
+					toastr.success('Offices was successfuly updated');
+					const existingOffices = this.offices.filter(item => {
+						return item.id != this.currentOffice.id;
 					});
-					this.levels = newLevels;
-					this.levels.unshift(response.data);
+					this.offices = existingOffices;
+					this.offices.unshift(response.data);
 					this.isEdit = false;
-                    this.name = '';
-					this.description = '';
-					this.sort = null;
-					this.currentLevel = null;
-					this.modalHeader = 'Add Level';
+                    this.name = null;
+                    this.code = null;
+                    this.currentOffice = null;
+					this.modalHeader = 'Add Office';
 					this.toggleModal();
 				}
 			} catch (e) {
-				toastr.error('There was a problem updating your data!!');
+				toastr.error('There was a problem updating your data');
 			}
 		},
 
         /**
-         * delete level
-         * @param { number } id - id of the level to be deleted
+         * delete fund code
+         * @param { number } id - id of the fund code to be deleted
          */
-		async deleteProfileType(id) {
+		async deleteOffice(id) {
 			try {
 				const response = await this.makeRequest(
 					'DELETE',
-					`/indicators/level/delete/${id}`
+					`/workflow/office/${id}`
 				);
-				if (response.data.success) {
-					toastr.success('Level was successfuly deleted');
-					this.levels = this.levels.filter(item => +item.id !== +id);
+				if (response.status === 204) {
+					toastr.success('Office was successfuly deleted');
+					this.offices = this.offices.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
-					this.modalHeader = 'Add Level';
+					this.modalHeader = 'Add Office';
 					this.itemToDelete = null;
 				} else {
-					toastr.error('There was a problem deleting level!!');
+					toastr.error('There was a problem deleting office');
 				}
 			} catch (error) {
 				toastr.error('There was a server error!!');
@@ -206,7 +193,7 @@ new Vue({
 
 	computed: {
         /**
-         * Check if level form is valid
+         * Check if fund code form is valid
          */
 		isFormValid() {
 			return this.name;

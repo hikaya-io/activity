@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from django.urls import path
+from django.urls import path, re_path
 from .views import (
     IndicatorList, add_indicator, indicator_create, IndicatorCreate,
     IndicatorUpdate, IndicatorDelete, PeriodicTargetDeleteView,
@@ -11,11 +11,10 @@ from .views import (
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
-    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelList, LevelCreate,
+    ObjectiveList, ObjectiveCreate, ObjectiveUpdate, ObjectiveDelete, objectives_list, objectives_tree, LevelList, LevelCreate,
     LevelUpdate, LevelDelete, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
     IndicatorTarget, DataCollectionFrequencyCreate, DataCollectionFrequencyList, DataCollectionFrequencyUpdate,
-    DataCollectionFrequencyDelete, IndicatorTypeList, IndicatorTypeCreate, IndicatorTypeUpdate, IndicatorTypeDelete,
-)
+    DataCollectionFrequencyDelete, IndicatorTypeView)
 
 urlpatterns = [
 
@@ -114,21 +113,36 @@ urlpatterns = [
     path('get_target/<int:indicator_id>/', IndicatorTarget.as_view(),
          name='indicator-targets'),
 
-    # objectives
-    path('objectives', objectives_list, name='objectives'),
-    path('objectives/tree', objectives_tree, name='objectives-tree'),
-    path('objectives/edit/<int:pk>/', ObjectiveUpdateView.as_view(),
-         name='update_strategic_objective'),
-    path('objectives/objective_delete/<int:pk>/', objective_delete,
-         name='objective_delete'),
-    path('disaggregation_type/delete/<int:pk>/',
+# Objectives
+     path(     
+        'objective/list',
+        ObjectiveList.as_view(),
+        name='objective_list'
+     ),
+     path(
+        'objective/add',
+        ObjectiveCreate.as_view(),
+        name='objective_add'
+     ),
+     path('objective/edit/<int:id>', 
+         ObjectiveUpdate.as_view(),
+         name='objective_update'
+     ),
+     path('objective/delete/<int:id>', 
+         ObjectiveDelete.as_view(),
+         name='objective_delete'
+     ),
+
+     path('objectives', objectives_list, name='objectives'),
+     path('objectives/tree', objectives_tree, name='objectives-tree'),
+     path('disaggregation_type/delete/<int:pk>/',
          DisaggregationTypeDeleteView.as_view(),
          name='disaggregation_type_delete'),
-    path(
+     path(
         'disaggregation_label/delete/<int:pk>/',
         DisaggregationLabelDeleteView.as_view(),
         name='disaggregation_label_delete'),
-
+     
 
     # Levels Urls
     path(
@@ -175,24 +189,9 @@ urlpatterns = [
     ),
 
     # Indicator Types Urls
-    path(
-          'indicator_type/list',
-          IndicatorTypeList.as_view(),
+    re_path(
+          r'indicator_types/(?P<pk>.*)',
+          IndicatorTypeView.as_view(),
           name='indicator_type_list'
     ),
-    path(
-          'indicator_type/add',
-          IndicatorTypeCreate.as_view(),
-          name='indicator_type_add'
-    ),
-    path(
-        'indicator_type/edit/<int:id>',
-        IndicatorTypeUpdate.as_view(),
-        name='indicator_type_edit'
-    ),
-    path(
-         'indicator_type/delete/<int:id>',
-         IndicatorTypeDelete.as_view(),
-         name='indicator_type_delete'
-     ),
 ]

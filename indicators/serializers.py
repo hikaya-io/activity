@@ -1,11 +1,17 @@
 from rest_framework import serializers
 
-from indicators.models import Indicator, PeriodicTarget, CollectedData
+from indicators.models import Indicator, IndicatorType, PeriodicTarget, CollectedData
 
 
 class IndicatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Indicator
+        fields = '__all__'
+
+
+class IndicatorTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IndicatorType
         fields = '__all__'
 
 

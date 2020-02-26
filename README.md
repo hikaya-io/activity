@@ -23,6 +23,9 @@ If you'd like to run your own copy of Activity or contribute to its development 
 Once all your changes have been committed to the repo, and before pushing them, run:
 `. travis.sh` -->
 
+<br/>
+<br/>
+
 # Local Setup
 
 **Note**: You should use `Python 3.7.5` for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
@@ -216,6 +219,9 @@ $ docker-compose exec web python manage.py [operation]
 ```
 The `operation` in this case can be: `makemigrations`, `migrate`, `collectstatic` etc
 
+<br/>
+<br/>
+
 # Extra information
 
 ## Postgresql help
@@ -278,6 +284,8 @@ GRANT ALL ON activity.* TO 'root'@'localhost' IDENTIFIED BY 'root';
 
 _NB:_ When you use these SQL queries, beware of not writing the quotes.
 
+<br/>
+<br/>
 
 # Contributing
-Activity is built and maintain by the team at Hikaya. We are always looking for a fresh set of :eyes: who want to contribute to **Activity**. Feel free to checkout our contributing page or reach out by creating an issue and we'll help you get started!
+Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team). We are always looking for a fresh set of :eyes: who want to contribute to **Activity**. Feel free to checkout our [contribution page](./CONTRIBUTING.md) or reach out by creating an issue and we'll help you get started!

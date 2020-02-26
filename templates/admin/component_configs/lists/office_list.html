@@ -1,8 +1,8 @@
-<div id="fund_code">
+<div id="office">
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">Fund Code List</h4>
+      <h4 class="page-title">Office List</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
@@ -13,14 +13,14 @@
             id="show-modal"
             @click="toggleModal()"
           >
-            <i class="fa fa-plus"></i> Fund Code
+            <i class="fa fa-plus"></i> Office
           </a>
         </div>
         <!-- Fund Code create modal -->
         <modal v-if="showModal" @close="showModal = false">
           <h4 slot="header">[[modalHeader]]</h4>
           <div slot="body">
-            {% include 'admin/component_configs/forms/fund_code_form.html' %}
+            {% include 'admin/component_configs/forms/office_form.html' %}
           </div>
           <div slot="footer">
             {% include 'ui-components/quick_entry_modal_footer.html' %}
@@ -44,7 +44,7 @@
               </button>
               <button
                 class="btn btn-danger"
-                @click="deleteProfileType(itemToDelete.id)"
+                @click="deleteOffice(itemToDelete.id)"
               >
                 Delete
               </button>
@@ -57,28 +57,28 @@
   </div>
 
   <!-- Table -->
-  <table class="table" id="fundCodesTable" v-if="fundCodes.length">
+  <table class="table" id="officesTable" v-if="offices.length">
     <thead>
       <tr>
-        <th>Fund Code</th>
-        <th>Stakeholder</th>
+        <th>Name</th>
+        <th>Code</th>
         <th></th>
       </tr>
     </thead>
 
     <tbody>
-      <tr v-cloak v-for="fundCode in fundCodes" v-if="fundCode.name">
+      <tr v-cloak v-for="office in offices" v-if="office.name">
         <td>
           <a
-            @click="toggleModal(fundCode)"
+            @click="toggleModal(office)"
             data-toggle="tooltip"
-            title="{{ fundCode.name }}"
+            title="{{ office.name }}"
           >
-            [[ fundCode.name ]]
+            [[ office.name ]]
           </a>
         </td>
         <td>
-          [[ fundCode.stakeholder__name ]]
+          [[ office.code ]]
         </td>
         <td class="text-right">
           <!-- Split button -->
@@ -98,12 +98,12 @@
             </button>
             <ul class="dropdown-menu">
               <li>
-                <a class="force-link" @click="toggleModal(fundCode)">Edit</a>
+                <a class="force-link" @click="toggleModal(office)">Edit</a>
               </li>
               <li>
                 <a
                   class="text-danger force-link"
-                  @click="toggleDeleteModal(fundCode)"
+                  @click="toggleDeleteModal(office)"
                   >Delete</a
                 >
               </li>
@@ -115,5 +115,5 @@
   </table>
 </div>
 {% include 'ui-components/vue_modal.html'%} {% block extra_js_in_body %}
-<script src="{{ STATIC_URL }}vue.js/workflow/fund_code.js"></script>
+<script src="{{ STATIC_URL }}vue.js/workflow/office.js"></script>
 {% endblock extra_js_in_body %}

@@ -34,7 +34,7 @@ new Vue({
 				}
 			})
 			.catch(e => {
-				toastr.error('There was a problem loading profile types from the database!!');
+				toastr.error('There was a problem loading profile types from the database');
 				this.profileTypes = [];
 			});
 	},
@@ -50,6 +50,11 @@ new Vue({
 				this.modalHeader = `Edit ${item.profile}`;
 				this.currentProfileType = item;
 				this.profile = item.profile;
+			} else {
+				this.isEdit = false;
+				this.modalHeader = `Add ${this.siteLabel} Type`; 
+				this.currentProfileType = null;
+				this.profile = null;
 			}
 		},
 
@@ -139,7 +144,7 @@ new Vue({
 					this.isEdit = false;
 					this.profile = null;
 					this.currentProfileType = null;
-					this.modalHeader = 'Add Profile Type';
+					this.modalHeader = `Add ${this.siteLabel} Type`; 
 					this.toggleModal();
 				}
 			} catch (e) {
@@ -161,6 +166,8 @@ new Vue({
 					toastr.success('Profile Type was successfuly Deleted');
 					this.profileTypes = this.profileTypes.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
+					this.modalHeader = `Add ${this.siteLabel} Type`; 
+					this.itemToDelete = null;
 				} else {
 					toastr.error('There was a problem deleting profile type!!');
 				}

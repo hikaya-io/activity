@@ -17,7 +17,7 @@ new Vue({
 		isEdit: false,
 		currentFundCode: null,
         itemToDelete: null,
-		modalHeader: '',
+		modalHeader: 'Add Fund Code',
 	},
 	beforeMount: function() {
 		this.makeRequest('GET', '/workflow/fund_code/list')
@@ -25,7 +25,6 @@ new Vue({
 				if (response.data) {
                     this.fundCodes = response.data.fund_codes.sort((a, b) => b.id - a.id);
                     this.stakeholders = response.data.stakeholders;
-                    this.modalHeader = 'Add Fund Code'; 
 					$(document).ready(() => {
 						$('#fundCodesTable').DataTable({
                             pageLength: 5,
@@ -52,6 +51,12 @@ new Vue({
 				this.currentFundCode = item;
                 this.name = item.name;
                 this.stakeholder = item.stakeholder;
+			} else {
+				this.isEdit = false;
+				this.modalHeader = `Add Fund Code`;
+				this.currentFundCode = null;
+                this.name = null;
+                this.stakeholder = null;
 			}
 		},
 
@@ -169,6 +174,8 @@ new Vue({
 					toastr.success('Fund Code was successfuly deleted');
 					this.fundCodes = this.fundCodes.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
+					this.modalHeader = `Add Fund Code`;
+					this.itemToDelete = null;
 				} else {
 					toastr.error('There was a problem deleting fund Code!!');
 				}

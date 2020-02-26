@@ -11,8 +11,10 @@ from urllib.parse import urlparse
 import re
 import json
 
+from rest_framework.permissions import IsAuthenticated
+
 from .export import IndicatorResource, CollectedDataResource
-from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer
+from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer
 from .tables import IndicatorDataTable
 from .forms import (
     IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
@@ -20,7 +22,7 @@ from .forms import (
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
     DisaggregationType, CollectedData, IndicatorType, Level, ExternalServiceRecord,
-    ExternalService, ActivityTable, StrategicObjective, Objective, DataCollectionFrequency,
+    ExternalService, ActivityTable, StrategicObjective, Objective, DataCollectionFrequency, ActivityUser
 )
 
 from django.db.models import Count, Sum, Min, Q
@@ -54,6 +56,7 @@ import requests
 from weasyprint import HTML, CSS
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from rest_framework import generics
 
 
 def generate_periodic_target_single(tf, start_date, nth_target_period,
@@ -2012,6 +2015,8 @@ def add_indicator(request):
     return HttpResponse({'success': True})
 
 
+# Objectives
+
 def objectives_list(request):
     if request.method == 'POST':
         data = request.POST
@@ -2104,37 +2109,132 @@ class StrategicObjectiveUpdateView(UpdateView):
         context['current_objective'] = self.get_object()
         return context
 
-
-class ObjectiveUpdateView(UpdateView):
-    model = Objective
-    template_name_suffix = '_update_form'
-    success_url = '/indicators/objectives'
-    form_class = ObjectiveForm
-
-    # add the request to the kwargs
-    def get_form_kwargs(self):
-        kwargs = super(ObjectiveUpdateView, self).get_form_kwargs()
-        kwargs['request'] = self.request
-        kwargs['current_objective'] = self.get_object()
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super(ObjectiveUpdateView, self).get_context_data(**kwargs)
-        context['current_objective'] = self.get_object()
-        context['active'] = ['indicators']
-        return context
-
-
-def objective_delete(request, pk):
+"""
+Objectives views Vue.js
+"""
+class ObjectiveList(GView):
     """
-    Delete strategic objective
-    :param request:
-    :param pk:
-    :return:
+    View to fetch objectives
     """
-    objective = Objective.objects.get(pk=int(pk))
-    objective.delete()
-    return redirect('/indicators/objectives')
+    def get(self, request):
+
+        user = ActivityUser.objects.filter(user=request.user).first()
+        programs_list = Program.objects.filter(organization=user.organization).values()
+        objectives = Objective.objects.filter(program__organization=request.user.activity_user.organization).values()
+        if objectives or programs_list:
+            return JsonResponse(
+                dict(
+                    objectives=list(objectives),
+                    programs_list=list(programs_list)
+                ),
+                safe=False
+            )
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+class ObjectiveCreate(GView):
+    """
+    View to create Objective and return Json response
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        objective = Objective(
+            name=data.get('name'),
+            description=data.get('description'),
+            program_id=int(data.get('program_id')),
+            parent_id=int(data.get('parent_id')) if data.get('parent_id') else None
+        )
+        objective.save()
+        obj = model_to_dict(objective)
+        obj['program_id'] = obj.pop('program')
+        obj['parent_id'] = obj.pop('parent')
+
+        if objective:
+            return JsonResponse(obj)
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class ObjectiveUpdate(GView):
+    """
+    View to Update Objective and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        objective_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        objective_name = data.get('name')
+        objective_description = data.get('description')
+        objective_parent = int(data.get('parent_id')) if data.get('parent_id') else None
+        objective_program = int(data.get('program_id'))
+
+        objective = Objective.objects.get(
+            id=objective_id
+        )
+        objective.name = objective_name
+        objective.description = objective_description
+        objective.program_id = objective_program
+        objective.parent_id = objective_parent
+        objective.save()
+
+        obj = model_to_dict(objective)
+        obj['program_id'] = obj.pop('program')
+        obj['parent_id'] = obj.pop('parent')
+
+        if objective:
+            return JsonResponse(obj)
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class ObjectiveDelete(GView):
+    """
+    View to Delete Objective and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        objective_id = int(self.kwargs.get('id'))
+        objective = Objective.objects.get(
+            id=int(objective_id)
+        )
+        objective.delete()
+
+        try:
+            Objective.objects.get(id=int(objective_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except Objective.DoesNotExist:
+            return JsonResponse(dict(success=True))
+
+
+# class ObjectiveUpdateView(UpdateView):
+#     model = Objective
+#     template_name_suffix = '_update_form'
+#     success_url = '/indicators/objectives'
+#     form_class = ObjectiveForm
+
+#     # add the request to the kwargs
+#     def get_form_kwargs(self):
+#         kwargs = super(ObjectiveUpdateView, self).get_form_kwargs()
+#         kwargs['request'] = self.request
+#         kwargs['current_objective'] = self.get_object()
+#         return kwargs
+
+#     def get_context_data(self, **kwargs):
+#         context = super(ObjectiveUpdateView, self).get_context_data(**kwargs)
+#         context['current_objective'] = self.get_object()
+#         context['active'] = ['indicators']
+#         return context
+
+
+# def objective_delete(request, pk):
+#     """
+#     Delete strategic objective
+#     :param request:
+#     :param pk:
+#     :return:
+#     """
+#     objective = Objective.objects.get(pk=int(pk))
+#     objective.delete()
+#     return redirect('/indicators/objectives')
 
 
 # Vue.js Views
@@ -2149,11 +2249,14 @@ class DataCollectionFrequencyCreate(GView):
     """
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
+
         frequency_name = data.get('frequency')
         frequency_description = data.get('description')
         collection_frequency = DataCollectionFrequency.objects.create(
             frequency=frequency_name,
-            description=frequency_description
+            description=frequency_description,
+            organization=organization
         )
 
         if collection_frequency:
@@ -2168,11 +2271,13 @@ class DataCollectionFrequencyList(GView):
     """
     def get(self, request):
 
-        frequencies = DataCollectionFrequency.objects.values()
-        if frequencies:
+        organization = request.user.activity_user.organization
+
+        try:
+            frequencies = DataCollectionFrequency.objects.filter(organization=organization).values()
             return JsonResponse(list(frequencies), safe=False)
-        else:
-            return JsonResponse(dict(error='Failed'))
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
 
 
 class DataCollectionFrequencyUpdate(GView):
@@ -2182,6 +2287,7 @@ class DataCollectionFrequencyUpdate(GView):
     def put(self, request, *args, **kwargs):
         frequency_id = int(self.kwargs.get('id'))
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
         frequency = data.get('frequency')
         description = data.get('description')
         collection_frequency = DataCollectionFrequency.objects.get(
@@ -2190,6 +2296,7 @@ class DataCollectionFrequencyUpdate(GView):
 
         collection_frequency.frequency = frequency
         collection_frequency.description = description
+        collection_frequency.organization = organization
         collection_frequency.save()
 
         if collection_frequency:
@@ -2305,75 +2412,16 @@ Indicator Type views
 """
 
 
-class IndicatorTypeCreate(CreateView):
-    """
-    create Indicator Type View
-    """
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
+class IndicatorTypeView(generics.ListCreateAPIView,
+                        generics.RetrieveUpdateDestroyAPIView):
+    queryset = IndicatorType.objects.all()
+    serializer_class = IndicatorTypeSerializer
+    permission_classes = [IsAuthenticated]
 
-        indicatorType = IndicatorType(
-            indicator_type=data.get('name'),
-            description=data.get('description')
-        )
-        indicatorType.save()
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
 
-        if indicatorType:
-            return JsonResponse(model_to_dict(indicatorType))
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-
-class IndicatorTypeList(GView):
-    """
-    View to fetch Indicator Types
-    """
-    def get(self, request):
-
-        indicator_types = IndicatorType.objects.values()
-        if indicator_types:
-            return JsonResponse(list(indicator_types), safe=False)
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-
-class IndicatorTypeUpdate(GView):
-    """
-    View to Update IndicatorType and return Json response
-    """
-    def put(self, request, *args, **kwargs):
-        indicator_type_id = int(self.kwargs.get('id'))
-        data = json.loads(request.body.decode('utf-8'))
-        indicator_type_name = data.get('name')
-        indicator_type_description = data.get('description')
-        indicatorType = IndicatorType.objects.get(
-            id=indicator_type_id
-        )
-
-        indicatorType.indicator_type = indicator_type_name
-        indicatorType.description = indicator_type_description
-        indicatorType.save()
-
-        if indicatorType:
-            return JsonResponse(model_to_dict(indicatorType))
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-
-class IndicatorTypeDelete(GView):
-    """
-    View to Delete IndicatorType and return Json response
-    """
-    def delete(self, request, *args, **kwargs):
-        indicator_type_id = int(self.kwargs.get('id'))
-        indicator_type = IndicatorType.objects.get(
-            id=int(indicator_type_id)
-        )
-        indicator_type.delete()
-
-        try:
-            IndicatorType.objects.get(id=int(indicator_type_id))
-            return JsonResponse(dict(error='Failed'))
-
-        except IndicatorType.DoesNotExist:
-            return JsonResponse(dict(success=True))
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return IndicatorType.objects.filter(organization=organization)
