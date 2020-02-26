@@ -1,19 +1,20 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from django.urls import path
+from django.urls import path, re_path
 from .views import (
     IndicatorList, add_indicator, indicator_create, IndicatorCreate,
     IndicatorUpdate, IndicatorDelete, PeriodicTargetDeleteView,
     PeriodicTargetView, CollectedDataReportData, CollectedDataCreate, CollectedDataDelete,
-    CollectedDataList, CollectedDataUpdate, CollectedDataAdd, collecteddata_import, indicator_report,
+    CollectedDataList, CollectedDataUpdate, CollectedDataAdd, CollectedDataEdit,
+    CollectedDataDeleteVue, collecteddata_import, indicator_report,
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
-    objectives_list, objectives_tree, ObjectiveUpdateView, objective_delete, LevelListView, 
-    LevelCreateView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, LevelUpdateView,level_delete,
-    IndicatorTarget
-)
+    ObjectiveList, ObjectiveCreate, ObjectiveUpdate, ObjectiveDelete, objectives_list, objectives_tree, LevelList, LevelCreate,
+    LevelUpdate, LevelDelete, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
+    IndicatorTarget, DataCollectionFrequencyCreate, DataCollectionFrequencyList, DataCollectionFrequencyUpdate,
+    DataCollectionFrequencyDelete, IndicatorTypeView)
 
 urlpatterns = [
 
@@ -58,6 +59,10 @@ urlpatterns = [
          CollectedDataDelete.as_view(), name='collecteddata_delete'),
     path('collecteddata_export/<program>/<indicator>/',
          CollectedDataList.as_view(), name='collecteddata_list'),
+    path('collected_data/edit/<int:id>',
+         CollectedDataEdit.as_view(), name='edit-collected-data'),
+    path('collected_data/delete/<int:id>',
+         CollectedDataDeleteVue.as_view(), name='delete-collected-data'),
 
     # Indicator Report
     path('report/<program>/<indicator>/<type>/',
@@ -108,24 +113,85 @@ urlpatterns = [
     path('get_target/<int:indicator_id>/', IndicatorTarget.as_view(),
          name='indicator-targets'),
 
-    # objectives
-    path('objectives', objectives_list, name='objectives'),
-    path('objectives/tree', objectives_tree, name='objectives-tree'),
-    path('objectives/edit/<int:pk>/', ObjectiveUpdateView.as_view(),
-         name='update_strategic_objective'),
-    path('objectives/objective_delete/<int:pk>/', objective_delete,
-         name='objective_delete'),
-    path('disaggregation_type/delete/<int:pk>/',
+# Objectives
+     path(     
+        'objective/list',
+        ObjectiveList.as_view(),
+        name='objective_list'
+     ),
+     path(
+        'objective/add',
+        ObjectiveCreate.as_view(),
+        name='objective_add'
+     ),
+     path('objective/edit/<int:id>', 
+         ObjectiveUpdate.as_view(),
+         name='objective_update'
+     ),
+     path('objective/delete/<int:id>', 
+         ObjectiveDelete.as_view(),
+         name='objective_delete'
+     ),
+
+     path('objectives', objectives_list, name='objectives'),
+     path('objectives/tree', objectives_tree, name='objectives-tree'),
+     path('disaggregation_type/delete/<int:pk>/',
          DisaggregationTypeDeleteView.as_view(),
          name='disaggregation_type_delete'),
-    path(
+     path(
         'disaggregation_label/delete/<int:pk>/',
         DisaggregationLabelDeleteView.as_view(),
         name='disaggregation_label_delete'),
-    
-    #levels
-    path('levels', LevelListView.as_view(), name='levels_list'),
-    path('levels_create', LevelCreateView.as_view(), name='levels_create'),
-    path('levels/<pk>/update',LevelUpdateView.as_view(), name='update_view' ),
-     path('levels/delete/<int:pk>/',level_delete, name='level_delete'),
+     
+
+    # Levels Urls
+    path(
+        'level/list',
+        LevelList.as_view(),
+        name='level_list'
+    ),
+    path(
+        'level/add',
+        LevelCreate.as_view(),
+        name='level_add'
+    ),
+    path(
+        'level/edit/<int:id>',
+        LevelUpdate.as_view(),
+        name='level_edit'
+    ),
+    path(
+         'level/delete/<int:id>',
+         LevelDelete.as_view(),
+         name='level_delete'
+     ),
+
+    # Data DataCollectionFrequency Urls
+    path(
+        'data_collection_frequency/add',
+        DataCollectionFrequencyCreate.as_view(),
+        name='data_collection_frequency_add'
+    ),
+    path(
+        'data_collection_frequency/list',
+        DataCollectionFrequencyList.as_view(),
+        name='data_collection_frequency_list'
+    ),
+    path(
+        'data_collection_frequency/edit/<int:id>',
+        DataCollectionFrequencyUpdate.as_view(),
+        name='data_collection_frequency_edit'
+    ),
+    path(
+          'data_collection_frequency/delete/<int:id>',
+          DataCollectionFrequencyDelete.as_view(),
+          name='data_collection_frequency_delete'
+    ),
+
+    # Indicator Types Urls
+    re_path(
+          r'indicator_types/(?P<pk>.*)',
+          IndicatorTypeView.as_view(),
+          name='indicator_type_list'
+    ),
 ]

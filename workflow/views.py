@@ -14,9 +14,10 @@ from .models import (
     ProjectComplete, SiteProfile, Documentation, Benchmarks, Budget, ProfileType,
     ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder, Sector,
     FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
+    Office, Province,
 )
 from formlibrary.models import TrainingAttendance, Distribution
-from indicators.models import CollectedData, ExternalService
+from indicators.models import CollectedData, ExternalService, Level
 from django.utils import timezone
 
 from .forms import (
@@ -24,11 +25,12 @@ from .forms import (
     ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
     DocumentationForm, SiteProfileForm, BenchmarkForm, BudgetForm,
     FilterForm, ProgramForm, SiteProfileQuickEntryForm,
-    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm
+    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm, ProfileTypeForm,
 )
 
 import pytz
 
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -40,8 +42,11 @@ import requests
 import logging
 
 from django.core import serializers
+from .serializers import OfficeSerializer, StakeholderTypeSerializer
+from rest_framework import generics
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic.detail import View
+from django.forms.models import model_to_dict
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.decorators import method_decorator
@@ -91,6 +96,30 @@ def level1_delete(request, pk):
     program = Program.objects.get(pk=int(pk))
     program.delete()
     return redirect('/workflow/level1')
+
+
+class ProgramCreate(GView):
+    """
+    Add program
+    """
+    def post(self,request):
+        data = request.POST
+
+        activity_user = ActivityUser.objects.filter(user=request.user).first()
+        program = Program(
+            name=data.get('program_name'),
+            start_date=data.get('start_date') if data.get('start_date') != '' else None,
+            end_date=data.get('end_date') if data.get('end_date') != '' else None,
+            organization=activity_user.organization
+        )
+        program.save()
+        try:
+            sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
+            program.sector.set(sectors)
+
+            return JsonResponse(dict(success=True))
+        except Exception as ex:
+            return JsonResponse(dict(success=False))
 
 
 class ProgramUpdate(UpdateView):
@@ -1208,54 +1237,6 @@ class ProjectCompleteBySite(ListView):
         return q
 
 
-class ProfileTypeList(ListView):
-    """
-    get_profile types
-    """
-    model = ProfileType
-    template_name = 'workflow/profile_type_list.html'
-
-    def get(self, request, *args, **kwargs):
-        get_profile_types = ProfileType.objects.all()
-
-        return render(request, self.template_name,
-                      {'get_profile_types': get_profile_types,
-                       'active': ['components', 'profile_type_list']})
-
-
-class ProfileTypeCreate(GView):
-    """
-    create ProfileType View
-    : returns success: Json object { 'success': True/False }
-    """
-    def post(self, request):
-        data = request.POST
-
-        user = ActivityUser.objects.filter(user=request.user).first()
-
-        profileType = ProfileType.objects.create(
-            profile=data.get('profile')
-        )
-
-        if profileType:
-            return JsonResponse({'success': True})
-        else: 
-            return JsonResponse({'error': 'Error saving profile type'})
-
-
-def delete_profile_type(request, pk):
-    """
-    delete Profile Type
-    :param request:
-    :param pk: Primary key of the profile type to be deleted
-    :return redirect:
-    """
-    profile_type = ProfileType.objects.get(pk=int(pk))
-    profile_type.delete()
-
-    return redirect('/accounts/admin/component_admin')
-
-
 class SiteProfileList(ListView):
     """
     SiteProfile list creates a map and list of sites by user country access
@@ -1293,7 +1274,7 @@ class SiteProfileList(ListView):
         inactive_site = pytz.UTC.localize(
             datetime.now()) - relativedelta(months=3)
 
-        # Filter SiteProfile list and map by activity or program
+        # Filter SiteProfile list and map by Activity or program
         if activity_id != 0:
             get_site_profile = SiteProfile.objects.all().prefetch_related(
                 'country', 'district',
@@ -2670,31 +2651,238 @@ def add_stakeholder(request):
     return HttpResponse({'success': False})
 
 
-class FundCodeCreate(GView):
+# Vue.js Views
+"""
+ProfileType views
+"""
+class ProfileTypeCreate(GView):
     """
-    View to create FundCode and return Json response
+    View to create ProfileType and return Json response
     """
     def post(self, request):
-        data = request.POST
-        stakeholder_id = None
-        name = data.get('name')
-        stakeholder = data.get('stakeholder', None)
-
-        if stakeholder is not None and stakeholder != '':
-            stakeholder_id = int(stakeholder)
-
-        fund_code = FundCode.objects.create(
-            name=name, stakeholder_id=stakeholder_id
+        data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
+        profile = data.get('profile')
+        profileType = ProfileType.objects.create(
+            profile=profile,
+            organization=organization
         )
 
+        if profileType:
+            return JsonResponse(model_to_dict(profileType))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class ProfileTypeList(GView):
+    """
+    View to create ProfileType and return Json response
+    """
+    def get(self, request):
+        organization = request.user.activity_user.organization
+
+        try:
+            profile_types = ProfileType.objects.filter(organization=organization).values()
+            activity_user = ActivityUser.objects.get(user=request.user)
+            return JsonResponse(
+                dict(
+                    profile_types=list(profile_types),
+                    site_label=activity_user.organization.site_label
+                ),
+                safe=False
+            )
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
+
+
+class ProfileTypeUpdate(GView):
+    """
+    View to Update ProfileType and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        profile_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
+        profile_name = data.get('profile')
+        profile = ProfileType.objects.get(
+            id=profile_id
+        )
+
+        profile.profile = profile_name
+        profile.organization = organization
+        profile.save()
+
+        if profile:
+            return JsonResponse(model_to_dict(profile))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class ProfileTypeDelete(GView):
+    """
+    View to Delete ProfileType and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        profile_id = int(self.kwargs.get('id'))
+        profile = ProfileType.objects.get(
+            id=int(profile_id)
+        )
+        profile.delete()
+
+        try:
+            ProfileType.objects.get(id=int(profile_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except ProfileType.DoesNotExist:
+
+            return JsonResponse(dict(success=True))
+
+
+"""
+FundCode views
+"""
+class FundCodeCreate(CreateView):
+    """
+    create Fund Code View
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
+        try:
+            stakeholder_id = int(data.get('stakeholder'))
+        except (ValueError, TypeError):
+            stakeholder_id = None
+        
+        fund_code = FundCode(
+            name=data.get('name'),
+            stakeholder_id=stakeholder_id,
+            organization=organization
+        )
+        fund_code.save()
+        
         if fund_code:
-            return JsonResponse(dict(
-                status=201,
-                fund_code=dict(name=fund_code.name, id=fund_code.id))
+            return JsonResponse(
+                dict(
+                    id=fund_code.id,
+                    name=fund_code.name,
+                    stakeholder__name=fund_code.stakeholder.name if stakeholder_id is not None else '',
+                    stakeholder=fund_code.stakeholder.id if stakeholder_id is not None else None
+                )
             )
         else:
-            return JsonResponse(dict(status=401))
+            return JsonResponse(dict(error='Failed'))
+
+
+class FundCodeList(GView):
+    """
+    View to fetch Fund Codes
+    """
+    def get(self, request):
+
+        organization = request.user.activity_user.organization
+
+        try:
+            fund_codes = FundCode.objects.filter(organization=organization).values('id', 'name', 'stakeholder__name', 'stakeholder')
+            stakeholders_list = Stakeholder.objects.filter(organization=organization).values()
+
+            return JsonResponse(
+                dict(
+                    fund_codes=list(fund_codes),
+                    stakeholders=list(stakeholders_list)
+                ),
+                safe=False
+            )
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
 
 
 
+class FundCodeUpdate(GView):
+    """
+    View to Update FundCode and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        fund_code_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
+        name = data.get('name')
+        # stakeholder = data.get('stakeholder')
+        try:
+            stakeholder_id = int(data.get('stakeholder'))
+        except (ValueError, TypeError):
+            stakeholder_id = None
 
+        fund_code = FundCode.objects.get(
+            id=fund_code_id
+        )
+
+        fund_code.name = name
+        fund_code.stakeholder_id = stakeholder_id
+        fund_code.organization = organization
+        fund_code.save()
+
+        if fund_code:
+            return JsonResponse(
+                dict(
+                    id=fund_code.id,
+                    name=fund_code.name,
+                    stakeholder__name=fund_code.stakeholder.name if stakeholder_id is not None else '',
+                    stakeholder=fund_code.stakeholder.id if stakeholder_id is not None else None
+                )
+            )
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class FundCodeDelete(GView):
+    """
+    View to Delete FundCode and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        fund_code_id = int(self.kwargs.get('id'))
+        fund_code = FundCode.objects.get(
+            id=int(fund_code_id)
+        )
+        fund_code.delete()
+
+        try:
+            FundCode.objects.get(id=int(fund_code_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except FundCode.DoesNotExist:
+
+            return JsonResponse(dict(success=True))
+
+
+"""
+Office view
+"""
+class OfficeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = Office.objects.all()
+    serializer_class = OfficeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return Office.objects.filter(organization=organization)
+
+
+"""
+Stakeholder type view
+"""
+class StakeholderTypeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = StakeholderType.objects.all()
+    serializer_class = StakeholderTypeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return StakeholderType.objects.filter(organization=organization)

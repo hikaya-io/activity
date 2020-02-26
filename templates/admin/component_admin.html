@@ -3,7 +3,7 @@
 	{% block breadcrumbs %}
 	<ul class="breadcrumb">
 		<li><a href="{% url 'admin_profile_settings' %}">Organization Settings</a></li>
-		<li class="active">Configurations</li>
+		<li class="active">Components</li>
 	</ul>
 	{% endblock %}
 
@@ -18,11 +18,18 @@
 		<div class="mb-15">
 			{% include 'admin/sections/side-nav.html' %}
 		</div>
-
-        <div >
-            {% include 'components/lists/profile_types_list.html' %}
-        </div>
-
+	</div>
+	<div class="bg-white mt-10 p-10 pt-0">
+		{% include 'admin/component_configs/lists/profile_types_list.html' %}
+	</div>
+	<div class="bg-white mt-10 p-10 pt-0">
+		{% include 'admin/component_configs/lists/fund_code_list.html' %}
+	</div>
+	<div class="bg-white mt-10 p-10 pt-0">
+		{% include 'admin/component_configs/lists/office_list.html' %}
+	</div>
+	<div class="bg-white mt-10 p-10 pt-0">
+		{% include 'admin/component_configs/lists/stakeholder_type_list.html' %}
 	</div>
 </div>
 <script>

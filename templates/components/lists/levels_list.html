@@ -1,0 +1,98 @@
+{% include '../modals/add_level_modal.html' %}
+
+<script>
+  $(document).ready(() => {
+    $('#levelsTable').DataTable({
+        pageLength: 5,
+        lengthMenu: [5, 10, 15, 20]
+    });
+
+    // show quick add modal if quick-modal to true
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('quick-action')) {
+      $('#addLevelModal').modal('show');
+    }
+  });
+</script>
+
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+        Level List
+      </h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <!-- sample action buttons -->
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="">
+          <a role="button" class="btn btn-sm btn-default disabled">
+            <i class="fa fa-list"></i> List
+          </a>
+
+          <a role="button" class="btn btn-sm btn-default" href="">
+            <i class="fa fa-sitemap"></i> Tree
+          </a>
+        </div>
+      </div>
+
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="">
+          <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addLevelModal">
+            <i class="fa fa-plus"></i> Level
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table" id="levelsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th class="text-right"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for level in get_all_levels %}  {% if level.name %}
+      <tr>
+        <td>
+            <a href="{% url 'update_view' level.id %}" data-toggle="tooltip"
+            title="{{ level.name }}">{{ level.name | truncatechars:25 }}</a>
+        </td>
+        <td>{{ level.description | truncatechars:75}}</td>
+        <td class="text-right">
+          <!-- Action buttons -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-default disabled">
+              More
+            </button>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <!-- drop down for edit and delete functionality-->
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'update_view' level.id %}">Edit</a></li>
+              <li>
+                <a href="#deleteLevelModal{{ level.id }}" 
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{ level.id }})"
+                  data-target="#deleteLevelModal{{ level.id }}"
+                  class="text-danger">
+                  Delete
+                </a>
+              </li>
+            </ul>
+          </div>
+        </td>
+        {% include 'components/deletemodals/level_confirm_delete.html'%}
+      </tr>
+      {% endif %} {% endfor %}
+    </tbody>
+  </table>
+</div> 
+
+

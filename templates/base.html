@@ -38,7 +38,7 @@
   <link href="{% static 'css/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
 
   <!-- jsTree -->
-  <link rel="styleshee" href="{% static 'jstree/dist/themes/default/style.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'jstree/dist/themes/default/style.min.css' %}" />
 
   <!-- hierachy chart -->
   <link rel="stylesheet" href="{% static 'hierachy_chart/jquery.orgchart.css' %}" />
@@ -50,15 +50,15 @@
   <link rel="stylesheet" href="{% static 'css/select2.min.css' %} " />
 
   <link href="{% static 'css/admin.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'css/vue_modal.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'css/vue_tree.css' %}" rel="stylesheet" type="text/css" />
   <link href="{% static 'css/components.css' %}" rel="stylesheet" type="text/css" />
 
   <link href="{% static 'css/hikaya-bootstrap.css' %}" rel="stylesheet" type="text/css" />
 
   <!--- Django Tables2 css -->
   <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}" />
-  <!-- Custom CSS -->
-  <link href="{% static 'css/app.css' %}" rel="stylesheet" type="text/css" />
-
+ 
   <!-- Hosted Leaflet CSS -->
   <!-- <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" /> -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
@@ -67,6 +67,9 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
   <link rel="stylesheet" href="{% static 'select2-bootstrap-theme/dist/select2-bootstrap.min.css' %}">
+
+ <!-- Custom CSS -->
+  <link href="{% static 'css/app.css' %}" rel="stylesheet" type="text/css" />
 
   {% block extra_js_in_header %}
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -80,7 +83,13 @@
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
    crossorigin=""></script>
-
+   
+   <!-- Vue.js scripts -->
+   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+   <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
+   <script src="https://cdn.jsdelivr.net/npm/vee-validate@2.0.0/dist/vee-validate.js"></script>
+<!--    <script src="https://unpkg.com/vue-tree-chart@1.2.6/dist/TreeChart.umd.min.js"></script>-->
+   <!-- end of Vue.js scripts -->
   {% endblock %}
   {{ form.media }}
 </head>
@@ -139,7 +148,6 @@
               </li>
               <li>
                 <a href="{% url 'objectives' %}">Objectives</a>
-                <a href="{% url 'levels_list' %}">Levels</a>
               </li>
             </ul>
           </li>

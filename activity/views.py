@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from smtplib import (SMTPRecipientsRefused)
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.template.response import TemplateResponse
 from django.views.generic import RedirectView
@@ -25,7 +26,10 @@ from django.views import View
 from django.views.decorators.csrf import csrf_protect
 from django.core.exceptions import MultipleObjectsReturned
 
-from indicators.models import CollectedData, Indicator
+from indicators.models import (
+    CollectedData, Indicator, DataCollectionFrequency,
+    Level,
+)
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, ActivityUser, ActivityBookmarks, FormGuidance,
@@ -58,10 +62,6 @@ def index(request, program_id=0):
     Home page
     get count of agreements approved and total for dashboard
     """
-    # add program
-    if request.method == 'POST' and request.is_ajax:
-        return add_program(request)
-
     # set the selected program
     selected_program = Program.objects.filter(id=program_id).first()
 
@@ -390,21 +390,17 @@ def set_invite_uuid(invite_uuid):
     return invite_uuid
 
 
-def user_login(request):
-    """
-    override django in-built login
-    :param request:
-    :return:
-    """
-    # redirect to homepage if user is logged in
-    if request.user.is_authenticated:
-        return redirect('/')
+class  UserLogin(View):
+    """User login class view"""
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/')
+        return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
-    if request.method == 'POST':
+    def post(self,request, *args, **kwargs):
         data = request.POST
-        username = data.get('username')
-        password = data.get('password')
-
+        username = data.get('username', None)
+        password = data.get('password', None)
         # check if user is active
         try:
             get_user = User.objects.get(Q(username=username) | Q(email=username.lower()))
@@ -417,7 +413,6 @@ def user_login(request):
                 return render(request, 'registration/login.html')
         except User.DoesNotExist:
             return render(request, 'registration/login.html')
-
         # proceed to authenticate the user
         user = authenticate(username=get_user.username, password=password)
 
@@ -431,17 +426,15 @@ def user_login(request):
 
         else:
             return render(request, 'registration/login.html')
-    return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
 
-@login_required
-def register_organization(request):
-    """
-    register organization
-    : param request:
-    : return org profile page
-    """
-    if request.method == 'POST':
+class RegisterOrganization(LoginRequiredMixin, View):
+    """Register organization view"""
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'registration/organization_register.html')
+
+    def post(self, request, *args, **kwargs):
         data = request.POST
         name = data.get('name')
         description = data.get('description')
@@ -475,8 +468,6 @@ def register_organization(request):
             return redirect('/')
         else:
             return redirect('register_organization')
-    else:
-        return render(request, 'registration/organization_register.html')
 
 
 @login_required(login_url='/accounts/login/')
@@ -515,7 +506,7 @@ def profile(request):
             user = User.objects.get(pk=request.user.id)
             if user:
 
-                # save activity user after updating name
+                # save Activity user after updating name
                 activity_user = ActivityUser.objects.get(user=request.user)
                 activity_user.organization = Organization.objects.get(
                     pk=int(activity_user_object['organization']))
@@ -613,7 +604,11 @@ def admin_profile_settings(request):
     return render(
         request,
         'admin/profile_settings.html',
-        {'nav_links': nav_links, 'organization': organization, 'active': 'profile'}
+        {
+            'nav_links': nav_links,
+            'organization': organization,
+            'active': 'profile'
+        }
     )
 
 
@@ -661,19 +656,79 @@ def admin_user_management(request, role, status):
         'active': 'people'
     })
 
+
 @login_required(login_url='/accounts/login/')
 def admin_component_admin(request):
-    user = get_object_or_404(ActivityUser, user=request.user)
-    organization = user.organization
-    profile_types = ProfileType.objects.all()
-
-    nav_links = get_nav_links('Component')
+    user = ActivityUser.objects.filter(user=request.user).first()
+    stakeholders = Stakeholder.objects.filter(organization=user.organization)
+    nav_links = get_nav_links('Components')
     return render(
         request,
         'admin/component_admin.html',
+        {
+            'nav_links': nav_links,
+            'get_stakeholders': stakeholders,
+            'active': 'components'
+        }
+    )
+
+
+@login_required(login_url='/accounts/login/')
+def admin_indicator_config(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+    get_collection_frequencies = DataCollectionFrequency.objects.all()
+
+    nav_links = get_nav_links('Indicators')
+    return render(
+        request,
+        'admin/indicator_configs.html',
+        {
+            'nav_links': nav_links,
+            'organization': organization,
+            'get_collection_frequencies': get_collection_frequencies,
+            'active': 'indicators'
+        }
+    )
+
+
+@login_required(login_url='/accounts/login/')
+def admin_form_library_settings(request):
+    nav_links = get_nav_links('Form Library')
+    return render(
+        request,
+        'admin/form_library_settings.html',
+        {
+            'nav_links': nav_links, 
+            'active': 'form_library'
+        }
+    )
+
+
+@login_required(login_url='/accounts/login/')
+def admin_workflow_settings(request):
+    nav_links = get_nav_links('Workflows')
+    return render(
+        request,
+        'admin/workflow_settings.html',
+        {
+            'nav_links': nav_links, 
+            'active': 'workflows'
+        }
+    )
+
+
+@login_required(login_url='/accounts/login/')
+def admin_indicator_settings(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+
+    nav_links = get_nav_links('Indicator')
+    return render(
+        request,
+        'admin/indicator_settings.html',
         {'organization': organization, 
-        'get_profile_types': profile_types,
-        'active': 'component_admin'}
+        'active': 'indicator_settings'}
     )
 
 
@@ -730,7 +785,7 @@ def admin_user_edit(request, pk):
         User.objects.filter(pk=user_obj.id).update(**user_object)
         user = User.objects.get(pk=user_obj.pk)
         if user:
-            # save activity user after updating name
+            # save Activity user after updating name
             activity_user = activity_user_obj
             activity_user.employee_number = activity_user_object['employee_number']
             activity_user.organization = Organization.objects.get(
@@ -792,27 +847,6 @@ def update_user_access(request, pk, status):
     return redirect('/accounts/admin/users/all/all/')
 
 
-@login_required(login_url='/accounts/login/')
-def add_program(request):
-    """
-    Add program
-    """
-    data = request.POST
-    activity_user = ActivityUser.objects.filter(user=request.user).first()
-    program = Program(name=data.get(
-        'program_name'), start_date=data.get('start_date'),
-        end_date=data.get('end_date'), organization=activity_user.organization)
-
-    try:
-        program.save()
-
-        sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
-        program.sector.set(sectors)
-
-        # Return a "created" (201) response code.
-        return HttpResponse(program)
-    except Exception as ex:
-        raise Exception(ex)
 
 
 class BookmarkList(ListView):

@@ -1,33 +1,9 @@
-<!-- <ul class="nav nav-tabs" role="tablist">
-	{% for item in nav_links %}
-	<li role="presentation" class="{{ item.status }}">
-		<a href="{{item.link}}">
-			{% if item.label == 'Profile' %}
-
-			{% elif item.label == 'Configurations' %}
-
-			{% elif item.label == 'People' %}
-
-			{% elif item.label == 'Usage' %}
-			{% endif %}
-
-			{{ item.label }}</a>
-	</li>
-	{% endfor %}
-</ul> -->
-
 <div>
 	<!-- Nav tabs -->
 	<ul class="nav nav-tabs" role="tablist">
-		<li role="presentation" class="{% if active == 'profile' %} active {% endif %}"><a href="/accounts/admin/profile_settings" aria-controls="profile"
-				role="tab">Profile</a></li>
-		<li role="presentation" class="{% if active == 'configurations' %} active {% endif %}"><a href="/accounts/admin/configurations" aria-controls="configurations"
-				role="tab">Configurations</a></li>
-		<li role="presentation" class="{% if active == 'people' %} active {% endif %}"><a href="/accounts/admin/users/all/all/" aria-controls="people" role="tab">People</a>
-		</li>
-		<li role="presentation" class="{% if active == 'usage' %} active {% endif %}"><a href="/accounts/admin_dashboard" aria-controls="usage" role="tab">Usage</a>
-		</li>
-		<li role="presentation" class="{% if active == 'component_admin' %} active {% endif %}"><a href="/accounts/admin/component_admin" aria-controls="usage" role="tab">Component Admin</a>
-		</li>
+		{% for nav_item in nav_links %}
+		<li role="presentation" class="{% if nav_item.status == 'active' %} active {% endif %}"><a href="{{nav_item.link}}" aria-controls="profile"
+			role="tab">{{nav_item.label}}</a></li>
+		{% endfor %}
 	</ul>
 </div>

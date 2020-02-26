@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from .views import (
-    list_workflow_level1, add_level2, add_documentation,
+    list_workflow_level1, ProgramCreate, add_level2, add_documentation,
     add_stakeholder, delete_stakeholder, ProgramUpdate,
     ProjectDash, ProgramDash, level1_delete, ProjectAgreementList,
     ProjectAgreementUpdate,
@@ -20,27 +20,28 @@ from .views import (
     save_bookmark, district_json, country_json, export_sites_list, ReportData, DocumentationAgreementDelete,
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
-    FundCodeCreate, ProfileTypeCreate, delete_profile_type
+    ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete,
+    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView
 )
-from django.urls import re_path, path
+from django.urls import path, re_path
 
 # place app url patterns here
 
 urlpatterns = [
+    # level1
     path('level1', list_workflow_level1, name='level1'),
     path('level1_delete/<int:pk>/', level1_delete, name='level1_delete'),
+    path('level1/add', ProgramCreate.as_view(), name='add_level1'),
+
     path('level2/add', add_level2, name='add-level2'),
     path('documentation/add', add_documentation, name='add-documentation'),
     path('contact/add', ContactCreate.as_view(), name='add-contact'),
     path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
     path('stakeholder/delete_stakeholder/<int:pk>/',
          delete_stakeholder, name='delete_stakeholder'),
-    path('level1/edit/<int:pk>/', ProgramUpdate.as_view(),
-        name='level1_edit'),
-    path('level2/project/<int:pk>/', ProjectDash.as_view(),
-        name='project_dashboard'),
-    path('level2/project/<int:pk>/', ProjectDash.as_view(),
-        name='project_dashboard'),
+    path('level1/edit/<int:pk>/', ProgramUpdate.as_view(), name='level1_edit'),
+    path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
+    path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/list/<slug:program>/<slug:status>/', ProgramDash.as_view(),
         name='projects_list'),
 
@@ -190,33 +191,77 @@ urlpatterns = [
     # reports
     path('report/export/', Report.as_view(), name='report'),
     path('report/<int:pk>/<slug:status>/', Report.as_view(), name='report'),
-    path('report_table/<int:pk>/<slug:status>/', ReportData.as_view(),
-        name='report_data'),
+    path('report_table/<int:pk>/<slug:status>/', ReportData.as_view(), name='report_data'),
 
     # exports
-    path('export_stakeholders_list/', export_stakeholders_list,
-        name='export_stakeholders_list'),
+    path('export_stakeholders_list/', export_stakeholders_list, name='export_stakeholders_list'),
     path('export_sites_list/', export_sites_list, name='export_sites_list'),
 
     # geography level jsons
-    path('province/<slug:province>/province_json/', province_json,
-        name='province_json'),
-    path('country/<slug:country>/country_json/', country_json,
-        name='country_json'),
-    path('district/<slug:district>/district_json/', district_json,
-        name='district_json'),
+    path('province/<slug:province>/province_json/', province_json, name='province_json'),
+    path('country/<slug:country>/country_json/', country_json, name='country_json'),
+    path('district/<slug:district>/district_json/', district_json, name='district_json'),
 
     # ajax calls
-    path('service/<slug:service>/service_json/', service_json,
-        name='service_json'),
+    path('service/<slug:service>/service_json/', service_json, name='service_json'),
     path('new_bookmark/', save_bookmark, name='save_bookmark'),
-    path('fund_code/add', FundCodeCreate.as_view(),
-         name='add_fund_code'),
 
-    # profile type
-    path('profile_type/add', ProfileTypeCreate.as_view(), name='add_profile_type'),
-    path('profile_type_update/<int:pk>/', StakeholderUpdate.as_view(),
-        name='profile_type_update'),
-    path('profile_type/delete_profile_type/<int:pk>/',
-         delete_profile_type, name='delete_profile_type')
+
+    # ProfileType Urls
+    path(
+        'profile_type/add',
+        ProfileTypeCreate.as_view(),
+        name='profile_type_add'
+    ),
+    path(
+        'profile_type/list',
+        ProfileTypeList.as_view(),
+        name='profile_type_list'
+    ),
+    path(
+        'profile_type/edit/<int:id>',
+        ProfileTypeUpdate.as_view(),
+        name='profile_type_edit'
+    ),
+    path(
+        'profile_type/delete/<int:id>',
+        ProfileTypeDelete.as_view(),
+        name='profile_type_delete'
+    ),
+
+    # ProfileType Urls
+    path(
+        'fund_code/add',
+        FundCodeCreate.as_view(),
+        name='fund_code_add'
+    ),
+    path(
+        'fund_code/list',
+        FundCodeList.as_view(),
+        name='fund_code_list'
+    ),
+    path(
+        'fund_code/edit/<int:id>',
+        FundCodeUpdate.as_view(),
+        name='fund_code_edit'
+    ),
+    path(
+        'fund_code/delete/<int:id>',
+        FundCodeDelete.as_view(),
+        name='fund_code_delete'
+    ),
+
+    # Office Urls
+    re_path(
+        r'office/(?P<pk>.*)',
+        OfficeView.as_view(),
+        name='office_list'
+    ),
+
+    # Stakeholder Type Urls
+    re_path(
+        r'stakeholder_type/(?P<pk>.*)',
+        StakeholderTypeView.as_view(),
+        name='stakeholder_type_list'
+    )
 ]

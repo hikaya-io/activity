@@ -1,0 +1,24 @@
+<form method="POST">
+    <div class="modal-body">
+      {% csrf_token %}
+      <div :class="{
+          'form-group': true, 
+          'has-error': errors.has('profile')
+        }">
+        <label for="profile">Location Type*</label
+        >
+        <input
+          type="text"
+          name="profile"
+          :class="{ 
+              'form-control': true, 
+              'is-danger': errors.has('profile') 
+            }"   
+          v-model="profile" 
+          v-validate="'required'"
+          placeholder="Enter profile name"
+        />
+        <span v-show="errors.has('profile')" class="help is-danger">[[ errors.first('profile') ]]</span>
+      </div>
+    </div>
+  </form>

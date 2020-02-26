@@ -112,25 +112,19 @@
 		</div>
 	</div>
 	<script>
-		let map = L.map('add-site-modal-map').setView([-1.2921, 36.8219], 13);
-		let my_divicon = L.divIcon({
+		let maps = L.map('add-site-modal-map').setView([-1.2921, 36.8219], 13);
+		let the_divicon = L.divIcon({
 				className: 'arrow_box'
 		});
 		let marker = L.marker([-1.2921, 36.8219], {
 				draggable:true
 		});
 
-		// L.tileLayer(
-		//  'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		//    'attribution': 'Map data, copyright <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-		//  }
-		// ).addTo(map);
-
 		L.tileLayer(
 			'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
 				'attribution': 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
 			}
-		).addTo(map);
+		).addTo(maps);
 
 		function addToTextBox(lt,ln){
 				document.getElementById('id_latitude').value = (lt).toFixed(7);
@@ -146,6 +140,6 @@
 				addToTextBox(lat,lon);
 		});
 
-		marker.addTo(map);
+		marker.addTo(maps);
 	</script>
 </form>

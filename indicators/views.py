@@ -5,11 +5,16 @@ from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.forms.models import model_to_dict
 
 from urllib.parse import urlparse
 import re
+import json
+
+from rest_framework.permissions import IsAuthenticated
 
 from .export import IndicatorResource, CollectedDataResource
+from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer
 from .tables import IndicatorDataTable
 from .forms import (
     IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
@@ -17,7 +22,7 @@ from .forms import (
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
     DisaggregationType, CollectedData, IndicatorType, Level, ExternalServiceRecord,
-    ExternalService, ActivityTable, StrategicObjective, Objective
+    ExternalService, ActivityTable, StrategicObjective, Objective, DataCollectionFrequency, ActivityUser
 )
 
 from django.db.models import Count, Sum, Min, Q
@@ -47,11 +52,11 @@ from workflow.forms import FilterForm
 from feed.serializers import FlatJsonSerializer
 from activity.util import get_country, get_table
 
-import json
 import requests
 from weasyprint import HTML, CSS
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from rest_framework import generics
 
 
 def generate_periodic_target_single(tf, start_date, nth_target_period,
@@ -200,7 +205,7 @@ class IndicatorTarget(GView):
         periodic_targets = PeriodicTarget.objects.filter(indicator=indicator_id).order_by('customsort', 'create_date', 'period')
         targets = []
         for target in periodic_targets:
-            targets.append({"pk": target.id, "period": str(target)})
+            targets.append({"pk": target.id, "period": str(target), "target": target.target})
 
         return JsonResponse({"data": targets})
 
@@ -453,6 +458,7 @@ class IndicatorUpdate(UpdateView):
     model = Indicator
     guidance = None
     template_name = 'indicators/indicator_form_tab_ui.html'
+    form_class = IndicatorForm
 
     object = None
 
@@ -630,7 +636,6 @@ class IndicatorUpdate(UpdateView):
         else:
             messages.success(self.request, 'Success, Indicator Updated!')
         return redirect('/indicators/home/0/0/0/')
-    form_class = IndicatorForm
 
 
 class IndicatorDelete(DeleteView):
@@ -691,25 +696,81 @@ class CollectedDataAdd(GView):
     Add Collected Data
     """
     def post(self, request):
-        data = request.POST
+        data = json.loads(request.body.decode('utf-8'))
 
-        # print(data.get('periodic_target', ''))
-        # peridoic_target=PeriodicTarget.objects.filter(id=int(data.get('periodic_target', ''))))
+        if data.get('date_collected') == "":
+            date = None
+        else:
+            date = data.get('date_collected')
+
+        if data.get('documentation') == "":
+            documentation = None
+        else:
+            documentation = int(data.get('documentation'))
 
         collected_data = CollectedData.objects.create(
             achieved=data.get('actual', ''),
             targeted=data.get('target', ''),
-            date_collected=data.get('date_collected', None),
-            periodic_target=PeriodicTarget.objects.filter(id=int(data.get('periodic_target', ''))).first(),
+            date_collected=date,
+            periodic_target=PeriodicTarget.objects.filter(id=int(data.get('period', ''))).first(),
             indicator=Indicator.objects.filter(id=int(data.get('indicator', ''))).first(),
-            evidence=Documentation.objects.filter(id=int(data.get('documentation', None))).first(),
+            evidence=Documentation.objects.filter(id=documentation).first(),
             program=Program.objects.filter(id=int(data.get('program', ''))).first(),
         )
 
         if collected_data:
-            return JsonResponse(dict(status=201))
+            return JsonResponse(model_to_dict(collected_data))
         else:
-            return JsonResponse(dict(status=400))
+            return JsonResponse(dict(error='Failed'))
+
+
+class CollectedDataEdit(GView):
+    def put(self, request, *args, **kwargs):
+        result_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        collected_data = CollectedData.objects.get(
+            id=result_id
+        )
+
+        if data.get('date_collected') == "":
+            date = None
+        else:
+            date = data.get('date_collected')
+
+        if data.get('documentation') == "":
+            documentation = None
+        else:
+            documentation = int(data.get('documentation'))
+            evidence = Documentation.objects.filter(id=documentation).first()
+            collected_data.evidence = evidence
+
+        achieved = data.get('actual', '')
+
+        collected_data.date_collected = date
+        collected_data.achieved = achieved
+        collected_data.save()
+
+        if collected_data:
+            return JsonResponse(model_to_dict(collected_data))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class CollectedDataDeleteVue(GView):
+    def delete(self, request, *args, **kwargs):
+        result_id = int(self.kwargs.get('id'))
+        result = CollectedData.objects.get(
+            id=int(result_id)
+        )
+        result.delete()
+
+        try:
+            CollectedData.objects.get(id=int(result_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except CollectedData.DoesNotExist:
+
+            return JsonResponse(dict(success=True))
 
 
 class CollectedDataCreate(CreateView):
@@ -785,7 +846,6 @@ class CollectedDataCreate(CreateView):
 
     def form_invalid(self, form):
 
-        print(form.errors)
         messages.error(self.request, 'Invalid Form',
                        fail_silently=False, extra_tags='danger')
 
@@ -878,12 +938,17 @@ class CollectedDataUpdate(UpdateView):
         get_indicator = CollectedData.objects.get(id=self.kwargs['pk'])
 
         try:
-            get_disaggregation_label = DisaggregationLabel.objects.all()\
-                .filter(
-                disaggregation_type__indicator__id=get_indicator.indicator_id)
+            if get_indicator.indicator is not None:
+                get_disaggregation_label = DisaggregationLabel.objects.all()\
+                    .filter(
+                    disaggregation_type__indicator__id=get_indicator.indicator.id)
+            else:
+                get_disaggregation_label = None
+
             get_disaggregation_label_standard = \
                 DisaggregationLabel.objects.all().filter(
                     disaggregation_type__standard=True)
+
         except DisaggregationLabel.DoesNotExist:
             get_disaggregation_label = None
             get_disaggregation_label_standard = None
@@ -938,7 +1003,7 @@ class CollectedDataUpdate(UpdateView):
         get_collected_data = CollectedData.objects.get(id=self.kwargs['pk'])
         get_disaggregation_label = DisaggregationLabel.objects.all()\
             .filter(
-            Q(disaggregation_type__indicator__id=self.request.POST['indicator']) |
+            Q(disaggregation_type__indicator__id=self.request.POST.get('indicator')) |
             Q(disaggregation_type__standard=True)).distinct()
 
         get_indicator = CollectedData.objects.get(id=self.kwargs['pk'])
@@ -980,8 +1045,7 @@ class CollectedDataUpdate(UpdateView):
 
         messages.success(self.request, 'Success, Data Updated!')
 
-        redirect_url = '/indicators/home/0/0/0/#hidden-' + \
-            str(get_indicator.program.id)
+        redirect_url = '/indicators/home/0/0/0/'
         return HttpResponseRedirect(redirect_url)
 
     form_class = CollectedDataForm
@@ -1139,45 +1203,27 @@ def service_json(request, service):
 
 
 def collected_data_json(AjaxableResponseMixin, indicator, program):
-    # TODO : Fix this function (problem with collecteddata
-    #  (commented for which reason ?)
     ind = Indicator.objects.get(pk=indicator)
-    template_name = 'indicators/collected_data_table.html'
 
-    # collecteddata = CollectedData.objects\
-    #     .filter(indicator=indicator)\
-    #     .select_related('indicator')\
-    #     .prefetch_related('evidence', 'periodic_target',
-    #       'disaggregation_value')\
-    #     .order_by('periodic_target__customsort', 'date_collected')
-
-    periodictargets = PeriodicTarget.objects.filter(
+    periodic_targets = PeriodicTarget.objects.filter(
         indicator=indicator).prefetch_related('collecteddata_set')\
         .order_by('customsort')
-    collecteddata_without_periodictargets = CollectedData.objects.filter(
-        indicator=indicator, periodic_target__isnull=True)
 
-    # detail_url = ''
-    # try:
-    #     for data in collecteddata:
-    #         if data.activity_table:
-    #             data.activity_table.detail_url = const_table_det_url(
-    #                 str(data.activity_table.url))
-    # except Exception as e:
-    #     pass
+    collected_data_without_periodic_targets = CollectedData.objects.filter(
+        indicator=indicator, periodic_target__isnull=True)
 
     collected_sum = CollectedData.objects\
         .select_related('periodic_target')\
         .filter(indicator=indicator)\
         .aggregate(Sum('periodic_target__target'), Sum('achieved'))
 
-    return render_to_response(template_name, {
-        'periodictargets': periodictargets,
-        'collecteddata_without_periodictargets':
-            collecteddata_without_periodictargets,
+    return JsonResponse({
+        'periodictargets': PeriodicTargetSerializer(periodic_targets, many=True).data,
+        'collecteddata_without_periodictargets': CollectedDataSerializer(collected_data_without_periodic_targets, many=True).data,
         'collected_sum': collected_sum,
-        'indicator': ind,
-        'program_id': program})
+        'indicator': IndicatorSerializer(ind).data,
+        'program_id': program
+    })
 
 
 def program_indicators_json(AjaxableResponseMixin, program, indicator, type):
@@ -1969,6 +2015,8 @@ def add_indicator(request):
     return HttpResponse({'success': True})
 
 
+# Objectives
+
 def objectives_list(request):
     if request.method == 'POST':
         data = request.POST
@@ -2007,20 +2055,37 @@ def objectives_tree(request):
     get_all_objectives = Objective.objects.filter(
         program__organization=request.user.activity_user.organization)
 
-    objectives_as_json = [{'id': 0, 'name': 'Strategic Objectives'}]
+    objectives_as_json = {
+        '0': {
+            'name': 'Strategic Objectives',
+            'children': []
+        }
+    }
+
+    get_programs = Program.objects.all().filter(
+        organization=request.user.activity_user.organization).distinct()
 
     for objective in get_all_objectives:
-        data = {'id': objective.id, 'name': objective.name}
+        data = {'name': objective.name, 'program': objective.program.name, 'children': []}
+
+        if str(objective.id) not in objectives_as_json:
+            objectives_as_json[str(objective.id)] = data
 
         if objective.parent is None:
-            data['parent'] = 0
+            objectives_as_json['0']['children'].append(objective.id)
         else:
-            data['parent'] = objective.parent.id
-
-        objectives_as_json.append(data)
+            if str(objective.parent.id) not in objectives_as_json:
+                objectives_as_json[str(objective.parent.id)] = {
+                    'name': objective.parent.name,
+                    'program': objective.parent.program.name,
+                    'children': [objective.id]
+                }
+            else:
+                objectives_as_json[str(objective.parent.id)]['children'].append(objective.id)
 
     context = {'get_all_objectives': get_all_objectives,
-               'objectives_as_json': objectives_as_json}
+               'objectives_as_json': objectives_as_json,
+               'get_programs': get_programs}
 
     return render(request, 'components/objectives-tree.html', context)
 
@@ -2044,75 +2109,319 @@ class StrategicObjectiveUpdateView(UpdateView):
         context['current_objective'] = self.get_object()
         return context
 
-
-class ObjectiveUpdateView(UpdateView):
-    model = Objective
-    template_name_suffix = '_update_form'
-    success_url = '/indicators/objectives'
-    form_class = ObjectiveForm
-
-    # add the request to the kwargs
-    def get_form_kwargs(self):
-        kwargs = super(ObjectiveUpdateView, self).get_form_kwargs()
-        kwargs['request'] = self.request
-        kwargs['current_objective'] = self.get_object()
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super(ObjectiveUpdateView, self).get_context_data(**kwargs)
-        context['current_objective'] = self.get_object()
-        context['active'] = ['indicators']
-        return context
-
-
-def objective_delete(request, pk):
+"""
+Objectives views Vue.js
+"""
+class ObjectiveList(GView):
     """
-    Delete strategic objective
-    :param request:
-    :param pk:
-    :return:
+    View to fetch objectives
     """
-    objective = StrategicObjective.objects.get(pk=int(pk))
-    objective.delete()
-    return redirect('/workflow/objectives')
+    def get(self, request):
+
+        user = ActivityUser.objects.filter(user=request.user).first()
+        programs_list = Program.objects.filter(organization=user.organization).values()
+        objectives = Objective.objects.filter(program__organization=request.user.activity_user.organization).values()
+        if objectives or programs_list:
+            return JsonResponse(
+                dict(
+                    objectives=list(objectives),
+                    programs_list=list(programs_list)
+                ),
+                safe=False
+            )
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+class ObjectiveCreate(GView):
+    """
+    View to create Objective and return Json response
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        objective = Objective(
+            name=data.get('name'),
+            description=data.get('description'),
+            program_id=int(data.get('program_id')),
+            parent_id=int(data.get('parent_id')) if data.get('parent_id') else None
+        )
+        objective.save()
+        obj = model_to_dict(objective)
+        obj['program_id'] = obj.pop('program')
+        obj['parent_id'] = obj.pop('parent')
+
+        if objective:
+            return JsonResponse(obj)
+        else:
+            return JsonResponse(dict(error='Failed'))
 
 
-class LevelListView(ListView):
-    """Veiw class to get a list of levels"""
+class ObjectiveUpdate(GView):
+    """
+    View to Update Objective and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        objective_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        objective_name = data.get('name')
+        objective_description = data.get('description')
+        objective_parent = int(data.get('parent_id')) if data.get('parent_id') else None
+        objective_program = int(data.get('program_id'))
 
-    def get(self, request, *args, **kwargs):
-        get_all_levels = Level.objects.all()
-        context = {
-            'get_all_levels': get_all_levels,
-            'active': ['indicators'],
-        }
-        return render(request, 'components/levels.html', context)
+        objective = Objective.objects.get(
+            id=objective_id
+        )
+        objective.name = objective_name
+        objective.description = objective_description
+        objective.program_id = objective_program
+        objective.parent_id = objective_parent
+        objective.save()
 
- 
-class LevelCreateView(CreateView):
-    """Veiw class to create a level"""
-    model = Level
-    template_name = 'components/modal/add_level_modal.html'
+        obj = model_to_dict(objective)
+        obj['program_id'] = obj.pop('program')
+        obj['parent_id'] = obj.pop('parent')
 
-    def post(self, request, *args, **kwargs):
-        data = request.POST
+        if objective:
+            return JsonResponse(obj)
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class ObjectiveDelete(GView):
+    """
+    View to Delete Objective and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        objective_id = int(self.kwargs.get('id'))
+        objective = Objective.objects.get(
+            id=int(objective_id)
+        )
+        objective.delete()
+
+        try:
+            Objective.objects.get(id=int(objective_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except Objective.DoesNotExist:
+            return JsonResponse(dict(success=True))
+
+
+# class ObjectiveUpdateView(UpdateView):
+#     model = Objective
+#     template_name_suffix = '_update_form'
+#     success_url = '/indicators/objectives'
+#     form_class = ObjectiveForm
+
+#     # add the request to the kwargs
+#     def get_form_kwargs(self):
+#         kwargs = super(ObjectiveUpdateView, self).get_form_kwargs()
+#         kwargs['request'] = self.request
+#         kwargs['current_objective'] = self.get_object()
+#         return kwargs
+
+#     def get_context_data(self, **kwargs):
+#         context = super(ObjectiveUpdateView, self).get_context_data(**kwargs)
+#         context['current_objective'] = self.get_object()
+#         context['active'] = ['indicators']
+#         return context
+
+
+# def objective_delete(request, pk):
+#     """
+#     Delete strategic objective
+#     :param request:
+#     :param pk:
+#     :return:
+#     """
+#     objective = Objective.objects.get(pk=int(pk))
+#     objective.delete()
+#     return redirect('/indicators/objectives')
+
+
+# Vue.js Views
+"""
+DataCollectionFrequency views
+"""
+
+
+class DataCollectionFrequencyCreate(GView):
+    """
+    View to create DataCollectionFrequency and return Json response
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
+
+        frequency_name = data.get('frequency')
+        frequency_description = data.get('description')
+        collection_frequency = DataCollectionFrequency.objects.create(
+            frequency=frequency_name,
+            description=frequency_description,
+            organization=organization
+        )
+
+        if collection_frequency:
+            return JsonResponse(model_to_dict(collection_frequency))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class DataCollectionFrequencyList(GView):
+    """
+    View to create DataCollectionFrequency and return Json response
+    """
+    def get(self, request):
+
+        organization = request.user.activity_user.organization
+
+        try:
+            frequencies = DataCollectionFrequency.objects.filter(organization=organization).values()
+            return JsonResponse(list(frequencies), safe=False)
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
+
+
+class DataCollectionFrequencyUpdate(GView):
+    """
+    View to Update DataCollectionFrequency and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        frequency_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
+        frequency = data.get('frequency')
+        description = data.get('description')
+        collection_frequency = DataCollectionFrequency.objects.get(
+            id=frequency_id
+        )
+
+        collection_frequency.frequency = frequency
+        collection_frequency.description = description
+        collection_frequency.organization = organization
+        collection_frequency.save()
+
+        if collection_frequency:
+            return JsonResponse(model_to_dict(collection_frequency))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class DataCollectionFrequencyDelete(GView):
+    """
+    View to Delete DataCollectionFrequency and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        frequency_id = int(self.kwargs.get('id'))
+        frequency = DataCollectionFrequency.objects.get(
+            id=int(frequency_id)
+        )
+        frequency.delete()
+
+        try:
+            DataCollectionFrequency.objects.get(id=int(frequency_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except DataCollectionFrequency.DoesNotExist:
+
+            return JsonResponse(dict(success=True))
+
+
+"""
+Level views
+"""
+
+
+class LevelCreate(CreateView):
+    """
+    create Level View
+    """
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+
         level = Level(
-            name=data.get('level_name'),
-            description=data.get('description')
+            name=data.get('name'),
+            description=data.get('description'),
+            sort=data.get('sort')
         )
         level.save()
-        if (data.get('saveLevelAndNew')):
-            return HttpResponseRedirect('/indicators/levels?quick-action=true')
-        return HttpResponseRedirect('/indicators/levels')
 
-class LevelUpdateView(UpdateView):
-    model = Level
-    form_class = LevelForm
-    template_name_suffix = '_update_form'
+        if level:
+            return JsonResponse(model_to_dict(level))
+        else:
+            return JsonResponse(dict(error='Failed'))
 
-def level_delete(request, pk):
-    """View to delete a level"""
-    level = Level.objects.get(pk=int(pk))
-    level.delete()
-    return redirect('/indicators/levels')
 
+class LevelList(GView):
+    """
+    View to fetch levels
+    """
+    def get(self, request):
+
+        levels = Level.objects.values()
+        if levels:
+            return JsonResponse(list(levels), safe=False)
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class LevelUpdate(GView):
+    """
+    View to Update Level and return Json response
+    """
+    def put(self, request, *args, **kwargs):
+        level_id = int(self.kwargs.get('id'))
+        data = json.loads(request.body.decode('utf-8'))
+        level_name = data.get('name')
+        level_description = data.get('description')
+        level_sort = data.get('sort')
+        level = Level.objects.get(
+            id=level_id
+        )
+
+        level.name = level_name
+        level.description = level_description
+        level.sort = level_sort
+        level.save()
+
+        if level:
+            return JsonResponse(model_to_dict(level))
+        else:
+            return JsonResponse(dict(error='Failed'))
+
+
+class LevelDelete(GView):
+    """
+    View to Delete Level and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        level_id = int(self.kwargs.get('id'))
+        level = Level.objects.get(
+            id=int(level_id)
+        )
+        level.delete()
+
+        try:
+            Level.objects.get(id=int(level_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except Level.DoesNotExist:
+            return JsonResponse(dict(success=True))
+
+
+"""
+Indicator Type views
+"""
+
+
+class IndicatorTypeView(generics.ListCreateAPIView,
+                        generics.RetrieveUpdateDestroyAPIView):
+    queryset = IndicatorType.objects.all()
+    serializer_class = IndicatorTypeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return IndicatorType.objects.filter(organization=organization)

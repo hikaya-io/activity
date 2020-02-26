@@ -1,0 +1,101 @@
+<form id="addCollectedDataForm">
+    {% csrf_token %}
+    <div class="modal-body">
+        <div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <div class="form-group" id="div_periodic_target">
+                        <label for="id_periodic_target">Target period*</label>
+                        <select 
+                            name="target period"
+                            id="id_periodic_target"
+                            :class="{ 
+                                'form-control': true, 
+                              }"
+                            style="width:200px;"
+                            @change=setTarget($event)
+                            v-model="period" 
+                            v-validate="'required'">
+                            <option value="" disabled>Select target period</option>
+                            <option v-for="target in targets" :value="target.id">
+                                    [[target.text]]
+                            </option>
+                        </select>
+                        <span v-show="errors.has('target period')" class="help is-danger">[[ errors.first('target period') ]]</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <div class="form-group" id="div_date_collected">
+                        <label for="dateCollected">Date collected</label>
+                        <input
+                        type="date"
+                        id="dateCollected"
+                        name="dateCollected"
+                        :class="{ 
+                            'form-control': true, 
+                          }"
+                        style="width:200px;"
+                        v-model="date_collected" 
+                        placeholder="Enter date collected"/>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="id_target">Target value</label>
+                        <input
+                        type="number"
+                        id="id_target"
+                        name="target"
+                        :class="{ 
+                            'form-control': true,  
+                          }"
+                        style="width:200px;"
+                        v-model="target" 
+                        readonly>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <div class="form-group" id="div_actual_value">
+                        <label for="id_actual">Actual value*</label>
+                        <input 
+                            type="number"
+                            name="actual value"
+                            id="id_actual"
+                            style="width:200px;"
+                            :class="{ 
+                                'form-control': true, 
+                                'is-danger': errors.has('actual value') 
+                              }"
+                            v-model="actual" 
+                            v-validate="'required'">
+                        <span v-show="errors.has('actual value')" class="help is-danger">[[ errors.first('actual value') ]]</span>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-8 col">
+                    <div class="form-group" id="div_evidence">
+                        <label for="id_evidence">Evidence</label>
+                        <select
+                        name="evidence"
+                        id="id_evidence"
+                        :class="{
+                            'form-control': true
+                        }"
+                        style="min-width:380px;"
+                        v-model="documentation">
+                            {% for document in get_documentation %} {% if document.name %}
+                            <option :value="{{ document.id }}">{{ document.name }}</option>
+                            {% endif %} {% endfor %}
+                        </select>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

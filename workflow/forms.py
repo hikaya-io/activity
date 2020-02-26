@@ -20,7 +20,9 @@ from .models import (
     Benchmarks, Budget, Office, ChecklistItem, Province, Stakeholder,
     ActivityUser, Contact, Sector, Country, ProfileType,
 )
-from indicators.models import CollectedData, Indicator, PeriodicTarget
+from indicators.models import (
+    CollectedData, Indicator, PeriodicTarget,
+)
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
 from activity.util import get_country
 
@@ -176,7 +178,7 @@ class ProjectAgreementForm(forms.ModelForm):
     effect_or_impact = forms.CharField(
         help_text="Please do not include outputs and keep less than 120 "
                   "words. Describe the logic that will link this "
-                  "project/activity to the proposed desired outcome/goal. "
+                  "project/Activity to the proposed desired outcome/goal. "
                   "Note any assumptions that are critical in this logic "
                   "chain.", widget=forms.Textarea,
         required=False)
@@ -264,6 +266,7 @@ class ProjectAgreementForm(forms.ModelForm):
                 ('rejected', 'rejected'),
 
             )
+
             self.fields['approval'].choices = APPROVALS
             # self.fields['approved_by'].widget.attrs['disabled'] = "disabled"
             self.fields['approval_remarks'].widget.attrs[
@@ -271,7 +274,7 @@ class ProjectAgreementForm(forms.ModelForm):
             self.fields[
                 'approval'].help_text = "Approval level permissions required"
             self.fields['approved_by'].queryset = ActivityUser.objects.filter(
-                organization=self.request.user.activity_user.organization).distinct()           
+                organization=self.request.user.activity_user.organization).distinct()
 
 
 class ProjectAgreementSimpleForm(forms.ModelForm):
@@ -360,16 +363,15 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
             status=True
         )
         self.fields['program'].label = '{}'.format(
-            self.request.user.activity_user.organization.level_1_label) 
+            self.request.user.activity_user.organization.level_1_label)
         self.fields['project_name'].label = '{} Name'.format(
-            self.request.user.activity_user.organization.level_2_label) 
+            self.request.user.activity_user.organization.level_2_label)
         self.fields['activity_code'].label = '{} Code'.format(
-            self.request.user.activity_user.organization.level_2_label) 
+            self.request.user.activity_user.organization.level_2_label)
         self.fields['total_estimated_budget'].label = 'Total {} Budget'.format(
-            self.request.user.activity_user.organization.level_2_label) 
+            self.request.user.activity_user.organization.level_2_label)
         self.fields['approval'].label = '{} Status'.format(
             self.request.user.activity_user.organization.level_2_label)
-
 
         # override the stakeholder queryset to use request.user for country
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
@@ -377,9 +379,11 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
 
         if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
+            # Status field for new project initiation form
             APPROVALS = (
                 ('in progress', 'in progress'),
                 ('awaiting approval', 'awaiting approval'),
+                ('approved', 'approved'),
                 ('rejected', 'rejected'),
                 ('new', 'new')
             )
@@ -1153,11 +1157,11 @@ class SiteProfileQuickEntryForm(forms.ModelForm):
 
 
 class SiteProfileForm(forms.ModelForm):
-    map = forms.CharField()
+    map = forms.CharField(required=False)
 
     class Meta:
         model = SiteProfile
-        exclude = ['create_date', 'edit_date']
+        exclude = ['create_date', 'edit_date', 'organizations']
 
     date_of_firstcontact = forms.DateField(
         widget=DatePicker.DateInput(), required=False)
@@ -1191,12 +1195,6 @@ class SiteProfileForm(forms.ModelForm):
                     Fieldset('Description',
                              'name', 'type', 'office', 'status',
                              ),
-                    Fieldset('Contact Info',
-                             'contact_leader', 'date_of_firstcontact',
-                             'contact_number', 'num_members',
-                             ),
-                    ),
-                Tab('Location',
                     Fieldset('Places',
                              'country', 'province', 'district',
                              'admin_level_three', 'village',
@@ -1204,9 +1202,13 @@ class SiteProfileForm(forms.ModelForm):
                              Field('longitude', step="any"),
                              ),
                     Fieldset('Map',
-                                 Row(
-                                    'map'
-                                 )
+                             HTML("""<div id="div_id_map"></div>"""),
+                             ),
+                    ),
+                Tab('Contact',
+                    Fieldset('Contact Info',
+                             'contact_leader', 'date_of_firstcontact',
+                             'contact_number', 'num_members',
                              ),
                     ),
                 Tab('Demographic Information',
@@ -1237,8 +1239,8 @@ class SiteProfileForm(forms.ModelForm):
 
             ),
             FormActions(
-                Reset('reset', 'Close', css_class='btn-close'),
-                Submit('submit', 'Save', css_class='btn-default')
+                Reset('reset', 'Cancel', css_class='btn-md btn-close'),
+                Submit('submit', 'Save', css_class='btn-md btn-success')
             ),
 
             HTML("""
@@ -1285,6 +1287,28 @@ class SiteProfileForm(forms.ModelForm):
             country__in=countries).distinct()
         self.fields['filled_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
+        self.fields['map'].widget = HiddenInput()
+
+
+class ProfileTypeForm(forms.ModelForm):
+    class Meta:
+        model = ProfileType
+        exclude = ('create_date', 'edit_date')
+
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.form_tag = True
+        self.helper.layout = Layout(
+            Row(
+                Column('profile', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+            Reset('reset', 'Cancel', css_class='btn-md btn-close'),
+            Submit('submit', 'Save', css_class='btn-md btn-success'),
+        )
+        super(ProfileTypeForm, self).__init__(*args, **kwargs)
 
 
 class DocumentationForm(forms.ModelForm):
@@ -1313,8 +1337,8 @@ class DocumentationForm(forms.ModelForm):
                 Column('project', css_class='form-group col-md-6 mb-0'),
                 css_class="form-row"
             ),
-            Reset('reset', 'Close', css_class='btn-md btn-close'),
-            Submit('submit', 'Save Changes', css_class='btn-md btn-success')
+            Reset('reset', 'Cancel', css_class='btn-md btn-close'),
+            Submit('submit', 'Save', css_class='btn-md btn-success')
 
         )
 
@@ -1506,8 +1530,8 @@ class ContactForm(forms.ModelForm):
             ),
 
             'address',
-            Reset('reset', 'Close', css_class='btn btn-md btn-close'),
-            Submit('submit', 'Save Changes',
+            Reset('reset', 'Cancel', css_class='btn btn-md btn-close'),
+            Submit('submit', 'Save',
                    css_class='btn btn-md btn-success'),
         )
 
@@ -1540,7 +1564,7 @@ class StakeholderForm(forms.ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
         self.helper.add_input(
-            Reset('reset', 'Close', css_class='btn-close')),
+            Reset('reset', 'Cancel', css_class='btn-close')),
         self.helper.add_input(
             Submit('submit', 'Save', css_class='btn-success')),
 
@@ -1555,10 +1579,10 @@ class StakeholderForm(forms.ModelForm):
                         'type',
                         'contact',
                         HTML("""
-                                <a 
-                                    role="button" 
+                                <a
+                                    role="button"
                                     class="btn btn-sm btn-default"
-                                    href="" data-toggle="modal" 
+                                    href="" data-toggle="modal"
                                     data-target="#addContactModal"
                                     >
                                     <i class="fa fa-plus"></i>&nbsp;&nbsp;Contact</a>

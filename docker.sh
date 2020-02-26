@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### It dockerizes automatically ###
-cd /home/Activity-CE
+cd /home/activity
 git stash
 git pull origin master
 

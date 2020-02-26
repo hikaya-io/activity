@@ -122,14 +122,14 @@ urlpatterns = [  # rest framework
     path('formlibrary/', include('formlibrary.urls')),
     # local login
     path('login/', authviews.LoginView.as_view(), name='login'),
-    path('accounts/login/', views.user_login, name='login'),
+    path('accounts/login/', views.UserLogin.as_view(), name='login'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/logout/', views.logout_view, name='logout'),
     # register
     path('accounts/register/user/<slug:invite_uuid>/', views.register, name='register'),
     path('accounts/join/organization/<slug:invite_uuid>/', views.invite_existing_user,
          name='join_organization'),
-    path('accounts/register/organization', views.register_organization,
+    path('accounts/register/organization', views.RegisterOrganization.as_view(),
          name='register_organization'),
 
     # password reset
@@ -158,8 +158,19 @@ urlpatterns = [  # rest framework
     path('accounts/admin/users/invitations/list/<slug:organization>/', views.admin_user_invitations,
          name='admin_user_invitations'),
     path('accounts/admin/invitations/', UserInviteView.as_view(), name='user_invitations'),
+    path('accounts/admin/workflow_settings', views.admin_workflow_settings,
+         name="admin_workflow_settings"),
+     path('accounts/admin/indicator_settings', views.admin_indicator_settings,
+         name="admin_indicator_settings"),
+     path('accounts/admin/form_library_settings', views.admin_form_library_settings,
+         name="admin_form_library_settings"),
     path('accounts/admin/component_admin', views.admin_component_admin,
          name="admin_component_admin"),
+    path(
+        'accounts/admin/indicator_configs_admin',
+        views.admin_indicator_config,
+        name='indicator_configs_admin'
+    ),
 
     # bookmarks
     path('bookmark_list', BookmarkList.as_view(),

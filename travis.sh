@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#### This script checks the build status. If it has passed then it runs Docker in the activity server. If it has failed, then it exists ####
+#### This script checks the build status. If it has passed then it runs Docker in the Activity server. If it has failed, then it exists ####
 
 echo about to Push
 git push origin master

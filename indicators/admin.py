@@ -175,8 +175,11 @@ class ObjectiveAdmin(admin.ModelAdmin):
 
 @admin.register(Level)
 class LevelAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'sort')
     display = 'Levels'
+
+
+LevelAdmin.ordering = ('sort', 'id')
 
 
 @admin.register(IndicatorType)

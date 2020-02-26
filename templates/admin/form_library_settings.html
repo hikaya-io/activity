@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+	{% block breadcrumbs %}
+	<ul class="breadcrumb">
+		<li><a href="{% url 'admin_profile_settings' %}">Organization Settings</a></li>
+		<li class="active">Form Library</li>
+	</ul>
+	{% endblock %}
+
+	<!-- Sub navigation -->
+	<div class="sub-navigation">
+		<div class="sub-navigation-header">
+			<h4 class="page-title">Form Library Settings</h4>
+		</div>
+	</div>
+
+	<div class="bg-white p-10 pt-0">
+		<div class="mb-15">
+			{% include 'admin/sections/side-nav.html' %}
+		</div>
+        <div class="coming-soon-container">
+            {% include '../comingsoon.html' %}
+        </div>
+	</div>
+</div>
+<script>
+	$('#reset-config-form').click(() => {
+		document.location.href = '/accounts/admin/profile_settings'
+	})
+</script>
+{% block extra_js_in_body %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/admin.js"></script>
+{% endblock %}
+{% endblock content %}

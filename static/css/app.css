@@ -12,7 +12,7 @@ body {
   height: 100%;
   margin-bottom: 60px;
   font-family: "Lato", system-ui, sans-serif !important;
-  background-color: #f5f5f5;
+  background-color: #fafafa;
   font-size: 14px;
   color: #737581;
   font-weight: 400;
@@ -24,8 +24,8 @@ body {
   width: 100%;
   /* Set the fixed height of the footer here */
   height: 40px;
-  border-top: 1px solid #f6f6f6;
-  background-color: #f5f5f5;
+  border-top: 1px solid #fafafa;
+  background-color: #fafafa;
   vertical-align: top;
   color: rgb(50, 50, 50);
 }
@@ -53,7 +53,7 @@ button:focus,
   margin-top: 12px;
   margin-bottom: 8px;
   list-style: none;
-  background-color: #f5f5f5;
+  background-color: #fafafa;
   border-radius: 4px;
   padding: 8px 8px 8px 0px;
 }
@@ -123,12 +123,19 @@ button:focus,
 
 .dropdown-menu > .active > a {
   color: #25ced1;
-  background: #d3f5f5;
+  background: #EFFBFB;
 }
 
 .dropdown-menu > .active > a:hover {
   color: #25ced1;
-  background: #d3f5f5;
+  background: #EFFBFB;
+  border-color: #e1e1e1;
+}
+
+.dropdown-menu > .active > a:focus {
+  color: #25ced1;
+  background: #EFFBFB;
+  border-color: #e1e1e1;
 }
 
 #user-initial {
@@ -235,7 +242,7 @@ nav>div>.container {
 .filter {
   padding: 3px;
   color: #000000;
-  background-color: #f5f5f5;
+  background-color: #fafafa;
   border-color: #808080;
   border-radius: 0.5px;
 }
@@ -300,9 +307,9 @@ nav>div>.container {
 .close.active,
 .open > .dropdown-toggle.close {
   color: #25ced1;
-  background-color: #d3f5f5;
+  background-color: #EFFBFB;
   background-image: none;
-  border-color: #d3f5f5;
+  border-color: #EFFBFB;
 }
 
 .close:active:hover,
@@ -315,8 +322,8 @@ nav>div>.container {
 .close.active.focus,
 .open > .dropdown-toggle.close.focus {
   color: #25ced1;
-  background-color: #d3f5f5;
-  border-color: #d3f5f5;
+  background-color: #EFFBFB;
+  border-color: #EFFBFB;
   box-shadow: none;
 }
 
@@ -537,7 +544,7 @@ select.listoption_filters {
   padding-right: 0px;
   margin-bottom: 0px;
   margin-top: 1px;
-  background-color: #f5f5f5;
+  background-color: #fafafa;
 }
 
 .periodic-target,
@@ -729,29 +736,34 @@ input[type="number"]::-webkit-outer-spin-button {
   color: #ffffff;
   background-color: #25ced1;
   border-color: #25ced1;
+  border-radius: 0.2rem;
 }
 
 .btn-info {
   background-color: #fe5f55;
   border-color: #fe5f55;
+  border-radius: 0.2rem;
 }
 
 .btn-success {
   background-color: #25ced1;
   border-color: #25ced1;
   margin-left: 5px;
+  border-radius: 0.2rem;
 }
 
 .btn-danger {
   background-color: #e52c2c;
   border-color: #e52c2c;
   margin-left: 5px;
+  border-radius: 0.2rem;
 }
 
 .btn-warning {
   background-color: #f9c80e;
   border-color: #f9c80e;
   margin-left: 5px;
+  border-radius: 0.2rem;
 }
 
 .table > tbody > tr:last-child > td {
@@ -760,6 +772,11 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .table > tbody > tr > td {
   vertical-align: middle;
+}
+
+/* removes the additional row border from the first row on the data table  */
+.table > tbody > tr:nth-child(1) > td {
+  border-top: none !important;
 }
 
 /* Fix known issue when showing placeholder for select multiple */
@@ -828,7 +845,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .box {
-  border: 1px solid #f5f5f5;
+  border: 1px solid #fafafa;
   padding: 5px;
   margin-bottom: 10px;
   height: max-content;
@@ -838,7 +855,7 @@ input[type="number"]::-webkit-outer-spin-button {
   user-select: none;
   -ms-touch-action: manipulation;
   touch-action: manipulation;
-  background-color: #f5f5f5;
+  background-color: #fafafa;
 }
 
 .box :last-child {
@@ -876,7 +893,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .box-info:hover {
   background-color: #25ced1;
-  color: #f5f5f5;
+  color: #fafafa;
   text-decoration: none;
   border: 1px solid #25ced1;
 }
@@ -898,7 +915,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .panel-dashboard {
   border: none;
-  border-bottom: 2px solid #f5f5f5;
+  border-bottom: 2px solid #fafafa;
 }
 
 .panel-dashboard .panel-title {
@@ -913,7 +930,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .row-charts .chart {
-  background-color: #f5f5f5;
+  background-color: #fafafa;
   flex: 1;
   padding: 10px;
 }
@@ -1008,7 +1025,7 @@ select[readonly].select2-hidden-accessible
 
 .pagination > .active > a {
   color: #25ced1;
-  background-color: #d3f5f5;
+  background-color: #EFFBFB;
   border-color: #e1e1e1;
 }
 
@@ -1102,6 +1119,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
 
 .btn-default {
   color: #737581;
+  border-radius: 0.2rem;
 }
 
 /* Error Pages*/
@@ -1154,4 +1172,148 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   height: inherit;
   justify-content: flex-end;
   align-items: center;
+}
+
+/* for site model active status button */
+.badge {
+  display: inline-block;
+  min-width: 10px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  color: #2ac27f;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-color: #d8f3e7;
+  border-radius: 10px;
+}
+
+.site-active {
+  color: #2ac27f;
+  background-color: #d8f3e7;
+}
+
+.site-inactive {
+  color: #737581;
+  background-color: #f4f5f7;
+}
+
+.project-status__new {
+  background-color: #f4f5f7;
+  color: #737581
+}
+
+.project-status__in-progress {
+  background-color: #e5d8f5;
+  color: #742dc8
+}
+
+.project-status__awaiting-approval {
+  background-color: #e5d8f5;
+  color: #742dc8
+}
+
+.project-status__rejected {
+  background-color: #fad8d8;
+  color: #e52c2c
+}
+
+.project-status__approved {
+  background-color: #d8f3e7;
+  color: #2ac27f
+}
+
+.force-link {
+  cursor: pointer;
+}
+
+/* style for main navigation bar */
+.navbar-default .navbar-nav>li>a:disabled {
+  color: #25ced1;
+  background-color: #EFFBFB;
+  border-color: #EFFBFB;
+}
+
+.navbar-default .navbar-nav .dropdown.open a.dropdown-toggle {
+  color: #25ced1;
+  background-color: #EFFBFB;
+  border-color: #EFFBFB;
+  border-bottom: 2px solid #25ced1;
+}
+
+.navbar-default .navbar-nav .dropdown {
+  color: #737581;
+  background-color: transparent;
+}
+
+.navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+  color: #25ced1;
+  background-color: #EFFBFB;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+  color: #25ced1;
+  background-color: #EFFBFB;
+  border-color: #EFFBFB;
+  border-bottom: 2px solid #25ced1;
+}
+
+/* modifiying dropdown select in django forms - ovverrides select2-bootstrap-theme*/
+.select2-container--bootstrap .select2-results__option--highlighted[aria-selected] {
+  color: #25ced1;
+  background-color: #EFFBFB;
+  border-color: #EFFBFB;
+}
+
+.select2-container--bootstrap .select2-dropdown {
+  -webkit-box-shadow: 0 6px 12px #e1e1e1;
+  box-shadow: 0 6px 12px #e1e1e1;
+  border-color: #e1e1e1;
+  overflow-x: hidden;
+  margin-top: -1px;
+}
+
+.select2-container--bootstrap.select2-container--focus .select2-selection, .select2-container--bootstrap.select2-container--open .select2-selection {
+  -webkit-box-shadow: inset 0 1px 1px #e1e1e1, 0 0 8px #e1e1e1;
+  box-shadow: inset 0 1px 1px #e1e1e1, 0 0 8px #e1e1e1;
+  -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  border-color: #e1e1e1;
+}
+
+/* overrides the bootstrap blue glow on all input fields */
+input[type="text"],
+input[type="number"], 
+input[type="password"],
+textarea {
+  outline: none;
+  box-shadow:none !important;
+  border:1px solid #ccc !important;
+  }
+
+input[type="text"]:focus,
+input[type="number"]:focus, 
+input[type="password"]:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: inset 0 1px 1px #e1e1e1, 0 0 8px #e1e1e1 !important;
+  border:1px solid #ccc !important;
+  }
+
+  /* overrides bootstrap blue glow for old dropdowns - i.e. site profile */
+.form-control:focus {
+  border-color: #e1e1e1;
+  outline: none;
+  -webkit-box-shadow: inset 0 1px 1px #e1e1e1, 0 0 8px #e1e1e1;
+  box-shadow: inset 0 1px 1px #e1e1e1, 0 0 8px #e1e1e1;
+}
+
+
+.modal-body-enter-active, .modal-body-leave-active {
+  transition: opacity .5s;
 }

@@ -1,26 +1,38 @@
-# Activity
+<br/>
+<br/>
+<p align="center">
+  <img src="static/img/activity_primary_color.png" height="45" />
+</p>
+<br/>
+<p align="center">
+  <i>A modern way for nonprofits to manage project activities and indicator results.<br/>Try out Activity using our hosted version at <a href="https://hikaya.io">hikaya.io</a>.</i>
+  <br/>
+  <br/>
+  <img src="static/img/example_app.png" alt="Activity" width="800" />
+</p>
+<p align="center">
+  <a href="https://spectrum.chat/hikaya" rel="nofollow"><img src="https://withspectrum.github.io/badge/badge.svg" alt="Join the community on Spectrum"/></a>
+</p>
 
-We are developing a tool for humanitarians to manage project activities and indicator results across their programs, including approval workflows and reporting and visualizations. Our goal is to help organizations answer common questions such as:
+This is the source code that runs the [**Activity**](https://hikaya.io/index#content4-8) application. If you want to use Activity then you don't need to run this code, we offer a hosted version of the app at [activity.hikaya.app](https://activity.hikaya.app).
 
-- who are funding your projects?
-- who you work with?
-- where you work?
-- how do my outputs align with my overall project goal?
+If you'd like to run your own copy of Activity or contribute to its development then this is the place for you.
 
 <!-- ## Configuration
-Copy the activity/settings/local-sample.py to local.py and modify for your environment.
-
 ## To deploy changes in activity servers
 Once all your changes have been committed to the repo, and before pushing them, run:
 `. travis.sh` -->
 
+<br/>
+<br/>
+
 # Local Setup
 
-Note: you should use python 3 for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
+**Note**: You should use `Python 3.7.5` for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
 
 Open up your terminal and follow the instructions listed below.
 
-See [these instructions for installing known dependencies](#install-non-python-dependencies).
+See [these instructions for addtional information](#extra-information).
 
 ## Clone the github repository
 
@@ -29,16 +41,16 @@ Navigate to the folder you want the repository to be stored in.
 Run the following command:
 
 ```bash
-$ git clone --branch dev https://github.com/hikaya-io/Activity.git
+$ git clone --branch dev https://github.com/hikaya-io/activity.git
 ```
 
 Once cloned, navigate to the cloned repository with:
 
 ```bash
-$ cd Activity
+$ cd activity
 ```
 
-or similar.
+or similar for your OS.
 
 ## Setting up on Virtual Environment
 ### Install virtualenv
@@ -62,11 +74,44 @@ $ virtualenv --no-site-packages <myvirtualenvironmentname>
 $ source <myvirtualenvironmentname>/bin/activate
 ```
 
+for Windows users:
+
+```bash
+$ source <myvirtualenvironmentname>/script/activate
+```
+
 ### Install requirements
 
 ```bash
 $ pip install -r requirements.txt
 ```
+
+### Install non-python dependencies
+
+1. **GDAL**
+
+On MacOs:
+
+```bash
+$ brew install gdal
+```
+
+On Windows:
+- You will need to donwload gdal core and gdal installer for your version of python.
+- Please read the following [instructions](https://pypi.org/project/GDAL/#windows) on how to properly install and test gdal.
+
+2. **Pango**
+
+On MacOs:
+
+```bash
+$ brew install pango
+```
+
+On Windows:
+- You will need Pango and Cairo for the application to run.
+- The runtime installer can be found [here](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases)
+- Download and install GTK+-3. 
 
 ### Create local copy of config file
 
@@ -123,7 +168,8 @@ This will run the server on http://127.0.0.1:8000 (Don't open the link in your b
 
 Once you have created your user account, you need to create an `activity user` that is linked to this user account.
 
-Go to http://127.0.0.1:8000/admin and sign in using your superuser account. Under the `workflow` model, you'll find `activity user`. Create a new activity user making sure you associate your user under the `user` attribute.
+Go to http://127.0.0.1:8000/admin and sign in using your superuser account. Under the `Workflow` model, you'll find `Activity users`. Create a new activity user making sure you associate your user under the `User` attribute.
+
 ### Open the dashboard
 
 Before launching the dashboard on http://127.0.0.1:8000, you need to log out of the admin account first.
@@ -158,7 +204,14 @@ If docker is exiting due to postgres connection issues. Stop your local postgres
 $ docker-compose exec web python manage.py createsuperuser
 ```
 
-navigate to admin, login and create a `activity_user`
+### Create 'Activity users'
+- Before logging in to the application you will need to go to the admin console (http://localhost:8000/admin/).
+- Navigate to `Workflow > Activity users` and add an Activity user.
+- Make to sure to select the superuser name you created earlier.
+
+### Open the dashboard
+- Please make sure to log out of the admin console to avoid `AttributeError`.
+- Go back to the main page to log in and create an organization to access the main dashboard (http://localhost:8000/)
 
 ### To run any other django commands
 ```bash
@@ -166,31 +219,16 @@ $ docker-compose exec web python manage.py [operation]
 ```
 The `operation` in this case can be: `makemigrations`, `migrate`, `collectstatic` etc
 
+<br/>
+<br/>
+
 # Extra information
-
-## Install non-python dependencies
-
-1. **GDAL**
-
-On mac:
-
-```bash
-$ brew install gdal
-```
-
-2. **pango**
-
-On mac:
-
-```bash
-$ brew install pango
-```
 
 ## Postgresql help
 
 ### Install
 
-On mac:
+On MacOS:
 
 ```bash
 $ brew update
@@ -198,6 +236,13 @@ $ brew install postgresql
 $ initdb /usr/local/var/postgres
 $ pg_ctl -D /usr/local/var/postgres start
 $ createdb <mydatabasename>
+```
+On Windows:
+- Download and install the latest stable installer for PostgreSQL
+- You can use the SQL Shell that comes along with the application to run the following commands
+- To create a database run the command
+```bash
+$ create database <mydatabasename>;
 ```
 
 ### Manage
@@ -238,3 +283,9 @@ GRANT ALL ON activity.* TO 'root'@'localhost' IDENTIFIED BY 'root';
 ```
 
 _NB:_ When you use these SQL queries, beware of not writing the quotes.
+
+<br/>
+<br/>
+
+# Contributing
+Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team). We are always looking for a fresh set of :eyes: who want to contribute to **Activity**. Feel free to checkout our [contribution page](./CONTRIBUTING.md) or reach out by creating an issue and we'll help you get started!
