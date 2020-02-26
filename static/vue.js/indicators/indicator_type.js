@@ -68,7 +68,6 @@ new Vue({
 			this.modalHeader = 'Confirm delete';
 			this.itemToDelete = data;
         },
-
         /**
          * Format date
          * @param {string} date - date to be formatted
