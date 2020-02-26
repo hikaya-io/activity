@@ -14,6 +14,7 @@ from .models import (
     ProjectComplete, SiteProfile, Documentation, Benchmarks, Budget, ProfileType,
     ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder, Sector,
     FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
+    Office, Province,
 )
 from formlibrary.models import TrainingAttendance, Distribution
 from indicators.models import CollectedData, ExternalService, Level
@@ -29,6 +30,7 @@ from .forms import (
 
 import pytz
 
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -40,6 +42,8 @@ import requests
 import logging
 
 from django.core import serializers
+from .serializers import OfficeSerializer, StakeholderTypeSerializer
+from rest_framework import generics
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic.detail import View
 from django.forms.models import model_to_dict
@@ -2744,13 +2748,16 @@ class FundCodeCreate(CreateView):
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
         organization = request.user.activity_user.organization
+        try:
+            stakeholder_id = int(data.get('stakeholder'))
+        except (ValueError, TypeError):
+            stakeholder_id = None
         
         fund_code = FundCode(
             name=data.get('name'),
-            stakeholder_id=data.get('stakeholder'),
+            stakeholder_id=stakeholder_id,
             organization=organization
         )
-
         fund_code.save()
         
         if fund_code:
@@ -2758,8 +2765,8 @@ class FundCodeCreate(CreateView):
                 dict(
                     id=fund_code.id,
                     name=fund_code.name,
-                    stakeholder__name=fund_code.stakeholder.name,
-                    stakeholder=fund_code.stakeholder.id
+                    stakeholder__name=fund_code.stakeholder.name if stakeholder_id is not None else '',
+                    stakeholder=fund_code.stakeholder.id if stakeholder_id is not None else None
                 )
             )
         else:
@@ -2799,13 +2806,18 @@ class FundCodeUpdate(GView):
         data = json.loads(request.body.decode('utf-8'))
         organization = request.user.activity_user.organization
         name = data.get('name')
-        stakeholder = data.get('stakeholder')
+        # stakeholder = data.get('stakeholder')
+        try:
+            stakeholder_id = int(data.get('stakeholder'))
+        except (ValueError, TypeError):
+            stakeholder_id = None
+
         fund_code = FundCode.objects.get(
             id=fund_code_id
         )
 
         fund_code.name = name
-        fund_code.stakeholder_id = stakeholder
+        fund_code.stakeholder_id = stakeholder_id
         fund_code.organization = organization
         fund_code.save()
 
@@ -2814,8 +2826,8 @@ class FundCodeUpdate(GView):
                 dict(
                     id=fund_code.id,
                     name=fund_code.name,
-                    stakeholder__name=fund_code.stakeholder.name,
-                    stakeholder=fund_code.stakeholder.id
+                    stakeholder__name=fund_code.stakeholder.name if stakeholder_id is not None else '',
+                    stakeholder=fund_code.stakeholder.id if stakeholder_id is not None else None
                 )
             )
         else:
@@ -2840,3 +2852,37 @@ class FundCodeDelete(GView):
         except FundCode.DoesNotExist:
 
             return JsonResponse(dict(success=True))
+
+
+"""
+Office view
+"""
+class OfficeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = Office.objects.all()
+    serializer_class = OfficeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return Office.objects.filter(organization=organization)
+
+
+"""
+Stakeholder type view
+"""
+class StakeholderTypeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = StakeholderType.objects.all()
+    serializer_class = StakeholderTypeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return StakeholderType.objects.filter(organization=organization)

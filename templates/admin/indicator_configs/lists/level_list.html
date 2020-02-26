@@ -22,7 +22,7 @@
                 role="button"
                 class="btn btn-sm btn-primary"
                 id="show-modal" 
-                @click="showModal = true"
+                @click=toggleModal()
                 >
                 <i class="fa fa-plus"></i> Level
                 </a>
@@ -67,6 +67,7 @@
         <tr>
           <th>Name</th>
           <th>Description</th>
+          <th>Sort</th>
           <th></th>
         </tr>
       </thead>
@@ -81,6 +82,10 @@
           <td>
              [[ level.description ]]
           </td>
+          <td>
+            <span v-if="level.sort">[[ level.sort ]]</span>
+            <span v-if="!level.sort">--</span>
+         </td>
           <td class="text-right">
             <!-- Split button -->
             <div class="btn-group">

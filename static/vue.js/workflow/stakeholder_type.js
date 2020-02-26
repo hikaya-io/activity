@@ -6,27 +6,25 @@ Vue.component('modal', {
 // start app
 new Vue({
 	delimiters: ['[[', ']]'],
-	el: '#level',
+	el: '#stakeholder_type',
 	data: {
 		showModal: false,
 		showDeleteModal: false,
-		levels: [],
+        stakeholderTypes: [],
         name: '',
-		description: '',
-		sort: null,
 		isEdit: false,
-		currentLevel: null,
+		currentStakeholderType: null,
         itemToDelete: null,
 		modalHeader: '',
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/indicators/level/list')
+		this.makeRequest('GET', '/workflow/stakeholder_type/')
 			.then(response => {
 				if (response.data) {
-                    this.levels = response.data.sort((a, b) => b.id - a.id);
-                    this.modalHeader = 'Add Level'; 
+                    this.stakeholderTypes = response.data.sort((a, b) => b.id - a.id);
+                    this.modalHeader = 'Add Stakeholder Type'; 
 					$(document).ready(() => {
-						$('#levelsTable').DataTable({
+						$('#stakeholderTypesTable').DataTable({
                             pageLength: 5,
                             lengthMenu: [5, 10, 15, 20]
 						});
@@ -34,50 +32,38 @@ new Vue({
 				}
 			})
 			.catch(e => {
-				toastr.error('There was a problem loading levels from the database!!');
-				this.levels = [];
+				toastr.error('There was a problem loading stakeholder types from the database');
+				this.stakeholderTypes = [];
 			});
 	},
 	methods: {
         /**
-         * open or close the level form modal
-         * @param { object } item - level item
+         * open or close the stakeholder type form modal
+         * @param { object } item - stakeholder type item
          */
 		toggleModal: function(item = null) {
             this.showModal = !this.showModal;
 			if (item) {
 				this.isEdit = true;
 				this.modalHeader = `Edit ${item.name}`;
-				this.currentLevel = item;
+				this.currentStakeholderType = item;
                 this.name = item.name;
-				this.description = item.description;
-				this.sort = item.sort;
 			} else {
 				this.isEdit = false;
-				this.modalHeader = 'Add Level';
-				this.currentLevel = null;
+				this.modalHeader = 'Add Stakeholder Type';
+				this.currentStakeholderType = null;
                 this.name = null;
-				this.description = null;
-				this.sort = null;
 			}
 		},
 
         /**
-         * open or close the level delete modal
-         * @param { object } data - level item
+         * open or close the stakeholder type delete modal
+         * @param { object } data - stakeholder type item
          */
 		toggleDeleteModal: function(data) {
 			this.showDeleteModal = !this.showDeleteModal;
 			this.modalHeader = 'Confirm delete';
 			this.itemToDelete = data;
-        },
-        
-        /**
-         * Format date
-         * @param {string} date - date to be formatted
-         */
-        formatDate: function(date) {
-            return moment(date, 'YYYY-MM-DDThh:mm:ssZ').format('YYYY-MM-DD');
         },
 
         /**
@@ -87,8 +73,8 @@ new Vue({
 		processForm: function(saveNew = false) {
 			this.$validator.validateAll().then(result => {
 				if (result) {
-					if (this.currentLevel && this.currentLevel.id) {
-						this.updateLevel();
+					if (this.currentStakeholderType && this.currentStakeholderType.id) {
+						this.updateStakeholderType();
 					} else {
 						if (saveNew) {
 							this.postData(saveNew);
@@ -101,30 +87,26 @@ new Vue({
 		},
 
         /**
-         * create new level
+         * create new stakeholder type
          * @param { boolean } saveNew - true if a user wants to make multiple posts
          */
 		async postData(saveNew) {
 			try {
 				const response = await this.makeRequest(
 					'POST',
-					`/indicators/level/add`,
+					`/workflow/stakeholder_type/`,
 					{
                         name: this.name,
-						description: this.description,
-						sort: this.sort
 					}
                 );
 				if (response) {
-                    toastr.success('Level successfuly saved');
-					this.levels.unshift(response.data);
+                    toastr.success('Stakeholder type successfuly saved');
+					this.stakeholderTypes.unshift(response.data);
 					if (!saveNew) {
 						this.toggleModal();
 					}
 					// resetting the form
                     this.name = '';
-					this.description = '';
-					this.sort = null;
 					this.$validator.reset();
 				}
 			} catch (error) {
@@ -133,57 +115,53 @@ new Vue({
 		},
 
         /**
-         * edit Level item
+         * edit stakeholder type item
          */
-		async updateLevel() {
+		async updateStakeholderType() {
 			try {
 				const response = await this.makeRequest(
 					'PUT',
-					`/indicators/level/edit/${this.currentLevel.id}`,
+					`/workflow/stakeholder_type/${this.currentStakeholderType.id}`,
 					{ 
                         name: this.name, 
-						description: this.description,
-						sort: this.sort
                     }
 				);
 				if (response) {
-					toastr.success('Level was successfuly updated');
-					const newLevels = this.levels.filter(item => {
-						return item.id != this.currentLevel.id;
+					toastr.success('Stakeholder Type was successfuly updated');
+					const existingStakeholderTypes = this.stakeholderTypes.filter(item => {
+						return item.id != this.currentStakeholderType.id;
 					});
-					this.levels = newLevels;
-					this.levels.unshift(response.data);
+					this.stakeholderTypes = existingStakeholderTypes;
+					this.stakeholderTypes.unshift(response.data);
 					this.isEdit = false;
-                    this.name = '';
-					this.description = '';
-					this.sort = null;
-					this.currentLevel = null;
-					this.modalHeader = 'Add Level';
+                    this.name = null;
+                    this.currentStakeholderType = null;
+					this.modalHeader = 'Add Stakeholder Type';
 					this.toggleModal();
 				}
 			} catch (e) {
-				toastr.error('There was a problem updating your data!!');
+				toastr.error('There was a problem updating your data');
 			}
 		},
 
         /**
-         * delete level
-         * @param { number } id - id of the level to be deleted
+         * delete stakeholder type
+         * @param { number } id - id of the stakeholder type to be deleted
          */
-		async deleteProfileType(id) {
+		async deleteStakeholderType(id) {
 			try {
 				const response = await this.makeRequest(
 					'DELETE',
-					`/indicators/level/delete/${id}`
+					`/workflow/stakeholder_type/${id}`
 				);
-				if (response.data.success) {
-					toastr.success('Level was successfuly deleted');
-					this.levels = this.levels.filter(item => +item.id !== +id);
+				if (response.status === 204) {
+					toastr.success('Stakeholder Type was successfuly deleted');
+					this.stakeholderTypes = this.stakeholderTypes.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
-					this.modalHeader = 'Add Level';
+					this.modalHeader = 'Add Stakeholder Type';
 					this.itemToDelete = null;
 				} else {
-					toastr.error('There was a problem deleting level!!');
+					toastr.error('There was a problem deleting stakeholder type');
 				}
 			} catch (error) {
 				toastr.error('There was a server error!!');
@@ -206,7 +184,7 @@ new Vue({
 
 	computed: {
         /**
-         * Check if level form is valid
+         * Check if stakeholder type form is valid
          */
 		isFormValid() {
 			return this.name;

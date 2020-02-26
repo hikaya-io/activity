@@ -1,0 +1,27 @@
+<form method="POST">
+  <div class="modal-body">
+    {% csrf_token %}
+    <div
+      :class="{ 
+            'form-group': true, 
+            'has-error': errors.has('name')
+        }"
+    >
+      <label for="name">Stakeholder Type*</label>
+      <input
+        type="text"
+        name="name"
+        :class="{ 
+            'form-control': true, 
+            'is-danger': errors.has('name') 
+        }"
+        v-model="name"
+        v-validate="'required'"
+        placeholder="Name"
+      />
+      <span v-show="errors.has('name')" class="help is-danger"
+        >[[ errors.first('name') ]]</span
+      >
+    </div>
+  </div>
+</form>
