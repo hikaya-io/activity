@@ -2164,8 +2164,8 @@ class ObjectiveUpdate(GView):
         data = json.loads(request.body.decode('utf-8'))
         objective_name = data.get('name')
         objective_description = data.get('description')
-        objective_parent = int(data.get('parent')) if data.get('parent') else None
-        objective_program = int(data.get('program'))
+        objective_parent = int(data.get('parent_id')) if data.get('parent_id') else None
+        objective_program = int(data.get('program_id'))
 
         objective = Objective.objects.get(
             id=objective_id
@@ -2175,8 +2175,13 @@ class ObjectiveUpdate(GView):
         objective.program_id = objective_program
         objective.parent_id = objective_parent
         objective.save()
+
+        obj = model_to_dict(objective)
+        obj['program_id'] = obj.pop('program')
+        obj['parent_id'] = obj.pop('parent')
+
         if objective:
-            return JsonResponse(model_to_dict(objective))
+            return JsonResponse(obj)
         else:
             return JsonResponse(dict(error='Failed'))
 
