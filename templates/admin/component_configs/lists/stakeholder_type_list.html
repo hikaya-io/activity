@@ -1,8 +1,8 @@
-<div id="fund_code">
+<div id="stakeholder_type">
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">Fund Code List</h4>
+      <h4 class="page-title">Stakeholder Type List</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
@@ -13,14 +13,14 @@
             id="show-modal"
             @click="toggleModal()"
           >
-            <i class="fa fa-plus"></i> Fund Code
+            <i class="fa fa-plus"></i> Stakeholder Type
           </a>
         </div>
         <!-- Fund Code create modal -->
         <modal v-if="showModal" @close="showModal = false">
           <h4 slot="header">[[modalHeader]]</h4>
           <div slot="body">
-            {% include 'admin/component_configs/forms/fund_code_form.html' %}
+            {% include 'admin/component_configs/forms/stakeholder_type_form.html' %}
           </div>
           <div slot="footer">
             {% include 'ui-components/quick_entry_modal_footer.html' %}
@@ -44,7 +44,7 @@
               </button>
               <button
                 class="btn btn-danger"
-                @click="deleteProfileType(itemToDelete.id)"
+                @click="deleteStakeholderType(itemToDelete.id)"
               >
                 Delete
               </button>
@@ -57,28 +57,24 @@
   </div>
 
   <!-- Table -->
-  <table class="table" id="fundCodesTable" v-if="fundCodes.length">
+  <table class="table" id="stakeholderTypesTable" v-if="stakeholderTypes.length">
     <thead>
       <tr>
-        <th>Fund Code</th>
-        <th>Stakeholder</th>
+        <th>Name</th>
         <th></th>
       </tr>
     </thead>
 
     <tbody>
-      <tr v-cloak v-for="fundCode in fundCodes" v-if="fundCode.name">
+      <tr v-cloak v-for="stakeholderType in stakeholderTypes" v-if="stakeholderType.name">
         <td>
           <a
-            @click="toggleModal(fundCode)"
+            @click="toggleModal(stakeholderType)"
             data-toggle="tooltip"
-            title="{{ fundCode.name }}"
+            title="{{ stakeholderType.name }}"
           >
-            [[ fundCode.name ]]
+            [[ stakeholderType.name ]]
           </a>
-        </td>
-        <td>
-          [[ fundCode.stakeholder__name ]]
         </td>
         <td class="text-right">
           <!-- Split button -->
@@ -98,12 +94,12 @@
             </button>
             <ul class="dropdown-menu">
               <li>
-                <a class="force-link" @click="toggleModal(fundCode)">Edit</a>
+                <a class="force-link" @click="toggleModal(stakeholderType)">Edit</a>
               </li>
               <li>
                 <a
                   class="text-danger force-link"
-                  @click="toggleDeleteModal(fundCode)"
+                  @click="toggleDeleteModal(stakeholderType)"
                   >Delete</a
                 >
               </li>
@@ -115,5 +111,5 @@
   </table>
 </div>
 {% include 'ui-components/vue_modal.html'%} {% block extra_js_in_body %}
-<script src="{{ STATIC_URL }}vue.js/workflow/fund_code.js"></script>
+<script src="{{ STATIC_URL }}vue.js/workflow/stakeholder_type.js"></script>
 {% endblock extra_js_in_body %}
