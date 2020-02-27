@@ -392,6 +392,7 @@ def set_invite_uuid(invite_uuid):
 
 class UserLogin(View):
     """User login class view"""
+
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('/')
