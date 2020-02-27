@@ -172,6 +172,8 @@ class Organization(models.Model):
         help_text="Image of minimum {} width and {} height, "
                   "maximum of {} ko".format(*tuple(IMAGE_SPEC.values())))
     country_code = models.CharField("2 Letter Country Code", blank=True, null=True, max_length=2)
+    location_description = models.TextField(
+        "Location Description/Notes", max_length=765, null=True, blank=True)
     latitude = models.CharField("Latitude", max_length=255, null=True, blank=True)
     longitude = models.CharField("Longitude", max_length=255, null=True, blank=True)
     zoom = models.IntegerField("Zoom", default=5)
