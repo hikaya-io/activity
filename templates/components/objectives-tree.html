@@ -1,5 +1,6 @@
 {% extends "base.html" %} {% load static %} {% block content %}
 {% include 'ui-components/vue_tree.html' %}
+{% include 'ui-components/vue_modal.html'%}
 
 {{ objectives_as_json|json_script:"objectives-data" }}
 
@@ -59,7 +60,7 @@
             <ul class="dropdown-menu">
               {% for program in get_programs %}
               {% if program.name %}
-              <li class="{% if program_id == program.id %} active {% endif%}" @click="setProgram('{{ program.name }}')">
+              <li class="{% if program_id == program.id %} active {% endif%}" @click="setProgram({{ program.id }},'{{ program.name }}')">
                 <a>{{ program.name | truncatechars:30 }}</a>
               </li>
               {% endif %}
@@ -70,14 +71,22 @@
       </div>
     </div>
   </div>
+  <modal v-if="showModal" @close="showModal = false">
+    <h4 slot="header">[[modalHeader]]</h4>
+    <div slot="body">
+      {% include 'components/modals/objective_form.html' %}
+    </div>
+    <div slot="footer">
+      {% include 'ui-components/quick_entry_modal_footer.html' %}
+    </div>
+  </modal>
   <div v-if="Object.keys(treeData).length" class="text-center">
-    <tree-chart :json="treeData" style="margin: auto"></tree-chart>
+    <tree-chart :json="treeData" style="margin: auto" @add-objective="toggleModal"></tree-chart>
   </div>
   <div class="text-center" v-else><h3>Please select a program.</h3></div>
 </div>
 {% endblock %}
 
-
 {% block extra_js_in_body %}
-<script src="{{ STATIC_URL }}vue.js/objectives_tree.js"></script>
+<script src="{{ STATIC_URL }}vue.js/indicators/objectives_tree.js"></script>
 {% endblock extra_js_in_body %}
