@@ -2862,13 +2862,18 @@ class OfficeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIVi
     serializer_class = OfficeSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        request.data['organization'] = request.user.activity_user.organization.id
-        return self.create(request, *args, **kwargs)
+    def perform_create(self, serializer):
+        serializer.save(organization=self.request.user.activity_user.organization)
 
     def get_queryset(self):
         organization = self.request.user.activity_user.organization.id
         return Office.objects.filter(organization=organization)
+    
+    def update(self, request, *args, **kwargs):
+        if "organization" in self.request.data and not self.request.data['organization']:
+            return JsonResponse(dict(error='Failed'))
+        return super().update(request, *args, **kwargs)
+
 
 
 """
