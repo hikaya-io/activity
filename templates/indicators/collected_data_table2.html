@@ -128,7 +128,7 @@
             <div class="text-right">
                 <button @click="toggleResultModal(); getTargets();"
                          role="button"
-                        class="btn btn-sm btn-success">[[modalHeader]]
+                        class="btn btn-sm btn-success">Add Result
                 </button>
             </div>
         </div>
@@ -163,7 +163,7 @@
         </modal>
         <modal v-if=showDeleteModal @close="showDeleteModal = false">
             <div slot="body">
-              <p>Are you sure you want to delete this result</p>
+              <p>Are you sure you want to delete this result?</p>
             </div>
             <div slot="footer">
               <div class="text-right">
