@@ -98,7 +98,7 @@ urlpatterns = [  # rest framework
 
     # index
     path('dashboard/<int:program_id>/',
-         activityviews.index, name='home_dashboard'),
+         activityviews.IndexView.as_view(), name='home_dashboard'),
 
     # base template for layout
     path('', TemplateView.as_view(template_name='base.html')),
