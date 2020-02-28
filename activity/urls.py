@@ -93,8 +93,7 @@ urlpatterns = [  # rest framework
     # enable the admin:
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
-    path('<slug:selected_countries>/',
-         views.index, name='index'),
+    path('<slug:selected_countries>/', views.IndexView.as_view(), name='index'),
 
     # index
     path('dashboard/<int:program_id>/',
