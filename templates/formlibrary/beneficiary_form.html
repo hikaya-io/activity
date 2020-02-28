@@ -3,8 +3,8 @@
   {% if form.errors %}
   <div class="help-block">
     {% for field in form %} {% for error in field.errors %}
-    <strong><i>{{ field.label }}</i> - {{ error | escape }}</strong>&nbsp; {%
-    endfor %} {% endfor %}
+      <strong><i>{{ field.label }}</i> - {{ error | escape }}</strong>
+    {% endfor %} {% endfor %}
   </div>
   {% for error in form.non_field_errors %}
   <div class="alert alert-error">
@@ -22,8 +22,11 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {% if beneficiary_name %} {{ beneficiary_name }} {% else %} {{
-        form_title }} {% endif%}
+        {% if beneficiary_name %} 
+          {{ beneficiary_name }} 
+        {% else %} 
+          {{ form_title }} 
+        {% endif%}
       </h4>
     </div>
     {% comment %}
