@@ -2336,11 +2336,13 @@ class LevelCreate(CreateView):
     """
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
 
         level = Level(
             name=data.get('name'),
             description=data.get('description'),
-            sort=data.get('sort')
+            sort=data.get('sort'),
+            organization=organization
         )
         level.save()
 
@@ -2356,11 +2358,13 @@ class LevelList(GView):
     """
     def get(self, request):
 
-        levels = Level.objects.values()
-        if levels:
+        organization = request.user.activity_user.organization
+
+        try:
+            levels = Level.objects.filter(organization=organization).values()
             return JsonResponse(list(levels), safe=False)
-        else:
-            return JsonResponse(dict(error='Failed'))
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
 
 
 class LevelUpdate(GView):
@@ -2370,6 +2374,7 @@ class LevelUpdate(GView):
     def put(self, request, *args, **kwargs):
         level_id = int(self.kwargs.get('id'))
         data = json.loads(request.body.decode('utf-8'))
+        organization = request.user.activity_user.organization
         level_name = data.get('name')
         level_description = data.get('description')
         level_sort = data.get('sort')
@@ -2380,6 +2385,7 @@ class LevelUpdate(GView):
         level.name = level_name
         level.description = level_description
         level.sort = level_sort
+        level.organization = organization
         level.save()
 
         if level:
