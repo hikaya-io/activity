@@ -328,42 +328,38 @@ def set_invite_uuid(invite_uuid):
     return invite_uuid
 
 
-class  UserLogin(View):
+class UserLogin(View):
     """User login class view"""
+
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('/')
         return render(request, 'registration/login.html', {'invite_uuid': 'none'})
 
-    def post(self,request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         data = request.POST
         username = data.get('username', None)
         password = data.get('password', None)
         # check if user is active
-        try:
-            get_user = User.objects.get(Q(username=username) | Q(email=username.lower()))
-            if not get_user.is_active:
-                messages.error(
-                    request,
-                    'Please verify your email address then try again.',
-                    fail_silently=True
-                )
-                return render(request, 'registration/login.html')
-        except User.DoesNotExist:
+        user = User.objects.filter(Q(username__iexact=username) | Q(email__iexact=username.lower())).first()
+        if not user:
             return render(request, 'registration/login.html')
+
+        if not user.is_active:
+            messages.error(request, 'Please verify your email address then try again.', fail_silently=True)
+            return render(request, 'registration/login.html')
+
         # proceed to authenticate the user
-        user = authenticate(username=get_user.username, password=password)
-
-        if user is not None:
-            login(request, user)
-            activity_user = ActivityUser.objects.filter(user=user).first()
-            if activity_user.organization:
-                return HttpResponseRedirect('/')
-            else:
-                return HttpResponseRedirect('/accounts/register/organization')
-
-        else:
+        user = authenticate(username__iexact=user.username, password=password)
+        if not user:
             return render(request, 'registration/login.html')
+
+        login(request, user)
+        activity_user = ActivityUser.objects.filter(user=user).first()
+        if activity_user.organization:
+            return HttpResponseRedirect('/')
+
+        return HttpResponseRedirect('/accounts/register/organization')
 
 
 class RegisterOrganization(LoginRequiredMixin, View):
