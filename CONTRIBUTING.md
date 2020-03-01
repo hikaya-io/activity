@@ -27,12 +27,19 @@ Before we get started, here are a few things we expect from you (and that you sh
 - When adding content, please consider if it is widely valuable. Please don't add references or links to things you or your employer have created as others will do so if they appreciate it.
 
 # How to contribute
+All contributors are welcome to submit issues and make pull requests to the repository.
+
   - Look through the [issues](https://github.com/hikaya/activity/issues). 
  
 If you'd like to contribute, start by searching through the [issues](https://github.com/hikaya/activity/issues) and [pull requests](https://github.com/hikaya/activity/pulls) to see whether someone else has raised a similar idea or question. If you see none, feel free to reach out to us on [Spectrum]("https://spectrum.chat/hikaya)
 
   - If you find an issue you would like to work on, feel free to assign it to yourself.
   - If you don't find one you would like to work on, create an issue, assign a label and @mention one of the maintainers to let them know about the issue.
+
+ ## For contributors who want to support this project in the long term
+Long standing contributors will be given `write` access to the repository. In addition, we have slots for contributors to be given `maintainer` status which allows contributors to administer the repository, support the onboarding of new contributors, and influence the product roadmap.
+
+Our current maintainers are: Peter Odeny ([@odenypeter](https://github.com/odenypeter)) and Isaac Kimaiyo ([@Kimaiyo077](https://github.com/kimaiyo077)).
  
 # Our development process
  
