@@ -350,7 +350,7 @@ class UserLogin(View):
             return render(request, 'registration/login.html')
 
         # proceed to authenticate the user
-        user = authenticate(username__iexact=user.username, password=password)
+        user = authenticate(username=user.username, password=password)
         if not user:
             return render(request, 'registration/login.html')
 
