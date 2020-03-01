@@ -86,6 +86,11 @@ new Vue({
     refreshTreeData() {
       this.treeData = this.getChildren('0');
     },
+    insertChild(nodeId, child) {
+      this.origData[nodeId].children.push(child.id)
+      this.origData[`${child.id}`] = {id: child.id, name: child.name, program: this.origData[nodeId].program, children: []}
+      this.refreshTreeData()
+    },
     getChildren(nodeId) {
       const node = this.origData[nodeId];
       if (node.children.length === 0) {
@@ -150,10 +155,10 @@ new Vue({
         );
         if (response) {
           toastr.success('Objective is saved');
+          this.insertChild(this.parent_id, {id: response.data.id, name: response.data.name})
           this.objectives.unshift(response.data);
           if (!saveNew) {
             this.toggleModal();
-            location.reload()
           }
           // resetting the form
           this.name = '';
