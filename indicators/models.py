@@ -99,10 +99,12 @@ class Objective(models.Model):
 
 class Level(models.Model):
     name = models.CharField(max_length=135, blank=True)
-    description = models.TextField(max_length=765, blank=True)
+    description = models.TextField(max_length=765, null=True, blank=True)
+    sort = models.IntegerField(null=True, blank=True)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
-    sort = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
