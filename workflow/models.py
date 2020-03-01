@@ -160,8 +160,6 @@ class Organization(models.Model):
                                         default='English-US', max_length=50)
     date_format = models.CharField('Organization Date Format',
                                    default='DD.MM.YYYY', max_length=100)
-    create_date = models.DateTimeField(null=True, blank=True)
-    edit_date = models.DateTimeField(null=True, blank=True)
     theme_color = models.CharField(
         "Organization Costum Color", default="25ced1", validators=[
             RegexValidator(regex='^.{6}$', message='Length has to be 6',
@@ -173,6 +171,14 @@ class Organization(models.Model):
         validators=[validate_image],
         help_text="Image of minimum {} width and {} height, "
                   "maximum of {} ko".format(*tuple(IMAGE_SPEC.values())))
+    country_code = models.CharField("2 Letter Country Code", blank=True, null=True, max_length=2)
+    location_description = models.TextField(
+        "Location Description/Notes", max_length=765, null=True, blank=True)
+    latitude = models.CharField("Latitude", max_length=255, null=True, blank=True)
+    longitude = models.CharField("Longitude", max_length=255, null=True, blank=True)
+    zoom = models.IntegerField("Zoom", default=5)
+    create_date = models.DateTimeField(null=True, blank=True)
+    edit_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ('name',)

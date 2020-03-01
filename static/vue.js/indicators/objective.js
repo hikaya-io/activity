@@ -16,6 +16,7 @@ new Vue({
     description: '',
     parent_id: '',
     program_id: '',
+    parent_obj_list: [],
     isEdit: false,
     currentObjective: null,
     itemToDelete: null,
@@ -26,6 +27,9 @@ new Vue({
       .then(response => {
         if (response.data) {
           this.objectives = response.data.objectives.sort(
+            (a, b) => b.id - a.id
+          );
+          this.parent_obj_list = response.data.objectives.sort(
             (a, b) => b.id - a.id
           );
           this.programs_list = response.data.programs_list;
@@ -60,6 +64,9 @@ new Vue({
         this.description = item.description;
         this.program_id = item.program_id;
         this.parent_id = item.parent_id;
+        this.parent_obj_list = this.objectives.filter(el => el.id !== item.id);
+        console.log('parent obj', this.parent_obj_list);
+        console.log('obj list', this.objectives);
       } else {
         this.isEdit = false;
         this.name = '';
@@ -67,6 +74,7 @@ new Vue({
         this.program_id = '';
         this.parent_id = '';
         this.modalHeader = 'Add objective';
+        this.parent_obj_list = this.objectives;
       }
     },
 
@@ -150,7 +158,6 @@ new Vue({
      * Edit objective item
      */
     async updateObjective() {
-      console.log();
       try {
         const response = await this.makeRequest(
           'PUT',
