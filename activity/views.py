@@ -5,7 +5,7 @@ from smtplib import (SMTPRecipientsRefused)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.template.response import TemplateResponse
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
@@ -56,133 +56,71 @@ APPROVALS = (
 )
 
 
-@login_required(login_url='/accounts/login/')
-def index(request, program_id=0):
-    """
-    Home page
-    get count of agreements approved and total for dashboard
-    """
-    # set the selected program
-    selected_program = Program.objects.filter(id=program_id).first()
+class IndexView(LoginRequiredMixin, TemplateView):
+    template_name = 'index.html'
+    login_url = '/accounts/login/'
 
-    # get programs belonging to the current organizatiom
-    get_programs = Program.objects.filter(
-        organization=request.user.activity_user.organization).exclude(
-        name__isnull=True).exclude(name__exact='')
+    def get(self, request, program_id=0, *args, **kwargs):
+        # set the selected program
+        selected_program = Program.objects.filter(id=program_id).first()
 
-    # get stuff based on the active program
-    if int(program_id) == 0:
-        get_locations = SiteProfile.objects.filter(
-            organizations__id__in=[request.user.activity_user.organization.id])
+        # get programs belonging to the current organizatiom
+        get_programs = Program.objects.filter(
+            organization=request.user.activity_user.organization).exclude(
+            name__isnull=True).exclude(name__exact='')
 
-        get_stakeholders_count = Stakeholder.objects.filter(
-            organization=request.user.activity_user.organization).distinct().count()
+        if int(program_id) == 0:
+            org_id = request.user.activity_user.organization.id
+            org_q = Q(organization__id=request.user.activity_user.organization.id)
+            prog_q = Q(program__organization=request.user.activity_user.organization)
+        else:
+            org_id = selected_program.organization.id
+            org_q = Q(program__id=selected_program.id)
+            prog_q = Q(program__id=program_id)
 
-        get_contacts_count = Contact.objects.filter(
-            organization=request.user.activity_user.organization).count()
+        locations = SiteProfile.objects.filter(organizations__id=org_id)
 
-        get_projects = ProjectAgreement.objects.filter(
-            program__organization=request.user.activity_user.organization)
+        stakeholders = Stakeholder.objects.filter(org_q).distinct()
+        contacts = Contact.objects.filter(organization__id=org_id)
+        projects = ProjectAgreement.objects.filter(prog_q)
+        indicators = Indicator.objects.filter(prog_q).distinct().order_by('-id')
+        collected_data = CollectedData.objects.filter(prog_q)
+        documents = Documentation.objects.filter(prog_q)
+        projects_awaiting_approval = ProjectAgreement.objects.filter(prog_q & Q(approval='awaiting approval'))
+        projects_approved = ProjectAgreement.objects.filter(prog_q & Q(approval='approved'))
+        projects_rejected = ProjectAgreement.objects.filter(prog_q & Q(approval='rejected'))
+        projects_new = ProjectAgreement.objects.filter(prog_q & (
+                Q(approval='') | Q(approval=None) | Q(approval__iexact='new')))
+        projects_in_progress = ProjectAgreement.objects.filter(prog_q & Q(approval='in progress'))
 
-        get_indicators = Indicator.objects.filter(
-            program__organization=request.user.activity_user.organization).distinct().order_by('-id')
+        projects_tracking = ProjectComplete.objects.filter(prog_q)
+        indicators_kpi = indicators.filter(key_performance_indicator=True)
+        latest_indicators = indicators.filter(key_performance_indicator=True)[:10]
 
-        get_collected_data = CollectedData.objects.filter(
-            program__organization=request.user.activity_user.organization)
+        context = {
+            'selected_program': selected_program,
+            'get_programs': get_programs,
+            'get_projects': projects,
+            'get_indicators': indicators,
+            'get_latest_indicators': latest_indicators,
+            'get_indicators_kpi_count': indicators_kpi.count(),
+            'get_collected_data_count': collected_data.count(),
+            'get_stakeholders_count': stakeholders.count(),
+            'get_contacts_count': contacts.count(),
+            'get_documents_count': documents.count(),
+            'get_active_locations_count': locations.filter(status=True).count(),
+            'get_locations_count': locations.count(),
+            'get_locations': locations,
+            'get_projects_awaiting_approval_count': projects_awaiting_approval.count(),
+            'get_projects_approved_count': projects_approved.count(),
+            'get_projects_rejected_count': projects_rejected.count(),
+            'get_projects_new_count': projects_new.count(),
+            'get_projects_in_progress_count': projects_in_progress.count(),
+            'get_projects_tracking_count': projects_tracking.count(),
+            'map_api_key': settings.GOOGLE_MAP_API_KEY
+        }
 
-        get_documents_count = Documentation.objects.filter(
-            program__organization=request.user.activity_user.organization).count()
-
-        get_projects_awaiting_approval_count = ProjectAgreement.objects.filter(
-            program__organization=request.user.activity_user.organization,
-            approval='awaiting approval').count()
-
-        get_projects_approved_count = ProjectAgreement.objects.filter(
-            program__organization=request.user.activity_user.organization,
-            approval='approved').count()
-
-        get_projects_rejected_count = ProjectAgreement.objects.filter(
-            program__organization=request.user.activity_user.organization,
-            approval='rejected').count()
-
-        get_projects_new_count = ProjectAgreement.objects.filter(
-            Q(program__organization=request.user.activity_user.organization) &
-            (Q(approval='') | Q(approval=None) | Q(approval='New') | Q(approval='new'))).count()
-
-        get_projects_in_progress_count = ProjectAgreement.objects.filter(
-            program__organization=request.user.activity_user.organization,
-            approval='in progress').count()
-
-        get_projects_tracking_count = ProjectComplete.objects.filter(
-            program__organization=request.user.activity_user.organization).count()
-    else:
-        get_locations = SiteProfile.objects.filter(
-            organizations__id__in=[selected_program.organization.id])
-
-        get_stakeholders_count = Stakeholder.objects.filter(
-            program__id=selected_program.id).distinct().count()
-
-        get_contacts_count = Contact.objects.filter(
-            organization=selected_program.organization).count()
-
-        get_projects = ProjectAgreement.objects.filter(program__id=program_id)
-
-        get_indicators = Indicator.objects.filter(
-            program__id=program_id).distinct().order_by('-id')
-
-        get_collected_data = CollectedData.objects.filter(
-            program__id=program_id)
-
-        get_documents_count = Documentation.objects.filter(
-            program__id=program_id).count()
-
-        get_projects_awaiting_approval_count = ProjectAgreement.objects.filter(
-            program__id=program_id, approval='awaiting approval').count()
-
-        get_projects_approved_count = ProjectAgreement.objects.filter(
-            program__id=program_id, approval='approved').count()
-
-        get_projects_rejected_count = ProjectAgreement.objects.filter(
-            program__id=program_id, approval='rejected').count()
-
-        get_projects_new_count = ProjectAgreement.objects.filter(
-            Q(program__id=program_id) & (Q(approval='') |
-                                         Q(approval=None) | Q(approval='New'))).count()
-
-        get_projects_in_progress_count = ProjectAgreement.objects.filter(
-            program__id=program_id,
-            approval='in progress').count()
-
-        get_projects_tracking_count = ProjectComplete.objects.filter(
-            program__id=program_id).count()
-
-    get_indicators_kpi_count = get_indicators.filter(
-        key_performance_indicator=True).count()
-    get_latest_indicators = get_indicators.filter(
-        key_performance_indicator=True)[:10]
-
-    return render(request, "index.html", {
-        'selected_program': selected_program,
-        'get_programs': get_programs,
-        'get_projects': get_projects,
-        'get_indicators': get_indicators,
-        'get_latest_indicators': get_latest_indicators,
-        'get_indicators_kpi_count': get_indicators_kpi_count,
-        'get_collected_data_count': get_collected_data.count(),
-        'get_stakeholders_count': get_stakeholders_count,
-        'get_contacts_count': get_contacts_count,
-        'get_documents_count': get_documents_count,
-        'get_active_locations_count': get_locations.filter(status=True).count(),
-        'get_locations_count': get_locations.count(),
-        'get_locations': get_locations,
-        'get_projects_awaiting_approval_count': get_projects_awaiting_approval_count,
-        'get_projects_approved_count': get_projects_approved_count,
-        'get_projects_rejected_count': get_projects_rejected_count,
-        'get_projects_new_count': get_projects_new_count,
-        'get_projects_in_progress_count': get_projects_in_progress_count,
-        'get_projects_tracking_count': get_projects_tracking_count,
-        'map_api_key': settings.GOOGLE_MAP_API_KEY
-    })
+        return TemplateResponse(request, self.template_name, context)
 
 
 @login_required(login_url='/accounts/login/')
@@ -699,7 +637,7 @@ def admin_form_library_settings(request):
         request,
         'admin/form_library_settings.html',
         {
-            'nav_links': nav_links, 
+            'nav_links': nav_links,
             'active': 'form_library'
         }
     )
@@ -712,7 +650,7 @@ def admin_workflow_settings(request):
         request,
         'admin/workflow_settings.html',
         {
-            'nav_links': nav_links, 
+            'nav_links': nav_links,
             'active': 'workflows'
         }
     )
@@ -727,7 +665,7 @@ def admin_indicator_settings(request):
     return render(
         request,
         'admin/indicator_settings.html',
-        {'organization': organization, 
+        {'organization': organization,
         'active': 'indicator_settings'}
     )
 
