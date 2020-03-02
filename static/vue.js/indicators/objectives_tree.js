@@ -50,6 +50,7 @@ new Vue({
     showDeleteModal: false,
     objectives: [],
     programs_list: [],
+    parent_obj_list: [],
     name: '',
     description: '',
     parent_id: '',
@@ -64,6 +65,9 @@ new Vue({
       .then(response => {
         if (response.data) {
           this.objectives = response.data.objectives.sort(
+            (a, b) => b.id - a.id
+          );
+          this.parent_obj_list = response.data.objectives.sort(
             (a, b) => b.id - a.id
           );
           this.programs_list = response.data.programs_list;
@@ -163,8 +167,6 @@ new Vue({
           // resetting the form
           this.name = '';
           this.description = '';
-          this.program_id = '';
-          this.parent_id = '';
           this.$validator.reset();
         }
       } catch (error) {
