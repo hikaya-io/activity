@@ -174,7 +174,7 @@ urlpatterns = [  # rest framework
     path(
         'accounts/admin/map_settings',
         views.admin_map_settings,
-        name='map_settings_admin'
+        name='admin_map_settings'
     ),
 
     # bookmarks
