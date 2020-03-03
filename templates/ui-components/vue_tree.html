@@ -1,25 +1,27 @@
 <script type="text/x-template" id="vue-tree-template">
   <div class="vue-tree">
     <table v-if="treeData.name">
-    <tr>
-      <td :colspan="treeData.children ? treeData.children.length * 2 : 1"
-          :class="{parentLevel: treeData.children, extend: treeData.children && treeData.extend}">
-        <div class="node">
-          <div class="node-body" @click="$emit('click-node', treeData)">
-            <div class="node-label text-center">
-              <span class="text">[[ treeData.name ]]</span>
+      <tr>
+        <td :colspan="treeData.children ? treeData.children.length * 2 : 1"
+            :class="{parentLevel: treeData.children, extend: treeData.children && treeData.extend}">
+          <div class="node">
+            <div class="node-body" @click="$emit('click-node', treeData)">
+              <div class="node-label text-center">
+                <span class="text">[[ treeData.name ]]</span>
+              </div>
+              <div class="node-add text-center" @click="$emit('add-objective', treeData)"><span
+                  class="fa fa-plus"></span></div>
             </div>
-            <div class="node-add text-center" @click="$emit('add-node', treeData)"><span class="fa fa-plus"></span></div>
           </div>
-        </div>
-        <div class="extend_handle" v-if="treeData.children" @click="toggleExtend(treeData)"></div>
-      </td>
-    </tr>
-    <tr v-if="treeData.children && treeData.extend">
-      <td v-for="(children, index) in treeData.children" :key="index" colspan="2" class="childLevel">
-        <tree-chart :json="children" @click-node="$emit('click-node', $event)"></tree-chart>
-      </td>
-    </tr>
-  </table>
+          <div class="extend_handle" v-if="treeData.children" @click="toggleExtend(treeData)"></div>
+        </td>
+      </tr>
+      <tr v-if="treeData.children && treeData.extend">
+        <td v-for="(children, index) in treeData.children" :key="index" colspan="2" class="childLevel">
+          <tree-chart :json="children" @click-node="$emit('click-node', $event)"
+                      @add-objective="$emit('add-objective', $event)"></tree-chart>
+        </td>
+      </tr>
+    </table>
   </div>
 </script>

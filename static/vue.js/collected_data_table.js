@@ -79,6 +79,8 @@ $(document).ready(() => {
 							this.target = item.targeted
 							this.actual = item.achieved
 							
+						} else{
+							this.isEdit = false;
 						}
 					},
 
@@ -193,7 +195,7 @@ $(document).ready(() => {
 								`/indicators/collected_data/delete/${itemToDelete.id}`
 							);
 							if (response.data.success) {
-								toastr.success('Result was successfuly Deleted');
+								toastr.success('Result was successfully deleted');
 								this.collectedData.periodictargets.forEach(periodictarget => {
 									if (periodictarget.id == itemToDelete.periodic_target) {
 										periodictarget.collecteddata_set = periodictarget.collecteddata_set.filter(item => +item.id !== +itemToDelete.id )		
