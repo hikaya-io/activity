@@ -50,6 +50,7 @@ new Vue({
     showDeleteModal: false,
     objectives: [],
     programs_list: [],
+    parent_obj_list: [],
     name: '',
     description: '',
     parent_id: '',
@@ -64,6 +65,9 @@ new Vue({
       .then(response => {
         if (response.data) {
           this.objectives = response.data.objectives.sort(
+            (a, b) => b.id - a.id
+          );
+          this.parent_obj_list = response.data.objectives.sort(
             (a, b) => b.id - a.id
           );
           this.programs_list = response.data.programs_list;
@@ -85,6 +89,11 @@ new Vue({
     },
     refreshTreeData() {
       this.treeData = this.getChildren('0');
+    },
+    insertChild(nodeId, child) {
+      this.origData[nodeId].children.push(child.id)
+      this.origData[`${child.id}`] = {id: child.id, name: child.name, program: this.origData[nodeId].program, children: []}
+      this.refreshTreeData()
     },
     getChildren(nodeId) {
       const node = this.origData[nodeId];
@@ -150,16 +159,14 @@ new Vue({
         );
         if (response) {
           toastr.success('Objective is saved');
+          this.insertChild(this.parent_id, {id: response.data.id, name: response.data.name})
           this.objectives.unshift(response.data);
           if (!saveNew) {
             this.toggleModal();
-            location.reload()
           }
           // resetting the form
           this.name = '';
           this.description = '';
-          this.program_id = '';
-          this.parent_id = '';
           this.$validator.reset();
         }
       } catch (error) {
