@@ -13,8 +13,7 @@ from .views import (
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
     ObjectiveList, ObjectiveCreate, ObjectiveUpdate, ObjectiveDelete, objectives_list, objectives_tree, LevelList, LevelCreate,
     LevelUpdate, LevelDelete, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
-    IndicatorTarget, DataCollectionFrequencyCreate, DataCollectionFrequencyList, DataCollectionFrequencyUpdate,
-    DataCollectionFrequencyDelete, IndicatorTypeView)
+    IndicatorTarget, IndicatorTypeView, DataCollectionFrequencyView)
 
 urlpatterns = [
 
@@ -166,32 +165,16 @@ urlpatterns = [
          name='level_delete'
      ),
 
-    # Data DataCollectionFrequency Urls
-    path(
-        'data_collection_frequency/add',
-        DataCollectionFrequencyCreate.as_view(),
-        name='data_collection_frequency_add'
-    ),
-    path(
-        'data_collection_frequency/list',
-        DataCollectionFrequencyList.as_view(),
-        name='data_collection_frequency_list'
-    ),
-    path(
-        'data_collection_frequency/edit/<int:id>',
-        DataCollectionFrequencyUpdate.as_view(),
-        name='data_collection_frequency_edit'
-    ),
-    path(
-          'data_collection_frequency/delete/<int:id>',
-          DataCollectionFrequencyDelete.as_view(),
-          name='data_collection_frequency_delete'
-    ),
-
     # Indicator Types Urls
     re_path(
           r'indicator_types/(?P<pk>.*)',
           IndicatorTypeView.as_view(),
           name='indicator_type_list'
     ),
+
+    re_path(
+          r'data_collection_frequency/(?P<pk>.*)',
+          DataCollectionFrequencyView.as_view(),
+          name='data_collection_frequency_list'
+    )
 ]
