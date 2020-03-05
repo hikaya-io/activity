@@ -14,10 +14,10 @@ if __name__ == "__main__":
             settings = 'activity.settings.test'
 
         else:
-            settings = 'activity.settings.local'
+            settings = 'activity.settings.production'
 
     except ModuleNotFoundError:
-        settings = 'activity.settings.local'
+        settings = 'activity.settings.production'
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings)
 
