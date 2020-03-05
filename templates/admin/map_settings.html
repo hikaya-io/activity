@@ -18,7 +18,7 @@
     <div class="mb-10">
       {% include 'admin/sections/side-nav.html' %}
     </div>
-    <div id="organizationLocation">
+    <div>
         <form id="organizationLocationForm">
             {% csrf_token %}
             <div class="form-group row">
@@ -55,8 +55,8 @@
             </div>
             <div class="row">
                 <div class="text-right admin-form-actions">
-                    <button type="reset" id="reset-config-form" class="btn btn-close">Close</button>
-                    <button type="button" class="btn btn-success" @click="updateLocation()">[[ country_code ]]Update</button>
+                    <button type="button" class="btn btn-close" @click="cancelLocationUpdate()">Close</button>
+                    <button type="button" class="btn btn-success" @click="updateLocation()">Update</button>
                 </div>
             </div>
         </form>
@@ -64,12 +64,7 @@
   </div>
 </div>
 
-<script>
-    $('#reset-config-form').click(() => {
-        document.location.href = '/accounts/admin/map_settings'
-    })
-</script>
+{% endblock content %}
 {% block extra_js_in_body %}
 <script type="text/javascript" src="{{ STATIC_URL }}vue.js/organization/organization_location.js"></script>
 {% endblock extra_js_in_body %}
-{% endblock content %}

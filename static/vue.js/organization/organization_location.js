@@ -3,10 +3,10 @@ Vue.use(VeeValidate);
 // start app
 new Vue({
 	delimiters: ['[[', ']]'],
-	el: '#organizationLocation',
+	el: '#organizationLocationForm',
 	data: {
         organization: null,
-        country_code: 'test',
+        country_code: '',
 		location_description: '',
         latitude: null,
 		longitude: null,
@@ -30,17 +30,11 @@ new Vue({
 			});
 	},
 	methods: {
-        
-        /**
-         * Format date
-         * @param {string} date - date to be formatted
-         */
 
         /**
          * edit organization location
          */
 		updateLocation() {
-			alert('am here');
 			try {
 				const response = this.makeRequest(
 					'PUT',
@@ -54,14 +48,30 @@ new Vue({
                     }
 				);
 				if (response) {
-					toastr.success('Organization location was successfuly updated');
-                    this.country_code = '';
-					this.location_description = '';
-					this.latitude = '';
+					toastr.success('Organization location was successfully updated');
+					this.organization = {
+						country_code: this.country_code,
+						location_description: this.location_description,
+						latitude: this.latitude,
+						longitude: this.longitude ,
+						zoom: this.zoom
+					}
 				}
 			} catch (e) {
-				toastr.error('There was a problem updating your data!!');
+				toastr.error('There was a problem updating your data');
 			}
+		},
+
+		/**
+         * Cancel edit organization location
+         */
+		cancelLocationUpdate() {
+			console.log('this.organization : ', this.organization);
+			this.country_code = this.organization.country_code;
+			this.location_description = this.organization.location_description;
+			this.latitude = this.organization.latitude;
+			this.longitude = this.organization.longitude;
+			this.zoom = this.organization.zoom;
 		},
 
         /**
