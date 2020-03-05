@@ -20,13 +20,18 @@ new Vue({
     isEdit: false,
     currentObjective: null,
     itemToDelete: null,
-    modalHeader: 'Add objective'
+    modalHeader: 'Add objective',
+    filtered_objectives: [],
+    filtered_program: false
   },
   beforeMount: function() {
     this.makeRequest('GET', '/indicators/objective/list')
       .then(response => {
         if (response.data) {
           this.objectives = response.data.objectives.sort(
+            (a, b) => b.id - a.id
+          );
+          this.filtered_objectives = response.data.objectives.sort(
             (a, b) => b.id - a.id
           );
           this.parent_obj_list = response.data.objectives.sort(
@@ -64,9 +69,7 @@ new Vue({
         this.description = item.description;
         this.program_id = item.program_id;
         this.parent_id = item.parent_id;
-        this.parent_obj_list = this.objectives.filter(el => el.id !== item.id);
-        console.log('parent obj', this.parent_obj_list);
-        console.log('obj list', this.objectives);
+        this.parent_obj_list = this.filtered_objectives.filter(el => el.id !== item.id);
       } else {
         this.isEdit = false;
         this.name = '';
@@ -74,7 +77,7 @@ new Vue({
         this.program_id = '';
         this.parent_id = '';
         this.modalHeader = 'Add objective';
-        this.parent_obj_list = this.objectives;
+        this.parent_obj_list = this.filtered_objectives;
       }
     },
 
@@ -138,7 +141,8 @@ new Vue({
         );
         if (response) {
           toastr.success('Objective is saved');
-          this.objectives.unshift(response.data);
+          this.filtered_objectives.unshift(response.data);
+          this.objectives=this.filtered_objectives
           if (!saveNew) {
             this.toggleModal();
           }
@@ -171,11 +175,12 @@ new Vue({
         );
         if (response) {
           toastr.success('Objective is updated');
-          const newObjectives = this.objectives.filter(item => {
+          const newObjectives = this.filtered_objectives.filter(item => {
             return item.id != this.currentObjective.id;
           });
-          this.objectives = newObjectives;
-          this.objectives.unshift(response.data);
+          this.filtered_objectives = newObjectives;
+          this.filtered_objectives.unshift(response.data);
+          this.objectives=this.filtered_objectives
           this.isEdit = false;
           this.name = '';
           this.description = '';
@@ -202,7 +207,8 @@ new Vue({
         );
         if (response.data.success) {
           toastr.success('Objective is deleted');
-          this.objectives = this.objectives.filter(item => +item.id !== +id);
+          this.filtered_objectives = this.objectives.filter(item => +item.id !== +id);
+          this.objectives=this.filtered_objectives
           this.showDeleteModal = !this.showDeleteModal;
           this.modalHeader = 'Add Objective';
         } else {
@@ -210,6 +216,18 @@ new Vue({
         }
       } catch (error) {
         toastr.error('There was a server error');
+      }
+    },
+
+    // Set workflow level 1 filter
+    setFilter: function(id) {
+      this.filtered_program = true;
+      if (id === 0) {
+        this.filtered_objectives = this.objectives;
+      } else {
+        this.filtered_objectives = this.objectives.filter(
+          el => el.program_id === id
+        );
       }
     },
 

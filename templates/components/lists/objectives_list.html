@@ -23,6 +23,13 @@
       </div>
 
       <div class="sub-nav-item">
+        <span class="text-filter">Filter by</span>
+      </div>
+      <div class="sub-nav-item">
+        {% include "components/objective-filter.html" %}
+      </div>
+
+      <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="">
           <a
             role="button"
@@ -74,7 +81,7 @@
     </div>
   </div>
   <!-- Objective table -->
-  <table class="table" id="objectivesTable" v-if="objectives.length">
+  <table class="table" id="objectivesTable" v-if="filtered_objectives.length">
     <thead>
       <tr>
         <th>Name</th>
@@ -85,7 +92,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-cloak v-for="objective in objectives" v-if="objective.name">
+      <tr v-cloak v-for="objective in filtered_objectives" v-if="objective.name">
         <td>
           <a
             @click="toggleModal(objective)"
@@ -102,7 +109,7 @@
           [[ program.name ]]
         </td>
         <td
-          v-for="objparent in objectives"
+          v-for="objparent in filtered_objectives"
           v-if="objective.parent_id===objparent.id"
         >
           [[ objparent.name ]]
@@ -110,7 +117,6 @@
         <td v-if="objective.parent_id===null">
           ---
         </td>
-        <!-- <td>[[ formatDate(objective.create_date) ]]</td> -->
         <td class="text-right">
           <!-- Action buttons -->
           <div class="btn-group">
@@ -146,7 +152,7 @@
     </tbody>
   </table>
   <div style="text-align:center">
-    <h4 v-if="!objectives.length">No objectives are added</h4>
+    <h4 v-if="!filtered_objectives.length">No objectives are added</h4>
   </div>
 </div>
 
