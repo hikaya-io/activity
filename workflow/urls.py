@@ -30,8 +30,9 @@ from django.urls import path, re_path
 urlpatterns = [
     # level1
     path('level1', list_workflow_level1, name='level1'),
-    path('level1_delete/<int:pk>/', level1_delete, name='level1_delete'),
     path('level1/add', ProgramCreate.as_view(), name='add_level1'),
+    path('level1/edit/<int:pk>/', ProgramUpdate.as_view(), name='level1_edit'),
+    path('level1_delete/<int:pk>/', level1_delete, name='level1_delete'),
 
     path('level2/add', add_level2, name='add-level2'),
     path('documentation/add', add_documentation, name='add-documentation'),
@@ -39,7 +40,6 @@ urlpatterns = [
     path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
     path('stakeholder/delete_stakeholder/<int:pk>/',
          delete_stakeholder, name='delete_stakeholder'),
-    path('level1/edit/<int:pk>/', ProgramUpdate.as_view(), name='level1_edit'),
     path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/list/<slug:program>/<slug:status>/', ProgramDash.as_view(),

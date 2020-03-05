@@ -6,18 +6,17 @@ new Vue({
 	el: '#organizationLocation',
 	data: {
         organization: null,
-        country_code: '',
+        country_code: 'test',
 		location_description: '',
         latitude: null,
 		longitude: null,
 		zoom: null,
-        itemToDelete: null,
 	},
 	beforeMount: function() {
 		this.makeRequest('GET', '/workflow/organization/1/?user_org=1')
 			.then(response => {
 				if (response.data) {
-                    this.organization = response.data;
+					this.organization = response.data[0];
                     this.country_code = this.organization.country_code;
                     this.location_description = this.organization.location_description;
                     this.latitude = this.organization.latitude;
@@ -36,29 +35,29 @@ new Vue({
          * Format date
          * @param {string} date - date to be formatted
          */
-        formatDate: function(date) {
-            return moment(date, 'YYYY-MM-DDThh:mm:ssZ').format('YYYY-MM-DD');
-        },
 
         /**
          * edit organization location
          */
-		async updateLocation() {
+		updateLocation() {
+			alert('am here');
 			try {
-				const response = await this.makeRequest(
+				const response = this.makeRequest(
 					'PUT',
 					`/workflow/organization/${this.organization.id}`,
-					{ 
-                        name: this.name, 
-						description: this.description,
-						sort: this.sort
+					{
+						country_code: this.country_code,
+						location_description: this.location_description,
+						latitude: this.latitude,
+						longitude: this.longitude ,
+						zoom: this.zoom
                     }
 				);
 				if (response) {
 					toastr.success('Organization location was successfuly updated');
-                    this.name = '';
-					this.description = '';
-					this.sort = null;
+                    this.country_code = '';
+					this.location_description = '';
+					this.latitude = '';
 				}
 			} catch (e) {
 				toastr.error('There was a problem updating your data!!');

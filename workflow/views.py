@@ -1318,7 +1318,7 @@ class SiteProfileList(ListView):
         if user_list:
             default_list = int(user_list)
 
-        form = SiteProfileQuickEntryForm()
+        form = SiteProfileQuickEntryForm(request=request)
         return render(request, self.template_name,
                       {
                           'inactive_site': inactive_site,
