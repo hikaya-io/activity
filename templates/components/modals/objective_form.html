@@ -22,8 +22,7 @@
         placeholder="Enter objective"
       />
       <span v-show="errors.has('name')" class="help is-danger"
-        >[[ errors.first('name') ]]</span
-      >
+        >[[ errors.first('name') ]]</span>
     </div>
     <div
       :class="{
@@ -65,12 +64,7 @@
         v-validate="'required'"
         placeholder="Choose a {{ user.activity_user.organization.level_1_label }}"
       >
-        <option
-          v-for="program in programs_list"
-          selected="currentObjective.program_id === program.id ? true : false"
-          :value="program.id"
-          >[[ program.name ]]</option
-        >
+        <option v-for="program in programs_list" selected="currentObjective.program_id === program.id ? true : false" :value="program.id">[[ program.name ]]</option>
       </select>
       <span v-show="errors.has('program')" class="help is-danger"
         >[[ errors.first('program') ]]</span
@@ -94,3 +88,4 @@
     </div>
   </div>
 </form>
+
