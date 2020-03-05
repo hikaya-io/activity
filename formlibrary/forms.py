@@ -67,7 +67,8 @@ class DistributionForm(forms.ModelForm):
             program__organization=self.request.user.activity_user.organization)
         self.fields['program'].queryset = Program.objects.filter(
             organization=self.request.user.activity_user.organization)
-        self.fields['office_code'].queryset = Office.objects.all()
+        self.fields['office_code'].queryset = Office.objects.filter(
+            organization=self.request.user.activity_user.organization)
         self.fields['province'].queryset = Province.objects.all()
 
 
