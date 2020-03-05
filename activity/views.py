@@ -627,6 +627,39 @@ def admin_indicator_config(request):
 
 
 @login_required(login_url='/accounts/login/')
+def admin_map_settings(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+    # reset logo
+    # if request.GET.get('reset_logo'):
+    #     organization = Organization.objects.get(pk=user.organization.id)
+    #     organization.logo = ''
+    # organization.save()
+
+    if request.method == 'POST':
+        data = request.POST
+        organization.country_code = data.get('country_code')
+        organization.location_description = data.get('location_description')
+        organization.latitude = data.get('latitude')
+        organization.longitude = data.get('longitude')
+        organization.zoom = data.get('zoom')
+        organization.save()
+        user.organization = organization
+        user.save()
+
+    nav_links = get_nav_links('Maps')
+    return render(
+        request,
+        'admin/map_settings.html',
+        {
+            'nav_links': nav_links,
+            'organization': organization,
+            'active': 'maps'
+        }
+    )
+
+
+@login_required(login_url='/accounts/login/')
 def admin_form_library_settings(request):
     nav_links = get_nav_links('Form Library')
     return render(
