@@ -22,7 +22,11 @@ new Vue({
     itemToDelete: null,
     modalHeader: 'Add objective',
     filtered_objectives: [],
-    filtered_program: false
+    filtered_program: false,
+    filtered_program_id: 0,
+    rows: 0,
+    currentPage: 1,
+    perPage: 10
   },
   beforeMount: function() {
     this.makeRequest('GET', '/indicators/objective/list')
@@ -39,12 +43,13 @@ new Vue({
           );
           this.programs_list = response.data.programs_list;
           this.modalHeader = 'Add objective';
-          $(document).ready(() => {
-            $('#objectivesTable').DataTable({
-              pageLength: 10,
-              lengthMenu: [10, 20, 30, 40]
-            });
-          });
+          this.rows = this.filtered_objectives.length;
+          // $(document).ready(() => {
+          //   $('#objectivesTable').DataTable({
+          //     pageLength: 10,
+          //     lengthMenu: [10, 20, 30, 40]
+          //   });
+          // });
         }
       })
       .catch(e => {
@@ -54,6 +59,7 @@ new Vue({
         this.objectives = [];
       });
   },
+
   methods: {
     /**
      * open or close the objective form modal
@@ -69,7 +75,9 @@ new Vue({
         this.description = item.description;
         this.program_id = item.program_id;
         this.parent_id = item.parent_id;
-        this.parent_obj_list = this.filtered_objectives.filter(el => el.id !== item.id);
+        this.parent_obj_list = this.filtered_objectives.filter(
+          el => el.id !== item.id
+        );
       } else {
         this.isEdit = false;
         this.name = '';
@@ -141,8 +149,8 @@ new Vue({
         );
         if (response) {
           toastr.success('Objective is saved');
-          this.filtered_objectives.unshift(response.data);
-          this.objectives=this.filtered_objectives
+          this.objectives.unshift(response.data);
+          this.setFilter(this.filtered_program_id);
           if (!saveNew) {
             this.toggleModal();
           }
@@ -175,12 +183,12 @@ new Vue({
         );
         if (response) {
           toastr.success('Objective is updated');
-          const newObjectives = this.filtered_objectives.filter(item => {
+          const newObjectives = this.objectives.filter(item => {
             return item.id != this.currentObjective.id;
           });
-          this.filtered_objectives = newObjectives;
-          this.filtered_objectives.unshift(response.data);
-          this.objectives=this.filtered_objectives
+          this.objectives = newObjectives;
+          this.objectives.unshift(response.data);
+          this.setFilter(this.filtered_program_id);
           this.isEdit = false;
           this.name = '';
           this.description = '';
@@ -207,8 +215,10 @@ new Vue({
         );
         if (response.data.success) {
           toastr.success('Objective is deleted');
-          this.filtered_objectives = this.objectives.filter(item => +item.id !== +id);
-          this.objectives=this.filtered_objectives
+          this.objectives = this.objectives.filter(
+            item => +item.id !== +id
+          );
+          this.setFilter(this.filtered_program_id);
           this.showDeleteModal = !this.showDeleteModal;
           this.modalHeader = 'Add Objective';
         } else {
@@ -222,6 +232,7 @@ new Vue({
     // Set workflow level 1 filter
     setFilter: function(id) {
       this.filtered_program = true;
+      this.filtered_program_id = id;
       if (id === 0) {
         this.filtered_objectives = this.objectives;
       } else {
@@ -229,6 +240,7 @@ new Vue({
           el => el.program_id === id
         );
       }
+      this.rows = this.filtered_objectives.length;
     },
 
     /**
