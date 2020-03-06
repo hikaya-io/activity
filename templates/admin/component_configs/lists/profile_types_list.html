@@ -50,6 +50,10 @@
     </div>
 </div>
 
+<div class="p-10" v-if="!profileTypes.length">
+  {% include 'admin/no_data.html' %}
+</div>
+
 <!-- Table -->
 <table class="table" id="profileTypesTable" v-if="profileTypes.length">
     <thead>
