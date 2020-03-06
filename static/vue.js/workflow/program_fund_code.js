@@ -109,7 +109,6 @@ new Vue({
                 );
 				if (response) {
 					toastr.success('Fund Code successfuly saved');
-					console.log('response.data : ', response.data)
 					this.addFundCodeOptions(response.data);
 					this.fundCodes.unshift(response.data);
 					if (!saveNew) {
