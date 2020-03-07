@@ -1,0 +1,43 @@
+<script type="text/x-template" id="beneficiaries-table-template">
+  <div id="beneficiaries_table">
+    <div v-if="participants.length">
+      <table class="table">
+        <tbody>
+        <tr>
+          <th style="min-width:180px;">Participant Name/Age</th>
+          <th class="text-right" style="width: 160px"># of training days</th>
+          <th class="text-right" style="width: 160px"># of days attended</th>
+          <th class="text-right" style="width: 160px">% attended </th>
+        </tr>
+        <template v-for="item in participants">
+          <tr>
+            <td>
+              <span style="display: block">[[ item.beneficiary_name ]]</span>
+              <span>[[ item.age ]]</span>
+            </td>
+            <td class="text-right" style="vertical-align: top">[[ item.training[0].training_duration ]]</td>
+          </tr>
+        </template>
+        </tbody>
+      </table>
+
+      <div class="text-right">
+        <paginate :page-count="totalPages" prev-text="Prev" next-text="Next" :click-handler="paginationHandler"
+                container-class="pagination" page-class="pagination_button" style="display: inline;"/>
+        <button role="button"
+                class="btn btn-sm btn-success">Add participant
+        </button>
+      </div>
+    </div>
+    <div v-else>
+      <div style="padding-left:10px; font-size: 16px; color: #54585A;">
+        There are no enrolled beneficiaries.
+      </div>
+      <div class="text-right">
+        <button role="button"
+                class="btn btn-sm btn-success">Add participant
+        </button>
+      </div>
+    </div>
+  </div>
+</script>
