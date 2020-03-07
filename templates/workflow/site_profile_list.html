@@ -43,6 +43,54 @@
           <div class="btn-group" role="group" aria-label="...">
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Site Status
+                  <span class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation"  class="{% if not site_status %} active {% endif %}">
+                      <a
+                        role="menuitem"
+                        tabindex="-1"
+                        href="/workflow/siteprofile_list/{{ program_id }}/{{project_agreement_id}}/list/"
+
+                      >
+                        -- All --
+                      </a>
+                    </li>
+                    <li role="presentation" class="{% if '1' in site_status %} active {% endif %}">
+                        {% if '1' in site_status %}
+                          <a class="custom-control custom-checkbox"
+                            href="/workflow/siteprofile_list/{{ program_id }}/{{project_agreement_id}}/list/?status={% if '0' in site_status %}0{% endif %}">
+                              <input type="checkbox" class="custom-control-input" checked>
+                            Active
+                          </a>
+                        {% else %}
+                          <a class="custom-control custom-checkbox"
+                            href="/workflow/siteprofile_list/{{ program_id }}/{{project_agreement_id}}/list/?status={% if '0' in site_status %}0,{% endif %}1">
+                              <input type="checkbox" class="custom-control-input">
+                            Active
+                          </a>
+                        {% endif %}
+                    </li>
+                    <li role="presentation" class="{% if '0' in site_status %} active {% endif %}">
+                        {% if '0' in site_status %}
+                          <a class="custom-control custom-checkbox"
+                            href="/workflow/siteprofile_list/{{ program_id }}/{{project_agreement_id}}/list/?status={% if '1' in site_status %}1{% endif %}">
+                              <input type="checkbox" class="custom-control-input" checked>
+                            Not Active
+                          </a>
+                        {% else %}
+                          <a class="custom-control custom-checkbox"
+                            href="/workflow/siteprofile_list/{{ program_id }}/{{project_agreement_id}}/list/?status=0{% if '1' in site_status %},1{% endif %}">
+                              <input type="checkbox" class="custom-control-input">
+                            Not Active
+                          </a>
+                        {% endif %}
+                    </li>
+                </ul>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   {{ user.activity_user.organization.level_1_label }}
                   <span class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
                 </button>
@@ -52,7 +100,7 @@
                         role="menuitem"
                         tabindex="-1"
                         href="/workflow/siteprofile_list/0/{{project_agreement_id}}/list/"
-                       
+
                       >
                         -- All --
                       </a>
@@ -138,8 +186,8 @@
       {% for item in get_site_profile %}
       <tr>
         <td>
-          <a href="/workflow/siteprofile_update/{{ item.id }}" 
-            data-toggle="tooltip" 
+          <a href="/workflow/siteprofile_update/{{ item.id }}"
+            data-toggle="tooltip"
             title="{{ item.name }}">
 			    {{ item.name | truncatechars:50 }}</a>
         </td>
