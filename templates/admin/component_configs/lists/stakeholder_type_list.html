@@ -56,6 +56,10 @@
     </div>
   </div>
 
+  <div class="p-10" v-if="!stakeholderTypes.length">
+    {% include 'admin/no_data.html' %}
+  </div>
+
   <!-- Table -->
   <table class="table" id="stakeholderTypesTable" v-if="stakeholderTypes.length">
     <thead>

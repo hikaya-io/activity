@@ -1317,3 +1317,8 @@ textarea:focus {
 .modal-body-enter-active, .modal-body-leave-active {
   transition: opacity .5s;
 }
+
+.no-table-data {
+  font-style: italic;
+  color: #8b8d9b;
+}

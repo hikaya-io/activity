@@ -55,8 +55,9 @@
       </div>
     </div>
   </div>
-  <div class="no-objective p-10"  v-if="!indicatorTypes.length" style="text-align: center">
-    No objectives are available
+  
+  <div class="p-10"  v-if="!indicatorTypes.length">
+    {% include 'admin/no_data.html' %}
   </div>
   <!-- Table -->
   <table class="table" id="indicatorTypesTable" v-if="indicatorTypes.length">
