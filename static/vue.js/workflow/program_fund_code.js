@@ -108,7 +108,8 @@ new Vue({
 					}
                 );
 				if (response) {
-                    toastr.success('Fund Code successfuly saved');
+					toastr.success('Fund Code successfuly saved');
+					this.addFundCodeOptions(response.data);
 					this.fundCodes.unshift(response.data);
 					if (!saveNew) {
 						this.toggleModal();
@@ -121,6 +122,15 @@ new Vue({
 			} catch (error) {
 				toastr.error('There was a problem saving your data!!');
 			}
+		},
+
+		 /**
+		add the created fundcode to select options
+		**/
+		addFundCodeOptions(fundCode) {
+			codeSelect2 = $('#id_fund_code');
+			var option = new Option(fundCode.name, fundCode.id, true, true);
+			codeSelect2.append(option).trigger('change');
 		},
 
         /**
