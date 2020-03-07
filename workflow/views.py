@@ -14,10 +14,10 @@ from .models import (
     ProjectComplete, SiteProfile, Documentation, Benchmarks, Budget, ProfileType,
     ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder, Sector,
     FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
-    Office, Province,
+    Office, Organization
 )
 from formlibrary.models import TrainingAttendance, Distribution
-from indicators.models import CollectedData, ExternalService, Level
+from indicators.models import CollectedData, ExternalService
 from django.utils import timezone
 
 from .forms import (
@@ -25,7 +25,7 @@ from .forms import (
     ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
     DocumentationForm, SiteProfileForm, BenchmarkForm, BudgetForm,
     FilterForm, ProgramForm, SiteProfileQuickEntryForm,
-    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm, ProfileTypeForm,
+    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm,
 )
 
 import pytz
@@ -42,9 +42,10 @@ import requests
 import logging
 
 from django.core import serializers
-from .serializers import OfficeSerializer, StakeholderTypeSerializer
+from .serializers import OfficeSerializer, StakeholderTypeSerializer, OrganizationSerializer
 from rest_framework import generics
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from rest_framework.response import Response
 from django.views.generic.detail import View
 from django.forms.models import model_to_dict
 
@@ -102,7 +103,7 @@ class ProgramCreate(GView):
     """
     Add program
     """
-    def post(self,request):
+    def post(self, request):
         data = request.POST
 
         activity_user = ActivityUser.objects.filter(user=request.user).first()
@@ -1317,7 +1318,7 @@ class SiteProfileList(ListView):
         if user_list:
             default_list = int(user_list)
 
-        form = SiteProfileQuickEntryForm()
+        form = SiteProfileQuickEntryForm(request=request)
         return render(request, self.template_name,
                       {
                           'inactive_site': inactive_site,
@@ -2891,3 +2892,18 @@ class StakeholderTypeView(generics.ListCreateAPIView, generics.RetrieveUpdateDes
     def get_queryset(self):
         organization = self.request.user.activity_user.organization.id
         return StakeholderType.objects.filter(organization=organization)
+
+
+"""
+Organization view
+"""
+class OrganizationView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = OrganizationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.GET.get('user_org', None) is not None:
+            queryset = Organization.objects.filter(id=self.request.user.activity_user.organization.id) 
+        else:
+            queryset = Organization.objects.all()
+        return queryset

@@ -170,6 +170,11 @@ urlpatterns = [  # rest framework
         views.admin_indicator_config,
         name='indicator_configs_admin'
     ),
+    path(
+        'accounts/admin/map_settings',
+        views.admin_map_settings,
+        name='admin_map_settings'
+    ),
 
     # bookmarks
     path('bookmark_list', BookmarkList.as_view(),
