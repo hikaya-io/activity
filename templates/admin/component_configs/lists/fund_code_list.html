@@ -56,6 +56,10 @@
     </div>
   </div>
 
+  <div class="p-10" v-if="!fundCodes.length">
+    {% include 'admin/no_data.html' %}
+  </div>
+
   <!-- Table -->
   <table class="table" id="fundCodesTable" v-if="fundCodes.length">
     <thead>
