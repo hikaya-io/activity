@@ -1325,3 +1325,7 @@ textarea:focus {
   font-style: italic;
   color: #8b8d9b;
 }
+
+#participantsTable th {
+  border-top: none;
+}
