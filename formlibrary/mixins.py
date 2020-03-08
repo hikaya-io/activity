@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from rest_framework import authentication, permissions
+from rest_framework.pagination import PageNumberPagination
 
 
 class LoggedInMixin(object):
@@ -55,3 +56,8 @@ class APIDefaultsMixin(object):
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 50
+
+
+class CustomPagination(PageNumberPagination):
+    page_size = 30
+    page_size_query_param = 'per_page'
