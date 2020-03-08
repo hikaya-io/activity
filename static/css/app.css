@@ -1318,6 +1318,9 @@ textarea:focus {
   transition: opacity .5s;
 }
 
+#participantsTable th {
+  border-top: none;
+}
 .no-table-data {
   font-style: italic;
   color: #8b8d9b;
