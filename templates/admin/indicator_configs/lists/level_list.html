@@ -60,6 +60,10 @@
           </div>
       </div>
   </div>
+
+  <div class="p-10"  v-if="!levels.length">
+    {% include 'admin/no_data.html' %}
+  </div>
   
   <!-- Table -->
   <table class="table" id="levelsTable" v-if="levels.length">
