@@ -492,17 +492,6 @@ class TrainingParticipantListObjects(ListAPIView):
             training__pk=pk
         ).prefetch_related('training')
 
-    # def get(self, request, *args, **kwargs):
-    #     pk = int(self.kwargs['pk'])
-    #     get_beneficiaries = Beneficiary.objects.filter(
-    #         training__pk=pk
-    #     ).prefetch_related('training')
-    #
-    #     ListModelMixin
-    #
-    #     final_dict = {'get_beneficiaries': BeneficiarySerializer(get_beneficiaries, many=True).data}
-    #     return JsonResponse(final_dict, safe=False)
-
 
 class BeneficiaryListObjects(View, AjaxableResponseMixin):
 
