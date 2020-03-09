@@ -10,10 +10,9 @@ from .views import (
     CollectedDataDeleteVue, collecteddata_import, indicator_report,
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
-    collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport,
-    ObjectiveList, ObjectiveCreate, ObjectiveUpdate, ObjectiveDelete, objectives_list, objectives_tree, LevelList, LevelCreate,
-    LevelUpdate, LevelDelete, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
-    IndicatorTarget, IndicatorTypeView, DataCollectionFrequencyView)
+    collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport, objectives_list, objectives_tree, 
+    LevelList, LevelCreate, LevelUpdate, LevelDelete, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
+    IndicatorTarget, IndicatorTypeView, DataCollectionFrequencyView, ObjectiveView)
 
 urlpatterns = [
 
@@ -113,24 +112,30 @@ urlpatterns = [
          name='indicator-targets'),
 
 # Objectives
-     path(     
-        'objective/list',
-        ObjectiveList.as_view(),
-        name='objective_list'
-     ),
-     path(
-        'objective/add',
-        ObjectiveCreate.as_view(),
-        name='objective_add'
-     ),
-     path('objective/edit/<int:id>', 
-         ObjectiveUpdate.as_view(),
-         name='objective_update'
-     ),
-     path('objective/delete/<int:id>', 
-         ObjectiveDelete.as_view(),
-         name='objective_delete'
-     ),
+     # path(     
+     #    'objective/list',
+     #    ObjectiveList.as_view(),
+     #    name='objective_list'
+     # ),
+     # path(
+     #    'objective/add',
+     #    ObjectiveCreate.as_view(),
+     #    name='objective_add'
+     # ),
+     # path('objective/edit/<int:id>', 
+     #     ObjectiveUpdate.as_view(),
+     #     name='objective_update'
+     # ),
+     # path('objective/delete/<int:id>', 
+     #     ObjectiveDelete.as_view(),
+     #     name='objective_delete'
+     # ),
+     
+     re_path(
+          r'objective/(?P<pk>.*)',
+          ObjectiveView.as_view(),
+          name='objective_list'
+    ),
 
      path('objectives', objectives_list, name='objectives'),
      path('objectives/tree', objectives_tree, name='objectives-tree'),
