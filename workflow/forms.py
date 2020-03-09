@@ -159,7 +159,6 @@ class ProgramForm(forms.ModelForm):
         self.fields['sector'].queryset = Sector.objects.all()
         self.fields['fund_code'].queryset = FundCode.objects.filter(
             organization=self.request.user.activity_user.organization).all()
-        # filter(organization=self.request.user.activity_user.organization)
         self.fields['name'].label = '{} Name'.format(self.organization.level_1_label)
         self.fields['description'].label = '{} Description'.format(self.organization.level_1_label)
 

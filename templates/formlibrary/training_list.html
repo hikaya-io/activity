@@ -5,14 +5,14 @@
   {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">My Dashboard</a></li>
-    <li class="active">Trainings</li>
+    <li class="active">{{ request.user.activity_user.organization.training_label }}</li>
   </ul>
   {% endblock %}
 
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">Training List</h4>
+      <h4 class="page-title">{{ request.user.activity_user.organization.training_label }} List</h4>
     </div>
 
     <div class="sub-navigation-actions">
@@ -38,7 +38,7 @@
             data-toggle="modal"
             data-target="#addTrainingModal"
             class="btn btn-sm btn-primary"
-            ><i class="fa fa-plus"></i> Training</button
+            ><i class="fa fa-plus"></i> {{ request.user.activity_user.organization.training_label }}</button
           >
         </div>
       </div>

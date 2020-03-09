@@ -173,7 +173,7 @@ def get_nav_links(nav):
             'link': '/accounts/admin/indicator_configs_admin'
         },
         {
-            'label': 'Form Library',
+            'label': 'Form Library Labels',
             'status': '',
             'link': '/accounts/admin/form_library_settings'
         },

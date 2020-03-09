@@ -3,14 +3,14 @@
 	{% block breadcrumbs %}
 	<ul class="breadcrumb">
 		<li><a href="{% url 'admin_profile_settings' %}">Organization Settings</a></li>
-		<li class="active">Form Library</li>
+		<li class="active">Form Library Labels</li>
 	</ul>
 	{% endblock %}
 
 	<!-- Sub navigation -->
 	<div class="sub-navigation">
 		<div class="sub-navigation-header">
-			<h4 class="page-title">Form Library Settings</h4>
+			<h4 class="page-title">Form Library Labels</h4>
 		</div>
 	</div>
 
@@ -18,17 +18,41 @@
 		<div class="mb-15">
 			{% include 'admin/sections/side-nav.html' %}
 		</div>
-        <div class="coming-soon-container">
-            {% include '../comingsoon.html' %}
-        </div>
+		<div>
+			<form id="formLibraryLabelsForm">
+				{% csrf_token %}
+				<div class="form-group row">
+					<label class="col-sm-2 col-form-label" for="beneficiary_label">Beneficiary</label>
+					<div class="col-sm-6">
+						<input type="text" id="beneficiary_label" name="beneficiary_label" 
+							v-model="beneficiary_label" placeholder="Beneficiary" class="form-control" />
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-2 col-form-label" for="training_label">Training</label>
+					<div class="col-sm-6">
+						<input type="text" id="training_label" name="training_label" 
+							v-model="training_label" placeholder="Training" class="form-control" />
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-2 col-form-label" for="distribution_label">Distribution</label>
+					<div class="col-sm-6">
+						<input type="text" id="distribution_label" name="distribution_label" 
+							v-model="distribution_label" class="form-control" placeholder="Distribution"/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="text-right admin-form-actions">
+						<button type="button" class="btn btn-close" @click="cancelUpdate()">Close</button>
+						<button type="button" class="btn btn-success" @click="updateFormLibraryLabels()">Update</button>
+					</div>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
-<script>
-	$('#reset-config-form').click(() => {
-		document.location.href = '/accounts/admin/profile_settings'
-	})
-</script>
-{% block extra_js_in_body %}
-<script type="text/javascript" src="{{ STATIC_URL }}js/admin.js"></script>
-{% endblock %}
 {% endblock content %}
+{% block extra_js_in_body %}
+<script type="text/javascript" src="{{ STATIC_URL }}vue.js/organization/form_library_labels.js"></script>
+{% endblock extra_js_in_body %}
