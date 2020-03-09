@@ -1,5 +1,7 @@
 {% extends "base.html" %} {% load group_tag %} {% block content %}
 {% include './modals/add_training_modal.html' %}
+{% include './participants_table.html'%}
+
 
 <div class="container">
   {% block breadcrumbs %}
@@ -25,20 +27,14 @@
 
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
-          <!-- <a
-            role="button"
-            class="btn btn-sm btn-default"
-            data-toggle="modal"
-            data-target="#importModal"
-            ><span class="glyphicon glyphicon-import"></span> Import Training</a
-          > -->
 
           <button
-            role="dialog"
-            data-toggle="modal"
-            data-target="#addTrainingModal"
-            class="btn btn-sm btn-primary"
-            ><i class="fa fa-plus"></i> Training</button
+              role="dialog"
+              data-toggle="modal"
+              data-target="#addTrainingModal"
+              class="btn btn-sm btn-primary"
+          ><i class="fa fa-plus"></i> Training
+          </button
           >
         </div>
       </div>
@@ -46,80 +42,79 @@
   </div>
 
   <table class="table" id="trainingTable">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-          <th class="text-right">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for training in get_training %}
-        <tr>
-          <td>
-            <a href="/formlibrary/training_update/{{training.id}}/" 
-              data-toggle="tooltip" 
-              title="{{training.training_name}}">
-              {{ training.training_name | truncatechars:50 }}
-            </a>
-          </td>
-          <td>{{ training.start_date }}</td>
-          <td>{{ training.end_date  }}</td>
-          <td class="text-right">
-            <!-- Action buttons -->
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-default disabled">
-                More
-              </button>
-              <button
-                type="button"
-                class="btn btn-default btn-sm dropdown-toggle"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <span class="caret"></span>
-                <span class="sr-only">Toggle Dropdown</span>
-              </button>
-              <ul class="dropdown-menu">
-                <li class="text-danger">
-                  <a href="/formlibrary/training_update/{{training.id}}/">Edit</a>
-                </li>
-                <li class="divider"></li>
-                <li class="text-danger">
-                    <a 
-                    class="text-danger"
-                      href="#deleteItemModal{{training.id}}" 
-                      data-toggle="modal" 
-                      onclick="setItemToDelete({{training.id}})"
-                      data-target="#deleteItemModal{{training.id}}">
-                      Delete
-                    </a>
-                </li>
-              </ul>
-            </div>
-          </td>
-          {% include 'shared/confirm_delete_training_modal.html' %}
-        </tr>
-        {% endfor %}
-      </tbody>
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th class="text-right">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for training in get_training %}
+    <tr>
+      <td class="details-control" data-indicator-id="{{ training.id }}" data-program-id="{{ program_id }}">
+        <span class="expandable collapsed" data-toggle="collapse" href="#row-{{training.id}}" aria-expanded="false"
+              aria-controls="row-{{training.id}}">
+          <button class="btn btn-link"><i class="fa fa-angle-right"></i></button>
+        </span>
+        <a href="/formlibrary/training_update/{{training.id}}/"
+           data-toggle="tooltip"
+           title="{{training.training_name}}">
+          {{ training.training_name | truncatechars:50 }}
+        </a>
+        <!-- Needed to rotate icon on click -->
+        <div class="collapsed" id="row-{{training.id}}"></div>
+      </td>
+      <td>{{ training.start_date }}</td>
+      <td>{{ training.end_date }}</td>
+      <td class="text-right">
+        <!-- Action buttons -->
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-default disabled">
+            More
+          </button>
+          <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+          >
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+            <li class="text-danger">
+              <a href="/formlibrary/training_update/{{training.id}}/">Edit</a>
+            </li>
+            <li class="divider"></li>
+            <li class="text-danger">
+              <a
+                  class="text-danger"
+                  href="#deleteItemModal{{training.id}}"
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{training.id}})"
+                  data-target="#deleteItemModal{{training.id}}">
+                Delete
+              </a>
+            </li>
+          </ul>
+        </div>
+      </td>
+      {% include 'shared/confirm_delete_training_modal.html' %}
+    </tr>
+    {% endfor %}
+    </tbody>
   </table>
-  <!-- Table -->
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('#trainingTable').dataTable();
-    });
-  </script>
-
   <!-- Modal -->
   <div
-    class="modal fade"
-    id="importModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="myModalLabel"
-    aria-hidden="true"
+      class="modal fade"
+      id="importModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      aria-hidden="true"
   >
     <div class="modal-dialog">
       <div class="modal-content"></div>
@@ -131,3 +126,7 @@
 </div>
 
 {% endblock content %}
+{% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}vue.js/training_participants_table.js"></script>
+{% endblock extra_js_in_body %}
+

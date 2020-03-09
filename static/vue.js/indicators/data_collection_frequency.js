@@ -19,7 +19,7 @@ new Vue({
 		modalHeader: 'Add data collection frequency',
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/indicators/data_collection_frequency/list')
+		this.makeRequest('GET', '/indicators/data_collection_frequency/')
 			.then(response => {
 				if (response.data) {
 					this.frequencies = response.data.sort((a, b) => b.id - a.id);
@@ -96,7 +96,7 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'POST',
-					`/indicators/data_collection_frequency/add`,
+					`/indicators/data_collection_frequency/`,
 					{
 						frequency: this.frequency,
 						description: this.description
@@ -125,7 +125,7 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'PUT',
-					`/indicators/data_collection_frequency/edit/${this.currentFrequency.id}`,
+					`/indicators/data_collection_frequency/${this.currentFrequency.id}`,
 					{ frequency: this.frequency, description: this.description }
 				);
 				if (response) {
@@ -156,9 +156,9 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'DELETE',
-					`/indicators/data_collection_frequency/delete/${id}`
+					`/indicators/data_collection_frequency/${id}`
 				);
-				if (response.data.success) {
+				if (response.status === 204) {
 					toastr.success('Data collection frequency is deleted');
 					this.frequencies = this.frequencies.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
