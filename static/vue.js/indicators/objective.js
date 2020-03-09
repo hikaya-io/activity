@@ -26,7 +26,7 @@ new Vue({
     filtered_program_id: 0,
     rows: 0,
     currentPage: 1,
-    perPage: 10
+    perPage: 5
   },
   beforeMount: function() {
     this.makeRequest('GET', '/indicators/objective/list')
@@ -44,12 +44,12 @@ new Vue({
           this.programs_list = response.data.programs_list;
           this.modalHeader = 'Add objective';
           this.rows = this.filtered_objectives.length;
-          // $(document).ready(() => {
-          //   $('#objectivesTable').DataTable({
-          //     pageLength: 10,
-          //     lengthMenu: [10, 20, 30, 40]
-          //   });
-          // });
+          $(document).ready(() => {
+            $('#objectivesTable').DataTable({
+              pageLength: 10,
+              lengthMenu: [10, 20, 30, 40]
+            });
+          });
         }
       })
       .catch(e => {
@@ -215,9 +215,7 @@ new Vue({
         );
         if (response.data.success) {
           toastr.success('Objective is deleted');
-          this.objectives = this.objectives.filter(
-            item => +item.id !== +id
-          );
+          this.objectives = this.objectives.filter(item => +item.id !== +id);
           this.setFilter(this.filtered_program_id);
           this.showDeleteModal = !this.showDeleteModal;
           this.modalHeader = 'Add Objective';
@@ -241,6 +239,7 @@ new Vue({
         );
       }
       this.rows = this.filtered_objectives.length;
+
     },
 
     /**

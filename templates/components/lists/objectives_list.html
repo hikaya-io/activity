@@ -81,18 +81,28 @@
     </div>
   </div>
   <!-- Objective table -->
-  <table class="table" id="objectivesTable" v-if="filtered_objectives.length">
+
+  <table
+    class="table"
+    id="objectivesTable"
+    v-if="filtered_objectives.length"
+    :per-page="perPage"
+    :current-page="currentPage"
+  >
     <thead>
       <tr>
         <th>Name</th>
         <th>{{ user.activity_user.organization.level_1_label }}</th>
         <th>Parent objective</th>
-        <!-- <th>Create Date</th> -->
         <th class="text-right"></th>
       </tr>
     </thead>
     <tbody>
-      <tr v-cloak v-for="objective in filtered_objectives" v-if="objective.name">
+      <tr
+        v-cloak
+        v-for="objective in filtered_objectives"
+        v-if="objective.name"
+      >
         <td>
           <a
             @click="toggleModal(objective)"
@@ -151,6 +161,33 @@
       </tr>
     </tbody>
   </table>
+  <!-- Use text in props -->
+
+  <!-- <b-table
+      id="objectivesTable"
+      :items="filtered_objectives"
+      :per-page="perPage"
+      :current-page="currentPage"
+      
+    ></b-table> -->
+
+  <b-pagination
+    v-model="currentPage"
+    :total-rows="rows"
+    :per-page="perPage"
+    prev-text="Prev"
+    next-text="Next"
+    class="mt-4"
+    aria-controls="objectivesTable"
+  >
+    <!-- <template v-slot:prev-text><span class="text-danger">Prev</span></template>
+    <template v-slot:next-text><span class="text-warning">Next</span></template>
+    <template v-slot:page="{ page, active }">
+      <b v-if="active">{{ page }}</b>
+      <i v-else>{{ page }}</i>
+    </template> -->
+  </b-pagination>
+
   <div style="text-align:center">
     <h4 v-if="!filtered_objectives.length">No objectives are added</h4>
   </div>
