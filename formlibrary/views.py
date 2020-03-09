@@ -3,6 +3,9 @@
 
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+from rest_framework.generics import ListAPIView
+from rest_framework.mixins import ListModelMixin
+
 from .models import TrainingAttendance, Beneficiary, Distribution
 from django.shortcuts import redirect
 
@@ -17,9 +20,11 @@ from django.db.models import Q
 
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.views.generic.detail import View
-from .mixins import AjaxableResponseMixin
+from .mixins import AjaxableResponseMixin, CustomPagination
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+
+from .serializers import BeneficiarySerializer
 
 
 class TrainingList(ListView):
@@ -477,6 +482,18 @@ class TrainingListObjects(View, AjaxableResponseMixin):
         final_dict = {'get_training': get_training}
 
         return JsonResponse(final_dict, safe=False)
+
+
+class TrainingParticipantListObjects(ListAPIView):
+
+    serializer_class = BeneficiarySerializer
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
+        pk = int(self.kwargs['pk'])
+        return Beneficiary.objects.filter(
+            training__pk=pk
+        ).prefetch_related('training')
 
 
 class BeneficiaryListObjects(View, AjaxableResponseMixin):
