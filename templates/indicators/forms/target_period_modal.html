@@ -1,0 +1,130 @@
+<form id="target_period_modal">
+    {% csrf_token %}
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="overall_target">Overall Target</label>
+                    <input
+                    type="number"
+                    id="overall_target"
+                    name="overall_target"
+                    :class="{ 
+                        'form-control': true,  
+                      }"
+                    v-model="overall_target"
+                    v-validate="'required'">
+                </div>
+            </div>
+          
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="baseline">Baseline</label>
+                    <input
+                    type="number"
+                    id="baseline"
+                    name="baseline"
+                    :class="{ 
+                        'form-control': true,  
+                      }"
+                    v-model="baseline"
+                    v-validate="'required'">
+                </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-12">
+                <label for="rationale_for_target" class="control-label">
+                    Rationale for target
+                </label>
+                <textarea 
+                name="rationale_for_target" 
+                cols="40" rows="3" 
+                maxlength="255" 
+                :class="{
+                        'textarea': true,
+                        'form-control': true,
+                    }"
+                id="id_rationale_for_target"
+                v-model="rationale" 
+                spellcheck="false"></textarea>
+            </div>
+          
+            <div class="col-md-6">
+                <div class="form-group" id="div_periodic_target">
+                    <label for="id_target_frequency">Target frequency</label>
+                    <select 
+                        name="target frequency"
+                        id="id_target_frequency"
+                        :class="{ 
+                            'form-control': true, 
+                          }"
+                        style="width:200px;"
+                        @change=setTarget($event)
+                        v-model="target_frequency" 
+                        v-validate="'required'">
+                        <option value="" disabled>Select target period</option>
+                        <option v-for="target in targets" :value="target.id">
+                                [[target.text]]
+                        </option>
+                    </select>
+                    <span v-show="errors.has('target period')" class="help is-danger">[[ errors.first('target period') ]]</span>
+                </div>
+            </div>
+          
+            <input
+              type="hidden"
+              name="periodic_targets_object"
+              id="periodic_targets_object"
+            />
+          </div>
+          
+          <div class="row" id="id_periodic_targets_section">
+            <div class="col-md-12" id="frequency_metadata">
+              <div class="row">
+                <div class="col-md-6" id="id_periods_generator">
+                  <div class="row">
+                    <div class="col-md-6">
+                      {{ form.target_frequency_start | as_crispy_field }}
+                    </div>
+          
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="number_of_target_periods"
+                          >Number of Target Periods*</label
+                        >
+                        <input
+                          class="form-control"
+                          type="number"
+                          name="number_of_target_periods"
+                          id="number_of_target_periods"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          
+              <div class="row" id="id_control_btns">
+                <div class="col-md-6">
+                  <div class="form-group text-right">
+                    <button
+                      type="button"
+                      class="btn btn-link btn-link-warning"
+                      id="clearTargets"
+                    >
+                      Remove all targets
+                    </button>
+                    <button type="button" class="btn btn-warning" id="addTargetsBtn">
+                      Add Targets
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-6" id="id_targets"></div>
+          </div>
+    </div>
+</form>
