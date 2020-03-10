@@ -20,7 +20,7 @@ new Vue({
 		modalHeader: '',
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/indicators/level/list')
+		this.makeRequest('GET', '/indicators/level/')
 			.then(response => {
 				if (response.data) {
                     this.levels = response.data.sort((a, b) => b.id - a.id);
@@ -108,7 +108,7 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'POST',
-					`/indicators/level/add`,
+					`/indicators/level/`,
 					{
                         name: this.name,
 						description: this.description,
@@ -116,7 +116,7 @@ new Vue({
 					}
                 );
 				if (response) {
-                    toastr.success('Level successfuly saved');
+                    toastr.success('Level successfully saved');
 					this.levels.unshift(response.data);
 					if (!saveNew) {
 						this.toggleModal();
@@ -128,7 +128,7 @@ new Vue({
 					this.$validator.reset();
 				}
 			} catch (error) {
-				toastr.error('There was a problem saving your data!!');
+				toastr.error('There was a problem saving your data');
 			}
 		},
 
@@ -139,7 +139,7 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'PUT',
-					`/indicators/level/edit/${this.currentLevel.id}`,
+					`/indicators/level/${this.currentLevel.id}`,
 					{ 
                         name: this.name, 
 						description: this.description,
@@ -147,7 +147,7 @@ new Vue({
                     }
 				);
 				if (response) {
-					toastr.success('Level was successfuly updated');
+					toastr.success('Level was successfully updated');
 					const newLevels = this.levels.filter(item => {
 						return item.id != this.currentLevel.id;
 					});
@@ -162,7 +162,7 @@ new Vue({
 					this.toggleModal();
 				}
 			} catch (e) {
-				toastr.error('There was a problem updating your data!!');
+				toastr.error('There was a problem updating your data');
 			}
 		},
 
@@ -174,19 +174,19 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'DELETE',
-					`/indicators/level/delete/${id}`
+					`/indicators/level/${id}`
 				);
-				if (response.data.success) {
-					toastr.success('Level was successfuly deleted');
+				if (response.status === 204) {
+					toastr.success('Level was successfully deleted');
 					this.levels = this.levels.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
 					this.modalHeader = 'Add Level';
 					this.itemToDelete = null;
 				} else {
-					toastr.error('There was a problem deleting level!!');
+					toastr.error('There was a problem deleting level');
 				}
 			} catch (error) {
-				toastr.error('There was a server error!!');
+				toastr.error('There was a server error');
 			}
 		},
 
@@ -195,7 +195,7 @@ new Vue({
          * @param { string } method - request method
          * @param { string } url  - request url
          * @param { string } data - request payload
-         * @return { Promise } - axios respons ePromise
+         * @return { Promise } - axios response Promise
          */
 		makeRequest(method, url, data = null) {
 			axios.defaults.xsrfHeaderName = 'X-CSRFToken';

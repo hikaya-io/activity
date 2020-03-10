@@ -75,3 +75,4 @@ xlrd==1.2.0
 xlwt==1.3.0
 psycopg2-binary
 django-select2
+django-map-widgets

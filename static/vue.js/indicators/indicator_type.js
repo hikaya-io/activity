@@ -111,7 +111,7 @@ new Vue({
 					}
                 );
 				if (response) {
-                    toastr.success('Indicator type successfuly saved');
+                    toastr.success('Indicator type successfully saved');
 					this.indicatorTypes.unshift(response.data);
 					if (!saveNew) {
 						this.toggleModal();
@@ -140,7 +140,7 @@ new Vue({
                     }
 				);
 				if (response) {
-					toastr.success('Indicator type was successfuly updated');
+					toastr.success('Indicator type was successfully updated');
 					const newIndicatorTypes = this.indicatorTypes.filter(item => {
 						return item.id != this.currentIndicatorType.id;
 					});
@@ -154,7 +154,7 @@ new Vue({
 					this.toggleModal();
 				}
 			} catch (e) {
-				toastr.error('There was a problem updating your data!!');
+				toastr.error('There was a problem updating your data');
 			}
 		},
 
@@ -169,13 +169,13 @@ new Vue({
 					`/indicators/indicator_types/${id}`
 				);
 				if (response.status === 204) {
-					toastr.success('Indicator type was successfuly deleted');
+					toastr.success('Indicator type was successfully deleted');
 					this.indicatorTypes = this.indicatorTypes.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
 					this.modalHeader = 'Add Indicator Type';
 					this.itemToDelete = null;
 				} else {
-					toastr.error('There was a problem deleting indicator type!!');
+					toastr.error('There was a problem deleting indicator type');
 				}
 			} catch (error) {
 				toastr.error('There was a server error!!');
