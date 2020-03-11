@@ -2216,7 +2216,7 @@ class ObjectiveView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAP
 
     def get_queryset(self):
         organization = self.request.user.activity_user.organization.id
-        return Objective.objects.filter(organization=organization)
+        return Objective.objects.all()
 
 
 # Vue.js Views
@@ -2236,7 +2236,6 @@ class DataCollectionFrequencyView(generics.ListCreateAPIView, generics.RetrieveU
     def get_queryset(self):
         organization = self.request.user.activity_user.organization.id
         return DataCollectionFrequency.objects.filter(organization=organization)
-
 
 """
 Level views

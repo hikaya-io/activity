@@ -82,6 +82,8 @@ class Objective(models.Model):
     parent = models.ForeignKey(
         'self', blank=True, null=True, related_name='children', on_delete=models.SET_NULL)
     description = models.TextField(max_length=765, blank=True)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
     create_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
