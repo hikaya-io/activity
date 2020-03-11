@@ -14,7 +14,7 @@ import json
 from rest_framework.permissions import IsAuthenticated
 
 from .export import IndicatorResource, CollectedDataResource
-from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer
+from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer, DataCollectionFrequencySerializer
 from .tables import IndicatorDataTable
 from .forms import (
     IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
@@ -2242,87 +2242,18 @@ class ObjectiveDelete(GView):
 DataCollectionFrequency views
 """
 
+class DataCollectionFrequencyView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = DataCollectionFrequency.objects.all()
+    serializer_class = DataCollectionFrequencySerializer
+    permission_classes = [IsAuthenticated]
 
-class DataCollectionFrequencyCreate(GView):
-    """
-    View to create DataCollectionFrequency and return Json response
-    """
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        organization = request.user.activity_user.organization
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
 
-        frequency_name = data.get('frequency')
-        frequency_description = data.get('description')
-        collection_frequency = DataCollectionFrequency.objects.create(
-            frequency=frequency_name,
-            description=frequency_description,
-            organization=organization
-        )
-
-        if collection_frequency:
-            return JsonResponse(model_to_dict(collection_frequency))
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-
-class DataCollectionFrequencyList(GView):
-    """
-    View to create DataCollectionFrequency and return Json response
-    """
-    def get(self, request):
-
-        organization = request.user.activity_user.organization
-
-        try:
-            frequencies = DataCollectionFrequency.objects.filter(organization=organization).values()
-            return JsonResponse(list(frequencies), safe=False)
-        except Exception as e:
-            return JsonResponse(dict(error=str(e)))
-
-
-class DataCollectionFrequencyUpdate(GView):
-    """
-    View to Update DataCollectionFrequency and return Json response
-    """
-    def put(self, request, *args, **kwargs):
-        frequency_id = int(self.kwargs.get('id'))
-        data = json.loads(request.body.decode('utf-8'))
-        organization = request.user.activity_user.organization
-        frequency = data.get('frequency')
-        description = data.get('description')
-        collection_frequency = DataCollectionFrequency.objects.get(
-            id=frequency_id
-        )
-
-        collection_frequency.frequency = frequency
-        collection_frequency.description = description
-        collection_frequency.organization = organization
-        collection_frequency.save()
-
-        if collection_frequency:
-            return JsonResponse(model_to_dict(collection_frequency))
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-
-class DataCollectionFrequencyDelete(GView):
-    """
-    View to Delete DataCollectionFrequency and return Json response
-    """
-    def delete(self, request, *args, **kwargs):
-        frequency_id = int(self.kwargs.get('id'))
-        frequency = DataCollectionFrequency.objects.get(
-            id=int(frequency_id)
-        )
-        frequency.delete()
-
-        try:
-            DataCollectionFrequency.objects.get(id=int(frequency_id))
-            return JsonResponse(dict(error='Failed'))
-
-        except DataCollectionFrequency.DoesNotExist:
-
-            return JsonResponse(dict(success=True))
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return DataCollectionFrequency.objects.filter(organization=organization)
 
 
 """

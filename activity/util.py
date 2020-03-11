@@ -182,6 +182,11 @@ def get_nav_links(nav):
             'status': '',
             'link': '/accounts/admin/component_admin'
         },
+        {
+            'label': 'Maps',
+            'status': '',
+            'link': '/accounts/admin/map_settings'
+        },
     ]
     for item in nav_links:
         if item['label'] == nav:
