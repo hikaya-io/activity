@@ -103,16 +103,11 @@ class Level(models.Model):
     sort = models.IntegerField(null=True, blank=True)
     organization = models.ForeignKey(
         Organization, null=True, blank=True, on_delete=models.SET_NULL)
-    create_date = models.DateTimeField(null=True, blank=True)
+    create_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.name
-
-    # def save(self):
-    #     if self.create_date is None:
-    #         self.create_date = datetime.now()
-    #     super(Level, self).save()
 
     def save(self, **kwargs):
         if self.create_date is None:
