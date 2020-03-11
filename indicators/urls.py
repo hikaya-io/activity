@@ -144,27 +144,6 @@ urlpatterns = [
      
 
     # Levels Urls
-#     path(
-#         'level/list',
-#         LevelList.as_view(),
-#         name='level_list'
-#     ),
-#     path(
-#         'level/add',
-#         LevelCreate.as_view(),
-#         name='level_add'
-#     ),
-#     path(
-#         'level/edit/<int:id>',
-#         LevelUpdate.as_view(),
-#         name='level_edit'
-#     ),
-#     path(
-#          'level/delete/<int:id>',
-#          LevelDelete.as_view(),
-#          name='level_delete'
-#      ),
-
     re_path(
           r'level/(?P<pk>.*)',
           LevelView.as_view(),

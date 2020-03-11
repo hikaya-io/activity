@@ -138,7 +138,7 @@ new Vue({
 		async updateLevel() {
 			try {
 				const response = await this.makeRequest(
-					'PUT',
+					'PATCH',
 					`/indicators/level/${this.currentLevel.id}`,
 					{ 
                         name: this.name, 

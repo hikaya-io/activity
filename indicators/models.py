@@ -109,11 +109,6 @@ class Level(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, **kwargs):
-        if self.create_date is None:
-            self.create_date = datetime.now()
-        super(Level, self).save(kwargs)
-
     def get_absolute_url(self):
         return reverse('levels_list')
 
