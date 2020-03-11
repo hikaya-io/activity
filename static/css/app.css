@@ -1321,11 +1321,37 @@ textarea:focus {
 #participantsTable th {
   border-top: none;
 }
+
 .no-table-data {
   font-style: italic;
   color: #8b8d9b;
 }
 
-#participantsTable th {
+#collectedDataTable th:nth-child(1) {
   border-top: none;
 }
+
+#collectedDataTable th:nth-child(2) {
+  border-top: none;
+}
+
+#collectedDataTable th:nth-child(3) {
+  border-top: none;
+}
+
+#collectedDataTable th:nth-child(4) {
+  border-top: none;
+}
+
+#collectedDataTable th:nth-child(5) {
+  border-top: none;
+}
+
+#collectedDataTable th:nth-child(6) {
+  border-top: none;
+}
+
+#collectedDataTable th:nth-child(7) {
+  border-top: none;
+}
+
