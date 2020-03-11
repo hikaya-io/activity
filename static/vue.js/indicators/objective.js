@@ -238,20 +238,20 @@ new Vue({
           el => el.program_id === id
         );
       }
-      $(document).ready(() => {
-        $('#objectivesTable')
-          .DataTable()
-          .clear()
-          .destroy();
+      // $(document).ready(() => {
+      //   $('#objectivesTable')
+      //     .DataTable()
+      //     .clear()
+      //     .destroy();
 
-        setTimeout(() => {
-          this.filtered_objectives = this.filtered_objectives;
-          $('#objectivesTable').DataTable({
-            pageLength: 10,
-            lengthMenu: [10, 20, 30, 40]
-          });
-        }, 100);
-      });
+      //   setTimeout(() => {
+      //     this.filtered_objectives = this.filtered_objectives;
+      //     $('#objectivesTable').DataTable({
+      //       pageLength: 10,
+      //       lengthMenu: [10, 20, 30, 40]
+      //     });
+      //   }, 100);
+      // });
       this.rows = this.filtered_objectives.length;
     },
 
