@@ -93,11 +93,6 @@ class Objective(models.Model):
     def __str__(self):
         return '{}'.format(self.name) or ''
 
-    # def save(self):
-    #     if self.create_date is None:
-    #         self.create_date = datetime.now()
-    #     super(Objective, self).save()
-
 
 class Level(models.Model):
     name = models.CharField(max_length=135, blank=True)

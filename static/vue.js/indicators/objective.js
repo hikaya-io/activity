@@ -26,15 +26,9 @@ new Vue({
     this.makeRequest('GET', '/indicators/objective/')
       .then(response => {
         if (response.data) {
-          console.log(response);
-          this.objectives = response.data.objectives.sort(
-            (a, b) => b.id - a.id
-          );
-          this.parent_obj_list = response.data.objectives.sort(
-            (a, b) => b.id - a.id
-          );
-          this.programs_list = response.data.programs_list;
-          this.modalHeader = 'Add objective';
+          console.log('objective', response);
+          this.objectives = response.data.sort((a, b) => b.id - a.id);
+          this.parent_obj_list = response.data.sort((a, b) => b.id - a.id);
           $(document).ready(() => {
             $('#objectivesTable').DataTable({
               pageLength: 10,
@@ -48,6 +42,23 @@ new Vue({
           'There was a problem loading objectives from the database'
         );
         this.objectives = [];
+      });
+
+    this.makeRequest('GET', '/workflow/level1_program/')
+      .then(response => {
+        if (response.data) {
+          console.log('wfl1 response', response.data);
+          this.programs_list = response.data.map(el => {
+            el['program_id'] = el['id'];
+            delete el['id']
+            return el
+          });
+          this.programs_list= response.data
+        }
+        console.log('program list', this.programs_list);
+      })
+      .catch(e => {
+        toastr.error('There was a problem loading programs from the database');
       });
   },
   methods: {

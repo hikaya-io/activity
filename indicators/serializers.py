@@ -4,7 +4,6 @@ from indicators.models import (
     Indicator, IndicatorType, PeriodicTarget, CollectedData, 
     DataCollectionFrequency, Objective,
     )
-from workflow.models import  (Program,)
 
 
 class IndicatorSerializer(serializers.ModelSerializer):
@@ -41,11 +40,6 @@ class DataCollectionFrequencySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ObjectiveSerializer(serializers.ModelSerializer):
-    program_list = serializers.SerializerMethodField(read_only=True)
-
     class Meta:
         model = Objective
         fields = '__all__'
-
-    def get_program_list(self, obj):
-        return Program.objects.values('id', 'name')
