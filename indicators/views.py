@@ -14,7 +14,7 @@ import json
 from rest_framework.permissions import IsAuthenticated
 
 from .export import IndicatorResource, CollectedDataResource
-from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer, DataCollectionFrequencySerializer
+from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer, DataCollectionFrequencySerializer, ObjectiveSerializer
 from .tables import IndicatorDataTable
 from .forms import (
     IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
@@ -2112,129 +2112,111 @@ class StrategicObjectiveUpdateView(UpdateView):
 """
 Objectives views Vue.js
 """
-class ObjectiveList(GView):
-    """
-    View to fetch objectives
-    """
-    def get(self, request):
-
-        user = ActivityUser.objects.filter(user=request.user).first()
-        programs_list = Program.objects.filter(organization=user.organization).values()
-        objectives = Objective.objects.filter(program__organization=request.user.activity_user.organization).values()
-        if objectives or programs_list:
-            return JsonResponse(
-                dict(
-                    objectives=list(objectives),
-                    programs_list=list(programs_list)
-                ),
-                safe=False
-            )
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-class ObjectiveCreate(GView):
-    """
-    View to create Objective and return Json response
-    """
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        objective = Objective(
-            name=data.get('name'),
-            description=data.get('description'),
-            program_id=int(data.get('program_id')),
-            parent_id=int(data.get('parent_id')) if data.get('parent_id') else None
-        )
-        objective.save()
-        obj = model_to_dict(objective)
-        obj['program_id'] = obj.pop('program')
-        obj['parent_id'] = obj.pop('parent')
-
-        if objective:
-            return JsonResponse(obj)
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-
-class ObjectiveUpdate(GView):
-    """
-    View to Update Objective and return Json response
-    """
-    def put(self, request, *args, **kwargs):
-        objective_id = int(self.kwargs.get('id'))
-        data = json.loads(request.body.decode('utf-8'))
-        objective_name = data.get('name')
-        objective_description = data.get('description')
-        objective_parent = int(data.get('parent_id')) if data.get('parent_id') else None
-        objective_program = int(data.get('program_id'))
-
-        objective = Objective.objects.get(
-            id=objective_id
-        )
-        objective.name = objective_name
-        objective.description = objective_description
-        objective.program_id = objective_program
-        objective.parent_id = objective_parent
-        objective.save()
-
-        obj = model_to_dict(objective)
-        obj['program_id'] = obj.pop('program')
-        obj['parent_id'] = obj.pop('parent')
-
-        if objective:
-            return JsonResponse(obj)
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-
-class ObjectiveDelete(GView):
-    """
-    View to Delete Objective and return Json response
-    """
-    def delete(self, request, *args, **kwargs):
-        objective_id = int(self.kwargs.get('id'))
-        objective = Objective.objects.get(
-            id=int(objective_id)
-        )
-        objective.delete()
-
-        try:
-            Objective.objects.get(id=int(objective_id))
-            return JsonResponse(dict(error='Failed'))
-
-        except Objective.DoesNotExist:
-            return JsonResponse(dict(success=True))
-
-
-# class ObjectiveUpdateView(UpdateView):
-#     model = Objective
-#     template_name_suffix = '_update_form'
-#     success_url = '/indicators/objectives'
-#     form_class = ObjectiveForm
-
-#     # add the request to the kwargs
-#     def get_form_kwargs(self):
-#         kwargs = super(ObjectiveUpdateView, self).get_form_kwargs()
-#         kwargs['request'] = self.request
-#         kwargs['current_objective'] = self.get_object()
-#         return kwargs
-
-#     def get_context_data(self, **kwargs):
-#         context = super(ObjectiveUpdateView, self).get_context_data(**kwargs)
-#         context['current_objective'] = self.get_object()
-#         context['active'] = ['indicators']
-#         return context
-
-
-# def objective_delete(request, pk):
+# class ObjectiveList(GView):
 #     """
-#     Delete strategic objective
-#     :param request:
-#     :param pk:
-#     :return:
+#     View to fetch objectives
 #     """
-#     objective = Objective.objects.get(pk=int(pk))
-#     objective.delete()
-#     return redirect('/indicators/objectives')
+#     def get(self, request):
+
+#         user = ActivityUser.objects.filter(user=request.user).first()
+#         programs_list = Program.objects.filter(organization=user.organization).values()
+#         objectives = Objective.objects.filter(program__organization=request.user.activity_user.organization).values()
+#         if objectives or programs_list:
+#             return JsonResponse(
+#                 dict(
+#                     objectives=list(objectives),
+#                     programs_list=list(programs_list)
+#                 ),
+#                 safe=False
+#             )
+#         else:
+#             return JsonResponse(dict(error='Failed'))
+
+# class ObjectiveCreate(GView):
+#     """
+#     View to create Objective and return Json response
+#     """
+#     def post(self, request):
+#         data = json.loads(request.body.decode('utf-8'))
+#         objective = Objective(
+#             name=data.get('name'),
+#             description=data.get('description'),
+#             program_id=int(data.get('program_id')),
+#             parent_id=int(data.get('parent_id')) if data.get('parent_id') else None
+#         )
+#         objective.save()
+#         obj = model_to_dict(objective)
+#         obj['program_id'] = obj.pop('program')
+#         obj['parent_id'] = obj.pop('parent')
+
+#         if objective:
+#             return JsonResponse(obj)
+#         else:
+#             return JsonResponse(dict(error='Failed'))
+
+
+# class ObjectiveUpdate(GView):
+#     """
+#     View to Update Objective and return Json response
+#     """
+#     def put(self, request, *args, **kwargs):
+#         objective_id = int(self.kwargs.get('id'))
+#         data = json.loads(request.body.decode('utf-8'))
+#         objective_name = data.get('name')
+#         objective_description = data.get('description')
+#         objective_parent = int(data.get('parent_id')) if data.get('parent_id') else None
+#         objective_program = int(data.get('program_id'))
+
+#         objective = Objective.objects.get(
+#             id=objective_id
+#         )
+#         objective.name = objective_name
+#         objective.description = objective_description
+#         objective.program_id = objective_program
+#         objective.parent_id = objective_parent
+#         objective.save()
+
+#         obj = model_to_dict(objective)
+#         obj['program_id'] = obj.pop('program')
+#         obj['parent_id'] = obj.pop('parent')
+
+#         if objective:
+#             return JsonResponse(obj)
+#         else:
+#             return JsonResponse(dict(error='Failed'))
+
+
+# class ObjectiveDelete(GView):
+#     """
+#     View to Delete Objective and return Json response
+#     """
+#     def delete(self, request, *args, **kwargs):
+#         objective_id = int(self.kwargs.get('id'))
+#         objective = Objective.objects.get(
+#             id=int(objective_id)
+#         )
+#         objective.delete()
+
+#         try:
+#             Objective.objects.get(id=int(objective_id))
+#             return JsonResponse(dict(error='Failed'))
+
+#         except Objective.DoesNotExist:
+#             return JsonResponse(dict(success=True))
+
+
+class ObjectiveView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = Objective.objects.all()
+    serializer_class = ObjectiveSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return Objective.objects.filter(organization=organization)
 
 
 # Vue.js Views
@@ -2259,7 +2241,6 @@ class DataCollectionFrequencyView(generics.ListCreateAPIView, generics.RetrieveU
 """
 Level views
 """
-
 
 class LevelCreate(CreateView):
     """

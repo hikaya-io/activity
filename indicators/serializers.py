@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from indicators.models import Indicator, IndicatorType, PeriodicTarget, CollectedData, DataCollectionFrequency
+from indicators.models import Indicator, IndicatorType, PeriodicTarget, CollectedData, DataCollectionFrequency, Objective
 
 
 class IndicatorSerializer(serializers.ModelSerializer):
@@ -34,4 +34,9 @@ class PeriodicTargetSerializer(serializers.ModelSerializer):
 class DataCollectionFrequencySerializer(serializers.ModelSerializer):
     class Meta:
         model = DataCollectionFrequency
+        fields = '__all__'
+
+class ObjectiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Objective
         fields = '__all__'

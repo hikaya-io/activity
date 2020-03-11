@@ -23,7 +23,7 @@ new Vue({
     modalHeader: 'Add objective'
   },
   beforeMount: function() {
-    this.makeRequest('GET', '/indicators/objective/list')
+    this.makeRequest('GET', '/indicators/objective/')
       .then(response => {
         if (response.data) {
           this.objectives = response.data.objectives.sort(
@@ -128,7 +128,7 @@ new Vue({
       try {
         const response = await this.makeRequest(
           'POST',
-          `/indicators/objective/add`,
+          `/indicators/objective/`,
           {
             name: this.name,
             description: this.description,
@@ -160,8 +160,8 @@ new Vue({
     async updateObjective() {
       try {
         const response = await this.makeRequest(
-          'PUT',
-          `/indicators/objective/edit/${this.currentObjective.id}`,
+          'PATCH',
+          `/indicators/objective/${this.currentObjective.id}`,
           {
             name: this.name,
             description: this.description,
@@ -198,9 +198,9 @@ new Vue({
       try {
         const response = await this.makeRequest(
           'DELETE',
-          `/indicators/objective/delete/${id}`
+          `/indicators/objective/${id}`
         );
-        if (response.data.success) {
+        if (response.status === 204) {
           toastr.success('Objective is deleted');
           this.objectives = this.objectives.filter(item => +item.id !== +id);
           this.showDeleteModal = !this.showDeleteModal;
