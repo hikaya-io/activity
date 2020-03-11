@@ -113,25 +113,6 @@ urlpatterns = [
          name='indicator-targets'),
 
 # Objectives
-     # path(     
-     #    'objective/list',
-     #    ObjectiveList.as_view(),
-     #    name='objective_list'
-     # ),
-     # path(
-     #    'objective/add',
-     #    ObjectiveCreate.as_view(),
-     #    name='objective_add'
-     # ),
-     # path('objective/edit/<int:id>', 
-     #     ObjectiveUpdate.as_view(),
-     #     name='objective_update'
-     # ),
-     # path('objective/delete/<int:id>', 
-     #     ObjectiveDelete.as_view(),
-     #     name='objective_delete'
-     # ),
-
      re_path(
           r'objective/(?P<pk>.*)',
           ObjectiveView.as_view(),
