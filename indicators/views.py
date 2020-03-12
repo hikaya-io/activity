@@ -14,11 +14,7 @@ import json
 from rest_framework.permissions import IsAuthenticated
 
 from .export import IndicatorResource, CollectedDataResource
-<<<<<<< HEAD
-from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer, DataCollectionFrequencySerializer, ObjectiveSerializer
-=======
-from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer
->>>>>>> dev
+from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer, DataCollectionFrequencySerializer, ObjectiveSerializer, LevelSerializer
 from .tables import IndicatorDataTable
 from .forms import (
     IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
