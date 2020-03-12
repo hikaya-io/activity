@@ -32,6 +32,9 @@ ALLOWED_HOSTS = []
 
 '''EMAIL CONFIGURATION'''
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
+# For local environment
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# For environments where sender email is configured
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-host

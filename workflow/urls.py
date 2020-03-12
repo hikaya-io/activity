@@ -48,7 +48,6 @@ urlpatterns = [
     path('stakeholder/delete_stakeholder/<int:pk>/',
          delete_stakeholder, name='delete_stakeholder'),
     path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
-    path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/list/<slug:program>/<slug:status>/', ProgramDash.as_view(),
         name='projects_list'),
 
