@@ -1291,6 +1291,8 @@ class SiteProfileForm(forms.ModelForm):
         self.fields['filled_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
         self.fields['map'].widget = HiddenInput()
+        self.fields['type'].queryset = ProfileType.objects.filter(
+                organization=self.request.user.activity_user.organization).distinct()
 
 
 class ProfileTypeForm(forms.ModelForm):
