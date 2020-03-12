@@ -37,7 +37,7 @@
     </ul>
   </div>
 
-  <!-- poroject filter -->
+  <!-- project filter -->
   {% if form_component != 'beneficiary_list' %}
   <div class="btn-group" role="group">
     <button
@@ -70,7 +70,7 @@
         aria-haspopup="true"
         aria-expanded="false"
       >
-        Training
+        {{ user.activity_user.organization.training_label }}
         <span class="fa {% if training_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
       </button>
       <ul class="dropdown-menu">
@@ -90,7 +90,7 @@
         aria-haspopup="true"
         aria-expanded="false"
       >
-        Distribution
+        {{ user.activity_user.organization.distribution_label }}
         <span class="fa {% if distribution_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
       </button>
       <ul class="dropdown-menu">

@@ -165,13 +165,13 @@
               aria-expanded="false">Form Library <i class="fa fa-angle-down"></i></a>
             <ul class="dropdown-menu">
               <li>
-                <a href="/formlibrary/beneficiary_list/0/0/0/"> Beneficiaries</a>
+                <a href="/formlibrary/beneficiary_list/0/0/0/"> {{ user.activity_user.organization.beneficiary_label }}</a>
               </li>
               <li>
-                <a href="/formlibrary/distribution_list/0/0/"> Distributions</a>
+                <a href="/formlibrary/distribution_list/0/0/"> {{ user.activity_user.organization.distribution_label }}</a>
               </li>
               <li>
-                <a href="/formlibrary/training_list/0/0/"> Trainings</a>
+                <a href="/formlibrary/training_list/0/0/"> {{ request.user.activity_user.organization.training_label }}</a>
               </li>
             </ul>
           </li>
