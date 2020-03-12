@@ -39,6 +39,7 @@
 
   var save = (id) => {
     $(`#${id}`).click(function (e) {
+      e.preventDefault();
       const formValue = $('#addProgramForm').serializeArray();
 
       const obj = {};
