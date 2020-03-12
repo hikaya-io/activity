@@ -1321,11 +1321,12 @@ textarea:focus {
 #participantsTable th {
   border-top: none;
 }
+
 .no-table-data {
   font-style: italic;
   color: #8b8d9b;
 }
 
-#participantsTable th {
-  border-top: none;
+#collectedDataTable th { 
+  border-top: none; 
 }
