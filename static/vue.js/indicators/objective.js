@@ -200,7 +200,7 @@ new Vue({
           'DELETE',
           `/indicators/objective/delete/${id}`
         );
-        if (response.data.success) {
+        if (response.status===204) {
           toastr.success('Objective is deleted');
           this.objectives = this.objectives.filter(item => +item.id !== +id);
           this.showDeleteModal = !this.showDeleteModal;
