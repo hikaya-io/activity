@@ -96,9 +96,11 @@ class IndexView(LoginRequiredMixin, TemplateView):
         projects_tracking = ProjectComplete.objects.filter(prog_q)
         indicators_kpi = indicators.filter(key_performance_indicator=True)
         latest_indicators = indicators.filter(key_performance_indicator=True)[:10]
+        get_all_sectors = Sector.objects.all()
 
         context = {
             'selected_program': selected_program,
+            'get_all_sectors': get_all_sectors,
             'get_programs': get_programs,
             'get_projects': projects,
             'get_indicators': indicators,
