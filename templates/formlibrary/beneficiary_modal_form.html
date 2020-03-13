@@ -41,6 +41,7 @@
         age: $("#age").val(),
         gender: $("#gender").val()
       };
+      console.log('data : ', data);
 
       $.ajax({
         url: "/formlibrary/beneficiary_add/0/",
@@ -71,6 +72,10 @@
           }
         },
         error: function(xhr, status, error) {
+          console.log('error : ', error);
+          console.log('status : ', status);
+          console.log('xhr : ', xhr);
+
           toastr.error(error, "Failed");
         }
       });

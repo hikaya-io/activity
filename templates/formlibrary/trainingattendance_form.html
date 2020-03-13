@@ -13,7 +13,7 @@
     {% endfor %} {% endif %} {% block breadcrumbs %}
     <ul class="breadcrumb">
       <li><a href="{% url 'index' %}">My Dashboard</a></li>
-      <li><a href="/formlibrary/training_list/0/0/">Trainings</a></li>
+      <li><a href="/formlibrary/training_list/0/0/">{{ request.user.activity_user.organization.training_label }}</a></li>
       <li class="active">Details</li>
     </ul>
   {% endblock %}
