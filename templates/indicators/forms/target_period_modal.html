@@ -1,6 +1,8 @@
 <form id="target_period_modal">
     {% csrf_token %}
-    <div class="modal-body">
+    <div class="modal-body" 
+        style="height: 300px;
+                overflow-y: auto;">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -10,8 +12,9 @@
                     id="overall_target"
                     name="overall_target"
                     :class="{ 
-                        'form-control': true,  
+                        'form-control': true,
                       }"
+                    :readonly= "disabledClass"
                     v-model="overall_target"
                     v-validate="'required'">
                 </div>
@@ -27,6 +30,7 @@
                     :class="{ 
                         'form-control': true,  
                       }"
+                    :readonly= "disabledClass"
                     v-model="baseline"
                     v-validate="'required'">
                 </div>
@@ -46,11 +50,12 @@
                         'textarea': true,
                         'form-control': true,
                     }"
+                :readonly= "disabledClass"
                 id="id_rationale_for_target"
                 v-model="rationale" 
                 spellcheck="false"></textarea>
             </div>
-          
+            <br>
             <div class="col-md-6">
                 <div class="form-group" id="div_periodic_target">
                     <label for="id_target_frequency">Target frequency</label>
@@ -58,15 +63,16 @@
                         name="target frequency"
                         id="id_target_frequency"
                         :class="{ 
-                            'form-control': true, 
+                            'form-control': true,
                           }"
+                        :readonly= "disabledClass"
                         style="width:200px;"
-                        @change=setTarget($event)
+                        @change=showFields()
                         v-model="target_frequency" 
                         v-validate="'required'">
                         <option value="" disabled>Select target period</option>
-                        <option v-for="target in targets" :value="target.id">
-                                [[target.text]]
+                        <option v-for="frequency in frequencies" :value="frequency.id">
+                                [[frequency.text]]
                         </option>
                     </select>
                     <span v-show="errors.has('target period')" class="help is-danger">[[ errors.first('target period') ]]</span>
@@ -79,14 +85,24 @@
               id="periodic_targets_object"
             />
           </div>
-          
+          <br>
           <div class="row" id="id_periodic_targets_section">
-            <div class="col-md-12" id="frequency_metadata">
+            <div class="col-md-12" id="frequency_metadata" v-if="show">
               <div class="row">
-                <div class="col-md-6" id="id_periods_generator">
+                <div class="col-md-12" id="id_periods_generator" :readonly= "disabledClass">
                   <div class="row">
                     <div class="col-md-6">
-                      {{ form.target_frequency_start | as_crispy_field }}
+                        <label for="target_frequency_start">Target Frequency Start Date</label>
+                        <input
+                        type="month"
+                        id="target_frequency_start"
+                        name="target_frequency_start"
+                        :class="{ 
+                            'form-control': true, 
+                          }"
+                        style="width:200px;"
+                        v-model="target_frequency_start" 
+                        placeholder="Enter start date"/>
                     </div>
           
                     <div class="col-md-6">
@@ -95,20 +111,21 @@
                           >Number of Target Periods*</label
                         >
                         <input
-                          class="form-control"
+                          :class="{'form-control': true}"
                           type="number"
                           name="number_of_target_periods"
                           id="number_of_target_periods"
+                          v-model="number_of_target_periods"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-          
+              <br>
               <div class="row" id="id_control_btns">
-                <div class="col-md-6">
-                  <div class="form-group text-right">
+                <div class="col-md-12">
+                  <div class="form-group text-right" v-if="show">
                     <button
                       type="button"
                       class="btn btn-link btn-link-warning"
@@ -116,15 +133,47 @@
                     >
                       Remove all targets
                     </button>
-                    <button type="button" class="btn btn-warning" id="addTargetsBtn">
+                    <button type="button" 
+                            class="btn btn-warning"
+                            id="addTargetsBtn"
+                            @click= addPeriodTargets()>
                       Add Targets
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-          
-            <div class="col-md-6" id="id_targets"></div>
-          </div>
+            <br>
+            <div v-show="show" class="col-md-12" id="id_targets">
+                <table id="targetsTable" class="table table-hover">
+                    <tbody>
+                        <tr v-for=" target in targets" :key="target.id">
+                            <th>[[target.period]]<br><small>[[target.start]] - [[target.end]]</small></th>
+                            <td>
+                                <input 
+                                :class="{
+                                    'form-control': true
+                                }" 
+                                v-on:keyup="updateSum()"
+                                type="number" 
+                                :id="target.id"
+                                v-model= "target_value[target.id]"
+                                name="periodic_targets">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Sum of Targets</th>
+                            <th id="sumOfTargets">[[sum]]</th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>Life of Program (LoP) target</th>
+                            <th>[[overall_target]]</th>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </form>

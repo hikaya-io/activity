@@ -1,0 +1,29 @@
+<div>
+    <button 
+        type="button" 
+        class="btn btn-close" 
+        data-dismiss="modal"
+        @click="toggleTargetModal()" 
+    >Cancel</button>
+    <button
+        v-if="!isEdit"
+        type="button"
+        class="btn btn-outline-success"
+        :disabled="errors.any() || !isFormValid"
+        @click=processForm(true)
+    >Save &amp; New</button>
+    <button
+        v-if="!isEdit"
+        type="button"
+        class="btn btn-success"
+        :disabled="errors.any() || !isFormValid"
+        @click=processForm()
+    >Save</button>
+    <button
+        v-if="isEdit"
+        type="button"
+        class="btn btn-success"
+        :disabled="errors.any() || !isFormValid"
+        @click=processForm()
+    >Update</button>   
+</div>
