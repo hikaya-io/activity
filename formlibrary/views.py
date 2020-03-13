@@ -247,6 +247,7 @@ class BeneficiaryCreate(CreateView):
     # add the request to the kwargs
     def get_form_kwargs(self):
         kwargs = super(BeneficiaryCreate, self).get_form_kwargs()
+        kwargs['organization'] = self.request.user.activity_user.organization
         kwargs['request'] = self.request
         return kwargs
 
