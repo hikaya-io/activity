@@ -14,7 +14,7 @@ import json
 from rest_framework.permissions import IsAuthenticated
 
 from .export import IndicatorResource, CollectedDataResource
-from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer, DataCollectionFrequencySerializer
+from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer
 from .tables import IndicatorDataTable
 from .forms import (
     IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
@@ -2205,38 +2205,6 @@ class ObjectiveDelete(GView):
             return JsonResponse(dict(success=True))
 
 
-# class ObjectiveUpdateView(UpdateView):
-#     model = Objective
-#     template_name_suffix = '_update_form'
-#     success_url = '/indicators/objectives'
-#     form_class = ObjectiveForm
-
-#     # add the request to the kwargs
-#     def get_form_kwargs(self):
-#         kwargs = super(ObjectiveUpdateView, self).get_form_kwargs()
-#         kwargs['request'] = self.request
-#         kwargs['current_objective'] = self.get_object()
-#         return kwargs
-
-#     def get_context_data(self, **kwargs):
-#         context = super(ObjectiveUpdateView, self).get_context_data(**kwargs)
-#         context['current_objective'] = self.get_object()
-#         context['active'] = ['indicators']
-#         return context
-
-
-# def objective_delete(request, pk):
-#     """
-#     Delete strategic objective
-#     :param request:
-#     :param pk:
-#     :return:
-#     """
-#     objective = Objective.objects.get(pk=int(pk))
-#     objective.delete()
-#     return redirect('/indicators/objectives')
-
-
 # Vue.js Views
 """
 DataCollectionFrequency views
@@ -2260,88 +2228,19 @@ class DataCollectionFrequencyView(generics.ListCreateAPIView, generics.RetrieveU
 Level views
 """
 
+class LevelView(generics.ListCreateAPIView,
+                        generics.RetrieveUpdateDestroyAPIView):
+    queryset = Level.objects.all()
+    serializer_class = LevelSerializer
+    permission_classes = [IsAuthenticated]
 
-class LevelCreate(CreateView):
-    """
-    create Level View
-    """
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        organization = request.user.activity_user.organization
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
 
-        level = Level(
-            name=data.get('name'),
-            description=data.get('description'),
-            sort=data.get('sort'),
-            organization=organization
-        )
-        level.save()
-
-        if level:
-            return JsonResponse(model_to_dict(level))
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-
-class LevelList(GView):
-    """
-    View to fetch levels
-    """
-    def get(self, request):
-
-        organization = request.user.activity_user.organization
-
-        try:
-            levels = Level.objects.filter(organization=organization).values()
-            return JsonResponse(list(levels), safe=False)
-        except Exception as e:
-            return JsonResponse(dict(error=str(e)))
-
-
-class LevelUpdate(GView):
-    """
-    View to Update Level and return Json response
-    """
-    def put(self, request, *args, **kwargs):
-        level_id = int(self.kwargs.get('id'))
-        data = json.loads(request.body.decode('utf-8'))
-        organization = request.user.activity_user.organization
-        level_name = data.get('name')
-        level_description = data.get('description')
-        level_sort = data.get('sort')
-        level = Level.objects.get(
-            id=level_id
-        )
-
-        level.name = level_name
-        level.description = level_description
-        level.sort = level_sort
-        level.organization = organization
-        level.save()
-
-        if level:
-            return JsonResponse(model_to_dict(level))
-        else:
-            return JsonResponse(dict(error='Failed'))
-
-
-class LevelDelete(GView):
-    """
-    View to Delete Level and return Json response
-    """
-    def delete(self, request, *args, **kwargs):
-        level_id = int(self.kwargs.get('id'))
-        level = Level.objects.get(
-            id=int(level_id)
-        )
-        level.delete()
-
-        try:
-            Level.objects.get(id=int(level_id))
-            return JsonResponse(dict(error='Failed'))
-
-        except Level.DoesNotExist:
-            return JsonResponse(dict(success=True))
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return Level.objects.filter(organization=organization)
 
 
 """
