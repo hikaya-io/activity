@@ -40,6 +40,10 @@ ADMINS = (
     ('Your Name', 'your_email@example.com'),
 )
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 # END MANAGER CONFIGURATION
@@ -185,6 +189,7 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.RemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'activity.middleware.TimingMiddleware'
@@ -250,6 +255,7 @@ THIRD_PARTY_APPS = (
     'simplejson',
     'simple_history',
     'django_select2',
+    'debug_toolbar'
 )
 
 # Apps specific for this project go here.
