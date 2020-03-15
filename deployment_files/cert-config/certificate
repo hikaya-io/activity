@@ -1,0 +1,11 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: letsencrypt-${APPLICATION_ENV}-certificate
+  namespace: ${APPLICATION_ENV}
+spec:
+  secretName: letsencrypt-cert-${APPLICATION_ENV}-tls
+  issuerRef:
+    name: letsencrypt-${APPLICATION_ENV}-issuer
+  dnsNames:
+  - ${HOST_DOMAIN}
