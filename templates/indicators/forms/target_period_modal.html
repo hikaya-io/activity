@@ -1,16 +1,16 @@
 <form id="target_period_modal">
     {% csrf_token %}
     <div class="modal-body" 
-        style="height: 300px;
+        style="height: 500px;
                 overflow-y: auto;">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="overall_target">Overall Target</label>
+                    <label for="overall_target">Overall target *</label>
                     <input
                     type="number"
                     id="overall_target"
-                    name="overall_target"
+                    name="overall target"
                     :class="{ 
                         'form-control': true,
                       }"
@@ -18,8 +18,8 @@
                     v-model="overall_target"
                     v-validate="'required'">
                 </div>
+                <span v-show="errors.has('overall target')" class="help is-danger">[[ errors.first('overall target') ]]</span>
             </div>
-          
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="baseline">Baseline</label>
@@ -58,7 +58,7 @@
             <br>
             <div class="col-md-6">
                 <div class="form-group" id="div_periodic_target">
-                    <label for="id_target_frequency">Target frequency</label>
+                    <label for="id_target_frequency">Target frequency *</label>
                     <select 
                         name="target frequency"
                         id="id_target_frequency"
@@ -75,7 +75,7 @@
                                 [[frequency.text]]
                         </option>
                     </select>
-                    <span v-show="errors.has('target period')" class="help is-danger">[[ errors.first('target period') ]]</span>
+                    <span v-show="errors.has('target frequency')" class="help is-danger">[[ errors.first('target frequency') ]]</span>
                 </div>
             </div>
           
@@ -92,16 +92,17 @@
                 <div class="col-md-12" id="id_periods_generator" :readonly= "disabledClass">
                   <div class="row">
                     <div class="col-md-6">
-                        <label for="target_frequency_start">Target Frequency Start Date</label>
+                        <label for="target_frequency_start">Target frequency start date *</label>
                         <input
                         type="month"
                         id="target_frequency_start"
-                        name="target_frequency_start"
+                        name="target frequency start"
                         :class="{ 
                             'form-control': true, 
                           }"
                         style="width:200px;"
                         v-model="target_frequency_start" 
+                        v-validate="'required'"
                         placeholder="Enter start date"/>
                     </div>
           
@@ -116,6 +117,7 @@
                           name="number_of_target_periods"
                           id="number_of_target_periods"
                           v-model="number_of_target_periods"
+                          v-validate="'required'"
                         />
                       </div>
                     </div>
@@ -148,7 +150,7 @@
                 <table id="targetsTable" class="table table-hover">
                     <tbody>
                         <tr v-for=" target in targets" :key="target.id">
-                            <th>[[target.period]]<br><small>[[target.start]] - [[target.end]]</small></th>
+                            <th>[[target.period]]<br><small>[[target.start_date]] - [[target.end_date]]</small></th>
                             <td>
                                 <input 
                                 :class="{
@@ -167,7 +169,7 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <th>Life of Program (LoP) target</th>
+                            <th>Overall target</th>
                             <th>[[overall_target]]</th>
                             <td></td>
                         </tr>

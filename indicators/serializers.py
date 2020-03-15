@@ -32,7 +32,6 @@ class PeriodicTargetSerializer(serializers.ModelSerializer):
         fields = ['id', 'period', 'start_date', 'end_date', 'target', 'collecteddata_set', 'indicator']
 
     def get_indicator(self, obj):
-        print(obj.indicator)
         return {"indicator_id": obj.indicator.id,
                 "baseline": obj.indicator.baseline,
                 "indicator_lop": obj.indicator.lop_target,

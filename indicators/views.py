@@ -14,7 +14,8 @@ import json
 from rest_framework.permissions import IsAuthenticated
 
 from .export import IndicatorResource, CollectedDataResource
-from .serializers import PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer, IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer
+from .serializers import (PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer,
+                          IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer)
 from .tables import IndicatorDataTable
 from .forms import (
     IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
@@ -2110,9 +2111,12 @@ class StrategicObjectiveUpdateView(UpdateView):
         context['current_objective'] = self.get_object()
         return context
 
+
 """
 Objectives views Vue.js
 """
+
+
 class ObjectiveList(GView):
     """
     View to fetch objectives
@@ -2132,6 +2136,7 @@ class ObjectiveList(GView):
             )
         else:
             return JsonResponse(dict(error='Failed'))
+
 
 class ObjectiveCreate(GView):
     """
@@ -2211,6 +2216,7 @@ class ObjectiveDelete(GView):
 DataCollectionFrequency views
 """
 
+
 class DataCollectionFrequencyView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = DataCollectionFrequency.objects.all()
     serializer_class = DataCollectionFrequencySerializer
@@ -2267,6 +2273,8 @@ class IndicatorTypeView(generics.ListCreateAPIView,
 """
 Periodic Target View
 """
+
+
 class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = PeriodicTarget.objects.all()
     serializer_class = PeriodicTargetSerializer
@@ -2283,12 +2291,10 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
         periodic_data = all_data['periodic_targets']
 
         serialized = self.serializer_class(data=periodic_data, many=True)
-        print(serialized.initial_data)
-        serialized.is_valid()
-        print(serialized.errors)
 
         if serialized.is_valid():
             serialized.save(indicator_id=all_data['indicator_id'])
-            Indicator.objects.filter(id=all_data['indicator_id']).first().update(**indicator_data)
+            indicator = Indicator.objects.filter(id=all_data['indicator_id'])
+            indicator.update(**indicator_data)
             return Response(serialized.data, status=status.HTTP_201_CREATED)
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)

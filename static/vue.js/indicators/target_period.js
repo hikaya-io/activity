@@ -145,29 +145,6 @@ new Vue({
                 const period = `Triannual ${i}`
                 const id = `${i}`
                 let periodEnds = moment(periodStart);
-                let start = moment(periodStart)
-                            .startOf("month")
-                            .format("MMM DD, YYYY");
-                let end = moment(periodEnds)
-                            .add(3, "months")
-                            .endOf("month")
-                            .format("MMM DD, YYYY");
-
-
-                this.targets = [...this.targets, { id, start, end, period}];
-
-                periodStart = moment(periodEnds).add(4, "months");
-            }
-
-        },
-
-        generateQuarterlyTargets: function(periodStart){
-            for (let i = 1; i <= this.number_of_target_periods; i++) {
-                const period = `Quarter ${i}`
-                const id = `${i}`
-                let periodEnds = moment(periodStart)
-                                 .subtract(1, "months")
-                                 .add(1, "quarters");
                 let start_date = moment(periodStart)
                             .startOf("month")
                             .format("MMM DD, YYYY");
@@ -180,6 +157,27 @@ new Vue({
                 this.targets = [...this.targets, { id, start_date, end_date, period}];
 
                 periodStart = moment(periodEnds).add(4, "months");
+            }
+
+        },
+
+        generateQuarterlyTargets: function(periodStart){
+            for (let i = 1; i <= this.number_of_target_periods; i++) {
+                const period = `Quarter ${i}`
+                const id = `${i}`
+                let periodEnds = moment(periodStart)
+                let start_date = moment(periodStart)
+                            .startOf("month")
+                            .format("MMM DD, YYYY");
+                let end_date = moment(periodEnds)
+                            .add(2, "months")
+                            .endOf("month")
+                            .format("MMM DD, YYYY");
+
+
+                this.targets = [...this.targets, { id, start_date, end_date, period}];
+
+                periodStart = moment(periodEnds).add(3, "months");
             }
         },
 
