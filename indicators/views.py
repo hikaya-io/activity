@@ -56,7 +56,8 @@ import requests
 from weasyprint import HTML, CSS
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
 
 
 def generate_periodic_target_single(tf, start_date, nth_target_period,
@@ -2261,3 +2262,33 @@ class IndicatorTypeView(generics.ListCreateAPIView,
     def get_queryset(self):
         organization = self.request.user.activity_user.organization.id
         return IndicatorType.objects.filter(organization=organization)
+
+
+"""
+Periodic Target View
+"""
+class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = PeriodicTarget.objects.all()
+    serializer_class = PeriodicTargetSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        all_data = request.data['data']
+        indicator_data = {
+            'lop_target': all_data['indicator_LOP'],
+            'baseline': all_data['indicator_baseline'],
+            'rationale_for_target': all_data['rationale'],
+        }
+
+        periodic_data = all_data['periodic_targets']
+
+        serialized = self.serializer_class(data=periodic_data, many=True)
+        print(serialized.initial_data)
+        serialized.is_valid()
+        print(serialized.errors)
+
+        if serialized.is_valid():
+            serialized.save(indicator_id=all_data['indicator_id'])
+            Indicator.objects.filter(id=all_data['indicator_id']).first().update(**indicator_data)
+            return Response(serialized.data, status=status.HTTP_201_CREATED)
+        return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)

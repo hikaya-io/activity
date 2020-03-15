@@ -40,7 +40,7 @@ new Vue({
 			})
 			.catch(e => {
 				toastr.error('There was a problem loading frequencies from the database');
-				this.targets = [];
+				this.frequencies = [];
 			});
 	},
     methods: {
@@ -104,16 +104,16 @@ new Vue({
                 const period = `Year ${i}`
                 const id = `${i}`
                 let periodEnds = moment(periodStart);
-                let start = moment(periodStart)
+                let start_date = moment(periodStart)
                             .startOf("month")
                             .format("MMM DD, YYYY");
-                let end = moment(periodEnds)
+                let end_date = moment(periodEnds)
                             .add(11, "months")
                             .endOf("month")
                             .format("MMM DD, YYYY");
 
 
-                this.targets = [...this.targets, { id, start, end, period}];
+                this.targets = [...this.targets, { id, start_date, end_date, period}];
 
                 periodStart = moment(periodEnds).add(12, "months");
             }
@@ -125,15 +125,15 @@ new Vue({
                 const period = `SemiAnnual ${i}`
                 const id = `${i}`
                 let periodEnds = moment(periodStart);
-                let start = moment(periodStart)
+                let start_date = moment(periodStart)
                             .startOf("month")
                             .format("MMM DD, YYYY");
-                let end = moment(periodEnds)
+                let end_date = moment(periodEnds)
                             .add(5, "months")
                             .endOf("month")
                             .format("MMM DD, YYYY");
 
-                this.targets = [...this.targets, { id, start, end, period}];
+                this.targets = [...this.targets, { id, start_date, end_date, period}];
 
                 periodStart = moment(periodEnds).add(6, "months");
             }
@@ -168,16 +168,16 @@ new Vue({
                 let periodEnds = moment(periodStart)
                                  .subtract(1, "months")
                                  .add(1, "quarters");
-                let start = moment(periodStart)
+                let start_date = moment(periodStart)
                             .startOf("month")
                             .format("MMM DD, YYYY");
-                let end = moment(periodEnds)
+                let end_date = moment(periodEnds)
                             .add(3, "months")
                             .endOf("month")
                             .format("MMM DD, YYYY");
 
 
-                this.targets = [...this.targets, { id, start, end, period}];
+                this.targets = [...this.targets, { id, start_date, end_date, period}];
 
                 periodStart = moment(periodEnds).add(4, "months");
             }
@@ -188,15 +188,15 @@ new Vue({
                 const period = `Month ${i}`
                 const id = `${i}`
                 let periodEnds = moment(periodStart)
-                let start = moment(periodStart)
+                let start_date = moment(periodStart)
                             .startOf("month")
                             .format("MMM DD, YYYY");
-                let end = moment(periodEnds)
+                let end_date = moment(periodEnds)
                             .add("months")
                             .endOf("month")
                             .format("MMM DD, YYYY");
 
-                this.targets = [...this.targets, { id, start, end, period}];
+                this.targets = [...this.targets, { id, start_date, end_date, period}];
 
                 periodStart = moment(periodEnds).add(1, "months");
             } 
@@ -229,12 +229,37 @@ new Vue({
                 }))
             })
             console.log(this.targets)
+            const id = this.indicator_id
+            this.targets = this.targets.map(function (obj) {
+                obj['indicator_id'] = obj['id'];
+                obj['start_date'] = moment(obj['start_date']).format("YYYY-MM-DD")
+                obj['end_date'] = moment(obj['end_date']).format("YYYY-MM-DD")
+                delete obj['id'];
+                obj['indicator_id'] = id
+                return obj;
+            });
+            console.log(this.targets)
             const data = {
-                indicator_id : this.indicator_id,
+                indicator_id : id,
                 indicator_LOP: this.overall_target,
                 indicator_baseline: this.baseline,
                 rationale : this.rationale,
                 periodic_targets: this.targets
+            }
+            console.log(data)
+
+            try {
+                const response = await this.makeRequest(
+                    'POST',
+                    `/indicators/periodic_target/`,
+                    {data}
+                  );
+
+                if (response){
+                    console.log(response)
+                }
+            } catch (error) {
+                alert('error')
             }
 
         },
