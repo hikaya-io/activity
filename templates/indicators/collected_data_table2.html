@@ -1,6 +1,6 @@
 <script type="text/x-template" id="collected-data-table-template">
     <div id="results_table">
-        <div v-if="collectedData.indicator.target_frequency">
+        <div v-if="collectedData.indicator.lop_target">
             <table class="table" id="collectedDataTable">
                 <tbody>
                 <tr>
@@ -111,7 +111,7 @@
                     </template>
                 </template>
                 <tr style="background-color: #f5f5f5;">
-                    <td><strong>Life of Program</strong></td>
+                    <td><strong>Overall target</strong></td>
                     <td align="right"><strong>[[ Math.floor(collectedData.indicator.lop_target) ]]</strong></td>
                     <!-- {{ collected_sum.periodic_target__target__sum }} -->
                     <td></td>
@@ -139,9 +139,10 @@
                         <img src="/static/img/target.png" class="img-responsive center-block" height="35" width="35">
                     </td>
                     <td valign="top" style="padding-left:10px; font-size: 16px; color: #54585A;">
-                        Before you can add results to this indicator, target periods need to be defined. <a
-                            :href="'/indicators/indicator_update/' + collectedData.indicator.id"
-                            data-tab="#targets" class="indicator-link">Set target periods.</a>
+                        Before you can add results to this indicator, target periods need to be defined. Go to <a
+                            :href="'/indicators/indicator_update/' + collectedData.indicator.id + '/#targets'"
+                            class="indicator-link">Set target periods. </a>
+                        or Click on <i>more >Add target periods</i>
                     </td>
                 </tr>
             </table>
