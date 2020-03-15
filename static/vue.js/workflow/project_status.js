@@ -6,27 +6,26 @@ Vue.component('modal', {
 // start app
 new Vue({
 	delimiters: ['[[', ']]'],
-	el: '#fund_code',
+	el: '#project_status',
 	data: {
 		showModal: false,
-		showDeleteModal: false,
-        fundCodes: [],
-        stakeholders: [],
+        showDeleteModal: false,
+        projectStatuses: [],
         name: '',
-        stakeholder: '',
+        description: '',
 		isEdit: false,
-		currentFundCode: null,
+		currentProjectStatus: null,
         itemToDelete: null,
-		modalHeader: 'Add Fund Code',
+		modalHeader: '',
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/workflow/fund_code/list')
+		this.makeRequest('GET', '/workflow/project_status/')
 			.then(response => {
 				if (response.data) {
-                    this.fundCodes = response.data.fund_codes.sort((a, b) => b.id - a.id);
-                    this.stakeholders = response.data.stakeholders;
+                    this.projectStatuses = response.data.sort((a, b) => b.id - a.id);
+                    this.modalHeader = 'Add Project Status';
 					$(document).ready(() => {
-						$('#fundCodesTable').DataTable({
+						$('#projectStatusTable').DataTable({
                             pageLength: 5,
                             lengthMenu: [5, 10, 15, 20]
 						});
@@ -34,35 +33,35 @@ new Vue({
 				}
 			})
 			.catch(e => {
-				toastr.error('There was a problem loading fund codes from the database!!');
-				this.fundCodes = [];
+				toastr.error('There was a problem loading project statuses from the database');
+				this.projectStatuses = [];
 			});
 	},
 	methods: {
         /**
-         * open or close the fund code form modal
-         * @param { object } item - fund code item
+         * open or close the project status form modal
+         * @param { object } item - project status item
          */
 		toggleModal: function(item = null) {
             this.showModal = !this.showModal;
 			if (item) {
-				this.isEdit = true;
+                this.isEdit = true;
 				this.modalHeader = `Edit ${item.name}`;
-				this.currentFundCode = item;
+				this.currentProjectStatus = item;
                 this.name = item.name;
-                this.stakeholder = item.stakeholder;
+                this.description = item.description;
 			} else {
 				this.isEdit = false;
-				this.modalHeader = `Add Fund Code`;
-				this.currentFundCode = null;
+				this.modalHeader = 'Add project status';
+				this.currentProjectStatus = null;
                 this.name = null;
-                this.stakeholder = null;
+                this.description = null;
 			}
 		},
 
         /**
-         * open or close the fund code delete modal
-         * @param { object } data - fund code item
+         * open or close the project status delete modal
+         * @param { object } data - project status item
          */
 		toggleDeleteModal: function(data) {
 			this.showDeleteModal = !this.showDeleteModal;
@@ -77,8 +76,8 @@ new Vue({
 		processForm: function(saveNew = false) {
 			this.$validator.validateAll().then(result => {
 				if (result) {
-					if (this.currentFundCode && this.currentFundCode.id) {
-						this.updateFundCode();
+					if (this.currentProjectStatus && this.currentProjectStatus.id) {
+						this.updateProjectStatus();
 					} else {
 						if (saveNew) {
 							this.postData(saveNew);
@@ -91,28 +90,28 @@ new Vue({
 		},
 
         /**
-         * create new fund code
+         * create new project status
          * @param { boolean } saveNew - true if a user wants to make multiple posts
          */
 		async postData(saveNew) {
 			try {
 				const response = await this.makeRequest(
 					'POST',
-					`/workflow/fund_code/add`,
+					`/workflow/project_status/`,
 					{
                         name: this.name,
-                        stakeholder: this.stakeholder
+                        description: this.description
 					}
                 );
 				if (response) {
-                    toastr.success('Fund Code successfuly saved');
-					this.fundCodes.unshift(response.data);
+                    toastr.success('Project status successfully saved');
+					this.projectStatuses.unshift(response.data);
 					if (!saveNew) {
 						this.toggleModal();
 					}
 					// resetting the form
                     this.name = '';
-                    this.stakeholder = '';
+                    this.description = '';
 					this.$validator.reset();
 				}
 			} catch (error) {
@@ -121,55 +120,55 @@ new Vue({
 		},
 
         /**
-         * edit Fund Code item
+         * edit project status item
          */
-		async updateFundCode() {
+		async updateProjectStatus() {
 			try {
 				const response = await this.makeRequest(
-					'PUT',
-					`/workflow/fund_code/edit/${this.currentFundCode.id}`,
-					{ 
-                        name: this.name, 
-                        stakeholder: this.stakeholder,
+					'PATCH',
+					`/workflow/project_status/${this.currentProjectStatus.id}`,
+					{
+                        name: this.name,
+                        description: this.description,
                     }
 				);
 				if (response) {
-					toastr.success('Fund code was successfuly updated');
-					const existingFundCodes = this.fundCodes.filter(item => {
-						return item.id != this.currentFundCode.id;
+					toastr.success('Project status was successfully updated');
+					const newprojectStatuses = this.projectStatuses.filter(item => {
+						return item.id != this.currentProjectStatus.id;
 					});
-					this.fundCodes = existingFundCodes;
-					this.fundCodes.unshift(response.data);
+					this.projectStatuses = newprojectStatuses;
+					this.projectStatuses.unshift(response.data);
 					this.isEdit = false;
                     this.name = null;
-                    this.stakeholder = null;
-                    this.currentFundCode = null;
-					this.modalHeader = 'Add Fund Code';
+                    this.description = null;
+                    this.currentProjectStatus = null;
+					this.modalHeader = 'Add project status';
 					this.toggleModal();
 				}
 			} catch (e) {
-				toastr.error('There was a problem updating your data!!');
+				toastr.error('There was a problem updating your data');
 			}
 		},
 
         /**
-         * delete fund code
-         * @param { number } id - id of the fund code to be deleted
+         * delete project status
+         * @param { number } id - id of the project status to be deleted
          */
 		async deleteProfileType(id) {
 			try {
 				const response = await this.makeRequest(
 					'DELETE',
-					`/workflow/fund_code/delete/${id}`
+					`/workflow/project_status/${id}`
 				);
-				if (response.data.success) {
-					toastr.success('Fund Code was successfuly deleted');
-					this.fundCodes = this.fundCodes.filter(item => +item.id !== +id);
+				if (response.status === 204) {
+					toastr.success('Project status was successfully deleted');
+					this.projectStatuses = this.projectStatuses.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
-					this.modalHeader = `Add Fund Code`;
+					this.modalHeader = 'Add project status';
 					this.itemToDelete = null;
 				} else {
-					toastr.error('There was a problem deleting fund Code!!');
+					toastr.error('There was a problem deleting project status');
 				}
 			} catch (error) {
 				toastr.error('There was a server error!!');
@@ -192,7 +191,7 @@ new Vue({
 
 	computed: {
         /**
-         * Check if fund code form is valid
+         * Check if project status form is valid
          */
 		isFormValid() {
 			return this.name;
