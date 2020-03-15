@@ -170,6 +170,11 @@ urlpatterns = [  # rest framework
         views.admin_indicator_config,
         name='indicator_configs_admin'
     ),
+    path(
+        'accounts/admin/map_settings',
+        views.admin_map_settings,
+        name='admin_map_settings'
+    ),
 
     # bookmarks
     path('bookmark_list', BookmarkList.as_view(),
@@ -189,3 +194,14 @@ urlpatterns = [  # rest framework
          include('social_django.urls', namespace='social')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+
+        # For django versions before 2.0:
+        # url(r'^__debug__/', include(debug_toolbar.urls)),
+
+    ] + urlpatterns

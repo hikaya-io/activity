@@ -1,7 +1,7 @@
 Vue.component('paginate', VuejsPaginate)
 
 const beneficiariesComponent = Vue.component('beneficiaries-table', {
-  template: '#beneficiaries-table-template',
+  template: '#participants-table-template',
 });
 
 $(document).ready(() => {

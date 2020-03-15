@@ -18,7 +18,7 @@ from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
     Benchmarks, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector, Country, ProfileType,
+    ActivityUser, Contact, Sector, Country, ProfileType, FundCode
 )
 from indicators.models import (
     CollectedData, Indicator, PeriodicTarget,
@@ -157,6 +157,8 @@ class ProgramForm(forms.ModelForm):
             filter(organization=self.request.user.activity_user.organization)
 
         self.fields['sector'].queryset = Sector.objects.all()
+        self.fields['fund_code'].queryset = FundCode.objects.filter(
+            organization=self.request.user.activity_user.organization).all()
         # filter(organization=self.request.user.activity_user.organization)
         self.fields['name'].label = '{} Name'.format(self.organization.level_1_label)
         self.fields['description'].label = '{} Description'.format(self.organization.level_1_label)
@@ -782,10 +784,6 @@ class ProjectCompleteForm(forms.ModelForm):
         self.fields['approved_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
 
-        # override the office queryset to use request.user for country
-        self.fields['office'].queryset = Office.objects.filter(
-            province__country__in=countries)
-
         # override the community queryset to use request.user for country
         self.fields['site'].queryset = SiteProfile.objects.filter(
             country__in=countries)
@@ -809,6 +807,8 @@ class ProjectCompleteForm(forms.ModelForm):
                 'disabled'] = "disabled"
             self.fields[
                 'approval'].help_text = "Approval level permissions required"
+            self.fields['office'].queryset = Office.objects.filter(
+                organization=self.request.user.activity_user.organization).distinct()
 
 
 class ProjectCompleteSimpleForm(forms.ModelForm):
@@ -1129,10 +1129,10 @@ class SiteProfileQuickEntryForm(forms.ModelForm):
         fields = ['name', 'type', 'longitude', 'latitude']
         # widgets = {'map': GooglePointFieldWidget, }
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         # get the user object from request to check user permissions
-
         self.helper = FormHelper()
+        self.request = kwargs.pop('request')
         self.helper.form_method = 'post'
         self.helper.form_class = 'form-horizontal'
         self.helper.form_error_title = 'Form Errors'
@@ -1152,8 +1152,10 @@ class SiteProfileQuickEntryForm(forms.ModelForm):
             # 'map',
         )
 
-        super(SiteProfileQuickEntryForm, self).__init__()
-        self.fields['type'].queryset = ProfileType.objects.all().distinct()
+        super(SiteProfileQuickEntryForm, self).__init__(*args, **kwargs)
+        # self.fields['type'].queryset = ProfileType.objects.all().distinct()
+        self.fields['type'].queryset = ProfileType.objects.filter(
+                organization=self.request.user.activity_user.organization).distinct()
 
 
 class SiteProfileForm(forms.ModelForm):
@@ -1279,8 +1281,8 @@ class SiteProfileForm(forms.ModelForm):
         # override the office queryset to use request.user for country
         countries = get_country(self.request.user)
         self.fields['date_of_firstcontact'].label = "Date of First Contact"
-        self.fields['office'].queryset = Office.objects.filter(
-            province__country__in=countries)
+        # self.fields['office'].queryset = Office.objects.filter(
+        #     province__country__in=countries)
         self.fields['province'].queryset = Province.objects.filter(
             country__in=countries)
         self.fields['approved_by'].queryset = ActivityUser.objects.filter(
@@ -1288,6 +1290,10 @@ class SiteProfileForm(forms.ModelForm):
         self.fields['filled_by'].queryset = ActivityUser.objects.filter(
             country__in=countries).distinct()
         self.fields['map'].widget = HiddenInput()
+        self.fields['type'].queryset = ProfileType.objects.filter(
+                organization=self.request.user.activity_user.organization).distinct()
+        self.fields['office'].queryset = Office.objects.filter(
+                organization=self.request.user.activity_user.organization).distinct()
 
 
 class ProfileTypeForm(forms.ModelForm):

@@ -15,7 +15,7 @@ from datetime import datetime
 
 from indicators.models import (
     Indicator, PeriodicTarget, CollectedData, Objective,
-    StrategicObjective, ActivityTable, DisaggregationType, Level
+    StrategicObjective, ActivityTable, DisaggregationType, Level, IndicatorType, DataCollectionFrequency
 )
 from workflow.models import Program, Documentation, \
     ProjectComplete, ActivityUser
@@ -77,6 +77,10 @@ class IndicatorForm(forms.ModelForm):
         self.fields['objectives'].label = '{} objective'.format(self.organization.level_1_label)
         self.fields['program'].label = '{}'.format(self.organization.level_1_label)
         self.fields['level'].queryset = Level.objects.filter().order_by('sort', 'id')
+        self.fields['indicator_type'].queryset = IndicatorType.objects.filter(
+            organization=self.request.user.activity_user.organization).distinct()
+        self.fields['data_collection_frequency'].queryset = DataCollectionFrequency.objects.filter(
+            organization=self.request.user.activity_user.organization).distinct()
 
 
 class CollectedDataForm(forms.ModelForm):

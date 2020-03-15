@@ -25,7 +25,7 @@ urlpatterns = [
          TrainingUpdate.as_view(), name='training_update'),
     path('training_delete/<slug:pk>/', delete_training,
          name='training_delete'),
-    path('training_participants/<slug:pk>', TrainingParticipantListObjects.as_view(),
+    path('training_participants/<int:pk>', TrainingParticipantListObjects.as_view(),
          name='training_participants'),
 
     path('beneficiary_list/<slug:program>/<slug:training>/<slug:distribution>/',

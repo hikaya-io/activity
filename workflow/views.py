@@ -14,10 +14,10 @@ from .models import (
     ProjectComplete, SiteProfile, Documentation, Benchmarks, Budget, ProfileType,
     ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder, Sector,
     FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
-    Office, Province,
+    Office, Organization
 )
 from formlibrary.models import TrainingAttendance, Distribution
-from indicators.models import CollectedData, ExternalService, Level
+from indicators.models import CollectedData, ExternalService
 from django.utils import timezone
 
 from .forms import (
@@ -25,7 +25,7 @@ from .forms import (
     ProjectCompleteForm, ProjectCompleteSimpleForm, ProjectCompleteCreateForm,
     DocumentationForm, SiteProfileForm, BenchmarkForm, BudgetForm,
     FilterForm, ProgramForm, SiteProfileQuickEntryForm,
-    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm, ProfileTypeForm,
+    QuantitativeOutputsForm, ChecklistItemForm, StakeholderForm, ContactForm,
 )
 
 import pytz
@@ -42,9 +42,10 @@ import requests
 import logging
 
 from django.core import serializers
-from .serializers import OfficeSerializer, StakeholderTypeSerializer
+from .serializers import OfficeSerializer, StakeholderTypeSerializer, OrganizationSerializer
 from rest_framework import generics
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from rest_framework.response import Response
 from django.views.generic.detail import View
 from django.forms.models import model_to_dict
 
@@ -102,7 +103,7 @@ class ProgramCreate(GView):
     """
     Add program
     """
-    def post(self,request):
+    def post(self, request):
         data = request.POST
 
         activity_user = ActivityUser.objects.filter(user=request.user).first()
@@ -1260,6 +1261,10 @@ class SiteProfileList(ListView):
         else:
             self.template_name = 'workflow/site_profile_list.html'
 
+        site_status = request.GET.get("status", '').split(',')
+        site_status = [s for s in site_status if s]
+        status = [s == '1' for s in site_status if s in ['0', '1']]
+
         activity_id = int(self.kwargs['activity_id'])
         program_id = int(self.kwargs['program_id'])
 
@@ -1274,41 +1279,42 @@ class SiteProfileList(ListView):
         inactive_site = pytz.UTC.localize(
             datetime.now()) - relativedelta(months=3)
 
+        get_site_profile = SiteProfile.objects.filter()
+        if status:
+            get_site_profile = get_site_profile.filter(status__in=status)
+
         # Filter SiteProfile list and map by Activity or program
         if activity_id != 0:
-            get_site_profile = SiteProfile.objects.all().prefetch_related(
-                'country', 'district',
-                'province').filter(
-                projectagreement__id=activity_id).distinct()
+            get_site_profile = get_site_profile.filter(projectagreement__id=activity_id)
         elif program_id != 0:
-            get_site_profile = SiteProfile.objects.all().prefetch_related(
-                'country', 'district', 'province').filter(
+            get_site_profile = get_site_profile.filter(
                 Q(projectagreement__program__id=program_id) | Q(
-                    collecteddata__program__id=program_id)).distinct()
+                    collecteddata__program__id=program_id))
         else:
-            get_site_profile = SiteProfile.objects.all().prefetch_related(
-                'country', 'district', 'province').filter(
+            get_site_profile = get_site_profile.filter(
                 organizations=request.user.activity_user.organization
-            ).distinct()
+            )
+
         if request.method == "GET" and "search" in request.GET:
             """
              fields = ('name', 'office')
             """
-            get_site_profile = SiteProfile.objects.all() \
-                .filter(Q(country__in=countries),
-                        Q(name__contains=request.GET["search"]) |
-                        Q(office__name__contains=request.GET["search"]) |
-                        Q(type__profile__contains=request.GET['search']) |
-                        Q(province__name__contains=request.GET["search"]) |
-                        Q(district__name__contains=request.GET["search"]) |
-                        Q(village__contains=request.GET['search']) |
-                        Q(projectagreement__project_name__contains=request.GET[
-                            "search"]) |
-                        Q(projectcomplete__project_name__contains=request.GET[
-                            'search'])) \
-                .select_related().distinct()
-        # paginate site profile list
+            get_site_profile = get_site_profile.filter(
+                Q(country__in=countries),
+                Q(name__contains=request.GET["search"]) |
+                Q(office__name__contains=request.GET["search"]) |
+                Q(type__profile__contains=request.GET['search']) |
+                Q(province__name__contains=request.GET["search"]) |
+                Q(district__name__contains=request.GET["search"]) |
+                Q(village__contains=request.GET['search']) |
+                Q(projectagreement__project_name__contains=request.GET[
+                    "search"]) |
+                Q(projectcomplete__project_name__contains=request.GET[
+                    'search'])
+            )
 
+        get_site_profile = get_site_profile.prefetch_related('country', 'district', 'province').distinct()
+        # paginate site profile list
         default_list = 10  # default number of site profiles per page
         # user defined number of site profiles per page, 10, 20, 30
         user_list = request.GET.get('user_list')
@@ -1317,7 +1323,7 @@ class SiteProfileList(ListView):
         if user_list:
             default_list = int(user_list)
 
-        form = SiteProfileQuickEntryForm()
+        form = SiteProfileQuickEntryForm(request=request)
         return render(request, self.template_name,
                       {
                           'inactive_site': inactive_site,
@@ -1327,13 +1333,13 @@ class SiteProfileList(ListView):
                           'country': countries,
                           'get_programs': get_programs,
                           'get_projects': get_projects,
-                          'form': FilterForm(),
                           'helper': FilterForm.helper,
                           'program_id': program_id,
                           'active': ['components'],
                           'map_api_key': settings.GOOGLE_MAP_API_KEY,
                           'get_location_types': get_location_types,
                           'form': form,
+                          'site_status': site_status
                       })
 
 
@@ -2752,14 +2758,14 @@ class FundCodeCreate(CreateView):
             stakeholder_id = int(data.get('stakeholder'))
         except (ValueError, TypeError):
             stakeholder_id = None
-        
+
         fund_code = FundCode(
             name=data.get('name'),
             stakeholder_id=stakeholder_id,
             organization=organization
         )
         fund_code.save()
-        
+
         if fund_code:
             return JsonResponse(
                 dict(
@@ -2868,7 +2874,7 @@ class OfficeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIVi
     def get_queryset(self):
         organization = self.request.user.activity_user.organization.id
         return Office.objects.filter(organization=organization)
-    
+
     def update(self, request, *args, **kwargs):
         if "organization" in self.request.data and not self.request.data['organization']:
             return JsonResponse(dict(error='Failed'))
@@ -2891,3 +2897,18 @@ class StakeholderTypeView(generics.ListCreateAPIView, generics.RetrieveUpdateDes
     def get_queryset(self):
         organization = self.request.user.activity_user.organization.id
         return StakeholderType.objects.filter(organization=organization)
+
+
+"""
+Organization view
+"""
+class OrganizationView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = OrganizationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.GET.get('user_org', None) is not None:
+            queryset = Organization.objects.filter(id=self.request.user.activity_user.organization.id)
+        else:
+            queryset = Organization.objects.all()
+        return queryset

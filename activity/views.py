@@ -96,9 +96,11 @@ class IndexView(LoginRequiredMixin, TemplateView):
         projects_tracking = ProjectComplete.objects.filter(prog_q)
         indicators_kpi = indicators.filter(key_performance_indicator=True)
         latest_indicators = indicators.filter(key_performance_indicator=True)[:10]
+        get_all_sectors = Sector.objects.all()
 
         context = {
             'selected_program': selected_program,
+            'get_all_sectors': get_all_sectors,
             'get_programs': get_programs,
             'get_projects': projects,
             'get_indicators': indicators,
@@ -622,6 +624,39 @@ def admin_indicator_config(request):
             'organization': organization,
             'get_collection_frequencies': get_collection_frequencies,
             'active': 'indicators'
+        }
+    )
+
+
+@login_required(login_url='/accounts/login/')
+def admin_map_settings(request):
+    user = get_object_or_404(ActivityUser, user=request.user)
+    organization = user.organization
+    # reset logo
+    # if request.GET.get('reset_logo'):
+    #     organization = Organization.objects.get(pk=user.organization.id)
+    #     organization.logo = ''
+    # organization.save()
+
+    if request.method == 'POST':
+        data = request.POST
+        organization.country_code = data.get('country_code')
+        organization.location_description = data.get('location_description')
+        organization.latitude = data.get('latitude')
+        organization.longitude = data.get('longitude')
+        organization.zoom = data.get('zoom')
+        organization.save()
+        user.organization = organization
+        user.save()
+
+    nav_links = get_nav_links('Maps')
+    return render(
+        request,
+        'admin/map_settings.html',
+        {
+            'nav_links': nav_links,
+            'organization': organization,
+            'active': 'maps'
         }
     )
 

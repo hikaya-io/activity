@@ -12,10 +12,10 @@ cssselect2==0.2.1
 defusedxml==0.6.0
 dicttoxml==1.7.4
 diff-match-patch==20181111
-django==2.2.10
+django==2.2.11
 django-ckeditor==5.7.0
 django-crispy-forms==1.7.2
-django-debug-toolbar==1.11
+django-debug-toolbar==2.2
 django-extensions==2.1.6
 django-filter==2.1.0
 django-geojson==2.12.0
