@@ -20,7 +20,7 @@ from .views import (
     save_bookmark, district_json, country_json, export_sites_list, ReportData, DocumentationAgreementDelete,
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
-    ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete,
+    ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete, ProjectStatusView,
     FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView, OrganizationView
 )
 from django.urls import path, re_path
@@ -40,7 +40,6 @@ urlpatterns = [
     path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
     path('stakeholder/delete_stakeholder/<int:pk>/',
          delete_stakeholder, name='delete_stakeholder'),
-    path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/list/<slug:program>/<slug:status>/', ProgramDash.as_view(),
         name='projects_list'),
@@ -270,5 +269,12 @@ urlpatterns = [
         r'organization/(?P<pk>.*)',
         OrganizationView.as_view(),
         name='user_organization'
+    ),
+
+    # Project Status Url
+    re_path(
+        r'project_status/(?P<pk>.*)',
+        ProjectStatusView.as_view(),
+        name='project_status_list'
     )
 ]
