@@ -64,14 +64,6 @@ new Vue({
 			this.modalHeader = 'Confirm delete';
 			this.itemToDelete = data;
         },
-        
-        /**
-         * Format date
-         * @param {string} date - date to be formatted
-         */
-        formatDate: function(date) {
-            return moment(date, 'YYYY-MM-DDThh:mm:ssZ').format('YYYY-MM-DD');
-        },
 
         /**
          * process form data
