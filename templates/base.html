@@ -37,7 +37,7 @@
   <link href="{% static 'css/vue_tree.css' %}" rel="stylesheet" type="text/css" />
   <link href="{% static 'css/components.css' %}" rel="stylesheet" type="text/css" />
 
-  <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet" type="text/css" />
   <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet" />
 
   <!-- Datatables css for HTML tables -->
@@ -392,10 +392,9 @@
       {% if "links.html"|template_exists %} {% include "links.html" %}
       {% else %}
       <div class="column col-xs-16 text-right">
-        <a href="https://hikaya.io" class="text-muted"><b>Hikaya</b></a> |
-        <a href="https://help.hikaya.io" class="text-muted"><b>Documentation</b></a>
-        |
-        <a href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE" class="text-muted"><b>License</b></a>
+        <a href="https://hikaya.io" class="text-muted">© 2020 Hikaya</a>
+        <a href="https://docs.hikaya.io" class="text-muted">Documentation</a>
+        <a href="https://github.com/hikaya-io/activity/blob/master/LICENSE" class="text-muted">License</a>
       </div>
       {% endif %}
     </div>
