@@ -311,7 +311,7 @@ def delete_beneficiary(request, pk):
     beneficiary = Beneficiary.objects.get(pk=int(pk))
     beneficiary.delete()
 
-    return redirect('/formlibrary/beneficiary_list/0/0/')
+    return redirect('/formlibrary/beneficiary_list/0/0/0/')
 
 
 class DistributionList(ListView):
