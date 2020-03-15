@@ -1,7 +1,7 @@
 <form id="target_period_modal">
     {% csrf_token %}
     <div class="modal-body" 
-        style="height: 500px;
+        style="max-height: 500px;
                 overflow-y: auto;">
         <div class="row">
             <div class="col-md-6">
@@ -14,11 +14,10 @@
                     :class="{ 
                         'form-control': true,
                       }"
-                    :readonly= "disabledClass"
                     v-model="overall_target"
                     v-validate="'required'">
+                    <span v-show="errors.has('overall target')" class="help is-danger">[[ errors.first('overall target') ]]</span>
                 </div>
-                <span v-show="errors.has('overall target')" class="help is-danger">[[ errors.first('overall target') ]]</span>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
@@ -30,9 +29,7 @@
                     :class="{ 
                         'form-control': true,  
                       }"
-                    :readonly= "disabledClass"
-                    v-model="baseline"
-                    v-validate="'required'">
+                    v-model="baseline">
                 </div>
             </div>
           </div>
@@ -50,13 +47,13 @@
                         'textarea': true,
                         'form-control': true,
                     }"
-                :readonly= "disabledClass"
                 id="id_rationale_for_target"
                 v-model="rationale" 
                 spellcheck="false"></textarea>
             </div>
             <br>
             <div class="col-md-6">
+              <br>
                 <div class="form-group" id="div_periodic_target">
                     <label for="id_target_frequency">Target frequency *</label>
                     <select 
@@ -65,7 +62,6 @@
                         :class="{ 
                             'form-control': true,
                           }"
-                        :readonly= "disabledClass"
                         style="width:200px;"
                         @change=showFields()
                         v-model="target_frequency" 
@@ -103,13 +99,15 @@
                         style="width:200px;"
                         v-model="target_frequency_start" 
                         v-validate="'required'"
+                        :readonly= "disabledClass"
                         placeholder="Enter start date"/>
+                        <span v-show="errors.has('target frequency start')" class="help is-danger">[[ errors.first('target frequency start') ]]</span>
                     </div>
           
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="number_of_target_periods"
-                          >Number of Target Periods*</label
+                          >Number of target periods*</label
                         >
                         <input
                           :class="{'form-control': true}"
@@ -118,6 +116,7 @@
                           id="number_of_target_periods"
                           v-model="number_of_target_periods"
                           v-validate="'required'"
+                          :readonly= "disabledClass"
                         />
                       </div>
                     </div>
@@ -132,12 +131,15 @@
                       type="button"
                       class="btn btn-link btn-link-warning"
                       id="clearTargets"
+                      :disabled= "!disabledClass"
+                      @click= removeTargetPeriods()
                     >
                       Remove all targets
                     </button>
                     <button type="button" 
                             class="btn btn-warning"
                             id="addTargetsBtn"
+                            :disabled= "disabledClass"
                             @click= addPeriodTargets()>
                       Add Targets
                     </button>
@@ -146,7 +148,7 @@
               </div>
             </div>
             <br>
-            <div v-show="show" class="col-md-12" id="id_targets">
+            <div v-show="showTable" class="col-md-12" id="id_targets">
                 <table id="targetsTable" class="table table-hover">
                     <tbody>
                         <tr v-for=" target in targets" :key="target.id">
@@ -160,7 +162,9 @@
                                 type="number" 
                                 :id="target.id"
                                 v-model= "target_value[target.id]"
-                                name="periodic_targets">
+                                name="target value"
+                                v-validate="'required'"/>
+                                <span v-show="errors.has('target value')" class="help is-danger">[[ errors.first('target value') ]]</span>
                             </td>
                         </tr>
                         <tr>

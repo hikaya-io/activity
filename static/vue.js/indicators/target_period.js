@@ -21,28 +21,17 @@ new Vue({
         currentPeriod: null,
         itemToDelete: null,
         show: false,
+        showTable: false,
         disabledClass: false,
-        frequencies: [],
         targets: [],
         sum: 0,
         target_value: [0, ],
+        frequencies: [{"id": "3", "text":"Annual"},
+                      {"id": "4", "text":"Semi-annual"},
+                      {"id": "5", "text":"Tri-annual"},
+                      {"id": "6", "text":"Quarterly"},
+                      {"id": "7", "text":"Monthly"}],       
     },
-    beforeMount: function() {
-		this.makeRequest('GET', '/indicators/data_collection_frequency/')
-			.then(response => {
-				if (response.data) {
-                    if (this.frequencies.length === 0){
-                        response.data.forEach(frequency =>{
-                            this.frequencies.push({"id": frequency.id, "text": frequency.frequency})
-                        })   
-                    }
-                }		
-			})
-			.catch(e => {
-				toastr.error('There was a problem loading frequencies from the database');
-				this.frequencies = [];
-			});
-	},
     methods: {
         makeRequest(method, url, data = null) {
             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -68,20 +57,20 @@ new Vue({
 
             this.frequencies.forEach(frequency => {
                 if (frequency.id === this.target_frequency){
-                    switch (frequency.text) {
-                        case "Annual":
+                    switch (frequency.id) {
+                        case "3":
                           this.generateYearlyTargets(periodStarts);
                           break;
-                        case "Semi-annual":
+                        case "4":
                           this.generateSemiAnnualTargets(periodStarts);
                           break;
-                        case "Tri-annual":
+                        case "5":
                           this.generateTriAnnualTargets(periodStarts);
                           break;
-                        case "Quarterly":
+                        case "6":
                           this.generateQuarterlyTargets(periodStarts);
                           break;
-                        case "Monthly":
+                        case "7":
                           this.generateMonthlyTargets(periodStarts);
                           break;
                 
@@ -92,7 +81,21 @@ new Vue({
                 }
             })
 
+            this.showTable = true
+            this.disabledClass = true
+
             
+        },
+
+        removeTargetPeriods: function(){
+            this.targets= [],
+            this.target_value= [0, ]
+            this.sum= 0
+            this.show=false
+            this.showTable = false
+            this.disabledClass = false
+            this.target_frequency_start= ''
+
         },
 
         showFields: function(){
@@ -201,19 +204,36 @@ new Vue({
         },
 
 
-        toggleTargetModal: function(indicator_id, item = null) {
+        toggleTargetModal: function(indicator_id) {
             this.showModal = !this.showModal
-            this.indicator_id = indicator_id 
+            this.indicator_id = indicator_id
+            this.overall_target = ''
+            this.baseline= 0
+            this.rationale= ''
+            this.target_frequency= ''
+            this.number_of_target_periods= '1'
+            this.target_frequency_start= ''
+            this.targets= [],
+            this.target_value= [0, ]
+            this.sum= 0
+            this.show=false
+            this.showTable = false
+            this.disabledClass = false
+
         },
 
         processForm: function() {
             this.$validator.validateAll().then(target => {
                 if (target) {
-                  if (this.currentPeriod && this.currentPeriod.id) {
-                    this.updateTarget();
-                  } else {
-                    this.postTarget()
-                  }
+                    if (this.targets.length > 0){
+                        if (this.sum === parseInt(this.overall_target)){
+                            this.postTarget()
+                        }else{
+                            toastr.error('The sum of target values must be equal to overall target');
+                        }
+                    }else{
+                        toastr.error('Please add period targets');
+                    }
                 }
             });
         },
@@ -226,7 +246,6 @@ new Vue({
                     }
                 }))
             })
-            console.log(this.targets)
             const id = this.indicator_id
             this.targets = this.targets.map(function (obj) {
                 obj['indicator_id'] = obj['id'];
@@ -236,7 +255,6 @@ new Vue({
                 obj['indicator_id'] = id
                 return obj;
             });
-            console.log(this.targets)
             const data = {
                 indicator_id : id,
                 indicator_LOP: this.overall_target,
@@ -244,7 +262,6 @@ new Vue({
                 rationale : this.rationale,
                 periodic_targets: this.targets
             }
-            console.log(data)
 
             try {
                 const response = await this.makeRequest(
@@ -254,19 +271,13 @@ new Vue({
                   );
 
                 if (response){
-                    console.log(response)
+                    this.toggleTargetModal();
+                    toastr.success('Target periods were saved successfully');
+                    this.$validator.reset();
                 }
             } catch (error) {
-                alert('error')
+                toastr.error('There was a problems saving your data.');
             }
-
-        },
-
-        async updateTarget() {
-
-        },
-
-        async deleteObjective(id) {
 
         },
 
