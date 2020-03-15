@@ -120,6 +120,21 @@
     $("#frequency_metadata").hide();
   });
 
+
+  $("#indicator_data").submit(function( event ) {
+    
+    if($("#id_lop_target").val()){
+      if($("#id_lop_target").val() != $("#sumOfTargets").text()){
+        toastr.error('The sum of target values must be equal to overall target');
+      }else{
+        $("#indicator_data").submit()
+      }
+    }else{
+      $("#indicator_data").submit()
+    }
+    event.preventDefault()
+  });
+
   $(() => {
     $("#id_target_frequency").on("select2:select", e => {
       selectedTarget = +$("#id_target_frequency").val();
@@ -443,8 +458,8 @@
         ),
 
         $("<tr>").append(
-          $("<th>").text("Life of Program (LoP) target"),
-          $("<th>").text(1000),
+          $("<th>").text("Overall target"),
+          $("<th>").text($("#id_lop_target").val()),
           $("<td>")
         )
       );
