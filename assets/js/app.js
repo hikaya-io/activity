@@ -402,10 +402,6 @@ $(document).ready(function() {
     $(document).on("change, keyup", "#id_cfw_estimate_male", updateCFW);
     $(document).on("change, keyup", "#id_cfw_estimate_female", updateCFW);
 
-    $('.dropdown-menu a').on('click', function(){
-        $(this).parent().parent().prev().html($(this).html() + '<span class="caret"></span>');
-    })
-
     /*
     * Expand accordion down to location hash and then load collected data
     */
@@ -425,26 +421,3 @@ $(document).ready(function() {
 function newPopup(url, windowName) {
     return window.open(url,windowName,'height=768,width=1366,left=1200,top=10,titlebar=no,toolbar=no,menubar=no,location=no,directories=no,status=no');
 }
-
-// EXAMPLE: <a onclick="newPopup('https://docs.google.com/document/d/1tDwo3m1ychefNiAMr-8hCZnhEugQlt36AOyUYHlPbVo/edit?usp=sharing','Form Help/Guidance'); return false;" href="#" class="btn btn-sm btn-info">Form Help/Guidance</a>
-
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-  e.target // activated tab
-  e.relatedTarget // previous tab
-})
-
-/*
-* Confirm Change of Short form to Long
-*/
-function confirmshort() {
-      if (document.getElementById('id_short').checked == true) {
-        return false;
-      } else {
-       var box= confirm("Warning: The short form is recommended for all cases except COMPLEX programs.  Are you sure you want to do this?");
-        if (box==true)
-            return true;
-        else
-           document.getElementById('id_short').checked = true;
-
-      }
-    }
