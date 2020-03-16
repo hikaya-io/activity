@@ -80,7 +80,6 @@
         <th>Name</th>
         <th>{{ user.activity_user.organization.level_1_label }}</th>
         <th>Parent objective</th>
-        <!-- <th>Create Date</th> -->
         <th class="text-right"></th>
       </tr>
     </thead>
@@ -97,7 +96,7 @@
         </td>
         <td
           v-for="program in programs_list"
-          v-if="objective.program_id===program.id"
+          v-if="objective.program_id===program.program_id"
         >
           [[ program.name ]]
         </td>
@@ -110,7 +109,6 @@
         <td v-if="objective.parent_id===null">
           ---
         </td>
-        <!-- <td>[[ formatDate(objective.create_date) ]]</td> -->
         <td class="text-right">
           <!-- Action buttons -->
           <div class="btn-group">

@@ -21,7 +21,8 @@ from .views import (
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
     ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete, ProjectStatusView,
-    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView, OrganizationView
+    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView, OrganizationView, 
+    ProgramView,
 )
 from django.urls import path, re_path
 
@@ -29,6 +30,12 @@ from django.urls import path, re_path
 
 urlpatterns = [
     # level1
+    re_path(
+          r'level1_program/(?P<pk>.*)',
+          ProgramView.as_view(),
+          name='program_list'
+    ),
+    
     path('level1', list_workflow_level1, name='level1'),
     path('level1/add', ProgramCreate.as_view(), name='add_level1'),
     path('level1/edit/<int:pk>/', ProgramUpdate.as_view(), name='level1_edit'),

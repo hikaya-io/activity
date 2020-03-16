@@ -82,7 +82,9 @@ class Objective(models.Model):
     parent = models.ForeignKey(
         'self', blank=True, null=True, related_name='children', on_delete=models.SET_NULL)
     description = models.TextField(max_length=765, blank=True)
-    create_date = models.DateTimeField(null=True, blank=True)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
+    create_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
@@ -90,11 +92,6 @@ class Objective(models.Model):
 
     def __str__(self):
         return '{}'.format(self.name) or ''
-
-    def save(self):
-        if self.create_date is None:
-            self.create_date = datetime.now()
-        super(Objective, self).save()
 
 
 class Level(models.Model):
