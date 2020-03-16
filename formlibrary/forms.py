@@ -28,6 +28,7 @@ class TrainingAttendanceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.request = kwargs.pop('request')
+        self.organization = kwargs.pop('organization')
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
@@ -40,6 +41,9 @@ class TrainingAttendanceForm(forms.ModelForm):
                 program__organization=self.request.user.activity_user.organization)
         self.fields['program'].queryset = Program.objects.filter(
             organization=self.request.user.activity_user.organization)
+
+        self.fields['training_name'].label = '{} name'.format(self.organization.training_label) 
+        self.fields['training_duration'].label = '{} duration'.format(self.organization.training_label)        
 
 
 class DistributionForm(forms.ModelForm):
@@ -56,6 +60,7 @@ class DistributionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.request = kwargs.pop('request')
+        self.organization = kwargs.pop('organization')
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
@@ -71,6 +76,11 @@ class DistributionForm(forms.ModelForm):
             organization=self.request.user.activity_user.organization)
         self.fields['province'].queryset = Province.objects.all()
 
+        self.fields['distribution_name'].label = '{} name'.format(self.organization.distribution_label)
+        self.fields['distribution_implementer'].label = '{} implementer'.format(self.organization.distribution_label)
+        self.fields['distribution_location'].label = '{} location'.format(self.organization.distribution_label)
+        self.fields['distribution_indicator'].label = '{} indicator'.format(self.organization.distribution_label)
+        
 
 class BeneficiaryForm(forms.ModelForm):
 
@@ -80,6 +90,7 @@ class BeneficiaryForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
+        self.organization = kwargs.pop('organization')
         self.request = kwargs.pop('request')
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
@@ -97,3 +108,5 @@ class BeneficiaryForm(forms.ModelForm):
             program__organization=organization)
         self.fields['site'].queryset = SiteProfile.objects.filter(
             organizations__id__contains=self.request.user.activity_user.organization.id)
+        
+        self.fields['beneficiary_name'].label = '{} name'.format(self.organization.beneficiary_label)
