@@ -24,20 +24,6 @@ if (!Date.prototype.toISODate) {
 	};
 }
 function isDate(dateVal) {
-	/*
-    var pattern = /^(\d{4})-(\d{2})-(\d{2})$/;
-    var dateArray = dateVal.match(pattern);
-    if (dateArray == null) return false;
-
-    var currentYear = (new Date).getFullYear();
-    var year = dateArray[1];
-    var month = dateArray[2];
-    var day = dateArray[3];
-    if (year < 2010 || year > (currentYear+3)) return false;
-    if (month < 1 || month > 12) return false;
-    if (day < 1 || day > 31) return false;
-    return new Date(dateVal) === 'Invalid Date' ? false : true;
-    */
 	var date = new Date(dateVal);
 	if (date == 'Invalid Date') {
 		return false;
@@ -443,13 +429,6 @@ $(document).ready(function() {
 	$(document).on('change, keyup', '#id_cfw_estimate_male', updateCFW);
 	$(document).on('change, keyup', '#id_cfw_estimate_female', updateCFW);
 
-	$('.dropdown-menu a').on('click', function() {
-		$(this)
-			.parent()
-			.parent()
-			.prev()
-			.html($(this).html() + '<span class="caret"></span>');
-	});
 
 	/*
 	 * Expand accordion down to location hash and then load collected data
@@ -473,26 +452,3 @@ function newPopup(url, windowName) {
 	);
 }
 
-// EXAMPLE: <a onclick="newPopup('https://docs.google.com/document/d/1tDwo3m1ychefNiAMr-8hCZnhEugQlt36AOyUYHlPbVo/edit?usp=sharing','Form Help/Guidance'); return false;" href="#" class="btn btn-sm btn-info">Form Help/Guidance</a>
-
-$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-	e.target; // activated tab
-	e.relatedTarget; // previous tab
-});
-
-/*
- * Confirm Change of Short form to Long
- */
-function confirmshort(keyword) {
-	if (document.getElementById('id_short').checked == true) {
-		return false;
-	} else {
-		var box = confirm(
-			'Warning: The short form is recommended for all cases except complex ' +
-				keyword +
-				'.  Are you sure you want to do this?'
-		);
-		if (box == true) return true;
-		else document.getElementById('id_short').checked = true;
-	}
-}

@@ -20,8 +20,9 @@ from .views import (
     save_bookmark, district_json, country_json, export_sites_list, ReportData, DocumentationAgreementDelete,
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
-    ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete,
-    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView, OrganizationView
+    ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete, ProjectStatusView,
+    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView, OrganizationView, 
+    ProgramView,
 )
 from django.urls import path, re_path
 
@@ -29,6 +30,12 @@ from django.urls import path, re_path
 
 urlpatterns = [
     # level1
+    re_path(
+          r'level1_program/(?P<pk>.*)',
+          ProgramView.as_view(),
+          name='program_list'
+    ),
+    
     path('level1', list_workflow_level1, name='level1'),
     path('level1/add', ProgramCreate.as_view(), name='add_level1'),
     path('level1/edit/<int:pk>/', ProgramUpdate.as_view(), name='level1_edit'),
@@ -40,7 +47,6 @@ urlpatterns = [
     path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
     path('stakeholder/delete_stakeholder/<int:pk>/',
          delete_stakeholder, name='delete_stakeholder'),
-    path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/list/<slug:program>/<slug:status>/', ProgramDash.as_view(),
         name='projects_list'),
@@ -270,5 +276,12 @@ urlpatterns = [
         r'organization/(?P<pk>.*)',
         OrganizationView.as_view(),
         name='user_organization'
+    ),
+
+    # Project Status Url
+    re_path(
+        r'project_status/(?P<pk>.*)',
+        ProjectStatusView.as_view(),
+        name='project_status_list'
     )
 ]

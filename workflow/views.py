@@ -14,7 +14,7 @@ from .models import (
     ProjectComplete, SiteProfile, Documentation, Benchmarks, Budget, ProfileType,
     ApprovalAuthority, Checklist, ChecklistItem, Contact, Stakeholder, Sector,
     FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
-    Office, Organization
+    Office, Organization, ProjectStatus
 )
 from formlibrary.models import TrainingAttendance, Distribution
 from indicators.models import CollectedData, ExternalService
@@ -42,7 +42,9 @@ import requests
 import logging
 
 from django.core import serializers
-from .serializers import OfficeSerializer, StakeholderTypeSerializer, OrganizationSerializer
+from .serializers import (
+    OfficeSerializer, StakeholderTypeSerializer, OrganizationSerializer, ProgramSerializer, ProjectStatusSerializer
+    )
 from rest_framework import generics
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from rest_framework.response import Response
@@ -72,6 +74,19 @@ APPROVALS = (
     ('new', 'New'),
 )
 
+# Program level1 serializer view
+class ProgramView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = Program.objects.all()
+    serializer_class = ProgramSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return Program.objects.filter(organization=organization)
 
 def date_handler(obj):
     return obj.isoformat() if hasattr(obj, 'isoformat') else obj
@@ -84,8 +99,8 @@ def list_workflow_level1(request):
 
     context = {'programs': programs,
                'get_all_sectors': get_all_sectors, 'active': ['workflow']}
-
-    return render(request, 'workflow/level1.html', context)
+    
+    return render(request, 'workflow/level1.html', context) 
 
 
 def level1_delete(request, pk):
@@ -2912,3 +2927,20 @@ class OrganizationView(generics.ListCreateAPIView, generics.RetrieveUpdateDestro
         else:
             queryset = Organization.objects.all()
         return queryset
+
+
+"""
+Project status view
+"""
+class ProjectStatusView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = ProjectStatus.objects.all()
+    serializer_class = ProjectStatusSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.data['organization'] = request.user.activity_user.organization.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return ProjectStatus.objects.filter(organization=organization)

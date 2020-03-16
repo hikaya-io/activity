@@ -96,9 +96,11 @@ class IndexView(LoginRequiredMixin, TemplateView):
         projects_tracking = ProjectComplete.objects.filter(prog_q)
         indicators_kpi = indicators.filter(key_performance_indicator=True)
         latest_indicators = indicators.filter(key_performance_indicator=True)[:10]
+        get_all_sectors = Sector.objects.all()
 
         context = {
             'selected_program': selected_program,
+            'get_all_sectors': get_all_sectors,
             'get_programs': get_programs,
             'get_projects': projects,
             'get_indicators': indicators,
@@ -489,6 +491,9 @@ def admin_configurations(request):
             'form_label': data.get('form_label'),
             'stakeholder_label': data.get('stakeholder_label'),
             'date_format': data.get('date_format'),
+            'beneficiary_label': data.get('beneficiary_label'),
+            'training_label': data.get('training_label'),
+            'distribution_label': data.get('distribution_label'),
             # 'default_currency': data.get('default_currency')
         }
         organization = Organization.objects.filter(

@@ -18,8 +18,34 @@ body {
   font-weight: 400;
 }
 
+/* Style links across the body including data tables */
+a {
+  color: #1FA9AC;
+}
+
+a:focus, a:hover {
+  color: #25CED1;
+  text-decoration: none;
+}
+
+/* styles expanded arrow icon */
+.btn-link {
+  font-weight: 400;
+  color: #1FA9AC;
+  border-radius: 0;
+}
+
+.btn-link:active, 
+.btn-link:hover, 
+.btn-link:focus {
+  font-weight: 400;
+  color: #25CED1;
+  border-radius: 0;
+}
+
 #footer {
-  position: fixed;
+  /* removing sticky footer */
+  /* position: fixed; */
   bottom: 0px;
   width: 100%;
   /* Set the fixed height of the footer here */
@@ -28,6 +54,8 @@ body {
   background-color: #fafafa;
   vertical-align: top;
   color: rgb(50, 50, 50);
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
 }
 
 /* Bootstrap Overrides */
@@ -71,7 +99,8 @@ button:focus,
   background-color: #fff;
   border: none;
   color: #737581;
-  font-family: "Inconsolata", monospace !important;
+  font-family: 'Lato', sans-serif !important;
+  font-weight: 300;
   font-size: 18px;
 }
 
@@ -236,7 +265,15 @@ nav>div>.container {
 
 #footer > .container {
   padding: 10px;
-  font-family: "Inconsolata", monospace !important;
+}
+
+#footer > .container > div > *  {
+  padding-right: 10px;
+}
+
+a.text-muted:focus, a.text-muted:hover {
+  color: #A5A7AE;
+  text-decoration: none;
 }
 
 .filter {
@@ -1321,11 +1358,12 @@ textarea:focus {
 #participantsTable th {
   border-top: none;
 }
+
 .no-table-data {
   font-style: italic;
   color: #8b8d9b;
 }
 
-#participantsTable th {
-  border-top: none;
+#collectedDataTable th { 
+  border-top: none; 
 }
