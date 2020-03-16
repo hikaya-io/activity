@@ -3,6 +3,8 @@
 {% include './collected_data_table2.html'%}
 {% include 'ui-components/vue_modal.html'%}
 
+
+
 <div id="indicators_list" class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
@@ -97,9 +99,10 @@
               <span class="caret"></span>
               <span class="sr-only">Toggle Dropdown</span>
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu nav">
               <li class="dropdown-header">Related</li>
               <!-- <li><a href="">Results</a></li> -->
+              <li><a @click="toggleTargetModal({{indicator.id}})">Add target periods</a></li>
               <li><a href="/indicators/indicator_update/{{indicator.id}}/">Objectives</a></li>
               <li><a href="/indicators/indicator_update/{{indicator.id}}/">Levels</a></li>
               <li><a href="/indicators/indicator_update/{{indicator.id}}/">Sectors</a></li>
@@ -116,6 +119,16 @@
       {% endfor %}
     </tbody>
   </table>
+
+  <modal v-if="showModal" @close="showModal = false">
+    <div slot="body">
+      {% include 'indicators/forms/target_period_modal.html' %}
+    </div>
+    <div slot="footer">
+      {% include 'indicators/forms/target_period_form_footer.html' %}
+    </div>
+    <h4 slot="header">[[modalHeader]]</h4>
+  </modal>
 
   <div class="modal fade" role="dialog" id="conform_modal_div" aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog modal-sm">
@@ -142,7 +155,7 @@
   </div>
 </div>
 {% endblock content %}
-{% include 'ui-components/vue_modal.html'%}
 {% block extra_js_in_body %}
 <script src="{{ STATIC_URL }}vue.js/collected_data_table.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}vue.js/indicators/target_period.js"></script>
 {% endblock extra_js_in_body %}
