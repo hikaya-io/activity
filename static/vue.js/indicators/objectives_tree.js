@@ -64,13 +64,17 @@ new Vue({
     this.makeRequest('GET', '/indicators/objective/')
       .then(response => {
         if (response.data) {
-          this.objectives = response.data.objectives.sort(
-            (a, b) => b.id - a.id
-          );
-          this.parent_obj_list = response.data.objectives.sort(
-            (a, b) => b.id - a.id
-          );
-          this.programs_list = response.data.programs_list;
+          this.objectives = response.data
+            .slice()
+            .sort((a, b) => b.id - a.id)
+            .map(el => {
+              el['program_id'] = el['program'];
+              el['parent_id'] = el['parent'];
+              delete el['program'];
+              delete el['parent'];
+              return el;
+            });
+          this.parent_obj_list = this.objectives;
           this.modalHeader = 'Add objective';
         }
       })
@@ -79,6 +83,21 @@ new Vue({
           'There was a problem loading objectives from the database'
         );
         this.objectives = [];
+      });
+
+      this.makeRequest('GET', '/workflow/level1_program/')
+      .then(response => {
+        if (response.data) {
+          this.programs_list = response.data.map(el => {
+            el['program_id'] = el['id'];
+            delete el['id'];
+            return el;
+          });
+          this.programs_list = response.data;
+        }
+      })
+      .catch(e => {
+        toastr.error('There was a problem loading data from the database');
       });
   },
   methods: {
@@ -153,12 +172,16 @@ new Vue({
           {
             name: this.name,
             description: this.description,
-            parent_id: this.parent_id,
-            program_id: this.program_id
+            parent: this.parent_id,
+            program: this.program_id
           }
         );
         if (response) {
           toastr.success('Objective is saved');
+          response.data['program_id'] = response.data['program'];
+          response.data['parent_id'] = response.data['parent'];
+          delete response.data['program'];
+          delete response.data['parent'];
           this.insertChild(this.parent_id, {id: response.data.id, name: response.data.name})
           this.objectives.unshift(response.data);
           if (!saveNew) {
