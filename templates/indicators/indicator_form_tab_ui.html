@@ -1,4 +1,15 @@
 {% extends "base.html" %} {% block content %}
+
+<script>
+  $(document).ready(function(){
+    var hash = window.location.hash;
+    if (hash !='') {
+        $('.nav-tabs a[href="' + hash + '"]').tab('show');
+    }
+});
+</script>
+
+
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
@@ -16,7 +27,7 @@
     </div>
   </div>
 
-  <form class="bg-white p-10 pt-0" method="POST" novalidate>
+  <form id="indicator_data" class="bg-white p-10 pt-0" method="POST" novalidate>
     {% csrf_token %}
 
     <!-- Nav tabs -->

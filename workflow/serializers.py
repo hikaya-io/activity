@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from workflow.models import Office, StakeholderType, Organization
+from workflow.models import Office, StakeholderType, Organization, ProjectStatus
 
 
 class OfficeSerializer(serializers.ModelSerializer):
@@ -18,5 +18,11 @@ class StakeholderTypeSerializer(serializers.ModelSerializer):
 class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
+        fields = '__all__'
+
+
+class ProjectStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectStatus
         fields = '__all__'
 

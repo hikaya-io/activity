@@ -12,7 +12,8 @@ from .views import (
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport, objectives_list, objectives_tree, 
     LevelView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
-    IndicatorTarget, IndicatorTypeView, DataCollectionFrequencyView, ObjectiveList, ObjectiveCreate, ObjectiveUpdate, ObjectiveDelete)
+    IndicatorTarget, IndicatorTypeView, DataCollectionFrequencyView, ObjectiveList, ObjectiveCreate, ObjectiveUpdate, ObjectiveDelete,
+    PeriodicTargetCreateView)
 
 urlpatterns = [
 
@@ -161,5 +162,12 @@ urlpatterns = [
           r'data_collection_frequency/(?P<pk>.*)',
           DataCollectionFrequencyView.as_view(),
           name='data_collection_frequency_list'
-    )
+    ),
+
+    # Periodic Target view
+    re_path(
+          r'periodic_target/(?P<id>.*)',
+          PeriodicTargetCreateView.as_view(),
+          name='periodic_target_view'
+    ),
 ]

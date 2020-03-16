@@ -1777,3 +1777,27 @@ class ActivityUserOrganizationGroup(models.Model):
     # displayed in admin templates
     def __str__(self):
         return '{} - {}'.format(self.activity_user, self.organization) or ''
+
+
+class ProjectStatus(models.Model):
+    name = models.CharField(max_length=135, blank=True)
+    description = models.TextField(max_length=765, null=True, blank=True)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
+    create_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
+    edit_date = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name_plural = "Project Statuses"
+
+    # on save add create date or update edit date
+    def save(self, *args, **kwargs):
+        if self.create_date is None:
+            self.create_date = datetime.now()
+        self.edit_date = datetime.now()
+        super(ProjectStatus, self).save()
+
+    # displayed in admin templates
+    def __str__(self):
+        return self.name

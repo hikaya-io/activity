@@ -1,7 +1,29 @@
 <script>
   $(document).ready(() => {
-    $("#distributionStart").datepicker({ dateFormat: "yy-mm-dd" });
-    $("#distributionEnd").datepicker({ dateFormat: "yy-mm-dd" });
+    $('#distributionStart').datepicker({
+      dateFormat: 'dd.mm.yy',
+      onSelect: function(dateText, inst) {
+        let date = $(this).datepicker('getDate');
+        date.setDate(date.getDate() + 1);
+        $('#distributionEnd').datepicker('option', 'minDate', date);
+        startDate = date;
+      },
+    });
+    $('#distributionEnd').datepicker({
+      dateFormat: 'dd.mm.yy',
+      onSelect: function(dateText) {
+        let date = $(this).datepicker('getDate');
+        date.setDate(date.getDate() - 1);
+        $('#distributionStart').datepicker('option', 'maxDate', date);
+      },
+    });
+
+    $('#addDistributionModal').on('hidden.bs.modal', function() {
+      $('form#addDistributionForm').trigger('reset');
+      $('#distributionStart').datepicker('option', 'maxDate', null);
+      $('#distributionEnd').datepicker('option', 'minDate', null);
+    });
+
     $("#program").select2({
       theme: "bootstrap",
       placeholder:
@@ -24,6 +46,9 @@
       formValue.forEach(item => {
         obj[item.name] = item.value;
       });
+
+      obj.start_date = obj.start_date ? moment(obj.start_date, 'DD.MM.YYYY').format() : null,
+      obj.end_date = obj.end_date ? moment(obj.end_date, 'DD.MM.YYYY').format() : null,
 
       $.ajax({
         url: '{% url "add_distribution" %}',
