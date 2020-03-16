@@ -67,8 +67,8 @@
       >
         <option
           v-for="program in programs_list"
-          selected="currentObjective.program_id === program.id ? true : false"
-          :value="program.id"
+          selected="currentObjective.program_id === program.program_id ? true : false"
+          :value="program.program_id"
           >[[ program.name ]]</option
         >
       </select>
