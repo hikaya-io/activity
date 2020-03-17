@@ -305,6 +305,79 @@ $(document).ready(function() {
     validateConfigForm();
   });
 
+  $('#beneficiary').on('input focus keyup', function() {
+    const beneficiary = $(this);
+    if (beneficiary.val()) {
+      invalidInputs = invalidInputs.filter(item => item !== 'beneficiary_label');
+      $('#div_beneficiary_name')
+        .removeClass('has-error')
+        .addClass('has-success');
+      $('#beneficiaryHelpBlock')
+        .removeClass('hikaya-show')
+        .addClass('hikaya-hide');
+    } else {
+      invalidInputs.indexOf('beneficiary_label') === -1
+        ? invalidInputs.push('beneficiary_label')
+        : '';
+      $('#div_beneficiary_name')
+        .removeClass('has-success')
+        .addClass('has-error');
+      $('#beneficiaryHelpBlock')
+        .removeClass('hikaya-hide')
+        .addClass('hikaya-show');
+    }
+    validateConfigForm();
+  });
+
+  $('#distribution').on('input focus keyup', function() {
+    const distribution = $(this);
+    if (distribution.val()) {
+      invalidInputs = invalidInputs.filter(item => item !== 'distribution_label');
+      $('#div_distribution_name')
+        .removeClass('has-error')
+        .addClass('has-success');
+      $('#distributionHelpBlock')
+        .removeClass('hikaya-show')
+        .addClass('hikaya-hide');
+    } else {
+      invalidInputs.indexOf('distribution_label') === -1
+        ? invalidInputs.push('distribution_label')
+        : '';
+      $('#div_distribution_name')
+        .removeClass('has-success')
+        .addClass('has-error');
+      $('#distributionHelpBlock')
+        .removeClass('hikaya-hide')
+        .addClass('hikaya-show');
+    }
+    validateConfigForm();
+  });
+
+  $('#training').on('input focus keyup', function() {
+    const training = $(this);
+    if (training.val()) {
+      invalidInputs = invalidInputs.filter(item => item !== 'training_label');
+      $('#div_training_name')
+        .removeClass('has-error')
+        .addClass('has-success');
+      $('#trainingHelpBlock')
+        .removeClass('hikaya-show')
+        .addClass('hikaya-hide');
+    } else {
+      invalidInputs.indexOf('training_label') === -1
+        ? invalidInputs.push('training_label')
+        : '';
+      $('#div_training_name')
+        .removeClass('has-success')
+        .addClass('has-error');
+      $('#trainingHelpBlock')
+        .removeClass('hikaya-hide')
+        .addClass('hikaya-show');
+    }
+    validateConfigForm();
+  });
+
+
   /*
    * Enable/Disable submit button
    */
