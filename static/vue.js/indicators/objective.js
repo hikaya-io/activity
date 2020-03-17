@@ -29,19 +29,21 @@ new Vue({
     perPage: 5
   },
   beforeMount: function() {
-    this.makeRequest('GET', '/indicators/objective/list')
+    this.makeRequest('GET', '/indicators/objective/')
       .then(response => {
         if (response.data) {
-          this.objectives = response.data.objectives.sort(
-            (a, b) => b.id - a.id
-          );
-          this.filtered_objectives = response.data.objectives.sort(
-            (a, b) => b.id - a.id
-          );
-          this.parent_obj_list = response.data.objectives.sort(
-            (a, b) => b.id - a.id
-          );
-          this.programs_list = response.data.programs_list;
+          this.objectives = response.data
+            .slice()
+            .sort((a, b) => b.id - a.id)
+            .map(el => {
+              el['program_id'] = el['program'];
+              el['parent_id'] = el['parent'];
+              delete el['program'];
+              delete el['parent'];
+              return el;
+            });
+          this.parent_obj_list = this.objectives;
+          this.filtered_objectives = this.objectives
           this.modalHeader = 'Add objective';
           this.rows = this.filtered_objectives.length;
           $(document).ready(() => {
@@ -53,10 +55,23 @@ new Vue({
         }
       })
       .catch(e => {
-        toastr.error(
-          'There was a problem loading objectives from the database'
-        );
+        toastr.error('There was a problem loading data from the database');
         this.objectives = [];
+      });
+
+    this.makeRequest('GET', '/workflow/level1_program/')
+      .then(response => {
+        if (response.data) {
+          this.programs_list = response.data.map(el => {
+            el['program_id'] = el['id'];
+            delete el['id'];
+            return el;
+          });
+          this.programs_list = response.data;
+        }
+      })
+      .catch(e => {
+        toastr.error('There was a problem loading data from the database');
       });
   },
 
@@ -139,16 +154,20 @@ new Vue({
       try {
         const response = await this.makeRequest(
           'POST',
-          `/indicators/objective/add`,
+          `/indicators/objective/`,
           {
             name: this.name,
             description: this.description,
-            parent_id: this.parent_id,
-            program_id: this.program_id
+            parent: this.parent_id,
+            program: this.program_id
           }
         );
         if (response) {
           toastr.success('Objective is saved');
+          response.data['program_id'] = response.data['program'];
+          response.data['parent_id'] = response.data['parent'];
+          delete response.data['program'];
+          delete response.data['parent'];
           this.objectives.unshift(response.data);
           this.setFilter(this.filtered_program_id);
           if (!saveNew) {
@@ -172,17 +191,21 @@ new Vue({
     async updateObjective() {
       try {
         const response = await this.makeRequest(
-          'PUT',
-          `/indicators/objective/edit/${this.currentObjective.id}`,
+          'PATCH',
+          `/indicators/objective/${this.currentObjective.id}`,
           {
             name: this.name,
             description: this.description,
-            parent_id: this.parent_id,
-            program_id: this.program_id
+            parent: this.parent_id,
+            program: this.program_id
           }
         );
         if (response) {
           toastr.success('Objective is updated');
+          response.data['program_id'] = response.data['program'];
+          response.data['parent_id'] = response.data['parent'];
+          delete response.data['program'];
+          delete response.data['parent'];
           const newObjectives = this.objectives.filter(item => {
             return item.id != this.currentObjective.id;
           });
@@ -211,9 +234,9 @@ new Vue({
       try {
         const response = await this.makeRequest(
           'DELETE',
-          `/indicators/objective/delete/${id}`
+          `/indicators/objective/${id}`
         );
-        if (response.data.success) {
+        if (response.status === 204) {
           toastr.success('Objective is deleted');
           this.objectives = this.objectives.filter(item => +item.id !== +id);
           this.setFilter(this.filtered_program_id);

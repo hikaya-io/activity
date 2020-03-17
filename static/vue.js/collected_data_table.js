@@ -122,7 +122,6 @@ $(document).ready(() => {
             },
 
             async postData(saveNew) {
-              console.log(this.documentation)
               try {
                 const response = await this.makeRequest(
                   'POST',

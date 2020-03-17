@@ -10,14 +10,14 @@
   {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">My Dashboard</a></li>
-    <li class="active">Distributions</li>
+    <li class="active">{{ request.user.activity_user.organization.distribution_label }}</li>
   </ul>
   {% endblock %}
 
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">Distribution List</h4>
+      <h4 class="page-title">{{ request.user.activity_user.organization.distribution_label }} List</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
@@ -29,7 +29,7 @@
 
       <div class="sub-nav-item">
         <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addDistributionModal">
-          <i class="fa fa-plus"></i> Distribution
+          <i class="fa fa-plus"></i> {{ request.user.activity_user.organization.distribution_label }}
         </button>
       </div>
     </div>

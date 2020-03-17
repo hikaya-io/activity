@@ -5,16 +5,15 @@ on:
     branches: 
       - dev
       - master
+      - ACT-609
   pull_request:
     branches: 
       - dev
       - master
 
 jobs:
-  build:
-
+  Build_and_test:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python 3.7
@@ -23,9 +22,10 @@ jobs:
         python-version: 3.7
     - name: Install dependencies
       run: |
+        sudo apt-get update -y
         sudo apt-get install gdal-bin
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install pipenv
     - name: Lint with flake8
       run: |
         pip install flake8
@@ -33,6 +33,116 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with Django Test
+    - name: Run Tests
       run: |
-        python manage.py test
+        pipenv install
+        source $(python3 -m pipenv --venv)/bin/activate
+        coverage run --source=activity manage.py test
+        echo "++++++++ Show test coverage report +++++++"
+        coverage report
+        coveralls
+
+
+  Infrastructure:
+    runs-on: ubuntu-latest 
+    needs: Build_and_test
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup terraform
+      run: |
+        export VER="0.12.21"
+        wget https://releases.hashicorp.com/terraform/${VER}/terraform_${VER}_linux_amd64.zip
+        unzip terraform_${VER}_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+        terraform version
+
+    - name: Run infrastructure script
+      env: 
+        BACKEND_BUCKET_DEV_ENV: ${{ secrets.BACKEND_BUCKET_DEV_ENV }}
+        STATE_FILE_DEV_ENV: ${{ secrets.STATE_FILE_DEV_ENV }}
+        SPACES_ACCESS_KEY: ${{ secrets.SPACES_ACCESS_KEY }}
+        SPACES_SECRET_KEY: ${{ secrets.SPACES_SECRET_KEY }}
+        CLUSTER_NAME_DEV_ENV: ${{ secrets.CLUSTER_NAME_DEV_ENV }}
+        CLUSTER_REGION: ${{ secrets.CLUSTER_REGION }}
+        K8S_VERSION: ${{ secrets.K8S_VERSION }}
+        NODE_TYPE: ${{ secrets.NODE_TYPE }}
+        MAX_NODE_NUM: ${{ secrets.MAX_NODE_NUM }}
+        MIN_NODE_NUM: ${{ secrets.MIN_NODE_NUM }}
+        SERVICE_ACCESS_TOKEN: ${{ secrets.SERVICE_ACCESS_TOKEN }}
+        DB_SIZE: ${{ secrets.DB_SIZE }}
+        PG_VERSION: ${{ secrets.PG_VERSION }}
+        DB_NAME_DEV_ENV: ${{ secrets.DB_NAME_DEV_ENV}}
+      
+      run: |
+        export TRAVIS_EVENT_TYPE="push"
+        chmod +x ci-scripts/create_infrastructure.sh
+        bash ./ci-scripts/create_infrastructure.sh
+
+  Build_and_push_image:
+    runs-on: ubuntu-latest 
+    needs: Infrastructure
+    steps:
+    - uses: actions/checkout@v1 
+    - name: Setup docker-ce
+      run: |
+        sudo apt install apt-transport-https ca-certificates curl software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+        sudo apt install docker-ce
+        sudo docker version
+  
+    - name: Build and Push
+      env:
+        DOCKER_HUB_USERNM: ${{ secrets.DOCKER_HUB_USERNM }}
+        DOCKER_HUB_PASSWD: ${{ secrets.DOCKER_HUB_PASSWD }}
+        ACTIVITY_CE_DB_NAME_DEV: ${{ secrets.ACTIVITY_CE_DB_NAME_DEV }}
+        ACTIVITY_CE_DB_USER_DEV: ${{ secrets.ACTIVITY_CE_DB_USER_DEV }}
+        ACTIVITY_CE_DB_PASSWORD_DEV: ${{ secrets.ACTIVITY_CE_DB_PASSWORD_DEV }}
+        ACTIVITY_CE_DB_HOST_DEV: ${{ secrets.ACTIVITY_CE_DB_HOST_DEV }}
+        SECRET_KEY_DEV_ENV: ${{ secrets.SECRET_KEY_DEV_ENV }}
+        DEBUG: ${{ secrets.DEBUG }}
+        DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+        DB_ENGINE: ${{ secrets.DB_ENGINE }}
+        ACTIVITY_CE_DB_PORT_DEV: ${{ secrets.ACTIVITY_CE_DB_PORT_DEV }}
+        APPLICATION_ENV: ${{ secrets.APPLICATION_ENV }}
+        EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+        EMAIL_HOST_USER_DEV: ${{ secrets.EMAIL_HOST_USER_DEV }}
+        EMAIL_HOST_PASSWORD_DEV: ${{ secrets.EMAIL_HOST_PASSWORD_DEV }}
+        EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+        GOOGLE_MAP_API_KEY_DEV: ${{ secrets.GOOGLE_MAP_API_KEY_DEV }}
+        APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
+        REGISTRY_OWNER: ${{ secrets.REGISTRY_OWNER }}
+
+      run: |
+        export TRAVIS_COMMIT=$GITHUB_SHA
+        export TRAVIS_EVENT_TYPE="push"
+        chmod +x ci-scripts/build_docker_image.sh
+        bash ./ci-scripts/build_docker_image.sh
+
+
+  Deploy:
+    needs: Build_and_push_image
+    runs-on: ubuntu-latest
+    container:
+      image: yagami22/ci-deploy-image 
+    steps:
+    - uses: actions/checkout@v1
+    - name: Deploy to DO
+      env:
+        APPLICATION_ENV: ${{ secrets.APPLICATION_ENV }}
+        CLUSTER_NAME_DEV_ENV: ${{ secrets.CLUSTER_NAME_DEV_ENV }}
+        SERVICE_ACCESS_TOKEN: ${{ secrets.SERVICE_ACCESS_TOKEN }}
+        DOCKER_HUB_USERNM: ${{ secrets.DOCKER_HUB_USERNM }}
+        DOCKER_HUB_PASSWD: ${{ secrets.DOCKER_HUB_PASSWD }}
+        B64_TOKEN: ${{ secrets.B64_TOKEN }}
+        DEFAULT_NOTIFY: ${{ secrets.DEFAULT_NOTIFY }}
+        RATE_LIMIT: ${{ secrets.RATE_LIMIT }}
+        HOST_DOMAIN: ${{ secrets.HOST_DOMAIN }}
+        APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
+        REGISTRY_OWNER: ${{ secrets.REGISTRY_OWNER }}
+      run: |
+        export TRAVIS_COMMIT=$GITHUB_SHA
+        export FILE_PATH="/github/home/.docker/config.json"
+        export TRAVIS_EVENT_TYPE="push"
+        chmod +x ci-scripts/deployment.sh
+        bash ./ci-scripts/deployment.sh
