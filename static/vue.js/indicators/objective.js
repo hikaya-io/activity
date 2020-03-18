@@ -43,15 +43,15 @@ new Vue({
               return el;
             });
           this.parent_obj_list = this.objectives;
-          this.filtered_objectives = this.objectives
+          this.filtered_objectives = this.objectives;
           this.modalHeader = 'Add objective';
           this.rows = this.filtered_objectives.length;
-          $(document).ready(() => {
-            $('#objectivesTable').DataTable({
-              pageLength: 10,
-              lengthMenu: [10, 20, 30, 40]
-            });
-          });
+          // $(document).ready(() => {
+          //   $('#objectivesTable').DataTable({
+          //     pageLength: 10,
+          //     lengthMenu: [10, 20, 30, 40]
+          //   });
+          // });
         }
       })
       .catch(e => {

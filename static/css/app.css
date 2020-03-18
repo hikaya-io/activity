@@ -3,24 +3,19 @@
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  /* position: relative; */
-  /* min-height: 100%; */
-  height: 100%;
-
+  position: relative;
+  min-height: 100%;
 }
 
 body {
   /* Margin bottom by footer height */
   height: 100%;
-  margin-top: 50px;
-  /* margin-bottom: 60px; */
+  margin-bottom: 60px;
   font-family: "Lato", system-ui, sans-serif !important;
   background-color: #fafafa;
   font-size: 14px;
   color: #737581;
   font-weight: 400;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Style links across the body including data tables */
@@ -48,24 +43,20 @@ a:focus, a:hover {
   border-radius: 0;
 }
 
-.activity-content{
-  flex: 1 0 auto;
-}
 
 #footer {
   /* removing sticky footer */
   /* position: fixed; */
-  /* bottom: 0px; */
-  /* width: 100%; */
+  bottom: 0px;
+  width: 100%;
   /* Set the fixed height of the footer here */
-  /* height: 40px; */
+  height: 40px;
   border-top: 1px solid #fafafa;
   background-color: #fafafa;
   vertical-align: top;
   color: rgb(50, 50, 50);
   font-family: 'Lato', sans-serif;
   font-weight: 300;
-  flex-shrink: 0;
 }
 
 /* Bootstrap Overrides */
