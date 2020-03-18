@@ -104,11 +104,12 @@
   {{ form.media }}
 </head>
 
-<body style="margin-top: 50px">
+<body >
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KWBBGXK" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
+  <div class="activity-content">
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <!-- Brand and toggle get grouped for better mobile display -->
@@ -380,6 +381,7 @@
     {% endblock messages %}
   </div>
 
+
   <!-- Main body content -->
   {% block content %} {% endblock %}
   <!--{% if not user.is_authenticated  %}
@@ -388,6 +390,8 @@
   <!-- .container collapse -->
 
   <div id="ajaxloading" class="modal ajax_loading"></div>
+  </div>
+
   <div id="footer">
     <!-- Sticky Footer -->
     <div class="container">
