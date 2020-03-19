@@ -11,4 +11,3 @@ class IsReadOnly(permissions.BasePermission):
 
         viewer_group = request.user.activity_user.activity_user_org_group.filter(group__name='Viewer')
         return not viewer_group.exists()
-
