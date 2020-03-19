@@ -7,15 +7,15 @@
     </td>
     <td>{{ project.cod_num }}</td>
     <td title="{{ project.program.name}}">{{ project.program.name | truncatechars:50 }}</td>
-    {% comment %} <td>{{ project.approval|capfirst }}</td> {% endcomment %}
-    <td>
+    <td>{{ project.approval|capfirst }}</td> 
+    {% comment %} <td>
       {% if project.approval == 'new' %} <span class="badge project-status__new">{{ project.approval|capfirst }}</span>
       {% elif project.approval == 'in progress'%} <span class="badge project-status__in-progress">{{ project.approval|capfirst }}</span>
       {% elif project.approval == 'awaiting approval'%} <span class="badge project-status__awaiting-approval">{{ project.approval|capfirst }}</span>
       {% elif project.approval == 'rejected'%} <span class="badge project-status__rejected">{{ project.approval|capfirst }}</span>
       {% elif project.approval == 'approved'%} <span class="badge project-status__approved">{{ project.approval|capfirst }}</span>
       {% endif %}
-    </td>
+    </td> {% endcomment %}
     {% comment %} <td>
         {% if item.projectcomplete %} 
           Tracking 

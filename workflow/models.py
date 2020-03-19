@@ -26,15 +26,6 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
 
-APPROVALS = (
-    ('new', 'new'),
-    ('in progress', 'in progress'),
-    ('awaiting approval', 'awaiting approval'),
-    ('approved', 'approved'),
-    ('rejected', 'rejected'),
-    ('Not approved', 'not approved'),
-)
-
 
 # New user created generate a token
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -1010,6 +1001,30 @@ class Stakeholder(models.Model):
         return self.name
 
 
+class ProjectStatus(models.Model):
+    name = models.CharField(max_length=135, blank=True)
+    description = models.TextField(max_length=765, null=True, blank=True)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
+    create_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
+    edit_date = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name_plural = "Project Statuses"
+
+    # on save add create date or update edit date
+    def save(self, *args, **kwargs):
+        if self.create_date is None:
+            self.create_date = datetime.now()
+        self.edit_date = datetime.now()
+        super(ProjectStatus, self).save()
+
+    # displayed in admin templates
+    def __str__(self):
+        return self.name
+
+
 class ProjectAgreementManager(models.Manager):
     def get_approved(self):
         return self.filter(approval="approved")
@@ -1072,6 +1087,9 @@ class ProjectAgreement(models.Model):
         "Project Code", help_text='', max_length=255, blank=True, null=True)
     office = models.ForeignKey(
         Office, verbose_name="Office", null=True, blank=True,
+        on_delete=models.SET_NULL)
+    approval = models.ForeignKey(
+        ProjectStatus, verbose_name="Approval Status", null=True, blank=True,
         on_delete=models.SET_NULL)
     cod_num = models.CharField(
         "Project COD #", max_length=255, blank=True, null=True)
@@ -1226,9 +1244,6 @@ class ProjectAgreement(models.Model):
     capacity = models.ManyToManyField(
         Capacity, verbose_name="Sustainability Plan", blank=True)
     evaluate = models.ManyToManyField(Evaluate, blank=True)
-    approval = models.CharField(
-        "Approval Status", choices=APPROVALS, default='new',
-        max_length=255, blank=True, null=True)
     approved_by = models.ForeignKey(ActivityUser, blank=True, null=True,
                                     related_name="approving_agreement",
                                     verbose_name="Request approval",
@@ -1778,26 +1793,3 @@ class ActivityUserOrganizationGroup(models.Model):
     def __str__(self):
         return '{} - {}'.format(self.activity_user, self.organization) or ''
 
-
-class ProjectStatus(models.Model):
-    name = models.CharField(max_length=135, blank=True)
-    description = models.TextField(max_length=765, null=True, blank=True)
-    organization = models.ForeignKey(
-        Organization, null=True, blank=True, on_delete=models.SET_NULL)
-    create_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
-    edit_date = models.DateTimeField(null=True, blank=True)
-
-    class Meta:
-        ordering = ('name',)
-        verbose_name_plural = "Project Statuses"
-
-    # on save add create date or update edit date
-    def save(self, *args, **kwargs):
-        if self.create_date is None:
-            self.create_date = datetime.now()
-        self.edit_date = datetime.now()
-        super(ProjectStatus, self).save()
-
-    # displayed in admin templates
-    def __str__(self):
-        return self.name

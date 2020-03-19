@@ -18,7 +18,7 @@ from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
     Benchmarks, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector, Country, ProfileType, FundCode
+    ActivityUser, Contact, Sector, Country, ProfileType, FundCode, ProjectStatus
 )
 from indicators.models import (
     CollectedData, Indicator, PeriodicTarget,
@@ -318,12 +318,12 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
     documentation_government_approval = forms.FileField(required=False)
     documentation_community_approval = forms.FileField(required=False)
 
-    approval = forms.ChoiceField(
-        choices=APPROVALS,
-        initial='new',
-        required=False,
-        label="Project Status"
-    )
+    # approval = forms.ChoiceField(
+    #     choices=APPROVALS,
+    #     initial='new',
+    #     required=False,
+    #     label="Project Status"
+    # )
 
     def __init__(self, *args, **kwargs):
         # get the user object from request to check permissions
@@ -373,22 +373,28 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
             self.request.user.activity_user.organization.level_2_label)
         self.fields['approval'].label = '{} Status'.format(
             self.request.user.activity_user.organization.level_2_label)
+        self.fields['approval'].label = '{} Status'.format(
+            self.request.user.activity_user.organization.level_2_label)
 
         # override the stakeholder queryset to use request.user for country
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
             organization=self.request.user.activity_user.organization)
+        
+        self.fields['approval'].queryset = ProjectStatus.objects.filter(
+                organization=self.request.user.activity_user.organization)
 
         if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
             # Status field for new project initiation form
-            APPROVALS = (
-                ('in progress', 'in progress'),
-                ('awaiting approval', 'awaiting approval'),
-                ('approved', 'approved'),
-                ('rejected', 'rejected'),
-                ('new', 'new')
-            )
-            self.fields['approval'].choices = APPROVALS
+            # APPROVALS = (
+            #     ('in progress', 'in progress'),
+            #     ('awaiting approval', 'awaiting approval'),
+            #     ('approved', 'approved'),
+            #     ('rejected', 'rejected'),
+            #     ('new', 'new')
+            # )
+            # self.fields['approval'].choices = APPROVALS
+            
             # self.fields['approved_by'].widget.attrs['disabled'] = "disabled"
             self.fields['approval_remarks'].widget.attrs[
                 'disabled'] = "disabled"
