@@ -4,7 +4,6 @@
       dateFormat: 'yy-mm-dd',
       onSelect: function(dateText, inst) {
         let date = $(this).datepicker('getDate');
-        date.setDate(date.getDate() + 1);
         $('#trainingEnd').datepicker('option', 'minDate', date);
         startDate = date;
       },
@@ -13,13 +12,10 @@
       dateFormat: 'yy-mm-dd',
       onSelect: function(dateText) {
         let date = $(this).datepicker('getDate');
-        date.setDate(date.getDate() - 1);
         $('#trainingStart').datepicker('option', 'maxDate', date);
       },
     });
 
-    // $("#trainingStart").datepicker({ dateFormat: "yy-mm-dd" });
-    // $("#trainingEnd").datepicker({ dateFormat: "yy-mm-dd" });
     $("#program").select2({
       theme: "bootstrap",
       placeholder:
