@@ -3,7 +3,7 @@
 
 from crispy_forms.helper import FormHelper
 from django import forms
-from .models import TrainingAttendance, Distribution, Beneficiary
+from .models import TrainingAttendance, Distribution, Individual
 from workflow.models import Program, ProjectAgreement, Office, Province, SiteProfile
 from functools import partial
 
@@ -42,8 +42,8 @@ class TrainingAttendanceForm(forms.ModelForm):
         self.fields['program'].queryset = Program.objects.filter(
             organization=self.request.user.activity_user.organization)
 
-        self.fields['training_name'].label = '{} name'.format(self.organization.training_label) 
-        self.fields['training_duration'].label = '{} duration'.format(self.organization.training_label)        
+        self.fields['training_name'].label = '{} name'.format(self.organization.training_label)
+        self.fields['training_duration'].label = '{} duration'.format(self.organization.training_label)
 
 
 class DistributionForm(forms.ModelForm):
@@ -80,12 +80,12 @@ class DistributionForm(forms.ModelForm):
         self.fields['distribution_implementer'].label = '{} implementer'.format(self.organization.distribution_label)
         self.fields['distribution_location'].label = '{} location'.format(self.organization.distribution_label)
         self.fields['distribution_indicator'].label = '{} indicator'.format(self.organization.distribution_label)
-        
 
-class BeneficiaryForm(forms.ModelForm):
+
+class IndividualForm(forms.ModelForm):
 
     class Meta:
-        model = Beneficiary
+        model = Individual
         exclude = ['create_date', 'edit_date']
 
     def __init__(self, *args, **kwargs):
@@ -97,7 +97,7 @@ class BeneficiaryForm(forms.ModelForm):
         self.helper.help_text_inline = True
         self.helper.html5_required = True
 
-        super(BeneficiaryForm, self).__init__(*args, **kwargs)
+        super(IndividualForm, self).__init__(*args, **kwargs)
 
         organization = self.request.user.activity_user.organization
         self.fields['training'].queryset = TrainingAttendance.objects.filter(
@@ -108,5 +108,5 @@ class BeneficiaryForm(forms.ModelForm):
             program__organization=organization)
         self.fields['site'].queryset = SiteProfile.objects.filter(
             organizations__id__contains=self.request.user.activity_user.organization.id)
-        
+
         self.fields['beneficiary_name'].label = '{} name'.format(self.organization.beneficiary_label)

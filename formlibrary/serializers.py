@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from formlibrary.models import Beneficiary, TrainingAttendance
+from formlibrary.models import Individual, TrainingAttendance
 
 
 class TrainingSerializer(serializers.ModelSerializer):
@@ -9,9 +9,9 @@ class TrainingSerializer(serializers.ModelSerializer):
         fields = ['training_duration']
 
 
-class BeneficiarySerializer(serializers.ModelSerializer):
+class IndividualSerializer(serializers.ModelSerializer):
     training = TrainingSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Beneficiary
+        model = Individual
         fields = ['id', 'beneficiary_name', 'age', 'training']

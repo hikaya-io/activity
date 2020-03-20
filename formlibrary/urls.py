@@ -3,8 +3,8 @@
 
 from .views import (
     TrainingList, add_training, add_distribution, TrainingListObjects,
-    BeneficiaryList, BeneficiaryCreate, BeneficiaryListObjects,
-    BeneficiaryUpdate, TrainingUpdate, delete_training, delete_beneficiary,
+    IndividualList, IndividualCreate, IndividualListObjects,
+    IndividualUpdate, TrainingUpdate, delete_training, delete_beneficiary,
     TrainingCreate, DistributionList, DistributionCreate, DistributionListObjects,
     DistributionUpdate, delete_distribution, GetAgreements,
     TrainingParticipantListObjects)
@@ -29,13 +29,13 @@ urlpatterns = [
          name='training_participants'),
 
     path('beneficiary_list/<slug:program>/<slug:training>/<slug:distribution>/',
-         BeneficiaryList.as_view(), name='beneficiary_list'),
+         IndividualList.as_view(), name='beneficiary_list'),
     path('beneficiary_objects/<slug:program>/<slug:project>/',
-         BeneficiaryListObjects.as_view(), name='beneficiary_objects'),
+         IndividualListObjects.as_view(), name='beneficiary_objects'),
     path('beneficiary_add/<slug:id>/',
-         BeneficiaryCreate.as_view(), name='beneficiary_add'),
+         IndividualCreate.as_view(), name='beneficiary_add'),
     path('beneficiary_update/<slug:pk>/',
-         BeneficiaryUpdate.as_view(), name='beneficiary_update'),
+         IndividualUpdate.as_view(), name='beneficiary_update'),
     path('beneficiary_delete/<slug:pk>/',
          delete_beneficiary, name='beneficiary_delete'),
 

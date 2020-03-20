@@ -126,7 +126,7 @@ class Distribution(models.Model):
         return self.distribution_name
 
 
-class Beneficiary(models.Model):
+class Individual(models.Model):
     beneficiary_name = models.CharField(max_length=255, null=True, blank=True)
     training = models.ManyToManyField(TrainingAttendance, blank=True)
     distribution = models.ManyToManyField(Distribution, blank=True)
@@ -149,7 +149,7 @@ class Beneficiary(models.Model):
         if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
-        super(Beneficiary, self).save()
+        super(Individual, self).save()
 
     # displayed in admin templates
     def __str__(self):

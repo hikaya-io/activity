@@ -6,7 +6,7 @@ from workflow.models import (
     Program, Country, Province, ProjectAgreement, Sector,
     ProjectType, SiteProfile, Office
 )
-from formlibrary.models import TrainingAttendance, Distribution, Beneficiary
+from formlibrary.models import TrainingAttendance, Distribution, Individual
 from datetime import datetime
 
 
@@ -131,7 +131,7 @@ class DistributionTestCase(TestCase):
             id=get_distribution.id).count(), 1)
 
 
-class BeneficiaryTestCase(TestCase):
+class IndividualTestCase(TestCase):
 
     def setUp(self):
         new_program = Program.objects.create(name="testprogram")
@@ -142,14 +142,14 @@ class BeneficiaryTestCase(TestCase):
         new_training.save()
         # get_training = TrainingAttendance.objects.get(
         #     training_name="testtraining")
-        new_benny = Beneficiary.objects.create(
+        new_benny = Individual.objects.create(
             beneficiary_name="Joe Test", father_name="Mr Test", age="42",
             gender="male", signature=False, remarks="life")
         new_benny.training.add(new_training)
         new_benny.save()
 
-    def test_beneficiary_exists(self):
+    def test_individual_exists(self):
         """Check for Benny object"""
-        get_benny = Beneficiary.objects.get(beneficiary_name="Joe Test")
-        self.assertEqual(Beneficiary.objects.filter(
+        get_benny = Individual.objects.get(beneficiary_name="Joe Test")
+        self.assertEqual(Individual.objects.filter(
             id=get_benny.id).count(), 1)

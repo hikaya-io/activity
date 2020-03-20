@@ -6,10 +6,10 @@ from django.views.generic.list import ListView
 from rest_framework.generics import ListAPIView
 from rest_framework.mixins import ListModelMixin
 
-from .models import TrainingAttendance, Beneficiary, Distribution
+from .models import TrainingAttendance, Individual, Distribution
 from django.shortcuts import redirect
 
-from .forms import TrainingAttendanceForm, BeneficiaryForm, DistributionForm
+from .forms import TrainingAttendanceForm, IndividualForm, DistributionForm
 from workflow.models import FormGuidance, Program, ProjectAgreement
 from django.utils.decorators import method_decorator
 from activity.util import get_country, group_excluded
@@ -24,7 +24,7 @@ from .mixins import AjaxableResponseMixin, CustomPagination
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
-from .serializers import BeneficiarySerializer
+from .serializers import IndividualSerializer
 
 
 class TrainingList(ListView):
@@ -171,11 +171,11 @@ def delete_training(request, pk):
     return redirect('/formlibrary/training_list/0/0/')
 
 
-class BeneficiaryList(ListView):
+class IndividualList(ListView):
     """
-    Beneficiary
+    Individual
     """
-    model = Beneficiary
+    model = Individual
     template_name = 'formlibrary/beneficiary_list.html'
 
     def get(self, request, *args, **kwargs):
@@ -191,17 +191,17 @@ class BeneficiaryList(ListView):
             program__in=get_programs)
         get_distribution = Distribution.objects.filter(
             program__in=get_programs)
-        get_beneficiaries = Beneficiary.objects.filter(
+        get_beneficiaries = Individual.objects.filter(
             program__in=get_programs)
 
         if int(program_id) != 0:
-            get_beneficiaries = Beneficiary.objects.filter(
+            get_beneficiaries = Individual.objects.filter(
                 program__id__contains=program_id)
         if int(training_id) != 0:
-            get_beneficiaries = Beneficiary.objects.filter(
+            get_beneficiaries = Individual.objects.filter(
                 training__id=int(training_id))
         if int(distribution_id) != 0:
-            get_beneficiaries = Beneficiary.objects.filter(
+            get_beneficiaries = Individual.objects.filter(
                 distribution__id=int(distribution_id))
 
         return render(request, self.template_name,
@@ -213,16 +213,16 @@ class BeneficiaryList(ListView):
                           'get_training': get_training,
                           'training_id': int(training_id),
                           'distribution_id': int(distribution_id),
-                          'form_component': 'beneficiary_list',
-                          'active': ['forms', 'beneficiary_list']
+                          'form_component': 'individual_list',
+                          'active': ['forms', 'individual_list']
                       })
 
 
-class BeneficiaryCreate(CreateView):
+class IndividualCreate(CreateView):
     """
-    Beneficiary Form
+    Individual Form
     """
-    model = Beneficiary
+    model = Individual
     guidance = None
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
@@ -231,7 +231,7 @@ class BeneficiaryCreate(CreateView):
             self.guidance = FormGuidance.objects.get(form="Beneficiary")
         except FormGuidance.DoesNotExist:
             self.guidance = None
-        return super(BeneficiaryCreate, self).dispatch(
+        return super(IndividualCreate, self).dispatch(
             request, *args, **kwargs)
 
     def get_initial(self):
@@ -246,7 +246,7 @@ class BeneficiaryCreate(CreateView):
 
     # add the request to the kwargs
     def get_form_kwargs(self):
-        kwargs = super(BeneficiaryCreate, self).get_form_kwargs()
+        kwargs = super(IndividualCreate, self).get_form_kwargs()
         kwargs['organization'] = self.request.user.activity_user.organization
         kwargs['request'] = self.request
         return kwargs
@@ -261,14 +261,14 @@ class BeneficiaryCreate(CreateView):
         form.save()
         return HttpResponse({'success': True})
 
-    form_class = BeneficiaryForm
+    form_class = IndividualForm
 
 
-class BeneficiaryUpdate(UpdateView):
+class IndividualUpdate(UpdateView):
     """
     Training Form
     """
-    model = Beneficiary
+    model = Individual
     guidance = None
 
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
@@ -277,21 +277,21 @@ class BeneficiaryUpdate(UpdateView):
             self.guidance = FormGuidance.objects.get(form="Beneficiary")
         except FormGuidance.DoesNotExist:
             self.guidance = None
-        return super(BeneficiaryUpdate, self).dispatch(
+        return super(IndividualUpdate, self).dispatch(
             request, *args, **kwargs)
 
     # add the request to the kwargs
     def get_form_kwargs(self):
-        kwargs = super(BeneficiaryUpdate, self).get_form_kwargs()
+        kwargs = super(IndividualUpdate, self).get_form_kwargs()
         kwargs['organization'] = self.request.user.activity_user.organization
         kwargs['request'] = self.request
         return kwargs
 
     def get_context_data(self, **kwargs):
-        context = super(BeneficiaryUpdate, self).get_context_data(**kwargs)
-        beneficiary = Beneficiary.objects.get(pk=int(self.kwargs['pk']))
+        context = super(IndividualUpdate, self).get_context_data(**kwargs)
+        beneficiary = Individual.objects.get(pk=int(self.kwargs['pk']))
         context['beneficiary_name'] = beneficiary.beneficiary_name
-        context['form_title'] = 'Beneficiary Update Form'
+        context['form_title'] = 'Individual Update Form'
         return context
 
     def form_invalid(self, form):
@@ -300,15 +300,15 @@ class BeneficiaryUpdate(UpdateView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, 'Success, Beneficiary Updated!')
+        messages.success(self.request, 'Success, Individual Updated!')
 
         return redirect('/formlibrary/beneficiary_list/0/0/0/')
 
-    form_class = BeneficiaryForm
+    form_class = IndividualForm
 
 
 def delete_beneficiary(request, pk):
-    beneficiary = Beneficiary.objects.get(pk=int(pk))
+    beneficiary = Individual.objects.get(pk=int(pk))
     beneficiary.delete()
 
     return redirect('/formlibrary/beneficiary_list/0/0/0/')
@@ -487,17 +487,17 @@ class TrainingListObjects(View, AjaxableResponseMixin):
 
 class TrainingParticipantListObjects(ListAPIView):
 
-    serializer_class = BeneficiarySerializer
+    serializer_class = IndividualSerializer
     pagination_class = CustomPagination
 
     def get_queryset(self):
         pk = int(self.kwargs['pk'])
-        return Beneficiary.objects.filter(
+        return Individual.objects.filter(
             training__pk=pk
         ).prefetch_related('training')
 
 
-class BeneficiaryListObjects(View, AjaxableResponseMixin):
+class IndividualListObjects(View, AjaxableResponseMixin):
 
     def get(self, request, *args, **kwargs):
 
@@ -506,15 +506,15 @@ class BeneficiaryListObjects(View, AjaxableResponseMixin):
         organization = self.request.user.activity_user.organization
 
         if program_id == 0:
-            get_beneficiaries = Beneficiary.objects.all().filter(
+            get_beneficiaries = Individual.objects.all().filter(
                 Q(program__organization=organization)) \
                 .values('id', 'beneficiary_name', 'create_date')
         elif program_id != 0 and project_id == 0:
-            get_beneficiaries = Beneficiary.objects.all().filter(
+            get_beneficiaries = Individual.objects.all().filter(
                 program__id=program_id).values('id', 'beneficiary_name',
                                                'create_date')
         else:
-            get_beneficiaries = Beneficiary.objects.all().filter(
+            get_beneficiaries = Individual.objects.all().filter(
                 program__id=program_id,
                 training__project_agreement=project_id).values(
                 'id', 'beneficiary_name', 'create_date')

@@ -8,7 +8,7 @@ from django.shortcuts import render
 from workflow.models import ProjectAgreement, ProjectComplete, Program, \
     SiteProfile, Country, ActivitySites
 from .models import ProgramNarratives, JupyterNotebooks
-from formlibrary.models import TrainingAttendance, Distribution, Beneficiary
+from formlibrary.models import TrainingAttendance, Distribution, Individual
 from indicators.models import CollectedData, Indicator, ActivityTable
 
 from django.db.models import Sum
@@ -315,7 +315,7 @@ def public_dashboard(request, id=0, public=0):
     for t in get_trainings:
         training_id_list.append(t.id)
 
-    get_beneficiaries = Beneficiary.objects.all().filter(
+    get_beneficiaries = Individual.objects.all().filter(
         training__in=training_id_list)
 
     get_project_completed = []
