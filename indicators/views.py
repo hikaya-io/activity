@@ -13,6 +13,7 @@ import json
 
 from rest_framework.permissions import IsAuthenticated
 
+from activity.permissions import IsReadOnly
 from .export import IndicatorResource, CollectedDataResource
 from .serializers import (PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer,
                           IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer, ObjectiveSerializer)
@@ -2177,7 +2178,7 @@ class IndicatorTypeView(generics.ListCreateAPIView,
                         generics.RetrieveUpdateDestroyAPIView):
     queryset = IndicatorType.objects.all()
     serializer_class = IndicatorTypeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsReadOnly]
 
     def post(self, request, *args, **kwargs):
         request.data['organization'] = request.user.activity_user.organization.id
