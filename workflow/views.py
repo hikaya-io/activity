@@ -66,13 +66,6 @@ from django.conf import settings
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-APPROVALS = (
-    ('in_progress', 'In Progress'),
-    ('awaiting_approval', 'Awaiting Approval'),
-    ('approved', 'Approved'),
-    ('rejected', 'Rejected'),
-    ('new', 'New'),
-)
 
 # Program level1 serializer view
 class ProgramView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
@@ -234,6 +227,8 @@ class ProgramDash(ListView):
 
         get_programs = Program.objects.all().filter(
             organization=request.user.activity_user.organization).distinct()
+        get_project_statuses = ProjectStatus.objects.all().filter(
+            organization=request.user.activity_user.organization).distinct()
         filtered_program = None
         status = None
         if int(self.kwargs['program']) == 0:
@@ -265,7 +260,7 @@ class ProgramDash(ListView):
         return render(request, self.template_name,
                       {
                           'get_programs': get_programs,
-                          'APPROVALS': APPROVALS,
+                          'APPROVALS': get_project_statuses,
                           'get_projects': get_projects,
                           'status': status,
                           'filtered_program': filtered_program,
@@ -283,8 +278,11 @@ class ProjectAgreementList(ListView):
 
     def get(self, request, *args, **kwargs):
         countries = get_country(request.user)
+        organization = request.user.activity_user.organization
+
         get_programs = Program.objects.all().filter(
             funding_status="Funded", country__in=countries).distinct()
+        get_project_statuses = ProjectStatus.objects.filter(organization=organization).distinct()
 
         if int(self.kwargs['pk']) != 0:
             get_dashboard = ProjectAgreement.objects.all().filter(
@@ -294,7 +292,7 @@ class ProjectAgreementList(ListView):
                           {'form': FilterForm(), 'get_program': get_program,
                            'get_dashboard': get_dashboard,
                            'get_programs': get_programs,
-                           'APPROVALS': APPROVALS})
+                           'APPROVALS': get_project_statuses})
 
         elif self.kwargs['status'] != 'none':
             get_dashboard = ProjectAgreement.objects.all().filter(
@@ -303,7 +301,7 @@ class ProjectAgreementList(ListView):
                           {'form': FilterForm(),
                            'get_dashboard': get_dashboard,
                            'get_programs': get_programs,
-                           'APPROVALS': APPROVALS})
+                           'APPROVALS': get_project_statuses})
 
         else:
             get_dashboard = ProjectAgreement.objects.all().filter(
@@ -313,7 +311,7 @@ class ProjectAgreementList(ListView):
                           {'form': FilterForm(),
                            'get_dashboard': get_dashboard,
                            'get_programs': get_programs,
-                           'APPROVALS': APPROVALS})
+                           'APPROVALS': get_project_statuses})
 
 
 class ProjectAgreementImport(ListView):
@@ -2344,6 +2342,7 @@ class Report(View, AjaxableResponseMixin):
 
         get_programs = Program.objects.all().filter(
             funding_status="Funded", organization=organization)
+        get_project_statuses = ProjectStatus.objects.all().filter(organization=organization)
 
         filtered = ProjectAgreementFilter(request.GET, queryset=get_agreements)
         table = ProjectAgreementTable(filtered.queryset)
@@ -2367,7 +2366,7 @@ class Report(View, AjaxableResponseMixin):
         return render(request, "workflow/report.html",
                       {'country': countries, 'form': FilterForm(),
                        'filter': filtered, 'helper': FilterForm.helper,
-                       'APPROVALS': APPROVALS, 'get_programs': get_programs})
+                       'APPROVALS': get_project_statuses, 'get_programs': get_programs})
 
 
 class ReportData(View, AjaxableResponseMixin):

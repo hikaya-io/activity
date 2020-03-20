@@ -28,13 +28,12 @@ from django.core.exceptions import MultipleObjectsReturned
 
 from indicators.models import (
     CollectedData, Indicator, DataCollectionFrequency,
-    Level,
 )
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, ActivityUser, ActivityBookmarks, FormGuidance,
     Organization, UserInvite, Stakeholder, Contact, Documentation,
-    ActivityUserOrganizationGroup, ProfileType,
+    ActivityUserOrganizationGroup,
 )
 from activity.util import get_nav_links, send_invite_emails, \
     send_single_mail
@@ -46,14 +45,6 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.conf import settings
 from .forms import HTMLPasswordResetForm
-
-APPROVALS = (
-    ('in_progress', 'In Progress'),
-    ('awaiting_approval', 'Awaiting Approval'),
-    ('approved', 'Approved'),
-    ('rejected', 'Rejected'),
-    ('new', 'New'),
-)
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -86,12 +77,12 @@ class IndexView(LoginRequiredMixin, TemplateView):
         indicators = Indicator.objects.filter(prog_q).distinct().order_by('-id')
         collected_data = CollectedData.objects.filter(prog_q)
         documents = Documentation.objects.filter(prog_q)
-        projects_awaiting_approval = ProjectAgreement.objects.filter(prog_q & Q(approval='awaiting approval'))
-        projects_approved = ProjectAgreement.objects.filter(prog_q & Q(approval='approved'))
-        projects_rejected = ProjectAgreement.objects.filter(prog_q & Q(approval='rejected'))
-        projects_new = ProjectAgreement.objects.filter(prog_q & (
-                Q(approval='') | Q(approval=None) | Q(approval__iexact='new')))
-        projects_in_progress = ProjectAgreement.objects.filter(prog_q & Q(approval='in progress'))
+        # projects_awaiting_approval = ProjectAgreement.objects.filter(prog_q & Q(approval='awaiting approval'))
+        # projects_approved = ProjectAgreement.objects.filter(prog_q & Q(approval='approved'))
+        # projects_rejected = ProjectAgreement.objects.filter(prog_q & Q(approval='rejected'))
+        # projects_new = ProjectAgreement.objects.filter(prog_q & (
+        #         Q(approval='') | Q(approval=None) | Q(approval__iexact='new')))
+        # projects_in_progress = ProjectAgreement.objects.filter(prog_q & Q(approval='in progress'))
 
         projects_tracking = ProjectComplete.objects.filter(prog_q)
         indicators_kpi = indicators.filter(key_performance_indicator=True)
@@ -113,11 +104,11 @@ class IndexView(LoginRequiredMixin, TemplateView):
             'get_active_locations_count': locations.filter(status=True).count(),
             'get_locations_count': locations.count(),
             'get_locations': locations,
-            'get_projects_awaiting_approval_count': projects_awaiting_approval.count(),
-            'get_projects_approved_count': projects_approved.count(),
-            'get_projects_rejected_count': projects_rejected.count(),
-            'get_projects_new_count': projects_new.count(),
-            'get_projects_in_progress_count': projects_in_progress.count(),
+            # 'get_projects_awaiting_approval_count': projects_awaiting_approval.count(),
+            # 'get_projects_approved_count': projects_approved.count(),
+            # 'get_projects_rejected_count': projects_rejected.count(),
+            # 'get_projects_new_count': projects_new.count(),
+            # 'get_projects_in_progress_count': projects_in_progress.count(),
             'get_projects_tracking_count': projects_tracking.count(),
             'map_api_key': settings.GOOGLE_MAP_API_KEY
         }
@@ -817,8 +808,6 @@ def update_user_access(request, pk, status):
         user_org_access.save()
 
     return redirect('/accounts/admin/users/all/all/')
-
-
 
 
 class BookmarkList(ListView):

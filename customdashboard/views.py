@@ -122,22 +122,22 @@ def default_custom_dashboard(request, id=0, status=0):
     get_budget_estimated = ProjectAgreement.objects.all().filter(
         program__id=program_id, program__country__in=countries).annotate(
         estimated=Sum('total_estimated_budget'))
-    get_awaiting_approval_count = ProjectAgreement.objects.all().filter(
-        program__id=program_id, approval='awaiting approval',
-        program__country__in=countries).count()
-    get_approved_count = ProjectAgreement.objects.all().filter(
-        program__id=program_id, approval='approved',
-        program__country__in=countries).count()
-    get_rejected_count = ProjectAgreement.objects.all().filter(
-        program__id=program_id, approval='rejected',
-        program__country__in=countries).count()
-    get_in_progress_count = ProjectAgreement.objects.all().filter(
-        program__id=program_id).filter(
-        Q(Q(approval='in progress') | Q(approval=None)),
-        program__country__in=countries).count()
-    no_status_count = ProjectAgreement.objects.all().filter(
-        program__id=program_id).filter(
-        Q(Q(approval=None) | Q(approval=""))).count()
+    # get_awaiting_approval_count = ProjectAgreement.objects.all().filter(
+    #     program__id=program_id, approval='awaiting approval',
+    #     program__country__in=countries).count()
+    # get_approved_count = ProjectAgreement.objects.all().filter(
+    #     program__id=program_id, approval='approved',
+    #     program__country__in=countries).count()
+    # get_rejected_count = ProjectAgreement.objects.all().filter(
+    #     program__id=program_id, approval='rejected',
+    #     program__country__in=countries).count()
+    # get_in_progress_count = ProjectAgreement.objects.all().filter(
+    #     program__id=program_id).filter(
+    #     Q(Q(approval='in progress') | Q(approval=None)),
+    #     program__country__in=countries).count()
+    # no_status_count = ProjectAgreement.objects.all().filter(
+    #     program__id=program_id).filter(
+    #     Q(Q(approval=None) | Q(approval=""))).count()
 
     get_site_profile = SiteProfile.objects.all().filter(
         Q(projectagreement__program__id=program_id) | Q(
@@ -192,13 +192,13 @@ def default_custom_dashboard(request, id=0, status=0):
                    'get_budget_estimated': get_budget_estimated,
                    'get_quantitative_data_sums': get_quantitative_data_sums,
                    'country': countries,
-                   'get_awaiting_approval_count': get_awaiting_approval_count,
                    'get_filtered_name': get_filtered_name,
                    'get_projects': get_projects,
-                   'get_approved_count': get_approved_count,
-                   'get_rejected_count': get_rejected_count,
-                   'get_in_progress_count': get_in_progress_count,
-                   'nostatus_count': no_status_count,
+                   #    'get_awaiting_approval_count': get_awaiting_approval_count,
+                   #    'get_approved_count': get_approved_count,
+                   #    'get_rejected_count': get_rejected_count,
+                   #    'get_in_progress_count': get_in_progress_count,
+                   #    'nostatus_count': no_status_count,
                    'get_projects_count': get_projects_count,
                    'selected_countries_list': selected_countries_list,
                    'get_site_profile_indicator': get_site_profile_indicator,
@@ -258,20 +258,20 @@ def public_dashboard(request, id=0, public=0):
 
     get_projects_count = ProjectAgreement.objects.all().filter(
         program__id=program_id).count()
-    get_awaiting_approval_count = ProjectAgreement.objects.all().filter(
-        program__id=program_id, approval='awaiting approval').count()
-    get_approved_count = ProjectAgreement.objects.all().filter(
-        program__id=program_id, approval='approved').count()
-    get_rejected_count = ProjectAgreement.objects.all().filter(
-        program__id=program_id, approval='rejected').count()
-    get_in_progress_count = ProjectAgreement.objects.all().filter(
-        Q(program__id=program_id) & Q(
-            Q(approval='in progress') | Q(approval=None) | Q(
-                approval=""))).count()
+    # get_awaiting_approval_count = ProjectAgreement.objects.all().filter(
+    #     program__id=program_id, approval='awaiting approval').count()
+    # get_approved_count = ProjectAgreement.objects.all().filter(
+    #     program__id=program_id, approval='approved').count()
+    # get_rejected_count = ProjectAgreement.objects.all().filter(
+    #     program__id=program_id, approval='rejected').count()
+    # get_in_progress_count = ProjectAgreement.objects.all().filter(
+    #     Q(program__id=program_id) & Q(
+    #         Q(approval='in progress') | Q(approval=None) | Q(
+    #             approval=""))).count()
 
-    no_status_count = ProjectAgreement.objects.all().filter(
-        Q(program__id=program_id) & Q(
-            Q(approval=None) | Q(approval=""))).count()
+    # no_status_count = ProjectAgreement.objects.all().filter(
+    #     Q(program__id=program_id) & Q(
+    #         Q(approval=None) | Q(approval=""))).count()
 
     get_notebooks = JupyterNotebooks.objects.all().filter(
         program__id=program_id)
@@ -338,12 +338,12 @@ def public_dashboard(request, id=0, public=0):
         'get_program': get_program, 'get_projects': get_projects,
         'get_site_profile': get_site_profile, 'countries': countries,
         'get_program_narrative': get_program_narrative,
-        'get_awaiting_approval_count': get_awaiting_approval_count,
         'get_quantitative_data_sums_2': get_quantitative_data_sums_2,
-        'get_approved_count': get_approved_count,
-        'get_rejected_count': get_rejected_count,
-        'get_in_progress_count': get_in_progress_count,
-        'nostatus_count': no_status_count,
+        # 'get_awaiting_approval_count': get_awaiting_approval_count,
+        # 'get_approved_count': get_approved_count,
+        # 'get_rejected_count': get_rejected_count,
+        # 'get_in_progress_count': get_in_progress_count,
+        # 'nostatus_count': no_status_count,
         'total_projects': get_projects_count,
         'get_indicator_count': get_indicator_count,
         'get_indicator_data': get_indicator_data,

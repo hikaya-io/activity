@@ -27,13 +27,13 @@ from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
 from activity.util import get_country
 
 # Global for approvals
-APPROVALS = (
-    ('in progress', 'in progress'),
-    ('awaiting approval', 'awaiting approval'),
-    ('approved', 'approved'),
-    ('rejected', 'rejected'),
-    ('new', 'new'),
-)
+# APPROVALS = (
+#     ('in progress', 'in progress'),
+#     ('awaiting approval', 'awaiting approval'),
+#     ('approved', 'approved'),
+#     ('rejected', 'rejected'),
+#     ('new', 'new'),
+# )
 
 # Global for Budget Variance
 BUDGET_VARIANCE = (
@@ -237,11 +237,11 @@ class ProjectAgreementForm(forms.ModelForm):
                   " - supplying laborers, getting training, etc.",
         widget=forms.Textarea, required=False)
 
-    approval = forms.ChoiceField(
-        choices=APPROVALS,
-        initial='new',
-        required=False,
-    )
+    # approval = forms.ChoiceField(
+    #     choices=APPROVALS,
+    #     initial='new',
+    #     required=False,
+    # )
 
     def __init__(self, *args, **kwargs):
         # get the user object from request to check permissions
@@ -259,16 +259,8 @@ class ProjectAgreementForm(forms.ModelForm):
 
         if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
-            APPROVALS = (
-                ('new', 'new'),
-                ('in progress', 'in progress'),
-                ('awaiting approval', 'awaiting approval'),
-                ('approved', 'approved'),
-                ('rejected', 'rejected'),
-
-            )
-
-            self.fields['approval'].choices = APPROVALS
+            self.fields['approval'].queryset = ProjectStatus.objects.filter(
+                organization=self.request.user.activity_user.organization)
             # self.fields['approved_by'].widget.attrs['disabled'] = "disabled"
             self.fields['approval_remarks'].widget.attrs[
                 'disabled'] = "disabled"
@@ -317,13 +309,6 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
 
     documentation_government_approval = forms.FileField(required=False)
     documentation_community_approval = forms.FileField(required=False)
-
-    # approval = forms.ChoiceField(
-    #     choices=APPROVALS,
-    #     initial='new',
-    #     required=False,
-    #     label="Project Status"
-    # )
 
     def __init__(self, *args, **kwargs):
         # get the user object from request to check permissions
@@ -515,11 +500,11 @@ class ProjectCompleteForm(forms.ModelForm):
     project_agreement2 = forms.CharField(
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
-    approval = forms.ChoiceField(
-        choices=APPROVALS,
-        initial='in progress',
-        required=False,
-    )
+    # approval = forms.ChoiceField(
+    #     choices=APPROVALS,
+    #     initial='in progress',
+    #     required=False,
+    # )
 
     budget_variance = forms.ChoiceField(
         choices=BUDGET_VARIANCE,
@@ -797,14 +782,17 @@ class ProjectCompleteForm(forms.ModelForm):
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
             country__in=countries)
 
+        self.fields['approval'].queryset = ProjectStatus.objects.filter(
+                organization=self.request.user.activity_user.organization)
+
         if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
-            APPROVALS = (
-                ('in progress', 'in progress'),
-                ('awaiting approval', 'awaiting approval'),
-                ('rejected', 'rejected'),
-            )
-            self.fields['approval'].choices = APPROVALS
+            # APPROVALS = (
+            #     ('in progress', 'in progress'),
+            #     ('awaiting approval', 'awaiting approval'),
+            #     ('rejected', 'rejected'),
+            # )
+            # self.fields['approval'].choices = APPROVALS
             self.fields['approved_by'].widget.attrs['disabled'] = "disabled"
             self.fields['approval_submitted_by'].widget.attrs[
                 'disabled'] = "disabled"
@@ -844,11 +832,11 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
     project_agreement2 = forms.CharField(
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
-    approval = forms.ChoiceField(
-        choices=APPROVALS,
-        initial='in progress',
-        required=False,
-    )
+    # approval = forms.ChoiceField(
+    #     choices=APPROVALS,
+    #     initial='in progress',
+    #     required=False,
+    # )
 
     budget_variance = forms.ChoiceField(
         choices=BUDGET_VARIANCE,
@@ -1106,14 +1094,17 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
             country__in=countries)
 
+        self.fields['approval'].queryset = ProjectStatus.objects.filter(
+                organization=self.request.user.activity_user.organization)
+
         if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
-            APPROVALS = (
-                ('in progress', 'in progress'),
-                ('awaiting approval', 'awaiting approval'),
-                ('rejected', 'rejected'),
-            )
-            self.fields['approval'].choices = APPROVALS
+            # APPROVALS = (
+            #     ('in progress', 'in progress'),
+            #     ('awaiting approval', 'awaiting approval'),
+            #     ('rejected', 'rejected'),
+            # )
+            # self.fields['approval'].choices = APPROVALS
             self.fields['approved_by'].widget.attrs['disabled'] = "disabled"
             self.fields['approval_remarks'].widget.attrs[
                 'disabled'] = "disabled"
@@ -1173,11 +1164,11 @@ class SiteProfileForm(forms.ModelForm):
     date_of_firstcontact = forms.DateField(
         widget=DatePicker.DateInput(), required=False)
 
-    approval = forms.ChoiceField(
-        choices=APPROVALS,
-        initial='in progress',
-        required=False,
-    )
+    # approval = forms.ChoiceField(
+    #     choices=APPROVALS,
+    #     initial='in progress',
+    #     required=False,
+    # )
 
     def __init__(self, *args, **kwargs):
         # get the user object from request to check user permissions
@@ -1557,11 +1548,11 @@ class StakeholderForm(forms.ModelForm):
         # 'sectors','formal_relationship_document', 'vetting_document', ]
         exclude = ['create_date', 'edit_date']
 
-    approval = forms.ChoiceField(
-        choices=APPROVALS,
-        initial='in progress',
-        required=False,
-    )
+    # approval = forms.ChoiceField(
+    #     choices=APPROVALS,
+    #     initial='in progress',
+    #     required=False,
+    # )
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
