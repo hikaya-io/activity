@@ -31,7 +31,9 @@ $(document).ready(() => {
             isEdit: '',
             currentResult: null,
             itemToDelete: null,
-            targets: []
+            targets: [],
+            show_disaggregations: false,
+            disaggregations: {},
           },
           methods: {
             makeRequest(method, url, data = null) {
@@ -62,6 +64,10 @@ $(document).ready(() => {
               }
             },
 
+            showDisaggregations: function(){
+              this.show_disaggregations= !this.show_disaggregations
+            },
+
             toggleResultModal: function (item = null) {
               this.showModal = !this.showModal;
               this.modalHeader = `Add Result`;
@@ -71,7 +77,7 @@ $(document).ready(() => {
               this.actual = ''
               this.period = ''
               this.documentation = ''
-
+              console.log(this.collectedData)
               if (item) {
                 this.isEdit = true;
                 this.modalHeader = `Edit Result`;
@@ -106,6 +112,7 @@ $(document).ready(() => {
             },
 
             processForm: function (saveNew = false) {
+              console.log(this.disaggregations)
               this.$validator.validateAll().then(result => {
                 if (result) {
                   if (this.currentResult && this.currentResult.id) {
@@ -133,7 +140,8 @@ $(document).ready(() => {
                     period: this.period,
                     indicator: indicatorId,
                     documentation: this.documentation,
-                    program: programId
+                    program: programId,
+                    disaggregations: this.disaggregations
                   }
                 );
                 if (response) {

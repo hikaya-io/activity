@@ -16,7 +16,8 @@ from rest_framework.permissions import IsAuthenticated
 from activity.permissions import IsReadOnly
 from .export import IndicatorResource, CollectedDataResource
 from .serializers import (PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer,
-                          IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer, ObjectiveSerializer)
+                          IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer, ObjectiveSerializer,
+                          DisaggregationTypeSerializer, DisaggregationLabelSerializer, DisaggregationValueSerializer)
 
 from .tables import IndicatorDataTable
 from .forms import (
@@ -702,6 +703,22 @@ class CollectedDataAdd(GView):
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
 
+        disaggs_list = []
+
+        if data.get('disaggregations') == {}:
+            disaggregations = None
+        else:
+            disaggregations = data.get('disaggregations')
+            print(disaggregations)
+            for key, value in disaggregations.items():
+                item = {"value": value,
+                        "disaggregation_label": key}
+                disaggs_list.append(item)
+
+        print(disaggs_list)
+
+        # serialized_data = self.serializer_class(data=periodic_data, many=True)
+
         if data.get('date_collected') == "":
             date = None
         else:
@@ -723,6 +740,12 @@ class CollectedDataAdd(GView):
         )
 
         if collected_data:
+            if len(disaggs_list) > 0:
+                serialized_data = DisaggregationValueSerializer(data=disaggs_list, many=True)
+                serialized_data.is_valid()
+                serialized_data.save(collected)
+            
+
             return JsonResponse(model_to_dict(collected_data))
         else:
             return JsonResponse(dict(error='Failed'))
