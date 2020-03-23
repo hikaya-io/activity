@@ -5,7 +5,6 @@ on:
     branches: 
       - dev
       - master
-      - ACT-609
   pull_request:
     branches: 
       - dev
@@ -146,3 +145,15 @@ jobs:
         export TRAVIS_EVENT_TYPE="push"
         chmod +x ci-scripts/deployment.sh
         bash ./ci-scripts/deployment.sh
+    
+  Notify_slack:
+    needs: Deploy 
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged
+    steps:
+    - uses: 8398a7/action-slack@v2
+      with:
+        status: ${{ job.status }}
+        author_name: Github Actions Deploy
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CHANNEL_HOOK }}
