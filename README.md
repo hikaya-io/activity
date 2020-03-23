@@ -162,6 +162,12 @@ $ python manage.py migrate
 $ python manage.py createsuperuser
 ```
 
+### Add authorization groups
+
+```bash
+$ python manage.py loaddata fixtures/auth_groups.json
+```
+
 ### Run the app locally
 
 If you're using more then one settings file change manage.py to point to local or dev file first.

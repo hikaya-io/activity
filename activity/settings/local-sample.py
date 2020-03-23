@@ -35,7 +35,7 @@ ALLOWED_HOSTS = environ.get('DJANGO_ALLOWED_HOSTS', [])
 # For local environment
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # For environments where sender email is configured
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-host
 EMAIL_HOST = environ.get('EMAIL_HOST', 'smtp.gmail.com')

@@ -340,7 +340,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         super(ProjectAgreementSimpleForm, self).__init__(*args, **kwargs)
 
         # override the program queryset to use request.user for country
-        countries = get_country(self.request.user)
+        # countries = get_country(self.request.user)
 
         self.fields['approval_submitted_by'].label = 'Originated by'
         self.fields['approved_by'].label = 'Approved by'
@@ -356,7 +356,7 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
 
         # override the office queryset to use request.user for country
         self.fields['office'].queryset = Office.objects.filter(
-            province__country__in=countries)
+                organization=self.request.user.activity_user.organization).distinct()
 
         # override the site queryset to use request.user for country
         self.fields['site'].queryset = SiteProfile.objects.filter(
