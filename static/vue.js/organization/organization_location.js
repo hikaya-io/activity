@@ -5,7 +5,8 @@ new Vue({
 	delimiters: ['[[', ']]'],
 	el: '#organizationLocationForm',
 	data: {
-        organization: null,
+		organization: null,
+		countries: [],
         country_code: '',
 		location_description: '',
         latitude: null,
@@ -24,6 +25,8 @@ new Vue({
 				toastr.error('There was a problem loading organization location from the database!');
 				this.organization = null;
 			});
+		// load countries
+		this.loadCountries();
 	},
 	methods: {
 
@@ -89,6 +92,21 @@ new Vue({
 			this.latitude = orgObject.latitude;
 			this.longitude = orgObject.longitude;
 			this.zoom = orgObject.zoom;
+		},
+
+		/**
+		 * Load all coutries to populate the dropdown
+		 */
+		loadCountries() {
+			this.makeRequest('GET', '/workflow/countries')
+			.then(response => {
+				if (response.data) {
+					this.countries = response.data;
+				}
+			})
+			.catch(e => {
+				this.countries = [];
+			});
 		}
 	},
 
