@@ -17,11 +17,7 @@ new Vue({
 			.then(response => {
 				if (response.data) {
 					this.organization = response.data[0];
-                    this.country_code = this.organization.country_code;
-                    this.location_description = this.organization.location_description;
-                    this.latitude = this.organization.latitude;
-                    this.longitude = this.organization.longitude;
-                    this.zoom = this.organization.zoom;
+                    this.setOrganizationFields(response.data[0])
 				}
 			})
 			.catch(e => {
@@ -34,9 +30,9 @@ new Vue({
         /**
          * edit organization location
          */
-		updateLocation() {
+		async updateLocation() {
 			try {
-				const response = this.makeRequest(
+				const response = await this.makeRequest(
 					'PATCH',
 					`/workflow/organization/${this.organization.id}`,
 					{
@@ -50,12 +46,13 @@ new Vue({
 				if (response) {
 					toastr.success('Organization location was successfully updated');
 					this.organization = {
-						country_code: this.country_code,
-						location_description: this.location_description,
-						latitude: this.latitude,
-						longitude: this.longitude ,
-						zoom: this.zoom
+						country_code: response.data.country_code,
+						location_description: response.data.location_description,
+						latitude: response.data.latitude,
+						longitude: response.data.longitude ,
+						zoom: response.data.zoom
 					}
+					this.setOrganizationFields(response.data)
 				}
 			} catch (e) {
 				toastr.error('There was a problem updating your data');
@@ -66,12 +63,7 @@ new Vue({
          * Cancel edit organization location
          */
 		cancelLocationUpdate() {
-			console.log('this.organization : ', this.organization);
-			this.country_code = this.organization.country_code;
-			this.location_description = this.organization.location_description;
-			this.latitude = this.organization.latitude;
-			this.longitude = this.organization.longitude;
-			this.zoom = this.organization.zoom;
+			this.setOrganizationFields(this.organization)
 		},
 
         /**
@@ -86,6 +78,18 @@ new Vue({
 			axios.defaults.xsrfCookieName = 'csrftoken';
 			return axios({ method, url, data });
 		},
+
+		/**
+		 * set organization fields
+		 * @param { object } orgObject
+		 */
+		setOrganizationFields(orgObject) {
+			this.country_code = orgObject.country_code;
+			this.location_description = orgObject.location_description;
+			this.latitude = orgObject.latitude;
+			this.longitude = orgObject.longitude;
+			this.zoom = orgObject.zoom;
+		}
 	},
 
 	computed: {
