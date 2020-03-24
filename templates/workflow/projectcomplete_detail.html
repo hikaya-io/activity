@@ -212,7 +212,7 @@
                 <th>Progress Against Targets </th>
                 <th>Actual Contribution</th>
                 <th>Beneficiary Type</th>
-                <th>Direct Beneficiaries</th>
+                <th>Direct {{ user.activity_user.organization.beneficiary_label }}</th>
             </tr>
             <tr>
                 <td>{{ complete.progress_against_targets }}</td>
@@ -225,7 +225,7 @@
         <table class="table" border="1">
             <tr>
                 <th>Average Household Size</th>
-                <th>Indirect Beneficiaries</th>
+                <th>Indirect {{ user.activity_user.organization.beneficiary_label }}</th>
                 <th>Capacity Built</th>
                 <th>Quality Assured</th>
             </tr>

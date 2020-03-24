@@ -1,7 +1,21 @@
 <script>
   $(document).ready(() => {
-    $("#trainingStart").datepicker({ dateFormat: "yy-mm-dd" });
-    $("#trainingEnd").datepicker({ dateFormat: "yy-mm-dd" });
+    $('#trainingStart').datepicker({
+      dateFormat: 'yy-mm-dd',
+      onSelect: function(dateText, inst) {
+        let date = $(this).datepicker('getDate');
+        $('#trainingEnd').datepicker('option', 'minDate', date);
+        startDate = date;
+      },
+    });
+    $('#trainingEnd').datepicker({
+      dateFormat: 'yy-mm-dd',
+      onSelect: function(dateText) {
+        let date = $(this).datepicker('getDate');
+        $('#trainingStart').datepicker('option', 'maxDate', date);
+      },
+    });
+
     $("#program").select2({
       theme: "bootstrap",
       placeholder:
@@ -51,6 +65,9 @@
       const formValue = $("#addTrainingForm").serializeArray();
 
       const obj = {};
+
+      obj.start_date = obj.start_date ? moment(obj.start_date, 'YYYY.MM.DD').format() : null,
+      obj.end_date = obj.end_date ? moment(obj.end_date, 'YYYY.MM.DD').format() : null,
 
       formValue.forEach(item => {
         obj[item.name] = item.value;

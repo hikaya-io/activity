@@ -96,9 +96,11 @@ class IndexView(LoginRequiredMixin, TemplateView):
         projects_tracking = ProjectComplete.objects.filter(prog_q)
         indicators_kpi = indicators.filter(key_performance_indicator=True)
         latest_indicators = indicators.filter(key_performance_indicator=True)[:10]
+        get_all_sectors = Sector.objects.all()
 
         context = {
             'selected_program': selected_program,
+            'get_all_sectors': get_all_sectors,
             'get_programs': get_programs,
             'get_projects': projects,
             'get_indicators': indicators,
@@ -489,6 +491,9 @@ def admin_configurations(request):
             'form_label': data.get('form_label'),
             'stakeholder_label': data.get('stakeholder_label'),
             'date_format': data.get('date_format'),
+            'beneficiary_label': data.get('beneficiary_label'),
+            'training_label': data.get('training_label'),
+            'distribution_label': data.get('distribution_label'),
             # 'default_currency': data.get('default_currency')
         }
         organization = Organization.objects.filter(
@@ -555,19 +560,16 @@ def admin_user_management(request, role, status):
     groups = Group.objects.all().distinct('name')
 
     # get owner orgs
-    owner_group = Group.objects.get(name='Owner')
     user_org_group_ids = ActivityUserOrganizationGroup.objects.filter(
         activity_user=request.user.activity_user,
-        group=owner_group
+        group__name='Owner'
     ).values_list('organization__id', flat=True)
 
     user_organizations = Organization.objects.filter(id__in=user_org_group_ids)
     if role != 'all':
-        group = Group.objects.get(id=int(role))
-
         get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
             organization__id=request.user.activity_user.organization.id,
-            group__id=group.id
+            group__id=int(role)
         ).values_list('activity_user__id')
 
         users = users.filter(

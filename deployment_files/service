@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata: 
+  name: activity-app-service-${APPLICATION_ENV}
+  namespace: ${APPLICATION_ENV}
+  labels: 
+    app: activity-app-${APPLICATION_ENV}
+spec:
+  selector:
+    app: activity-app-${APPLICATION_ENV}
+  ports:
+    - port: 80
+      name: http
+      protocol: TCP
+      targetPort: 8000
+  type: NodePort

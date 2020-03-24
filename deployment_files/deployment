@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: activity-app-${APPLICATION_ENV}
+  namespace: ${APPLICATION_ENV}
+  labels:
+    app: activity-app-${APPLICATION_ENV}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: activity-app-${APPLICATION_ENV}
+  template:
+    metadata:
+      labels:
+        app: activity-app-${APPLICATION_ENV}
+    spec:
+      containers:
+        - name: activity-app-${APPLICATION_ENV}
+          image: docker.io/${REGISTRY_OWNER}/activity:${APPLICATION_NAME}-${APPLICATION_ENV}-${TRAVIS_COMMIT}
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 375m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
+          ports:
+          - containerPort: 8000
+      imagePullSecrets:
+        - name: regcred

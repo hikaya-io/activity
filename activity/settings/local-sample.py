@@ -27,12 +27,15 @@ def get_env_setting(setting):
 '''HOST CONFIGURATION'''
 # See: https://docs.djangoproject.com/en/1.5/releases/1.5/
 # #allowed-hosts-required-in-production
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = environ.get('DJANGO_ALLOWED_HOSTS', [])
 '''END HOST CONFIGURATION'''
 
 '''EMAIL CONFIGURATION'''
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# For local environment
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# For environments where sender email is configured
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-host
 EMAIL_HOST = environ.get('EMAIL_HOST', 'smtp.gmail.com')

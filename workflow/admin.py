@@ -6,7 +6,7 @@ from .models import (
     Benchmarks, Budget, SiteProfile, Organization, Evaluate, ProfileType, FundCode,
     AdminLevelThree, ActivityUser, ChecklistItem, Stakeholder, StakeholderType,
     Currency, ActivityBookmarks, ActivitySites, ActivityUserOrganizationGroup,
-    Office, Province, Template, Capacity, ApprovalAuthority, User, LandType,
+    Office, Province, Template, Capacity, ApprovalAuthority, User, LandType, ProjectStatus,
     FormGuidance, Contact, Checklist, ProjectComplete, District, Village, UserInvite,
 )
 from import_export import resources, fields
@@ -408,3 +408,9 @@ class ActivityBookmarksAdmin(admin.ModelAdmin):
 
 # Other Admin site registrations
 admin.site.register(ActivityUserProxy, ReportActivityUserProxyAdmin)
+
+
+@admin.register(ProjectStatus)
+class ProjectStatusAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'create_date', 'edit_date')
+    display = 'Project Status'

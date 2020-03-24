@@ -138,6 +138,7 @@ class TrainingUpdate(UpdateView):
     # add the request to the kwargs
     def get_form_kwargs(self):
         kwargs = super(TrainingUpdate, self).get_form_kwargs()
+        kwargs['organization'] = self.request.user.activity_user.organization
         kwargs['request'] = self.request
         return kwargs
 
@@ -246,6 +247,7 @@ class BeneficiaryCreate(CreateView):
     # add the request to the kwargs
     def get_form_kwargs(self):
         kwargs = super(BeneficiaryCreate, self).get_form_kwargs()
+        kwargs['organization'] = self.request.user.activity_user.organization
         kwargs['request'] = self.request
         return kwargs
 
@@ -281,6 +283,7 @@ class BeneficiaryUpdate(UpdateView):
     # add the request to the kwargs
     def get_form_kwargs(self):
         kwargs = super(BeneficiaryUpdate, self).get_form_kwargs()
+        kwargs['organization'] = self.request.user.activity_user.organization
         kwargs['request'] = self.request
         return kwargs
 
@@ -308,7 +311,7 @@ def delete_beneficiary(request, pk):
     beneficiary = Beneficiary.objects.get(pk=int(pk))
     beneficiary.delete()
 
-    return redirect('/formlibrary/beneficiary_list/0/0/')
+    return redirect('/formlibrary/beneficiary_list/0/0/0/')
 
 
 class DistributionList(ListView):
@@ -419,6 +422,7 @@ class DistributionUpdate(UpdateView):
     # add the request to the kwargs
     def get_form_kwargs(self):
         kwargs = super(DistributionUpdate, self).get_form_kwargs()
+        kwargs['organization'] = self.request.user.activity_user.organization
         kwargs['request'] = self.request
         return kwargs
 

@@ -39,9 +39,9 @@
         v-model="parent_id"
         placeholder="Choose a parent objective"
       >
+        <option value="">No parent</option>
         <option
           v-for="objective in parent_obj_list"
-          selected="currentObjective.parent_id === objective.id ? true : false"
           :value="objective.id"
           >[[ objective.name ]]</option
         >
@@ -67,8 +67,8 @@
       >
         <option
           v-for="program in programs_list"
-          selected="currentObjective.program_id === program.id ? true : false"
-          :value="program.id"
+          selected="currentObjective.program_id === program.program_id ? true : false"
+          :value="program.program_id"
           >[[ program.name ]]</option
         >
       </select>
