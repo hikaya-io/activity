@@ -48,13 +48,7 @@ new Vue({
 				);
 				if (response) {
 					toastr.success('Organization location was successfully updated');
-					this.organization = {
-						country_code: response.data.country_code,
-						location_description: response.data.location_description,
-						latitude: response.data.latitude,
-						longitude: response.data.longitude ,
-						zoom: response.data.zoom
-					}
+					this.organization = response.data
 					this.setOrganizationFields(response.data)
 				}
 			} catch (e) {
@@ -102,6 +96,11 @@ new Vue({
 			.then(response => {
 				if (response.data) {
 					this.countries = response.data;
+					// $(document).ready(() => {
+					// 	$('#country_code').select2({
+					// 		theme: 'bootstrap'
+					// 	});
+					// });
 				}
 			})
 			.catch(e => {
