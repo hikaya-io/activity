@@ -560,19 +560,16 @@ def admin_user_management(request, role, status):
     groups = Group.objects.all().distinct('name')
 
     # get owner orgs
-    owner_group = Group.objects.get(name='Owner')
     user_org_group_ids = ActivityUserOrganizationGroup.objects.filter(
         activity_user=request.user.activity_user,
-        group=owner_group
+        group__name='Owner'
     ).values_list('organization__id', flat=True)
 
     user_organizations = Organization.objects.filter(id__in=user_org_group_ids)
     if role != 'all':
-        group = Group.objects.get(id=int(role))
-
         get_org_users_by_roles = ActivityUserOrganizationGroup.objects.filter(
             organization__id=request.user.activity_user.organization.id,
-            group__id=group.id
+            group__id=int(role)
         ).values_list('activity_user__id')
 
         users = users.filter(

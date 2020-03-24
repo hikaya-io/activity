@@ -20,7 +20,9 @@
         <modal v-if="showModal" @close="showModal = false">
           <h4 slot="header">[[modalHeader]]</h4>
           <div slot="body">
-            {% include 'admin/component_configs/forms/fund_code_form.html' %}
+            <form method="POST">
+              {% include 'admin/component_configs/fund_code.html' %}
+            </form>
           </div>
           <div slot="footer">
             {% include 'ui-components/quick_entry_modal_footer.html' %}
