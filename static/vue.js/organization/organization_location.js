@@ -37,7 +37,7 @@ new Vue({
 		updateLocation() {
 			try {
 				const response = this.makeRequest(
-					'PUT',
+					'PATCH',
 					`/workflow/organization/${this.organization.id}`,
 					{
 						country_code: this.country_code,
