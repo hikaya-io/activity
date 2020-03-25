@@ -1,0 +1,76 @@
+<form method="POST">
+    <div class="modal-body">
+        {% csrf_token %}
+        <div :class="{ 
+            'form-group': true, 
+            'has-error': errors.has('name')
+        }">
+            <label for="name">[[ level_1_label ]] name*</label
+            >
+            <input
+                type="text"
+                name="name"
+                :class="{ 
+                    'form-control': true, 
+                    'is-danger': errors.has('name') 
+                }"   
+                v-model="name" 
+                v-validate="'required'"
+                :placeholder="level_1_label"
+            />
+            <span v-show="errors.has('name')" class="help is-danger">[[ errors.first('name') ]]</span>
+        </div>
+        <div
+            :class="{
+                'form-group': true
+            }"
+        >
+            <label for="sectors">Sectors</label>
+            <select
+                id="sectors"
+                :class="{
+                        'form-control': true,
+                    }"
+                v-model="sectors"
+                placeholder="Sector"
+                multiple="true"
+                >
+                <option
+                    v-for="sector in sectorsList"
+                    :value=sector.id>[[ sector.sector ]]</option>
+            </select>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <vuejs-datepicker 
+                    name="start_date" 
+                    :value="start_date" 
+                    v-model="start_date" 
+                    :format="customFormatter"
+                    @selected="disableDates('start', $event)"
+                    :disabled-dates="disabledDates.start"
+                    placeholder="Start Date">
+                </vuejs-datepicker>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="endDate">End Date</label>
+                <vuejs-datepicker 
+                    name="end_date" 
+                    :value="end_date" 
+                    v-model="end_date" 
+                    placeholder="End Date"
+                    @selected="disableDates('end', $event)"
+                    :disabled-dates="disabledDates.end"
+                    >
+                </vuejs-datepicker>
+              </div>
+            </div>
+          </div>
+        <!-- selected="currentFundCode.stakeholder == stakeholder.id ? 'true' : 'false'" -->
+    </div>
+</form>

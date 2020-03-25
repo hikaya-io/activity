@@ -98,7 +98,8 @@ def list_workflow_level1(request):
     get_all_sectors = Sector.objects.all()
 
     context = {'programs': programs,
-               'get_all_sectors': get_all_sectors, 'active': ['workflow']}
+               'get_all_sectors': get_all_sectors,
+               'active': ['workflow']}
     
     return render(request, 'workflow/level1.html', context) 
 
@@ -119,7 +120,7 @@ class ProgramCreate(GView):
     Add program
     """
     def post(self, request):
-        data = request.POST
+        data = json.loads(request.body.decode('utf-8'))
 
         activity_user = ActivityUser.objects.filter(user=request.user).first()
         program = Program(
@@ -2944,3 +2945,25 @@ class ProjectStatusView(generics.ListCreateAPIView, generics.RetrieveUpdateDestr
     def get_queryset(self):
         organization = self.request.user.activity_user.organization.id
         return ProjectStatus.objects.filter(organization=organization)
+
+
+"""
+GetLevel1DependantData: sectors, organization
+"""
+class GetLevel1DependantData(GView):
+    """
+    View to fetch all Sectors
+    """
+    def get(self, request):
+        try:
+            organization = Organization.objects.get(id=request.user.activity_user.organization.id)
+            sectors = Sector.objects.all().values('id', 'sector')
+
+            return JsonResponse(
+                dict(
+                    level_1_label=organization.level_1_label,
+                    sectors=list(sectors), safe=False
+                )
+            )
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
