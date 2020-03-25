@@ -98,11 +98,6 @@ new Vue({
 			.then(response => {
 				if (response.data) {
 					this.countries = response.data;
-					// $(document).ready(() => {
-					// 	$('#country_code').select2({
-					// 		theme: 'bootstrap'
-					// 	});
-					// });
 				}
 			})
 			.catch(e => {
