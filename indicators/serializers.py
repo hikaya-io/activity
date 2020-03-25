@@ -30,10 +30,11 @@ class IndicatorSerializer(serializers.ModelSerializer):
 
 
 class DisaggregationValueSerializer(serializers.ModelSerializer):
+    disaggregation_label = DisaggregationLabelSerializer()
 
     class Meta:
         model = DisaggregationValue
-        fields = '__all__'
+        fields = ['id', 'value', 'disaggregation_label']
 
 
 class IndicatorTypeSerializer(serializers.ModelSerializer):
@@ -44,11 +45,11 @@ class IndicatorTypeSerializer(serializers.ModelSerializer):
 
 class CollectedDataSerializer(serializers.ModelSerializer):
     date_collected = serializers.DateTimeField(format='%Y-%m-%d')
-    dissagregation_values = DisaggregationValueSerializer(many=True, read_only=True)
+    disaggregation_value = DisaggregationValueSerializer(many=True, read_only=True)
 
     class Meta:
         model = CollectedData
-        fields = '__all__'
+        fields = ['id', 'periodic_target', 'targeted', 'achieved', 'description', 'indicator', 'date_collected', 'evidence', 'disaggregation_value']
 
 
 class PeriodicTargetSerializer(serializers.ModelSerializer):

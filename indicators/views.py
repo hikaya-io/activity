@@ -715,10 +715,6 @@ class CollectedDataAdd(GView):
                         "disaggregation_label": key}
                 disaggs_list.append(item)
 
-        print(disaggs_list)
-
-        # serialized_data = self.serializer_class(data=periodic_data, many=True)
-
         if data.get('date_collected') == "":
             date = None
         else:
@@ -741,12 +737,13 @@ class CollectedDataAdd(GView):
 
         if collected_data:
             if len(disaggs_list) > 0:
-                serialized_data = DisaggregationValueSerializer(data=disaggs_list, many=True)
-                serialized_data.is_valid()
-                serialized_data.save(collected)
-            
-
-            return JsonResponse(model_to_dict(collected_data))
+                for item in disaggs_list:
+                    collected_data.disaggregation_value.create(
+                        value=item["value"],
+                        disaggregation_label=DisaggregationLabel.objects.filter(id=int(item["disaggregation_label"])).first(),
+                    )
+            collecteddata_set = CollectedData.objects.filter(id=model_to_dict(collected_data)['id']).first()
+            return JsonResponse({'collected_data': CollectedDataSerializer(collecteddata_set).data})
         else:
             return JsonResponse(dict(error='Failed'))
 
@@ -770,7 +767,6 @@ class CollectedDataEdit(GView):
             documentation = int(data.get('documentation'))
             evidence = Documentation.objects.filter(id=documentation).first()
             collected_data.evidence = evidence
-
         achieved = data.get('actual', '')
 
         collected_data.date_collected = date
@@ -778,7 +774,8 @@ class CollectedDataEdit(GView):
         collected_data.save()
 
         if collected_data:
-            return JsonResponse(model_to_dict(collected_data))
+            collecteddata_set = CollectedData.objects.filter(id=result_id).first()
+            return JsonResponse({'collected_data': CollectedDataSerializer(collecteddata_set).data})
         else:
             return JsonResponse(dict(error='Failed'))
 

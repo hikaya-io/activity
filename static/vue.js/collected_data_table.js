@@ -77,15 +77,24 @@ $(document).ready(() => {
               this.actual = ''
               this.period = ''
               this.documentation = ''
-              console.log(this.collectedData)
+              this.disaggregations = {}
+              this.show_disaggregations= false
+
               if (item) {
+                console.log(item)
                 this.isEdit = true;
                 this.modalHeader = `Edit Result`;
                 this.currentResult = item;
                 this.date_collected = item.date_collected
                 this.target = item.targeted
-                this.actual = item.achieved
-
+                this.actual = item.achieved 
+                if (item.disaggregation_value.length > 0) {
+                  this.show_disaggregations= true
+                  item.disaggregation_value.forEach(disaggregation => {
+                    this.disaggregations[disaggregation.disaggregation_label.id] = disaggregation.value
+                  })
+                  
+                }
               } else {
                 this.isEdit = false;
               }
@@ -112,7 +121,6 @@ $(document).ready(() => {
             },
 
             processForm: function (saveNew = false) {
-              console.log(this.disaggregations)
               this.$validator.validateAll().then(result => {
                 if (result) {
                   if (this.currentResult && this.currentResult.id) {
@@ -147,8 +155,8 @@ $(document).ready(() => {
                 if (response) {
                   toastr.success('Result successfuly saved');
                   this.collectedData.periodictargets.forEach(periodictarget => {
-                    if (periodictarget.id == response.data.periodic_target) {
-                      periodictarget.collecteddata_set.push(response.data);
+                    if (periodictarget.id == response.data.collected_data.periodic_target) {
+                      periodictarget.collecteddata_set.push(response.data.collected_data);
                     }
                   })
                   if (!saveNew) {
@@ -159,6 +167,8 @@ $(document).ready(() => {
                   this.target = '';
                   this.actual = 0;
                   this.documentation = '';
+                  this.show_disaggregations = false
+                  this.disaggregations = {}
                   this.$validator.reset();
                 }
                 ;
@@ -177,15 +187,16 @@ $(document).ready(() => {
                     target: this.target,
                     date_collected: this.date_collected,
                     period: this.period,
-                    documentation: this.documentation
+                    documentation: this.documentation,
+                    disaggregations: this.disaggregations
                   }
                 );
                 if (response) {
                   toastr.success('Result was successfuly updated');
                   this.collectedData.periodictargets.forEach(periodictarget => {
-                    if (periodictarget.id == response.data.periodic_target) {
+                    if (periodictarget.id == response.data.collected_data.periodic_target) {
                       periodictarget.collecteddata_set = periodictarget.collecteddata_set.filter(item => +item.id !== +this.currentResult.id)
-                      periodictarget.collecteddata_set.unshift(response.data);
+                      periodictarget.collecteddata_set.unshift(response.data.collected_data);
                     }
                   })
                   this.isEdit = false;
