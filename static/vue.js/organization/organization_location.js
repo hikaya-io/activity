@@ -110,8 +110,14 @@ new Vue({
 			});
 		},
 
+		/**
+		 * Call this function to draw thw map
+		 */
 		showTheMap() {
-			console.log('Test : ', this.latitude)
+			var container = L.DomUtil.get('org_map');
+			if(container != null){
+				container._leaflet_id = null;
+			} 
 			let map = L.map('org_map').setView(
 				[
 					this.latitude, 
@@ -119,19 +125,12 @@ new Vue({
 				], 
 				this.zoom
 				);
-			let my_divicon = L.divIcon({
-					className: 'arrow_box'
-			});
 
 			L.tileLayer(
 				'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
 					'attribution': 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
 				}
 			).addTo(map);
-		},
-
-		onChange(event) {
-			console.log(event.target.value)
 		},
 	},
 

@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 <style>
 	#org_map {
-        height: 50vh !important;
+        height: 40vh !important;
         margin-top: 10px;
 	}
 </style>
@@ -70,13 +70,29 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label" for="longitude">Longitude</label>
                 <div class="col-sm-6">
-                    <input type="text" id="longitude" name="longitude" v-model="longitude" class="form-control" placeholder="Enter decimal degrees"/>
+                    <input 
+                        type="text" 
+                        id="longitude" 
+                        name="longitude" 
+                        v-model="longitude" 
+                        class="form-control" 
+                        placeholder="Enter decimal degrees"
+                        @keyUp=showTheMap()
+                        />
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label" for="zoom">Zoom</label>
                 <div class="col-sm-6">
-                    <input type="number" id="zoom" name="zoom" v-model="zoom" class="form-control" placeholder="Zoom"/>
+                    <input 
+                        type="number" 
+                        id="zoom" 
+                        name="zoom" 
+                        v-model="zoom" 
+                        class="form-control" 
+                        placeholder="Zoom"
+                        @keyUp=showTheMap()
+                        />
                 </div>
             </div>
             <div class="row">
