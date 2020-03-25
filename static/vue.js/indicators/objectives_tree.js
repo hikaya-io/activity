@@ -111,7 +111,7 @@ new Vue({
     },
     insertChild(nodeId, child) {
       this.origData[nodeId].children.push(child.id)
-      this.origData[`${child.id}`] = {id: child.id, name: child.name, program: this.origData[nodeId].program, children: []}
+      this.origData[`${child.id}`] = {id: child.id, name: child.name, program: this.currentProgram, children: []}
       this.refreshTreeData()
     },
     getChildren(nodeId) {
@@ -134,6 +134,8 @@ new Vue({
       if (this.showModal) {
         if (treeData.id !== '0') {
           this.parent_id = treeData.id
+        } else {
+          this.parent_id = ''
         }
         this.program_id = this.currentId
       }
@@ -182,7 +184,7 @@ new Vue({
           response.data['parent_id'] = response.data['parent'];
           delete response.data['program'];
           delete response.data['parent'];
-          this.insertChild(this.parent_id, {id: response.data.id, name: response.data.name})
+          this.insertChild(this.parent_id ? this.parent_id : '0', {id: response.data.id, name: response.data.name})
           this.objectives.unshift(response.data);
           if (!saveNew) {
             this.toggleModal();
@@ -193,6 +195,7 @@ new Vue({
           this.$validator.reset();
         }
       } catch (error) {
+        console.error(error)
         toastr.error('There was a problem saving');
       }
     },
