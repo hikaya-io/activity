@@ -18,7 +18,8 @@ new Vue({
 			.then(response => {
 				if (response.data) {
 					this.organization = response.data[0];
-                    this.setOrganizationFields(response.data[0])
+					this.setOrganizationFields(response.data[0])
+					this.showTheMap()
 				}
 			})
 			.catch(e => {
@@ -27,6 +28,7 @@ new Vue({
 			});
 		// load countries
 		this.loadCountries();
+		
 	},
 	methods: {
 
@@ -106,7 +108,31 @@ new Vue({
 			.catch(e => {
 				this.countries = [];
 			});
-		}
+		},
+
+		showTheMap() {
+			console.log('Test : ', this.latitude)
+			let map = L.map('org_map').setView(
+				[
+					this.latitude, 
+					this.longitude
+				], 
+				this.zoom
+				);
+			let my_divicon = L.divIcon({
+					className: 'arrow_box'
+			});
+
+			L.tileLayer(
+				'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+					'attribution': 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
+				}
+			).addTo(map);
+		},
+
+		onChange(event) {
+			console.log(event.target.value)
+		},
 	},
 
 	computed: {
