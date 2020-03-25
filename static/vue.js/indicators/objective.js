@@ -23,10 +23,7 @@ new Vue({
     modalHeader: 'Add objective',
     filtered_objectives: [],
     filtered_program: false,
-    filtered_program_id: 0,
-    rows: 0,
-    currentPage: 1,
-    perPage: 5
+    filtered_program_id: 0
   },
   beforeMount: function() {
     this.makeRequest('GET', '/indicators/objective/')
@@ -45,13 +42,6 @@ new Vue({
           this.parent_obj_list = this.objectives;
           this.filtered_objectives = this.objectives;
           this.modalHeader = 'Add objective';
-          this.rows = this.filtered_objectives.length;
-          // $(document).ready(() => {
-          //   $('#objectivesTable').DataTable({
-          //     pageLength: 10,
-          //     lengthMenu: [10, 20, 30, 40]
-          //   });
-          // });
         }
       })
       .catch(e => {
@@ -67,7 +57,6 @@ new Vue({
             delete el['id'];
             return el;
           });
-          this.programs_list = response.data;
         }
       })
       .catch(e => {
@@ -261,21 +250,6 @@ new Vue({
           el => el.program_id === id
         );
       }
-      // $(document).ready(() => {
-      //   $('#objectivesTable')
-      //     .DataTable()
-      //     .clear()
-      //     .destroy();
-
-      //   setTimeout(() => {
-      //     this.filtered_objectives = this.filtered_objectives;
-      //     $('#objectivesTable').DataTable({
-      //       pageLength: 10,
-      //       lengthMenu: [10, 20, 30, 40]
-      //     });
-      //   }, 100);
-      // });
-      this.rows = this.filtered_objectives.length;
     },
 
     /**
