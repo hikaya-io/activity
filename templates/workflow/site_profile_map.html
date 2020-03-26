@@ -137,7 +137,13 @@
 </div>
 
 <script>
-	let map = L.map('map').setView([-1.2921, 36.8219], 13);
+	let map = L.map('map').setView(
+    [
+      Number('{{user.activity_user.organization.latitude}}'), 
+      Number('{{user.activity_user.organization.longitude}}')
+    ], 
+      Number('{{user.activity_user.organization.zoom}}')
+    );
 	let my_divicon = L.divIcon({
 			className: 'arrow_box'
 	});

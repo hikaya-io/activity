@@ -1,7 +1,12 @@
 <script>
 	let map = L.map('map', {
-    zoomSnap: 3
-	}).setView([-1.2921, 36.8219], 13);
+	}).setView(
+		[
+      		Number('{{user.activity_user.organization.latitude}}'), 
+      		Number('{{user.activity_user.organization.longitude}}')
+  		], 
+		Number('{{user.activity_user.organization.zoom}}')
+    );
 
 	let my_divicon = L.divIcon({
 			className: 'arrow_box'
