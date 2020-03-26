@@ -2803,7 +2803,9 @@ class FundCodeList(GView):
         organization = request.user.activity_user.organization
 
         try:
-            fund_codes = FundCode.objects.filter(organization=organization).values('id', 'name', 'stakeholder__name', 'stakeholder')
+            fund_codes = FundCode.objects.filter(
+                organization=organization
+            ).values('id', 'name', 'stakeholder__name', 'stakeholder')
             stakeholders_list = Stakeholder.objects.filter(organization=organization).values()
 
             return JsonResponse(
@@ -2815,7 +2817,6 @@ class FundCodeList(GView):
             )
         except Exception as e:
             return JsonResponse(dict(error=str(e)))
-
 
 
 class FundCodeUpdate(GView):
@@ -2875,10 +2876,10 @@ class FundCodeDelete(GView):
             return JsonResponse(dict(success=True))
 
 
-"""
-Office view
-"""
 class OfficeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    """
+    Office view
+    """
     queryset = Office.objects.all()
     serializer_class = OfficeSerializer
     permission_classes = [IsAuthenticated]
@@ -2896,11 +2897,10 @@ class OfficeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIVi
         return super().update(request, *args, **kwargs)
 
 
-
-"""
-Stakeholder type view
-"""
 class StakeholderTypeView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    """
+    Stakeholder type view
+    """
     queryset = StakeholderType.objects.all()
     serializer_class = StakeholderTypeSerializer
     permission_classes = [IsAuthenticated]
@@ -2914,10 +2914,10 @@ class StakeholderTypeView(generics.ListCreateAPIView, generics.RetrieveUpdateDes
         return StakeholderType.objects.filter(organization=organization)
 
 
-"""
-Organization view
-"""
 class OrganizationView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    """
+    Organization view
+    """
     serializer_class = OrganizationSerializer
     permission_classes = [IsAuthenticated]
 
@@ -2929,10 +2929,10 @@ class OrganizationView(generics.ListCreateAPIView, generics.RetrieveUpdateDestro
         return queryset
 
 
-"""
-Project status view
-"""
 class ProjectStatusView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    """
+    Project status view
+    """
     queryset = ProjectStatus.objects.all()
     serializer_class = ProjectStatusSerializer
     permission_classes = [IsAuthenticated]
@@ -2944,3 +2944,18 @@ class ProjectStatusView(generics.ListCreateAPIView, generics.RetrieveUpdateDestr
     def get_queryset(self):
         organization = self.request.user.activity_user.organization.id
         return ProjectStatus.objects.filter(organization=organization)
+
+
+class GetCountries(GView):
+    """
+    View to fetch all Countries
+    """
+    def get(self, request):
+
+        try:
+            countries = Country.objects.values('id', 'country', 'code')
+            print('Countries', countries)
+
+            return JsonResponse(list(countries), safe=False)
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
