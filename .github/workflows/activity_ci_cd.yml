@@ -33,14 +33,16 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Run Tests
+      env: 
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
         pipenv install
         source $(python3 -m pipenv --venv)/bin/activate
-        coverage run --source=activity manage.py test
+        coverage run manage.py test
         echo "++++++++ Show test coverage report +++++++"
         coverage report
-        coveralls
-
+        echo "----------- Upload test coverage ---------"
+        bash <(curl -s https://codecov.io/bash)
 
   Infrastructure:
     runs-on: ubuntu-latest 
