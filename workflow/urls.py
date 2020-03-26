@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from .views import (
-    list_workflow_level1, ProgramCreate, GetLevel1DependantData, add_level2, add_documentation,
-    add_stakeholder, delete_stakeholder, ProgramUpdate,
+    list_workflow_level1, ProgramCreate, ProgramUpdate, GetLevel1DependantData, 
+    add_level2, add_documentation, GetProjectDependantData,
+    add_stakeholder, delete_stakeholder, GetStakeholderDependantData,
     ProjectDash, ProgramDash, level1_delete, ProjectAgreementList,
     ProjectAgreementUpdate,
     ProjectCompleteBySite, ProjectCompleteDetail, DocumentationListObjects,
@@ -21,8 +22,8 @@ from .views import (
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
     ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete, ProjectStatusView,
-    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView, OrganizationView, 
-    ProgramView, GetStakeholderDependantData,
+    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView, OrganizationView,
+    ProgramView,
 )
 from django.urls import path, re_path
 
@@ -43,10 +44,11 @@ urlpatterns = [
     path('level1_dependant_data', GetLevel1DependantData.as_view(), name='level1_dependant_data'),
 
     path('level2/add', add_level2, name='add-level2'),
-    path('documentation/add', add_documentation, name='add-documentation'),
-    path('contact/add', ContactCreate.as_view(), name='add-contact'),
     path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/list/<slug:program>/<slug:status>/', ProgramDash.as_view(), name='projects_list'),
+    path('project_dependant_data', GetProjectDependantData.as_view(), name='project_dependant_data'),
+    path('documentation/add', add_documentation, name='add-documentation'),
+    path('contact/add', ContactCreate.as_view(), name='add-contact'),
 
     # projects / project agreements
     path('<int:pk>/', ProjectAgreementList.as_view(), name='projectagreement_list'),

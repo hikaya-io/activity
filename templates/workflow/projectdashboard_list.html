@@ -32,7 +32,7 @@
 
       <div class="sub-nav-item">
         <!-- sample action buttons -->
-        <div class="btn-group" role="group" aria-label="">
+        <!-- <div class="btn-group" role="group" aria-label="">
             <button
             class="btn btn-primary btn-sm"
             data-toggle="modal"
@@ -41,6 +41,26 @@
             <i class="fa fa-plus"></i>
             {{ request.user.activity_user.organization.level_2_label }}
           </button>
+        </div> -->
+        <div class="btn-group" id="add_project_modal">
+          <a
+            role="button"
+            class="btn btn-primary btn-sm"
+            id="show-modal"
+            @click="showModal = true"
+          >
+            <i class="fa fa-plus"></i> {{ request.user.activity_user.organization.level_2_label }}
+          </a>
+          <!-- Project create modal -->
+          <modal v-if="showModal" @close="showModal = false">
+              <h4 slot="header">[[modalHeader]]</h4>
+              <div slot="body">
+                {% include '../workflow/modals/add_project_modal.html' %}
+              </div>
+              <div slot="footer">
+                {% include 'ui-components/quick_entry_modal_footer.html' %}
+              </div>
+          </modal>
         </div>
       </div>
     </div>
@@ -100,4 +120,10 @@
     }
   </script>
 </div>
+
+{% include 'ui-components/vue_modal.html'%}
+ 
 {% endblock content %}
+{% block extra_js_in_body %}
+<script type="text/javascript" src="{{ STATIC_URL }}vue.js/workflow/project.js"></script>
+{% endblock extra_js_in_body %}

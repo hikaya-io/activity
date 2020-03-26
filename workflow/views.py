@@ -100,8 +100,8 @@ def list_workflow_level1(request):
     context = {'programs': programs,
                'get_all_sectors': get_all_sectors,
                'active': ['workflow']}
-    
-    return render(request, 'workflow/level1.html', context) 
+   
+    return render(request, 'workflow/level1_list.html', context) 
 
 
 def level1_delete(request, pk):
@@ -2628,11 +2628,10 @@ class DocumentationListObjects(View, AjaxableResponseMixin):
 
 
 def add_level2(request):
-    data = request.POST
-    program = Program.objects.get(id=int(data.get('program')))
+    data = json.loads(request.body.decode('utf-8'))
 
-    level2 = ProjectAgreement(project_name=data.get(
-        'project_name'), program=program)
+    program = Program.objects.get(id=int(data.get('program')))
+    level2 = ProjectAgreement(project_name=data.get('project_name'), program=program)
 
     if level2.save():
         return HttpResponse({'success': True})
@@ -2963,6 +2962,29 @@ class GetLevel1DependantData(GView):
                 dict(
                     level_1_label=organization.level_1_label,
                     sectors=list(sectors), safe=False
+                )
+            )
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
+
+
+"""
+GetProjectDependantData: level1
+"""
+class GetProjectDependantData(GView):
+    """
+    View to fetch all level1
+    """
+    def get(self, request):
+        try:
+            organization = Organization.objects.get(id=request.user.activity_user.organization.id)
+            programs = Program.objects.filter(organization=organization).values('id', 'name')
+
+            return JsonResponse(
+                dict(
+                    level_2_label=organization.level_2_label,
+                    programs=list(programs),
+                    safe=False
                 )
             )
         except Exception as e:
