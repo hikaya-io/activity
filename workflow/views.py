@@ -2654,8 +2654,8 @@ def add_documentation(request):
 
 
 def add_stakeholder(request):
-    data = request.POST
-
+    data = json.loads(request.body.decode('utf-8'))
+    print('data : ', data)
     user = ActivityUser.objects.filter(user=request.user).first()
 
     stakeholder_type_id = int(data.get('stakeholder_type', None), 10)
@@ -2963,6 +2963,31 @@ class GetLevel1DependantData(GView):
                 dict(
                     level_1_label=organization.level_1_label,
                     sectors=list(sectors), safe=False
+                )
+            )
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
+
+
+"""
+GetStakeholderDependantData: stakeholder type, sectors, organization
+"""
+class GetStakeholderDependantData(GView):
+    """
+    View to fetch all Sectors, stakeholder types
+    """
+    def get(self, request):
+        try:
+            organization = Organization.objects.get(id=request.user.activity_user.organization.id)
+            sectors = Sector.objects.all().values('id', 'sector')
+            stakeholder_types = StakeholderType.objects.all().filter(organization=organization).values('id', 'name')
+
+            return JsonResponse(
+                dict(
+                    stakeholder_label=organization.stakeholder_label,
+                    sectors=list(sectors),
+                    stakeholder_types=list(stakeholder_types),
+                    safe=False
                 )
             )
         except Exception as e:

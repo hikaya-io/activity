@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block content %} 
-<!-- {% include '../workflow/modals/add_level1_modal.html' %} -->
+<!-- {% include '../workflow/modals/create_level1_modal.html' %} -->
 
 <script>
   $(document).ready(function() {
@@ -38,7 +38,7 @@
           <modal v-if="showModal" @close="showModal = false">
               <h4 slot="header">[[modalHeader]]</h4>
               <div slot="body">
-                {% include '../workflow/modals/level1_modal.html' %}
+                {% include '../workflow/modals/add_level1_modal.html' %}
               </div>
               <div slot="footer">
                 {% include 'ui-components/quick_entry_modal_footer.html' %}

@@ -1,189 +1,66 @@
-<script>
-	$(document).ready(() => {
-		$('#sectors').select2({
-			theme: 'bootstrap',
-			placeholder: 'Select sectors...',
-			allowClear: true,
-			multiple: true,
-			dropdownParent: $('#addStakeholderModal'),
-		});
+<form method="POST">
+    <div class="modal-body">
+        {% csrf_token %}
+        <div :class="{ 
+            'form-group': true, 
+            'has-error': errors.has('name')
+        }">
+            <label for="name">[[ stakeholder_label ]] name*</label
+            >
+            <input
+                type="text"
+                name="name"
+                :class="{ 
+                    'form-control': true, 
+                    'is-danger': errors.has('name') 
+                }"   
+                v-model="name" 
+                v-validate="'required'"
+                :placeholder="stakeholder_label"
+            />
+            <span v-show="errors.has('name')" class="help is-danger">[[ errors.first('name') ]]</span>
+        </div>
 
-		$('#stakeholderType').select2({
-			theme: 'bootstrap',
-		});
+        <!-- stakeholder type-->
+        <div
+            :class="{
+                'form-group': true
+            }"
+        >
+            <label for="stakeholderType">[[ stakeholder_label ]] type</label>
+            <select
+                id="stakeholderType"
+                :class="{
+                        'form-control': true,
+                    }"
+                v-model="stakeholderType"
+                >
+                <option
+                    v-for="stakeholderType in stakeholderTypesList"
+                    :value=stakeholderType.id>[[ stakeholderType.name ]]</option>
+            </select>
+        </div>
 
-		$('#stakeholderName').on('input', function () {
-			const name = $(this);
-			if (name.val()) {
-				$('#div_stakeholder_name')
-					.removeClass('has-error')
-					.addClass('has-success');
-				$('#nameHelpBlock')
-					.removeClass('hikaya-show')
-					.addClass('hikaya-hide');
-			} else {
-				$('#div_stakeholder_name')
-					.removeClass('has-success')
-					.addClass('has-error');
-			}
-		});
-
-		$('#stakeholderType').on('change', function () {
-			const type = $(this);
-			if (type.val()) {
-				$('#div_stakeholder_type')
-					.removeClass('has-error')
-					.addClass('has-success');
-				$('#typeHelpBlock')
-					.removeClass('hikaya-show')
-					.addClass('hikaya-hide');
-			} else {
-				$('#div_stakeholder_type')
-					.removeClass('has-success')
-					.addClass('has-error');
-			}
-		});
-
-		// show quick add modal if quick-modal to true
-		const url = new URL(window.location.href);
-		if (url.searchParams.get('quick-modal')) {
-			$('#addStakeholderModal').modal('show');
-		}
-	});
-
-	var saveStakeholder = (buttonId) => {
-		$(`#${buttonId}`).click(function (e) {
-			const formValue = $('#addStakeholderForm').serializeArray();
-
-			const obj = {};
-
-			formValue.forEach(item => {
-				obj[item.name] = item.value;
-			});
-
-			if (obj.stakeholder_name == '' || obj.stakeholder_type == '') {
-				if (obj.stakeholder_name == '') {
-					$('#div_stakeholder_name')
-						.removeClass('has-success')
-						.addClass('has-error');
-					$('#nameHelpBlock')
-						.removeClass('hikaya-hide')
-						.addClass('hikaya-show');
-				}
-				if (obj.stakeholder_type == '') {
-					$('#div_stakeholder_type')
-						.removeClass('has-success')
-						.addClass('has-error');
-					$('#typeHelpBlock')
-						.removeClass('hikaya-hide')
-						.addClass('hikaya-show');
-				}
-				toastr.error('Fill in all required fields');
-			} else {
-				// set sectors and format dates
-				data = {
-					...obj,
-					sectors: $('#sectors').val(),
-					start_date: moment(obj.start_date, 'DD.MM.YYYY').format(),
-				};
-
-				$.ajax({
-					url: '{% url "add-stakeholder" %}',
-					type: 'POST',
-					data,
-					success: function (resp, status) {
-						// notify success
-						toastr.success('Stakeholder was added successfully', `${resp}`);
-
-						//close modal
-						$('#addStakeholderModal').modal('hide');
-
-						// reset form
-						$('#addStakeholderForm').trigger('reset');
-						$('#sectors')
-							.select('val', '')
-							.trigger('change');
-
-						const urlWithoutQueryString = window.location.href.split('?')[0];
-						if (buttonId === 'saveStakeholderAndNew') {
-							window.location.replace(`${urlWithoutQueryString}?quick-modal=true`);
-						} else {
-							setTimeout(() => {
-								window.location.replace(urlWithoutQueryString);
-							}, 2000);
-						}
-					},
-					error: function (xhr, status, error) {
-						toastr.error(error, 'Failed');
-					},
-				});
-			}
-		});
-	}
-
-	$(function () {
-		saveStakeholder('saveStakeholderAndNew');
-		saveStakeholder('saveStakeholder');
-	});
-</script>
-
-<!-- Modal -->
-<div class="modal fade" id="addStakeholderModal" tabindex="-1" role="dialog" aria-labelledby="addStakeholderModalLabel">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<form id="addStakeholderForm">
-				{% csrf_token %}
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h4 class="modal-title" id="addStakeholderModalLabel">
-						Add Stakeholder
-					</h4>
-				</div>
-				<div class="modal-body">
-					<div class="form-group" id="div_stakeholder_name">
-						<label class="control-label" for="stakeholderName">Stakeholder Name*</label>
-						<input type="text" id="stakeholderName" name="stakeholder_name" class="form-control"
-							placeholder="Name of the stakeholder" autocomplete="off" />
-						<span id="nameHelpBlock" class="help-block hikaya-hide">stakeholder name required</span>
-					</div>
-
-					<div class="form-group" id="div_stakeholder_type">
-						<label class="control-label" for="stakeholdertype">Stakeholder Type*</label>
-						<select name="stakeholder_type" id="stakeholderType" class="form-control">
-							<option value=""></option>
-							{% for stakeholder_type in get_stakeholder_types %}
-							<option value="{{ stakeholder_type.id }}">
-								{{ stakeholder_type.name }}
-							</option>
-							{% endfor %}
-						</select>
-						<span id="typeHelpBlock" class="help-block hikaya-hide">stakeholder type required</span>
-					</div>
-
-					<div class="form-group">
-						<label for="sectors">Sectors</label>
-						<select id="sectors" class="form-control" name="sectors" autocomplete="off" multiple="multiple">
-							{% for sector in get_sectors %}
-							<option value="{{ sector.id }}">{{ sector.sector }}</option>
-							{% endfor %}
-						</select>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-close" data-dismiss="modal">
-						Cancel
-					</button>
-					<button type="button" class="btn btn-outline-success" id="saveStakeholderAndNew">
-						Save &amp; New
-					</button>
-
-					<button type="button" class="btn btn-success" id="saveStakeholder">
-						Save
-					</button>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
+        <!-- sectors -->
+        <div
+            :class="{
+                'form-group': true
+            }"
+        >
+            <label for="sectors">Sectors</label>
+            <select
+                id="sectors"
+                :class="{
+                        'form-control': true,
+                    }"
+                v-model="sectors"
+                placeholder="Sector"
+                multiple="true"
+                >
+                <option
+                    v-for="sector in sectorsList"
+                    :value=sector.id>[[ sector.sector ]]</option>
+            </select>
+        </div>
+    </div>
+</form>

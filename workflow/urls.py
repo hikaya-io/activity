@@ -22,7 +22,7 @@ from .views import (
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
     ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete, ProjectStatusView,
     FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView, OrganizationView, 
-    ProgramView,
+    ProgramView, GetStakeholderDependantData,
 )
 from django.urls import path, re_path
 
@@ -45,9 +45,6 @@ urlpatterns = [
     path('level2/add', add_level2, name='add-level2'),
     path('documentation/add', add_documentation, name='add-documentation'),
     path('contact/add', ContactCreate.as_view(), name='add-contact'),
-    path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
-    path('stakeholder/delete_stakeholder/<int:pk>/',
-         delete_stakeholder, name='delete_stakeholder'),
     path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/list/<slug:program>/<slug:status>/', ProgramDash.as_view(), name='projects_list'),
 
@@ -127,16 +124,14 @@ urlpatterns = [
         name='benchmark_delete'),
 
     # stakeholders
-    path('stakeholder_list/<slug:program_id>/<slug:project_id>/',
-        StakeholderList.as_view(), name='stakeholder_list'),
-    path('stakeholder_table/<slug:program_id>/<int:pk>/',
-        StakeholderObjects.as_view(), name='stakeholder_table'),
-    path('stakeholder_add/<int:id>/', StakeholderCreate.as_view(),
-        name='stakeholder_add'),
-    path('stakeholder_update/<int:pk>/', StakeholderUpdate.as_view(),
-        name='stakeholder_update'),
-    path('export_stakeholders_list/<slug:program_id>/',
-        export_stakeholders_list, name='export_stakeholders_list'),
+    path('stakeholder_list/<slug:program_id>/<slug:project_id>/', StakeholderList.as_view(), name='stakeholder_list'),
+    path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
+    path('stakeholder/delete_stakeholder/<int:pk>/', delete_stakeholder, name='delete_stakeholder'),
+    path('stakeholder_table/<slug:program_id>/<int:pk>/', StakeholderObjects.as_view(), name='stakeholder_table'),
+    path('stakeholder_add/<int:id>/', StakeholderCreate.as_view(), name='stakeholder_add'),
+    path('stakeholder_update/<int:pk>/', StakeholderUpdate.as_view(), name='stakeholder_update'),
+    path('export_stakeholders_list/<slug:program_id>/', export_stakeholders_list, name='export_stakeholders_list'),
+    path('stakeholder_dependant_data', GetStakeholderDependantData.as_view(), name='stakeholder_dependant_data'),
 
     # sites / site profiles
     path('site_list/<slug:program_id>/<int:pk>/', SiteProfileList.as_view(),

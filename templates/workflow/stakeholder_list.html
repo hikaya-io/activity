@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block content %} 
-{% include './modals/add_stakeholder_modal.html' %}
+<!-- {% include './modals/create_stakeholder_modal.html' %} -->
 
 <script>
   $(document).ready(() => {
@@ -78,7 +78,7 @@
       </div>
 
       <div class="sub-nav-item">
-        <div class="btn-group" role="group" aria-label="...">
+        <div id="add_stakeholder_modal" class="btn-group" role="group" aria-label="...">
           <!-- <a
             role="button"
             class="btn btn-sm btn-info  disabled"
@@ -88,14 +88,32 @@
             Export to CSV</a
           > -->
 
-          <a
+          <!-- <a
             role="button"
             class="btn btn-sm btn-primary"
             data-toggle="modal"
             data-target="#addStakeholderModal"
           >
            <i class="fa fa-plus"></i> {{user.activity_user.organization.stakeholder_label}}
-          </a>
+          </a> -->
+            <a
+              role="button"
+              class="btn btn-primary btn-sm"
+              id="show-modal"
+              @click="showModal = true"
+            >
+              <i class="fa fa-plus"></i> {{ request.user.activity_user.organization.stakeholder_label }}
+            </a>
+            <!-- Level 1 create/edit modal -->
+            <modal v-if="showModal" @close="showModal = false">
+                <h4 slot="header">[[modalHeader]]</h4>
+                <div slot="body">
+                  {% include '../workflow/modals/add_stakeholder_modal.html' %}
+                </div>
+                <div slot="footer">
+                  {% include 'ui-components/quick_entry_modal_footer.html' %}
+                </div>
+            </modal>
         </div>
       </div>
     </div>
@@ -161,4 +179,10 @@
     </tbody>
   </table>
 </div>
+
+{% include 'ui-components/vue_modal.html'%}
+ 
 {% endblock content %}
+{% block extra_js_in_body %}
+<script type="text/javascript" src="{{ STATIC_URL }}vue.js/workflow/stakeholder.js"></script>
+{% endblock extra_js_in_body %}
