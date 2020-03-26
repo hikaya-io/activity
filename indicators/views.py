@@ -16,7 +16,8 @@ from rest_framework.permissions import IsAuthenticated
 from activity.permissions import IsReadOnly
 from .export import IndicatorResource, CollectedDataResource
 from .serializers import (PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer,
-                          IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer, ObjectiveSerializer)
+                          IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer, ObjectiveSerializer,
+                          DisaggregationTypeSerializer, DisaggregationLabelSerializer, DisaggregationValueSerializer)
 
 from .tables import IndicatorDataTable
 from .forms import (
@@ -702,6 +703,18 @@ class CollectedDataAdd(GView):
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
 
+        disaggs_list = []
+
+        if data.get('disaggregations') == {}:
+            disaggregations = None
+        else:
+            disaggregations = data.get('disaggregations')
+            print(disaggregations)
+            for key, value in disaggregations.items():
+                item = {"value": value,
+                        "disaggregation_label": key}
+                disaggs_list.append(item)
+
         if data.get('date_collected') == "":
             date = None
         else:
@@ -723,7 +736,14 @@ class CollectedDataAdd(GView):
         )
 
         if collected_data:
-            return JsonResponse(model_to_dict(collected_data))
+            if len(disaggs_list) > 0:
+                for item in disaggs_list:
+                    collected_data.disaggregation_value.create(
+                        value=item["value"],
+                        disaggregation_label=DisaggregationLabel.objects.filter(id=int(item["disaggregation_label"])).first(),
+                    )
+            collecteddata_set = CollectedData.objects.filter(id=model_to_dict(collected_data)['id']).first()
+            return JsonResponse({'collected_data': CollectedDataSerializer(collecteddata_set).data})
         else:
             return JsonResponse(dict(error='Failed'))
 
@@ -747,7 +767,6 @@ class CollectedDataEdit(GView):
             documentation = int(data.get('documentation'))
             evidence = Documentation.objects.filter(id=documentation).first()
             collected_data.evidence = evidence
-
         achieved = data.get('actual', '')
 
         collected_data.date_collected = date
@@ -755,7 +774,8 @@ class CollectedDataEdit(GView):
         collected_data.save()
 
         if collected_data:
-            return JsonResponse(model_to_dict(collected_data))
+            collecteddata_set = CollectedData.objects.filter(id=result_id).first()
+            return JsonResponse({'collected_data': CollectedDataSerializer(collecteddata_set).data})
         else:
             return JsonResponse(dict(error='Failed'))
 

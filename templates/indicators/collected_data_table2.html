@@ -10,6 +10,7 @@
                     <th class="text-right align-bottom">Actual</th>
                     <th class="text-right align-bottom" style="width: 65px">% Met</th>
                     <th class="align-bottom">Evidence</th>
+                    <th class="align-bottom"> Disaggregations</th>
                     <th class="align-bottom" style="width: 80px"></th>
                 </tr>
                 <template v-for="item in collectedData.periodictargets">
@@ -25,7 +26,7 @@
                             align="right">
                             [[ Math.floor(item.target) ]]
                         </td>
-                        <!-- Display first row only to comoplete complete columns -->
+                        <!-- Display first row only to complete complete columns -->
                         <template v-if="item.collecteddata_set.length">
                             <template v-for="(cdata, index) in item.collecteddata_set">
                                 <template v-if="index === 0">
@@ -48,6 +49,11 @@
                                             <a :href="cdata.activity_table.detail_url" target="_blank">[[
                                                 cdata.activity_table
                                                 ]]</a>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template v-if="cdata.disaggregation_value.length > 0">
+                                            <span alt="ok" class="glyphicon glyphicon-ok"></span>
                                         </template>
                                     </td>
                                     <td align="right">
