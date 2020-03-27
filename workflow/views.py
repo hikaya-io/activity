@@ -2986,6 +2986,9 @@ class GetStakeholderDependantData(GView):
                 )
             )
 
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
+
 
 class GetCountries(GView):
     """
