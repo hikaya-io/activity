@@ -1,9 +1,10 @@
 <form id="addCollectedDataForm">
     {% csrf_token %}
-    <div class="modal-body">
+    <div class="modal-body"
+    style="max-height: 500px; overflow-y: auto;">
         <div>
             <div class="row">
-                <div class="col-md-6 col-sm-6">
+                <div class="col-md-6">
                     <div class="form-group" id="div_periodic_target">
                         <label for="id_periodic_target">Target period*</label>
                         <select 
@@ -21,10 +22,10 @@
                                     [[target.text]]
                             </option>
                         </select>
-                        <span v-show="errors.has('target period')" class="help is-danger">[[ errors.first('target period') ]]</span>
+                        <p v-show="errors.has('target period')" class="help is-danger">[[ errors.first('target period') ]]</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-sm-6">
+                <div class="col-md-6">
                     <div class="form-group" id="div_date_collected">
                         <label for="dateCollected">Date collected</label>
                         <input
@@ -71,7 +72,7 @@
                               }"
                             v-model="actual" 
                             v-validate="'required'">
-                        <span v-show="errors.has('actual value')" class="help is-danger">[[ errors.first('actual value') ]]</span>
+                        <p v-show="errors.has('actual value')" class="help is-danger">[[ errors.first('actual value') ]]</p>
                     </div>
                 </div>
             </div>
@@ -92,7 +93,43 @@
                             <option :value="{{ document.id }}">{{ document.name }}</option>
                             {% endif %} {% endfor %}
                         </select>
-                        
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div id="div_disaggregations">
+                    <div class="col-md-8 col">
+                        <label>Disaggregations</label>
+                    </div>
+                    <div class="col-md-4 col">
+                        <button
+                        type="button"
+                        style="background-color: white; border: none; font-size: 12px;"
+                        @click=showDisaggregations()
+                        > 
+                        <i class="fa fa-plus"></i> Disaggregated results</button>
+                    </div>
+                    <br>
+                    <div class="form-group" v-if="show_disaggregations">
+                        <div class="row" v-if="collectedData.indicator.disaggregation['0']">
+                            <div class="col-md-10 col-md-offset-2" v-for="disagg in collectedData.indicator.disaggregation">
+                                <label>[[disagg.disaggregation_type]]</label>
+                                <div class="row" style="margin: 10px;" v-for="disagg_label in disagg.disaggregation_label">
+                                    <label class="col-md-3">[[disagg_label.label]]:</label>
+                                    <input 
+                                    type="text"
+                                    :class="{ 
+                                        'form-control': true, 
+                                      }"
+                                    v-model="disaggregations[disagg_label.id]">
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <br>
+                            <p style="margin-left: 15px;">You have no disaggregations to add to this set of results</p>
+                        </div>
                     </div>
                 </div>
             </div>

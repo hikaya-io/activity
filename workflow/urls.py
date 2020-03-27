@@ -22,8 +22,8 @@ from .views import (
     QuantitativeOutputsUpdate, QuantitativeOutputsDelete, BudgetList, BudgetCreate,
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
     ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete, ProjectStatusView,
-    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView, OrganizationView,
-    ProgramView,
+    FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView, OrganizationView, 
+    ProgramView, GetCountries,
 )
 from django.urls import path, re_path
 
@@ -195,6 +195,7 @@ urlpatterns = [
     # ajax calls
     path('service/<slug:service>/service_json/', service_json, name='service_json'),
     path('new_bookmark/', save_bookmark, name='save_bookmark'),
+    path('countries/', GetCountries.as_view(), name='get_countries'),
 
 
     # ProfileType Urls
