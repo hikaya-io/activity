@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from .views import (
-    list_workflow_level1, ProgramCreate, ProgramUpdate, GetLevel1DependantData, 
+    list_workflow_level1, ProgramCreate, ProgramUpdate, ProgramDelete, GetLevel1DependantData, 
     add_level2, add_documentation, GetProjectDependantData,
     add_stakeholder, delete_stakeholder, GetStakeholderDependantData,
     ProjectDash, ProgramDash, level1_delete, ProjectAgreementList,
@@ -41,6 +41,7 @@ urlpatterns = [
     path('level1/add', ProgramCreate.as_view(), name='add_level1'),
     path('level1/edit/<int:pk>/', ProgramUpdate.as_view(), name='level1_edit'),
     path('level1_delete/<int:pk>/', level1_delete, name='level1_delete'),
+    path('level1/delete/<int:id>', ProgramDelete.as_view(), name='program_delete'),
     path('level1_dependant_data', GetLevel1DependantData.as_view(), name='level1_dependant_data'),
 
     path('level2/add', add_level2, name='add-level2'),

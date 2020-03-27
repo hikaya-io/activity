@@ -1,65 +1,67 @@
-{% extends "base.html" %} {% block content %} 
-
-<script>
-  $(document).ready(function() {
-    $('#level1Table').DataTable();
-  });
-</script>
-
-<div class="container">
-  {% block breadcrumbs %}
-  <ul class="breadcrumb">
-    <li><a href="/">My Dashboard</a></li>
-    <li class="active">
-      {{ request.user.activity_user.organization.level_1_label }}
-    </li>
-  </ul>
-  {% endblock %}
-
+<div id="level_1_list">
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">
-        {{ request.user.activity_user.organization.level_1_label }} List
-      </h4>
+      <h4 class="page-title">[[ level_1_label ]] List</h4>
     </div>
     <div class="sub-navigation-actions">
-      <div class="form-group" id="level_1_modal">
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
           <a
             role="button"
-            class="btn btn-primary btn-sm"
+            class="btn btn-sm btn-primary"
             id="show-modal"
-            @click="showModal = true"
+            @click="toggleModal()"
           >
-            <i class="fa fa-plus"></i> {{ request.user.activity_user.organization.level_1_label }}
+            <i class="fa fa-plus"></i> [[ level_1_label ]]
           </a>
-          <!-- Level 1 create/edit modal -->
-          <modal v-if="showModal" @close="showModal = false">
-              <h4 slot="header">[[modalHeader]]</h4>
-              <div slot="body">
-                {% include '../workflow/modals/add_level1_modal.html' %}
-              </div>
-              <div slot="footer">
-                {% include 'ui-components/quick_entry_modal_footer.html' %}
-              </div>
-          </modal>
         </div>
-
-      <!-- sample action buttons -->
-      <!-- <div class="btn-group" role="group" aria-label="">
-        <button
-          class="btn btn-primary btn-sm"
-          data-toggle="modal"
-          data-target="#addProgramModal"
-        >
-          <i class="fa fa-plus"></i>
-          {{ request.user.activity_user.organization.level_1_label }}
-        </button>
-      </div> -->
+        <!-- Program create modal -->
+        <modal v-if="showModal" @close="showModal = false">
+          <div slot="body">
+            {% include './modals/add_level1_modal.html' %}
+          </div>
+          <div slot="footer">
+            {% include 'ui-components/quick_entry_modal_footer.html' %}
+          </div>
+          <h4 slot="header">[[modalHeader]]</h4>
+        </modal>
+        <!-- Program delete modal -->
+        <modal v-if="showDeleteModal" @close="showDeleteModal = false">
+          <h4 slot="header">[[modalHeader]]</h4>
+          <div slot="body">
+            <p>
+              Are you sure you want to delete <b>[[ itemToDelete.name ]]</b>
+            </p>
+          </div>
+          <div slot="footer">
+            <div class="text-right">
+              <button
+                type="submit"
+                class="btn btn-close"
+                @click="showDeleteModal = false"
+              >
+                Cancel
+              </button>
+              <button
+                class="btn btn-danger"
+                @click="deleteProgram(itemToDelete.id)"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </modal>
+      </div>
     </div>
   </div>
 
-  <table class="table" id="level1Table">
+  <div class="p-10" v-if="!programsList.length">
+    {% include 'admin/no_data.html' %}
+  </div>
+
+  <!-- Table -->
+  <table class="table" id="level1Table" v-if="programsList.length">
     <thead>
       <tr>
         <th>Name</th>
@@ -70,19 +72,24 @@
     </thead>
 
     <tbody>
-      {% for program in programs %} {% if program.name %}
-      <tr>
+      <tr v-cloak v-for="program in programsList" v-if="program.name">
         <td>
-          <a href="/workflow/level1/edit/{{ program.id }}/" data-toggle="tooltip" title="{{ program.name }}">
-            {{ program.name | truncatechars:50}}
-          </a>
+            <a v-bind:href="'/workflow/level1/edit/'+program.id+'/'" data-toggle="tooltip" :title="program.name">
+                [[ program.name ]]
+            </a>
         </td>
-        <!-- dates to be formated -->
-        <td>{{ program.start_date | date }}</td>
-        <td>{{ program.end_date | date }}</td>
+        <td>
+          [[ formatDate(program.start_date) ]]
+        </td>
+        <td>
+          [[ formatDate(program.end_date) ]]
+        </td>
         <td class="text-right">
+          <!-- Split button -->
           <div class="btn-group">
-            <a role="button" href="" class="btn btn-default btn-sm disabled">More</a>
+            <button type="button" class="btn btn-default btn-sm disabled">
+              More
+            </button>
             <button
               type="button"
               class="btn btn-default btn-sm dropdown-toggle"
@@ -96,45 +103,43 @@
             <ul class="dropdown-menu">
               <li class="dropdown-header">Related</li>
               <li>
-                <a href="/workflow/level2/list/{{program.id}}/none/">
-                  {{ request.user.activity_user.organization.level_2_label }}
-                </a>
+                <a href="/workflow/level2/list/{{ program.id }}/none/"
+                  >[[ level_2_label ]]</a
+                >
               </li>
-              <li><a href="/workflow/stakeholder_list/0/0/">{{ user.activity_user.organization.stakeholder_label }}</a></li>
-              <li><a href="/workflow/siteprofile_list/0/0/list/">{{ user.activity_user.organization.site_label }}</a></li>
-              <li><a href="/indicators/home/0/0/0/">{{ user.activity_user.organization.indicator_label }}</a></li>
-
-              <li role="separator" class="divider"></li>
-
               <li>
-                <a class="" href="/workflow/level1/edit/{{ program.id }}/"
+                <a href="/workflow/stakeholder_list/0/0/"
+                  >[[ stakeholder_label ]]</a
+                >
+              </li>
+              <li>
+                <a href="/workflow/siteprofile_list/0/0/list/"
+                  >[[ site_label ]]</a
+                >
+              </li>
+              <li>
+                <a href="/indicators/home/0/0/0/">[[ indicator_label ]]</a>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a v-bind:href="'/workflow/level1/edit/'+program.id+'/'"
                   >Edit</a
                 >
               </li>
               <li>
                 <a
-                  class="text-danger"
-                  href="#deleteProgramModal{{ program.id }}"
-                  data-toggle="modal"
-                  onclick="setItemToDelete({{ program.id }})"
-                  data-target="#deleteProgramModal{{ program.id }}"
+                  class="text-danger force-link"
+                  @click="toggleDeleteModal(program)"
+                  >Delete</a
                 >
-                  Delete
-                </a>
               </li>
             </ul>
           </div>
         </td>
-        {% include 'workflow/modals/program_delete_confirm_modal.html'%}
       </tr>
-      {% endif %} {% endfor %}
     </tbody>
   </table>
 </div>
-
-{% include 'ui-components/vue_modal.html'%}
- 
-{% endblock content %}
-{% block extra_js_in_body %}
-<script type="text/javascript" src="{{ STATIC_URL }}vue.js/workflow/level_1.js"></script>
+{% include 'ui-components/vue_modal.html'%} {% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}vue.js/workflow/level_1.js"></script>
 {% endblock extra_js_in_body %}

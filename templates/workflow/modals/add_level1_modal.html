@@ -26,7 +26,7 @@
             }"
         >
             <label for="sectors">Sectors</label>
-            <select
+            <select :bootstrap-styling="true"
                 id="sectors"
                 :class="{
                         'form-control': true,
@@ -39,38 +39,38 @@
                     v-for="sector in sectorsList"
                     :value=sector.id>[[ sector.sector ]]</option>
             </select>
+            <p class="help-text">Hold down <span style="font-weight: bold">Control</span> or <span style="font-weight: bold">Command</span> on a Mac, to select more than one</p>
         </div>
         <div class="row">
-            <div class="col-md-5">
-              <div class="form-group">
+            <div class="col-md-6 form-group">
                 <label for="startDate">Start Date</label>
-                <vuejs-datepicker 
+                <vuejs-datepicker :bootstrap-styling="true"
                     name="start_date" 
                     :value="start_date" 
+                    :clear-button=true
+                    input-class="background-color: white"
                     v-model="start_date" 
                     :format="customFormatter"
                     @selected="disableDates('start', $event)"
                     :disabled-dates="disabledDates.start"
                     placeholder="Start Date">
                 </vuejs-datepicker>
-              </div>
             </div>
 
-            <div class="col-md-5">
-              <div class="form-group">
+            <div class="col-md-6 form-group">
                 <label for="endDate">End Date</label>
-                <vuejs-datepicker 
+                <vuejs-datepicker :bootstrap-styling="true"
                     name="end_date" 
                     :value="end_date" 
+                    :clear-button=true
+                    input-class="background-color: white"
                     v-model="end_date" 
                     placeholder="End Date"
                     @selected="disableDates('end', $event)"
                     :disabled-dates="disabledDates.end"
                     >
                 </vuejs-datepicker>
-              </div>
             </div>
-          </div>
-        <!-- selected="currentFundCode.stakeholder == stakeholder.id ? 'true' : 'false'" -->
+        </div>
     </div>
 </form>

@@ -101,7 +101,7 @@ def list_workflow_level1(request):
                'get_all_sectors': get_all_sectors,
                'active': ['workflow']}
    
-    return render(request, 'workflow/level1_list.html', context) 
+    return render(request, 'workflow/level1.html', context) 
 
 
 def level1_delete(request, pk):
@@ -113,6 +113,26 @@ def level1_delete(request, pk):
     program = Program.objects.get(pk=int(pk))
     program.delete()
     return redirect('/workflow/level1')
+
+
+class ProgramDelete(GView):
+    """
+    View to Delete Level1 and return Json response
+    """
+    def delete(self, request, *args, **kwargs):
+        program_id = int(self.kwargs.get('id'))
+        program = Program.objects.get(
+            id=int(program_id)
+        )
+        program.delete()
+
+        try:
+            Program.objects.get(id=int(program_id))
+            return JsonResponse(dict(error='Failed'))
+
+        except Program.DoesNotExist:
+
+            return JsonResponse(dict(success=True))
 
 
 class ProgramCreate(GView):
@@ -129,14 +149,19 @@ class ProgramCreate(GView):
             end_date=data.get('end_date') if data.get('end_date') != '' else None,
             organization=activity_user.organization
         )
+        
         program.save()
+        
         try:
-            sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
+            sectors = Sector.objects.filter(id__in=data.get('sectors'))
             program.sector.set(sectors)
+            response_object = model_to_dict(program)
+            response_object['sector'] = [model_to_dict(sector) for sector in program.sector.all()]
+            
+            return JsonResponse(dict(program=response_object))
 
-            return JsonResponse(dict(success=True))
-        except Exception as ex:
-            return JsonResponse(dict(success=False))
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
 
 
 class ProgramUpdate(UpdateView):
@@ -2628,7 +2653,8 @@ class DocumentationListObjects(View, AjaxableResponseMixin):
 
 
 def add_level2(request):
-    data = json.loads(request.body.decode('utf-8'))
+    # data = json.loads(request.body.decode('utf-8'))
+    data = request.POST
 
     program = Program.objects.get(id=int(data.get('program')))
     level2 = ProjectAgreement(project_name=data.get('project_name'), program=program)
@@ -2653,8 +2679,9 @@ def add_documentation(request):
 
 
 def add_stakeholder(request):
-    data = json.loads(request.body.decode('utf-8'))
-    print('data : ', data)
+    # data = json.loads(request.body.decode('utf-8'))
+    data = request.POST
+
     user = ActivityUser.objects.filter(user=request.user).first()
 
     stakeholder_type_id = int(data.get('stakeholder_type', None), 10)
@@ -2947,7 +2974,7 @@ class ProjectStatusView(generics.ListCreateAPIView, generics.RetrieveUpdateDestr
 
 
 """
-GetLevel1DependantData: sectors, organization
+GetLevel1DependantData: sectors, organization, programs
 """
 class GetLevel1DependantData(GView):
     """
@@ -2956,11 +2983,17 @@ class GetLevel1DependantData(GView):
     def get(self, request):
         try:
             organization = Organization.objects.get(id=request.user.activity_user.organization.id)
+            programs = Program.objects.all().filter(organization=organization).values()
             sectors = Sector.objects.all().values('id', 'sector')
 
             return JsonResponse(
                 dict(
                     level_1_label=organization.level_1_label,
+                    level_2_label=organization.level_2_label,
+                    stakeholder_label=organization.stakeholder_label,
+                    site_label=organization.site_label,
+                    indicator_label=organization.indicator_label,
+                    programs=list(programs),
                     sectors=list(sectors), safe=False
                 )
             )

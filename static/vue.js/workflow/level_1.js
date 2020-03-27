@@ -6,17 +6,22 @@ Vue.component('modal', {
 // start app
 new Vue({
 	delimiters: ['[[', ']]'],
-	el: '#level_1_modal',
+	el: '#level_1_list',
 	components: {
 		vuejsDatepicker
 	},
 	data: {
+		programsList: [],
+		sectorsList: [],
         name: '',
 		sectors: [],
 		start_date: '',
 		end_date: '',
-		sectorsList: [],
 		level_1_label: '',
+		level_2_label: '',
+		stakeholder_label: '',
+		site_label: '',
+		indicator_label: '',
 		showModal: false,
 		isEdit: false,
 		currentProgram: null,
@@ -26,24 +31,32 @@ new Vue({
 			end:{}
 		},
 		saveNew: false,
+		showDeleteModal: false,
+		itemToDelete: null,
 	},
 	beforeMount: function() {
-		console.log('saveNew : ', this.saveNew);
 		this.makeRequest('GET', '/workflow/level1_dependant_data')
 			.then(response => {
 				if (response.data) {
-					console.log('response.data : ', response.data)
-					this.level_1_label = response.data.level_1_label;
-					this.modalHeader = `Add ${this.level_1_label}`; 
+					this.programsList = response.data.programs.sort((a, b) => (a.name > b.name) ? 1 : -1);
 					this.sectorsList = response.data.sectors;
+					this.level_1_label = response.data.level_1_label;
+					this.level_2_label = response.data.level_2_label;
+					this.stakeholder_label = response.data.stakeholder_label;
+					this.site_label = response.data.site_label;
+					this.indicator_label = response.data.indicator_label;
+					this.modalHeader = `Add ${this.level_1_label}`; 
 
 					$(document).ready(() => {
-					  
+						$('#level1Table').DataTable({
+                            pageLength: 10,
+                            lengthMenu: [10, 15, 20]
+						});
 					});
 				}
 			})
 			.catch(e => {
-				toastr.error('There was a problem loading programs from the database!!');
+				toastr.error('There was a problem loading programs from the database');
 			});
 	},
 	methods: {
@@ -53,19 +66,23 @@ new Vue({
          */
 		toggleModal: function(item = null) {
 			this.showModal = !this.showModal;
-			console.log('showModal : ', this.showModal);
-			if (item) {
-				this.isEdit = true;
-				this.modalHeader = `Edit ${item.name}`;
-				this.currentProgram = item;
-                this.name = item.name;
-				this.start_date = item.start_date;
-                this.end_date = item.end_date;				
+			if (!item) {
+				this.name = '';
+				this.sectors = [];
+				this.start_date = '';
+				this.end_date = '';		
 			}
 		},
 
+		/**
+         * Format date
+         * @param {string} date - date to be formatted
+         */
+        formatDate: function(date) {
+            return date ? moment(date, 'YYYY-MM-DDThh:mm:ssZ').format('YYYY-MM-DD') : '';
+        },
+
 		customFormatter(date) {
-			console.log('here : ', moment(date).format('DD.MM.YYYY'))
 			return moment(date).format('DD.MM.YYYY');
 		},
 
@@ -91,8 +108,6 @@ new Vue({
          * @param { boolean } saveNew - true if a user wants to make multiple posts
          */
 		async postData(saveNew) {
-			console.log('date : ', moment(this.start_date, 'DD.MM.YYYY').format('YYYY-MM-DDThh:mm:ssZ'))
-			console.log('saveNew : ', saveNew);
 			try {
 				const response = await this.makeRequest(
 					'POST',
@@ -104,9 +119,10 @@ new Vue({
                         end_date: this.end_date ? moment(this.end_date, 'DD.MM.YYYY').format('YYYY-MM-DDThh:mm:ssZ') : null
 					}
                 );
-				if (response) {
+				if (response.data) {
 					toastr.success(`${this.level_1_label} successfuly saved`);
-					location.reload();
+					this.programsList.unshift(response.data.program);
+
 					if (!saveNew) {
 						this.toggleModal();
 					}
@@ -122,14 +138,40 @@ new Vue({
 			}
 		},
 
+		/**
+         * open or close the profile type delete modal
+         * @param { object } data - profile type item
+         */
+		toggleDeleteModal: function(data) {
+			this.showDeleteModal = !this.showDeleteModal;
+			this.modalHeader = 'Confirm delete';
+			this.itemToDelete = data;
+        },
+
 		 /**
-		add the created fundcode to select options
-		**/
-		// addFundCodeOptions(fundCode) {
-		// 	codeSelect2 = $('#id_fund_code');
-		// 	var option = new Option(fundCode.name, fundCode.id, true, true);
-		// 	codeSelect2.append(option).trigger('change');
-		// },
+         * delete program
+         * @param { number } id - id of the program to be deleted
+         */
+		async deleteProgram(id) {
+			try {
+				const response = await this.makeRequest(
+					'DELETE',
+					`/workflow/level1/delete/${id}`
+				);
+				if (response.data.success) {
+					toastr.success(`${this.level_1_label} was successfuly Deleted`);
+					this.programsList = this.programsList.filter(item => +item.id !== +id);
+					// location.reload();
+					this.showDeleteModal = !this.showDeleteModal;
+					this.modalHeader = `Add ${this.level_1_label}`; 
+					this.itemToDelete = null;
+				} else {
+					toastr.error('There was a problem deleting program!!');
+				}
+			} catch (error) {
+				toastr.error('There was a server error!!');
+			}
+		},
 
         /**
          * make requests for CRUD operations using axios
@@ -145,7 +187,6 @@ new Vue({
 		},
 
 		disableDates(date, value) {
-			console.log('Event', new Date(value))
 			if(date === 'start') {
 				this.disabledDates.end = {
 					to: new Date(value)

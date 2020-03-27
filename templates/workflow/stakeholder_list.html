@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block content %} 
-<!-- {% include './modals/create_stakeholder_modal.html' %} -->
+{% include './modals/create_stakeholder_modal.html' %}
 
 <script>
   $(document).ready(() => {
@@ -88,15 +88,15 @@
             Export to CSV</a
           > -->
 
-          <!-- <a
+          <a
             role="button"
             class="btn btn-sm btn-primary"
             data-toggle="modal"
             data-target="#addStakeholderModal"
           >
            <i class="fa fa-plus"></i> {{user.activity_user.organization.stakeholder_label}}
-          </a> -->
-            <a
+          </a>
+            {% comment %} <a
               role="button"
               class="btn btn-primary btn-sm"
               id="show-modal"
@@ -113,7 +113,7 @@
                 <div slot="footer">
                   {% include 'ui-components/quick_entry_modal_footer.html' %}
                 </div>
-            </modal>
+            </modal> {% endcomment %}
         </div>
       </div>
     </div>
@@ -180,9 +180,9 @@
   </table>
 </div>
 
-{% include 'ui-components/vue_modal.html'%}
+{% comment %} {% include 'ui-components/vue_modal.html'%} {% endcomment %}
  
 {% endblock content %}
-{% block extra_js_in_body %}
+{% comment %} {% block extra_js_in_body %}
 <script type="text/javascript" src="{{ STATIC_URL }}vue.js/workflow/stakeholder.js"></script>
-{% endblock extra_js_in_body %}
+{% endblock extra_js_in_body %} {% endcomment %}

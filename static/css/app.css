@@ -28,6 +28,10 @@ a:focus, a:hover {
   text-decoration: none;
 }
 
+.help-text {
+  font-size: 10px;
+}
+
 /* styles expanded arrow icon */
 .btn-link {
   font-weight: 400;
