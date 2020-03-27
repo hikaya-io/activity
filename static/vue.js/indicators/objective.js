@@ -50,7 +50,7 @@ new Vue({
         this.objectives = [];
       });
 
-    this.makeRequest('GET', '/workflow/level1_program/')
+    this.makeRequest('GET', '/workflow/level1/')
       .then(response => {
         if (response.data) {
           this.programs_list = response.data.map(el => {

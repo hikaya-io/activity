@@ -74,7 +74,7 @@
     <tbody>
       <tr v-cloak v-for="program in programsList" v-if="program.name">
         <td>
-            <a v-bind:href="'/workflow/level1/edit/'+program.id+'/'" data-toggle="tooltip" :title="program.name">
+            <a v-bind:href="'/workflow/level1_edit/'+program.id+'/'" data-toggle="tooltip" :title="program.name">
                 [[ program.name ]]
             </a>
         </td>
@@ -122,7 +122,7 @@
               </li>
               <li role="separator" class="divider"></li>
               <li>
-                <a v-bind:href="'/workflow/level1/edit/'+program.id+'/'"
+                <a v-bind:href="'/workflow/level1_edit/'+program.id+'/'"
                   >Edit</a
                 >
               </li>

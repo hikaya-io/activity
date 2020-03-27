@@ -111,17 +111,18 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'POST',
-					`/workflow/level1/add`,
+					`/workflow/level1/`,
 					{
-						program_name: this.name,
-						sectors: this.sectors,
+						name: this.name,
+						sector: this.sectors,
 						start_date: this.start_date ? moment(this.start_date, 'DD.MM.YYYY').format('YYYY-MM-DDThh:mm:ssZ') : null,
                         end_date: this.end_date ? moment(this.end_date, 'DD.MM.YYYY').format('YYYY-MM-DDThh:mm:ssZ') : null
 					}
                 );
 				if (response.data) {
+					console.log('response.data : ', response.data)
 					toastr.success(`${this.level_1_label} successfuly saved`);
-					this.programsList.unshift(response.data.program);
+					this.programsList.unshift(response.data);
 
 					if (!saveNew) {
 						this.toggleModal();
@@ -156,12 +157,11 @@ new Vue({
 			try {
 				const response = await this.makeRequest(
 					'DELETE',
-					`/workflow/level1/delete/${id}`
+					`/workflow/level1/${id}`
 				);
-				if (response.data.success) {
+				if (response.status === 204) {
 					toastr.success(`${this.level_1_label} was successfuly Deleted`);
 					this.programsList = this.programsList.filter(item => +item.id !== +id);
-					// location.reload();
 					this.showDeleteModal = !this.showDeleteModal;
 					this.modalHeader = `Add ${this.level_1_label}`; 
 					this.itemToDelete = null;

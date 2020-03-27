@@ -101,73 +101,13 @@ def list_workflow_level1(request):
                'get_all_sectors': get_all_sectors,
                'active': ['workflow']}
    
-    return render(request, 'workflow/level1.html', context) 
-
-
-def level1_delete(request, pk):
-    """
-    Delete program
-    :param pk:
-    :return:
-    """
-    program = Program.objects.get(pk=int(pk))
-    program.delete()
-    return redirect('/workflow/level1')
-
-
-class ProgramDelete(GView):
-    """
-    View to Delete Level1 and return Json response
-    """
-    def delete(self, request, *args, **kwargs):
-        program_id = int(self.kwargs.get('id'))
-        program = Program.objects.get(
-            id=int(program_id)
-        )
-        program.delete()
-
-        try:
-            Program.objects.get(id=int(program_id))
-            return JsonResponse(dict(error='Failed'))
-
-        except Program.DoesNotExist:
-
-            return JsonResponse(dict(success=True))
-
-
-class ProgramCreate(GView):
-    """
-    Add program
-    """
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-
-        activity_user = ActivityUser.objects.filter(user=request.user).first()
-        program = Program(
-            name=data.get('program_name'),
-            start_date=data.get('start_date') if data.get('start_date') != '' else None,
-            end_date=data.get('end_date') if data.get('end_date') != '' else None,
-            organization=activity_user.organization
-        )
-        
-        program.save()
-        
-        try:
-            sectors = Sector.objects.filter(id__in=data.get('sectors'))
-            program.sector.set(sectors)
-            response_object = model_to_dict(program)
-            response_object['sector'] = [model_to_dict(sector) for sector in program.sector.all()]
-            
-            return JsonResponse(dict(program=response_object))
-
-        except Exception as e:
-            return JsonResponse(dict(error=str(e)))
+    return render(request, 'workflow/level1.html', context)
 
 
 class ProgramUpdate(UpdateView):
     model = Program
     template_name = 'workflow/program_form_tab_ui.html'
-    success_url = '/workflow/level1'
+    success_url = '/workflow/level1_list'
     form_class = ProgramForm
 
     # add the request to the kwargs
