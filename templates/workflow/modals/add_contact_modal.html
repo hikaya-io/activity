@@ -1,3 +1,5 @@
+<!-- Vue.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
 	$(document).ready(() => {
 		$('#stakeholder').select2({
@@ -72,8 +74,8 @@
 			stakeSelect2 = $('#stakeholder');
 			var option = new Option(stakeholder_name, +stakeholder_id, true, true);
 			stakeSelect2.append(option).trigger('change');
-			/** 
-			set stakehollder field to readOnly 
+			/**
+			set stakehollder field to readOnly
 			when Contact is created from Stakeholder details view
 			*/
 			stakeSelect2.attr('readonly', true);
