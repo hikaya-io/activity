@@ -1,6 +1,8 @@
 Vue.use(VeeValidate);
+Vue.component('ValidationProvider', VeeValidate.ValidationProvider);
+Vue.component('v-select', VueSelect.VueSelect);
 Vue.component('modal', {
-  template: '#modal-template'
+  template: '#modal-template',
 });
 
 // start app
@@ -246,6 +248,11 @@ new Vue({
       axios.defaults.xsrfHeaderName = 'X-CSRFToken';
       axios.defaults.xsrfCookieName = 'csrftoken';
       return axios({ method, url, data });
+    },
+
+    blur(field) {
+      const provider = this.$refs[field];
+      return provider.validate();
     }
   },
 
@@ -254,7 +261,7 @@ new Vue({
      * Check if objective form is valid
      */
     isFormValid() {
-      return this.name;
+      return this.name && this.program_id;
     }
   }
 });
