@@ -7,7 +7,7 @@
 <br/>
 <p align="center">
   <a href='https://travis-ci.org/hikaya-io/activity.svg?branch=dev'><img src='https://travis-ci.org/hikaya-io/activity.svg?branch=dev' alt='Travis Status' /></a>
-  <a href='https://coveralls.io/github/hikaya-io/activity?branch=dev'><img src='https://coveralls.io/repos/github/hikaya-io/activity/badge.svg?branch=dev' alt='Coverage Status' /></a>
+  <a href="https://codecov.io/gh/hikaya-io/activity"><img src="https://codecov.io/gh/hikaya-io/activity/branch/dev/graph/badge.svg" alt="Codecov badge" /></a>
   <a href='https://github.com/hikaya-io/activity/workflows/Activity/badge.svg'><img src='https://github.com/hikaya-io/activity/workflows/Activity/badge.svg' alt='GH Actions Status' /></a>
 </p>
 

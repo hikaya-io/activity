@@ -1,0 +1,37 @@
+<div class="btn-group" role="group" aria-label="">
+  <!-- filter by wfl1  -->
+  <div class="btn-group" role="group">
+    <button
+      type="button"
+      class="btn btn-sm btn-default dropdown-toggle"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      {{ user.activity_user.organization.level_1_label }}
+      <span
+        :class="{'fa fa-filter': filtered_program, 'fa fa-angle-down':!filtered_program}"
+      ></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <a role="menuitem" tabindex="-1" @click='setFilter(0)' 
+          >-- All --</a
+        >
+      </li>
+      {% for program in get_programs %} {% if program.name %}
+      <li>
+        <a
+          role="menuitem"
+          tabindex="-1"
+          @click='setFilter({{program.id}})'
+        >
+          {{ program.name }}</a
+        >
+      </li>
+      {% endif %} {% endfor %}
+    </ul>
+  </div>
+
+  <!-- filter by project status -->
+</div>

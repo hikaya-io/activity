@@ -22,7 +22,10 @@ new Vue({
     isEdit: false,
     currentObjective: null,
     itemToDelete: null,
-    modalHeader: 'Add objective'
+    modalHeader: 'Add objective',
+    filtered_objectives: [],
+    filtered_program: false,
+    filtered_program_id: 0
   },
   beforeMount: function() {
     this.makeRequest('GET', '/indicators/objective/')
@@ -39,12 +42,8 @@ new Vue({
               return el;
             });
           this.parent_obj_list = this.objectives;
-          $(document).ready(() => {
-            $('#objectivesTable').DataTable({
-              pageLength: 10,
-              lengthMenu: [10, 20, 30, 40]
-            });
-          });
+          this.filtered_objectives = this.objectives;
+          this.modalHeader = 'Add objective';
         }
       })
       .catch(e => {
@@ -60,13 +59,13 @@ new Vue({
             delete el['id'];
             return el;
           });
-          this.programs_list = response.data;
         }
       })
       .catch(e => {
         toastr.error('There was a problem loading data from the database');
       });
   },
+
   methods: {
     /**
      * open or close the objective form modal
@@ -82,7 +81,9 @@ new Vue({
         this.description = item.description;
         this.program_id = item.program_id;
         this.parent_id = item.parent_id;
-        this.parent_obj_list = this.objectives.filter(el => el.id !== item.id);
+        this.parent_obj_list = this.filtered_objectives.filter(
+          el => el.id !== item.id
+        );
       } else {
         this.isEdit = false;
         this.name = '';
@@ -90,7 +91,7 @@ new Vue({
         this.program_id = '';
         this.parent_id = '';
         this.modalHeader = 'Add objective';
-        this.parent_obj_list = this.objectives;
+        this.parent_obj_list = this.filtered_objectives;
       }
     },
 
@@ -159,6 +160,7 @@ new Vue({
           delete response.data['program'];
           delete response.data['parent'];
           this.objectives.unshift(response.data);
+          this.setFilter(this.filtered_program_id);
           if (!saveNew) {
             this.toggleModal();
           }
@@ -200,6 +202,7 @@ new Vue({
           });
           this.objectives = newObjectives;
           this.objectives.unshift(response.data);
+          this.setFilter(this.filtered_program_id);
           this.isEdit = false;
           this.name = '';
           this.description = '';
@@ -227,6 +230,7 @@ new Vue({
         if (response.status === 204) {
           toastr.success('Objective is deleted');
           this.objectives = this.objectives.filter(item => +item.id !== +id);
+          this.setFilter(this.filtered_program_id);
           this.showDeleteModal = !this.showDeleteModal;
           this.modalHeader = 'Add Objective';
         } else {
@@ -234,6 +238,19 @@ new Vue({
         }
       } catch (error) {
         toastr.error('There was a server error');
+      }
+    },
+
+    // Set workflow level 1 filter
+    setFilter: function(id) {
+      this.filtered_program = true;
+      this.filtered_program_id = id;
+      if (id === 0) {
+        this.filtered_objectives = this.objectives;
+      } else {
+        this.filtered_objectives = this.objectives.filter(
+          el => el.program_id === id
+        );
       }
     },
 
