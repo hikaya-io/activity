@@ -79,7 +79,7 @@
   <link rel="stylesheet" href="{% static 'select2-bootstrap-theme/dist/select2-bootstrap.min.css' %}">
 
   <link href="{% static 'css/app.css' %}" rel="stylesheet" type="text/css" />
-  
+
   {% block extra_js_in_header %}
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script type="text/javascript" src="{% static 'js/jquery-3.1.4.min.js' %}"></script>
@@ -393,16 +393,12 @@
       {% if "links.html"|template_exists %} {% include "links.html" %}
       {% else %}
       <div class="column col-xs-16 text-right">
-<<<<<<< HEAD
         <a href="https://hikaya.io" class="text-muted"><b>Hikaya</b></a> |
         <a href="https://help.hikaya.io" class="text-muted"><b>Documentation</b></a>
-        |
         <a href="https://github.com/hikaya-io/Activity-CE/blob/master/LICENSE" class="text-muted"><b>License</b></a>
-=======
         <a href="https://hikaya.io" class="text-muted">© 2020 Hikaya</a>
         <a href="https://docs.hikaya.io" class="text-muted">Documentation</a>
         <a href="https://github.com/hikaya-io/activity/blob/master/LICENSE" class="text-muted">License</a>
->>>>>>> a73bb8f9b31a553ae099846a58f176614182cedd
       </div>
       {% endif %}
     </div>
