@@ -32,10 +32,15 @@ run_linter() {
 #@--- run tests --- @#
 run_tests() {
     echo "++++++++++++++++ Run tests ++++++++++++++++"
-    coverage run --source=activity manage.py test
+    coverage run  manage.py test
     coverage report
-    coveralls
 }
+
+#@--- function to report coverage ---@#
+report_coverage() {
+    bash <(curl -s https://codecov.io/bash) 
+}
+
 
 #@--- Main function ---@#
 main() {
@@ -51,6 +56,9 @@ main() {
 
     #@--- Run tests ---@#
     run_tests
+
+    #@--- Report Coverage ---@#
+    report_coverage
 }
 
 #@--- Run main function ---@#
