@@ -2913,9 +2913,6 @@ class ProjectStatusView(generics.ListCreateAPIView, generics.RetrieveUpdateDestr
         return ProjectStatus.objects.filter(organization=organization)
 
 
-"""
-GetLevel1DependantData: sectors, organization, programs
-"""
 class GetLevel1DependantData(GView):
     """
     View to fetch all Sectors
@@ -2941,9 +2938,6 @@ class GetLevel1DependantData(GView):
             return JsonResponse(dict(error=str(e)))
 
 
-"""
-GetProjectDependantData: level1
-"""
 class GetProjectDependantData(GView):
     """
     View to fetch all level1
@@ -2964,9 +2958,6 @@ class GetProjectDependantData(GView):
             return JsonResponse(dict(error=str(e)))
 
 
-"""
-GetStakeholderDependantData: stakeholder type, sectors, organization
-"""
 class GetStakeholderDependantData(GView):
     """
     View to fetch all Sectors, stakeholder types
