@@ -40,7 +40,7 @@ Once all your changes have been committed to the repo, and before pushing them, 
 
 Open up your terminal and follow the instructions listed below.
 
-See [these instructions for addtional information](#extra-information).
+See [these instructions for additional information](#extra-information).
 
 ## Clone the github repository
 
@@ -70,7 +70,7 @@ $ pip install virtualenv
 ### Create virtualenv
 
 ```bash
-$ virtualenv --no-site-packages <myvirtualenvironmentname>
+$ virtualenv <myvirtualenvironmentname>
 ```
 
 - use no site packages to prevent virtualenv from seeing your global packages
@@ -105,7 +105,7 @@ $ brew install gdal
 ```
 
 On Windows:
-- You will need to donwload gdal core and gdal installer for your version of python.
+- You will need to download gdal core and gdal installer for your version of python.
 - Please read the following [instructions](https://pypi.org/project/GDAL/#windows) on how to properly install and test gdal.
 
 2. **Pango**
