@@ -61,22 +61,25 @@ $ cd activity
 or similar for your OS.
 
 ## Setting up on Virtual Environment
-### Install virtualenv
+You can setup virtual environment either using virtualenv or pipenv.
+
+### Using virtualenv
+#### Install virtualenv
 
 ```bash
 $ pip install virtualenv
 ```
 
-### Create virtualenv
+#### Create virtualenv
 
 ```bash
 $ virtualenv <myvirtualenvironmentname>
 ```
 
-- use no site packages to prevent virtualenv from seeing your global packages
-- . <myvirtualenvironmentname>/bin/activate allows us to just use pip from the command-line by adding to the path rather then full path.
+- by default it should prevent virtualenv from seeing your global packages
+- . <myvirtualenvironmentname>/bin/activate allows us to just use pip from the command-line by adding to the path rather than the full path.
 
-### Activate virtualenv
+#### Activate virtualenv
 
 ```bash
 $ source <myvirtualenvironmentname>/bin/activate
@@ -88,7 +91,19 @@ for Windows users:
 $ source <myvirtualenvironmentname>/script/activate
 ```
 
+### Using pipenv
+#### Install pipenv
+```bash
+$ pip install pipenv
+```
+
+#### Create and activate virtual environment
+```bash
+$ pipenv shell
+```
+
 ### Install requirements
+Once your virtual environment is running, install the requirements.
 
 ```bash
 $ pip install -r requirements.txt
@@ -302,4 +317,4 @@ _NB:_ When you use these SQL queries, beware of not writing the quotes.
 <br/>
 
 # Contributing
-Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team). We are always looking for a fresh set of :eyes: who want to contribute to **Activity**. Feel free to checkout our [contribution page](./CONTRIBUTING.md) or  [development page](https://github.com/hikaya-io/wiki/blob/master/start/development-process.md) for details on our work process. You can also reach out by creating an issue and we'll help you get started!
+Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team). We are always looking for a fresh set of :eyes: who want to contribute to **Activity**. Feel free to checkout our [contribution page](./CONTRIBUTING.md) and also learn more about our [development process](https://github.com/hikaya-io/wiki/blob/master/start/development-process.md). You can reach out by creating an issue and we'll help you get started!
