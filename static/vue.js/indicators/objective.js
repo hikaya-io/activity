@@ -81,7 +81,7 @@ new Vue({
         this.description = item.description;
         this.program_id = item.program_id;
         this.parent_id = item.parent_id;
-        this.parent_obj_list = this.filtered_objectives;
+        this.parent_obj_list = this.filtered_objectives.filter(obj => obj.id !== item.id);
       } else {
         this.isEdit = false;
         this.name = '';
