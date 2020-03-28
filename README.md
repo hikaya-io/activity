@@ -302,4 +302,4 @@ _NB:_ When you use these SQL queries, beware of not writing the quotes.
 <br/>
 
 # Contributing
-Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team). We are always looking for a fresh set of :eyes: who want to contribute to **Activity**. Feel free to checkout our [contribution page](./CONTRIBUTING.md) or reach out by creating an issue and we'll help you get started!
+Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team). We are always looking for a fresh set of :eyes: who want to contribute to **Activity**. Feel free to checkout our [contribution page](./CONTRIBUTING.md) or  [development page](https://github.com/hikaya-io/wiki/blob/master/start/development-process.md) for details on our work process. You can also reach out by creating an issue and we'll help you get started!
