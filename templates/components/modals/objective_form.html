@@ -35,10 +35,13 @@
           class="hikaya-select"
           inputId="parent"
           name="parent"
+          label="name"
           :searchable="false"
           v-model="parent_id"
           placeholder="Choose a parent objective"
-          :options="parent_obj_list.map(objective => ({value: objective.id, label: objective.name}))">
+          :options="parent_obj_list"
+          :reduce="objective => objective.id"
+      >
         <template #open-indicator="{ attributes }">
           <i class="caret"></i>
         </template>
@@ -61,7 +64,9 @@
            v-model="program_id"
            @search:blur="blur('program')"
            placeholder="Choose a {{ user.activity_user.organization.level_1_label }}"
-           :options="programs_list.map(program => ({value: program.program_id, label: program.name}))"
+           label="name"
+           :options="programs_list"
+           :reduce="program => program.program_id"
            :class="{'hikaya-select': true, 'is-invalid': !!errors.length}"
           >
             <template #open-indicator="{ attributes }">
