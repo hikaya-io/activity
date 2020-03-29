@@ -45,10 +45,10 @@
             <div class="col-md-6 form-group">
                 <label for="startDate">Start Date</label>
                 <vuejs-datepicker :bootstrap-styling="true"
+                    input-class="background-color: white"
                     name="start_date" 
                     :value="start_date" 
                     :clear-button=true
-                    input-class="background-color: white"
                     v-model="start_date" 
                     :format="customFormatter"
                     @selected="disableDates('start', $event)"
@@ -60,12 +60,13 @@
             <div class="col-md-6 form-group">
                 <label for="endDate">End Date</label>
                 <vuejs-datepicker :bootstrap-styling="true"
+                    input-class="background-color: white"
                     name="end_date" 
                     :value="end_date" 
                     :clear-button=true
-                    input-class="background-color: white"
                     v-model="end_date" 
                     placeholder="End Date"
+                    :format="customFormatter"
                     @selected="disableDates('end', $event)"
                     :disabled-dates="disabledDates.end"
                     >

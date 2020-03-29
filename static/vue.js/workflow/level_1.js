@@ -66,6 +66,7 @@ new Vue({
          */
 		toggleModal: function(item = null) {
 			this.showModal = !this.showModal;
+			this.modalHeader = `Add ${this.level_1_label}`; 
 			if (!item) {
 				this.name = '';
 				this.sectors = [];
@@ -120,7 +121,6 @@ new Vue({
 					}
                 );
 				if (response.data) {
-					console.log('response.data : ', response.data)
 					toastr.success(`${this.level_1_label} successfuly saved`);
 					this.programsList.unshift(response.data);
 
@@ -135,7 +135,7 @@ new Vue({
 					this.$validator.reset();
 				}
 			} catch (error) {
-				toastr.error('There was a problem saving your data!!');
+				toastr.error('There was a problem saving your data');
 			}
 		},
 
@@ -166,10 +166,10 @@ new Vue({
 					this.modalHeader = `Add ${this.level_1_label}`; 
 					this.itemToDelete = null;
 				} else {
-					toastr.error('There was a problem deleting program!!');
+					toastr.error('There was a problem deleting program');
 				}
 			} catch (error) {
-				toastr.error('There was a server error!!');
+				toastr.error('There was a server error');
 			}
 		},
 
