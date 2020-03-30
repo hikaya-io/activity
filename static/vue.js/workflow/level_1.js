@@ -22,6 +22,8 @@ new Vue({
 		stakeholder_label: '',
 		site_label: '',
 		indicator_label: '',
+		minDate: '',
+		maxDate: '',
 		showModal: false,
 		isEdit: false,
 		currentProgram: null,
@@ -104,6 +106,20 @@ new Vue({
 			});
 		},
 
+		/**
+         * set minimum date
+         */
+		setMinDate: function() {
+			this.minDate = this.start_date;
+		},
+
+		/**
+         * set maximum date
+         */
+		setMaxDate: function() {
+			this.maxDate = this.end_date;
+		},
+
         /**
          * create new fund code
          * @param { boolean } saveNew - true if a user wants to make multiple posts
@@ -116,8 +132,8 @@ new Vue({
 					{
 						name: this.name,
 						sector: this.sectors,
-						start_date: this.start_date ? moment(this.start_date, 'DD.MM.YYYY').format('YYYY-MM-DDThh:mm:ssZ') : null,
-                        end_date: this.end_date ? moment(this.end_date, 'DD.MM.YYYY').format('YYYY-MM-DDThh:mm:ssZ') : null
+						start_date: this.start_date ? moment(this.start_date, 'YYYY-MM-DD').format('YYYY-MM-DDThh:mm:ssZ') : null,
+                        end_date: this.end_date ? moment(this.end_date, 'YYYY-MM-DD').format('YYYY-MM-DDThh:mm:ssZ') : null
 					}
                 );
 				if (response.data) {

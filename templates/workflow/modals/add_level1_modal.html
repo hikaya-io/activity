@@ -42,35 +42,40 @@
             <p class="help-text">Hold down <span style="font-weight: bold">Control</span> or <span style="font-weight: bold">Command</span> on a Mac, to select more than one</p>
         </div>
         <div class="row">
-            <div class="col-md-6 form-group">
-                <label for="startDate">Start Date</label>
-                <vuejs-datepicker :bootstrap-styling="true"
-                    input-class="background-color: white"
-                    name="start_date" 
-                    :value="start_date" 
-                    :clear-button=true
-                    v-model="start_date" 
-                    :format="customFormatter"
-                    @selected="disableDates('start', $event)"
-                    :disabled-dates="disabledDates.start"
-                    placeholder="Start Date">
-                </vuejs-datepicker>
+            <div class="col-md-6">
+                <div class="form-group" id="div_start_date">
+                    <label for="startDate">Start Date</label>
+                    <input
+                        type="date"
+                        id="startDate"
+                        name="startDate"
+                        :class="{ 
+                            'form-control': true, 
+                            }"
+                        style="width:200px;"
+                        v-model="start_date" 
+                        placeholder="Start Date"
+                        v-on:change="setMinDate()"
+                        :max="maxDate"/>
+                </div>
             </div>
 
-            <div class="col-md-6 form-group">
-                <label for="endDate">End Date</label>
-                <vuejs-datepicker :bootstrap-styling="true"
-                    input-class="background-color: white"
-                    name="end_date" 
-                    :value="end_date" 
-                    :clear-button=true
-                    v-model="end_date" 
-                    placeholder="End Date"
-                    :format="customFormatter"
-                    @selected="disableDates('end', $event)"
-                    :disabled-dates="disabledDates.end"
-                    >
-                </vuejs-datepicker>
+            <div class="col-md-6">
+                <div class="form-group" id="div_end_date">
+                    <label for="endDate">End Date</label>
+                    <input
+                        type="date"
+                        id="endDate"
+                        name="endDate"
+                        :class="{ 
+                            'form-control': true, 
+                            }"
+                        style="width:200px;"
+                        v-model="end_date" 
+                        placeholder="End Date"
+                        v-on:change="setMaxDate()"
+                        :min="minDate"/>
+                </div>
             </div>
         </div>
     </div>
