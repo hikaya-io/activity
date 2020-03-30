@@ -3,8 +3,6 @@
 {% include './collected_data_table2.html'%}
 {% include 'ui-components/vue_modal.html'%}
 
-
-
 <div id="indicators_list" class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
@@ -102,7 +100,7 @@
             <ul class="dropdown-menu nav">
               <li class="dropdown-header">Related</li>
               <!-- <li><a href="">Results</a></li> -->
-              <li><a @click="toggleTargetModal({{indicator.id}})">Add target periods</a></li>
+              <li><a @click="toggleTargetModal({{indicator.id}})">Target periods</a></li>
               <li><a href="/indicators/indicator_update/{{indicator.id}}/">Objectives</a></li>
               <li><a href="/indicators/indicator_update/{{indicator.id}}/">Levels</a></li>
               <li><a href="/indicators/indicator_update/{{indicator.id}}/">Sectors</a></li>

@@ -16,22 +16,32 @@ new Vue({
         target_frequency_start: '',
         showModal: false,
         showDeleteModal: false,
-        modalHeader: "Add Target Period",
-        isEdit: '',
-        currentPeriod: null,
-        itemToDelete: null,
+        modalHeader: "",
+        isEdit: false,
         show: false,
         showTable: false,
         disabledClass: false,
         targets: [],
         sum: 0,
-        target_value: [0, ],
+        target_value: {},
+        target_period_data: [],
         frequencies: [{"id": "3", "text":"Annual"},
                       {"id": "4", "text":"Semi-annual"},
                       {"id": "5", "text":"Tri-annual"},
                       {"id": "6", "text":"Quarterly"},
                       {"id": "7", "text":"Monthly"}],       
     },
+    beforeMount: function() {
+		this.makeRequest('GET', '/indicators/periodic_target/')
+			.then(response => {
+				response.data.forEach(target => {
+                    this.target_period_data.push(target)
+                })
+			})
+			.catch(e => {
+				toastr.error('There was a problem loading targets from the database');
+			});
+	},
     methods: {
         makeRequest(method, url, data = null) {
             axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -41,9 +51,11 @@ new Vue({
 
         updateSum: function(){
             this.sum = 0
-            this.target_value.forEach(value => {
-                this.sum += parseInt(value)
-            });
+            for (var key in this.target_value) {
+                if (this.target_value.hasOwnProperty(key)) {
+                    this.sum += parseInt(this.target_value[key]) 
+                }
+            }
             
         },
 
@@ -89,7 +101,7 @@ new Vue({
 
         removeTargetPeriods: function(){
             this.targets= [],
-            this.target_value= [0, ]
+            this.target_value= {}
             this.sum= 0
             this.show=false
             this.showTable = false
@@ -203,9 +215,7 @@ new Vue({
             } 
         },
 
-
         toggleTargetModal: function(indicator_id) {
-            this.showModal = !this.showModal
             this.indicator_id = indicator_id
             this.overall_target = ''
             this.baseline= 0
@@ -214,11 +224,40 @@ new Vue({
             this.number_of_target_periods= '1'
             this.target_frequency_start= ''
             this.targets= [],
-            this.target_value= [0, ]
+            this.target_value= {}
             this.sum= 0
             this.show=false
             this.showTable = false
             this.disabledClass = false
+            this.isEdit = false
+            this.modalHeader = "Add target periods"
+
+            this.target_period_data.forEach(target =>{
+                if(target.indicator.indicator_id == this.indicator_id){
+                    console.log(target)
+                    this.isEdit = true
+                    this.overall_target = target.indicator.indicator_lop
+                    this.baseline= target.indicator.baseline
+                    this.rationale= target.indicator.rationale
+                    const id = target.id
+                    const start_date = target.start_date
+                    const end_date = target.end_date
+                    const period = target.period
+                    const target_value = target.target
+                    this.targets = [...this.targets, {id, start_date, end_date, period, target_value}]
+                    
+                }
+            })
+            if(this.isEdit){
+                this.targets.reverse()
+                this.modalHeader = 'Edit target period'
+                this.targets.forEach(target => {
+                    this.target_value[target.id] = target.target_value
+                })
+                this.showTable = true
+            }
+   
+            this.showModal = !this.showModal
 
         },
 

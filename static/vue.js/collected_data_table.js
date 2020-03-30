@@ -81,7 +81,6 @@ $(document).ready(() => {
               this.show_disaggregations= false
 
               if (item) {
-                console.log(item)
                 this.isEdit = true;
                 this.modalHeader = `Edit Result`;
                 this.currentResult = item;

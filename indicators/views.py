@@ -168,7 +168,8 @@ class IndicatorList(ListView):
             program__organization=organization)
         get_indicator_types = IndicatorType.objects.all()
         get_documentation = Documentation.objects.all()
-        get_periodic_target = PeriodicTarget.objects.order_by('customsort', 'create_date', 'period')
+        get_periodic_target = PeriodicTarget.objects.distinct().filter(
+            indicator__program__organization=organization)
 
         program_id = int(self.kwargs['program'])
         indicator_id = int(self.kwargs['indicator'])
@@ -2237,3 +2238,7 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
             indicator.update(**indicator_data)
             return Response(serialized.data, status=status.HTTP_201_CREATED)
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization
+        return PeriodicTarget.objects.filter(indicator__program__organization=organization)
