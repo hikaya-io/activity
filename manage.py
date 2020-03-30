@@ -5,10 +5,11 @@ import sys
 if __name__ == "__main__":
 
     debug = os.environ.get('DEBUG', None)
+    settings = 'activity.settings.local'
     try:
 
         if debug is False and debug is not None:
-            settings = 'activity.settings.local'
+            settings = 'activity.settings.production'
 
         elif 'test' in sys.argv:
             settings = 'activity.settings.test'
