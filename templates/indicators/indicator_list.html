@@ -100,7 +100,7 @@
             <ul class="dropdown-menu nav">
               <li class="dropdown-header">Related</li>
               <!-- <li><a href="">Results</a></li> -->
-              <li><a @click="toggleTargetModal({{indicator.id}})">Target periods</a></li>
+              <li><a @click="toggleTargetModal({{indicator.id}})" >Add/Edit target periods</a></li>
               <li><a href="/indicators/indicator_update/{{indicator.id}}/">Objectives</a></li>
               <li><a href="/indicators/indicator_update/{{indicator.id}}/">Levels</a></li>
               <li><a href="/indicators/indicator_update/{{indicator.id}}/">Sectors</a></li>
@@ -124,6 +124,25 @@
     </div>
     <div slot="footer">
       {% include 'indicators/forms/target_period_form_footer.html' %}
+    </div>
+    <h4 slot="header">[[modalHeader]]</h4>
+  </modal>
+  <modal v-if=showDeleteModal @close="showDeleteModal = false" >
+    <div slot="body">
+      <p>Are you sure you want to delete target periods? Any results added will also be deleted</p>
+    </div>
+    <div slot="footer">
+      <div class="text-right">
+        <button type="submit" class="btn btn-close" @click="showDeleteModal = false, modalHeader = 'Edit Target Modal'">
+          Cancel
+        </button>
+        <button
+          class="btn btn-danger"
+          @click=deleteTargets()
+        >
+          Delete
+        </button>
+      </div>
     </div>
     <h4 slot="header">[[modalHeader]]</h4>
   </modal>

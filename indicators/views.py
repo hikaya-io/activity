@@ -2220,6 +2220,10 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
     serializer_class = PeriodicTargetSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization
+        return PeriodicTarget.objects.filter(indicator__program__organization=organization)
+
     def post(self, request, *args, **kwargs):
         all_data = request.data['data']
         indicator_data = {
@@ -2236,9 +2240,47 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
             serialized.save(indicator_id=all_data['indicator_id'])
             indicator = Indicator.objects.filter(id=all_data['indicator_id'])
             indicator.update(**indicator_data)
-            return Response(serialized.data, status=status.HTTP_201_CREATED)
+            return Response({'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data}, status=status.HTTP_201_CREATED)
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get_queryset(self):
-        organization = self.request.user.activity_user.organization
-        return PeriodicTarget.objects.filter(indicator__program__organization=organization)
+    def patch(self, request, *args, **kwargs):
+        targets = self.get_queryset()
+        data = request.data['data']
+        periodic_data = data['periodic_targets']
+        updated_data = []
+        indicator_data = {
+            'lop_target': data['indicator_LOP'],
+            'baseline': data['indicator_baseline'],
+            'rationale_for_target': data['rationale'],
+        }
+
+        for periodic_target in periodic_data:
+            if periodic_target["target_value"] != periodic_target["target"]:
+                updated_data.append(periodic_target)
+
+        for target in targets:
+            for data in updated_data:
+                if data['pk'] == target.id:
+                    serializer = self.serializer_class(instance=target, data=data,)
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
+
+        indicator = Indicator.objects.filter(id=data['indicator_id'])
+        indicator.update(**indicator_data)
+
+        return Response({'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data},
+                        status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        id = request.data['id']
+        queryset = PeriodicTarget.objects.filter(indicator__id=id)
+        queryset.delete()
+        indicator_data = {
+            'lop_target': None,
+            'baseline': None,
+            'rationale_for_target': None,
+        }
+        indicator = Indicator.objects.filter(id=id)
+        indicator.update(**indicator_data)
+        return Response({'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data},
+                        status=status.HTTP_200_OK)

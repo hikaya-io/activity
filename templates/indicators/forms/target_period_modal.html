@@ -64,7 +64,8 @@
                           }"
                         style="width:200px;"
                         @change=showFields()
-                        v-model="target_frequency" 
+                        v-model="target_frequency"
+                        :readonly= "disabledClass" 
                         v-validate="'required'">
                         <option value="" disabled>Select target period</option>
                         <option v-for="frequency in frequencies" :value="frequency.id">
@@ -127,7 +128,19 @@
               <div class="row" id="id_control_btns">
                 <div class="col-md-12">
                   <div class="form-group text-right" v-if="show">
-                    <button
+                    <span v-if="isEdit">
+                      <button
+                      type="button"
+                      class="btn btn-link btn-link-warning"
+                      id="clearTargets"
+                      :disabled= "!disabledClass"
+                      @click= toggleDeleteModal()
+                    >
+                      Remove all targets
+                    </button>
+                  </span>
+                    <span v-else>
+                      <button
                       type="button"
                       class="btn btn-link btn-link-warning"
                       id="clearTargets"
@@ -136,6 +149,8 @@
                     >
                       Remove all targets
                     </button>
+                  </span>
+                    
                     <button type="button" 
                             class="btn btn-warning"
                             id="addTargetsBtn"
@@ -161,7 +176,7 @@
                                 v-on:keyup="updateSum()"
                                 type="number" 
                                 :id="target.id"
-                                v-model= "target_value[target.id]"
+                                v-model= "target_value[target.pk]"
                                 name="target value"
                                 v-validate="'required'"/>
                                 <span v-show="errors.has('target value')" class="help is-danger">[[ errors.first('target value') ]]</span>
