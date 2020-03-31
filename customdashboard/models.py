@@ -26,11 +26,6 @@ class ProgramNarratives(models.Model):
         return self.narrative_title
 
 
-class ProgramNarrativesAdmin(admin.ModelAdmin):
-    list_display = ('narrative', 'create_date', 'edit_date')
-    display = 'Overlay Narrative'
-
-
 class Link(models.Model):
     link = models.CharField("Link to Service", max_length=200, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
@@ -38,11 +33,6 @@ class Link(models.Model):
 
     def __str__(self):
         return self.link
-
-
-class LinkAdmin(admin.ModelAdmin):
-    list_display = ('link', 'create_date', 'edit_date')
-    display = 'Link'
 
 
 class ProgramLinks(models.Model):
@@ -81,9 +71,3 @@ class JupyterNotebooks(models.Model):
     def __str__(self):
 
         return self.name
-
-
-class JupyterNotebooksAdmin(admin.ModelAdmin):
-    list_display = ('name', 'program', 'very_custom_dashboard',
-                    'create_date', 'edit_date')
-    display = 'Jupyter Notebooks'
