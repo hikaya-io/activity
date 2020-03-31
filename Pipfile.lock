@@ -163,7 +163,7 @@
                 "sha256:89c2007ca4fa5b351a51a279eccff298520783b713bf28efb89dfb81c80ea49b"
             ],
             "index": "pypi",
-            "version": "==2.2.7"
+            "version": "==2.2.10"
         },
         "django-appconf": {
             "hashes": [
