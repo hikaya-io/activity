@@ -20,7 +20,30 @@
             />
             <span v-show="errors.has('name')" class="help is-danger">[[ errors.first('name') ]]</span>
         </div>
+
         <div
+        :class="{
+              'form-group': true
+          }"
+      >
+        <label for="sectors">Sectors</label>
+        <v-select
+            multiple
+            class="hikaya-select"
+            inputId="sectors"
+            name="sectors"
+            label="sector"
+            :searchable="false"
+            v-model="sectors"
+            placeholder="Choose sectors"
+            :options="sectorsList"
+            :reduce="sector => sector.id"
+        > 
+        </v-select>
+      </div>
+
+
+        <!-- <div
             :class="{
                 'form-group': true
             }"
@@ -40,7 +63,7 @@
                     :value=sector.id>[[ sector.sector ]]</option>
             </select>
             <p class="help-text">Hold down <span style="font-weight: bold">Control</span> or <span style="font-weight: bold">Command</span> on a Mac, to select more than one</p>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group" id="div_start_date">

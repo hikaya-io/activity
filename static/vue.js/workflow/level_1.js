@@ -1,6 +1,6 @@
 Vue.use(VeeValidate);
-// Vue.component('ValidationProvider', VeeValidate.ValidationProvider);
-// Vue.component('v-select', VueSelect.VueSelect);
+Vue.component('ValidationProvider', VeeValidate.ValidationProvider);
+Vue.component('v-select', VueSelect.VueSelect);
 Vue.component('modal', {
 	template: '#modal-template',
 });
