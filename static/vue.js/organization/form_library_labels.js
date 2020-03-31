@@ -6,7 +6,7 @@ new Vue({
 	el: '#formLibraryLabelsForm',
 	data: {
         organization: null,
-        beneficiary_label: '',
+        individual_label: '',
 		training_label: '',
         distribution_label: null,
 	},
@@ -15,7 +15,7 @@ new Vue({
 			.then(response => {
 				if (response.data) {
 					this.organization = response.data[0];
-                    this.beneficiary_label = this.organization.beneficiary_label;
+                    this.individual_label = this.organization.individual_label;
                     this.training_label = this.organization.training_label;
                     this.distribution_label = this.organization.distribution_label;
 				}
@@ -36,7 +36,7 @@ new Vue({
 					'PUT',
 					`/workflow/organization/${this.organization.id}`,
 					{
-						beneficiary_label: this.beneficiary_label,
+						individual_label: this.individual_label,
 						training_label: this.training_label,
 						distribution_label: this.distribution_label,
                     }
@@ -44,7 +44,7 @@ new Vue({
 				if (response) {
 					toastr.success('Form library labels were successfully updated');
 					this.organization = {
-						beneficiary_label: this.beneficiary_label,
+						individual_label: this.individual_label,
 						training_label: this.training_label,
 						distribution_label: this.distribution_label,
 					}
@@ -58,7 +58,7 @@ new Vue({
          * Cancel edit form library labels
          */
 		cancelUpdate() {
-			this.beneficiary_label = this.organization.beneficiary_label;
+			this.individual_label = this.organization.individual_label;
 			this.training_label = this.organization.training_label;
 			this.distribution_label = this.organization.distribution_label;
 		},

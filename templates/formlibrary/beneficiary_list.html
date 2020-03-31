@@ -3,7 +3,7 @@
 
 <script>
     $(document).ready(() => {
-        $('#beneficiariesTable').DataTable();
+        $('#individualsTable').DataTable();
     })
 </script>
 
@@ -11,14 +11,14 @@
   {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">My Dashboard</a></li>
-    <li class="active">{{ request.user.activity_user.organization.beneficiary_label }}</li>
+    <li class="active">{{ request.user.activity_user.organization.individual_label }}</li>
   </ul>
   {% endblock %}
 
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">{{ request.user.activity_user.organization.beneficiary_label }} List</h4>
+      <h4 class="page-title">{{ request.user.activity_user.organization.individual_label }} List</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
@@ -36,7 +36,7 @@
             data-toggle="modal"
             data-target="#addIndividualModal"
           >
-            <i class="fa fa-plus"></i> {{ request.user.activity_user.organization.beneficiary_label }}
+            <i class="fa fa-plus"></i> {{ request.user.activity_user.organization.individual_label }}
           </button>
         </div>
       </div>
@@ -44,10 +44,10 @@
   </div>
 
   <!-- Table -->
-  <table class="table" id="beneficiariesTable">
+  <table class="table" id="individualsTable">
     <thead>
       <tr>
-        <th>{{ request.user.activity_user.organization.beneficiary_label }} Name</th>
+        <th>{{ request.user.activity_user.organization.individual_label }} Name</th>
         <th>Gender</th>
         <th>Age</th>
         <th>Date created</th>

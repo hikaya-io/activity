@@ -315,7 +315,7 @@ def public_dashboard(request, id=0, public=0):
     for t in get_trainings:
         training_id_list.append(t.id)
 
-    get_beneficiaries = Individual.objects.all().filter(
+    get_individuals = Individual.objects.all().filter(
         training__in=training_id_list)
 
     get_project_completed = []
@@ -356,7 +356,7 @@ def public_dashboard(request, id=0, public=0):
         'get_locations': get_locations,
         'get_site_profile_indicator': get_site_profile_indicator,
         'get_site_profile_indicator_count': get_site_profile_indicator.count(),
-        'get_beneficiaries': get_beneficiaries,
+        'get_individuals': get_individuals,
         'get_distributions': get_distributions, 'get_trainings': get_trainings,
         'get_project_completed': get_project_completed,
         'get_all_projects': get_all_projects,

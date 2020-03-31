@@ -150,7 +150,7 @@ class Organization(models.Model):
     indicator_label = models.CharField('Indicator Organization label',
                                        default='Indicators',
                                        max_length=255)
-    beneficiary_label = models.CharField('Individual Organization label', default='Beneficiaries', max_length=255)
+    individual_label = models.CharField('Individual Organization label', default='Individuals', max_length=255)
     training_label = models.CharField('Training Organization label', default='Training', max_length=255)
     distribution_label = models.CharField('Distribution Organization label', default='Distribution', max_length=255)
     theme_color = models.CharField('Organization theme color',
@@ -1130,12 +1130,12 @@ class ProjectAgreement(models.Model):
         "Expected duration", help_text="[MONTHS]/[DAYS]", blank=True,
         null=True, max_length=255)
     individual_type = models.CharField(
-        "Type of direct beneficiaries",
+        "Type of direct individuals",
         help_text="i.e. Farmer, Association, Student, Govt, etc.",
         max_length=255,
         blank=True, null=True)
-    estimated_num_direct_beneficiaries = models.CharField(
-        "Estimated number of direct beneficiaries",
+    estimated_num_direct_individuals = models.CharField(
+        "Estimated number of direct individuals",
         help_text="Please provide achievable estimates as we will "
                   "use these as our 'Targets'",
         max_length=255,
@@ -1144,9 +1144,9 @@ class ProjectAgreement(models.Model):
         "Average Household Size",
         help_text="Refer to Form 01 - Community Profile",
         max_length=255, blank=True, null=True)
-    estimated_num_indirect_beneficiaries = models.CharField(
-        "Estimated Number of indirect beneficiaries",
-        help_text="This is a calculation - multiply direct beneficiaries "
+    estimated_num_indirect_individuals = models.CharField(
+        "Estimated Number of indirect individuals",
+        help_text="This is a calculation - multiply direct individuals "
                   "by average household size",
         max_length=255,
         blank=True, null=True)
@@ -1425,8 +1425,8 @@ class ProjectComplete(models.Model):
     """
     Start Clean Up - These can be removed
     """
-    beneficiary_type = models.CharField(
-        "Type of direct beneficiaries",
+    individual_type = models.CharField(
+        "Type of direct individuals",
         help_text="i.e. Farmer, Association, Student, Govt, etc.",
         max_length=255,
         blank=True, null=True)
@@ -1435,14 +1435,14 @@ class ProjectComplete(models.Model):
         help_text="Refer to Form 01 - Community Profile", max_length=255,
         blank=True,
         null=True)
-    indirect_beneficiaries = models.CharField(
-        "Estimated Number of indirect beneficiaries",
-        help_text="This is a calculation - multiply direct beneficiaries "
+    indirect_individuals = models.CharField(
+        "Estimated Number of indirect individuals",
+        help_text="This is a calculation - multiply direct individuals "
                   "by average household size",
         max_length=255,
         blank=True, null=True)
-    direct_beneficiaries = models.CharField(
-        "Actual Direct Beneficiaries", max_length=255, blank=True, null=True)
+    direct_individuals = models.CharField(
+        "Actual Direct Individuals", max_length=255, blank=True, null=True)
     jobs_created = models.CharField(
         "Number of Jobs Created", max_length=255, blank=True, null=True)
     jobs_part_time = models.CharField(

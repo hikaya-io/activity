@@ -108,20 +108,20 @@
           <span aria-hidden="true">&times;</span>
         </button>
         <h4 class="modal-title" id="addProjectModalLabel">
-          Add New {{ request.user.activity_user.organization.beneficiary_label }}
+          Add New {{ request.user.activity_user.organization.individual_label }}
         </h4>
       </div>
       <form id="addIndividualForm">
         <div class="modal-body">
           {% csrf_token %}
           <div class="form-group">
-            <label for="firstName">{{ request.user.activity_user.organization.beneficiary_label }} Name</label>
+            <label for="firstName">{{ request.user.activity_user.organization.individual_label }} Name</label>
             <input
               type="text"
               id="firstName"
               name="first_name"
               class="form-control"
-              placeholder="{{ request.user.activity_user.organization.beneficiary_label }}"
+              placeholder="{{ request.user.activity_user.organization.individual_label }}"
             />
           </div>
 

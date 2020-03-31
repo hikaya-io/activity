@@ -74,7 +74,7 @@ class Distribution(models.Model):
     reporting_period = models.CharField(max_length=255, null=True, blank=True)
     province = models.ForeignKey(
         Province, null=True, blank=True, on_delete=models.SET_NULL)
-    total_beneficiaries_received_input = models.IntegerField(
+    total_individuals_received_input = models.IntegerField(
         null=True, blank=True)
     distribution_location = models.CharField(
         max_length=255, null=True, blank=True)

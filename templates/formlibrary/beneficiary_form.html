@@ -13,7 +13,7 @@
   {% endfor %} {% endif %} {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">My Dashboard</a></li>
-    <li><a href="/formlibrary/individual_list/0/0/">{{ request.user.activity_user.organization.beneficiary_label }}</a></li>
+    <li><a href="/formlibrary/individual_list/0/0/">{{ request.user.activity_user.organization.individual_label }}</a></li>
     <li class="active">Details</li>
   </ul>
   {% endblock %}
@@ -41,7 +41,7 @@
       <div id="individual-tab">
         <ul class="nav nav-tabs">
           <li class="active">
-            <a href="#details" data-toggle="tab">{{ request.user.activity_user.organization.beneficiary_label }} Details</a>
+            <a href="#details" data-toggle="tab">{{ request.user.activity_user.organization.individual_label }} Details</a>
           </li>
           <li><a href="#information" data-toggle="tab">Services</a></li>
           <li><a href="#participants" data-toggle="tab">Related</a></li>

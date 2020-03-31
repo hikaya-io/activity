@@ -191,22 +191,22 @@ class IndividualList(ListView):
             program__in=get_programs)
         get_distribution = Distribution.objects.filter(
             program__in=get_programs)
-        get_beneficiaries = Individual.objects.filter(
+        get_individuals = Individual.objects.filter(
             program__in=get_programs)
 
         if int(program_id) != 0:
-            get_beneficiaries = Individual.objects.filter(
+            get_individuals = Individual.objects.filter(
                 program__id__contains=program_id)
         if int(training_id) != 0:
-            get_beneficiaries = Individual.objects.filter(
+            get_individuals = Individual.objects.filter(
                 training__id=int(training_id))
         if int(distribution_id) != 0:
-            get_beneficiaries = Individual.objects.filter(
+            get_individuals = Individual.objects.filter(
                 distribution__id=int(distribution_id))
 
         return render(request, self.template_name,
                       {
-                          'get_beneficiaries': get_beneficiaries,
+                          'get_individuals': get_individuals,
                           'program_id': int(program_id),
                           'get_programs': get_programs,
                           'get_distribution': get_distribution,
@@ -302,7 +302,7 @@ class IndividualUpdate(UpdateView):
         form.save()
         messages.success(self.request, 'Success, Individual Updated!')
 
-        return redirect('/formlibrary/beneficiary_list/0/0/0/')
+        return redirect('/formlibrary/individual_list/0/0/0/')
 
     form_class = IndividualForm
 
@@ -311,7 +311,7 @@ def delete_individual(request, pk):
     individual = Individual.objects.get(pk=int(pk))
     individual.delete()
 
-    return redirect('/formlibrary/beneficiary_list/0/0/0/')
+    return redirect('/formlibrary/individual_list/0/0/0/')
 
 
 class DistributionList(ListView):
