@@ -42,25 +42,6 @@
             {{ request.user.activity_user.organization.level_2_label }}
           </button>
         </div>
-        {% comment %} <div class="btn-group" id="add_project_modal">
-          <a
-            role="button"
-            class="btn btn-primary btn-sm"
-            id="show-modal"
-            @click="showModal = true"
-          >
-            <i class="fa fa-plus"></i> {{ request.user.activity_user.organization.level_2_label }}
-          </a>
-          <modal v-if="showModal" @close="showModal = false">
-              <h4 slot="header">[[modalHeader]]</h4>
-              <div slot="body">
-                {% include '../workflow/modals/add_project_modal.html' %}
-              </div>
-              <div slot="footer">
-                {% include 'ui-components/quick_entry_modal_footer.html' %}
-              </div>
-          </modal>
-        </div> {% endcomment %}
       </div>
     </div>
   </div>

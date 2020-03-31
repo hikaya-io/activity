@@ -1,6 +1,7 @@
 Vue.use(VeeValidate);
 Vue.component('modal', {
 	template: '#modal-template',
+	
 });
 
 // start app
@@ -8,7 +9,7 @@ new Vue({
 	delimiters: ['[[', ']]'],
 	el: '#level_1_list',
 	components: {
-		vuejsDatepicker
+		'v-select': VueSelect.VueSelect
 	},
 	data: {
 		programsList: [],
@@ -137,7 +138,7 @@ new Vue({
 					}
                 );
 				if (response.data) {
-					toastr.success(`${this.level_1_label} successfuly saved`);
+					toastr.success(`${this.level_1_label} successfully saved`);
 					this.programsList.unshift(response.data);
 
 					if (!saveNew) {

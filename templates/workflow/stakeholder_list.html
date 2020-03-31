@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block content %} 
-{% include './modals/create_stakeholder_modal.html' %}
+{% include './modals/add_stakeholder_modal.html' %}
 
 <script>
   $(document).ready(() => {
@@ -96,24 +96,6 @@
           >
            <i class="fa fa-plus"></i> {{user.activity_user.organization.stakeholder_label}}
           </a>
-            {% comment %} <a
-              role="button"
-              class="btn btn-primary btn-sm"
-              id="show-modal"
-              @click="showModal = true"
-            >
-              <i class="fa fa-plus"></i> {{ request.user.activity_user.organization.stakeholder_label }}
-            </a>
-            <!-- Level 1 create/edit modal -->
-            <modal v-if="showModal" @close="showModal = false">
-                <h4 slot="header">[[modalHeader]]</h4>
-                <div slot="body">
-                  {% include '../workflow/modals/add_stakeholder_modal.html' %}
-                </div>
-                <div slot="footer">
-                  {% include 'ui-components/quick_entry_modal_footer.html' %}
-                </div>
-            </modal> {% endcomment %}
         </div>
       </div>
     </div>
@@ -180,9 +162,4 @@
   </table>
 </div>
 
-{% comment %} {% include 'ui-components/vue_modal.html'%} {% endcomment %}
- 
 {% endblock content %}
-{% comment %} {% block extra_js_in_body %}
-<script type="text/javascript" src="{{ STATIC_URL }}vue.js/workflow/stakeholder.js"></script>
-{% endblock extra_js_in_body %} {% endcomment %}
