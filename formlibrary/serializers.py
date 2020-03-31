@@ -14,4 +14,4 @@ class IndividualSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Individual
-        fields = ['id', 'beneficiary_name', 'age', 'training']
+        fields = ['id', 'first_name', 'age', 'training']

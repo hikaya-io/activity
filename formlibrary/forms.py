@@ -109,4 +109,4 @@ class IndividualForm(forms.ModelForm):
         self.fields['site'].queryset = SiteProfile.objects.filter(
             organizations__id__contains=self.request.user.activity_user.organization.id)
 
-        self.fields['beneficiary_name'].label = '{} name'.format(self.organization.beneficiary_label)
+        self.fields['first_name'].label = '{} name'.format(self.organization.individual_label)

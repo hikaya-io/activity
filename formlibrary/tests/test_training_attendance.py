@@ -143,13 +143,13 @@ class IndividualTestCase(TestCase):
         # get_training = TrainingAttendance.objects.get(
         #     training_name="testtraining")
         new_benny = Individual.objects.create(
-            beneficiary_name="Joe Test", father_name="Mr Test", age="42",
+            first_name="Joe Test", father_name="Mr Test", age="42",
             gender="male", signature=False, remarks="life")
         new_benny.training.add(new_training)
         new_benny.save()
 
     def test_individual_exists(self):
         """Check for Benny object"""
-        get_benny = Individual.objects.get(beneficiary_name="Joe Test")
+        get_benny = Individual.objects.get(first_name="Joe Test")
         self.assertEqual(Individual.objects.filter(
             id=get_benny.id).count(), 1)

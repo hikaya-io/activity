@@ -127,7 +127,7 @@ class Distribution(models.Model):
 
 
 class Individual(models.Model):
-    beneficiary_name = models.CharField(max_length=255, null=True, blank=True)
+    first_name = models.CharField(max_length=255, null=True, blank=True)
     training = models.ManyToManyField(TrainingAttendance, blank=True)
     distribution = models.ManyToManyField(Distribution, blank=True)
     father_name = models.CharField(max_length=255, null=True, blank=True)
@@ -142,7 +142,7 @@ class Individual(models.Model):
     edit_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        ordering = ('beneficiary_name',)
+        ordering = ('first_name',)
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
@@ -153,6 +153,6 @@ class Individual(models.Model):
 
     # displayed in admin templates
     def __str__(self):
-        if self.beneficiary_name is None:
+        if self.first_name is None:
             return "NULL"
-        return self.beneficiary_name
+        return self.first_name

@@ -13,7 +13,7 @@
   {% endfor %} {% endif %} {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">My Dashboard</a></li>
-    <li><a href="/formlibrary/beneficiary_list/0/0/">{{ request.user.activity_user.organization.beneficiary_label }}</a></li>
+    <li><a href="/formlibrary/individual_list/0/0/">{{ request.user.activity_user.organization.beneficiary_label }}</a></li>
     <li class="active">Details</li>
   </ul>
   {% endblock %}
@@ -22,10 +22,10 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {% if beneficiary_name %} 
-          {{ beneficiary_name }} 
-        {% else %} 
-          {{ form_title }} 
+        {% if first_name %}
+          {{ first_name }}
+        {% else %}
+          {{ form_title }}
         {% endif%}
       </h4>
     </div>
@@ -38,7 +38,7 @@
   <div class="admin-content">
     <form method="POST">
       {% csrf_token %}
-      <div id="beneficiary-tab">
+      <div id="individual-tab">
         <ul class="nav nav-tabs">
           <li class="active">
             <a href="#details" data-toggle="tab">{{ request.user.activity_user.organization.beneficiary_label }} Details</a>

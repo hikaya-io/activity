@@ -150,7 +150,7 @@ class Organization(models.Model):
     indicator_label = models.CharField('Indicator Organization label',
                                        default='Indicators',
                                        max_length=255)
-    beneficiary_label = models.CharField('Beneficiary Organization label', default='Beneficiaries', max_length=255)
+    beneficiary_label = models.CharField('Individual Organization label', default='Beneficiaries', max_length=255)
     training_label = models.CharField('Training Organization label', default='Training', max_length=255)
     distribution_label = models.CharField('Distribution Organization label', default='Distribution', max_length=255)
     theme_color = models.CharField('Organization theme color',
@@ -1129,7 +1129,7 @@ class ProjectAgreement(models.Model):
     expected_duration = models.CharField(
         "Expected duration", help_text="[MONTHS]/[DAYS]", blank=True,
         null=True, max_length=255)
-    beneficiary_type = models.CharField(
+    individual_type = models.CharField(
         "Type of direct beneficiaries",
         help_text="i.e. Farmer, Association, Student, Govt, etc.",
         max_length=255,

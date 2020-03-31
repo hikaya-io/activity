@@ -228,7 +228,7 @@ class IndividualCreate(CreateView):
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
-            self.guidance = FormGuidance.objects.get(form="Beneficiary")
+            self.guidance = FormGuidance.objects.get(form="Individual")
         except FormGuidance.DoesNotExist:
             self.guidance = None
         return super(IndividualCreate, self).dispatch(
@@ -274,7 +274,7 @@ class IndividualUpdate(UpdateView):
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:
-            self.guidance = FormGuidance.objects.get(form="Beneficiary")
+            self.guidance = FormGuidance.objects.get(form="Individual")
         except FormGuidance.DoesNotExist:
             self.guidance = None
         return super(IndividualUpdate, self).dispatch(
@@ -289,8 +289,8 @@ class IndividualUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndividualUpdate, self).get_context_data(**kwargs)
-        beneficiary = Individual.objects.get(pk=int(self.kwargs['pk']))
-        context['beneficiary_name'] = beneficiary.beneficiary_name
+        individual = Individual.objects.get(pk=int(self.kwargs['pk']))
+        context['first_name'] = individual.first_name
         context['form_title'] = 'Individual Update Form'
         return context
 
@@ -307,9 +307,9 @@ class IndividualUpdate(UpdateView):
     form_class = IndividualForm
 
 
-def delete_beneficiary(request, pk):
-    beneficiary = Individual.objects.get(pk=int(pk))
-    beneficiary.delete()
+def delete_individual(request, pk):
+    individual = Individual.objects.get(pk=int(pk))
+    individual.delete()
 
     return redirect('/formlibrary/beneficiary_list/0/0/0/')
 
@@ -506,23 +506,23 @@ class IndividualListObjects(View, AjaxableResponseMixin):
         organization = self.request.user.activity_user.organization
 
         if program_id == 0:
-            get_beneficiaries = Individual.objects.all().filter(
+            get_individual = Individual.objects.all().filter(
                 Q(program__organization=organization)) \
-                .values('id', 'beneficiary_name', 'create_date')
+                .values('id', 'first_name', 'create_date')
         elif program_id != 0 and project_id == 0:
-            get_beneficiaries = Individual.objects.all().filter(
-                program__id=program_id).values('id', 'beneficiary_name',
+            get_individual = Individual.objects.all().filter(
+                program__id=program_id).values('id', 'first_name',
                                                'create_date')
         else:
-            get_beneficiaries = Individual.objects.all().filter(
+            get_individual = Individual.objects.all().filter(
                 program__id=program_id,
                 training__project_agreement=project_id).values(
-                'id', 'beneficiary_name', 'create_date')
+                'id', 'first_name', 'create_date')
 
-        get_beneficiaries = json.dumps(
-            list(get_beneficiaries), cls=DjangoJSONEncoder)
+        get_individual = json.dumps(
+            list(get_individual), cls=DjangoJSONEncoder)
 
-        final_dict = {'get_beneficiaries': get_beneficiaries}
+        final_dict = {'get_individual': get_individual}
 
         return JsonResponse(final_dict, safe=False)
 

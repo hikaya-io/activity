@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block content %} {% load group_tag %} 
+{% extends "base.html" %} {% block content %} {% load group_tag %}
 {% include './beneficiary_modal_form.html' %}
 
 <script>
@@ -34,7 +34,7 @@
           <button
             class="btn btn-primary btn-sm"
             data-toggle="modal"
-            data-target="#addBeneficiaryModal"
+            data-target="#addIndividualModal"
           >
             <i class="fa fa-plus"></i> {{ request.user.activity_user.organization.beneficiary_label }}
           </button>
@@ -55,18 +55,18 @@
       </tr>
     </thead>
     <tbody>
-      {% for beneficiary in get_beneficiaries %}
+      {% for individual in get_individuals %}
       <tr>
         <td>
-          <a href="/formlibrary/beneficiary_update/{{ beneficiary.id }}" 
-            data-toggle="tooltip" 
-            title="{{beneficiary.beneficiary_name}}">
-            {{ beneficiary.beneficiary_name | truncatechars:50 }}
+          <a href="/formlibrary/individual_update/{{ individual.id }}"
+            data-toggle="tooltip"
+            title="{{individual.first_name}}">
+            {{ individual.first_name | truncatechars:50 }}
           </a>
         </td>
-        <td>{{ beneficiary.gender }}</td>
-        <td>{{ beneficiary.age }}</td>
-        <td>{{ beneficiary.create_date | date:'m-d-Y' }}</td>
+        <td>{{ individual.gender }}</td>
+        <td>{{ individual.age }}</td>
+        <td>{{ individual.create_date | date:'m-d-Y' }}</td>
         <td class="text-right">
           <!-- Split button -->
           <div class="btn-group">
@@ -83,17 +83,17 @@
             </button>
             <ul class="dropdown-menu">
               <li>
-                <a href="/formlibrary/beneficiary_update/{{ beneficiary.id }}"
+                <a href="/formlibrary/individual_update/{{ individual.id }}"
                   >Edit</a
                 >
               </li>
               <li>
                   <a
                   class="text-danger"
-                  href="#deleteItemModal{{beneficiary.id}}" 
-                  data-toggle="modal" 
-                  onclick="setItemToDelete({{beneficiary.id}})"
-                  data-target="#deleteItemModal{{beneficiary.id}}">
+                  href="#deleteItemModal{{individual.id}}"
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{individual.id}})"
+                  data-target="#deleteItemModal{{individual.id}}">
                   Delete
                 </a>
               </li>

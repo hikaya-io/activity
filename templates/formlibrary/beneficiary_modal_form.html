@@ -5,28 +5,28 @@
       placeholder:
         "Select {{user.activity_user.organization.level_1_label}}...",
       allowClear: true,
-      dropdownParent: $("#addBeneficiaryModal")
+      dropdownParent: $("#addIndividualModal")
     });
 
     $("#gender").select2({
       theme: "bootstrap",
       placeholder: "Select gender...",
       allowClear: true,
-      dropdownParent: $("#addBeneficiaryModal")
+      dropdownParent: $("#addIndividualModal")
     });
 
     // show quick add modal if quick-modal to true
     const url = new URL(window.location.href);
     if (url.searchParams.get("quick-modal")) {
-      $("#addBeneficiaryModal").modal("show");
+      $("#addIndividualModal").modal("show");
     }
   });
 
-  var saveBeneficiary = buttonId => {
+  var saveIndividual = buttonId => {
     $(`#${buttonId}`).click(function(e) {
       e.preventDefault();
 
-      const formValue = $("#addBeneficiaryForm").serializeArray();
+      const formValue = $("#addIndividualForm").serializeArray();
 
       const obj = {};
 
@@ -44,24 +44,24 @@
       console.log('data : ', data);
 
       $.ajax({
-        url: "/formlibrary/beneficiary_add/0/",
+        url: "/formlibrary/individual_add/0/",
         type: "POST",
         data,
         success: function(resp, status) {
           // notify success
-          toastr.success("Beneficiary was added successfully");
+          toastr.success("Individual was added successfully");
 
           //close modal
-          $("#addBeneficiaryModal").modal("hide");
+          $("#addIndividualModal").modal("hide");
 
           // reset form
-          $("#addBeneficiaryForm").trigger("reset");
+          $("#addIndividualForm").trigger("reset");
           $("#program")
             .select("val", "")
             .trigger("change");
 
           const urlWithoutQueryString = window.location.href.split("?")[0];
-          if (buttonId === "saveBeneficiaryAndNew") {
+          if (buttonId === "saveIndividualAndNew") {
             window.location.replace(
               `${urlWithoutQueryString}?quick-modal=true`
             );
@@ -83,8 +83,8 @@
   };
 
   $(function() {
-    saveBeneficiary("saveBeneficiaryAndNew");
-    saveBeneficiary("saveBeneficiary");
+    saveIndividual("saveIndividualAndNew");
+    saveIndividual("saveIndividual");
   });
 </script>
 
@@ -92,9 +92,9 @@
 <!-- Modal -->
 <div
   class="modal fade"
-  id="addBeneficiaryModal"
+  id="addIndividualModal"
   tabindex="-1"
-  aria-labelledby="addBeneficiaryModalLabel"
+  aria-labelledby="addIndividualModalLabel"
 >
   <div class="modal-dialog" role="form">
     <div class="modal-content">
@@ -111,15 +111,15 @@
           Add New {{ request.user.activity_user.organization.beneficiary_label }}
         </h4>
       </div>
-      <form id="addBeneficiaryForm">
+      <form id="addIndividualForm">
         <div class="modal-body">
           {% csrf_token %}
           <div class="form-group">
-            <label for="beneficiaryName">{{ request.user.activity_user.organization.beneficiary_label }} Name</label>
+            <label for="firstName">{{ request.user.activity_user.organization.beneficiary_label }} Name</label>
             <input
               type="text"
-              id="beneficiaryName"
-              name="beneficiary_name"
+              id="firstName"
+              name="first_name"
               class="form-control"
               placeholder="{{ request.user.activity_user.organization.beneficiary_label }}"
             />
@@ -179,12 +179,12 @@
           <button
             type="submit"
             class="btn btn-outline-success"
-            id="saveBeneficiaryAndNew"
+            id="saveIndividualAndNew"
           >
             Save &amp; New
           </button>
 
-          <button type="submit" class="btn btn-success" id="saveBeneficiary">
+          <button type="submit" class="btn btn-success" id="saveIndividual">
             Save
           </button>
         </div>

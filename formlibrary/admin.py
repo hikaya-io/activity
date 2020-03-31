@@ -9,9 +9,9 @@ from .models import (
 
 @admin.register(Individual)
 class IndividualAdmin(admin.ModelAdmin):
-    list_display = ('site', 'beneficiary_name',)
+    list_display = ('site', 'first_name',)
     display = 'Individual'
-    list_filter = ('site', 'beneficiary_name')
+    list_filter = ('site', 'first_name')
 
 
 @admin.register(Distribution)
