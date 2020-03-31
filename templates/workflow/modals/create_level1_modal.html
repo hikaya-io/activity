@@ -54,7 +54,7 @@
       obj.end_date = obj.end_date ? moment(obj.end_date, 'DD.MM.YYYY').format() : null,
 
       $.ajax({
-        url: "{% url 'add_level1' %}",
+        url: "{% url 'level1_list' %}",
         type: 'POST',
         data: obj,
         success: function(resp, status) {

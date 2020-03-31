@@ -1,18 +1,14 @@
 Vue.use(VeeValidate);
-Vue.component('ValidationProvider', VeeValidate.ValidationProvider);
-Vue.component('v-select', VueSelect.VueSelect);
+// Vue.component('ValidationProvider', VeeValidate.ValidationProvider);
+// Vue.component('v-select', VueSelect.VueSelect);
 Vue.component('modal', {
 	template: '#modal-template',
-	
 });
 
 // start app
 new Vue({
 	delimiters: ['[[', ']]'],
 	el: '#level_1_list',
-	components: {
-		'v-select': VueSelect.VueSelect
-	},
 	data: {
 		programsList: [],
 		sectorsList: [],

@@ -1037,6 +1037,30 @@ class ProjectAgreementManager(models.Manager):
             'approval_submitted_by')
 
 
+class ProjectStatus(models.Model):
+    name = models.CharField(max_length=135, blank=True)
+    description = models.TextField(max_length=765, null=True, blank=True)
+    organization = models.ForeignKey(
+        Organization, null=True, blank=True, on_delete=models.SET_NULL)
+    create_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
+    edit_date = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name_plural = "Project Statuses"
+
+    # on save add create date or update edit date
+    def save(self, *args, **kwargs):
+        if self.create_date is None:
+            self.create_date = datetime.now()
+        self.edit_date = datetime.now()
+        super(ProjectStatus, self).save()
+
+    # displayed in admin templates
+    def __str__(self):
+        return self.name
+
+
 class ProjectAgreement(models.Model):
     agreement_key = models.UUIDField(default=uuid.uuid4, unique=True),
     short = models.BooleanField(
@@ -1072,6 +1096,9 @@ class ProjectAgreement(models.Model):
         "Project Code", help_text='', max_length=255, blank=True, null=True)
     office = models.ForeignKey(
         Office, verbose_name="Office", null=True, blank=True,
+        on_delete=models.SET_NULL)
+    project_status = models.ForeignKey(
+        ProjectStatus, verbose_name="Project Status", null=True, blank=True,
         on_delete=models.SET_NULL)
     cod_num = models.CharField(
         "Project COD #", max_length=255, blank=True, null=True)
@@ -1778,26 +1805,3 @@ class ActivityUserOrganizationGroup(models.Model):
     def __str__(self):
         return '{} - {}'.format(self.activity_user, self.organization) or ''
 
-
-class ProjectStatus(models.Model):
-    name = models.CharField(max_length=135, blank=True)
-    description = models.TextField(max_length=765, null=True, blank=True)
-    organization = models.ForeignKey(
-        Organization, null=True, blank=True, on_delete=models.SET_NULL)
-    create_date = models.DateTimeField(default=datetime.now, null=True, blank=True)
-    edit_date = models.DateTimeField(null=True, blank=True)
-
-    class Meta:
-        ordering = ('name',)
-        verbose_name_plural = "Project Statuses"
-
-    # on save add create date or update edit date
-    def save(self, *args, **kwargs):
-        if self.create_date is None:
-            self.create_date = datetime.now()
-        self.edit_date = datetime.now()
-        super(ProjectStatus, self).save()
-
-    # displayed in admin templates
-    def __str__(self):
-        return self.name

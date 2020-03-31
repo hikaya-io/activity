@@ -18,7 +18,7 @@ from django import forms
 from .models import (
     ProjectAgreement, ProjectComplete, Program, SiteProfile, Documentation,
     Benchmarks, Budget, Office, ChecklistItem, Province, Stakeholder,
-    ActivityUser, Contact, Sector, Country, ProfileType, FundCode
+    ActivityUser, Contact, Sector, Country, ProfileType, FundCode, ProjectStatus
 )
 from indicators.models import (
     CollectedData, Indicator, PeriodicTarget,
@@ -377,6 +377,8 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         # override the stakeholder queryset to use request.user for country
         self.fields['stakeholder'].queryset = Stakeholder.objects.filter(
             organization=self.request.user.activity_user.organization)
+        self.fields['project_status'].queryset = ProjectStatus.objects.filter(
+                organization=self.request.user.activity_user.organization).distinct()
 
         if 'Approver' not in self.request.user.groups.values_list('name',
                                                                   flat=True):
