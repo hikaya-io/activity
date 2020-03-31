@@ -81,13 +81,13 @@ $(document).ready(() => {
               this.show_disaggregations= false
 
               if (item) {
-                console.log(item)
                 this.isEdit = true;
                 this.modalHeader = `Edit Result`;
                 this.currentResult = item;
                 this.date_collected = item.date_collected
                 this.target = item.targeted
-                this.actual = item.achieved 
+                this.actual = item.achieved
+                this.documentation = item.evidence
                 if (item.disaggregation_value.length > 0) {
                   this.show_disaggregations= true
                   item.disaggregation_value.forEach(disaggregation => {
