@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from .views import (
-    list_workflow_level1, ProgramUpdate, GetLevel1DependantData, 
-    add_level2, add_documentation, GetProjectDependantData,
-    add_stakeholder, delete_stakeholder, GetStakeholderDependantData,
+    list_workflow_level1, ProgramUpdate, GetLevel1DependantData,
+    add_level2, add_documentation,
+    add_stakeholder, delete_stakeholder,
     ProjectDash, ProgramDash, ProjectAgreementList,
     ProjectAgreementUpdate,
     ProjectCompleteBySite, ProjectCompleteDetail, DocumentationListObjects,
@@ -44,7 +44,6 @@ urlpatterns = [
     path('level2/add', add_level2, name='add-level2'),
     path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/list/<slug:program>/<slug:status>/', ProgramDash.as_view(), name='projects_list'),
-    path('project_dependant_data', GetProjectDependantData.as_view(), name='project_dependant_data'),
     path('documentation/add', add_documentation, name='add-documentation'),
     path('contact/add', ContactCreate.as_view(), name='add-contact'),
 
@@ -131,7 +130,6 @@ urlpatterns = [
     path('stakeholder_add/<int:id>/', StakeholderCreate.as_view(), name='stakeholder_add'),
     path('stakeholder_update/<int:pk>/', StakeholderUpdate.as_view(), name='stakeholder_update'),
     path('export_stakeholders_list/<slug:program_id>/', export_stakeholders_list, name='export_stakeholders_list'),
-    path('stakeholder_dependant_data', GetStakeholderDependantData.as_view(), name='stakeholder_dependant_data'),
 
     # sites / site profiles
     path('site_list/<slug:program_id>/<int:pk>/', SiteProfileList.as_view(),

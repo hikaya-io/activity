@@ -2938,49 +2938,6 @@ class GetLevel1DependantData(GView):
             return JsonResponse(dict(error=str(e)))
 
 
-class GetProjectDependantData(GView):
-    """
-    View to fetch all level1
-    """
-    def get(self, request):
-        try:
-            organization = Organization.objects.get(id=request.user.activity_user.organization.id)
-            programs = Program.objects.filter(organization=organization).values('id', 'name')
-
-            return JsonResponse(
-                dict(
-                    level_2_label=organization.level_2_label,
-                    programs=list(programs),
-                    safe=False
-                )
-            )
-        except Exception as e:
-            return JsonResponse(dict(error=str(e)))
-
-
-class GetStakeholderDependantData(GView):
-    """
-    View to fetch all Sectors, stakeholder types
-    """
-    def get(self, request):
-        try:
-            organization = Organization.objects.get(id=request.user.activity_user.organization.id)
-            sectors = Sector.objects.all().values('id', 'sector')
-            stakeholder_types = StakeholderType.objects.all().filter(organization=organization).values('id', 'name')
-
-            return JsonResponse(
-                dict(
-                    stakeholder_label=organization.stakeholder_label,
-                    sectors=list(sectors),
-                    stakeholder_types=list(stakeholder_types),
-                    safe=False
-                )
-            )
-
-        except Exception as e:
-            return JsonResponse(dict(error=str(e)))
-
-
 class GetCountries(GView):
     """
     View to fetch all Countries
