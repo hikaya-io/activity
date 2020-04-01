@@ -31,21 +31,21 @@
         }"
     >
       <label for="parent">Parent objective</label>
-      <select
-        name="parent"
-        :class="{ 
-                'form-control': true, 
-            }"
-        v-model="parent_id"
-        placeholder="Choose a parent objective"
+      <v-select
+          class="hikaya-select"
+          inputId="parent"
+          name="parent"
+          label="name"
+          :searchable="false"
+          v-model="parent_id"
+          placeholder="Choose a parent objective"
+          :options="parent_obj_list"
+          :reduce="objective => objective.id"
       >
-        <option value="">No parent</option>
-        <option
-          v-for="objective in parent_obj_list"
-          :value="objective.id"
-          >[[ objective.name ]]</option
-        >
-      </select>
+        <template #open-indicator="{ attributes }">
+          <i class="caret"></i>
+        </template>
+      </v-select>
     </div>
     <div
       :class="{
@@ -56,25 +56,28 @@
       <label for="program"
         >{{ user.activity_user.organization.level_1_label }}*</label
       >
-      <select
-        name="program"
-        :class="{ 
-                'form-control': true
-            }"
-        v-model="program_id"
-        v-validate="'required'"
-        placeholder="Choose a {{ user.activity_user.organization.level_1_label }}"
-      >
-        <option
-          v-for="program in programs_list"
-          selected="currentObjective.program_id === program.program_id ? true : false"
-          :value="program.program_id"
-          >[[ program.name ]]</option
-        >
-      </select>
-      <span v-show="errors.has('program')" class="help is-danger"
-        >[[ errors.first('program') ]]</span
-      >
+      <validation-provider name="program" rules="required" ref="program" v-slot="{ errors }">
+        <div>
+          <v-select
+           input-id="program"
+           :searchable="false"
+           v-model="program_id"
+           @search:blur="blur('program')"
+           placeholder="Choose a {{ user.activity_user.organization.level_1_label }}"
+           label="name"
+           :options="programs_list"
+           :reduce="program => program.program_id"
+           :class="{'hikaya-select': true, 'is-invalid': !!errors.length}"
+          >
+            <template #open-indicator="{ attributes }">
+              <i class="caret"></i>
+            </template>
+          </v-select>
+          <span v-show="errors[0]" class="help is-danger"
+            >[[ errors[0] ]]</span
+          >
+        </div>
+      </validation-provider>
     </div>
     <div
       :class="{

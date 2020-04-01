@@ -16,7 +16,8 @@ from rest_framework.permissions import IsAuthenticated
 from activity.permissions import IsReadOnly
 from .export import IndicatorResource, CollectedDataResource
 from .serializers import (PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer,
-                          IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer, ObjectiveSerializer)
+                          IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer, ObjectiveSerializer,
+                          DisaggregationTypeSerializer, DisaggregationLabelSerializer, DisaggregationValueSerializer)
 
 from .tables import IndicatorDataTable
 from .forms import (
@@ -167,7 +168,8 @@ class IndicatorList(ListView):
             program__organization=organization)
         get_indicator_types = IndicatorType.objects.all()
         get_documentation = Documentation.objects.all()
-        get_periodic_target = PeriodicTarget.objects.order_by('customsort', 'create_date', 'period')
+        get_periodic_target = PeriodicTarget.objects.distinct().filter(
+            indicator__program__organization=organization)
 
         program_id = int(self.kwargs['program'])
         indicator_id = int(self.kwargs['indicator'])
@@ -702,6 +704,18 @@ class CollectedDataAdd(GView):
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
 
+        disaggs_list = []
+
+        if data.get('disaggregations') == {}:
+            disaggregations = None
+        else:
+            disaggregations = data.get('disaggregations')
+            print(disaggregations)
+            for key, value in disaggregations.items():
+                item = {"value": value,
+                        "disaggregation_label": key}
+                disaggs_list.append(item)
+
         if data.get('date_collected') == "":
             date = None
         else:
@@ -723,7 +737,14 @@ class CollectedDataAdd(GView):
         )
 
         if collected_data:
-            return JsonResponse(model_to_dict(collected_data))
+            if len(disaggs_list) > 0:
+                for item in disaggs_list:
+                    collected_data.disaggregation_value.create(
+                        value=item["value"],
+                        disaggregation_label=DisaggregationLabel.objects.filter(id=int(item["disaggregation_label"])).first(),
+                    )
+            collecteddata_set = CollectedData.objects.filter(id=model_to_dict(collected_data)['id']).first()
+            return JsonResponse({'collected_data': CollectedDataSerializer(collecteddata_set).data})
         else:
             return JsonResponse(dict(error='Failed'))
 
@@ -747,7 +768,6 @@ class CollectedDataEdit(GView):
             documentation = int(data.get('documentation'))
             evidence = Documentation.objects.filter(id=documentation).first()
             collected_data.evidence = evidence
-
         achieved = data.get('actual', '')
 
         collected_data.date_collected = date
@@ -755,7 +775,8 @@ class CollectedDataEdit(GView):
         collected_data.save()
 
         if collected_data:
-            return JsonResponse(model_to_dict(collected_data))
+            collecteddata_set = CollectedData.objects.filter(id=result_id).first()
+            return JsonResponse({'collected_data': CollectedDataSerializer(collecteddata_set).data})
         else:
             return JsonResponse(dict(error='Failed'))
 
@@ -2199,6 +2220,10 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
     serializer_class = PeriodicTargetSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization
+        return PeriodicTarget.objects.filter(indicator__program__organization=organization)
+
     def post(self, request, *args, **kwargs):
         all_data = request.data['data']
         indicator_data = {
@@ -2215,5 +2240,47 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
             serialized.save(indicator_id=all_data['indicator_id'])
             indicator = Indicator.objects.filter(id=all_data['indicator_id'])
             indicator.update(**indicator_data)
-            return Response(serialized.data, status=status.HTTP_201_CREATED)
+            return Response({'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data}, status=status.HTTP_201_CREATED)
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, *args, **kwargs):
+        targets = self.get_queryset()
+        data = request.data['data']
+        periodic_data = data['periodic_targets']
+        updated_data = []
+        indicator_data = {
+            'lop_target': data['indicator_LOP'],
+            'baseline': data['indicator_baseline'],
+            'rationale_for_target': data['rationale'],
+        }
+
+        for periodic_target in periodic_data:
+            if periodic_target["target_value"] != periodic_target["target"]:
+                updated_data.append(periodic_target)
+
+        for target in targets:
+            for data in updated_data:
+                if data['pk'] == target.id:
+                    serializer = self.serializer_class(instance=target, data=data,)
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
+
+        indicator = Indicator.objects.filter(id=data['indicator_id'])
+        indicator.update(**indicator_data)
+
+        return Response({'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data},
+                        status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        id = request.data['id']
+        queryset = PeriodicTarget.objects.filter(indicator__id=id)
+        queryset.delete()
+        indicator_data = {
+            'lop_target': None,
+            'baseline': None,
+            'rationale_for_target': None,
+        }
+        indicator = Indicator.objects.filter(id=id)
+        indicator.update(**indicator_data)
+        return Response({'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data},
+                        status=status.HTTP_200_OK)

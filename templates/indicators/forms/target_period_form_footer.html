@@ -11,5 +11,12 @@
         class="btn btn-success"
         :disabled="errors.any() || !isFormValid"
         @click=processForm()
-    >Save</button>  
+    >Save</button>
+    <button
+        v-if="isEdit"
+        type="button"
+        class="btn btn-success"
+        :disabled="errors.any() || !isFormValid"
+        @click=processForm()
+    >Update</button>  
 </div>

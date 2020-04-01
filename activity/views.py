@@ -535,7 +535,7 @@ def admin_profile_settings(request):
         organization.save()
         user.organization = organization
         user.save()
-        messages.error(
+        messages.success(
             request, 'Your organization logo has been updated.',
             fail_silently=False)
 

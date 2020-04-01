@@ -31,7 +31,9 @@ $(document).ready(() => {
             isEdit: '',
             currentResult: null,
             itemToDelete: null,
-            targets: []
+            targets: [],
+            show_disaggregations: false,
+            disaggregations: {},
           },
           methods: {
             makeRequest(method, url, data = null) {
@@ -62,6 +64,10 @@ $(document).ready(() => {
               }
             },
 
+            showDisaggregations: function(){
+              this.show_disaggregations= !this.show_disaggregations
+            },
+
             toggleResultModal: function (item = null) {
               this.showModal = !this.showModal;
               this.modalHeader = `Add Result`;
@@ -71,6 +77,8 @@ $(document).ready(() => {
               this.actual = ''
               this.period = ''
               this.documentation = ''
+              this.disaggregations = {}
+              this.show_disaggregations= false
 
               if (item) {
                 this.isEdit = true;
@@ -79,7 +87,14 @@ $(document).ready(() => {
                 this.date_collected = item.date_collected
                 this.target = item.targeted
                 this.actual = item.achieved
-
+                this.documentation = item.evidence
+                if (item.disaggregation_value.length > 0) {
+                  this.show_disaggregations= true
+                  item.disaggregation_value.forEach(disaggregation => {
+                    this.disaggregations[disaggregation.disaggregation_label.id] = disaggregation.value
+                  })
+                  
+                }
               } else {
                 this.isEdit = false;
               }
@@ -133,14 +148,15 @@ $(document).ready(() => {
                     period: this.period,
                     indicator: indicatorId,
                     documentation: this.documentation,
-                    program: programId
+                    program: programId,
+                    disaggregations: this.disaggregations
                   }
                 );
                 if (response) {
                   toastr.success('Result successfuly saved');
                   this.collectedData.periodictargets.forEach(periodictarget => {
-                    if (periodictarget.id == response.data.periodic_target) {
-                      periodictarget.collecteddata_set.push(response.data);
+                    if (periodictarget.id == response.data.collected_data.periodic_target) {
+                      periodictarget.collecteddata_set.push(response.data.collected_data);
                     }
                   })
                   if (!saveNew) {
@@ -151,6 +167,8 @@ $(document).ready(() => {
                   this.target = '';
                   this.actual = 0;
                   this.documentation = '';
+                  this.show_disaggregations = false
+                  this.disaggregations = {}
                   this.$validator.reset();
                 }
                 ;
@@ -169,15 +187,16 @@ $(document).ready(() => {
                     target: this.target,
                     date_collected: this.date_collected,
                     period: this.period,
-                    documentation: this.documentation
+                    documentation: this.documentation,
+                    disaggregations: this.disaggregations
                   }
                 );
                 if (response) {
                   toastr.success('Result was successfuly updated');
                   this.collectedData.periodictargets.forEach(periodictarget => {
-                    if (periodictarget.id == response.data.periodic_target) {
+                    if (periodictarget.id == response.data.collected_data.periodic_target) {
                       periodictarget.collecteddata_set = periodictarget.collecteddata_set.filter(item => +item.id !== +this.currentResult.id)
-                      periodictarget.collecteddata_set.unshift(response.data);
+                      periodictarget.collecteddata_set.unshift(response.data.collected_data);
                     }
                   })
                   this.isEdit = false;

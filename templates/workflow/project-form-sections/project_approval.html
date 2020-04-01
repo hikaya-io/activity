@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        {{form.approval | as_crispy_field}}
+        {{form.project_status | as_crispy_field}}
     </div>
 
     <div class="col-md-6">
@@ -29,7 +29,7 @@
 
 <script>
     $(document).ready(() => {
-        $('#id_approval').select2({ theme: 'bootstrap' })
+        $('#id_project_status').select2({ theme: 'bootstrap' })
         $('#id_approval_submitted_by').select2({ theme: 'bootstrap' })
         $('#id_approved_by').select2({ theme: 'bootstrap' })
     })

@@ -10,6 +10,7 @@ html {
 body {
   /* Margin bottom by footer height */
   height: 100%;
+  margin-top: 50px;
   margin-bottom: 60px;
   font-family: "Lato", system-ui, sans-serif !important;
   background-color: #fafafa;
@@ -42,6 +43,7 @@ a:focus, a:hover {
   color: #25CED1;
   border-radius: 0;
 }
+
 
 #footer {
   /* removing sticky footer */
