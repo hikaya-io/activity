@@ -2593,7 +2593,6 @@ class DocumentationListObjects(View, AjaxableResponseMixin):
 
 
 def add_level2(request):
-    # data = json.loads(request.body.decode('utf-8'))
     data = request.POST
 
     program = Program.objects.get(id=int(data.get('program')))
@@ -2619,7 +2618,6 @@ def add_documentation(request):
 
 
 def add_stakeholder(request):
-    # data = json.loads(request.body.decode('utf-8'))
     data = request.POST
 
     user = ActivityUser.objects.filter(user=request.user).first()
