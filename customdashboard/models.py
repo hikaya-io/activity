@@ -47,11 +47,6 @@ class ProgramLinks(models.Model):
     edit_date = models.DateTimeField(null=True, blank=True)
 
 
-class ProgramLinksAdmin(admin.ModelAdmin):
-    list_display = ('program', 'create_date', 'edit_date')
-    display = 'Program Link'
-
-
 class JupyterNotebooks(models.Model):
     name = models.CharField("Notebook Name", max_length=255)
     program = models.ForeignKey(
