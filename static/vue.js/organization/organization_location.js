@@ -14,11 +14,11 @@ new Vue({
 		longitude: null,
 		admin_boundary: '',
 		zoom: null,
-		adminBoundaries = [
+		adminBoundaries: [
 			{label: 'ADM0', value: 'ADM0'},
 			{label: 'ADM1', value: 'ADM1'},
 			{label: 'ADM2', value: 'ADM2'},
-			{label: 'ADM2', value: 'ADM2'}
+			{label: 'ADM3', value: 'ADM3'}
 		]
 	},
 	beforeMount: function() {
