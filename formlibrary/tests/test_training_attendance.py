@@ -92,7 +92,7 @@ class DistributionTestCase(TestCase):
             distribution_implementer="34",
             reporting_period="34",
             province=get_province,
-            total_beneficiaries_received_input="34",
+            total_individuals_received_input="34",
             distribution_location="testlocation",
             input_type_distributed="testinputtype",
             distributor_name_and_affiliation="testdistributorperson",
