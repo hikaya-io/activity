@@ -1,4 +1,5 @@
 Vue.use(VeeValidate);
+Vue.component('v-select', VueSelect.VueSelect);
 
 // start app
 new Vue({
@@ -14,7 +15,7 @@ new Vue({
 		zoom: null,
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/workflow/organization/1/?user_org=1')
+		this.makeRequest('GET', '/workflow/organization/?user_org=true')
 			.then(response => {
 				if (response.data) {
 					this.organization = response.data[0];
@@ -115,10 +116,10 @@ new Vue({
 			} 
 			let map = L.map('org_map').setView(
 				[
-					this.latitude, 
-					this.longitude
+					this.latitude ? this.latitude : 0.00, 
+					this.longitude ? this.longitude : 0.00
 				], 
-				this.zoom
+				this.zoom ? this.zoom : 5
 				);
 
 			L.tileLayer(
