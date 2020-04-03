@@ -1,169 +1,83 @@
-<script>
-  $(document).ready(() => {
-    $('#sectors').select2({
-      theme: 'bootstrap',
-      placeholder: 'Select sectors...',
-      allowClear: true,
-    });
-    $('#startDate').datepicker({
-      dateFormat: 'dd.mm.yy',
-      onSelect: function(dateText, inst) {
-        let date = $(this).datepicker('getDate');
-        date.setDate(date.getDate() + 1);
-        $('#endDate').datepicker('option', 'minDate', date);
-        startDate = date;
-      },
-    });
-    $('#endDate').datepicker({
-      dateFormat: 'dd.mm.yy',
-      onSelect: function(dateText) {
-        let date = $(this).datepicker('getDate');
-        date.setDate(date.getDate() - 1);
-        $('#startDate').datepicker('option', 'maxDate', date);
-      },
-    });
-
-    $('#addProgramModal').on('hidden.bs.modal', function() {
-      $('form#addProgramForm').trigger('reset');
-      $('#startDate').datepicker('option', 'maxDate', null);
-      $('#endDate').datepicker('option', 'minDate', null);
-    });
-
-    // show the modal if program modal is set to true
-    const url = new URL(window.location.href);
-    if (url.searchParams.get('program-modal')) {
-      $('#addProgramModal').modal('show');
-    }
-  });
-
-  var save = id => {
-    $(`#${id}`).click(function(e) {
-      e.preventDefault();
-
-      const formValue = $('#addProgramForm').serializeArray();
-
-      const obj = {};
-
-      formValue.forEach(item => {
-        obj[item.name] = item.value;
-      });
-
-      // set sectors and format dates
-    
-      obj.start_date = obj.start_date ? moment(obj.start_date, 'DD.MM.YYYY').format() : null,
-      obj.end_date = obj.end_date ? moment(obj.end_date, 'DD.MM.YYYY').format() : null,
-
-      $.ajax({
-        url: "{% url 'add_level1' %}",
-        type: 'POST',
-        data: obj,
-        success: function(resp, status) {
-          // notify success
-        if (resp.success) {
-            // notify success
-            toastr.success(
-              '{{ user.activity_user.organization.level_1_label }} was added sucessfully',
-            );
-          } else {
-            // Saving failed
-            toastr.error(
-              'The {{ user.activity_user.organization.level_1_label }} was not added',
-              'Failed',
-            );
-          }
-
-          //close modal
-          $('#addProgramModal').modal('hide');
-
-          // reset form
-          $('#addProgramForm').trigger('reset');
-          $('#sectors')
-            .select('val', '')
-            .trigger('change');
-
-          const urlWithoutQueryString = window.location.href.split('?')[0];
-          if (id === 'saveAndNew') {
-            window.location.replace(
-              `${urlWithoutQueryString}?program-modal=true`,
-            );
-          } else {
-            setTimeout(() => {
-              window.location.replace(urlWithoutQueryString);
-            }, 2000);
-          }
-        },
-        error: function(xhr, status, error) {
-          toastr.error(error, 'Failed');
-        },
-      });
-    });
-  };
-
-  $(function () {
-    save('saveAndNew');
-    save('saveProgram');
-  });
-</script>
-
-<script type="text/javascript" src="{{ STATIC_URL }}js/admin.js"></script>
-
-<!-- Modal -->
-<div class="modal fade" id="addProgramModal" tabindex="-1" role="dialog" aria-labelledby="addProgramModalLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="addProgramModalLabel">Add {{ user.activity_user.organization.level_1_label }}</h4>
+<form method="POST">
+    <div class="modal-body">
+        {% csrf_token %}
+        <div :class="{ 
+            'form-group': true, 
+            'has-error': errors.has('name')
+        }">
+            <label for="name">[[ level_1_label ]] name*</label
+            >
+            <input
+                type="text"
+                name="name"
+                :class="{ 
+                    'form-control': true, 
+                    'is-danger': errors.has('name') 
+                }"   
+                v-model="name" 
+                v-validate="'required'"
+                :placeholder="level_1_label"
+            />
+            <span v-show="errors.has('name')" class="help is-danger">[[ errors.first('name') ]]</span>
         </div>
-        <div class="modal-body">
-          <form id="addProgramForm">
-            {% csrf_token %}
-            <div class="form-group">
-              <label for="programName">{{ user.activity_user.organization.level_1_label }} Name*</label>
-              <input type="text" id="programName" name="program_name" class="form-control" placeholder="{{user.activity_user.organization.level_1_label}}" />
-            </div>
-  
-            <div class="form-group">
-              <label for="sectors">Sectors</label>
-              <select id="sectors" class="form-control" name="sectors" multiple="multiple">
-                {% for sector in get_all_sectors %}
-                <option value="{{ sector.id }}">{{ sector.sector }}</option>
-                {% endfor %}
-              </select>
-            </div>
-  
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="startDate">Start Date</label>
-                  <input type="text" id="startDate" class="form-control" placeholder="Start Date" name="start_date"
-                    autocomplete="off" />
-                </div>
-              </div>
-  
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="endDate">End Date</label>
-                  <input type="text" id="endDate" class="form-control" placeholder="End Date" name="end_date"
-                    autocomplete="off" />
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-close" data-dismiss="modal" id="close">
-            Cancel
-          </button>
-          <button type="submit" class="btn btn-outline-success" id="saveAndNew">
-            Save &amp; New
-          </button>
-          <button type="submit" class="btn btn-success" id="saveProgram">
-            Save
-          </button>
-        </div>
+
+        <div
+        :class="{
+              'form-group': true
+          }"
+      >
+        <label for="sectors">Sectors</label>
+        <v-select
+            multiple
+            class="hikaya-select"
+            inputId="sectors"
+            name="sectors"
+            label="sector"
+            :searchable="false"
+            v-model="sectors"
+            placeholder="Choose sectors"
+            :options="sectorsList"
+            :reduce="sector => sector.id"
+        > 
+        </v-select>
       </div>
+      
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group" id="div_start_date">
+                    <label for="startDate">Start Date</label>
+                    <input
+                        type="date"
+                        id="startDate"
+                        name="startDate"
+                        :class="{ 
+                            'form-control': true, 
+                            }"
+                        style="width:200px;"
+                        v-model="start_date" 
+                        placeholder="Start Date"
+                        v-on:change="setMinDate()"
+                        :max="maxDate"/>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group" id="div_end_date">
+                    <label for="endDate">End Date</label>
+                    <input
+                        type="date"
+                        id="endDate"
+                        name="endDate"
+                        :class="{ 
+                            'form-control': true, 
+                            }"
+                        style="width:200px;"
+                        v-model="end_date" 
+                        placeholder="End Date"
+                        v-on:change="setMaxDate()"
+                        :min="minDate"/>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+</form>

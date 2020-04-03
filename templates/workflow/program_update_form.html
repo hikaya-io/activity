@@ -4,7 +4,7 @@
 	<ul class="breadcrumb">
 		<li><a href="/">My Dashboard</a></li>
 		<li class="active">
-			<a href="/workflow/level1">
+			<a href="/workflow/level1_list">
 				{{ request.user.activity_user.organization.level_1_label }}
 			</a>
 		</li>
@@ -32,7 +32,7 @@
 		$('#id_fund_code').select2({theme: 'bootstrap'})
 	});
 	$('#reset-id-reset').click(() => {
-		document.location.href = '/workflow/level1'
+		document.location.href = '/workflow/level1_list'
 	})
 </script>
 {% endblock content %}
