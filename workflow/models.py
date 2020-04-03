@@ -174,7 +174,9 @@ class Organization(models.Model):
         validators=[validate_image],
         help_text="Image of minimum {} width and {} height, "
                   "maximum of {} ko".format(*tuple(IMAGE_SPEC.values())))
-    country_code = models.CharField("Country Code", blank=True, null=True, max_length=3)
+    country_code = models.ManyToManyField(
+        'workflow.Country', related_name='organization_country', verbose_name='Country Code',
+        blank=True)
     location_description = models.TextField(
         "Location Description", max_length=765, null=True, blank=True)
     latitude = models.DecimalField("Latitude", max_digits=9, null=True, decimal_places=7, blank=True)

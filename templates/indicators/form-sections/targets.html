@@ -123,7 +123,7 @@
 
   $("#indicator_data").submit(function( event ) {
     
-    if($("#id_lop_target").val()){
+    if($("#sumOfTargets").text()){
       if($("#id_lop_target").val() != $("#sumOfTargets").text()){
         toastr.error('The sum of target values must be equal to overall target');
       }else{
