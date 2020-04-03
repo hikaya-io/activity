@@ -51,7 +51,7 @@ new Vue({
         this.objectives = [];
       });
 
-    this.makeRequest('GET', '/workflow/level1_program/')
+    this.makeRequest('GET', '/workflow/level1/')
       .then(response => {
         if (response.data) {
           this.programs_list = response.data.map(el => {
@@ -81,9 +81,7 @@ new Vue({
         this.description = item.description;
         this.program_id = item.program_id;
         this.parent_id = item.parent_id;
-        this.parent_obj_list = this.filtered_objectives.filter(
-          el => el.id !== item.id
-        );
+        this.parent_obj_list = this.filtered_objectives.filter(obj => obj.id !== item.id);
       } else {
         this.isEdit = false;
         this.name = '';

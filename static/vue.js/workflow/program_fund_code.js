@@ -26,12 +26,6 @@ new Vue({
                     this.fundCodes = response.data.fund_codes.sort((a, b) => b.id - a.id);
                     this.stakeholders = response.data.stakeholders;
                     this.modalHeader = 'Add Fund Code'; 
-					// $(document).ready(() => {
-					// 	$('#fundCodesTable').DataTable({
-                    //         pageLength: 5,
-                    //         lengthMenu: [5, 10, 15, 20]
-					// 	});
-					// });
 				}
 			})
 			.catch(e => {

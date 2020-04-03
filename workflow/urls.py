@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from .views import (
-    list_workflow_level1, ProgramCreate, add_level2, add_documentation,
-    add_stakeholder, delete_stakeholder, ProgramUpdate,
-    ProjectDash, ProgramDash, level1_delete, ProjectAgreementList,
+    list_workflow_level1, ProgramUpdate, GetLevel1DependantData,
+    add_level2, add_documentation,
+    add_stakeholder, delete_stakeholder,
+    ProjectDash, ProgramDash, ProjectAgreementList,
     ProjectAgreementUpdate,
     ProjectCompleteBySite, ProjectCompleteDetail, DocumentationListObjects,
     SiteProfileList, SiteProfileCreate, SiteProfileUpdate,
@@ -22,7 +23,7 @@ from .views import (
     BudgetUpdate, BudgetDelete, Report, SiteProfileObjects, checklist_update_link, delete_contact,
     ProfileTypeCreate, ProfileTypeList, ProfileTypeUpdate, ProfileTypeDelete, ProjectStatusView,
     FundCodeList, FundCodeCreate, FundCodeUpdate, FundCodeDelete, OfficeView, StakeholderTypeView, OrganizationView, 
-    ProgramView,GetCountries,
+    ProgramView, GetCountries,
 )
 from django.urls import path, re_path
 
@@ -31,24 +32,20 @@ from django.urls import path, re_path
 urlpatterns = [
     # level1
     re_path(
-          r'level1_program/(?P<pk>.*)',
+          r'level1/(?P<pk>.*)',
           ProgramView.as_view(),
           name='program_list'
     ),
     
-    path('level1', list_workflow_level1, name='level1'),
-    path('level1/add', ProgramCreate.as_view(), name='add_level1'),
-    path('level1/edit/<int:pk>/', ProgramUpdate.as_view(), name='level1_edit'),
-    path('level1_delete/<int:pk>/', level1_delete, name='level1_delete'),
+    path('level1_list', list_workflow_level1, name='level1_list'),
+    path('level1_edit/<int:pk>/', ProgramUpdate.as_view(), name='level1_edit'),
+    path('level1_dependant_data', GetLevel1DependantData.as_view(), name='level1_dependant_data'),
 
     path('level2/add', add_level2, name='add-level2'),
-    path('documentation/add', add_documentation, name='add-documentation'),
-    path('contact/add', ContactCreate.as_view(), name='add-contact'),
-    path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
-    path('stakeholder/delete_stakeholder/<int:pk>/',
-         delete_stakeholder, name='delete_stakeholder'),
     path('level2/project/<int:pk>/', ProjectDash.as_view(), name='project_dashboard'),
     path('level2/list/<slug:program>/<slug:status>/', ProgramDash.as_view(), name='projects_list'),
+    path('documentation/add', add_documentation, name='add-documentation'),
+    path('contact/add', ContactCreate.as_view(), name='add-contact'),
 
     # projects / project agreements
     path('<int:pk>/', ProjectAgreementList.as_view(), name='projectagreement_list'),
@@ -126,16 +123,13 @@ urlpatterns = [
         name='benchmark_delete'),
 
     # stakeholders
-    path('stakeholder_list/<slug:program_id>/<slug:project_id>/',
-        StakeholderList.as_view(), name='stakeholder_list'),
-    path('stakeholder_table/<slug:program_id>/<int:pk>/',
-        StakeholderObjects.as_view(), name='stakeholder_table'),
-    path('stakeholder_add/<int:id>/', StakeholderCreate.as_view(),
-        name='stakeholder_add'),
-    path('stakeholder_update/<int:pk>/', StakeholderUpdate.as_view(),
-        name='stakeholder_update'),
-    path('export_stakeholders_list/<slug:program_id>/',
-        export_stakeholders_list, name='export_stakeholders_list'),
+    path('stakeholder_list/<slug:program_id>/<slug:project_id>/', StakeholderList.as_view(), name='stakeholder_list'),
+    path('stakeholder/add', add_stakeholder, name='add-stakeholder'),
+    path('stakeholder/delete_stakeholder/<int:pk>/', delete_stakeholder, name='delete_stakeholder'),
+    path('stakeholder_table/<slug:program_id>/<int:pk>/', StakeholderObjects.as_view(), name='stakeholder_table'),
+    path('stakeholder_add/<int:id>/', StakeholderCreate.as_view(), name='stakeholder_add'),
+    path('stakeholder_update/<int:pk>/', StakeholderUpdate.as_view(), name='stakeholder_update'),
+    path('export_stakeholders_list/<slug:program_id>/', export_stakeholders_list, name='export_stakeholders_list'),
 
     # sites / site profiles
     path('site_list/<slug:program_id>/<int:pk>/', SiteProfileList.as_view(),

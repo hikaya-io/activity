@@ -345,6 +345,7 @@ class UserLogin(View):
         # check if user is active
         user = User.objects.filter(Q(username__iexact=username) | Q(email__iexact=username.lower())).first()
         if not user:
+            messages.error(request, 'Incorrect credentials.', fail_silently=True)
             return render(request, 'registration/login.html')
 
         if not user.is_active:
@@ -354,6 +355,7 @@ class UserLogin(View):
         # proceed to authenticate the user
         user = authenticate(username=user.username, password=password)
         if not user:
+            messages.error(request, 'Incorrect credentials.', fail_silently=True)
             return render(request, 'registration/login.html')
 
         login(request, user)
