@@ -11,7 +11,14 @@ new Vue({
 		location_description: '',
         latitude: null,
 		longitude: null,
+		admin_boundary: '',
 		zoom: null,
+		adminBoundaries = [
+			{label: 'ADM0', value: 'ADM0'},
+			{label: 'ADM1', value: 'ADM1'},
+			{label: 'ADM2', value: 'ADM2'},
+			{label: 'ADM2', value: 'ADM2'}
+		]
 	},
 	beforeMount: function() {
 		this.makeRequest('GET', '/workflow/organization/1/?user_org=1')
