@@ -170,9 +170,15 @@ new Vue({
 
 		getBoundaryData(admin) {
 			let data = null;
+			const country = this.countries.find(item => item.id === +this.country_code[0]);
+			console.log('Country:::', country)
 			this.makeRequest(
 				'GET', 
-				'https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/KEN/ADM3/KEN_ADM3.geojson'
+				`https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/${
+					country.code.toUpperCase()
+				}/${
+					admin.toUpperCase()
+				}/${country.code.toUpperCase()}_${admin.toUpperCase()}.geojson`
 			)
 			.then(response => {
 				data = response.data;
