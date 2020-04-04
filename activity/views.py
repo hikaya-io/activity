@@ -170,6 +170,17 @@ class MultipleUserNameError(Exception):
     """Existing Username Error"""
     pass
 
+# https://python-social-auth.readthedocs.io/en/latest/pipeline.html#authentication-pipeline
+# ? Are these signatures the same for Microsoft?
+def remove_inactive_user(uid, **kwargs):
+    """
+    If there exists an INACTIVE user with the same email, delete it and its ActivityUser
+    """
+    if User.objects.filter(email=uid, is_active=False).exists():
+        existing_user = User.objects.get(email=uid, is_active=False)
+        existing_user.activity_user.delete()
+        existing_user.delete()
+
 
 def register(request, invite_uuid):
     """

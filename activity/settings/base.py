@@ -279,13 +279,8 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # ###### AUTHENTICATION BAKEND CONFIG ######
 # https://github.com/django/django/blob/master/django/contrib/auth/backends.py
 AUTHENTICATION_BACKENDS = (
-    # 'social_core.backends.open_id.OpenIdAuth',
-    # 'social_core.backends.google.GoogleOpenId',
     'social_core.backends.google.GoogleOAuth2',
-    # 'social_core.backends.google.GoogleOAuth',
-    # 'social_core.backends.twitter.TwitterOAuth',
-    # 'social_core.backends.yahoo.YahooOpenId',
-    # 'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.microsoft.MicrosoftOAuth2',
     'activity.middlewares.custom_middlewares.EmailOrUsernameBackend',
 )
 
@@ -294,6 +289,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_uid',
     'social_core.pipeline.social_auth.auth_allowed',
     'social_core.pipeline.social_auth.social_user',
+    'activity.views.remove_inactive_user',
     'social_core.pipeline.social_auth.associate_by_email',
     'social_core.pipeline.user.get_username',
     'social_core.pipeline.user.create_user',
@@ -301,6 +297,9 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
 )
+
+# https://python-social-auth.readthedocs.io/en/latest/configuration/django.html#database
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 # ########### END OF AUTHENTICATION BACKEND ##############
 
