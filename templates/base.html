@@ -122,9 +122,7 @@
         {% if user.is_authenticated and user.activity_user.organization.logo.url %}
           <img src="{{ user.activity_user.organization.logo.url }}" alt="Activity">
         {% else %}
-        <a class="navbar-brand" href="{% url 'index' %}">
-          <b>Activity</b>	
-        </a>
+          <img src="{{ STATIC_URL }}img/hikaya-activity-logo.png"  alt="Activity">
         {% endif %}
         </a>
       </div>
