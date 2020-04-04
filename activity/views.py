@@ -61,6 +61,11 @@ class IndexView(LoginRequiredMixin, TemplateView):
     login_url = '/accounts/login/'
 
     def get(self, request, program_id=0, *args, **kwargs):
+        # If the user has no linked organization, redirect to create one
+        if request.user.activity_user.organization is None:
+            # return render(request, 'registration/login.html')
+            return redirect('/accounts/register/organization')
+
         # set the selected program
         selected_program = Program.objects.filter(id=program_id).first()
 
