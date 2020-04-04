@@ -1,0 +1,145 @@
+<div id="level_1_list">
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">[[ level_1_label ]] List</h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <a
+            role="button"
+            class="btn btn-sm btn-primary"
+            id="show-modal"
+            @click="toggleModal()"
+          >
+            <i class="fa fa-plus"></i> [[ level_1_label ]]
+          </a>
+        </div>
+        <!-- Program create modal -->
+        <modal v-if="showModal" @close="showModal = false">
+          <div slot="body">
+            {% include './modals/add_level1_modal.html' %}
+          </div>
+          <div slot="footer">
+            {% include 'ui-components/quick_entry_modal_footer.html' %}
+          </div>
+          <h4 slot="header">[[modalHeader]]</h4>
+        </modal>
+        <!-- Program delete modal -->
+        <modal v-if="showDeleteModal" @close="showDeleteModal = false">
+          <h4 slot="header">[[modalHeader]]</h4>
+          <div slot="body">
+            <p>
+              Are you sure you want to delete <b>[[ itemToDelete.name ]]</b>?
+            </p>
+          </div>
+          <div slot="footer">
+            <div class="text-right">
+              <button
+                type="submit"
+                class="btn btn-close"
+                @click="showDeleteModal = false"
+              >
+                Cancel
+              </button>
+              <button
+                class="btn btn-danger"
+                @click="deleteProgram(itemToDelete.id)"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </modal>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-10" v-if="!programsList.length">
+    {% include 'admin/no_data.html' %}
+  </div>
+
+  <!-- Table -->
+  <table class="table" id="level1Table" v-if="programsList.length">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr v-cloak v-for="program in programsList" v-if="program.name">
+        <td>
+            <a v-bind:href="'/workflow/level1_edit/'+program.id+'/'" data-toggle="tooltip" :title="program.name">
+                [[ program.name ]]
+            </a>
+        </td>
+        <td>
+          [[ formatDate(program.start_date) ]]
+        </td>
+        <td>
+          [[ formatDate(program.end_date) ]]
+        </td>
+        <td class="text-right">
+          <!-- Split button -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm disabled">
+              More
+            </button>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li class="dropdown-header">Related</li>
+              <li>
+                <a href="/workflow/level2/list/{{ program.id }}/none/"
+                  >[[ level_2_label ]]</a
+                >
+              </li>
+              <li>
+                <a href="/workflow/stakeholder_list/0/0/"
+                  >[[ stakeholder_label ]]</a
+                >
+              </li>
+              <li>
+                <a href="/workflow/siteprofile_list/0/0/list/"
+                  >[[ site_label ]]</a
+                >
+              </li>
+              <li>
+                <a href="/indicators/home/0/0/0/">[[ indicator_label ]]</a>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a v-bind:href="'/workflow/level1_edit/'+program.id+'/'"
+                  >Edit</a
+                >
+              </li>
+              <li>
+                <a
+                  class="text-danger force-link"
+                  @click="toggleDeleteModal(program)"
+                  >Delete</a
+                >
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% include 'ui-components/vue_modal.html'%} {% block extra_js_in_body %}
+<script type="text/javascript" src="{{ STATIC_URL }}vue.js/workflow/level_1.js"></script>
+{% endblock extra_js_in_body %}
