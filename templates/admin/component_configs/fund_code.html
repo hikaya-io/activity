@@ -28,18 +28,18 @@
       }"
   >
     <label for="stakeholder">Stakeholder</label>
-    <select
+    <hikaya-select
       id="stakeholder"
-      :class="{
-              'form-control': true,
-          }"
+      name="stakeholder"
+      :required="false"
+      :searchable="false"
       v-model="stakeholder"
       placeholder="Stakeholder"
+      label="name"
+      :options="stakeholders"
+      :reduce="stakeholder => stakeholder.id"
     >
-      <option
-          v-for="stakeholder in stakeholders"
-          selected="currentFundCode.stakeholder == stakeholder.id ? 'true' : 'false'"
-          :value=stakeholder.id>[[ stakeholder.name ]]</option>
-    </select>
+
+    </hikaya-select>
   </div>
 </div>
