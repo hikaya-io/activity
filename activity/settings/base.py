@@ -296,6 +296,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
+    'activity.views.handle_new_social_login',
 )
 
 # https://python-social-auth.readthedocs.io/en/latest/configuration/django.html#database

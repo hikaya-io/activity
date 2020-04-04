@@ -181,6 +181,16 @@ def remove_inactive_user(uid, **kwargs):
         existing_user.activity_user.delete()
         existing_user.delete()
 
+# https://python-social-auth.readthedocs.io/en/latest/pipeline.html#authentication-pipeline
+def handle_new_social_login(response, user, is_new, details, username, new_association, social, **kwargs):
+    """
+    Create an ActivityUser for social logins with unused emails
+    """
+    if new_association and not ActivityUser.objects.filter(user=user).exists():
+        ActivityUser.objects.create(
+            user=user,
+            name='{} {}'.format(user.first_name, user.last_name)
+        )
 
 def register(request, invite_uuid):
     """
