@@ -8,6 +8,7 @@ new Vue({
 	data: {
 		organization: null,
 		countries: [],
+		countriesData: [],
         country_code: '',
 		location_description: '',
         latitude: null,
@@ -140,9 +141,9 @@ new Vue({
 			
 			if (adminBoundary) {
 				var myStyle = {
-					"color": "#00ff00",
-					"weight": 5,
-					"opacity": 0.9
+					"color": "#00CCCC",
+					"weight": 3,
+					"opacity": 0.50
 				};
 				
 				L.geoJSON(geoJsonData, {
@@ -165,9 +166,13 @@ new Vue({
 		renderCounntryBoundaries(value) {
 			console.log(value)
 			this.getBoundaryData(value);
-
+			this.loadBoundaryData();
+			console.log('Country Data:::', this.countriesData)
 		},
 
+		/**
+		 * 
+		 */
 		getBoundaryData(admin) {
 			let data = null;
 			const country = this.countries.find(item => item.id === +this.country_code[0]);
@@ -191,6 +196,34 @@ new Vue({
 			});
 			return data;
 
+		},
+
+		/**
+		 * Load geoJson data for the selected countries
+		 */
+		loadBoundaryData() {
+			this.countriesData = [];
+			if(this.country_code) {
+				this.country_code.forEach(code => {
+					let data = null;
+					const country = this.countries.find(item => item.id === +this.country_code[0]);
+					this.makeRequest(
+						'GET', 
+						`https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/${
+							country.code.toUpperCase()
+						}/${
+							admin.toUpperCase()
+						}/${country.code.toUpperCase()}_${admin.toUpperCase()}.geojson`
+					)
+					.then(response => {
+						data = response.data;
+						this.countriesData.push(data);						
+					})
+					.catch(e => {
+						toastr.error('There was a problem loading boundary data for the country');
+					});
+				});
+			}
 		}
 	},
 
