@@ -19,7 +19,8 @@ new Vue({
 			{label: 'ADM1', value: 'ADM1'},
 			{label: 'ADM2', value: 'ADM2'},
 			{label: 'ADM3', value: 'ADM3'}
-		]
+		],
+		showAdminBoundary: false
 	},
 	beforeMount: function() {
 		this.makeRequest('GET', '/workflow/organization/?user_org=true')
@@ -31,6 +32,7 @@ new Vue({
 				}
 			})
 			.catch(e => {
+				console.log(e)
 				toastr.error('There was a problem loading organization location from the database!');
 				this.organization = null;
 			});
@@ -62,6 +64,7 @@ new Vue({
 					this.setOrganizationFields(response.data)
 				}
 			} catch (e) {
+				console.log(e);
 				toastr.error('There was a problem updating your data');
 			}
 		},
@@ -116,7 +119,7 @@ new Vue({
 		/**
 		 * Call this function to draw thw map
 		 */
-		showTheMap() {
+		showTheMap(adminBoundary=null, geoJsonData=null) {
 			var container = L.DomUtil.get('org_map');
 			if(container != null){
 				container._leaflet_id = null;
@@ -134,7 +137,55 @@ new Vue({
 					'attribution': 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
 				}
 			).addTo(map);
+			
+			if (adminBoundary) {
+				var myStyle = {
+					"color": "#00ff00",
+					"weight": 5,
+					"opacity": 0.9
+				};
+				
+				L.geoJSON(geoJsonData, {
+					style: myStyle
+				}).addTo(map);
+			}
 		},
+
+		/**
+		 * on select of a country
+		 * @param {array} selectedValues
+		 */
+		countryCodeSelected(value) {
+			this.showAdminBoundary = true;
+		},
+
+		/**
+		 * Render country Boundary
+		 */
+		renderCounntryBoundaries(value) {
+			console.log(value)
+			this.getBoundaryData(value);
+
+		},
+
+		getBoundaryData(admin) {
+			let data = null;
+			this.makeRequest(
+				'GET', 
+				'https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/KEN/ADM3/KEN_ADM3.geojson'
+			)
+			.then(response => {
+				data = response.data;
+				this.showTheMap(admin, data);
+				console.log('Dataaa:::', response)
+			})
+			.catch(e => {
+				console.log(e)
+				toastr.error('There was a problem loading boundary data for the country');
+			});
+			return data;
+
+		}
 	},
 
 	computed: {
