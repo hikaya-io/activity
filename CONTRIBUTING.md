@@ -95,15 +95,16 @@ This repo is currently maintained by Hikaya, who have commit access. They will l
   - ```bug``` - Something isn't working
   - ```defect``` - Something isn't working right
   - ```enhancement``` - New feature 
-  - ```dependencies``` - Updates dependecies
+  - ```refactor``` - Refactoring existing code
+  - ```dependencies``` - Updates dependencies
   - ```duplicate``` - Issue or pullrequest exists
   - ```help wanted``` - Extra attention is required
   - ```question``` - More information is needed
-  - ```level 0``` - Insignificant task (minimal effort and time needed)
-  - ```level 1``` - Simple issues requiring minimal effort
-  - ```level 2``` - Not so complex, requiring a relatively goot amount of effort and time to fix
-  - ```level 3``` - Complex task
-  - ```level 4``` - Very complext task
+  - ```1``` - Insignificant task (minimal effort and time needed)
+  - ```2``` - Simple issues requiring minimal effort
+  - ```3``` - Not so complex, requiring a relatively good amount of effort and time to fix
+  - ```5``` - Complex task
+  - ```8``` - Very complex task
  
  
 ## Naming conventions
