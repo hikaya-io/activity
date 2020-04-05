@@ -61,6 +61,11 @@ class IndexView(LoginRequiredMixin, TemplateView):
     login_url = '/accounts/login/'
 
     def get(self, request, program_id=0, *args, **kwargs):
+        # If the user has no linked organization, redirect to create one
+        if request.user.activity_user.organization is None:
+            # return render(request, 'registration/login.html')
+            return redirect('/accounts/register/organization')
+
         # set the selected program
         selected_program = Program.objects.filter(id=program_id).first()
 
@@ -165,6 +170,27 @@ class MultipleUserNameError(Exception):
     """Existing Username Error"""
     pass
 
+# https://python-social-auth.readthedocs.io/en/latest/pipeline.html#authentication-pipeline
+# ? Are these signatures the same for Microsoft?
+def remove_inactive_user(uid, **kwargs):
+    """
+    If there exists an INACTIVE user with the same email, delete it and its ActivityUser
+    """
+    if User.objects.filter(email=uid, is_active=False).exists():
+        existing_user = User.objects.get(email=uid, is_active=False)
+        existing_user.activity_user.delete()
+        existing_user.delete()
+
+# https://python-social-auth.readthedocs.io/en/latest/pipeline.html#authentication-pipeline
+def handle_new_social_login(response, user, is_new, details, username, new_association, social, **kwargs):
+    """
+    Create an ActivityUser for social logins with unused emails
+    """
+    if new_association and not ActivityUser.objects.filter(user=user).exists():
+        ActivityUser.objects.create(
+            user=user,
+            name='{} {}'.format(user.first_name, user.last_name)
+        )
 
 def register(request, invite_uuid):
     """
