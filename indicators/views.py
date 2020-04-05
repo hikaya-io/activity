@@ -16,8 +16,10 @@ from rest_framework.permissions import IsAuthenticated
 from activity.permissions import IsReadOnly
 from .export import IndicatorResource, CollectedDataResource
 from .serializers import (PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer,
-                          IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer, ObjectiveSerializer,
-                          DisaggregationTypeSerializer, DisaggregationLabelSerializer, DisaggregationValueSerializer)
+                          IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer,
+                          ObjectiveSerializer,
+                          DisaggregationTypeSerializer, DisaggregationLabelSerializer, DisaggregationValueSerializer,
+                          DocumentationSerializer)
 
 from .tables import IndicatorDataTable
 from .forms import (
@@ -197,7 +199,7 @@ class IndicatorList(ListView):
             'get_indicators': get_indicators,
             'get_indicator_types': get_indicator_types,
             'get_periodic_target': get_periodic_target,
-            'get_documentation': get_documentation,
+            'get_documentation': DocumentationSerializer(get_documentation, many=True).data,
             'program_id': program_id,
             'indicator_id': indicator_id,
             'type_id': type_id,

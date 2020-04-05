@@ -5,6 +5,7 @@ from indicators.models import (
     DataCollectionFrequency, Objective, Level, DisaggregationLabel,
     DisaggregationType, DisaggregationValue
     )
+from workflow.models import Documentation
 
 
 class DisaggregationLabelSerializer(serializers.ModelSerializer):
@@ -82,4 +83,10 @@ class ObjectiveSerializer(serializers.ModelSerializer):
 class LevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Level
+        fields = '__all__'
+
+
+class DocumentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Documentation
         fields = '__all__'
