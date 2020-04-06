@@ -19,6 +19,7 @@ $(document).ready(() => {
         new detailComponent({
           delimiters: ['[[', ']]'],
           data: {
+            documentationList: JSON.parse(document.getElementById('documentation-data').textContent),
             collectedData: result,
             showModal: false,
             showDeleteModal: false,

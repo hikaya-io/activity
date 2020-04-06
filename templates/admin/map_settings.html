@@ -30,21 +30,20 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label" for="country_code">Country Code</label>
                 <div class="col-sm-6">
-                    <select 
-                        id="country_code"
-                        :class="{ 
-                                'form-control': true, 
-                            }"
-                        v-model="country_code"
-                        placeholder="Select Country Code..."
-                        @change="onChange($event)"
-                    >
-                        <option 
-                            v-for="country in countries" 
-                            selected="organization.country_code == country.code ? 'true' : 'false'"
-                            :value=country.code>[[ country.code ]]</option> 
-                    </select>
-                </div>
+                <v-select
+                    class="hikaya-select"
+                    inputId="country_code"
+                    name="country_code"
+                    multiple
+                    label="code"
+                    :searchable="true"
+                    v-model="country_code"
+                    placeholder="Choose country code"
+                    :options="countries"
+                    :reduce="country => country.id"
+                >
+                </v-select>
+            </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label" for="location_description">Description</label>

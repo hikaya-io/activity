@@ -112,34 +112,63 @@
 		</div>
 	</div>
 	<script>
-		let maps = L.map('add-site-modal-map').setView([-1.2921, 36.8219], 13);
-		let the_divicon = L.divIcon({
-				className: 'arrow_box'
-		});
-		let marker = L.marker([-1.2921, 36.8219], {
-				draggable:true
+		$(document).ready(function() {
+			const org_lat = Number('{{user.activity_user.organization.latitude}}');
+			const org_long = Number('{{user.activity_user.organization.longitude}}');
+			const org_zoom = Number('{{user.activity_user.organization.zoom}}')
+
+			let latitude = org_lat ? org_lat : -1.2921;
+			let longitude = org_long ? org_long : 36.8219;
+			let zoom = org_zoom ? org_zoom : 5;
+
+			$('#addLocationModal').on('shown.bs.modal', function () {
+				displayMap(latitude, longitude, zoom);
+			})
+
+			$('#id_latitude').on('input focus keyup', function() {
+				latitude = Number($(this).val());
+				displayMap(latitude, longitude, zoom);
+			});
+			$('#id_longitude').on('input focus keyup', function() {
+				longitude = Number($(this).val());
+				displayMap(latitude, longitude, zoom);
+			});
 		});
 
-		L.tileLayer(
-			'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-				'attribution': 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
-			}
-		).addTo(maps);
-
-		function addToTextBox(lt,ln){
-				document.getElementById('id_latitude').value = (lt).toFixed(7);
-				document.getElementById('id_longitude').value = (ln).toFixed(7);
+		function displayMap(latitude , longitude, zoom) {
+			var container = L.DomUtil.get('add-site-modal-map');
+			if(container != null){
+				container._leaflet_id = null;
+			} 
+			let maps = L.map('add-site-modal-map').setView([latitude, longitude], zoom);
+			let the_divicon = L.divIcon({
+					className: 'arrow_box'
+			});
+			let marker = L.marker([latitude, longitude], {
+					draggable:true
+			});
+	
+			L.tileLayer(
+				'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+					'attribution': 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
+				}
+			).addTo(maps);
+	
+			// adds listener for drag end event
+			marker.on('dragend', function(event){
+					let marker = event.target;
+					let location = marker.getLatLng();
+					let lat = location.lat;
+					let lon = location.lng;
+					addToTextBox(lat,lon);
+			});
+	
+			marker.addTo(maps);
 		}
 
-		// adds listener for drag end event
-		marker.on('dragend', function(event){
-				let marker = event.target;
-				let location = marker.getLatLng();
-				let lat = location.lat;
-				let lon = location.lng;
-				addToTextBox(lat,lon);
-		});
-
-		marker.addTo(maps);
+		function addToTextBox(lt,ln){
+			document.getElementById('id_latitude').value = (lt).toFixed(7);
+			document.getElementById('id_longitude').value = (ln).toFixed(7);
+	}
 	</script>
 </form>
