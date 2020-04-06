@@ -121,6 +121,8 @@ jobs:
         GOOGLE_MAP_API_KEY: ${{ secrets.GOOGLE_MAP_API_KEY }}
         APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
         REGISTRY_OWNER: ${{ secrets.REGISTRY_OWNER }}
+        SOCIAL_AUTH_GOOGLE_OAUTH2_KEY: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY }}
+        SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET }}
         # staging variables. others are reused from dev
         ACTIVITY_CE_DB_NAME_STAGING: ${{ secrets.ACTIVITY_CE_DB_NAME_STAGING }}
         APPLICATION_ENV_STAGING: ${{ secrets.APPLICATION_ENV_STAGING }}

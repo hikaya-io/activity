@@ -21,6 +21,8 @@ export_variables() {
     echo export EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD} >> .env.deploy
     echo export EMAIL_HOST=${EMAIL_HOST} >> .env.deploy
     echo export GOOGLE_MAP_API_KEY=${GOOGLE_MAP_API_KEY} >> .env.deploy
+    echo export SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=${SOCIAL_AUTH_GOOGLE_OAUTH2_KEY} >> .env.deploy
+    echo export SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=${SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET} >> .env.deploy
 }
 
 #@--- Build docker image  and push---@#
