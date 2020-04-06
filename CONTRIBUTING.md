@@ -49,7 +49,7 @@ Our current maintainers are: Peter Odeny ([@odenypeter](https://github.com/odeny
  
 We have 3 main branches in our repo:
 - `Dev` - All bug fixes and enhancements
-- Feature branches (i.e. `ACT-001`) - All feature branches must be named like: ACT-001 (where ACT-001 is the issue number on Jira)
+- Feature branches (i.e. `ACT-001`) - All feature branches must be named like: ACT-001 (where ACT-001 is the issue number on GitHub)
 - `Staging` - This is our QA testing environment
 - `Master` - Clean code in production environment
  
@@ -58,7 +58,7 @@ We have 3 main branches in our repo:
 - All pull requests should be based off of the `Dev` branch.
 - All branch names should follow the issue number such as: `ACT-001`. This should be the Github issue number.
  
-**Commits (Smart Commits)**
+**Commits (Smart Commits, only for Jira)**
  
 - For us to be able to track and link our issues on Github, we use smart commits (This is for issues tracked in Jira). Below is an example of smart commit:
   - ACT-001:- Update Activity UI based on styling guide
@@ -73,7 +73,7 @@ We have 3 main branches in our repo:
   - All set checks passes (We will set the checks for each individual project).
   - The bug/feature/enhancement in question is fully addressed
   - PRs must follow the predefined template. In the PR body, the following questions should be addressed (This is predefined when creating a new PR):
-  	- Descriptive Title
+  	- Descriptive Title: Add the issue number followed by a brief description of the ticket e.g., `ACT-001: Adds project status`
  	- What is the purpose of the PR?
   	- Approach used to address the issue
   	- Any prerequisites before/after merging?
@@ -90,7 +90,7 @@ This repo is currently maintained by Hikaya, who have commit access. They will l
  
 # Coding conventions
  
-## Github labels
+## GitHub labels
   - ```Good first issue``` - Good for newcomers
   - ```bug``` - Something isn't working
   - ```defect``` - Something isn't working right
@@ -125,7 +125,7 @@ We'll continue updating this section as our product matures and more standards a
     - The project uses `Flake8` for python code linting.
  
 ## CI/CD
-  - We are currently using Github Actions for simple build checks.
+  - We are currently using GitHub Actions for simple build checks.
   - In the future, we will introduce more rigorous checks including unit tests, integration tests, end-to-end tests, and automatic deployments to `dev`.
  
 # Community
