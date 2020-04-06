@@ -5,10 +5,12 @@ on:
     branches: 
       - dev
       - master
+      - staging
   pull_request:
     branches: 
       - dev
       - master
+      - staging
 
 jobs:
   Build_and_test:
@@ -72,8 +74,14 @@ jobs:
         SERVICE_ACCESS_TOKEN: ${{ secrets.SERVICE_ACCESS_TOKEN }}
         DB_SIZE: ${{ secrets.DB_SIZE }}
         PG_VERSION: ${{ secrets.PG_VERSION }}
-        DB_NAME_DEV_ENV: ${{ secrets.DB_NAME_DEV_ENV}}
-      
+        DB_NAME_DEV_ENV: ${{ secrets.DB_NAME_DEV_ENV }}
+        # staging vars, some are reused from dev_env
+        BACKEND_BUCKET_STAGING: ${{ secrets.BACKEND_BUCKET_STAGING }}
+        STATE_FILE_STAGING: ${{ secrets.STATE_FILE_STAGING }}
+        CLUSTER_NAME_STAGING: ${{ secrets.CLUSTER_NAME_STAGING }}
+        K8S_VERSION_STAGING: ${{ secrets.K8S_VERSION_STAGING }}
+        DB_NAME_STAGING: ${{ secrets.DB_NAME_STAGING }}
+
       run: |
         export TRAVIS_EVENT_TYPE="push"
         chmod +x ci-scripts/create_infrastructure.sh
@@ -100,19 +108,24 @@ jobs:
         ACTIVITY_CE_DB_USER_DEV: ${{ secrets.ACTIVITY_CE_DB_USER_DEV }}
         ACTIVITY_CE_DB_PASSWORD_DEV: ${{ secrets.ACTIVITY_CE_DB_PASSWORD_DEV }}
         ACTIVITY_CE_DB_HOST_DEV: ${{ secrets.ACTIVITY_CE_DB_HOST_DEV }}
-        SECRET_KEY_DEV_ENV: ${{ secrets.SECRET_KEY_DEV_ENV }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
         DEBUG: ${{ secrets.DEBUG }}
         DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
         DB_ENGINE: ${{ secrets.DB_ENGINE }}
         ACTIVITY_CE_DB_PORT_DEV: ${{ secrets.ACTIVITY_CE_DB_PORT_DEV }}
         APPLICATION_ENV: ${{ secrets.APPLICATION_ENV }}
         EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
-        EMAIL_HOST_USER_DEV: ${{ secrets.EMAIL_HOST_USER_DEV }}
-        EMAIL_HOST_PASSWORD_DEV: ${{ secrets.EMAIL_HOST_PASSWORD_DEV }}
+        EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+        EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
         EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-        GOOGLE_MAP_API_KEY_DEV: ${{ secrets.GOOGLE_MAP_API_KEY_DEV }}
+        GOOGLE_MAP_API_KEY: ${{ secrets.GOOGLE_MAP_API_KEY }}
         APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
         REGISTRY_OWNER: ${{ secrets.REGISTRY_OWNER }}
+        SOCIAL_AUTH_GOOGLE_OAUTH2_KEY: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY }}
+        SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET }}
+        # staging variables. others are reused from dev
+        ACTIVITY_CE_DB_NAME_STAGING: ${{ secrets.ACTIVITY_CE_DB_NAME_STAGING }}
+        APPLICATION_ENV_STAGING: ${{ secrets.APPLICATION_ENV_STAGING }}
 
       run: |
         export TRAVIS_COMMIT=$GITHUB_SHA
@@ -141,21 +154,23 @@ jobs:
         HOST_DOMAIN: ${{ secrets.HOST_DOMAIN }}
         APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
         REGISTRY_OWNER: ${{ secrets.REGISTRY_OWNER }}
+        # staging variables
+        CLUSTER_NAME_STAGING: ${{ secrets.CLUSTER_NAME_STAGING }}
+        HOST_DOMAIN_STAGING: ${{ secrets.HOST_DOMAIN_STAGING }}
+        APPLICATION_ENV_STAGING: ${{ secrets.APPLICATION_ENV_STAGING }}
+        SLACK_CHANNEL_HOOK: ${{ secrets.SLACK_CHANNEL_HOOK }}
       run: |
         export TRAVIS_COMMIT=$GITHUB_SHA
         export FILE_PATH="/github/home/.docker/config.json"
         export TRAVIS_EVENT_TYPE="push"
         chmod +x ci-scripts/deployment.sh
         bash ./ci-scripts/deployment.sh
-    
-  Notify_slack:
-    needs: Deploy 
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.merged
-    steps:
-    - uses: 8398a7/action-slack@v2
-      with:
-        status: ${{ job.status }}
-        author_name: Github Actions Deploy
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CHANNEL_HOOK }}
+        if [[ $? -eq 0 ]]; then
+            export DEPLOY="success"
+        else
+            export DEPLOY="fail"
+        fi
+        export EMOJI=":github:"
+        export TRAVIS_COMMIT_MESSAGE="No Commit message"
+        chmod +x ci-scripts/notify_slack.sh
+        bash ./ci-scripts/notify_slack.sh
