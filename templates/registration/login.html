@@ -81,7 +81,12 @@
                   </div> -->
               </div>
             </form>
-            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login with Google</a>
+            <div class="social-login">
+              <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">
+                <img style="display: block; margin: 0 auto 10px auto;" src="{{ STATIC_URL }}img/google-signin.png" class="img-responsive" alt="Activity">
+              </a>
+            </div>
+            {% comment %} <a href="{% url 'social:begin' 'microsoft-graph' %}?next={{ request.path }}">Login with Google</a> {% endcomment %}
             <div class="col-md-12 text-center">
               <a class="forgot-password" href="/accounts/user/password_reset/">
                 Forgot password?
