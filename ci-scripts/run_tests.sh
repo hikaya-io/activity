@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set +ex
+set -ex
 
 #@--- install and setup python ---@#
 setup_python() {
