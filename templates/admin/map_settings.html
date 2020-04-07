@@ -57,7 +57,7 @@
                         placeholder="Select admin boundary"
                         :options="adminBoundaries"
                         :reduce="boundary => boundary.value"
-                        @input="renderCounntryBoundaries"
+                        @input="renderCountryBoundaries"
                     >
                     </v-select>
                 </div>
@@ -79,7 +79,7 @@
                         v-model="latitude" 
                         class="form-control" 
                         placeholder="Enter decimal degrees"
-                        @keyUp=showTheMap()
+                        @keyUp=getBoundaryData(admin_boundary)
                         />
                 </div>
             </div>
@@ -93,7 +93,7 @@
                         v-model="longitude" 
                         class="form-control" 
                         placeholder="Enter decimal degrees"
-                        @keyUp=showTheMap()
+                        @keyUp=getBoundaryData(admin_boundary)
                         />
                 </div>
             </div>
@@ -107,7 +107,7 @@
                         v-model="zoom" 
                         class="form-control" 
                         placeholder="Zoom"
-                        @keyUp=showTheMap()
+                        @keyUp=getBoundaryData(admin_boundary)
                         />
                 </div>
             </div>

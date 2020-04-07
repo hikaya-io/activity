@@ -166,7 +166,7 @@ new Vue({
 		/**
 		 * Render country Boundary
 		 */
-		renderCounntryBoundaries(value) {
+		renderCountryBoundaries(value) {
 			this.getBoundaryData(value);
 		},
 
@@ -175,23 +175,26 @@ new Vue({
 		 */
 		getBoundaryData(admin) {
 			let data = null;
-			const country = this.countries.find(item => item.id === +this.country_code[0]);
-			this.makeRequest(
-				'GET', 
-				`https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/${
-					country.code.toUpperCase()
-				}/${
-					admin.toUpperCase()
-				}/${country.code.toUpperCase()}_${admin.toUpperCase()}.geojson`
-			)
-			.then(response => {
-				data = response.data;
-				this.showTheMap(admin, data);
-			})
-			.catch(e => {
-				toastr.error('There was a problem loading boundary data for the country');
-			});
-			return data;
+			if(this.admin_boundary && this.country_code.length) {
+				const country = this.countries.find(item => item.id === +this.country_code[0]);
+				this.makeRequest(
+					'GET', 
+					`https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/${
+						country.code.toUpperCase()
+					}/${
+						admin.toUpperCase()
+					}/${country.code.toUpperCase()}_${admin.toUpperCase()}.geojson`
+				)
+				.then(response => {
+					data = response.data;
+					this.showTheMap(admin, data);
+				})
+				.catch(e => {
+					toastr.error('There was a problem loading boundary data for the country');
+				});
+			} else {
+				this.showTheMap();
+			}
 
 		},
 
