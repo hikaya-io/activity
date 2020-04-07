@@ -1,0 +1,164 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-04-07 03:53-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: registration/change_password.html:8 registration/profile.html:53
+#, fuzzy
+#| msgid "Password"
+msgid "Change Password"
+msgstr "Change mon mot de passe"
+
+#: registration/change_password.html:11
+#, fuzzy
+#| msgid "Password"
+msgid "Change your password"
+msgstr "Change mon mot de passe"
+
+#: registration/change_password.html:21
+#, fuzzy
+#| msgid "Password"
+msgid "Old Password"
+msgstr "Ancien mot de passe"
+
+#: registration/change_password.html:30
+#, fuzzy
+#| msgid "Password"
+msgid "New Password"
+msgstr "Nouveau mot de passe"
+
+#: registration/change_password.html:39
+msgid "Your password must be at least 6 characters"
+msgstr "Votre mot de passe doit contenir au moins 6 caractères"
+
+#: registration/change_password.html:43
+#, fuzzy
+#| msgid "Confirm New Password*"
+msgid "Confirm New Password"
+msgstr "Confirmer le nouveau mot de passe"
+
+#: registration/change_password.html:58 registration/profile.html:64
+#: registration/register.html:158
+msgid "Cancel"
+msgstr "Annuler"
+
+#: registration/change_password.html:64
+msgid "Save Changes"
+msgstr "Sauvegarder les modifications"
+
+#: registration/confirm_email.html:7
+msgid "Confirm Your Email Address"
+msgstr "Confirmez votre adresse email"
+
+#: registration/confirm_email.html:12
+msgid "Proceed to your email account to confirm your email address to activate your account"
+msgstr "Accédez à votre compte de messagerie pour confirmer votre adresse e-mail et activer votre Compte"
+
+#: registration/confirm_email.html:13 registration/login.html:8
+#: registration/login.html:20 registration/register.html:18
+msgid "Login"
+msgstr "Se connecter"
+
+#: registration/login.html:29 registration/register.html:26
+msgid "Register"
+msgstr "S'inscrire"
+
+#: registration/login.html:35
+msgid "Fill in your login details to start your session"
+msgstr "Remplissez vos informations de connexion pour démarrer votre session"
+
+#: registration/login.html:43 registration/register.html:68
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: registration/login.html:53 registration/register.html:132
+msgid "Password"
+msgstr "Mot de passe"
+
+#: registration/login.html:64
+msgid "Clear"
+msgstr "Effacer"
+
+#: registration/login.html:71
+msgid "Sign in"
+msgstr "Se connecter"
+
+#: registration/login.html:85
+msgid "Login with Google"
+msgstr "Se connecter avec Google"
+
+#: registration/login.html:88
+msgid "Forgot password?"
+msgstr "Mot de passe oublié?"
+
+#: registration/profile.html:37
+msgid "My Dashboard"
+msgstr "Mon tableau de bord"
+
+#: registration/profile.html:38
+msgid "Profile"
+msgstr "Profile"
+
+#: registration/profile.html:46
+msgid "My Profile"
+msgstr "Mon Profile"
+
+#: registration/profile.html:65
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: registration/register.html:7
+msgid "Create an account"
+msgstr "Créer un compte"
+
+#: registration/register.html:33
+msgid "Fill in your details (mandatory fields are marked with *)"
+msgstr "Remplissez vos données (les champs obligatoires sont marqués d'un *)"
+
+#: registration/register.html:47
+msgid "First Name"
+msgstr "Prénom"
+
+#: registration/register.html:57
+msgid "Last Name"
+msgstr "Nom de famille"
+
+#: registration/register.html:92
+msgid "Email Address"
+msgstr "Adresse e-mail"
+
+#: registration/register.html:114
+msgid "Invalid email address"
+msgstr "Adresse e-mail invalide"
+
+#: registration/register.html:144
+#, fuzzy
+#| msgid "Password"
+msgid "Confirm Password"
+msgstr "Confirmez le mot de passe"
+
+#: registration/register.html:166
+#, fuzzy
+#| msgid "Sign in"
+msgid "Sign up"
+msgstr "Se connecter"
+
+#~ msgid ""
+#~ "Fill in your old, new and confirm your new password to change your "
+#~ "password"
+#~ msgstr "Veuillez changer votre mot de passe"
