@@ -4,95 +4,69 @@
   <div class="modal-body">
     {% csrf_token %}
     <div
-      :class="{ 
+        :class="{
           'form-group': true, 
           'has-error': errors.has('name')
       }"
     >
       <label for="name">Objective name*</label>
       <input
-        type="text"
-        name="name"
-        :class="{ 
+          type="text"
+          name="name"
+          :class="{
                   'form-control': true, 
                   'is-danger': errors.has('name') 
               }"
-        v-model="name"
-        v-validate="'required'"
-        placeholder="Enter objective"
+          v-model="name"
+          v-validate="'required'"
+          placeholder="Enter objective"
       />
       <span v-show="errors.has('name')" class="help is-danger"
-        >[[ errors.first('name') ]]</span
+      >[[ errors.first('name') ]]</span
       >
     </div>
     <div
-      :class="{
+        :class="{
             'form-group': true
         }"
     >
       <label for="parent">Parent objective</label>
-      <v-select
-          class="hikaya-select"
-          inputId="parent"
+      <hikaya-select
+          :required="false"
+          id="parent"
           name="parent"
           label="name"
           :searchable="false"
           v-model="parent_id"
           placeholder="Choose a parent objective"
           :options="parent_obj_list"
-          :reduce="objective => objective.id"
-      >
-        <template #open-indicator="{ attributes }">
-          <i class="caret"></i>
-        </template>
-      </v-select>
+          :reduce="objective => objective.id">
+      </hikaya-select>
     </div>
-    <div
-      :class="{
-            'form-group': true,
-            'has-error': errors.has('program')
-        }"
-    >
+    <div class="form-group">
       <label for="program"
-        >{{ user.activity_user.organization.level_1_label }}*</label
-      >
-      <validation-provider name="program" rules="required" ref="program" v-slot="{ errors }">
-        <div>
-          <v-select
-           input-id="program"
-           :searchable="false"
-           v-model="program_id"
-           @search:blur="blur('program')"
-           placeholder="Choose a {{ user.activity_user.organization.level_1_label }}"
-           label="name"
-           :options="programs_list"
-           :reduce="program => program.program_id"
-           :class="{'hikaya-select': true, 'is-invalid': !!errors.length}"
-          >
-            <template #open-indicator="{ attributes }">
-              <i class="caret"></i>
-            </template>
-          </v-select>
-          <span v-show="errors[0]" class="help is-danger"
-            >[[ errors[0] ]]</span
-          >
-        </div>
-      </validation-provider>
+      >{{ user.activity_user.organization.level_1_label }}*
+      </label>
+      <hikaya-select
+          name="program"
+          :required="true"
+          id="program"
+          :searchable="false"
+          v-model="program_id"
+          placeholder="Choose a {{ user.activity_user.organization.level_1_label }}"
+          label="name"
+          :options="programs_list"
+          :reduce="program => program.program_id">
+      </hikaya-select>
     </div>
-    <div
-      :class="{
-          'form-group': true
-      }"
-    >
+    <div class="form-group">
       <label for="description">Description</label>
       <textarea
-        rows="3"
-        name="description"
-        :class="{ 
-                  'form-control': true, 
-              }"
-        v-model="description"
-        placeholder="Add description"
+          rows="3"
+          name="description"
+          class="form-control"
+          v-model="description"
+          placeholder="Add description"
       ></textarea>
     </div>
   </div>
