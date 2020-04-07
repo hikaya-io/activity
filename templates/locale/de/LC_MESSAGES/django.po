@@ -16,20 +16,20 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: registration/bookmark_confirm_delete.html:2
 msgid "Bookmark Confirm Delete"
-msgstr "Confirmez suppression de Bookmark"
+msgstr ""
 
 #: registration/bookmark_confirm_delete.html:7
 msgid "Are you sure you want to delete"
-msgstr "Etes-vous sûr que vous voulez supprimer"
+msgstr ""
 
 #: registration/bookmark_form.html:5 registration/bookmark_list.html:4
 #: registration/profile.html:38
 msgid "Profile"
-msgstr "Profile"
+msgstr ""
 
 #: registration/bookmark_form.html:6 registration/bookmark_list.html:14
 msgid "Bookmarks"
@@ -37,60 +37,48 @@ msgstr ""
 
 #: registration/bookmark_form.html:7 registration/bookmark_form.html:11
 msgid "Bookmark Form"
-msgstr "Formulaire de Bookmarks"
+msgstr ""
 
 #: registration/bookmark_list.html:5
 msgid "Bookmark List"
-msgstr "Liste de Bookmarks"
+msgstr ""
 
 #: registration/bookmark_list.html:8
 msgid "Your Bookmarks List"
-msgstr "Votre list de Bookmarks"
+msgstr ""
 
 #: registration/bookmark_list.html:22
 msgid "No bookmarks yet."
-msgstr "Aucun Bokmark"
+msgstr ""
 
 #: registration/change_password.html:2
-#, fuzzy
-#| msgid "Password"
 msgid "Password Update"
-msgstr "Mot de passe"
+msgstr ""
 
 #: registration/change_password.html:8 registration/profile.html:53
-#, fuzzy
-#| msgid "Password"
 msgid "Change Password"
-msgstr "Change mon mot de passe"
+msgstr ""
 
 #: registration/change_password.html:11
-#, fuzzy
-#| msgid "Password"
 msgid "Change your password"
-msgstr "Change mon mot de passe"
+msgstr ""
 
 #: registration/change_password.html:21
-#, fuzzy
-#| msgid "Password"
 msgid "Old Password"
-msgstr "Ancien mot de passe"
+msgstr ""
 
 #: registration/change_password.html:30
 #: registration/password_reset_confirm.html:16
-#, fuzzy
-#| msgid "Password"
 msgid "New Password"
-msgstr "Nouveau mot de passe"
+msgstr ""
 
 #: registration/change_password.html:39
 msgid "Your password must be at least 6 characters"
-msgstr "Votre mot de passe doit contenir au moins 6 caractères"
+msgstr ""
 
 #: registration/change_password.html:43
-#, fuzzy
-#| msgid "Confirm New Password*"
 msgid "Confirm New Password"
-msgstr "Confirmer le nouveau mot de passe"
+msgstr ""
 
 #: registration/change_password.html:58
 #: registration/organization_register.html:75
@@ -98,224 +86,198 @@ msgstr "Confirmer le nouveau mot de passe"
 #: registration/password_reset_form.html:34 registration/profile.html:64
 #: registration/register.html:158
 msgid "Cancel"
-msgstr "Annuler"
+msgstr ""
 
 #: registration/change_password.html:64
 msgid "Save Changes"
-msgstr "Sauvegarder les modifications"
+msgstr ""
 
 #: registration/confirm_email.html:7
 msgid "Confirm Your Email Address"
-msgstr "Confirmez votre adresse email"
+msgstr ""
 
 #: registration/confirm_email.html:12
 msgid ""
 "Proceed to your email account to confirm your email address to activate your "
 "account"
 msgstr ""
-"Accédez à votre compte de messagerie pour confirmer votre adresse e-mail et "
-"activer votre Compte"
 
 #: registration/confirm_email.html:13 registration/login.html:8
 #: registration/login.html:20 registration/register.html:18
 msgid "Login"
-msgstr "Se connecter"
+msgstr ""
 
 #: registration/login.html:29 registration/register.html:26
 msgid "Register"
-msgstr "S'inscrire"
+msgstr ""
 
 #: registration/login.html:35
 msgid "Fill in your login details to start your session"
-msgstr "Remplissez vos informations de connexion pour démarrer votre session"
+msgstr ""
 
 #: registration/login.html:43 registration/register.html:68
 msgid "Username"
-msgstr "Nom d'utilisateur"
+msgstr ""
 
 #: registration/login.html:53 registration/register.html:132
 msgid "Password"
-msgstr "Mot de passe"
+msgstr ""
 
 #: registration/login.html:64
 msgid "Clear"
-msgstr "Effacer"
+msgstr ""
 
 #: registration/login.html:71
 msgid "Sign in"
-msgstr "Se connecter"
+msgstr ""
 
 #: registration/login.html:85
 msgid "Login with Google"
-msgstr "Se connecter avec Google"
+msgstr ""
 
 #: registration/login.html:88
 msgid "Forgot password?"
-msgstr "Mot de passe oublié?"
+msgstr ""
 
 #: registration/organization_register.html:5
-#, fuzzy
-#| msgid "Create an account"
 msgid "Create an Organization"
-msgstr "Créer un compte"
+msgstr ""
 
 #: registration/organization_register.html:8
 msgid "Fill in organization details"
-msgstr "Remplissez les données de l'organization"
+msgstr ""
 
 #: registration/organization_register.html:9
-#, fuzzy
-#| msgid "Fill in your details (mandatory fields are marked with *)"
 msgid "(mandatory fields are marked with *)"
-msgstr "Remplissez vos données (les champs obligatoires sont marqués d'un *)"
+msgstr ""
 
 #: registration/organization_register.html:17
-#, fuzzy
-#| msgid "Last Name"
 msgid "Name"
-msgstr "Nom de famille"
+msgstr ""
 
 #: registration/organization_register.html:28
 msgid "Description"
-msgstr "Description"
+msgstr ""
 
 #: registration/organization_register.html:39
 msgid "URL"
-msgstr "URL"
+msgstr ""
 
 #: registration/organization_register.html:50
 msgid "Location"
-msgstr "Localisation"
+msgstr ""
 
 #: registration/organization_register.html:61
 msgid "Activity URL"
-msgstr "URL Activity"
+msgstr ""
 
 #: registration/organization_register.html:79
 msgid "Create"
-msgstr "Créer"
+msgstr ""
 
 #: registration/password_reset_complete.html:5
 msgid "Password reset complete"
-msgstr "réinitialisation du mot de passe terminée"
+msgstr ""
 
 #: registration/password_reset_complete.html:7
 msgid "Your password has been set. You may go ahead and"
-msgstr "Votre mot de passe a été défini. Vous pouvez continuer et"
+msgstr ""
 
 #: registration/password_reset_complete.html:8
-#, fuzzy
-#| msgid "Sign in"
 msgid "sign in"
-msgstr "Se connecter"
+msgstr ""
 
 #: registration/password_reset_complete.html:8
 msgid "now"
-msgstr "maintenant"
+msgstr ""
 
 #: registration/password_reset_confirm.html:2
-#, fuzzy
-#| msgid "Confirm New Password*"
 msgid "Enter new password"
-msgstr "Confirmer le nouveau mot de passe"
+msgstr ""
 
 #: registration/password_reset_confirm.html:6
-#, fuzzy
-#| msgid "Password"
 msgid "Set New Password"
-msgstr "Nouveau mot de passe"
+msgstr ""
 
 #: registration/password_reset_confirm.html:9
-#, fuzzy
-#| msgid ""
-#| "Fill in your old, new and confirm your new password to change your "
-#| "password"
 msgid "Fill in a new password and confirm to reset your current password"
-msgstr "Veuillez changer votre mot de passe"
+msgstr ""
 
 #: registration/password_reset_confirm.html:28
 msgid "New password confirmation"
-msgstr "Confirmation du nouveau mot de passe"
+msgstr ""
 
 #: registration/password_reset_confirm.html:52
-#, fuzzy
-#| msgid "Password"
 msgid "Change my password"
-msgstr "Change mon mot de passe"
+msgstr ""
 
 #: registration/password_reset_done.html:5
 msgid "Success"
-msgstr "Succès"
+msgstr ""
 
 #: registration/password_reset_done.html:7
 msgid "An email has been sent with instructions to reset your password."
-msgstr "Un e-mail a été envoyé avec des instructions pour réinitialiser votre mot de passe."
+msgstr ""
 
 #: registration/password_reset_email.html:16
 #: registration/password_reset_form.html:6
-#, fuzzy
-#| msgid "Password"
 msgid "Reset Password"
-msgstr "Nouveau mot de passe"
+msgstr ""
 
 #: registration/password_reset_form.html:2
-#, fuzzy
-#| msgid "Password"
 msgid "Password Reset"
-msgstr "Mot de passe"
+msgstr ""
 
 #: registration/password_reset_form.html:9
-msgid "Fill in the email address tied to your account and submit to reset your password"
-msgstr "Remplissez l'adresse e-mail liée à votre compte et validez pour réinitialiser votre mot de passe"
+msgid ""
+"Fill in the email address tied to your account and submit to reset your "
+"password"
+msgstr ""
 
 #: registration/password_reset_form.html:16 registration/register.html:92
 msgid "Email Address"
-msgstr "Adresse e-mail"
+msgstr ""
 
 #: registration/password_reset_form.html:40
 msgid "Submit"
-msgstr "Envoyer"
+msgstr ""
 
 #: registration/profile.html:37
 msgid "My Dashboard"
-msgstr "Mon tableau de bord"
+msgstr ""
 
 #: registration/profile.html:46
 msgid "My Profile"
-msgstr "Mon Profile"
+msgstr ""
 
 #: registration/profile.html:65
 msgid "Save"
-msgstr "Sauvegarder"
+msgstr ""
 
 #: registration/register.html:7
 msgid "Create an account"
-msgstr "Créer un compte"
+msgstr ""
 
 #: registration/register.html:33
 msgid "Fill in your details (mandatory fields are marked with *)"
-msgstr "Remplissez vos données (les champs obligatoires sont marqués d'un *)"
+msgstr ""
 
 #: registration/register.html:47
 msgid "First Name"
-msgstr "Prénom"
+msgstr ""
 
 #: registration/register.html:57
 msgid "Last Name"
-msgstr "Nom de famille"
+msgstr ""
 
 #: registration/register.html:114
 msgid "Invalid email address"
-msgstr "Adresse e-mail invalide"
+msgstr ""
 
 #: registration/register.html:144
-#, fuzzy
-#| msgid "Password"
 msgid "Confirm Password"
-msgstr "Confirmez le mot de passe"
+msgstr ""
 
 #: registration/register.html:166
-#, fuzzy
-#| msgid "Sign in"
 msgid "Sign up"
-msgstr "Se connecter"
+msgstr ""

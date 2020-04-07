@@ -1,12 +1,13 @@
 {% extends 'base.html' %} {% block content %}
+{% load i18n %}
 <div class="container auth-container">
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
-			<h1>Create an Organization</h1>
+			<h1>{% trans 'Create an Organization' %}</h1>
 			<div class="panel panel-default auth-main">
 				<div class="panel-heading">
-					<strong>Fill in organization details</strong>
-					<span>(mandatory fields are marked with *)</span>
+					<strong>{% trans 'Fill in organization details' %}</strong>
+					<span>{% trans '(mandatory fields are marked with *)' %}</span>
 				</div>
 				<div class="panel-body">
 					<div class="auth-form">
@@ -14,7 +15,7 @@
 							{% csrf_token %}
 							<div class="row">
 								<div class="form-group" id="div_org_name">
-									<label class="control-label" for="name">Name*</label>
+									<label class="control-label" for="name">{% trans 'Name' %}*</label>
 									<input
 										type="text"
 										id="org_name"
@@ -25,7 +26,7 @@
 							</div>
 							<div class="row">
 								<div class="">
-									<label for="description">Description</label>
+									<label for="description">{% trans 'Description' %}</label>
 									<textarea
 										name="description"
 										id="description"
@@ -36,7 +37,7 @@
 							</div>
 							<div class="row">
 								<div id="div_org_url">
-									<label class="control-label" for="organization_url">URL</label>
+									<label class="control-label" for="organization_url">{% trans 'URL' %}</label>
 									<input
 										type="text"
 										id="org_url"
@@ -47,7 +48,7 @@
 							</div>
 							<div class="row">
 								<div class="" id="div_location">
-									<label class="control-label" for="location">Location</label>
+									<label class="control-label" for="location">{% trans 'Location' %}</label>
 									<input
 										type="text"
 										id="location"
@@ -58,7 +59,7 @@
 							</div>
 							<div class="row">
 								<div class="">
-									<label for="activity_url">Activity URL</label>
+									<label for="activity_url">{% trans 'Activity URL' %}</label>
 									<input
                                         type="text"
 										id="activity_url"
@@ -72,11 +73,11 @@
                                 <div class="text-right">
 									{% if user.activity_user.organization %}
                                     <button  id="reset-org-create-form" type="reset" class="btn btn-md btn-close">
-                                        Cancel
+                                        {% trans 'Cancel' %}
 									</button>
 									{% endif %}
                                     <button id="orgFormSubmitBtn"  type="submit" class="btn btn-success" disabled>
-                                        Create
+                                        {% trans 'Create' %}
                                     </button>
                                 </div>
 							</div>
