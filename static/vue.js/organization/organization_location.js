@@ -29,11 +29,13 @@ new Vue({
 				if (response.data) {
 					this.organization = response.data[0];
 					this.setOrganizationFields(response.data[0])
-					this.showTheMap()
+					if(this.organization.admin_boundary) {
+						this.showAdminBoundary = true;
+						this.getBoundaryData(this.organization.admin_boundary)
+					}
 				}
 			})
 			.catch(e => {
-				console.log(e)
 				toastr.error('There was a problem loading organization location from the database!');
 				this.organization = null;
 			});
@@ -56,7 +58,8 @@ new Vue({
 						location_description: this.location_description,
 						latitude: this.latitude,
 						longitude: this.longitude ,
-						zoom: this.zoom
+						zoom: this.zoom,
+						admin_boundary: this.admin_boundary
                     }
 				);
 				if (response) {
@@ -65,7 +68,6 @@ new Vue({
 					this.setOrganizationFields(response.data)
 				}
 			} catch (e) {
-				console.log(e);
 				toastr.error('There was a problem updating your data');
 			}
 		},
@@ -100,6 +102,7 @@ new Vue({
 			this.latitude = orgObject.latitude;
 			this.longitude = orgObject.longitude;
 			this.zoom = orgObject.zoom;
+			this.admin_boundary = orgObject.admin_boundary;
 		},
 
 		/**
@@ -164,19 +167,15 @@ new Vue({
 		 * Render country Boundary
 		 */
 		renderCounntryBoundaries(value) {
-			console.log(value)
 			this.getBoundaryData(value);
-			this.loadBoundaryData();
-			console.log('Country Data:::', this.countriesData)
 		},
 
 		/**
-		 * 
+		 * Load 
 		 */
 		getBoundaryData(admin) {
 			let data = null;
 			const country = this.countries.find(item => item.id === +this.country_code[0]);
-			console.log('Country:::', country)
 			this.makeRequest(
 				'GET', 
 				`https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/${
@@ -188,10 +187,8 @@ new Vue({
 			.then(response => {
 				data = response.data;
 				this.showTheMap(admin, data);
-				console.log('Dataaa:::', response)
 			})
 			.catch(e => {
-				console.log(e)
 				toastr.error('There was a problem loading boundary data for the country');
 			});
 			return data;
