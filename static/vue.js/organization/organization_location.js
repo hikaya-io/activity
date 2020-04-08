@@ -24,6 +24,9 @@ new Vue({
 		showAdminBoundary: false,
 	},
 	beforeMount: function () {
+		// load countries
+		this.loadCountries();
+
 		this.makeRequest('GET', '/workflow/organization/?user_org=true')
 			.then((response) => {
 				if (response.data) {
@@ -41,8 +44,6 @@ new Vue({
 				);
 				this.organization = null;
 			});
-		// load countries
-		this.loadCountries();
 	},
 	methods: {
 		/**
@@ -56,8 +57,8 @@ new Vue({
 					{
 						country_code: this.country_code,
 						location_description: this.location_description,
-						latitude: this.latitude,
-						longitude: this.longitude,
+						latitude: this.latitude !== '' ? this.latitude : null,
+						longitude: this.longitude !== '' ? this.longitude : null,
 						zoom: this.zoom,
 						admin_boundary: this.admin_boundary,
 					}
@@ -179,17 +180,21 @@ new Vue({
 			let data = null;
 			if (this.admin_boundary && this.country_code.length) {
 				const country = this.countries.find((item) => item.id === +this.country_code[0]);
-				this.makeRequest(
-					'GET',
-					`https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/${country.code.toUpperCase()}/${admin.toUpperCase()}/${country.code.toUpperCase()}_${admin.toUpperCase()}.geojson`
-				)
+				if (country) {
+					this.makeRequest(
+						'GET',
+						`https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/${country.code.toUpperCase()}/${admin.toUpperCase()}/${country.code.toUpperCase()}_${admin.toUpperCase()}.geojson`
+					)
 					.then((response) => {
 						data = response.data;
 						this.showTheMap(admin, data);
 					})
 					.catch((e) => {
-						toastr.error('There was a problem loading boundary data for the country');
+						toastr.error(
+							'There was a problem loading boundary data for the country'
+						);
 					});
+				}
 			} else {
 				this.showTheMap();
 			}
