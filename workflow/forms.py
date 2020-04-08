@@ -358,6 +358,9 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         self.fields['office'].queryset = Office.objects.filter(
                 organization=self.request.user.activity_user.organization).distinct()
 
+        # When a project is being edited, the user cannot select programs from other organizations.
+        self.fields['program'].queryset = Program.objects.filter(organization=kwargs['instance'].program.organization)
+
         # override the site queryset to use request.user for country
         self.fields['site'].queryset = SiteProfile.objects.filter(
             organizations=self.request.user.activity_user.organization,
