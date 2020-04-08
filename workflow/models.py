@@ -35,6 +35,13 @@ APPROVALS = (
     ('Not approved', 'not approved'),
 )
 
+ADMIN_BOUNDARIES = (
+    ('ADM0', 'ADM0'),
+    ('ADM1', 'ADM1'),
+    ('ADM2', 'ADM2'),
+    ('ADM3', 'ADM3'),
+)
+
 
 # New user created generate a token
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -182,6 +189,9 @@ class Organization(models.Model):
     latitude = models.DecimalField("Latitude", max_digits=9, null=True, decimal_places=7, blank=True)
     longitude = models.DecimalField("Longitude", max_digits=9, null=True, decimal_places=7, blank=True)
     zoom = models.IntegerField("Zoom", default=5, blank=True, null=True)
+    admin_boundary = models.CharField(
+        'Admin Boundary', choices=ADMIN_BOUNDARIES, max_length=10, null=True,
+        blank=True, default='ADM0')
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
@@ -392,6 +402,7 @@ class Contact(models.Model):
 # other programs is 'Program Dashboard'
 class FundCode(models.Model):
     name = models.CharField('Fund Code', max_length=255, blank=True)
+    funding = models.IntegerField('Funding', blank=True)
     stakeholder = models.ForeignKey(
         'Stakeholder', related_name='stakeholder', null=True, blank=True,
         on_delete=models.SET_NULL)
@@ -1806,4 +1817,3 @@ class ActivityUserOrganizationGroup(models.Model):
     # displayed in admin templates
     def __str__(self):
         return '{} - {}'.format(self.activity_user, self.organization) or ''
-
