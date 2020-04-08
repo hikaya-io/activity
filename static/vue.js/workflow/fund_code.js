@@ -10,13 +10,13 @@ new Vue({
 	data: {
 		showModal: false,
 		showDeleteModal: false,
-        fundCodes: [],
-        stakeholders: [],
-        name: '',
-        stakeholder: '',
+		fundCodes: [],
+		stakeholders: [],
+		name: '',
+		stakeholder: '',
 		isEdit: false,
 		currentFundCode: null,
-        itemToDelete: null,
+		itemToDelete: null,
 		modalHeader: 'Add Fund Code',
 	},
 	beforeMount: function() {
