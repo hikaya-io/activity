@@ -519,7 +519,7 @@ def admin_configurations(request):
             'form_label': data.get('form_label'),
             'stakeholder_label': data.get('stakeholder_label'),
             'date_format': data.get('date_format'),
-            'beneficiary_label': data.get('beneficiary_label'),
+            'individual_label': data.get('individual_label'),
             'training_label': data.get('training_label'),
             'distribution_label': data.get('distribution_label'),
             # 'default_currency': data.get('default_currency')

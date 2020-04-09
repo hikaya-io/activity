@@ -358,6 +358,9 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         self.fields['office'].queryset = Office.objects.filter(
                 organization=self.request.user.activity_user.organization).distinct()
 
+        # When a project is being edited, the user cannot select programs from other organizations.
+        self.fields['program'].queryset = Program.objects.filter(organization=kwargs['instance'].program.organization)
+
         # override the site queryset to use request.user for country
         self.fields['site'].queryset = SiteProfile.objects.filter(
             organizations=self.request.user.activity_user.organization,
@@ -696,7 +699,7 @@ class ProjectCompleteForm(forms.ModelForm):
                     Fieldset(
                         '', AppendedText(
                             'progress_against_targets', '%'),
-                        'beneficiary_type', 'direct_beneficiaries',
+                        'individual_type', 'direct_individuals',
                         'average_household_size', 'indirect_beneficiaries',
                         'capacity_built', 'quality_assured',
                         'issues_and_challenges', 'lessons_learned',
@@ -1010,7 +1013,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                     Fieldset('',
                              AppendedText(
                                  'progress_against_targets', '%'),
-                             'beneficiary_type', 'capacity_built',
+                             'individual_type', 'capacity_built',
                              'quality_assured', 'issues_and_challenges',
                              'lessons_learned'
                              ),

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from import_export import resources
-from .models import TrainingAttendance, Distribution, Beneficiary
+from .models import TrainingAttendance, Distribution, Individual
 
 
 class TrainingAttendanceResource(resources.ModelResource):
@@ -17,7 +17,7 @@ class DistributionResource(resources.ModelResource):
         model = Distribution
 
 
-class BeneficiaryResource(resources.ModelResource):
+class IndividualResource(resources.ModelResource):
 
     class Meta:
-        model = Beneficiary
+        model = Individual
