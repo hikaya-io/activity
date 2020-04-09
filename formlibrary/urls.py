@@ -3,8 +3,8 @@
 
 from .views import (
     TrainingList, add_training, add_distribution, TrainingListObjects,
-    BeneficiaryList, BeneficiaryCreate, BeneficiaryListObjects,
-    BeneficiaryUpdate, TrainingUpdate, delete_training, delete_beneficiary,
+    IndividualList, IndividualCreate, IndividualListObjects,
+    IndividualUpdate, TrainingUpdate, delete_training, delete_individual,
     TrainingCreate, DistributionList, DistributionCreate, DistributionListObjects,
     DistributionUpdate, delete_distribution, GetAgreements,
     TrainingParticipantListObjects)
@@ -28,16 +28,16 @@ urlpatterns = [
     path('training_participants/<int:pk>', TrainingParticipantListObjects.as_view(),
          name='training_participants'),
 
-    path('beneficiary_list/<slug:program>/<slug:training>/<slug:distribution>/',
-         BeneficiaryList.as_view(), name='beneficiary_list'),
-    path('beneficiary_objects/<slug:program>/<slug:project>/',
-         BeneficiaryListObjects.as_view(), name='beneficiary_objects'),
-    path('beneficiary_add/<slug:id>/',
-         BeneficiaryCreate.as_view(), name='beneficiary_add'),
-    path('beneficiary_update/<slug:pk>/',
-         BeneficiaryUpdate.as_view(), name='beneficiary_update'),
-    path('beneficiary_delete/<slug:pk>/',
-         delete_beneficiary, name='beneficiary_delete'),
+    path('individual_list/<slug:program>/<slug:training>/<slug:distribution>/',
+         IndividualList.as_view(), name='individual_list'),
+    path('individual_objects/<slug:program>/<slug:project>/',
+         IndividualListObjects.as_view(), name='individual_objects'),
+    path('individual_add/<slug:id>/',
+         IndividualCreate.as_view(), name='individual_add'),
+    path('individual_update/<slug:pk>/',
+         IndividualUpdate.as_view(), name='individual_update'),
+    path('individual_delete/<slug:pk>/',
+         delete_individual, name='individual_delete'),
 
     path('distribution_list/<slug:program>/<slug:project>/',
          DistributionList.as_view(), name='distribution_list'),
