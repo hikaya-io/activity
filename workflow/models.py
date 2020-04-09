@@ -402,7 +402,7 @@ class Contact(models.Model):
 # other programs is 'Program Dashboard'
 class FundCode(models.Model):
     name = models.CharField('Fund Code', max_length=255, blank=True)
-    funding = models.IntegerField('Funding', blank=True)
+    percentage_of_funding = models.IntegerField('% of Funding', blank=True)
     stakeholder = models.ForeignKey(
         'Stakeholder', related_name='stakeholder', null=True, blank=True,
         on_delete=models.SET_NULL)

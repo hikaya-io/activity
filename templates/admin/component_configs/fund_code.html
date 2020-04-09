@@ -18,7 +18,7 @@
     >
   </div>
   <div :class="{ 'form-group': true, 'has-error': errors.has('funding') }">
-    <label for="funding">Funding*</label>
+    <label for="funding">% of Funding*</label>
     <input
       type="number"
       min="0"
@@ -30,7 +30,7 @@
       }"
       v-model="funding"
       v-validate="'required'"
-      placeholder="Funding %"
+      placeholder="% of Funding"
     />
     <span v-show="errors.has('funding')" class="help is-danger"
       >[[ errors.first('funding') ]]</span
