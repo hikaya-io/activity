@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-09 05:42-0700\n"
+"POT-Creation-Date: 2020-04-09 06:02-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,98 +21,102 @@ msgstr ""
 #: templates/400.html:4 templates/400.html:6 templates/404.html:4
 #: templates/404.html:6
 msgid "Page Not found"
-msgstr ""
+msgstr "Page non trouvée"
 
 #: templates/400.html:14 templates/404.html:19
 msgid "This is not the page you were looking for,"
-msgstr ""
+msgstr "Ceci n'est pas la page que vous cherchiez"
 
 #: templates/400.html:14 templates/404.html:19
 msgid "you may be lost."
-msgstr ""
+msgstr "vous pourriez être perdu."
 
 #: templates/400.html:15 templates/403.html:16 templates/404.html:20
 #: templates/500.html:17
 msgid "Go to home page"
-msgstr ""
+msgstr "Aller à la page d'accueil"
 
 #: templates/403.html:4
 msgid "Additional Permissions Required"
-msgstr ""
+msgstr "Autorisations supplémentaires requises"
 
 #: templates/403.html:6
 msgid "You don't appear to have the proper permissions to access this page."
 msgstr ""
+"Vous ne semblez pas avoir les autorisations appropriées pour accéder à cette "
+"page."
 
 #: templates/403.html:14
-msgid "You don"
-msgstr ""
+msgid "You don't have the proper permissions"
+msgstr "Vous ne disposez pas des autorisations appropriées"
 
 #: templates/403.html:15
 msgid "Contact your organization or country admin"
-msgstr ""
+msgstr "Veullez contactez votre organisation"
 
 #: templates/500.html:5 templates/500.html:7
 msgid "Server Error"
-msgstr ""
+msgstr "Erreur Serveur"
 
 #: templates/500.html:15
 msgid "There was a problem loading this page."
-msgstr ""
+msgstr "Un problème est survenu lors du chargement de cette page."
 
 #: templates/500.html:16
 msgid "Notify your systems administrator if you think"
-msgstr ""
+msgstr "Notifiez votre administrateur système si vous pense que"
 
 #: templates/500.html:16
 msgid "you should not be seeing this page."
-msgstr ""
+msgstr "vous n'êtes pas censé voir cette page"
 
-#: templates/comingsoon.html:2
+#: templates/comingsoon.html:3
 msgid "We’re still working on this,"
-msgstr ""
+msgstr "Nous travaillons encore sur cela,"
 
-#: templates/comingsoon.html:2
+#: templates/comingsoon.html:3
 msgid "stay tuned!"
-msgstr ""
+msgstr "restez à l'écoute"
 
-#: templates/contact.html:2 templates/report_base.html:172
+#: templates/contact.html:4 templates/report_base.html:174
 msgid "Feedback"
-msgstr ""
+msgstr "Feedback"
 
-#: templates/contact.html:6
+#: templates/contact.html:8
 msgid "Message"
-msgstr ""
+msgstr "Message"
 
-#: templates/contact.html:14
+#: templates/contact.html:16
 msgid ""
 "Let us know if you are having a problem or would like to see something "
 "change."
 msgstr ""
+"Faites-nous savoir si vous rencontrez un problème ou si vous avez des "
+"suggestions"
 
-#: templates/documentation.html:2 templates/report_base.html:172
+#: templates/documentation.html:4 templates/report_base.html:174
 #, fuzzy
 #| msgid "Location"
 msgid "Documentation"
 msgstr "Localisation"
 
-#: templates/documentation.html:13
+#: templates/documentation.html:15
 msgid "No Documentation yet."
-msgstr ""
-
-#: templates/filefield.html:14
-msgid "Select image"
-msgstr ""
+msgstr "Pas encore de documentation"
 
 #: templates/filefield.html:15
+msgid "Select image"
+msgstr "Choisir une image"
+
+#: templates/filefield.html:16
 msgid "Remove"
-msgstr ""
+msgstr "Supprimer"
 
-#: templates/form_guidance.html:8 templates/form_guidance.html:14
+#: templates/form_guidance.html:9 templates/form_guidance.html:15
 msgid "Help"
-msgstr ""
+msgstr "Aide"
 
-#: templates/form_guidance.html:23
+#: templates/form_guidance.html:24
 #: templates/registration/change_password.html:58
 #: templates/registration/organization_register.html:76
 #: templates/registration/password_reset_confirm.html:47
@@ -122,107 +126,107 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuler"
 
-#: templates/index.html:36 templates/registration/profile.html:37
-#: templates/report_base.html:53 templates/report_base.html:56
-#: templates/report_base.html:58 templates/report_base.html:64
-#: templates/report_base.html:73 templates/report_base.html:74
-#: templates/report_base.html:75 templates/report_base.html:80
-#: templates/report_base.html:88 templates/report_base.html:90
-#: templates/report_base.html:91 templates/report_base.html:92
-#: templates/report_base.html:101 templates/report_base.html:103
-#: templates/report_base.html:105 templates/report_base.html:110
-#: templates/report_base.html:111 templates/report_base.html:128
+#: templates/index.html:37 templates/registration/profile.html:37
+#: templates/report_base.html:55 templates/report_base.html:58
+#: templates/report_base.html:60 templates/report_base.html:66
+#: templates/report_base.html:75 templates/report_base.html:76
+#: templates/report_base.html:77 templates/report_base.html:82
+#: templates/report_base.html:90 templates/report_base.html:92
+#: templates/report_base.html:93 templates/report_base.html:94
+#: templates/report_base.html:103 templates/report_base.html:105
+#: templates/report_base.html:107 templates/report_base.html:112
+#: templates/report_base.html:113 templates/report_base.html:130
 msgid "My Dashboard"
 msgstr "Mon tableau de bord"
 
-#: templates/index.html:41
+#: templates/index.html:42
 msgid "Filter by"
-msgstr ""
+msgstr "Filtrer par"
 
-#: templates/index.html:66
+#: templates/index.html:67
 msgid "All"
-msgstr ""
+msgstr "Tout"
 
-#: templates/index.html:107
+#: templates/index.html:108
 msgid "Workflows"
-msgstr ""
+msgstr "Workflows"
 
-#: templates/index.html:148
+#: templates/index.html:149
 msgid "Tracking"
-msgstr ""
+msgstr "Tracking"
 
-#: templates/index.html:152 templates/index.html:210 templates/index.html:278
-#: templates/index.html:289
+#: templates/index.html:153 templates/index.html:211 templates/index.html:279
+#: templates/index.html:290
 msgid "out of"
-msgstr ""
+msgstr "parmis"
 
-#: templates/index.html:207
+#: templates/index.html:208
 msgid "KPIs"
-msgstr ""
+msgstr "KPIs"
 
-#: templates/index.html:218
+#: templates/index.html:219
 msgid "Collected Data"
-msgstr ""
+msgstr "Données collectées"
 
-#: templates/index.html:225
+#: templates/index.html:226
 msgid "Latest"
-msgstr ""
+msgstr "Dernier"
 
-#: templates/index.html:225
+#: templates/index.html:226
 msgid "Key Performance Indicators"
-msgstr ""
-
-#: templates/index.html:229
-msgid "Level"
-msgstr ""
+msgstr "Indicateurs clés de performance"
 
 #: templates/index.html:230
-msgid "Indicator"
-msgstr ""
+msgid "Level"
+msgstr "Niveau"
 
 #: templates/index.html:231
-msgid "Target"
-msgstr ""
+msgid "Indicator"
+msgstr "Indicateur"
 
 #: templates/index.html:232
+msgid "Target"
+msgstr "Cible"
+
+#: templates/index.html:233
 msgid "Actual"
-msgstr ""
+msgstr "Actuel"
 
-#: templates/index.html:260
+#: templates/index.html:261
 msgid "Components"
-msgstr ""
+msgstr "Composantes"
 
-#: templates/index.html:275
+#: templates/index.html:276
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
-#: templates/index.html:286
+#: templates/index.html:287
 #, fuzzy
 #| msgid "Location"
 msgid "Active Locations"
 msgstr "Localisation"
 
-#: templates/index.html:289
+#: templates/index.html:290
 #, fuzzy
 #| msgid "Location"
 msgid "locations"
 msgstr "Localisation"
 
-#: templates/index.html:301 templates/index.html:307
+#: templates/index.html:302 templates/index.html:308
 msgid "Documents"
-msgstr ""
+msgstr "Documents"
 
-#: templates/index.html:303 templates/index.html:309
+#: templates/index.html:304 templates/index.html:310
 msgid "linked to"
-msgstr ""
+msgstr "lié à"
 
-#: templates/index.html:323 templates/index.html:331
+#: templates/index.html:324 templates/index.html:332
 msgid "with"
-msgstr ""
+msgstr "avec"
 
-#: templates/index.html:323 templates/index.html:331
+#: templates/index.html:324 templates/index.html:332
 msgid "contacts"
-msgstr ""
+msgstr "contacts"
 
 #: templates/registration/bookmark_confirm_delete.html:2
 msgid "Bookmark Confirm Delete"
@@ -464,8 +468,12 @@ msgstr ""
 "passe."
 
 #: templates/registration/password_reset_done.html:11
-msgid "If you don"
-msgstr ""
+msgid ""
+"If you don't receive an email, please make sure you've entered the address "
+"you registered with, and check your spam folder."
+msgstr "
+
+Si vous ne recevez pas d'e-mail, assurez-vous d'avoir entré l'adresse avec laquelle vous vous êtes enregistré et vérifiez votre spam."
 
 #: templates/registration/password_reset_email.html:17
 #: templates/registration/password_reset_form.html:7
@@ -537,6 +545,6 @@ msgstr "Confirmez le mot de passe"
 msgid "Sign up"
 msgstr "Se connecter"
 
-#: templates/report_base.html:172
+#: templates/report_base.html:174
 msgid "FAQ"
-msgstr ""
+msgstr "FAQ"
