@@ -1,25 +1,39 @@
 <div class="modal-body">
   {% csrf_token %}
-  <div
-    :class="{
-              'form-group': true,
-              'has-error': errors.has('name')
-          }"
-  >
+  <div :class="{ 'form-group': true, 'has-error': errors.has('name') }">
     <label for="name">Fund Code*</label>
     <input
       type="text"
       name="name"
       :class="{
-              'form-control': true,
-              'is-danger': errors.has('name')
-          }"
+        'form-control': true,
+        'is-danger': errors.has('name')
+      }"
       v-model="name"
       v-validate="'required'"
-      placeholder="Name"
+      placeholder="Fund Code"
     />
     <span v-show="errors.has('name')" class="help is-danger"
       >[[ errors.first('name') ]]</span
+    >
+  </div>
+  <div :class="{ 'form-group': true, 'has-error': errors.has('funding') }">
+    <label for="funding">Funding*</label>
+    <input
+      type="number"
+      min="0"
+      max="100"
+      name="funding"
+      :class="{
+        'form-control': true,
+        'is-danger': errors.has('name')
+      }"
+      v-model="funding"
+      v-validate="'required'"
+      placeholder="Funding %"
+    />
+    <span v-show="errors.has('funding')" class="help is-danger"
+      >[[ errors.first('funding') ]]</span
     >
   </div>
   <div
