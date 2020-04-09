@@ -146,7 +146,7 @@
               <!-- awaiting approval count-->
               <a class="btn btn-info btn-xs" href="/workflow/dashboard/{{ get_program.id }}/awaiting_approval/"
                 >
-                  Awaiting Approval 
+                  Awaiting Approval
                   <span class="badge badge-info">
                       {{ get_awaiting_approval_count }}</span>
                 </a>
@@ -196,7 +196,7 @@
                           <th>EXp. Start Date</th>
                         </tr>
                     </thead>
-                    <tbody> 
+                    <tbody>
                         {% for project in getAllProjects %}
                         <tr>
                           <td>{{ project.activity_code }}</td>
@@ -257,7 +257,7 @@
       </div>
       <div class="tab-pane" id="indicators">
         <h4 class="page-header">Key Performance Indicators</h4>
-       
+
         <div class="mb-3">
           <button class="btn btn-info btn-xs">{{ user.activity_user.organization.indicator_label }}
               <span class="badge badge-info">{{ get_indicator_count }}</span>
@@ -346,7 +346,7 @@
         <h4 class="page-header">
           Analysis (Analysis reports, visualizations and Notebooks)
         </h4>
-        
+
         {% for notebook in get_notebooks %}
         <div class="row">
           <div class="panel panel-info">
@@ -389,7 +389,7 @@
                       {% for item in getBeneficiaries %}
                       <tr>
                         <td>{{ item.create_date | date }}</td>
-                        <td>{{ item.beneficiary_name }}</td>
+                        <td>{{ item.first_name }}</td>
                         <td>{{ item.age }}</td>
                         <td>{{ item.gender }}</td>
                       </tr>
@@ -411,7 +411,7 @@
                             <th>Date Created</th>
                         </tr>
                     </thead>
-                    
+
                     <tbody>
                         {% for item in getTrainings %}
                         <tr>
@@ -423,7 +423,7 @@
                 </table>
             </div>
         </div>
-        
+
         <div class="panel panel-info">
             <div class="panel-heading">
                 <strong>Distributions for {{ get_program.name }} </strong>
@@ -455,7 +455,7 @@
         <h4 class="page-header">
           {{ get_program_narrative.narrative_title }}
         </h4>
-        
+
         <div class="well well-sm">
             <p>{{ get_program_narrative.narrative }}</p>
         </div>

@@ -28,7 +28,7 @@
   <div class="row">
     <h3>{% if get_program %}{{ get_program.name }}{% endif %}</h3>
 
-            
+
       <!-- tabs left -->
       <div class="tabbable tabs-left">
         <div class="tab_navs"></div>
@@ -38,10 +38,10 @@
             <li><a href="#indicators"  data-toggle="tab"><i class="fa fa-bars"></i> Indicators</a></li>
             <li><a href="#monitoring"  data-toggle="tab"><i class="fa fa-tasks"></i> Monitoring</a></li>
             <li><a href="#i_surveys" data-toggle="tab"><i class="fa fa-list-alt"></i> Evidence</a></li>
-    
+
         </ul>
         <div class="tab-content col-md-10 row">
-            
+
             <div class="sidebar-pane" id="projects">
                   <h1 class="sidebar-header">{{ user.activity_user.organization.level_2_label }} Status and Key Performance Indicators</h1>
                     <br>
@@ -54,7 +54,7 @@
                        <span class="label label-success">Rejected &nbsp;<span class="badge">{{ get_in_progress_count }}</span></span>
 
                       </a>
-                    </h4>  
+                    </h4>
                      <!-- The table collapse panel -->
                           <div class="panel-group">
                             <div class="panel panel-default">
@@ -208,7 +208,7 @@
                         </div>
                     </div> -->
                     <!-- End of the map -->
-                
+
             </div>
 
             <!-- Monitoring contents -->
@@ -231,7 +231,7 @@
                                  {% for item in getBeneficiaries %}
                                     <tr>
                                         <td>{{ item.create_date|date }} </td>
-                                        <td>{{ item.beneficiary_name }}</td>
+                                        <td>{{ item.first_name }}</td>
                                         <td>{{ item.age }}</td>
                                         <td>{{ item.gender }}</td>
                                     </tr>
@@ -313,7 +313,7 @@
                     </div>
                     {% endfor %}
                 </div>
-                    
+
             </div>
 
             <div class="sidebar-pane active" id="dashboard">
@@ -351,7 +351,7 @@
                 </div>
                 <!-- End of doughnut and polar charts -->
 
-                
+
                 <!-- The map -->
                 <div class="row">
                     <div class="panel panel-info">
@@ -373,7 +373,7 @@
          </div>
     </div>
       <!-- /tabs -->
-    
+
   </div><!-- /row -->
 
         <script src="{{ STATIC_URL }}publicdashboard/js/vendor/jquery-1.11.1.min.js"></script>

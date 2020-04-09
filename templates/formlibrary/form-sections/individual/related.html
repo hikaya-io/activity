@@ -1,0 +1,9 @@
+{% load crispy_forms_tags %}
+<div class="row">
+	<div class="col-md-6">
+		{{ form.training | as_crispy_field }}
+	</div>
+	<div class="col-md-6">
+		{{ form.distribution | as_crispy_field }}
+	</div>
+</div>
