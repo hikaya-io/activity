@@ -33,7 +33,7 @@ msgstr "Profile"
 
 #: registration/bookmark_form.html:6 registration/bookmark_list.html:14
 msgid "Bookmarks"
-msgstr ""
+msgstr "Bookmarks"
 
 #: registration/bookmark_form.html:7 registration/bookmark_form.html:11
 msgid "Bookmark Form"
