@@ -44,13 +44,6 @@ class DashboardTheme(models.Model):
         return self.theme_name
 
 
-class DashboardThemeAdmin(admin.ModelAdmin):
-    list_display = ('theme_name', 'theme_description', 'is_public',
-                    'number_of_components', 'layout_dictionary', 'create_date',
-                    'edit_date')
-    display = 'Dashboard Theme'
-
-
 class ComponentDataSource(models.Model):
     data_name = models.CharField(
         "Name of Source Data", max_length=255, blank=True)
@@ -77,12 +70,6 @@ class ComponentDataSource(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.data_name
-
-
-class ComponentDataSourceAdmin(admin.ModelAdmin):
-    list_display = ('data_name', 'data_type', 'data_source',
-                    'data_filter_key', 'create_date', 'edit_date')
-    display = 'Data Source'
 
 
 class DashboardComponent(models.Model):
@@ -116,13 +103,6 @@ class DashboardComponent(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.component_name
-
-
-class DashboardComponentAdmin(admin.ModelAdmin):
-    list_display = ('component_name', 'component_description',
-                    'component_type', 'data_required', 'create_date',
-                    'edit_date')
-    display = 'Dashboard Components'
 
 
 # For programs that have custom dashboards. The default dashboard
@@ -164,9 +144,3 @@ class CustomDashboard(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.dashboard_name
-
-
-class CustomDashboardAdmin(admin.ModelAdmin):
-    list_display = ('dashboard_name', 'dashboard_description', 'is_public',
-                    'theme', 'color_palette', 'create_date', 'edit_date')
-    display = 'Custom Dashboard'

@@ -1,6 +1,4 @@
 Vue.use(VeeValidate);
-Vue.component('ValidationProvider', VeeValidate.ValidationProvider);
-Vue.component('v-select', VueSelect.VueSelect);
 Vue.component('modal', {
   template: '#modal-template',
 });
@@ -51,7 +49,7 @@ new Vue({
         this.objectives = [];
       });
 
-    this.makeRequest('GET', '/workflow/level1_program/')
+    this.makeRequest('GET', '/workflow/level1/')
       .then(response => {
         if (response.data) {
           this.programs_list = response.data.map(el => {
