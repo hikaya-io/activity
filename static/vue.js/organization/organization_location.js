@@ -125,7 +125,7 @@ new Vue({
 		 * Call this function to draw thw map
 		 */
 		showTheMap(adminBoundary = null, geoJsonData = null) {
-			var container = L.DomUtil.get('org_map');
+			const container = L.DomUtil.get('org_map');
 			if (container != null) {
 				container._leaflet_id = null;
 			}
