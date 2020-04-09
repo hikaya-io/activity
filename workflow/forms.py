@@ -1208,7 +1208,7 @@ class SiteProfileForm(forms.ModelForm):
                              Field('longitude', step="any"),
                              ),
                     Fieldset('Map',
-                             HTML("""<div id="div_id_map"></div>"""),
+                             HTML("""<div id="map_cont"><div id="div_id_map"></div></div>"""),
                              ),
                     ),
                 Tab('Contact',
