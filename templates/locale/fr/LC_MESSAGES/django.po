@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-07 04:14-0700\n"
+"POT-Creation-Date: 2020-04-09 05:42-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,97 +18,299 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: registration/bookmark_confirm_delete.html:2
+#: templates/400.html:4 templates/400.html:6 templates/404.html:4
+#: templates/404.html:6
+msgid "Page Not found"
+msgstr ""
+
+#: templates/400.html:14 templates/404.html:19
+msgid "This is not the page you were looking for,"
+msgstr ""
+
+#: templates/400.html:14 templates/404.html:19
+msgid "you may be lost."
+msgstr ""
+
+#: templates/400.html:15 templates/403.html:16 templates/404.html:20
+#: templates/500.html:17
+msgid "Go to home page"
+msgstr ""
+
+#: templates/403.html:4
+msgid "Additional Permissions Required"
+msgstr ""
+
+#: templates/403.html:6
+msgid "You don't appear to have the proper permissions to access this page."
+msgstr ""
+
+#: templates/403.html:14
+msgid "You don"
+msgstr ""
+
+#: templates/403.html:15
+msgid "Contact your organization or country admin"
+msgstr ""
+
+#: templates/500.html:5 templates/500.html:7
+msgid "Server Error"
+msgstr ""
+
+#: templates/500.html:15
+msgid "There was a problem loading this page."
+msgstr ""
+
+#: templates/500.html:16
+msgid "Notify your systems administrator if you think"
+msgstr ""
+
+#: templates/500.html:16
+msgid "you should not be seeing this page."
+msgstr ""
+
+#: templates/comingsoon.html:2
+msgid "We’re still working on this,"
+msgstr ""
+
+#: templates/comingsoon.html:2
+msgid "stay tuned!"
+msgstr ""
+
+#: templates/contact.html:2 templates/report_base.html:172
+msgid "Feedback"
+msgstr ""
+
+#: templates/contact.html:6
+msgid "Message"
+msgstr ""
+
+#: templates/contact.html:14
+msgid ""
+"Let us know if you are having a problem or would like to see something "
+"change."
+msgstr ""
+
+#: templates/documentation.html:2 templates/report_base.html:172
+#, fuzzy
+#| msgid "Location"
+msgid "Documentation"
+msgstr "Localisation"
+
+#: templates/documentation.html:13
+msgid "No Documentation yet."
+msgstr ""
+
+#: templates/filefield.html:14
+msgid "Select image"
+msgstr ""
+
+#: templates/filefield.html:15
+msgid "Remove"
+msgstr ""
+
+#: templates/form_guidance.html:8 templates/form_guidance.html:14
+msgid "Help"
+msgstr ""
+
+#: templates/form_guidance.html:23
+#: templates/registration/change_password.html:58
+#: templates/registration/organization_register.html:76
+#: templates/registration/password_reset_confirm.html:47
+#: templates/registration/password_reset_form.html:35
+#: templates/registration/profile.html:64
+#: templates/registration/register.html:158
+msgid "Cancel"
+msgstr "Annuler"
+
+#: templates/index.html:36 templates/registration/profile.html:37
+#: templates/report_base.html:53 templates/report_base.html:56
+#: templates/report_base.html:58 templates/report_base.html:64
+#: templates/report_base.html:73 templates/report_base.html:74
+#: templates/report_base.html:75 templates/report_base.html:80
+#: templates/report_base.html:88 templates/report_base.html:90
+#: templates/report_base.html:91 templates/report_base.html:92
+#: templates/report_base.html:101 templates/report_base.html:103
+#: templates/report_base.html:105 templates/report_base.html:110
+#: templates/report_base.html:111 templates/report_base.html:128
+msgid "My Dashboard"
+msgstr "Mon tableau de bord"
+
+#: templates/index.html:41
+msgid "Filter by"
+msgstr ""
+
+#: templates/index.html:66
+msgid "All"
+msgstr ""
+
+#: templates/index.html:107
+msgid "Workflows"
+msgstr ""
+
+#: templates/index.html:148
+msgid "Tracking"
+msgstr ""
+
+#: templates/index.html:152 templates/index.html:210 templates/index.html:278
+#: templates/index.html:289
+msgid "out of"
+msgstr ""
+
+#: templates/index.html:207
+msgid "KPIs"
+msgstr ""
+
+#: templates/index.html:218
+msgid "Collected Data"
+msgstr ""
+
+#: templates/index.html:225
+msgid "Latest"
+msgstr ""
+
+#: templates/index.html:225
+msgid "Key Performance Indicators"
+msgstr ""
+
+#: templates/index.html:229
+msgid "Level"
+msgstr ""
+
+#: templates/index.html:230
+msgid "Indicator"
+msgstr ""
+
+#: templates/index.html:231
+msgid "Target"
+msgstr ""
+
+#: templates/index.html:232
+msgid "Actual"
+msgstr ""
+
+#: templates/index.html:260
+msgid "Components"
+msgstr ""
+
+#: templates/index.html:275
+msgid "Active"
+msgstr ""
+
+#: templates/index.html:286
+#, fuzzy
+#| msgid "Location"
+msgid "Active Locations"
+msgstr "Localisation"
+
+#: templates/index.html:289
+#, fuzzy
+#| msgid "Location"
+msgid "locations"
+msgstr "Localisation"
+
+#: templates/index.html:301 templates/index.html:307
+msgid "Documents"
+msgstr ""
+
+#: templates/index.html:303 templates/index.html:309
+msgid "linked to"
+msgstr ""
+
+#: templates/index.html:323 templates/index.html:331
+msgid "with"
+msgstr ""
+
+#: templates/index.html:323 templates/index.html:331
+msgid "contacts"
+msgstr ""
+
+#: templates/registration/bookmark_confirm_delete.html:2
 msgid "Bookmark Confirm Delete"
 msgstr "Confirmez suppression de Bookmark"
 
-#: registration/bookmark_confirm_delete.html:7
+#: templates/registration/bookmark_confirm_delete.html:8
 msgid "Are you sure you want to delete"
 msgstr "Etes-vous sûr que vous voulez supprimer"
 
-#: registration/bookmark_form.html:5 registration/bookmark_list.html:4
-#: registration/profile.html:38
+#: templates/registration/bookmark_form.html:7
+#: templates/registration/bookmark_list.html:6
+#: templates/registration/profile.html:38
 msgid "Profile"
 msgstr "Profile"
 
-#: registration/bookmark_form.html:6 registration/bookmark_list.html:14
+#: templates/registration/bookmark_form.html:8
+#: templates/registration/bookmark_list.html:16
 msgid "Bookmarks"
 msgstr "Bookmarks"
 
-#: registration/bookmark_form.html:7 registration/bookmark_form.html:11
+#: templates/registration/bookmark_form.html:9
+#: templates/registration/bookmark_form.html:13
 msgid "Bookmark Form"
 msgstr "Formulaire de Bookmarks"
 
-#: registration/bookmark_list.html:5
+#: templates/registration/bookmark_list.html:7
 msgid "Bookmark List"
 msgstr "Liste de Bookmarks"
 
-#: registration/bookmark_list.html:8
+#: templates/registration/bookmark_list.html:10
 msgid "Your Bookmarks List"
 msgstr "Votre list de Bookmarks"
 
-#: registration/bookmark_list.html:22
+#: templates/registration/bookmark_list.html:24
 msgid "No bookmarks yet."
 msgstr "Aucun Bokmark"
 
-#: registration/change_password.html:2
+#: templates/registration/change_password.html:2
 #, fuzzy
 #| msgid "Password"
 msgid "Password Update"
 msgstr "Mot de passe"
 
-#: registration/change_password.html:8 registration/profile.html:53
+#: templates/registration/change_password.html:8
+#: templates/registration/profile.html:53
 #, fuzzy
 #| msgid "Password"
 msgid "Change Password"
 msgstr "Change mon mot de passe"
 
-#: registration/change_password.html:11
+#: templates/registration/change_password.html:11
 #, fuzzy
 #| msgid "Password"
 msgid "Change your password"
 msgstr "Change mon mot de passe"
 
-#: registration/change_password.html:21
+#: templates/registration/change_password.html:21
 #, fuzzy
 #| msgid "Password"
 msgid "Old Password"
 msgstr "Ancien mot de passe"
 
-#: registration/change_password.html:30
-#: registration/password_reset_confirm.html:16
+#: templates/registration/change_password.html:30
+#: templates/registration/password_reset_confirm.html:17
 #, fuzzy
 #| msgid "Password"
 msgid "New Password"
 msgstr "Nouveau mot de passe"
 
-#: registration/change_password.html:39
+#: templates/registration/change_password.html:39
 msgid "Your password must be at least 6 characters"
 msgstr "Votre mot de passe doit contenir au moins 6 caractères"
 
-#: registration/change_password.html:43
+#: templates/registration/change_password.html:43
 #, fuzzy
 #| msgid "Confirm New Password*"
 msgid "Confirm New Password"
 msgstr "Confirmer le nouveau mot de passe"
 
-#: registration/change_password.html:58
-#: registration/organization_register.html:75
-#: registration/password_reset_confirm.html:46
-#: registration/password_reset_form.html:34 registration/profile.html:64
-#: registration/register.html:158
-msgid "Cancel"
-msgstr "Annuler"
-
-#: registration/change_password.html:64
+#: templates/registration/change_password.html:64
 msgid "Save Changes"
 msgstr "Sauvegarder les modifications"
 
-#: registration/confirm_email.html:7
+#: templates/registration/confirm_email.html:7
 msgid "Confirm Your Email Address"
 msgstr "Confirmez votre adresse email"
 
-#: registration/confirm_email.html:12
+#: templates/registration/confirm_email.html:12
 msgid ""
 "Proceed to your email account to confirm your email address to activate your "
 "account"
@@ -116,116 +318,124 @@ msgstr ""
 "Accédez à votre compte de messagerie pour confirmer votre adresse e-mail et "
 "activer votre Compte"
 
-#: registration/confirm_email.html:13 registration/login.html:8
-#: registration/login.html:20 registration/register.html:18
+#: templates/registration/confirm_email.html:13
+#: templates/registration/login.html:8 templates/registration/login.html:20
+#: templates/registration/register.html:18
 msgid "Login"
 msgstr "Se connecter"
 
-#: registration/login.html:29 registration/register.html:26
+#: templates/registration/login.html:29 templates/registration/register.html:26
 msgid "Register"
 msgstr "S'inscrire"
 
-#: registration/login.html:35
+#: templates/registration/login.html:35
 msgid "Fill in your login details to start your session"
 msgstr "Remplissez vos informations de connexion pour démarrer votre session"
 
-#: registration/login.html:43 registration/register.html:68
+#: templates/registration/login.html:43 templates/registration/register.html:68
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-#: registration/login.html:53 registration/register.html:132
+#: templates/registration/login.html:53
+#: templates/registration/register.html:132
 msgid "Password"
 msgstr "Mot de passe"
 
-#: registration/login.html:64
+#: templates/registration/login.html:64
 msgid "Clear"
 msgstr "Effacer"
 
-#: registration/login.html:71
+#: templates/registration/login.html:71
 msgid "Sign in"
 msgstr "Se connecter"
 
-#: registration/login.html:85
+#: templates/registration/login.html:85
 msgid "Login with Google"
 msgstr "Se connecter avec Google"
 
-#: registration/login.html:88
+#: templates/registration/login.html:88
 msgid "Forgot password?"
 msgstr "Mot de passe oublié?"
 
-#: registration/organization_register.html:5
+#: templates/registration/organization_register.html:6
 #, fuzzy
 #| msgid "Create an account"
 msgid "Create an Organization"
 msgstr "Créer un compte"
 
-#: registration/organization_register.html:8
+#: templates/registration/organization_register.html:9
 msgid "Fill in organization details"
 msgstr "Remplissez les données de l'organization"
 
-#: registration/organization_register.html:9
+#: templates/registration/organization_register.html:10
 #, fuzzy
 #| msgid "Fill in your details (mandatory fields are marked with *)"
 msgid "(mandatory fields are marked with *)"
 msgstr "Remplissez vos données (les champs obligatoires sont marqués d'un *)"
 
-#: registration/organization_register.html:17
+#: templates/registration/organization_register.html:18
 #, fuzzy
 #| msgid "Last Name"
 msgid "Name"
 msgstr "Nom de famille"
 
-#: registration/organization_register.html:28
+#: templates/registration/organization_register.html:29
 msgid "Description"
 msgstr "Description"
 
-#: registration/organization_register.html:39
+#: templates/registration/organization_register.html:40
 msgid "URL"
 msgstr "URL"
 
-#: registration/organization_register.html:50
+#: templates/registration/organization_register.html:51
 msgid "Location"
 msgstr "Localisation"
 
-#: registration/organization_register.html:61
+#: templates/registration/organization_register.html:62
 msgid "Activity URL"
 msgstr "URL Activity"
 
-#: registration/organization_register.html:79
+#: templates/registration/organization_register.html:80
 msgid "Create"
 msgstr "Créer"
 
-#: registration/password_reset_complete.html:5
+#: templates/registration/password_reset_complete.html:2
+#, fuzzy
+#| msgid "Password reset complete"
+msgid "Password reset Done"
+msgstr "réinitialisation du mot de passe terminée"
+
+#: templates/registration/password_reset_complete.html:6
 msgid "Password reset complete"
 msgstr "réinitialisation du mot de passe terminée"
 
-#: registration/password_reset_complete.html:7
+#: templates/registration/password_reset_complete.html:8
 msgid "Your password has been set. You may go ahead and"
 msgstr "Votre mot de passe a été défini. Vous pouvez continuer et"
 
-#: registration/password_reset_complete.html:8
+#: templates/registration/password_reset_complete.html:9
 #, fuzzy
 #| msgid "Sign in"
 msgid "sign in"
 msgstr "Se connecter"
 
-#: registration/password_reset_complete.html:8
+#: templates/registration/password_reset_complete.html:9
 msgid "now"
 msgstr "maintenant"
 
-#: registration/password_reset_confirm.html:2
+#: templates/registration/password_reset_confirm.html:3
 #, fuzzy
 #| msgid "Confirm New Password*"
 msgid "Enter new password"
 msgstr "Confirmer le nouveau mot de passe"
 
-#: registration/password_reset_confirm.html:6
+#: templates/registration/password_reset_confirm.html:7
 #, fuzzy
 #| msgid "Password"
 msgid "Set New Password"
 msgstr "Nouveau mot de passe"
 
-#: registration/password_reset_confirm.html:9
+#: templates/registration/password_reset_confirm.html:10
 #, fuzzy
 #| msgid ""
 #| "Fill in your old, new and confirm your new password to change your "
@@ -233,89 +443,100 @@ msgstr "Nouveau mot de passe"
 msgid "Fill in a new password and confirm to reset your current password"
 msgstr "Veuillez changer votre mot de passe"
 
-#: registration/password_reset_confirm.html:28
+#: templates/registration/password_reset_confirm.html:29
 msgid "New password confirmation"
 msgstr "Confirmation du nouveau mot de passe"
 
-#: registration/password_reset_confirm.html:52
+#: templates/registration/password_reset_confirm.html:53
 #, fuzzy
 #| msgid "Password"
 msgid "Change my password"
 msgstr "Change mon mot de passe"
 
-#: registration/password_reset_done.html:5
+#: templates/registration/password_reset_done.html:6
 msgid "Success"
 msgstr "Succès"
 
-#: registration/password_reset_done.html:7
+#: templates/registration/password_reset_done.html:8
 msgid "An email has been sent with instructions to reset your password."
-msgstr "Un e-mail a été envoyé avec des instructions pour réinitialiser votre mot de passe."
+msgstr ""
+"Un e-mail a été envoyé avec des instructions pour réinitialiser votre mot de "
+"passe."
 
-#: registration/password_reset_email.html:16
-#: registration/password_reset_form.html:6
+#: templates/registration/password_reset_done.html:11
+msgid "If you don"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:17
+#: templates/registration/password_reset_form.html:7
 #, fuzzy
 #| msgid "Password"
 msgid "Reset Password"
 msgstr "Nouveau mot de passe"
 
-#: registration/password_reset_form.html:2
+#: templates/registration/password_reset_form.html:3
 #, fuzzy
 #| msgid "Password"
 msgid "Password Reset"
 msgstr "Mot de passe"
 
-#: registration/password_reset_form.html:9
-msgid "Fill in the email address tied to your account and submit to reset your password"
-msgstr "Remplissez l'adresse e-mail liée à votre compte et validez pour réinitialiser votre mot de passe"
+#: templates/registration/password_reset_form.html:10
+msgid ""
+"Fill in the email address tied to your account and submit to reset your "
+"password"
+msgstr ""
+"Remplissez l'adresse e-mail liée à votre compte et validez pour "
+"réinitialiser votre mot de passe"
 
-#: registration/password_reset_form.html:16 registration/register.html:92
+#: templates/registration/password_reset_form.html:17
+#: templates/registration/register.html:92
 msgid "Email Address"
 msgstr "Adresse e-mail"
 
-#: registration/password_reset_form.html:40
+#: templates/registration/password_reset_form.html:41
 msgid "Submit"
 msgstr "Envoyer"
 
-#: registration/profile.html:37
-msgid "My Dashboard"
-msgstr "Mon tableau de bord"
-
-#: registration/profile.html:46
+#: templates/registration/profile.html:46
 msgid "My Profile"
 msgstr "Mon Profile"
 
-#: registration/profile.html:65
+#: templates/registration/profile.html:65
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: registration/register.html:7
+#: templates/registration/register.html:7
 msgid "Create an account"
 msgstr "Créer un compte"
 
-#: registration/register.html:33
+#: templates/registration/register.html:33
 msgid "Fill in your details (mandatory fields are marked with *)"
 msgstr "Remplissez vos données (les champs obligatoires sont marqués d'un *)"
 
-#: registration/register.html:47
+#: templates/registration/register.html:47
 msgid "First Name"
 msgstr "Prénom"
 
-#: registration/register.html:57
+#: templates/registration/register.html:57
 msgid "Last Name"
 msgstr "Nom de famille"
 
-#: registration/register.html:114
+#: templates/registration/register.html:114
 msgid "Invalid email address"
 msgstr "Adresse e-mail invalide"
 
-#: registration/register.html:144
+#: templates/registration/register.html:144
 #, fuzzy
 #| msgid "Password"
 msgid "Confirm Password"
 msgstr "Confirmez le mot de passe"
 
-#: registration/register.html:166
+#: templates/registration/register.html:166
 #, fuzzy
 #| msgid "Sign in"
 msgid "Sign up"
 msgstr "Se connecter"
+
+#: templates/report_base.html:172
+msgid "FAQ"
+msgstr ""
