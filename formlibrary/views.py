@@ -176,7 +176,7 @@ class IndividualList(ListView):
     Individual
     """
     model = Individual
-    template_name = 'formlibrary/beneficiary_list.html'
+    template_name = 'formlibrary/individual_list.html'
 
     def get(self, request, *args, **kwargs):
 

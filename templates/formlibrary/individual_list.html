@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block content %} {% load group_tag %}
-{% include './beneficiary_modal_form.html' %}
+{% include './individual_modal_form.html' %}
 
 <script>
     $(document).ready(() => {
@@ -100,7 +100,7 @@
             </ul>
           </div>
         </td>
-        {% include 'formlibrary/beneficiary_confirm_delete.html'%}
+        {% include 'formlibrary/individual_confirm_delete.html'%}
       </tr>
       {% endfor %}
     </tbody>

@@ -45,22 +45,22 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Province'),
         ),
         migrations.AddField(
-            model_name='beneficiary',
+            model_name='individual',
             name='distribution',
             field=models.ManyToManyField(blank=True, to='formlibrary.Distribution'),
         ),
         migrations.AddField(
-            model_name='beneficiary',
+            model_name='individual',
             name='program',
             field=models.ManyToManyField(blank=True, to='workflow.Program'),
         ),
         migrations.AddField(
-            model_name='beneficiary',
+            model_name='individual',
             name='site',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.SiteProfile'),
         ),
         migrations.AddField(
-            model_name='beneficiary',
+            model_name='individual',
             name='training',
             field=models.ManyToManyField(blank=True, to='formlibrary.TrainingAttendance'),
         ),
