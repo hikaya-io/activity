@@ -45,7 +45,6 @@ new Vue({
 		toggleModal: function(item = null) {
             this.showModal = !this.showModal;
 			if (item) {
-				console.log(item)
 				this.isEdit = true;
 				this.modalHeader = `Edit ${item.name}`;
 				this.currentStakeholderType = item;
@@ -95,7 +94,6 @@ new Vue({
          * @param { boolean } saveNew - true if a user wants to make multiple posts
          */
 		async postData(saveNew) {
-			console.log(this.description)
 			try {
 				const response = await this.makeRequest(
 					'POST',
