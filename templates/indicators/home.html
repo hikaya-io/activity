@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
+
 {% block bread_crumb %}
 <ol class="breadcrumb">
   <li class="active">{{ user.activity_user.organization.indicator_label }}</li>
 </ol>
 {% endblock %}
+
 {% block page_title %}Indicator Planning Tool{% endblock %} 
 
 {% block content %}
