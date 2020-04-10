@@ -125,23 +125,24 @@ $(document).ready(() => {
             validateDisaggregations: function(){
               let sum = 0
               this.validate_disaggregation = true
-              this.collectedData.indicator.disaggregation.forEach(disagg =>{
-                disagg.disaggregation_label.forEach(disagg_label =>{
-                  const entries = Object.entries(this.disaggregations)
-                  for (const [id, value] of entries) {
-                    if(parseInt(id) === disagg_label.id){
-                      sum += parseInt(value)
+
+              if (Object.keys(this.disaggregations).length > 0){
+                this.collectedData.indicator.disaggregation.forEach(disagg =>{
+                  disagg.disaggregation_label.forEach(disagg_label =>{
+                    const entries = Object.entries(this.disaggregations)
+                    for (const [id, value] of entries) {
+                      if(parseInt(id) === disagg_label.id){
+                       sum += parseInt(value)
+                      }
                     }
+                  })
+                  if(sum !== parseInt(this.actual)){
+                    toastr.error(`Total for ${disagg.disaggregation_type} does not match the actual value`);
+                    this.validate_disaggregation = false
                   }
-
+                  sum = 0
                 })
-                if(sum !== parseInt(this.actual)){
-                  toastr.error(`Total for ${disagg.disaggregation_type} does not match the actual value`);
-                  this.validate_disaggregation = false
-                }
-                sum = 0
-              })
-
+              }
             },
 
             processForm: function (saveNew = false) {
