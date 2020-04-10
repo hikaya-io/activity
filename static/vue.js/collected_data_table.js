@@ -34,6 +34,7 @@ $(document).ready(() => {
             itemToDelete: null,
             targets: [],
             show_disaggregations: false,
+            validate_disaggregation: true,
             disaggregations: {},
           },
           methods: {
@@ -121,9 +122,33 @@ $(document).ready(() => {
               return moment(date, 'YYYY-MM-DDThh:mm:ssZ').format('YYYY-MM-DD');
             },
 
+            validateDisaggregations: function(){
+              let sum = 0
+              this.validate_disaggregation = true
+
+              if (Object.keys(this.disaggregations).length > 0){
+                this.collectedData.indicator.disaggregation.forEach(disagg =>{
+                  disagg.disaggregation_label.forEach(disagg_label =>{
+                    const entries = Object.entries(this.disaggregations)
+                    for (const [id, value] of entries) {
+                      if(parseInt(id) === disagg_label.id){
+                       sum += parseInt(value)
+                      }
+                    }
+                  })
+                  if(sum !== parseInt(this.actual)){
+                    toastr.error(`Total for ${disagg.disaggregation_type} does not match the actual value`);
+                    this.validate_disaggregation = false
+                  }
+                  sum = 0
+                })
+              }
+            },
+
             processForm: function (saveNew = false) {
               this.$validator.validateAll().then(result => {
-                if (result) {
+                this.validateDisaggregations();
+                if (result && this.validate_disaggregation) {
                   if (this.currentResult && this.currentResult.id) {
                     this.updateResult();
                   } else {
@@ -144,7 +169,7 @@ $(document).ready(() => {
                   `/indicators/collecteddata/add`,
                   {
                     actual: this.actual,
-                    target: this.target,
+                    target: '250',
                     date_collected: this.date_collected,
                     period: this.period,
                     indicator: indicatorId,
@@ -244,6 +269,17 @@ $(document).ready(() => {
               return true;
             },
           },
+
+          watch: {
+             period: function(){
+               this.targets.forEach(tag => {
+                if (tag.id === Number(this.period)) {
+                  this.target = tag.target
+                }
+              })
+
+             }
+          }
         }).$mount(`#details-${indicatorId}`);
       },
       error: (error) => {
