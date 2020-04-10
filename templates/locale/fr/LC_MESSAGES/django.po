@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-09 06:02-0700\n"
+"POT-Creation-Date: 2020-04-09 21:34-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,15 +127,6 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #: templates/index.html:37 templates/registration/profile.html:37
-#: templates/report_base.html:55 templates/report_base.html:58
-#: templates/report_base.html:60 templates/report_base.html:66
-#: templates/report_base.html:75 templates/report_base.html:76
-#: templates/report_base.html:77 templates/report_base.html:82
-#: templates/report_base.html:90 templates/report_base.html:92
-#: templates/report_base.html:93 templates/report_base.html:94
-#: templates/report_base.html:103 templates/report_base.html:105
-#: templates/report_base.html:107 templates/report_base.html:112
-#: templates/report_base.html:113 templates/report_base.html:130
 msgid "My Dashboard"
 msgstr "Mon tableau de bord"
 
@@ -213,6 +204,7 @@ msgid "locations"
 msgstr "Localisation"
 
 #: templates/index.html:302 templates/index.html:308
+#: templates/report_base.html:66
 msgid "Documents"
 msgstr "Documents"
 
@@ -228,7 +220,7 @@ msgstr "avec"
 msgid "contacts"
 msgstr "contacts"
 
-#: templates/registration/bookmark_confirm_delete.html:2
+#: templates/registration/bookmark_confirm_delete.html:3
 msgid "Bookmark Confirm Delete"
 msgstr "Confirmez suppression de Bookmark"
 
@@ -238,7 +230,7 @@ msgstr "Etes-vous sûr que vous voulez supprimer"
 
 #: templates/registration/bookmark_form.html:7
 #: templates/registration/bookmark_list.html:6
-#: templates/registration/profile.html:38
+#: templates/registration/profile.html:38 templates/report_base.html:113
 msgid "Profile"
 msgstr "Profile"
 
@@ -349,7 +341,7 @@ msgstr "Mot de passe"
 msgid "Clear"
 msgstr "Effacer"
 
-#: templates/registration/login.html:71
+#: templates/registration/login.html:71 templates/report_base.html:130
 msgid "Sign in"
 msgstr "Se connecter"
 
@@ -471,9 +463,9 @@ msgstr ""
 msgid ""
 "If you don't receive an email, please make sure you've entered the address "
 "you registered with, and check your spam folder."
-msgstr "
-
-Si vous ne recevez pas d'e-mail, assurez-vous d'avoir entré l'adresse avec laquelle vous vous êtes enregistré et vérifiez votre spam."
+msgstr ""
+"Si vous ne recevez pas d'e-mail, assurez-vous d'avoir entré l'adresse avec "
+"laquelle vous vous êtes enregistré et vérifiez votre spam."
 
 #: templates/registration/password_reset_email.html:17
 #: templates/registration/password_reset_form.html:7
@@ -544,6 +536,80 @@ msgstr "Confirmez le mot de passe"
 #| msgid "Sign in"
 msgid "Sign up"
 msgstr "Se connecter"
+
+#: templates/report_base.html:55
+msgid "Home"
+msgstr "Acceuil"
+
+#: templates/report_base.html:58
+#, fuzzy
+#| msgid "Workflows"
+msgid "Workflow"
+msgstr "Workflow"
+
+#: templates/report_base.html:60
+#, fuzzy
+#| msgid "My Dashboard"
+msgid "Program Dashboard"
+msgstr "Mon tableau de bord"
+
+#: templates/report_base.html:75
+#, fuzzy
+#| msgid "Indicator"
+msgid "Indicator Planning"
+msgstr "Planification des indicateurs"
+
+#: templates/report_base.html:76
+#, fuzzy
+#| msgid "Indicator"
+msgid "Indicator Data"
+msgstr "Données des indicateurs"
+
+#: templates/report_base.html:77
+#, fuzzy
+#| msgid "Indicator"
+msgid "Indicator Library"
+msgstr "Librairie d'indicateurs"
+
+#: templates/report_base.html:82
+msgid "Form Library"
+msgstr "Librairie des formulaires"
+
+#: templates/report_base.html:90
+msgid "Reports"
+msgstr "Rapports"
+
+#: templates/report_base.html:92
+#, fuzzy
+#| msgid "Activity URL"
+msgid "Activity Report"
+msgstr "Rapport Activity"
+
+#: templates/report_base.html:93
+#, fuzzy
+#| msgid "Indicator"
+msgid "Indicator Data Report"
+msgstr "Rapport des données d'indicateurs"
+
+#: templates/report_base.html:94
+msgid "Report Builder"
+msgstr "Constructeur de rapport"
+
+#: templates/report_base.html:103
+msgid "DEMO SERVER"
+msgstr "SERVEUR DEMO"
+
+#: templates/report_base.html:105
+msgid "LOCAL SERVER"
+msgstr "DERVEUR LOCAL"
+
+#: templates/report_base.html:107
+msgid "DEV SERVER"
+msgstr "DERVEUR DE DEV"
+
+#: templates/report_base.html:112
+msgid "Logout"
+msgstr "Se déconnecter"
 
 #: templates/report_base.html:174
 msgid "FAQ"
