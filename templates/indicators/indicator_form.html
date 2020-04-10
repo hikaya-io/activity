@@ -38,9 +38,9 @@
     {% endif %}
     {% block breadcrumbs %}
         <ul class="breadcrumb">
-            <li><a href="/">My Dashboard</a></li>
-            <li><a href="/indicators/home/0/0/0/">Indicators</a></li>
-            <li class="active">Details</li>
+            <li><a href="/">{% trans 'My Dashboard' %}</a></li>
+            <li><a href="/indicators/home/0/0/0/">{% trans 'Indicators' %}</a></li>
+            <li class="active">{% trans 'Details' %}</li>
         </ul>
     {% endblock %}
 
@@ -50,7 +50,7 @@
             <h4 class="page-title">
                     {% if i_name %}
                         {% if indicator.level.all %}
-                            {{ indicator.level.all|join:', ' }} indicator:
+                            {{ indicator.level.all|join:', ' }} {% trans 'indicator' %}:
                         {% endif %}
                         {{i_name|truncatechars:300}}
                     {% endif %}
