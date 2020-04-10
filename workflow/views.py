@@ -2871,6 +2871,7 @@ class StakeholderTypeView(generics.ListCreateAPIView, generics.RetrieveUpdateDes
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
+        print(request.data)
         request.data['organization'] = request.user.activity_user.organization.id
         return self.create(request, *args, **kwargs)
 
