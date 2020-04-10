@@ -699,7 +699,7 @@ class ProjectCompleteForm(forms.ModelForm):
                     Fieldset(
                         '', AppendedText(
                             'progress_against_targets', '%'),
-                        'beneficiary_type', 'direct_beneficiaries',
+                        'individual_type', 'direct_individuals',
                         'average_household_size', 'indirect_beneficiaries',
                         'capacity_built', 'quality_assured',
                         'issues_and_challenges', 'lessons_learned',
@@ -1013,7 +1013,7 @@ class ProjectCompleteSimpleForm(forms.ModelForm):
                     Fieldset('',
                              AppendedText(
                                  'progress_against_targets', '%'),
-                             'beneficiary_type', 'capacity_built',
+                             'individual_type', 'capacity_built',
                              'quality_assured', 'issues_and_challenges',
                              'lessons_learned'
                              ),

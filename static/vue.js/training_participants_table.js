@@ -1,6 +1,6 @@
 Vue.component('paginate', VuejsPaginate)
 
-const beneficiariesComponent = Vue.component('beneficiaries-table', {
+const individualsComponent = Vue.component('individuals-table', {
   template: '#participants-table-template',
 });
 
@@ -8,12 +8,12 @@ $(document).ready(() => {
   const table = $('#trainingTable').DataTable();
 
   function format(trainingId, programId) {
-    let div = $(`<div id="training-${trainingId}-beneficiaries"></div>`)
+    let div = $(`<div id="training-${trainingId}-individuals"></div>`)
     $.ajax({
       url: `/formlibrary/training_participants/${trainingId}`,
       type: 'GET',
       success: function (result) {
-        new beneficiariesComponent({
+        new individualsComponent({
           delimiters: ['[[', ']]'],
           data: {
             participants: result['results'],
@@ -52,7 +52,7 @@ $(document).ready(() => {
               }
             }
           }
-        }).$mount(`#training-${trainingId}-beneficiaries`);
+        }).$mount(`#training-${trainingId}-individuals`);
       },
       error: (error) => {
         console.log(error)

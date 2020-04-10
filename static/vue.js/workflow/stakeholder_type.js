@@ -11,7 +11,8 @@ new Vue({
 		showModal: false,
 		showDeleteModal: false,
         stakeholderTypes: [],
-        name: '',
+		name: '',
+		description: '',
 		isEdit: false,
 		currentStakeholderType: null,
         itemToDelete: null,
@@ -47,12 +48,14 @@ new Vue({
 				this.isEdit = true;
 				this.modalHeader = `Edit ${item.name}`;
 				this.currentStakeholderType = item;
-                this.name = item.name;
+				this.name = item.name;
+				this.description = item.description;
 			} else {
 				this.isEdit = false;
 				this.modalHeader = 'Add Stakeholder Type';
 				this.currentStakeholderType = null;
-                this.name = null;
+				this.name = null;
+				this.description = null;
 			}
 		},
 
@@ -96,7 +99,8 @@ new Vue({
 					'POST',
 					`/workflow/stakeholder_type/`,
 					{
-                        name: this.name,
+						name: this.name,
+						description: this.description
 					}
                 );
 				if (response) {
@@ -106,7 +110,8 @@ new Vue({
 						this.toggleModal();
 					}
 					// resetting the form
-                    this.name = '';
+					this.name = '';
+					this.description = '';
 					this.$validator.reset();
 				}
 			} catch (error) {
@@ -123,7 +128,8 @@ new Vue({
 					'PUT',
 					`/workflow/stakeholder_type/${this.currentStakeholderType.id}`,
 					{ 
-                        name: this.name, 
+						name: this.name,
+						description: this.description, 
                     }
 				);
 				if (response) {
@@ -134,7 +140,8 @@ new Vue({
 					this.stakeholderTypes = existingStakeholderTypes;
 					this.stakeholderTypes.unshift(response.data);
 					this.isEdit = false;
-                    this.name = null;
+					this.name = null;
+					this.description = null;
                     this.currentStakeholderType = null;
 					this.modalHeader = 'Add Stakeholder Type';
 					this.toggleModal();
