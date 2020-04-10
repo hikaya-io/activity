@@ -21,9 +21,9 @@ COPY . /app
 # Make the start file executable and delete installation cache, reduces image size
 RUN pip install -r requirements.txt && \
     chmod 777  docker-deploy/start_app.sh && \
-    rm -rf /root/.cache &&\
-    mv /app/activity/settings/local-sample.py /app/activity/settings/local.py && \
-    sed -i "s/EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'/EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'/" activity/settings/local.py
+    rm -rf /root/.cache && \
+    sed -i "s/EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'/EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'/" activity/settings/local-sample.py && \
+    mv /app/activity/settings/local-sample.py /app/activity/settings/local.py
 
 # Set the entry point where the application can be started on
 ENTRYPOINT ["docker-deploy/start_app.sh"]
