@@ -14,16 +14,18 @@ new Vue({
 
 	beforeMount: function() {
 		this.loadCountries();
-		this.latitude = Number('{{user.activity_user.organization.latitude}}'); 
-		this.longitude = Number('{{user.activity_user.organization.longitude}}');
-		this.zoom =  Number('{{user.activity_user.organization.zoom}}');
+		const lat = Number('{{user.activity_user.organization.latitude}}'); 
+		const long = Number('{{user.activity_user.organization.longitude}}');
+		const mapZoom =  Number('{{user.activity_user.organization.zoom}}');
+
+		this.latitude = lat ? lat : 0.00;
+		this.longitude = long ? long : 0.00;
+		this.zoom =  mapZoom ? mapZoom : 5;
 		this.admin_boundary = '{{user.activity_user.organization.admin_boundary}}';
 		this.country_code = Number('{{user.activity_user.organization.country_code.all.0.id}}');
 		// load countries
 		setTimeout(() => {
-			if(this.admin_boundary && this.country_code) {
-				this.getBoundaryData(this.admin_boundary);
-			}
+			this.getBoundaryData(this.admin_boundary);
 		}, 1000)
 	},
 
@@ -100,7 +102,7 @@ new Vue({
 		
 			// this check will catch empty lists that cause the following function
 			// to break the rendering of the map
-			if (locations !== undefined || locations.length != 0) {
+			if (locations !== undefined && locations.length != 0) {
 				let group = new L.featureGroup(
 					locations
 				);
