@@ -3,7 +3,6 @@
 {% load humanize %} 
 {% block content%} 
 {% include './shared/level1_modal_form.html' %}
-
 <script src="{% static 'js/chart.js@2.8.0.min.js' %}"></script>
 
 <script>
@@ -335,11 +334,11 @@
             </div>
           </div>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-10" id="map_container">
           <div id="map">
-            {% include './small_site_profile_map.html' %}
           </div>
         </div>
+        {% include './small_site_profile_map.html' %}
       </div>
     </div>
   </div>
