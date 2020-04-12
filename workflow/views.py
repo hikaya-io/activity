@@ -1411,6 +1411,7 @@ class SiteProfileUpdate(UpdateView):
             site__id=self.kwargs['pk'])
         context.update({'get_projects': get_projects})
         context.update({'site_name': site.name})
+        context.update({'site': site})
         return context
 
     def form_invalid(self, form):
