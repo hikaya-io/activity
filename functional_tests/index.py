@@ -11,5 +11,17 @@ from selenium import webdriver
 # Local usage of Firefox
 driver = webdriver.Firefox()
 
+driver.get('http://localhost:8000')
+assert 'Activity' in driver.title
+
+# Fill login form and submit it
+username_input = driver.find_element_by_id('login_username')
+username_input.send_keys('anas')
+password_input = driver.find_element_by_id('login_password')
+password_input.send_keys('hikaya')
+
+password_input.submit()
+
+# TODO check that I am redirected to create a new organization
 
 driver.quit()
