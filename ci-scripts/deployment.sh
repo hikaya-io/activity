@@ -34,7 +34,8 @@ auth_kubectl_cluster() {
     if [[ $TRAVIS_BRANCH == "dev" ]] || \
         [[ $GITHUB_REF == "refs/heads/dev" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]]; then
+        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/master" ]]; then
         doctl auth init -t $SERVICE_ACCESS_TOKEN
         doctl -t $SERVICE_ACCESS_TOKEN kubernetes cluster kubeconfig save $CLUSTER_NAME
         kubectl create namespace $APPLICATION_ENV || echo "++++++ Namespace Exists ++++++"
@@ -60,8 +61,8 @@ deploy_app() {
     if [[ $TRAVIS_BRANCH == "dev" ]]  || \
         [[ $GITHUB_REF == "refs/heads/dev" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]]; then
-        
+        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/master" ]]; then
         echo "------- generate deployfiles --------------"
         envsubst < ./deployment_files/deployment > deployment.yaml
         envsubst < ./deployment_files/service > service.yaml
@@ -76,12 +77,12 @@ deploy_app() {
         kubectl apply -f deployment_files/man.yaml 
         kubectl apply --validate=false -f deployment_files/cert-config/cert-manager-0.12.0.yaml
         kubectl apply --validate=false -f deployment_files/metrics-server.yaml
-        sleep 60
+        sleep 70
 
         kubectl apply -f deployment_files/ingress-service.yaml 
         kubectl apply -f cert-secret.yaml  
-        kubectl apply -f cert-issuer.yaml
-        kubectl apply -f certificate.yaml
+        kubectl apply --validate=false -f cert-issuer.yaml
+        kubectl apply --validate=false -f certificate.yaml
         kubectl apply -f deployment.yaml  
         kubectl apply -f service.yaml
         kubectl apply -f autoscaler.yaml 
@@ -92,17 +93,26 @@ deploy_app() {
 
 #@--- Function to replace some key variables ---@#
 replace_variables() {
+    
+    #@--- Replace necesary variables for dev env ---@#
+    if [[ $TRAVIS_BRANCH == "dev" ]] || \
+        [[ $GITHUB_REF == "refs/heads/dev" ]]; then
+        export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
+    fi
+
+    #@--- Replace necesary variables for staging env ---@#
     if [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]]; then
         export APPLICATION_ENV=${APPLICATION_ENV_STAGING}
         export HOST_DOMAIN=${HOST_DOMAIN_STAGING}
         export CLUSTER_NAME=${CLUSTER_NAME_STAGING}
-
     fi
 
-    if [[ $TRAVIS_BRANCH == "dev" ]] || \
-        [[ $GITHUB_REF == "refs/heads/dev" ]]; then
-        export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
+    #@--- Replace necesary variables for production env ---@#
+    if [[ $GITHUB_REF == "refs/heads/master" ]]; then
+        export APPLICATION_ENV=${APPLICATION_ENV_PROD}
+        export HOST_DOMAIN=${HOST_DOMAIN_PROD}
+        export CLUSTER_NAME=${CLUSTER_NAME_PROD}
     fi
 }
 
