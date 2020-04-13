@@ -8,13 +8,18 @@ replace_env_varibles() {
     if [[ $GITHUB_REF == "refs/heads/staging" ]]; then
         export APPLICATION_ENV=${APPLICATION_ENV_STAGING}
     fi
+
+    if [[ $GITHUB_REF == "refs/heads/master" ]]; then
+        export APPLICATION_ENV=${APPLICATION_ENV_PROD}
+    fi
 }
 
 
 #@--- Function to setup the message to be send ---@#
 setup_message() {
     if  [[ $GITHUB_REF == "refs/heads/dev" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]]; then
+        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/master" ]]; then
         if [[ $DEPLOY == "success" ]]; then
             echo "++++++++++++ generate deployment message +++++++++++++"
             COMMIT_URL="https://github.com/hikaya-io/activity/commit/${TRAVIS_COMMIT}"

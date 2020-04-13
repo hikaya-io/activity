@@ -712,7 +712,6 @@ class CollectedDataAdd(GView):
             disaggregations = None
         else:
             disaggregations = data.get('disaggregations')
-            print(disaggregations)
             for key, value in disaggregations.items():
                 item = {"value": value,
                         "disaggregation_label": key}
@@ -764,7 +763,7 @@ class CollectedDataEdit(GView):
         else:
             date = data.get('date_collected')
 
-        if data.get('documentation') == "":
+        if data.get('documentation') == "" or data.get('documentation') == None:
             documentation = None
         else:
             documentation = int(data.get('documentation'))

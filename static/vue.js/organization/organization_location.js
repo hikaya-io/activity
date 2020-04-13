@@ -125,7 +125,7 @@ new Vue({
 		 * Call this function to draw thw map
 		 */
 		showTheMap(adminBoundary = null, geoJsonData = null) {
-			var container = L.DomUtil.get('org_map');
+			const container = L.DomUtil.get('org_map');
 			if (container != null) {
 				container._leaflet_id = null;
 			}
@@ -183,7 +183,7 @@ new Vue({
 				if (country) {
 					this.makeRequest(
 						'GET',
-						`https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/${country.code.toUpperCase()}/${admin.toUpperCase()}/${country.code.toUpperCase()}_${admin.toUpperCase()}.geojson`
+						`https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/${country.code.toUpperCase()}/${admin.toUpperCase()}/${country.code.toUpperCase()}-${admin.toUpperCase()}.geojson`
 					)
 					.then((response) => {
 						data = response.data;

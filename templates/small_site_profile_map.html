@@ -1,51 +1,153 @@
 <script>
-	let map = L.map('map', {
-	}).setView(
-		[
-      		Number('{{user.activity_user.organization.latitude}}'), 
-      		Number('{{user.activity_user.organization.longitude}}')
-  		], 
-		Number('{{user.activity_user.organization.zoom}}')
-    );
+new Vue({
+	delimiters: ['[[', ']]'],
+	el: '#map_container',
+	data: {
+		countries: [],
+		organization: null,
+		latitude: null,
+		longitude: null,
+		zoom: null,
+		admin_boundary: null,
+		country_code: []
+	},
 
-	let my_divicon = L.divIcon({
-			className: 'arrow_box'
-	});
+	beforeMount: function() {
+		this.loadCountries();
+		const lat = Number('{{user.activity_user.organization.latitude}}'); 
+		const long = Number('{{user.activity_user.organization.longitude}}');
+		const mapZoom =  Number('{{user.activity_user.organization.zoom}}');
 
-	L.tileLayer(
-		'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-			'attribution': 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
+		this.latitude = lat ? lat : 0.00;
+		this.longitude = long ? long : 0.00;
+		this.zoom =  mapZoom ? mapZoom : 5;
+		this.admin_boundary = '{{user.activity_user.organization.admin_boundary}}';
+		this.country_code = Number('{{user.activity_user.organization.country_code.all.0.id}}');
+		// load countries
+		setTimeout(() => {
+			this.getBoundaryData(this.admin_boundary);
+		}, 1000)
+	},
+
+	methods: {
+		/**
+		* make requests for CRUD operations using axios
+		* @param { string } method - request method
+		* @param { string } url  - request url
+		* @param { string } data - request payload
+		* @return { Promise } - axios respons ePromise
+		*/
+		makeRequest(method, url, data = null) {
+			axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+			axios.defaults.xsrfCookieName = 'csrftoken';
+			return axios({ method, url, data });
+		},
+		
+		/**
+		* Load all coutries to populate the dropdown
+		*/
+		loadCountries() {
+			this.makeRequest('GET', '/workflow/countries')
+				.then((response) => {
+					if (response.data) {
+						this.countries = response.data;
+					}
+				})
+				.catch((e) => {
+					this.countries = [];
+				});
+		},
+
+		plotMap(adminBoundary = null, geoJsonData = null) {
+			// check that the map has not been initialized in the DOM
+			const container = L.DomUtil.get('map');
+			if (container != null) {
+				container._leaflet_id = null;
+			}
+
+			let map = L.map('map', {
+			}).setView([this.latitude, this.longitude], this.zoom);
+		
+			let my_divicon = L.divIcon({
+					className: 'arrow_box'
+			});
+		
+			L.tileLayer(
+				'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+					'attribution': 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
+				}
+			).addTo(map);
+		
+			let locations = [];
+		
+			//for each site we create a marker, add it to the map and a list
+			{% for site in get_locations %}
+				let marker{{ forloop.counter0 }} = L.marker([Number('{{site.latitude}}'), Number('{{site.longitude}}')], {
+						draggable:false
+				});
+		
+				marker{{ forloop.counter0 }}.url = '/workflow/siteprofile_update/{{ site.id }}/';
+				marker{{ forloop.counter0 }}.on('click', function(){
+					window.location.pathname = (this.url);
+				});
+		
+				marker{{ forloop.counter0 }}.addTo(map);
+				locations.push(marker{{ forloop.counter0 }})
+			{% endfor %}
+		
+			locations = [...locations];
+		
+			// we use the list of site markers to autozoom the map
+			// (featureGroup leaflet.js)
+		
+			// this check will catch empty lists that cause the following function
+			// to break the rendering of the map
+			if (locations !== undefined && locations.length != 0) {
+				let group = new L.featureGroup(
+					locations
+				);
+				map.fitBounds(group.getBounds());
+			}
+			if (adminBoundary) {
+				var myStyle = {
+					color: '#00CCCC',
+					weight: 2,
+					opacity: 0.5,
+				};
+
+				L.geoJSON(geoJsonData, {
+					style: myStyle,
+				}).addTo(map);
+			}
+		},
+		/**
+		* Load
+		*/
+		getBoundaryData(admin) {
+			let data = null;
+			if (this.admin_boundary && this.country_code) {
+				const country = this.countries.find((item) => item.id === +this.country_code);
+				if (country) {
+					this.makeRequest(
+						'GET',
+						`https://raw.githubusercontent.com/hikaya-io/admin-boundaries/master/data/${country.code.toUpperCase()}/${admin.toUpperCase()}/${country.code.toUpperCase()}-${admin.toUpperCase()}.geojson`
+					)
+					.then((response) => {
+						data = response.data;
+						this.plotMap(admin, data);
+					})
+					.catch((e) => {
+						toastr.error(
+							'There was a problem loading boundary data for the country'
+						);
+					});
+				}
+			} else {
+				this.plotMap();
+			}
 		}
-	).addTo(map);
 
-	let locations = [];
-
-	//for each site we create a marker, add it to the map and a list
-	{% for site in get_locations %}
-		let marker{{ forloop.counter0 }} = L.marker([Number('{{site.latitude}}'), Number('{{site.longitude}}')], {
-				draggable:false
-		});
-
-		marker{{ forloop.counter0 }}.url = '/workflow/siteprofile_update/{{ site.id }}/';
-		marker{{ forloop.counter0 }}.on('click', function(){
-			window.location.pathname = (this.url);
-		});
-
-		marker{{ forloop.counter0 }}.addTo(map);
-		locations.push(marker{{ forloop.counter0 }})
-	{% endfor %}
-
-	locations = [...locations];
-
-	// we use the list of site markers to autozoom the map
-	// (featureGroup leaflet.js)
-
-	// this check will catch empty lists that cause the following function
-	// to break the rendering of the map
-	if (locations !== undefined || locations.length != 0) {
-		let group = new L.featureGroup(
-			locations
-		);
-		map.fitBounds(group.getBounds());
 	}
+
+})
 </script>
