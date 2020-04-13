@@ -31,6 +31,33 @@
 						>
 					</div>
 
+					<div class="form-group" id="div_funding_name">
+						<label class="control-label" for="name">Funding*</label>
+						<input
+							type="text"
+							id="funding_name"
+							name="name"
+							class="form-control"
+							placeholder="Funding"
+							autocomplete="off"
+						/>
+						<span id="fundCodeNameHelpBlock" class="help-block hikaya-hide"
+							>Funding required</span
+						>
+					</div>
+
+					<div class="form-group" id="div_stakeholder">
+						<label class="control-label" for="stakeholder">Stakeholder</label>
+						<select name="stakeholder" id="stakeholder" class="form-control">
+							<option value=""></option>
+							{% for stakeholder in donor_stakeholders %}
+							<option value="{{ stakeholder_type.id }}">
+								{{ stakeholder.name }}
+							</option>
+							{% endfor %}
+						</select>
+					</div>
+
 					<div class="form-group" id="div_stakeholder">
 						<label class="control-label" for="stakeholder">Stakeholder</label>
 						<select name="stakeholder" id="stakeholder" class="form-control">
@@ -65,10 +92,10 @@
 			theme: 'bootstrap',
 			placeholder: 'Select stakeholder (Donor)'
 		});
-		
-        $('#id_fund_code').select2({ 
-			theme: 'bootstrap', 
-			placeholder: 'Select fund code(s)' 
+
+        $('#id_fund_code').select2({
+			theme: 'bootstrap',
+			placeholder: 'Select fund code(s)'
 		});
 
 		// disable submit buttons until the name is set
@@ -154,7 +181,7 @@
 			});
 		});
     };
-    
+
     /**
     add the created fundcode to select options
     **/

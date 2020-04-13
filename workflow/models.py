@@ -402,6 +402,7 @@ class Contact(models.Model):
 # other programs is 'Program Dashboard'
 class FundCode(models.Model):
     name = models.CharField('Fund Code', max_length=255, blank=True)
+    percentage_of_funding = models.IntegerField('% of Funding', null=True, blank=True)
     stakeholder = models.ForeignKey(
         'Stakeholder', related_name='stakeholder', null=True, blank=True,
         on_delete=models.SET_NULL)
@@ -1818,4 +1819,3 @@ class ActivityUserOrganizationGroup(models.Model):
     # displayed in admin templates
     def __str__(self):
         return '{} - {}'.format(self.activity_user, self.organization) or ''
-
