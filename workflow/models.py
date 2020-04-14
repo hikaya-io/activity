@@ -218,7 +218,7 @@ class Country(models.Model):
         Organization, blank=True, null=True, on_delete=models.SET_NULL)
     code = models.CharField("2 Letter Country Code", max_length=4, blank=True)
     description = models.TextField(
-        "Description/Notes", max_length=765, blank=True)
+        "Description/Notes", max_length=765, null=True, blank=True)
     latitude = models.CharField(
         "Latitude", max_length=255, null=True, blank=True)
     longitude = models.CharField(
