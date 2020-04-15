@@ -1369,3 +1369,7 @@ textarea:focus {
 #collectedDataTable th {
   border-top: none;
 }
+
+.min-width-100 {
+  min-width: 100px;
+}
