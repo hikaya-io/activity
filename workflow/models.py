@@ -218,7 +218,7 @@ class Country(models.Model):
         Organization, blank=True, null=True, on_delete=models.SET_NULL)
     code = models.CharField("2 Letter Country Code", max_length=4, blank=True)
     description = models.TextField(
-        "Description/Notes", max_length=765, blank=True)
+        "Description/Notes", max_length=765, null=True, blank=True)
     latitude = models.CharField(
         "Latitude", max_length=255, null=True, blank=True)
     longitude = models.CharField(
@@ -402,6 +402,7 @@ class Contact(models.Model):
 # other programs is 'Program Dashboard'
 class FundCode(models.Model):
     name = models.CharField('Fund Code', max_length=255, blank=True)
+    percentage_of_funding = models.IntegerField('% of Funding', null=True, blank=True)
     stakeholder = models.ForeignKey(
         'Stakeholder', related_name='stakeholder', null=True, blank=True,
         on_delete=models.SET_NULL)
@@ -1818,4 +1819,3 @@ class ActivityUserOrganizationGroup(models.Model):
     # displayed in admin templates
     def __str__(self):
         return '{} - {}'.format(self.activity_user, self.organization) or ''
-

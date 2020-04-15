@@ -58,7 +58,7 @@ odfpy==1.4.0
 openapi-codec==1.3.2
 openpyxl==2.6.2
 packaging==20.3
-Pillow==6.2.0
+Pillow>=6.2.2
 pluggy==0.13.1
 psycopg2-binary==2.8.4
 py==1.8.1
@@ -91,6 +91,7 @@ urllib3==1.24.3
 wcwidth==0.1.8
 WeasyPrint==47
 webencodings==0.5.1
+whitenoise==5.0.1
 xlrd==1.2.0
 xlwt==1.3.0
 zipp==3.1.0
