@@ -1142,13 +1142,14 @@ def invite_existing_user(request, invite_uuid):
             activity_user = ActivityUser.objects.filter(user=user).first()
             if activity_user:
                 activity_user.organization = invite.organization
-                activity_user.save()
                 activity_user.organizations.add(invite.organization)
-                messages.error(request,
+                activity_user.save()
+                messages.success(request,
                                'You have successfully joined {}'.format(invite.organization.name))
                 # delete the invite
                 invite.delete()
 
+                # TODO this renders the login form even if the user is logged in
                 return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
             # if user is not found
@@ -1162,7 +1163,7 @@ def invite_existing_user(request, invite_uuid):
             return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
     except UserInvite.DoesNotExist:
-        messages.error(request, 'Error, this invitation is no-longer valid')
+        messages.error(request, 'Error, this invitation is no longer valid')
         return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
 
