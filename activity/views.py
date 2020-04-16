@@ -1141,9 +1141,10 @@ def invite_existing_user(request, invite_uuid):
             user = User.objects.get(email=invite.email)
             activity_user = ActivityUser.objects.filter(user=user).first()
             if activity_user:
+                # Accepting the invite of an existing user
                 activity_user.organization = invite.organization
-                activity_user.organizations.add(invite.organization)
                 activity_user.save()
+                activity_user.organizations.add(invite.organization)
                 messages.success(request,
                                'You have successfully joined {}'.format(invite.organization.name))
                 # delete the invite
