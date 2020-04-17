@@ -1,12 +1,8 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block content %}
-<script>
-  $(document).ready(() => {
-    $('#documentationtable').DataTable();
-  });
-</script>
 
-<div class="container">
+{% include 'ui-components/vue_modal.html'%}
+<div class="container" id="documents">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">My Dashboard</a></li>
@@ -26,62 +22,68 @@
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
           <div class="btn-group" role="group">
-            <button
-              type="button"
-              class="btn btn-sm btn-default dropdown-toggle"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
               {{ user.activity_user.organization.level_1_label }}
               <span class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
             </button>
             <ul class="dropdown-menu">
-              <li class="{% if program_id == 0 %} active {% endif %}"><a href="/workflow/documentation_list/0/{{project_agreement_id}}/">--All--</a></li>
+              <li class="{% if program_id == 0 %} active {% endif %}"><a
+                  href="/workflow/documentation_list/0/{{project_agreement_id}}/">--All--</a></li>
               {% for program in get_programs %}
               {% if program.name %}
               <li class="{% if program_id == program.id %} active {% endif %}">
-                <a href="/workflow/documentation_list/{{program.id}}/{{project_agreement_id}}/">{{ program.name | truncatechars:30 }}</a>
+                <a
+                  href="/workflow/documentation_list/{{program.id}}/{{project_agreement_id}}/">{{ program.name | truncatechars:30 }}</a>
               </li>
               {% endif%}
               {% endfor %}
             </ul>
           </div>
           <div class="btn-group" role="group">
-              <button
-                type="button"
-                class="btn btn-sm btn-default dropdown-toggle"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                {{ user.activity_user.organization.level_2_label }}
-                <span class="fa {% if project_agreement_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li class="{% if project_agreement_id == 0 %} active {% endif %}"><a href="/workflow/documentation_list/{{program_id}}/0/">--All--</a></li>
-                {% for project in get_projects %}
-                <li class="{% if project_agreement_id == project.id %} active {% endif %}">
-                  <a href="/workflow/documentation_list/{{program_id}}/{{project.id}}/">{{ project.project_name | truncatechars:30 }}</a>
-                </li>
-                {% endfor %}
-              </ul>
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              {{ user.activity_user.organization.level_2_label }}
+              <span class="fa {% if project_agreement_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li class="{% if project_agreement_id == 0 %} active {% endif %}"><a
+                  href="/workflow/documentation_list/{{program_id}}/0/">--All--</a></li>
+              {% for project in get_projects %}
+              <li class="{% if project_agreement_id == project.id %} active {% endif %}">
+                <a
+                  href="/workflow/documentation_list/{{program_id}}/{{project.id}}/">{{ project.project_name | truncatechars:30 }}</a>
+              </li>
+              {% endfor %}
+            </ul>
           </div>
         </div>
       </div>
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
-          <button
-            class="btn btn-sm btn-primary"
-            data-toggle="modal"
-            data-target="#addDocumentModal"
-          >
+          <a
+          role="button"
+          class="btn btn-sm btn-primary"
+          id="show-modal"
+          @click="toggleModal()">
             <i class="fa fa-plus"></i> Document
-          </button>
+        </a>
         </div>
       </div>
+      <!-- Objective create modal -->
+     
     </div>
+    
   </div>
+  <modal v-if="showModal" @close="showModal = false">
+    <h4 slot="header">[[modalHeader]]</h4>
+    <div slot="body">
+      {% include 'workflow/modals/add_document_form.html' %}
+    </div>
+    <div slot="footer">
+      {% include 'ui-components/quick_entry_modal_footer.html' %}
+    </div>
+  </modal>
 
   <!-- Table -->
   <table class="table" id="documentationtable">
@@ -97,15 +99,12 @@
       {% for document in get_documentation %}
       <tr>
         <td>
-          <a href="{% url 'documentation_update' pk=document.id %}" 
-            data-toggle="tooltip" 
+          <a href="{% url 'documentation_update' pk=document.id %}" data-toggle="tooltip"
             title="{{ document.name }}">{{ document.name | truncatechars:50 }}</a>
         </td>
         <td>{{ document.program.name }}</td>
         <td>
-          <a href="{{ document.url }}" target="_blank" 
-            data-toggle="tooltip" 
-            title="{{ document.url }}">
+          <a href="{{ document.url }}" target="_blank" data-toggle="tooltip" title="{{ document.url }}">
             {{ document.url | truncatechars:50 }}
           </a>
         </td>
@@ -115,13 +114,8 @@
             <button type="button" class="btn btn-default btn-sm disabled">
               Actions
             </button>
-            <button
-              type="button"
-              class="btn btn-default btn-sm dropdown-toggle"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
               <span class="sr-only">Toggle Dropdown</span>
             </button>
@@ -132,11 +126,17 @@
           </div>
         </td>
       </tr>
-      
+
       {% endfor %}
     </tbody>
   </table>
 
-<!-- add document modal -->
-{% include 'workflow/modals/add_document_modal.html' %} 
-{% endblock content %}
+
+
+  <!-- add document modal -->
+
+  {% endblock content %}
+
+  {% block extra_js_in_body %}
+  <script type="text/javascript" src="{{ STATIC_URL }}vue.js/components/documents.js"></script>
+  {% endblock %}
