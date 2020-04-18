@@ -471,7 +471,7 @@ class Migration(migrations.Migration):
                 ('invite_uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name='Invite UUUID')),
                 ('email', models.CharField(max_length=255, verbose_name='Email Address')),
                 ('status', models.CharField(choices=[('accepted', 'Accepted'), ('pending', 'pending'), ('rejected', 'Rejected')], default='pending', max_length=35, verbose_name='Invitation Status')),
-                ('invite_date', models.DateTimeField(auto_now_add=True, verbose_name='Invitation DAte')),
+                ('invite_date', models.DateTimeField(auto_now_add=True, verbose_name='Invitation Date')),
                 ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='workflow.Organization', verbose_name='Organization')),
             ],
             options={

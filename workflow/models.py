@@ -1781,7 +1781,7 @@ class UserInvite(models.Model):
         Organization, verbose_name='Organization', on_delete=models.CASCADE)
     status = models.CharField(
         'Invitation Status', max_length=35, choices=INVITE_STATUSES, default='pending')
-    invite_date = models.DateTimeField('Invitation DAte', auto_now_add=True)
+    invite_date = models.DateTimeField('Invitation Date', auto_now_add=True)
 
     class Meta:
         ordering = ('invite_date',)
