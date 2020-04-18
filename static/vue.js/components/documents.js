@@ -24,7 +24,7 @@ new Vue({
   },
   beforeMount: function () {
 
-    this.makeRequest('GET', '/workflow/level1_program/')
+    this.makeRequest('GET', '/workflow/level1/')
       .then(response => {
         if (response.data) {
           this.programs_list = response.data.map(el => {
@@ -109,7 +109,7 @@ new Vue({
           data
         );
         if (response) {
-          toastr.success('Documentation was added successfully', `${response}`);
+          toastr.success('Documentation was added successfully');
           response.data['program_id'] = response.data['program'];
           delete response.data['program'];
           this.setFilter(this.filtered_program_id);
