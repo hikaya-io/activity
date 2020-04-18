@@ -2606,7 +2606,7 @@ def add_level2(request):
 
 
 def add_documentation(request):
-    data = request.POST
+    data = json.loads(request.body)
     program = Program.objects.get(id=int(data.get('program')))
 
     documentation = Documentation(name=data.get(
