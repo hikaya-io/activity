@@ -1,0 +1,83 @@
+<!-- Add Objective modal body -->
+
+<form method="POST">
+    <div class="modal-body">
+      {% csrf_token %}
+      <div
+        :class="{ 
+            'form-group': true, 
+            'has-error': errors.has('name')
+        }"
+      >
+        <label for="name">Name*</label>
+        <input
+          type="text"
+          name="name"
+          :class="{ 
+                    'form-control': true, 
+                    'is-danger': errors.has('name') 
+                }"
+          v-model="name"
+          v-validate="'required'"
+          placeholder="Name of the document"
+        />
+        <span v-show="errors.has('name')" class="help is-danger"
+          >[[ errors.first('name') ]]</span
+        >
+      </div>
+      <div
+        :class="{
+              'form-group': true
+          }"
+      >
+        <label for="program"
+          >{{ user.activity_user.organization.level_1_label }}*</label
+        >
+        <validation-provider name="program" rules="required" ref="program" v-slot="{ errors }">
+          <div>
+            <v-select
+             input-id="program"
+             :searchable="false"
+             v-model="program_id"
+             @search:blur="blur('program')"
+             placeholder="Choose a {{ user.activity_user.organization.level_1_label }}"
+             label="name"
+             :options="programs_list"
+             :reduce="program => program.program_id"
+             :class="{'hikaya-select': true, 'is-invalid': !!errors.length}"
+            >
+              <template #open-indicator="{ attributes }">
+                <i class="caret"></i>
+              </template>
+            </v-select>
+            <span v-show="errors[0]" class="help is-danger"
+              >[[ errors[0] ]]</span
+            >
+          </div>
+        </validation-provider>
+      </div>
+      <div
+      :class="{ 
+          'form-group': true, 
+          'has-error': errors.has('name')
+      }"
+    >
+      <label for="name">URL</label>
+      <input
+        type="text"
+        name="url"
+        :class="{ 
+                  'form-control': true, 
+                  'is-danger': errors.has('url') 
+              }"
+        v-model="url"
+        v-validate="'required'"
+        placeholder="e.g https://documents.example.com/files/doca.pdf"
+      />
+      <span v-show="errors.has('url')" class="help is-danger"
+        >[[ errors.first('url') ]]</span
+      >
+    </div>
+    </div>
+  </form>
+  
