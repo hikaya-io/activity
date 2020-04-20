@@ -22,7 +22,7 @@ Models are gathered inside the directory `models` and [organized as a package](h
 
 If you add models to the folder, just make sure to expose your model in `__init__.py`.
 
-MTI between model `Service`, and the different kinds of services `Training`, `Distribution`, `Construction`...
+Multi Table Inheritance between model `Service`, and the different kinds of services `Training`, `Distribution`, `Construction`...
 
 `Service` is marked as an abstract class, since a service can't exist without being one, and only one, of the supported service types.
 
@@ -61,11 +61,12 @@ Since we are now using UUID for model IDs, we need to associate an expressive sl
 ## Questions
 
 What would be the common fields between all the currently supported service types (`Training` and `Distribution`), and the potential future ones(`Construction` for example)? Which one of them are required and which are nullable?
-    - Program
-    - Site
-    - Office
-    - Implementer
-    - Start and End dates
+
+- Program
+- Site
+- Office
+- Implementer
+- Start and End dates
 
 **About the Case model:**
 
