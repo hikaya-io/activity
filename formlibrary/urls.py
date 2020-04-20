@@ -7,7 +7,7 @@ from .views import (
     IndividualUpdate, TrainingUpdate, delete_training, delete_individual,
     TrainingCreate, DistributionList, DistributionCreate, DistributionListObjects,
     DistributionUpdate, delete_distribution, GetAgreements,
-    TrainingParticipantListObjects)
+    TrainingParticipantListObjects, IndividualViewList, IndividualViewDetail)
 from django.urls import path
 
 # place app url patterns here
@@ -28,6 +28,16 @@ urlpatterns = [
     path('training_participants/<int:pk>', TrainingParticipantListObjects.as_view(),
          name='training_participants'),
 
+    path(
+          r'individual/<int:pk>/',
+          IndividualViewDetail.as_view(),
+          name='Individual_detail'
+    ),
+    path(
+          r'individual/',
+          IndividualViewList.as_view(),
+          name='Individual_list'
+    ),
     path('individual_list/<slug:program>/<slug:training>/<slug:distribution>/',
          IndividualList.as_view(), name='individual_list'),
     path('individual_objects/<slug:program>/<slug:project>/',
