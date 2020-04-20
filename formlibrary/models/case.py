@@ -50,8 +50,6 @@ class Individual(models.Model):
 class Household(Case):
     name = models.CharField(max_length=255)
     # individuals = 
-    # ? address
-    # ? contact_information
 
 # class Village(Case):
 #    individuals = 
