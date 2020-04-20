@@ -1,8 +1,8 @@
 <form method="POST">
     <div class="modal-body">
         {% csrf_token %}
-        <div :class="{ 
-            'form-group': true, 
+        <div :class="{
+            'form-group': true,
             'has-error': errors.has('name')
         }">
             <label for="name">[[ level_1_label ]] name*</label
@@ -10,11 +10,11 @@
             <input
                 type="text"
                 name="name"
-                :class="{ 
-                    'form-control': true, 
-                    'is-danger': errors.has('name') 
-                }"   
-                v-model="name" 
+                :class="{
+                    'form-control': true,
+                    'is-danger': errors.has('name')
+                }"
+                v-model="name"
                 v-validate="'required'"
                 :placeholder="level_1_label"
             />
@@ -38,23 +38,23 @@
             placeholder="Choose sectors"
             :options="sectorsList"
             :reduce="sector => sector.id"
-        > 
+        >
         </v-select>
       </div>
-      
+
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group" id="div_start_date">
-                    <label for="startDate">Start Date</label>
+                    <label for="startDate">Start Datef</label>
                     <input
                         type="date"
                         id="startDate"
                         name="startDate"
-                        :class="{ 
-                            'form-control': true, 
+                        :class="{
+                            'form-control': true,
                             }"
                         style="width:200px;"
-                        v-model="start_date" 
+                        v-model="start_date"
                         placeholder="Start Date"
                         v-on:change="setMinDate()"
                         :max="maxDate"/>
@@ -68,11 +68,11 @@
                         type="date"
                         id="endDate"
                         name="endDate"
-                        :class="{ 
-                            'form-control': true, 
+                        :class="{
+                            'form-control': true,
                             }"
                         style="width:200px;"
-                        v-model="end_date" 
+                        v-model="end_date"
                         placeholder="End Date"
                         v-on:change="setMaxDate()"
                         :min="minDate"/>
