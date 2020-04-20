@@ -1,21 +1,40 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import uuid
-from django.db import models
 from datetime import datetime
+from django.db import models
 from workflow.models import Program, SiteProfile
-from .training_attendance import TrainingAttendance
+# from formlibrary.models import TrainingAttendance, Distribution # ! For some reason, this errors out
+from formlibrary.models import TrainingAttendance
 from .distribution import Distribution
 
-# https://github.com/hikaya-io/activity/issues/410
 class Case(models.Model):
     """
     Keeps track of Individuals/Households and their usage/participation in services
+    Spec: https://github.com/hikaya-io/activity/issues/410
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     label = models.CharField(max_length=255)
-    # services = 
+    # services =
 
-# class Individual(Case):
+
+class Household(Case):
+    """
+    Family, or group of people, living together
+    Spec: https://github.com/hikaya-io/activity/issues/409
+    """
+    name = models.CharField(max_length=255)
+    # individuals = models.ForeignKey(
+    #     Individual, null=True, blank=True, on_delete=models.SET_NULL)
+
+
 class Individual(models.Model):
+    """
+    Individual, or person.
+    Subject to future changes: https://github.com/hikaya-io/activity/issues/403
+    Also, will inherit from Case (subject to research/discussion)
+    """
     first_name = models.CharField(max_length=255, null=True, blank=True)
     training = models.ManyToManyField(TrainingAttendance, blank=True)
     distribution = models.ManyToManyField(Distribution, blank=True)
@@ -30,6 +49,9 @@ class Individual(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
 
+    household = models.ForeignKey(
+        Household, null=True, blank=True, on_delete=models.SET_NULL)
+
     class Meta:
         ordering = ('first_name',)
 
@@ -40,19 +62,7 @@ class Individual(models.Model):
         self.edit_date = datetime.now()
         super(Individual, self).save()
 
-    # displayed in admin templates
     def __str__(self):
         if self.first_name is None:
             return "NULL"
         return self.first_name
-
-# https://github.com/hikaya-io/activity/issues/409
-class Household(Case):
-    name = models.CharField(max_length=255)
-    # individuals = 
-
-# class Village(Case):
-#    individuals = 
-
-# class School(Case):
-#     students = individuals

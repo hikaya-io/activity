@@ -1,9 +1,16 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+from datetime import datetime
 from django.db import models
 from workflow.models import Program, ProjectAgreement, Office, Province
-from datetime import datetime
 
-# TODO update: https://github.com/hikaya-io/activity/issues/419
+
 class Distribution(models.Model):
+    """
+    Distribution of items, or group of items, to individuals or households
+    Subject to future changes: https://github.com/hikaya-io/activity/issues/419
+    """
     distribution_name = models.CharField(max_length=255)
     program = models.ForeignKey(
         Program, null=True, blank=True, on_delete=models.SET_NULL)
@@ -68,4 +75,3 @@ class Distribution(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.distribution_name
-

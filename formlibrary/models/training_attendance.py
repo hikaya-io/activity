@@ -1,20 +1,12 @@
-# Training models and its functions
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+from datetime import datetime
 from django.db import models
 from workflow.models import Program, ProjectAgreement
-from datetime import datetime
 
-# https://github.com/hikaya-io/activity/issues/422
-# ? Attendance tracking needs more reflexion
-# ? Tracking of attendance needs the notion of a session/class: track the `attendees`
-# ? from the list of registered into the program
-# class Attendance(models.Model):
-#     """
-#     Attendance "sheet" to keep track of Individuals/Household participations to trainings.
-#     """
-#     number_of_sessions = models.IntegerField()
 
 class TrainingAttendance(models.Model):
-    # TODO
     training_name = models.CharField(max_length=255)
     program = models.ForeignKey(
         Program, null=True, blank=True, on_delete=models.SET_NULL)
@@ -59,3 +51,13 @@ class TrainingAttendance(models.Model):
     # displayed in admin templates
     def __str__(self):
         return self.training_name
+
+# ? Attendance tracking needs more reflexion
+# ? Tracking of attendance needs the notion of a session/class: track the `attendees`
+# ? from the list of registered into the program
+# class Attendance(models.Model):
+#     """
+#     Attendance "sheet" to keep track of Individuals/Household participations to trainings.
+#     Spec: https://github.com/hikaya-io/activity/issues/422
+#     """
+#     number_of_sessions = models.IntegerField()
