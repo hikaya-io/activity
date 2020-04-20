@@ -54,6 +54,18 @@ Distribution:
 
 > All links to external models are with the `workflow` app
 
+## Tests
+
+We are opting to write tests as we code, or even better, before coding ([Test Driven Development](https://www.obeythetestinggoat.com/book/part1.harry.html))
+
+If you are not familiar with writing tests, no worries. They can be written separately by a reviewer.
+
+Since we are writing early tests, there is no need to write technically exhaustive tests and assertions.
+Let's keep the tests to a minimum, and focused the business logic. In other terms, perfect tests for now would be
+direct translations of the requirements expressed in the Github Issues
+
+Later on, we could provide fixtures as we go of each Model.
+
 ## On Slug fields
 
 Since we are now using UUID for model IDs, we need to associate an expressive slug, deduced from a name, label or description, for more friendly URLs.
