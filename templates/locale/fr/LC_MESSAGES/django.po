@@ -601,11 +601,11 @@ msgstr "SERVEUR DEMO"
 
 #: templates/report_base.html:105
 msgid "LOCAL SERVER"
-msgstr "DERVEUR LOCAL"
+msgstr "SERVEUR LOCAL"
 
 #: templates/report_base.html:107
 msgid "DEV SERVER"
-msgstr "DERVEUR DE DEV"
+msgstr "SERVEUR DE DEV"
 
 #: templates/report_base.html:112
 msgid "Logout"
