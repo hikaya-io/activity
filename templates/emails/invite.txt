@@ -1,4 +1,4 @@
-Invitation to joing {{organization}} on Hikaya
+Invitation to join {{organization}} on Hikaya
 Click on the invitation link below to register and be a member of {{organization}} on Hikaya Activity
 Copy link: {{link}}
 
@@ -9,7 +9,7 @@ Activity is an open source product brought to you by your friends at Hikaya
 
 {{link}}
 
-Copyright © 2019 Hikaya
+Copyright © 2020 Hikaya
 All rights reserved.
 
-This email was sent to <{{email}}> because you created an Activity account.
+This email was sent to {{email}} because you created an Activity account.
