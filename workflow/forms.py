@@ -162,6 +162,13 @@ class ProgramForm(forms.ModelForm):
         self.fields['name'].label = '{} Name'.format(self.organization.level_1_label)
         self.fields['description'].label = '{} Description'.format(self.organization.level_1_label)
 
+        self.fields["start_date"].widget.attrs.update({
+            'id': 'start_date_picker'
+        });
+        self.fields["end_date"].widget.attrs.update({
+            'id': 'end_date_picker'
+        });
+
 
 class ProjectAgreementForm(forms.ModelForm):
     class Meta:
