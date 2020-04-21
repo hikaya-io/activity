@@ -84,12 +84,19 @@ $(document).ready(() => {
 
               if(this.showModal) {
                 let self = this;
-                setTimeout(() => $("#dateCollected").datepicker({
-                  dateFormat: "yy-mm-dd",
-                  onSelect: function (dateText) {
-                    self.date_collected = dateText;
+                setTimeout(() => {
+                  $("#dateCollected").datepicker({
+                    dateFormat: "yy-mm-dd",
+                    onSelect: function (dateText) {
+                      self.date_collected = dateText;
+                    }
+                  })
+                  if(item) {
+                    $("#dateCollected").datepicker('setDate', item.date_collected);
+                  } else {
+                    $("#dateCollected").datepicker('setDate', "");
                   }
-                }), 0)
+                }, 0)
               } else {
                 $("#dateCollected").datepicker('hide').datepicker('destroy');
               }
@@ -201,7 +208,6 @@ $(document).ready(() => {
                   if (!saveNew) {
                     this.toggleResultModal();
                   }
-                  console.log('resettings')
                   // resetting the form
                   this.date_collected = '';
                   this.target = '';
