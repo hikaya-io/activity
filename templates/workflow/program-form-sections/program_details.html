@@ -31,6 +31,9 @@
   </div>
 </div>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
 <script>
   $(document).ready(() => {
     $('#div_id_sector').select2({ theme: 'bootstrap' });
@@ -38,9 +41,37 @@
   });
 
   // Restricting start and end datepickers
-  document.getElementById("start_date_picker").addEventListener('change', function() {
-    console.log("boi")
-  })
+  // document.getElementById("start_date_picker").addEventListener('change', function() {
+  //   console.log("boi")
+  // })
+
+  $("#start_date_picker").datepicker({
+    onSelect: function(dateText) {
+        $("#end_date_picker").datepicker({
+          maxDate: $("#start_date_picker").datepicker("getDate")
+        })
+    }
+  });
+
+  $("#end_date_picker").datepicker({
+    onSelect: function(dateText) {
+        $("#start_date_picker").datepicker({
+          minDate: $("#end_date_picker").datepicker("getDate")
+        })
+    }
+  });
+
+  // $("#start_date_picker").datepicker({
+  //     dateFormat: 'dd/mm/yy',
+  //     inline: true,
+  //     minDate: new Date()
+  // });
+  // $("#end_date_picker").datepicker({
+  //     dateFormat: 'dd/mm/yy',
+  //     inline: true,
+  //     minDate: $("#start_date_picker").datepicker("getDate") });
+  // });
+
 
   // $("#start_date_picker").on('change', function() {
   //   alert('Element ' + this.name + 'clicked');
