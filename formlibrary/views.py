@@ -3,14 +3,18 @@
 
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from rest_framework.generics import ListAPIView
+from django.core import serializers
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.mixins import ListModelMixin
 
 from .models import TrainingAttendance, Individual, Distribution
 from django.shortcuts import redirect
 
 from .forms import TrainingAttendanceForm, IndividualForm, DistributionForm
-from workflow.models import FormGuidance, Program, ProjectAgreement
+from workflow.models import FormGuidance, Program, ProjectAgreement, ActivityUser
 from django.utils.decorators import method_decorator
 from activity.util import get_country, group_excluded
 
@@ -169,6 +173,37 @@ def delete_training(request, pk):
     distribution = TrainingAttendance.objects.get(pk=int(pk))
     distribution.delete()
     return redirect('/formlibrary/training_list/0/0/')
+
+
+class IndividualViewList(ListCreateAPIView):
+    queryset = Individual.objects.all()
+    serializer_class = IndividualSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = Individual.objects.all()
+        program_id = self.request.query_params.get('program', None)
+        distribution_id = self.request.query_params.get('distribution', None)
+        training_id = self.request.query_params.get('training', None)
+        if program_id is not None:
+            programs = Program.objects.filter(id=program_id)
+            queryset = queryset.filter(program__in=programs)
+        if distribution_id is not None:
+            distributions = Distribution.objects.filter(id=distribution_id)
+            queryset = queryset.filter(distribution__in=distributions)
+        if training_id is not None:
+            trainingattendances = TrainingAttendance.objects.filter(id=training_id)
+            queryset = queryset.filter(training__in=trainingattendances)
+        return queryset
+
+
+class IndividualViewDetail(RetrieveUpdateDestroyAPIView):
+    queryset = Individual.objects.all()
+    serializer_class = IndividualSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class IndividualList(ListView):
