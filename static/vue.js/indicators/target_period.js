@@ -25,15 +25,16 @@ new Vue({
         sum: 0,
         target_value: {},
         target_period_data: [],
-        frequencies: [{"id": "3", "text":"Annual"},
-                      {"id": "4", "text":"Semi-annual"},
-                      {"id": "5", "text":"Tri-annual"},
-                      {"id": "6", "text":"Quarterly"},
-                      {"id": "7", "text":"Monthly"}],       
+        frequencies: [{"id": "3", "text":"Every Year"},
+                      {"id": "4", "text":"Every Six Months"},
+                      {"id": "5", "text":"Every Four Months"},
+                      {"id": "6", "text":"Every Three Months"},
+                      {"id": "7", "text":"Every Month"}],       
     },
     beforeMount: function() {
 		this.makeRequest('GET', '/indicators/periodic_target/')
 			.then(response => {
+                console.log(response)
 				response.data.forEach(target => {
                     this.target_period_data.push(target)
                 })
