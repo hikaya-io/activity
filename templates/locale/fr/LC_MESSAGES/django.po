@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-20 22:54+0100\n"
+"POT-Creation-Date: 2020-04-22 04:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,6 +68,114 @@ msgstr "Notifiez votre administrateur système si vous pense que"
 msgid "you should not be seeing this page."
 msgstr "vous n'êtes pas censé voir cette page"
 
+#: base.html:23
+msgid "We help organizations tell their stories through data"
+msgstr "Nous aidons les organisations à raconter leurs histoires à travers les données"
+
+#: base.html:118
+msgid "Toggle navigation"
+msgstr "Basculer la navigation"
+
+#: base.html:138 index.html:108
+msgid "Workflows"
+msgstr "Workflows"
+
+#: base.html:152 indicators/indicator_form.html:42
+#: indicators/indicator_form_tab_ui.html:20
+#, fuzzy
+#| msgid "Indicator"
+msgid "Indicators"
+msgstr "Indicateur"
+
+#: base.html:158 indicators/indicator_list.html:108
+#, fuzzy
+#| msgid "Active"
+msgid "Objectives"
+msgstr "Actif"
+
+#: base.html:165 report_base.html:82
+msgid "Form Library"
+msgstr "Librairie des formulaires"
+
+#: base.html:181 index.html:261
+msgid "Components"
+msgstr "Composantes"
+
+#: base.html:184
+#, fuzzy
+#| msgid "contacts"
+msgid "Contacts"
+msgstr "contacts"
+
+#: base.html:188 index.html:302 index.html:308 report_base.html:66
+msgid "Documents"
+msgstr "Documents"
+
+#: base.html:205 report_base.html:90
+msgid "Reports"
+msgstr "Rapports"
+
+#: base.html:208
+#, fuzzy
+#| msgid "My Dashboard"
+msgid "Dashboards"
+msgstr "Mon tableau de bord"
+
+#: base.html:220
+#, fuzzy
+#| msgid "Sign in"
+msgid "Signed in as"
+msgstr "Se connecter"
+
+#: base.html:222 registration/bookmark_form.html:7
+#: registration/bookmark_list.html:6 registration/profile.html:38
+#: report_base.html:113
+msgid "Profile"
+msgstr "Profile"
+
+#: base.html:225
+#, fuzzy
+#| msgid "Fill in organization details"
+msgid "Organization Settings"
+msgstr "Remplissez les données de l'organization"
+
+#: base.html:230
+#, fuzzy
+#| msgid "Create an account"
+msgid "Organizations"
+msgstr "Créer un compte"
+
+#: base.html:242
+#, fuzzy
+#| msgid "Create an account"
+msgid "Add new Organization"
+msgstr "Créer un compte"
+
+#: base.html:248
+#, fuzzy
+#| msgid "Sign in"
+msgid "Sign out"
+msgstr "Se connecter"
+
+#: base.html:256 registration/confirm_email.html:13 registration/login.html:8
+#: registration/login.html:20 registration/register.html:18
+msgid "Login"
+msgstr "Se connecter"
+
+#: base.html:274 registration/login.html:71 report_base.html:130
+msgid "Sign in"
+msgstr "Se connecter"
+
+#: base.html:355 documentation.html:4 report_base.html:174
+#, fuzzy
+#| msgid "Location"
+msgid "Documentation"
+msgstr "Localisation"
+
+#: base.html:356
+msgid "License"
+msgstr "License"
+
 #: comingsoon.html:3
 msgid "We’re still working on this,"
 msgstr "Nous travaillons encore sur cela,"
@@ -91,12 +199,6 @@ msgid ""
 msgstr ""
 "Faites-nous savoir si vous rencontrez un problème ou si vous avez des "
 "suggestions"
-
-#: documentation.html:4 report_base.html:174
-#, fuzzy
-#| msgid "Location"
-msgid "Documentation"
-msgstr "Localisation"
 
 #: documentation.html:15
 msgid "No Documentation yet."
@@ -136,10 +238,6 @@ msgstr "Filtrer par"
 #: index.html:67 indicators/indicator_list.html:39
 msgid "All"
 msgstr "Tout"
-
-#: index.html:108
-msgid "Workflows"
-msgstr "Workflows"
 
 #: index.html:149
 msgid "Tracking"
@@ -181,10 +279,6 @@ msgstr "Cible"
 msgid "Actual"
 msgstr "Actuel"
 
-#: index.html:261
-msgid "Components"
-msgstr "Composantes"
-
 #: index.html:276
 msgid "Active"
 msgstr "Actif"
@@ -200,10 +294,6 @@ msgstr "Localisation"
 #| msgid "Location"
 msgid "locations"
 msgstr "Localisation"
-
-#: index.html:302 index.html:308 report_base.html:66
-msgid "Documents"
-msgstr "Documents"
 
 #: index.html:304 index.html:310
 msgid "linked to"
@@ -239,23 +329,23 @@ msgstr "Cible"
 
 #: indicators/collecteddata_list.html:315
 msgid "Achieved Total"
-msgstr ""
+msgstr "Total atteint"
 
 #: indicators/collecteddata_list.html:323
 msgid "Start Date"
-msgstr ""
+msgstr "Date de Début"
 
 #: indicators/collecteddata_list.html:327
 msgid "End Date"
-msgstr ""
+msgstr "Date de fin"
 
 #: indicators/collecteddata_list.html:337
 msgid "Targeted Total:"
-msgstr ""
+msgstr "Total ciblé:"
 
 #: indicators/collecteddata_list.html:338
 msgid "Achieved Total:"
-msgstr ""
+msgstr "Total atteint:"
 
 #: indicators/disaggregation_report.html:10
 #: indicators/disaggregation_report.html:17
@@ -266,7 +356,7 @@ msgstr "Rapport des données d'indicateurs"
 
 #: indicators/disaggregation_report.html:30
 msgid "PID"
-msgstr ""
+msgstr "PID"
 
 #: indicators/disaggregation_report.html:32
 #, fuzzy
@@ -276,7 +366,7 @@ msgstr "Indicateur"
 
 #: indicators/disaggregation_report.html:34
 msgid "Number"
-msgstr ""
+msgstr "Nombre"
 
 #: indicators/disaggregation_report.html:36
 #, fuzzy
@@ -293,33 +383,27 @@ msgstr "Actuel"
 #: indicators/disaggregation_report.html:38
 #: indicators/indicator_form_tab_ui.html:62
 msgid "Disaggregation"
-msgstr ""
+msgstr "Désagrégation"
 
 #: indicators/disaggregation_report.html:41
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: indicators/disaggregation_report.html:42
 msgid "Label"
-msgstr ""
+msgstr "Étiquette"
 
 #: indicators/disaggregation_report.html:43
 msgid "Value"
-msgstr ""
+msgstr "Valeur"
 
 #: indicators/disaggregation_report.html:73
 msgid "No Disaggregation"
-msgstr ""
-
-#: indicators/indicator_form.html:42 indicators/indicator_form_tab_ui.html:20
-#, fuzzy
-#| msgid "Indicator"
-msgid "Indicators"
-msgstr "Indicateur"
+msgstr "Aucune Désagrégation"
 
 #: indicators/indicator_form.html:43
 msgid "Details"
-msgstr ""
+msgstr "Détails"
 
 #: indicators/indicator_form.html:53
 #, fuzzy
@@ -329,11 +413,11 @@ msgstr "Indicateur"
 
 #: indicators/indicator_form_tab_ui.html:44
 msgid "Summary"
-msgstr ""
+msgstr "Résumé"
 
 #: indicators/indicator_form_tab_ui.html:53
 msgid "Performance"
-msgstr ""
+msgstr "Performance"
 
 #: indicators/indicator_form_tab_ui.html:67
 #, fuzzy
@@ -343,15 +427,15 @@ msgstr "Cible"
 
 #: indicators/indicator_form_tab_ui.html:76
 msgid "Data Acquisition"
-msgstr ""
+msgstr "Acquisition des données"
 
 #: indicators/indicator_form_tab_ui.html:86
 msgid "Analysis and Reporting"
-msgstr ""
+msgstr "Analyse et rapports"
 
 #: indicators/indicator_form_tab_ui.html:96
 msgid "Approval"
-msgstr ""
+msgstr "Approbation"
 
 #: indicators/indicator_form_tab_ui.html:131 registration/profile.html:65
 msgid "Save"
@@ -359,7 +443,7 @@ msgstr "Sauvegarder"
 
 #: indicators/indicator_list.html:22
 msgid "List"
-msgstr ""
+msgstr "Liste"
 
 #: indicators/indicator_list.html:65 registration/organization_register.html:18
 #, fuzzy
@@ -375,27 +459,21 @@ msgstr "Localisation"
 
 #: indicators/indicator_list.html:98
 msgid "More"
-msgstr ""
+msgstr "Plus"
 
 #: indicators/indicator_list.html:102
 msgid "Toggle Dropdown"
-msgstr ""
+msgstr "Basculer le dropdown"
 
 #: indicators/indicator_list.html:105
 msgid "Related"
-msgstr ""
+msgstr "En relation"
 
 #: indicators/indicator_list.html:107
 #, fuzzy
 #| msgid "Target"
 msgid "Target Periods"
 msgstr "Cible"
-
-#: indicators/indicator_list.html:108
-#, fuzzy
-#| msgid "Active"
-msgid "Objectives"
-msgstr "Actif"
 
 #: indicators/indicator_list.html:109
 #, fuzzy
@@ -405,21 +483,21 @@ msgstr "Niveau"
 
 #: indicators/indicator_list.html:110
 msgid "Sectors"
-msgstr ""
+msgstr "Secteurs"
 
 #: indicators/indicator_list.html:111
 msgid "Disaggregations"
-msgstr ""
+msgstr "Désagrégations"
 
 #: indicators/indicator_list.html:115
 #: indicators/program_indicators_table.html:51
 msgid "Edit"
-msgstr ""
+msgstr "Éditer"
 
 #: indicators/indicator_list.html:116
 #: indicators/program_indicators_table.html:64
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 #: indicators/program_indicators_table.html:11
 #, fuzzy
@@ -447,7 +525,7 @@ msgstr "Librairie d'indicateurs"
 
 #: indicators/program_indicators_table.html:15
 msgid "Sector"
-msgstr ""
+msgstr "Secteur"
 
 #: indicators/program_indicators_table.html:37
 #, fuzzy
@@ -457,7 +535,7 @@ msgstr "KPIs"
 
 #: indicators/program_indicators_table.html:59
 msgid "Data"
-msgstr ""
+msgstr "Données"
 
 #: registration/bookmark_confirm_delete.html:3
 msgid "Bookmark Confirm Delete"
@@ -466,11 +544,6 @@ msgstr "Confirmez suppression de Bookmark"
 #: registration/bookmark_confirm_delete.html:8
 msgid "Are you sure you want to delete"
 msgstr "Etes-vous sûr que vous voulez supprimer"
-
-#: registration/bookmark_form.html:7 registration/bookmark_list.html:6
-#: registration/profile.html:38 report_base.html:113
-msgid "Profile"
-msgstr "Profile"
 
 #: registration/bookmark_form.html:8 registration/bookmark_list.html:16
 msgid "Bookmarks"
@@ -539,7 +612,7 @@ msgstr "Sauvegarder les modifications"
 
 #: registration/confirm_email.html:7
 msgid "Confirm Your Email Address"
-msgstr "Confirmez votre adresse email"
+msgstr "Confirmez votre adresse e-mail"
 
 #: registration/confirm_email.html:12
 msgid ""
@@ -548,11 +621,6 @@ msgid ""
 msgstr ""
 "Accédez à votre compte de messagerie pour confirmer votre adresse e-mail et "
 "activer votre Compte"
-
-#: registration/confirm_email.html:13 registration/login.html:8
-#: registration/login.html:20 registration/register.html:18
-msgid "Login"
-msgstr "Se connecter"
 
 #: registration/login.html:29 registration/register.html:26
 msgid "Register"
@@ -573,10 +641,6 @@ msgstr "Mot de passe"
 #: registration/login.html:64
 msgid "Clear"
 msgstr "Effacer"
-
-#: registration/login.html:71 report_base.html:130
-msgid "Sign in"
-msgstr "Se connecter"
 
 #: registration/login.html:85
 msgid "Login with Google"
@@ -792,14 +856,6 @@ msgstr "Données des indicateurs"
 #| msgid "Indicator"
 msgid "Indicator Library"
 msgstr "Librairie d'indicateurs"
-
-#: report_base.html:82
-msgid "Form Library"
-msgstr "Librairie des formulaires"
-
-#: report_base.html:90
-msgid "Reports"
-msgstr "Rapports"
 
 #: report_base.html:92
 #, fuzzy
