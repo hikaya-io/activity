@@ -1,5 +1,5 @@
 <script type="text/x-template" id="participants-table-template">
-  <div id="beneficiaries_table">
+  <div id="individuals_table">
     <div v-if="participants.length">
       <table class="table" id="participantsTable">
         <tbody>
@@ -12,7 +12,7 @@
         <template v-for="item in participants">
           <tr>
             <td>
-              <span style="display: block">[[ item.beneficiary_name ]]</span>
+              <span style="display: block">[[ item.first_name ]]</span>
               <span>[[ item.age ]]</span>
             </td>
             <td class="text-right" style="vertical-align: top">[[ item.training[0].training_duration ]]</td>
@@ -31,7 +31,7 @@
     </div>
     <div v-else>
       <div style="padding-left:10px; font-size: 16px; color: #54585A;">
-        There are no enrolled beneficiaries.
+        There are no enrolled individuals.
       </div>
       <div class="text-right">
         <button role="button"

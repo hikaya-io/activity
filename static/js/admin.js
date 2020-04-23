@@ -305,24 +305,24 @@ $(document).ready(function() {
     validateConfigForm();
   });
 
-  $('#beneficiary').on('input focus keyup', function() {
-    const beneficiary = $(this);
-    if (beneficiary.val()) {
-      invalidInputs = invalidInputs.filter(item => item !== 'beneficiary_label');
-      $('#div_beneficiary_name')
+  $('#individual').on('input focus keyup', function() {
+    const individual = $(this);
+    if (individual.val()) {
+      invalidInputs = invalidInputs.filter(item => item !== 'individual_label');
+      $('#div_individual_name')
         .removeClass('has-error')
         .addClass('has-success');
-      $('#beneficiaryHelpBlock')
+      $('#individualHelpBlock')
         .removeClass('hikaya-show')
         .addClass('hikaya-hide');
     } else {
-      invalidInputs.indexOf('beneficiary_label') === -1
-        ? invalidInputs.push('beneficiary_label')
+      invalidInputs.indexOf('individual_label') === -1
+        ? invalidInputs.push('individual_label')
         : '';
-      $('#div_beneficiary_name')
+      $('#div_individual_name')
         .removeClass('has-success')
         .addClass('has-error');
-      $('#beneficiaryHelpBlock')
+      $('#individualHelpBlock')
         .removeClass('hikaya-hide')
         .addClass('hikaya-show');
     }

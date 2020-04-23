@@ -1,0 +1,109 @@
+{% extends "base.html" %} {% block content %} {% load group_tag %}
+{% include './individual_modal_form.html' %}
+
+<script>
+    $(document).ready(() => {
+        $('#individualsTable').DataTable();
+    })
+</script>
+
+<div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
+    <li class="active">{{ request.user.activity_user.organization.individual_label }}</li>
+  </ul>
+  {% endblock %}
+
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">{{ request.user.activity_user.organization.individual_label }} List</h4>
+    </div>
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        <span class="text-filter">Filter by</span>
+      </div>
+      <div class="sub-nav-item">
+        {% include "./filter.html" %}
+      </div>
+
+      <div class="sub-nav-item">
+        <!-- sample action buttons -->
+        <div class="btn-group" role="group" aria-label="">
+          <button
+            class="btn btn-primary btn-sm"
+            data-toggle="modal"
+            data-target="#addIndividualModal"
+          >
+            <i class="fa fa-plus"></i> {{ request.user.activity_user.organization.individual_label }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <table class="table" id="individualsTable">
+    <thead>
+      <tr>
+        <th>{{ request.user.activity_user.organization.individual_label }} Name</th>
+        <th>Gender</th>
+        <th>Age</th>
+        <th>Date created</th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for individual in get_individuals %}
+      <tr>
+        <td>
+          <a href="/formlibrary/individual_update/{{ individual.id }}"
+            data-toggle="tooltip"
+            title="{{individual.first_name}}">
+            {{ individual.first_name | truncatechars:50 }}
+          </a>
+        </td>
+        <td>{{ individual.gender }}</td>
+        <td>{{ individual.age }}</td>
+        <td>{{ individual.create_date | date:'m-d-Y' }}</td>
+        <td class="text-right">
+          <!-- Split button -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm disabled">More</button>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="/formlibrary/individual_update/{{ individual.id }}"
+                  >Edit</a
+                >
+              </li>
+              <li>
+                  <a
+                  class="text-danger"
+                  href="#deleteItemModal{{individual.id}}"
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{individual.id}})"
+                  data-target="#deleteItemModal{{individual.id}}">
+                  Delete
+                </a>
+              </li>
+            </ul>
+          </div>
+        </td>
+        {% include 'formlibrary/individual_confirm_delete.html'%}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}

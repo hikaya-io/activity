@@ -36,8 +36,8 @@ a:focus, a:hover {
   border-radius: 0;
 }
 
-.btn-link:active, 
-.btn-link:hover, 
+.btn-link:active,
+.btn-link:hover,
 .btn-link:focus {
   font-weight: 400;
   color: #25CED1;
@@ -1009,7 +1009,7 @@ select[readonly].select2-hidden-accessible
   font-size: 10px;
 }
 
-#beneficiary-tab {
+#individual-tab {
   min-height: 58vh;
 }
 
@@ -1327,7 +1327,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
 
 /* overrides the bootstrap blue glow on all input fields */
 input[type="text"],
-input[type="number"], 
+input[type="number"],
 input[type="password"],
 textarea {
   outline: none;
@@ -1336,7 +1336,7 @@ textarea {
   }
 
 input[type="text"]:focus,
-input[type="number"]:focus, 
+input[type="number"]:focus,
 input[type="password"]:focus,
 textarea:focus {
   outline: none;
@@ -1366,6 +1366,6 @@ textarea:focus {
   color: #8b8d9b;
 }
 
-#collectedDataTable th { 
-  border-top: none; 
+#collectedDataTable th {
+  border-top: none;
 }

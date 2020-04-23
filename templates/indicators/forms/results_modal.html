@@ -16,7 +16,6 @@
                             label="text"
                             style="width: 200px"
                             :searchable="false"
-                            :required="true"
                             v-model="period"
                             placeholder="Select target period"
                             :options="targets"
@@ -28,16 +27,17 @@
                 <div class="col-md-6">
                     <div class="form-group" id="div_date_collected">
                         <label for="dateCollected">Date collected</label>
-                        <input
-                        type="date"
-                        id="dateCollected"
-                        name="dateCollected"
-                        :class="{ 
-                            'form-control': true, 
-                          }"
-                        style="width:200px;"
-                        v-model="date_collected" 
-                        placeholder="Enter date collected"/>
+                        <input 
+                            type="text" 
+                            id="dateCollected"
+                            name="dateCollected"
+                            :class="{ 
+                                'form-control': true, 
+                            }"
+                            :value="date_collected"
+                            v-once
+                            placeholder="Enter date collected"
+                            autocomplete="off" />
                     </div>
                 </div>
             </div>

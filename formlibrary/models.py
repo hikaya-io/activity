@@ -74,7 +74,7 @@ class Distribution(models.Model):
     reporting_period = models.CharField(max_length=255, null=True, blank=True)
     province = models.ForeignKey(
         Province, null=True, blank=True, on_delete=models.SET_NULL)
-    total_beneficiaries_received_input = models.IntegerField(
+    total_individuals_received_input = models.IntegerField(
         null=True, blank=True)
     distribution_location = models.CharField(
         max_length=255, null=True, blank=True)
@@ -126,8 +126,8 @@ class Distribution(models.Model):
         return self.distribution_name
 
 
-class Beneficiary(models.Model):
-    beneficiary_name = models.CharField(max_length=255, null=True, blank=True)
+class Individual(models.Model):
+    first_name = models.CharField(max_length=255, null=True, blank=True)
     training = models.ManyToManyField(TrainingAttendance, blank=True)
     distribution = models.ManyToManyField(Distribution, blank=True)
     father_name = models.CharField(max_length=255, null=True, blank=True)
@@ -142,17 +142,17 @@ class Beneficiary(models.Model):
     edit_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        ordering = ('beneficiary_name',)
+        ordering = ('first_name',)
 
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
         if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
-        super(Beneficiary, self).save()
+        super(Individual, self).save()
 
     # displayed in admin templates
     def __str__(self):
-        if self.beneficiary_name is None:
+        if self.first_name is None:
             return "NULL"
-        return self.beneficiary_name
+        return self.first_name

@@ -197,8 +197,9 @@ MIDDLEWARE = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
-    'activity.middleware.TimingMiddleware'
+    'activity.middleware.TimingMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 )
 # END MIDDLEWARE CONFIGURATION
 

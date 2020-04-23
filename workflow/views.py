@@ -1411,6 +1411,7 @@ class SiteProfileUpdate(UpdateView):
             site__id=self.kwargs['pk'])
         context.update({'get_projects': get_projects})
         context.update({'site_name': site.name})
+        context.update({'site': site})
         return context
 
     def form_invalid(self, form):
@@ -2605,7 +2606,7 @@ def add_level2(request):
 
 
 def add_documentation(request):
-    data = request.POST
+    data = json.loads(request.body)
     program = Program.objects.get(id=int(data.get('program')))
 
     documentation = Documentation(name=data.get(

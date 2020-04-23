@@ -23,5 +23,19 @@
         >[[ errors.first('name') ]]</span
       >
     </div>
+    <div 
+      :class="{'form-group': true}"
+    >
+      <label for="description">Description</label>
+      <textarea
+          rows="3"
+          name="description"
+          :class="{ 
+              'form-control': true, 
+          }"   
+          v-model="description" 
+          placeholder="Description"
+      ></textarea>
+  </div>
   </div>
 </form>
