@@ -4,9 +4,10 @@
 from datetime import datetime
 from django.db import models
 from workflow.models import Program, ProjectAgreement
+from .service import StartEndDates
 
 
-class TrainingAttendance(models.Model):
+class TrainingAttendance(StartEndDates):
     training_name = models.CharField(max_length=255)
     program = models.ForeignKey(
         Program, null=True, blank=True, on_delete=models.SET_NULL)
@@ -19,8 +20,6 @@ class TrainingAttendance(models.Model):
     location = models.CharField(max_length=255, null=True, blank=True)
     community = models.CharField(max_length=255, null=True, blank=True)
     training_duration = models.CharField(max_length=255, null=True, blank=True)
-    start_date = models.CharField(max_length=255, null=True, blank=True)
-    end_date = models.CharField(max_length=255, null=True, blank=True)
     trainer_name = models.CharField(max_length=255, null=True, blank=True)
     trainer_contact_num = models.CharField(
         max_length=255, null=True, blank=True)
