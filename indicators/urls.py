@@ -12,7 +12,7 @@ from .views import (
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport, ObjectiveView, objectives_list, objectives_tree, 
     LevelView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
-    IndicatorTarget, IndicatorTypeView, DataCollectionFrequencyView, PeriodicTargetCreateView)
+    IndicatorTarget, IndicatorTypeView, DataCollectionFrequencyView, PeriodicTargetCreateView, IndicatorDataView)
 
 urlpatterns = [
 
@@ -155,4 +155,7 @@ urlpatterns = [
           PeriodicTargetCreateView.as_view(),
           name='periodic_target_view'
     ),
+
+    # Indicator data view
+    path('indicator_data', IndicatorDataView.as_view(), name='indicator_data_view'),
 ]

@@ -6,6 +6,7 @@ from indicators.models import (
     DisaggregationType, DisaggregationValue
     )
 from workflow.models import Documentation
+from workflow.serializers import ProgramSerializer
 
 
 class DisaggregationLabelSerializer(serializers.ModelSerializer):
@@ -24,10 +25,11 @@ class DisaggregationTypeSerializer(serializers.ModelSerializer):
 
 class IndicatorSerializer(serializers.ModelSerializer):
     disaggregation = DisaggregationTypeSerializer(read_only=True, many=True)
+    program = ProgramSerializer(read_only=True, many=True)
 
     class Meta:
         model = Indicator
-        fields = ['id', 'name', 'lop_target', 'disaggregation']
+        fields = ['id', 'name', 'lop_target', 'baseline', 'rationale_for_target', 'disaggregation', 'program']
 
 
 class DisaggregationValueSerializer(serializers.ModelSerializer):
@@ -56,27 +58,17 @@ class CollectedDataSerializer(serializers.ModelSerializer):
 class PeriodicTargetSerializer(serializers.ModelSerializer):
     collecteddata_set = CollectedDataSerializer(many=True, read_only=True)
     indicator = serializers.SerializerMethodField()
-    level_1_label = serializers.SerializerMethodField()
 
     class Meta:
         model = PeriodicTarget
-        fields = ['id', 'period', 'start_date', 'end_date', 'target', 'collecteddata_set', 'indicator', 'level_1_label']
+        fields = ['id', 'period', 'start_date', 'end_date', 'target', 'collecteddata_set', 'indicator']
 
     def get_indicator(self, obj):
-        return {"indicator_id": obj.indicator.id,
+        return {"id": obj.indicator.id,
                 "baseline": obj.indicator.baseline,
-                "indicator_lop": obj.indicator.lop_target,
-                "rationale": obj.indicator.rationale_for_target,
+                "lop_target": obj.indicator.lop_target,
+                "rationale_for_target": obj.indicator.rationale_for_target,
                 }
-
-    def get_level_1_label(self, obj):
-        user = None
-        request = self.context.get("request")
-        if request and hasattr(request, "user"):
-            user = request.user
-        return {
-            "level_1": user.activity_user.organization.level_1_label
-        }
 
 
 class DataCollectionFrequencySerializer(serializers.ModelSerializer):
