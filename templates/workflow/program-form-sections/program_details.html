@@ -41,39 +41,19 @@
   });
 
   // Restricting start and end datepickers
-  // document.getElementById("start_date_picker").addEventListener('change', function() {
-  //   console.log("boi")
-  // })
-
   $("#start_date_picker").datepicker({
     onSelect: function(dateText) {
         $("#end_date_picker").datepicker({
-          maxDate: $("#start_date_picker").datepicker("getDate")
-        })
+          minDate: dateText
+        });
     }
   });
 
   $("#end_date_picker").datepicker({
     onSelect: function(dateText) {
         $("#start_date_picker").datepicker({
-          minDate: $("#end_date_picker").datepicker("getDate")
-        })
+          masDate: dateText
+        });
     }
   });
-
-  // $("#start_date_picker").datepicker({
-  //     dateFormat: 'dd/mm/yy',
-  //     inline: true,
-  //     minDate: new Date()
-  // });
-  // $("#end_date_picker").datepicker({
-  //     dateFormat: 'dd/mm/yy',
-  //     inline: true,
-  //     minDate: $("#start_date_picker").datepicker("getDate") });
-  // });
-
-
-  // $("#start_date_picker").on('change', function() {
-  //   alert('Element ' + this.name + 'clicked');
-  // });
 </script>
