@@ -603,11 +603,11 @@ class IndicatorUpdate(UpdateView):
             for disagg in json.loads(disaggs):
                 if disagg.get('id', None) is None:
                     disagg_type = DisaggregationType.objects.create(
-                        disaggregation_type=disagg['type']
+                        disaggregation_type=disagg['disaggregation_type']
                     )
                 else:
                     disagg_type = DisaggregationType.objects.filter(id=int(disagg['id'])).first()
-                    disagg_type.disaggregation_type = disagg['type']
+                    disagg_type.disaggregation_type = disagg['disaggregation_type']
                     disagg_type.save()
 
                 # register disag to the indicator
