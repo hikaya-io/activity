@@ -246,6 +246,7 @@ $(document).ready(() => {
                     }
                   })
                   this.isEdit = false;
+                  this.currentResult = null;
                   this.modalHeader = 'Add Result';
                   this.toggleResultModal();
                 }
