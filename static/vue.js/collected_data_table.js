@@ -81,6 +81,7 @@ $(document).ready(() => {
               this.documentation = ''
               this.disaggregations = {}
               this.show_disaggregations = false
+              console.log(this.collectedData)
 
               if(this.showModal) {
                 let self = this;
@@ -246,6 +247,7 @@ $(document).ready(() => {
                     }
                   })
                   this.isEdit = false;
+                  this.currentResult = null;
                   this.modalHeader = 'Add Result';
                   this.toggleResultModal();
                 }

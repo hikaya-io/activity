@@ -17,17 +17,14 @@ replace_env_varibles() {
 
 #@--- Function to setup the message to be send ---@#
 setup_message() {
-    if  [[ $GITHUB_REF == "refs/heads/dev" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/master" ]]; then
-        if [[ $DEPLOY == "success" ]]; then
-            echo "++++++++++++ generate deployment message +++++++++++++"
-            COMMIT_URL="https://github.com/hikaya-io/activity/commit/${TRAVIS_COMMIT}"
-            DEPLOYMENT_MESSAGE="*Success* :white_check_mark: The following commit was deployed to *_activity ${APPLICATION_ENV}_* by ${EMOJI} \n [Message]: $TRAVIS_COMMIT_MESSAGE \n [Link]: ${COMMIT_URL}"
-        else
-            COMMIT_URL="https://github.com/hikaya-io/activity/commit/${TRAVIS_COMMIT}"
-            DEPLOYMENT_MESSAGE="*Failed* :no_entry: The following commit was unable to deploy to *_activity ${APPLICATION_ENV}_* by ${EMOJI} \n [Message]: $TRAVIS_COMMIT_MESSAGE \n [Link]: ${COMMIT_URL}"
-        fi
+    
+    if [[ $DEPLOY == "success" ]]; then
+        echo "++++++++++++ generate deployment message +++++++++++++"
+        COMMIT_URL="https://github.com/hikaya-io/activity/commit/${TRAVIS_COMMIT}"
+        DEPLOYMENT_MESSAGE="*Success* :white_check_mark: The following commit was deployed to *_activity ${APPLICATION_ENV}_* by ${EMOJI} \n [Message]: $TRAVIS_COMMIT_MESSAGE \n [Link]: ${COMMIT_URL}"
+    else
+        COMMIT_URL="https://github.com/hikaya-io/activity/commit/${TRAVIS_COMMIT}"
+        DEPLOYMENT_MESSAGE="*Failed* :no_entry: The following commit was unable to deploy to *_activity ${APPLICATION_ENV}_* by ${EMOJI} \n [Message]: $TRAVIS_COMMIT_MESSAGE \n [Link]: ${COMMIT_URL}"
     fi
 
 }
@@ -45,14 +42,18 @@ send_slack_notification() {
 
 #@--- Main function ---@#
 main() {
-    #@--- run the replace function ---@#
-    replace_env_varibles
+    if  [[ $GITHUB_REF == "refs/heads/dev" ]] || \
+        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/master" ]]; then
+        #@--- run the replace function ---@#
+        replace_env_varibles
 
-    #@-- Run the message function ---@#
-    setup_message
+        #@-- Run the message function ---@#
+        setup_message
 
-    #@--- Run slack notify function ---@#
-    send_slack_notification
+        #@--- Run slack notify function ---@#
+        send_slack_notification
+    fi
 }
     
 #@--- Run main function ---@#
