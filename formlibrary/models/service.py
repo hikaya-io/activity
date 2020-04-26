@@ -4,10 +4,26 @@
 import uuid
 from django.db import models
 from workflow.models import Program, Office, Stakeholder, Site
-from formlibrary.models import Case
 
 
-class Service(models.Model):
+class Case(models.Model):
+    """
+    Keeps track of Individuals/Households and their usage/participation in services
+    Spec: https://github.com/hikaya-io/activity/issues/410
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    label = models.CharField(max_length=255)
+
+
+class StartEndDates(models.Model):
+    start_date = models.CharField(max_length=255, null=True, blank=True)
+    end_date = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        abstract = True
+
+
+class Service(StartEndDates):
     """
     Abstract base class for all kinds of offered services.
     Spec: https://github.com/hikaya-io/activity/issues/412
@@ -17,7 +33,7 @@ class Service(models.Model):
     description = models.TextField(max_length=550, null=True, blank=True)
     program = models.OneToOneField(
         Program, null=True, blank=True, on_delete=models.SET_NULL)
-    office = models.OneToOneField(
+    office = models.ForeignKey(
         Office, null=True, blank=True, on_delete=models.SET_NULL)
     site = models.ForeignKey(
         Site, null=True, blank=True, on_delete=models.SET_NULL)
@@ -25,9 +41,8 @@ class Service(models.Model):
         Stakeholder, null=True, blank=True, on_delete=models.SET_NULL)
     cases = models.ForeignKey(
         Case, null=True, blank=True, on_delete=models.SET_NULL)
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
-    form_verified_by = models.CharField(max_length=255)
+    form_verified_by = models.CharField(max_length=255, null=True, blank=True)
+    form_filled_by = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         abstract = True

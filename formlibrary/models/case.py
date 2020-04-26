@@ -6,17 +6,9 @@ from datetime import datetime
 from django.db import models
 from workflow.models import Program, SiteProfile
 # from formlibrary.models import TrainingAttendance, Distribution # ! For some reason, this errors out
-from formlibrary.models import TrainingAttendance
+from .training import Training
 from .distribution import Distribution
-
-class Case(models.Model):
-    """
-    Keeps track of Individuals/Households and their usage/participation in services
-    Spec: https://github.com/hikaya-io/activity/issues/410
-    """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    label = models.CharField(max_length=255)
-    # services =
+from .service import Case
 
 
 class Household(Case):
@@ -25,8 +17,7 @@ class Household(Case):
     Spec: https://github.com/hikaya-io/activity/issues/409
     """
     name = models.CharField(max_length=255)
-    # individuals = models.ForeignKey(
-    #     Individual, null=True, blank=True, on_delete=models.SET_NULL)
+
 
 
 class Individual(models.Model):
@@ -36,7 +27,7 @@ class Individual(models.Model):
     Also, will inherit from Case (subject to research/discussion)
     """
     first_name = models.CharField(max_length=255, null=True, blank=True)
-    training = models.ManyToManyField(TrainingAttendance, blank=True)
+    training = models.ManyToManyField(Training, blank=True)
     distribution = models.ManyToManyField(Distribution, blank=True)
     father_name = models.CharField(max_length=255, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)

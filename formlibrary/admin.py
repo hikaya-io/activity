@@ -3,20 +3,20 @@
 from django.contrib import admin
 
 from .models import (
-    TrainingAttendance, Distribution, Individual
+    TrainingAttendance, Distribution, Individual, Training
 )
 
+admin.site.register(Training)
 
 @admin.register(Individual)
 class IndividualAdmin(admin.ModelAdmin):
     list_display = ('site', 'first_name',)
     display = 'Individual'
-    list_filter = ('site', 'first_name')
 
 
 @admin.register(Distribution)
 class DistributionAdmin(admin.ModelAdmin):
-    list_display = ('distribution_name', 'program',
+    list_display = ('name', 'program',
                     'initiation', 'create_date', 'edit_date')
     display = 'Program Dashboard'
 
