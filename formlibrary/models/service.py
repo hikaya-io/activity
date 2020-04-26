@@ -4,16 +4,7 @@
 import uuid
 from django.db import models
 from workflow.models import Program, Office, Stakeholder, Site
-
-
-class Case(models.Model):
-    """
-    Keeps track of Individuals/Households and their usage/participation in services
-    Spec: https://github.com/hikaya-io/activity/issues/410
-    """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    label = models.CharField(max_length=255)
-
+from .case import Case
 
 class StartEndDates(models.Model):
     start_date = models.CharField(max_length=255, null=True, blank=True)

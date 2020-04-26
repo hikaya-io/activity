@@ -11,6 +11,15 @@ from .distribution import Distribution
 from .service import Case
 
 
+class Case(models.Model):
+    """
+    Keeps track of Individuals/Households and their usage/participation in services
+    Spec: https://github.com/hikaya-io/activity/issues/410
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    label = models.CharField(max_length=255)
+
+
 class Household(Case):
     """
     Family, or group of people, living together
