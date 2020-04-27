@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from formlibrary.models import Service
+from .service import Service
 from workflow.models import Contact
 
 
@@ -15,10 +15,11 @@ class Training(Service):
     # ? Can a trainer be in charge of multiple Trainings?
     trainer = models.ForeignKey(
         Contact, null=True, blank=True, on_delete=models.SET_NULL)
+    # ? Is this supplied in user input or calculated from start/end dates?
     duration = models.IntegerField(help_text="Number of days? Sessions?")
 
     @property
-    def total_individual_supported(self):
+    def total_individuals_supported(self):
         # TODO Check all individuals, and households and their individuals
         return 0
 

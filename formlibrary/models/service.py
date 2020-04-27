@@ -4,7 +4,7 @@
 import uuid
 from django.db import models
 from workflow.models import Program, Office, Stakeholder, Site
-from formlibrary.models import Case
+from .case import Case
 
 class StartEndDates(models.Model):
     """
@@ -12,6 +12,7 @@ class StartEndDates(models.Model):
     """
     # TODO move to its own place
     # TODO Check the start_date < end_date and throw adequate error if else
+    # TODO Will we need the same for a Slug field? Does Django offer one?
     start_date = models.CharField(max_length=255, null=True, blank=True)
     end_date = models.CharField(max_length=255, null=True, blank=True)
 

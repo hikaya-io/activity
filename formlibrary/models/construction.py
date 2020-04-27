@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from formlibrary.models import Service
+from .service import Service
 
 
 class Construction(Service):

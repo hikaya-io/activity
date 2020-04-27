@@ -5,8 +5,6 @@ import uuid
 from datetime import datetime
 from django.db import models
 from workflow.models import Program, SiteProfile
-# from formlibrary.models import TrainingAttendance, Distribution # ! For some reason, this errors out
-from formlibrary.models import Distribution, Training
 
 
 class Case(models.Model):
@@ -36,8 +34,8 @@ class Individual(models.Model):
     Also, will inherit from Case (subject to research/discussion)
     """
     first_name = models.CharField(max_length=255, null=True, blank=True)
-    training = models.ManyToManyField(Training, blank=True)
-    distribution = models.ManyToManyField(Distribution, blank=True)
+    training = models.ManyToManyField("formlibrary.training", blank=True)
+    distribution = models.ManyToManyField("formlibrary.distribution", blank=True)
     father_name = models.CharField(max_length=255, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
     gender = models.CharField(max_length=255, null=True, blank=True)
