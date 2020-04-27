@@ -7,6 +7,11 @@ from workflow.models import Program, Office, Stakeholder, Site
 from .case import Case
 
 class StartEndDates(models.Model):
+    """
+    Abstract Base Class to implement start/end dates fields
+    """
+    # TODO move to its own place
+    # TODO Check the start_date < end_date and throw adequate error if else
     start_date = models.CharField(max_length=255, null=True, blank=True)
     end_date = models.CharField(max_length=255, null=True, blank=True)
 

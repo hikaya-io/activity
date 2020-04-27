@@ -8,9 +8,11 @@ from workflow.models import Contact
 
 class Training(Service):
     """
-    Suject to future changes: https://github.com/hikaya-io/activity/issues/421
+    Subject to future changes: https://github.com/hikaya-io/activity/issues/421
     ? Should we edit/update the already existing TrainingAttendance, or implement from scratch?
     """
+    # ? Can a training have multiple trainers?
+    # ? Can a trainer be in charge of multiple Trainings?
     trainer = models.ForeignKey(
         Contact, null=True, blank=True, on_delete=models.SET_NULL)
     duration = models.IntegerField(help_text="Number of days? Sessions?")

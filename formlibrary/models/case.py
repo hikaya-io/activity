@@ -16,6 +16,8 @@ class Case(models.Model):
     Keeps track of Individuals/Households and their usage/participation in services
     Spec: https://github.com/hikaya-io/activity/issues/410
     """
+    # ! If Individuals already exist in the database, we change its ID
+    # ! to UUID type, and hence can inherit from Case
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     label = models.CharField(max_length=255)
 
