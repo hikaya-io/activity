@@ -66,9 +66,15 @@ direct translations of the requirements expressed in the Github Issues
 
 Later on, we could provide fixtures as we go of each Model.
 
-## On Slug fields
+### Testing and fixtures (TODO)
+
+Provide fixtures for the models of `formlibrary`, but also provide some for the `workflow` app that are in relation with the models in here.
+
+## On Slug fields (Requires research)
 
 Since we are now using UUID for model IDs, we need to associate an expressive slug, deduced from a name, label or description, for more friendly URLs.
+
+It should be deduced from an attribute (`name`, `description`, `title`...) and automatically calculated on `save()`.
 
 ## Questions
 
