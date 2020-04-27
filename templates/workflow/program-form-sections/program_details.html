@@ -38,7 +38,12 @@
   $(document).ready(() => {
     $('#div_id_sector').select2({ theme: 'bootstrap' });
     $('#id_description').attr('rows', 4);
+
+    // Setting datepickers to nothing
+    $("#start_date_picker").datepicker('setDate','');
+    $("#end_date_picker").datepicker('setDate','');
   });
+
 
   // Restricting start and end datepickers
   $("#start_date_picker").datepicker({
