@@ -42,18 +42,20 @@
 
   // Restricting start and end datepickers
   $("#start_date_picker").datepicker({
+    dateFormat: 'dd.mm.yy',
     onSelect: function(dateText) {
-        $("#end_date_picker").datepicker({
-          minDate: dateText
-        });
+      $("#end_date_picker").datepicker({
+        minDate: dateText
+      });
     }
   });
 
   $("#end_date_picker").datepicker({
+    dateFormat: 'dd.mm.yy',
     onSelect: function(dateText) {
-        $("#start_date_picker").datepicker({
-          masDate: dateText
-        });
+      $("#start_date_picker").datepicker({
+        masDate: dateText
+      });
     }
   });
 </script>
