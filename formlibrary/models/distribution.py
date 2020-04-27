@@ -4,7 +4,7 @@
 from datetime import datetime
 from django.db import models
 from workflow.models import Program, ProjectAgreement, Office, Province
-from .service import Service
+from formlibrary.models import Service
 
 class Distribution(Service):
     """

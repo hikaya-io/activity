@@ -6,9 +6,7 @@ from datetime import datetime
 from django.db import models
 from workflow.models import Program, SiteProfile
 # from formlibrary.models import TrainingAttendance, Distribution # ! For some reason, this errors out
-from .training import Training
-from .distribution import Distribution
-from .service import Case
+from formlibrary.models import Distribution, Training
 
 
 class Case(models.Model):

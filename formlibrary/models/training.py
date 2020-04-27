@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from .service import Service
+from formlibrary.models import Service
 from workflow.models import Contact
 
 

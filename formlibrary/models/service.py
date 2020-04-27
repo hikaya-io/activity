@@ -4,7 +4,7 @@
 import uuid
 from django.db import models
 from workflow.models import Program, Office, Stakeholder, Site
-from .case import Case
+from formlibrary.models import Case
 
 class StartEndDates(models.Model):
     """
