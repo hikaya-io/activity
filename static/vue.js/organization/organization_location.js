@@ -160,18 +160,17 @@ new Vue({
          * @param {array} selectedValues
          */
         countryCodeSelected(value) {
-            console.log(value)
+            let selectedCountry = null;
             if (value.length > 0) {
-                const selectedCountry = this.countries.find(
+                selectedCountry = this.countries.find(
                     country => +country.id === +value[value.length - 1]
                 )
                 this.latitude = selectedCountry.latitude;
                 this.longitude = selectedCountry.longitude;
-
             }
             this.showAdminBoundary = true;
             if (this.admin_boundary) {
-                this.getBoundaryData(this.admin_boundary);
+                this.getBoundaryData(this.admin_boundary, selectedCountry);
             }
         },
 
@@ -185,10 +184,12 @@ new Vue({
         /**
          * Load
          */
-        getBoundaryData(admin) {
+        getBoundaryData(admin, country=null) {
             let data = null;
             if (this.admin_boundary && this.country_code.length) {
-                const country = this.countries.find((item) => item.id === +this.country_code[0]);
+                if(!country) {
+                    country = this.countries.find((item) => item.id === +this.country_code[0]);
+                }
                 if (country) {
                     this.makeRequest(
                         'GET',
@@ -202,6 +203,7 @@ new Vue({
                             toastr.error(
                                 'There was a problem loading boundary data for the country'
                             );
+                            this.showTheMap();
                         });
                 }
             } else {
