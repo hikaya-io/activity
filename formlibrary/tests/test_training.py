@@ -1,8 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.test import TestCase
-from workflow.models import Program
-from formlibrary.models import Individual, Household, Training
+from workflow.models import Program, Office
+from formlibrary.models import Individual, Household, Training, Service
 
 class TestTraining(TestCase):
     """
@@ -19,19 +19,19 @@ class TestTraining(TestCase):
     # Spec: https://github.com/hikaya-io/activity/issues/420
     # ? How does Service Type interact with other models
     def setUp(self):
+        self.program = Program.objects.first()
+        self.office = Office.objects.first()
         self.training = Training.objects.create(
             name="Training 1",
             description="Description training 1",
-            program=None,
-            office=None,
-            site=None,
-            implementer=None,
-            cases=None,
-            # cases=[self.individual, self.household],
+            program=self.program,
+            office=self.office,
             start_date="04/01/2020",
             end_date="04/15/2020",
             form_verified_by="Bruce",
             duration=30,
+        )
+        self.program.training_set.add(self.training)
     def test_create_training(self):
         training = Training.objects.create(
             name="New Training",
@@ -58,6 +58,19 @@ class TestTraining(TestCase):
         self.assertEqual(training.name, "New name for the training")
         # self.assertNotEqual(edit_date, created_at)
 
+    def test_relationships(self):
+        """
+        Test that the relationships of Training model can be set
+        """
+        # TODO Use self.training, self.program, self.office...
+        print(self)
+    
+    def test_reverse_relationships(self):
+        """
+        Test how the reverse relationships of Training are set
+        """
+        # TODO Use self.training, self.program, self.office...
+        print(self)
 
     def test_duration(self):
         """
