@@ -3,7 +3,6 @@
 {% load humanize %} 
 {% block content%} 
 {% include './shared/level1_modal_form.html' %}
-
 <script src="{% static 'js/chart.js@2.8.0.min.js' %}"></script>
 
 <script>
@@ -112,7 +111,7 @@
         <div class="col-md-2 col-xs-12">
           <div class="row">
             <div class="col-md-12 col-xs-6">
-              <a class="box box-info" href="/workflow/level1">
+              <a class="box box-info" href="/workflow/level1_list">
                 <p class="box-info-label">
                   {{ request.user.activity_user.organization.level_1_label }}
                 </p>
@@ -335,11 +334,11 @@
             </div>
           </div>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-10" id="map_container">
           <div id="map">
-            {% include './small_site_profile_map.html' %}
           </div>
         </div>
+        {% include './small_site_profile_map.html' %}
       </div>
     </div>
   </div>

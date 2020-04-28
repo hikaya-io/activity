@@ -493,7 +493,7 @@ def admin_configurations(request):
             'form_label': data.get('form_label'),
             'stakeholder_label': data.get('stakeholder_label'),
             'date_format': data.get('date_format'),
-            'beneficiary_label': data.get('beneficiary_label'),
+            'individual_label': data.get('individual_label'),
             'training_label': data.get('training_label'),
             'distribution_label': data.get('distribution_label'),
             # 'default_currency': data.get('default_currency')
@@ -1141,14 +1141,26 @@ def invite_existing_user(request, invite_uuid):
             user = User.objects.get(email=invite.email)
             activity_user = ActivityUser.objects.filter(user=user).first()
             if activity_user:
+                # Accepting the invite of an existing user
                 activity_user.organization = invite.organization
                 activity_user.save()
                 activity_user.organizations.add(invite.organization)
-                messages.error(request,
-                               'You have successfully joined {}'.format(invite.organization.name))
+
                 # delete the invite
                 invite.delete()
+                # define user organization access groups
+                user_org_access = ActivityUserOrganizationGroup.objects.create(
+                    activity_user=activity_user,
+                    organization=invite.organization,
+                )
+                # set default permission to editor on invite
+                group = Group.objects.get(name='Editor')
+                user_org_access.group = group
+                user_org_access.save()
 
+                messages.success(request,
+                               'You have successfully joined {}'.format(invite.organization.name))
+                # TODO this renders the login form even if the user is logged in
                 return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
             # if user is not found
@@ -1162,7 +1174,7 @@ def invite_existing_user(request, invite_uuid):
             return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
     except UserInvite.DoesNotExist:
-        messages.error(request, 'Error, this invitation is no-longer valid')
+        messages.error(request, 'Error, this invitation is no longer valid')
         return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 
 

@@ -5,6 +5,8 @@ from indicators.models import (
     DataCollectionFrequency, Objective, Level, DisaggregationLabel,
     DisaggregationType, DisaggregationValue
     )
+from workflow.models import Documentation
+from workflow.serializers import ProgramSerializer
 
 
 class DisaggregationLabelSerializer(serializers.ModelSerializer):
@@ -23,10 +25,11 @@ class DisaggregationTypeSerializer(serializers.ModelSerializer):
 
 class IndicatorSerializer(serializers.ModelSerializer):
     disaggregation = DisaggregationTypeSerializer(read_only=True, many=True)
+    program = ProgramSerializer(read_only=True, many=True)
 
     class Meta:
         model = Indicator
-        fields = ['id', 'name', 'lop_target', 'disaggregation']
+        fields = ['id', 'name', 'lop_target', 'baseline', 'rationale_for_target', 'disaggregation', 'program']
 
 
 class DisaggregationValueSerializer(serializers.ModelSerializer):
@@ -61,10 +64,11 @@ class PeriodicTargetSerializer(serializers.ModelSerializer):
         fields = ['id', 'period', 'start_date', 'end_date', 'target', 'collecteddata_set', 'indicator']
 
     def get_indicator(self, obj):
-        return {"indicator_id": obj.indicator.id,
+        return {"id": obj.indicator.id,
                 "baseline": obj.indicator.baseline,
-                "indicator_lop": obj.indicator.lop_target,
-                "rationale": obj.indicator.rationale_for_target, }
+                "lop_target": obj.indicator.lop_target,
+                "rationale_for_target": obj.indicator.rationale_for_target,
+                }
 
 
 class DataCollectionFrequencySerializer(serializers.ModelSerializer):
@@ -82,4 +86,10 @@ class ObjectiveSerializer(serializers.ModelSerializer):
 class LevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Level
+        fields = '__all__'
+
+
+class DocumentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Documentation
         fields = '__all__'

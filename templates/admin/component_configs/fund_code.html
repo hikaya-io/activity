@@ -1,25 +1,39 @@
 <div class="modal-body">
   {% csrf_token %}
-  <div
-    :class="{
-              'form-group': true,
-              'has-error': errors.has('name')
-          }"
-  >
+  <div :class="{ 'form-group': true, 'has-error': errors.has('name') }">
     <label for="name">Fund Code*</label>
     <input
       type="text"
       name="name"
       :class="{
-              'form-control': true,
-              'is-danger': errors.has('name')
-          }"
+        'form-control': true,
+        'is-danger': errors.has('name')
+      }"
       v-model="name"
       v-validate="'required'"
-      placeholder="Name"
+      placeholder="Fund Code"
     />
     <span v-show="errors.has('name')" class="help is-danger"
       >[[ errors.first('name') ]]</span
+    >
+  </div>
+  <div :class="{ 'form-group': true, 'has-error': errors.has('funding') }">
+    <label for="funding">% of Funding*</label>
+    <input
+      type="number"
+      min="0"
+      max="100"
+      name="funding"
+      :class="{
+        'form-control': true,
+        'is-danger': errors.has('name')
+      }"
+      v-model="funding"
+      v-validate="'required'"
+      placeholder="% of Funding"
+    />
+    <span v-show="errors.has('funding')" class="help is-danger"
+      >[[ errors.first('funding') ]]</span
     >
   </div>
   <div
@@ -28,18 +42,18 @@
       }"
   >
     <label for="stakeholder">Stakeholder</label>
-    <select
+    <hikaya-select
       id="stakeholder"
-      :class="{
-              'form-control': true,
-          }"
+      name="stakeholder"
+      :required="false"
+      :searchable="false"
       v-model="stakeholder"
       placeholder="Stakeholder"
+      label="name"
+      :options="stakeholders"
+      :reduce="stakeholder => stakeholder.id"
     >
-      <option
-          v-for="stakeholder in stakeholders"
-          selected="currentFundCode.stakeholder == stakeholder.id ? 'true' : 'false'"
-          :value=stakeholder.id>[[ stakeholder.name ]]</option>
-    </select>
+
+    </hikaya-select>
   </div>
 </div>

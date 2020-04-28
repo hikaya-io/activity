@@ -11,9 +11,9 @@
       <span class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
     </button>
     <ul class="dropdown-menu">
-      {% if form_component == 'beneficiary_list' %}
+      {% if form_component == 'individual_list' %}
         <li class="{% if program_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/0/{{training_id}}/{{distribution_id}}/">--All--</a></li>
-        
+
         {% for program in get_programs %}
         {% if program.name %}
         <li class="{% if program_id == program.id %} active {% endif %}">
@@ -23,9 +23,9 @@
         {% endfor %}
       {% endif %}
 
-      {% if form_component != 'beneficiary_list' %}
+      {% if form_component != 'individual_list' %}
         <li class="{% if program_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/0/{{project_id}}/">--All--</a></li>
-        
+
         {% for program in get_programs %}
         {% if program.name %}
         <li class="{% if program_id == program.id %} active {% endif %}">
@@ -38,7 +38,7 @@
   </div>
 
   <!-- project filter -->
-  {% if form_component != 'beneficiary_list' %}
+  {% if form_component != 'individual_list' %}
   <div class="btn-group" role="group">
     <button
       type="button"
@@ -61,7 +61,7 @@
   </div>
   {% endif %}
 
-  {% if  form_component == 'beneficiary_list' %}
+  {% if  form_component == 'individual_list' %}
   <div class="btn-group" role="group">
       <button
         type="button"

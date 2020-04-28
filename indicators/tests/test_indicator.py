@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 
 
 class IndicatorTestCase(TestCase):
-    fixtures = ['fixtures/organization.json', 'fixtures/country.json']
+    fixtures = ['fixtures/organization.json', 'fixtures/countries.json']
 
     def setUp(self):
         new_organization = Organization.objects.create(name="Activity")

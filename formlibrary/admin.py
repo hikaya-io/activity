@@ -3,15 +3,15 @@
 from django.contrib import admin
 
 from .models import (
-    TrainingAttendance, Distribution, Beneficiary
+    TrainingAttendance, Distribution, Individual
 )
 
 
-@admin.register(Beneficiary)
-class BeneficiaryAdmin(admin.ModelAdmin):
-    list_display = ('site', 'beneficiary_name',)
-    display = 'Beneficiary'
-    list_filter = ('site', 'beneficiary_name')
+@admin.register(Individual)
+class IndividualAdmin(admin.ModelAdmin):
+    list_display = ('site', 'first_name',)
+    display = 'Individual'
+    list_filter = ('site', 'first_name')
 
 
 @admin.register(Distribution)

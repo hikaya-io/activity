@@ -4,7 +4,8 @@ set +ex
 
 #@--- install kubectl and doctl ---@#
 install_kubectl_doctl() {
-    if [[ $TRAVIS_BRANCH == "dev" ]]; then
+    if [[ $TRAVIS_BRANCH == "dev" ]] || \
+        [[ $TRAVIS_BRANCH == "staging" ]]; then
         echo "++++++++++++ install kubectl ++++++++++++"
         curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 
@@ -30,9 +31,13 @@ install_kubectl_doctl() {
 #@--- Authorize kubectl to cluster ---@#
 auth_kubectl_cluster() {
     # Authenticate kubectl to the cluster
-    if [[ $TRAVIS_BRANCH == "dev" ]] || [[ $GITHUB_REF == "refs/heads/dev" ]]; then
-        doctl -t $SERVICE_ACCESS_TOKEN kubernetes cluster kubeconfig save $CLUSTER_NAME_DEV_ENV
+    if [[ $TRAVIS_BRANCH == "dev" ]] || \
+        [[ $GITHUB_REF == "refs/heads/dev" ]] || \
+        [[ $TRAVIS_BRANCH == "staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/master" ]]; then
         doctl auth init -t $SERVICE_ACCESS_TOKEN
+        doctl -t $SERVICE_ACCESS_TOKEN kubernetes cluster kubeconfig save $CLUSTER_NAME
         kubectl create namespace $APPLICATION_ENV || echo "++++++ Namespace Exists ++++++"
         kubectl create namespace ingress-nginx || echo "++++++ Namespace ingress-nginx Exists ++++++"
     fi
@@ -53,7 +58,11 @@ deploy_app() {
         --from-file=.dockerconfigjson=$FILE_PATH \
         --type=kubernetes.io/dockerconfigjson -n $APPLICATION_ENV
 
-    if [[ $TRAVIS_BRANCH == "dev" ]]  || [[ $GITHUB_REF == "refs/heads/dev" ]]; then
+    if [[ $TRAVIS_BRANCH == "dev" ]]  || \
+        [[ $GITHUB_REF == "refs/heads/dev" ]] || \
+        [[ $TRAVIS_BRANCH == "staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/master" ]]; then
         echo "------- generate deployfiles --------------"
         envsubst < ./deployment_files/deployment > deployment.yaml
         envsubst < ./deployment_files/service > service.yaml
@@ -68,12 +77,12 @@ deploy_app() {
         kubectl apply -f deployment_files/man.yaml 
         kubectl apply --validate=false -f deployment_files/cert-config/cert-manager-0.12.0.yaml
         kubectl apply --validate=false -f deployment_files/metrics-server.yaml
-        sleep 60
+        sleep 70
 
         kubectl apply -f deployment_files/ingress-service.yaml 
         kubectl apply -f cert-secret.yaml  
-        kubectl apply -f cert-issuer.yaml
-        kubectl apply -f certificate.yaml
+        kubectl apply --validate=false -f cert-issuer.yaml
+        kubectl apply --validate=false -f certificate.yaml
         kubectl apply -f deployment.yaml  
         kubectl apply -f service.yaml
         kubectl apply -f autoscaler.yaml 
@@ -82,13 +91,40 @@ deploy_app() {
     fi
 }
 
+#@--- Function to replace some key variables ---@#
+replace_variables() {
+    
+    #@--- Replace necesary variables for dev env ---@#
+    if [[ $TRAVIS_BRANCH == "dev" ]] || \
+        [[ $GITHUB_REF == "refs/heads/dev" ]]; then
+        export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
+    fi
+
+    #@--- Replace necesary variables for staging env ---@#
+    if [[ $TRAVIS_BRANCH == "staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/staging" ]]; then
+        export APPLICATION_ENV=${APPLICATION_ENV_STAGING}
+        export HOST_DOMAIN=${HOST_DOMAIN_STAGING}
+        export CLUSTER_NAME=${CLUSTER_NAME_STAGING}
+    fi
+
+    #@--- Replace necesary variables for production env ---@#
+    if [[ $GITHUB_REF == "refs/heads/master" ]]; then
+        export APPLICATION_ENV=${APPLICATION_ENV_PROD}
+        export HOST_DOMAIN=${HOST_DOMAIN_PROD}
+        export CLUSTER_NAME=${CLUSTER_NAME_PROD}
+    fi
+}
 
 #@--- Main Function ---@#
 main() {
-
+    
     if [[ $TRAVIS_EVENT_TYPE != "pull_request" ]]; then
         #@--- Run install and setup function ---@#
         install_kubectl_doctl
+
+        #@--- run the replace function ---@#
+        replace_variables
 
         #@--- Run the setup function ---@#
         auth_kubectl_cluster

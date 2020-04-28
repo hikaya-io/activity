@@ -98,50 +98,16 @@ def list_workflow_level1(request):
     get_all_sectors = Sector.objects.all()
 
     context = {'programs': programs,
-               'get_all_sectors': get_all_sectors, 'active': ['workflow']}
-    
-    return render(request, 'workflow/level1.html', context) 
-
-
-def level1_delete(request, pk):
-    """
-    Delete program
-    :param pk:
-    :return:
-    """
-    program = Program.objects.get(pk=int(pk))
-    program.delete()
-    return redirect('/workflow/level1')
-
-
-class ProgramCreate(GView):
-    """
-    Add program
-    """
-    def post(self, request):
-        data = request.POST
-
-        activity_user = ActivityUser.objects.filter(user=request.user).first()
-        program = Program(
-            name=data.get('program_name'),
-            start_date=data.get('start_date') if data.get('start_date') != '' else None,
-            end_date=data.get('end_date') if data.get('end_date') != '' else None,
-            organization=activity_user.organization
-        )
-        program.save()
-        try:
-            sectors = Sector.objects.filter(id__in=data.getlist('sectors[]'))
-            program.sector.set(sectors)
-
-            return JsonResponse(dict(success=True))
-        except Exception as ex:
-            return JsonResponse(dict(success=False))
+               'get_all_sectors': get_all_sectors,
+               'active': ['workflow']}
+   
+    return render(request, 'workflow/level1.html', context)
 
 
 class ProgramUpdate(UpdateView):
     model = Program
     template_name = 'workflow/program_form_tab_ui.html'
-    success_url = '/workflow/level1'
+    success_url = '/workflow/level1_list'
     form_class = ProgramForm
 
     # add the request to the kwargs
@@ -1445,6 +1411,7 @@ class SiteProfileUpdate(UpdateView):
             site__id=self.kwargs['pk'])
         context.update({'get_projects': get_projects})
         context.update({'site_name': site.name})
+        context.update({'site': site})
         return context
 
     def form_invalid(self, form):
@@ -2628,10 +2595,9 @@ class DocumentationListObjects(View, AjaxableResponseMixin):
 
 def add_level2(request):
     data = request.POST
-    program = Program.objects.get(id=int(data.get('program')))
 
-    level2 = ProjectAgreement(project_name=data.get(
-        'project_name'), program=program)
+    program = Program.objects.get(id=int(data.get('program')))
+    level2 = ProjectAgreement(project_name=data.get('project_name'), program=program)
 
     if level2.save():
         return HttpResponse({'success': True})
@@ -2640,7 +2606,7 @@ def add_level2(request):
 
 
 def add_documentation(request):
-    data = request.POST
+    data = json.loads(request.body)
     program = Program.objects.get(id=int(data.get('program')))
 
     documentation = Documentation(name=data.get(
@@ -2944,6 +2910,31 @@ class ProjectStatusView(generics.ListCreateAPIView, generics.RetrieveUpdateDestr
     def get_queryset(self):
         organization = self.request.user.activity_user.organization.id
         return ProjectStatus.objects.filter(organization=organization)
+
+
+class GetLevel1DependantData(GView):
+    """
+    View to fetch all Sectors
+    """
+    def get(self, request):
+        try:
+            organization = Organization.objects.get(id=request.user.activity_user.organization.id)
+            programs = Program.objects.all().filter(organization=organization).values()
+            sectors = Sector.objects.all().values('id', 'sector')
+
+            return JsonResponse(
+                dict(
+                    level_1_label=organization.level_1_label,
+                    level_2_label=organization.level_2_label,
+                    stakeholder_label=organization.stakeholder_label,
+                    site_label=organization.site_label,
+                    indicator_label=organization.indicator_label,
+                    programs=list(programs),
+                    sectors=list(sectors), safe=False
+                )
+            )
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
 
 
 class GetCountries(GView):
