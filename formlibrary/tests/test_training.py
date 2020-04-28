@@ -3,6 +3,7 @@ from django.db import models
 from django.test import TestCase
 from workflow.models import Program
 from formlibrary.models import Individual, Household, Training
+from datetime import date
 
 class TestTraining(TestCase):
     """
@@ -23,8 +24,8 @@ class TestTraining(TestCase):
             implementer=None,
             cases=None,
             # cases=[self.individual, self.household],
-            start_date="04/01/2020",
-            end_date="04/15/2020",
+            start_date=date(2020, 10, 1),
+            end_date=date(2020, 10, 19),
             form_verified_by="Bruce",
             duration=30,
             # trainers=None
@@ -53,8 +54,8 @@ class TestTraining(TestCase):
     # Start/End dates testing
     ################################
     def test_dates(self):
-        self.assertIsInstance(self.training.start_date, models.DateField)
-        self.assertIsInstance(self.training.end_date, models.DateField)
+        self.assertIsInstance(self.training.start_date, date)
+        self.assertIsInstance(self.training.end_date, date)
 
     def test_start_end_dates(self):
         "Test validation of start/end dates"
@@ -63,7 +64,7 @@ class TestTraining(TestCase):
             Training.objects.create(
                 name="Training 2",
                 description="End date < Start date",
-                start_date="04/15/2020",
-                end_date="01/01/2019",
+                start_date=date(2020, 10, 19),
+                end_date=date(2020, 10, 1),
                 duration=0
             )
