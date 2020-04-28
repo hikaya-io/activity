@@ -32,10 +32,32 @@ class TestTraining(TestCase):
             end_date="04/15/2020",
             form_verified_by="Bruce",
             duration=30,
-            # trainers=None
-            trainer=None
+    def test_create_training(self):
+        training = Training.objects.create(
+            name="New Training",
+            description="Newly created training",
+            duration=30
         )
-        # self.training.cases.add(self.individual, self.household)
+        # Test the inheritance
+        self.assertIsInstance(training, Service)
+        # Check the Training is well saved
+        created_training = Training.objects.get(pk=training.pk)
+        self.assertEqual(training.name, created_training.name)
+        self.assertEqual(training.description, created_training.description)
+        self.assertEqual(training.duration, created_training.duration)
+        self.assertIsNone(training.program)
+        self.assertIsNone(training.office)
+        # Assert created date has been set and = modified date
+        # self.assertEqual(training.create_date, training.edit_date)
+
+    def test_edit_training(self):
+        training = Training.objects.first()
+        # created_at = training.create_date
+        training.name = "New name for the training"
+        training.save()
+        self.assertEqual(training.name, "New name for the training")
+        # self.assertNotEqual(edit_date, created_at)
+
 
     def test_duration(self):
         """
