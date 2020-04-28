@@ -3,16 +3,17 @@
 
 import uuid
 from django.db import models
-from workflow.models import Program, Office, Stakeholder, Site
+from workflow.models import Program, Office, Stakeholder, Site, Contact
 from .case import Case
 
 class StartEndDates(models.Model):
     """
     Abstract Base Class to implement start/end dates fields
     """
-    # TODO move to its own place
+    # TODO move to its own place. A package named "core_mixins"
     # TODO Check the start_date < end_date and throw adequate error if else
     # TODO Will we need the same for a Slug field? Does Django offer one?
+    # TODO Do the same for created/modified at/by fields
     start_date = models.CharField(max_length=255, null=True, blank=True)
     end_date = models.CharField(max_length=255, null=True, blank=True)
 
@@ -50,16 +51,19 @@ class Service(StartEndDates):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(max_length=550, null=True, blank=True)
-    program = models.OneToOneField(
-        Program, null=True, blank=True, on_delete=models.SET_NULL)
+    # Is a Program required for any type of service?
+    program = models.ForeignKey(
+        Program, null=True, blank=False, on_delete=models.SET_NULL)
     office = models.ForeignKey(
         Office, null=True, blank=True, on_delete=models.SET_NULL)
     site = models.ForeignKey(
         Site, null=True, blank=True, on_delete=models.SET_NULL)
-    implementer = models.OneToOneField(
+    # Can an implementer be in charge of multiple services?
+    implementer = models.ForeignKey(
         Stakeholder, null=True, blank=True, on_delete=models.SET_NULL)
-    cases = models.ForeignKey(
-        Case, null=True, blank=True, on_delete=models.SET_NULL)
+    # Cases relationship: Many To Many?
+    cases = models.ManyToManyField(Case, blank=True)
+    contacts = models.ManyToManyField(Contact, blank=True)
     form_verified_by = models.CharField(max_length=255, null=True, blank=True)
     form_filled_by = models.CharField(max_length=255, null=True, blank=True)
 
