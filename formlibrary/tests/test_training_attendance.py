@@ -50,7 +50,7 @@ class TrainingAttendanceTestCase(TestCase):
 
 class DistributionTestCase(TestCase):
 
-    fixtures = ['fixtures/projecttype.json', 'fixtures/sectors.json']
+    fixtures = ['fixtures/tests/projecttype.json', 'fixtures/tests/sectors.json']
 
     def setUp(self):
         new_program = Program.objects.create(name="testprogram")

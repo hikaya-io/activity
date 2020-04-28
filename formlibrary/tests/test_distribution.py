@@ -9,7 +9,7 @@ class TestDistribution(TestCase):
     Test the Distribution model
     """
 
-    fixtures = ['fixtures/organization.json']
+    fixtures = ['fixtures/tests/organization.json']
 
     # Spec: https://github.com/hikaya-io/activity/issues/420
     # ? How does Service Type interact with other models

@@ -9,7 +9,12 @@ class TestTraining(TestCase):
     Test the Training model
     """
 
-    fixtures = ['fixtures/organization.json']
+    fixtures = [
+        'fixtures/tests/organization.json',
+        'fixtures/tests/trainings.json',
+        'fixtures/tests/programs.json',
+        'fixtures/tests/offices.json',
+    ]
 
     # Spec: https://github.com/hikaya-io/activity/issues/420
     # ? How does Service Type interact with other models
