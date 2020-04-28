@@ -674,6 +674,13 @@ class IndicatorDelete(DeleteView):
     form_class = IndicatorForm
 
 
+def indicator_delete(request, pk):
+    indicator = Indicator.objects.get(pk=int(pk))
+    indicator.delete()
+
+    return redirect('/indicators/home/0/0/0/')
+
+
 class PeriodicTargetDeleteView(DeleteView):
     model = PeriodicTarget
 

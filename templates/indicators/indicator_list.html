@@ -98,7 +98,7 @@
               <span class="caret"></span>
               <span class="sr-only">Toggle Dropdown</span>
             </button>
-            <ul class="dropdown-menu nav">
+            <ul class="dropdown-menu">
               <li class="dropdown-header">Related</li>
               <!-- <li><a href="">Results</a></li> -->
               <li><a @click="toggleTargetModal({{indicator.id}})" >Target Periods</a></li>
@@ -110,10 +110,17 @@
               <li role="separator" class="divider"></li>
 
               <li><a class="" href="{% url 'indicator_update' indicator.id %}">Edit</a></li>
-              <li><a class="text-danger" href="">Delete</a></li>
+              <li>
+                <a class="text-danger"
+                  href="#deleteIndicatorModal{{ indicator.id }}"
+                  data-toggle="modal"
+                  onclick="setItemToDelete({{ indicator.id }})"
+                  data-target="#deleteIndicatorModal{{ indicator.id }}">
+                  Delete</a></li>
             </ul>
           </div>
         </td>
+        {% include './indicator_confirm_delete.html' %}
       </tr>
       {% endfor %}
     </tbody>
