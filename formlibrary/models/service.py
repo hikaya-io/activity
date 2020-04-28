@@ -43,3 +43,27 @@ class Service(StartEndDates):
 
     class Meta:
         abstract = True
+
+    @property
+    def total_individuals_supported(self):
+        """
+        Number of Individuals, excluding Households, supported by the service
+        """
+        # TODO Check all individuals, and households and their individuals
+        return 0
+
+    @property
+    def total_households_supported(self):
+        """
+        Number of Households, supported by the service
+        """
+        # TODO Check all individuals, and households and their individuals
+        return 0
+
+    @property
+    def total_supported(self):
+        """
+        Number of Individuals, including Households, supported by the service
+        """
+        # TODO Check all individuals, and households and their individuals
+        return 0
