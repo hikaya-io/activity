@@ -19,6 +19,28 @@ class StartEndDates(models.Model):
     class Meta:
         abstract = True
 
+class CreatedModifiedDates(models.Model):
+    "Mixins for created/modified timestamps"
+    # This is the naming used in other models
+    create_date = models.DateTimeField(
+        null=False, blank=False, auto_now_add=True)
+    edit_date = models.DateTimeField(null=False, blank=False, auto_now=True)
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        """
+        Create/Edit dates in UTC timezone
+        """
+        if self.create_date is None:
+            self.create_date = datetime.utcnow()
+        self.edit_date = datetime.utcnow()
+        super().save(*args, **kwargs)
+
+# class CreatedModifiedBy(models.Model):
+#     # ? Can this work with OneToOne field
+#     created_by = models.ForeignKey(ActivityUser, null=False, related_name="creator")
 
 class Service(StartEndDates):
     """
