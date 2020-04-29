@@ -13,7 +13,9 @@
     });
     $("#id_indicator_data_span_count_" + `{{indicator.id}}`).text("{{ indicator.collecteddata_set.count|default:0 }}");
 </script>
+{% load i18n %}
 {% load assign %}
+
 {% if indicator.target_frequency %}
     <table class="table" id="collectedDataTable">
         <tr>

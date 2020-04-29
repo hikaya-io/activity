@@ -1,4 +1,7 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
 
 <script>
   $(document).ready(function(){
@@ -13,8 +16,8 @@
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="/">My Dashboard</a></li>
-    <li><a href="/indicators/home/0/0/0/">Indicators</a></li>
+    <li><a href="/">{% trans 'My Dashboard' %}</a></li>
+    <li><a href="/indicators/home/0/0/0/">{% trans 'Indicators' %}</a></li>
     <li class="active">{{ indicator.name }}</li>
   </ul>
   {% endblock %}
@@ -38,7 +41,7 @@
           aria-controls="indicator_summary"
           role="tab"
           data-toggle="tab"
-          >Summary</a
+          >{% trans 'Summary' %}</a
         >
       </li>
       <li role="presentation">
@@ -47,7 +50,7 @@
           aria-controls="performance"
           role="tab"
           data-toggle="tab"
-          >Performance</a
+          >{% trans 'Performance' %}</a
         >
       </li>
       <li role="presentation">
@@ -56,12 +59,12 @@
           aria-controls="disaggregation"
           role="tab"
           data-toggle="tab"
-          >Disaggregation</a
+          >{% trans 'Disaggregation' %}</a
         >
       </li>
       <li role="presentation">
         <a href="#targets" aria-controls="targets" role="tab" data-toggle="tab"
-          >Targets</a
+          >{% trans 'Targets' %}</a
         >
       </li>
       <li role="presentation">
@@ -70,7 +73,7 @@
           aria-controls="data_acquiscition"
           role="tab"
           data-toggle="tab"
-          >Data Acquisition</a
+          >{% trans 'Data Acquisition' %}</a
         >
       </li>
 
@@ -80,7 +83,7 @@
           aria-controls="analysis_and_reporting"
           role="tab"
           data-toggle="tab"
-          >Analysis and Reporting</a
+          >{% trans 'Analysis and Reporting' %}</a
         >
       </li>
 
@@ -90,7 +93,7 @@
           aria-controls="approval"
           role="tab"
           data-toggle="tab"
-          >Approval</a
+          >{% trans 'Approval' %}</a
         >
       </li>
     </ul>
@@ -124,8 +127,8 @@
 
     <div class="form-group text-right">
       <a role="button" href="/indicators/home/0/0/0/" class="btn btn-close"
-        >Cancel</a>
-      <button type="submit" class="btn btn-success">Save</button>
+        >{% trans 'Cancel' %}</a>
+      <button type="submit" class="btn btn-success">{% trans 'Save' %}</button>
     </div>
   </form>
 </div>

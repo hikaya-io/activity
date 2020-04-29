@@ -1,5 +1,6 @@
 
 {% block content %}
+
     <script type="text/javascript">
         $(document).ready(function() {
             /* add select2 js library to the indicator select box */
@@ -58,6 +59,7 @@
             $('.modal:visible').length && $(document.body).addClass('modal-open');
         });
     </script>
+    {% load i18n %}
     {% if form.errors %}
         <div class="help-block">
         {% for field in form %}
@@ -75,6 +77,5 @@
     {% csrf_token %}
     {% load crispy_forms_tags %}
     {% crispy form %}
-
 
 {% endblock content %}
