@@ -42,7 +42,6 @@ new Vue({
             
         this.makeRequest('GET', '/indicators/indicator_data')
             .then(response => {
-                console.log(response)
                 if(response.data){
                     this.level_1_label = response.data.level_1_label
                     this.frequencies = [{"id": "1", "text":`Life of ${this.level_1_label}`},
@@ -319,9 +318,7 @@ new Vue({
             this.modalHeader = "Add Target Periods"
 
             this.target_period_data.forEach(target =>{
-                console.log(target)
                 if(target.indicator.id == this.indicator_id){
-                    console.log("gere")
                     this.isEdit = true
                     this.overall_target = target.indicator.lop_target
                     this.sum = target.indicator.lop_target
@@ -410,7 +407,6 @@ new Vue({
             
             const id = this.indicator_id
             this.targets = this.targets.map(function (obj) {
-                console.log(obj)
                 obj['indicator_id'] = obj['id'];
                 obj['start_date'] = moment(obj['start_date']).format("YYYY-MM-DD")
                 obj['end_date'] = moment(obj['end_date']).format("YYYY-MM-DD")
@@ -426,7 +422,6 @@ new Vue({
                 periodic_targets: this.targets
             }
 
-            console.log(data)
             try {
                 const response = await this.makeRequest(
                     'POST',

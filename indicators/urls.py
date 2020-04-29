@@ -7,7 +7,7 @@ from .views import (
     IndicatorUpdate, IndicatorDelete, PeriodicTargetDeleteView,
     PeriodicTargetView, CollectedDataReportData, CollectedDataCreate, CollectedDataDelete,
     CollectedDataList, CollectedDataUpdate, CollectedDataAdd, CollectedDataEdit,
-    CollectedDataDeleteVue, collecteddata_import, indicator_report,
+    CollectedDataDeleteVue, collecteddata_import, indicator_report, indicator_delete,
     TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
     program_indicator_report, indicator_data_report, IndicatorExport, service_json,
     collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport, ObjectiveView, objectives_list, objectives_tree, 
@@ -33,7 +33,7 @@ urlpatterns = [
     path('indicator_update/<int:pk>/',
          IndicatorUpdate.as_view(), name='indicator_update'),
     path('indicator_delete/<int:pk>/',
-         IndicatorDelete.as_view(), name='indicator_delete'),
+         indicator_delete, name='indicator_delete'),
 
     path('periodic_target_delete/<int:pk>/',
          PeriodicTargetDeleteView.as_view(), name='pt_delete'),
