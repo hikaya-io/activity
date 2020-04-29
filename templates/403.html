@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Additional Permissions Required{% endblock %}
+{% block title %}{% trans 'Additional Permissions Required' %}{% endblock %}
 
-{% block page_title %}You don't appear to have the proper permissions to access this page.{% endblock page_title %}
+{% block page_title %}{% trans "You don't appear to have the proper permissions to access this page." %}{% endblock page_title %}
 
 {% block content %}
 
@@ -10,9 +11,9 @@
     <div class="error-page-content">
         <img src="{{ STATIC_URL }}img/error-strokes.png" class="error-page-image"/>
         <p class="text-center error-code">403</p>
-        <p class="text-center error-message">You don't have the proper permissions <br /> to access this page. 
-            <br /> Contact your organization or country admin</p>
-        <a href="/dashboard/0/" class="btn btn-success error-button">Go to home page</a>
+        <p class="text-center error-message">{% trans "You don't have the proper permissions" %} <br /> to access this page. 
+            <br /> {% trans 'Contact your organization or country admin' %}</p>
+        <a href="/dashboard/0/" class="btn btn-success error-button">{% trans 'Go to home page' %}</a>
     </div>
 </div>
 

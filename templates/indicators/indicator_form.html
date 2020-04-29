@@ -1,83 +1,87 @@
 {% extends "base.html" %}
-    
-    {% block content %}
-    <div class="container">
-        <div id="numDataPoints" style="display: none;">{{ object.collecteddata_set.all.count }}</div>
-        <div id="initialTargetFrequencyValue" style="display:none;">{{ object.target_frequency }}</div>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
-        <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
-        <script type="text/javascript">
-            //Searchable select option for service indicator
-            $(document).ready(function() {
-                /* add select2 js library to the indicator select box */
-                $("#id_program").select2({theme: 'bootstrap'})
-                $("#id_program").select2().prop('disabled', true)
-                // $("#id_sector").select2({theme: 'bootstrap'});
-                $("#id_strategic_objectives").select2();
-                $('#id_objectives').select2()
-                $('#id_level').select2({theme: 'bootstrap'})
-                $('#id_level').addClass('form-control')
-            });
-        </script>
-    
-        {% if form.errors %}
-            <div class="help-block">
-            {% for field in form %}
-                {% for error in field.errors %}
-                        <strong><i>{{ field.label }}</i> - {{ error|escape }}</strong>&nbsp;
-                {% endfor %}
-            {% endfor %}
-            </div>
-            {% for error in form.non_field_errors %}
-                <div class="alert alert-error">
-                    <strong>{{ error|escape }}</strong>
-                </div>
-            {% endfor %}
-        {% endif %}
-        {% block breadcrumbs %}
-        <ul class="breadcrumb">
-            <li><a href="/">My Dashboard</a></li>
-            <li><a href="/indicators/home/0/0/0/">Indicators</a></li>
-            <li class="active">Details</li>
-        </ul>
-        {% endblock %}
+{% load i18n %}
 
-        <!-- Sub navigation -->
-        <div class="sub-navigation">
-            <div class="sub-navigation-header">
-                <h4 class="page-title">
-                        {% if i_name %}
-                            {% if indicator.level.all %}
-                                {{ indicator.level.all|join:', ' }} indicator:
-                            {% endif %}
-                            {{i_name|truncatechars:300}}
-                        {% endif %}
-                </h4>
+{% block content %}
+
+<div class="container">
+    <div id="numDataPoints" style="display: none;">{{ object.collecteddata_set.all.count }}</div>
+    <div id="initialTargetFrequencyValue" style="display:none;">{{ object.target_frequency }}</div>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+    <link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
+    <script type="text/javascript">
+        //Searchable select option for service indicator
+        $(document).ready(function() {
+            /* add select2 js library to the indicator select box */
+            $("#id_program").select2({theme: 'bootstrap'})
+            $("#id_program").select2().prop('disabled', true)
+            // $("#id_sector").select2({theme: 'bootstrap'});
+            $("#id_strategic_objectives").select2();
+            $('#id_objectives').select2()
+            $('#id_level').select2({theme: 'bootstrap'})
+            $('#id_level').addClass('form-control')
+        });
+    </script>
+    
+    {% if form.errors %}
+        <div class="help-block">
+        {% for field in form %}
+            {% for error in field.errors %}
+                    <strong><i>{{ field.label }}</i> - {{ error|escape }}</strong>&nbsp;
+            {% endfor %}
+        {% endfor %}
+        </div>
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-error">
+                <strong>{{ error|escape }}</strong>
             </div>
+        {% endfor %}
+    {% endif %}
+    {% block breadcrumbs %}
+        <ul class="breadcrumb">
+            <li><a href="/">{% trans 'My Dashboard' %}</a></li>
+            <li><a href="/indicators/home/0/0/0/">{% trans 'Indicators' %}</a></li>
+            <li class="active">{% trans 'Details' %}</li>
+        </ul>
+    {% endblock %}
+
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+        <div class="sub-navigation-header">
+            <h4 class="page-title">
+                    {% if i_name %}
+                        {% if indicator.level.all %}
+                            {{ indicator.level.all|join:', ' }} {% trans 'indicator' %}:
+                        {% endif %}
+                        {{i_name|truncatechars:300}}
+                    {% endif %}
+            </h4>
         </div>
+    </div>
     
-        <div id="indicator_form" class="admin-content">
-            {% load crispy_forms_tags %}
-            <form 
-                action="{% url 'indicator_update' indicator.id %}" 
-                id="indicator_update_form" 
-                class="form-vertical" 
-                method="post" 
-                novalidate>
-                {% csrf_token %}
-                {% crispy form %}
-                <div>
-                    <input type="reset" id="reset-id-reset" class="btn btn-close" value="Cancel">
-                    <input type="submit" class="btn btn-success" value="Save">
-                </div>
-    
-            </form>
-        </div>
-     {% include 'indicators/indicator_form_common_js.html' %}
+    <div id="indicator_form" class="admin-content">
+        {% load crispy_forms_tags %}
+        <form 
+            action="{% url 'indicator_update' indicator.id %}" 
+            id="indicator_update_form" 
+            class="form-vertical" 
+            method="post" 
+            novalidate>
+            {% csrf_token %}
+            {% crispy form %}
+            <div>
+                <input type="reset" id="reset-id-reset" class="btn btn-close" value="Cancel">
+                <input type="submit" class="btn btn-success" value="Save">
+            </div>
+
+        </form>
+    </div>
+    {% include 'indicators/indicator_form_common_js.html' %}
 </div>
+
 <script>
     $('#reset-id-reset').click(() => {
         window.location.href = '/indicators/home/0/0/0/';
     });
 </script>
+
 {% endblock content %}
