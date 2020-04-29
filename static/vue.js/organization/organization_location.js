@@ -188,7 +188,9 @@ new Vue({
             let data = null;
             if (this.admin_boundary && this.country_code.length) {
                 if(!country) {
-                    country = this.countries.find((item) => item.id === +this.country_code[0]);
+
+                    const code = this.country_code[this.country_code.length - 1]
+                    country = this.countries.find((item) => item.id === +code);
                 }
                 if (country) {
                     this.makeRequest(
