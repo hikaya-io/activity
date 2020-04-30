@@ -4,9 +4,10 @@
 from django.db import models
 from .service import Service
 from workflow.models import Contact
+from .service import CreatedModifiedBy, StartEndDates
 
 
-class Training(Service):
+class Training(Service, CreatedModifiedBy, StartEndDates):
     """
     Subject to future changes: https://github.com/hikaya-io/activity/issues/421
     ? Should we edit/update the already existing TrainingAttendance, or implement from scratch?

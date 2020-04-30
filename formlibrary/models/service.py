@@ -3,7 +3,7 @@
 
 import uuid
 from django.db import models
-from workflow.models import Program, Office, Stakeholder, Site, Contact
+from workflow.models import Program, Office, Stakeholder, Site, Contact, ActivityUser
 from .case import Case
 
 class StartEndDates(models.Model):
@@ -22,6 +22,7 @@ class StartEndDates(models.Model):
 
 class CreatedModifiedDates(models.Model):
     "Mixins for created/modified timestamps"
+    # TODO implement logic of setting these values
     # This is the naming used in other models
     create_date = models.DateTimeField(
         null=False, blank=False, auto_now_add=True)
@@ -39,11 +40,16 @@ class CreatedModifiedDates(models.Model):
         self.edit_date = datetime.utcnow()
         super().save(*args, **kwargs)
 
-# class CreatedModifiedBy(models.Model):
-#     # ? Can this work with OneToOne field
-#     created_by = models.ForeignKey(ActivityUser, null=False, related_name="creator")
+class CreatedModifiedBy(models.Model):
+    created_by = models.ForeignKey(ActivityUser, null=False,
+        related_name="+", on_delete=models.CASCADE)
+    modified_by = models.ForeignKey(ActivityUser, null=False,
+        related_name="+", on_delete=models.CASCADE)
 
-class Service(StartEndDates):
+    class Meta:
+        abstract = True
+
+class Service(models.Model):
     """
     Abstract base class for all kinds of offered services.
     Spec: https://github.com/hikaya-io/activity/issues/412

@@ -5,8 +5,10 @@ from datetime import datetime
 from django.db import models
 from workflow.models import Program, ProjectAgreement, Office, Province
 from formlibrary.models import Service
+from .service import CreatedModifiedBy, StartEndDates
 
-class Distribution(Service):
+
+class Distribution(Service, CreatedModifiedBy, StartEndDates):
     """
     Distribution of items, or group of items, to individuals or households
     Subject to future changes: https://github.com/hikaya-io/activity/issues/419
