@@ -27,9 +27,10 @@ class CreatedModifiedDates(models.Model):
     "Mixins for created/modified timestamps"
     # TODO Unit test this
     # This is the naming used in other models
-    create_date = models.DateTimeField(
-        null=False, blank=False, auto_now_add=True)
-    edit_date = models.DateTimeField(null=False, blank=False, auto_now=True)
+    create_date = models.DateTimeField(verbose_name="Creation date", editable=False,
+                                        null=False, blank=False, auto_now_add=True)
+    modified_date = models.DateTimeField(verbose_name="Modification date", editable=False,
+                                        null=False, blank=False, auto_now=True)
 
     class Meta:
         abstract = True
@@ -46,16 +47,16 @@ class CreatedModifiedDates(models.Model):
 
 class CreatedModifiedBy(models.Model):
     # TODO implement logic of setting these values
-    created_by = models.ForeignKey(ActivityUser, null=False,
-                                    related_name="+", on_delete=models.CASCADE)
-    modified_by = models.ForeignKey(ActivityUser, null=False,
-                                    related_name="+", on_delete=models.CASCADE)
+    created_by = models.ForeignKey(ActivityUser, null=True, editable=False,
+                                    verbose_name="Created by", related_name="+", on_delete=models.SET_NULL)
+    modified_by = models.ForeignKey(ActivityUser, null=True,  editable=False,
+                                    verbose_name="Modified by", related_name="+", on_delete=models.SET_NULL)
 
     class Meta:
         abstract = True
 
 
-class Service(models.Model):
+class Service(CreatedModifiedBy, StartEndDates, models.Model):
     """
     Abstract base class for all kinds of offered services.
     Spec: https://github.com/hikaya-io/activity/issues/412
