@@ -11,7 +11,7 @@ on:
       - staging
   release:
     types:
-      - created
+      - published
 
 jobs:
   Build_and_test:
