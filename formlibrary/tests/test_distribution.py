@@ -3,6 +3,7 @@ from django.db import models
 from django.test import TestCase
 from workflow.models import Program
 from formlibrary.models import Individual, Household, Distribution
+from datetime import date
 
 class TestDistribution(TestCase):
     """
@@ -17,8 +18,8 @@ class TestDistribution(TestCase):
         self.distribution = Distribution.objects.create(
             name="Distribution 1",
             description="First distribution",
-            start_date="04/01/2020",
-            end_date="04/15/2020",
+            start_date=date(2020, 10, 1),
+            end_date=date(2020, 10, 19),
         )
         # self.training.cases.add(self.individual, self.household)
 
@@ -35,8 +36,8 @@ class TestDistribution(TestCase):
     # Start/End dates testing
     ################################
     def test_dates(self):
-        self.assertIsInstance(self.distribution.start_date, models.DateField)
-        self.assertIsInstance(self.distribution.end_date, models.DateField)
+        self.assertIsInstance(self.distribution.start_date, date)
+        self.assertIsInstance(self.distribution.end_date, date)
 
     def test_start_end_dates(self):
         "Test validation of start/end dates"
@@ -45,6 +46,6 @@ class TestDistribution(TestCase):
             Distribution.objects.create(
                 name="Distribution 2",
                 description="End date < Start date",
-                start_date="04/15/2020",
-                end_date="01/01/2019"
+                start_date=date(2020, 10, 19),
+                end_date=date(2020, 10, 1)
             )
