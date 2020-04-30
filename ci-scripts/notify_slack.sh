@@ -9,7 +9,7 @@ replace_env_varibles() {
         export APPLICATION_ENV=${APPLICATION_ENV_STAGING}
     fi
 
-    if [[ $GITHUB_REF == "refs/heads/master" ]]; then
+    if [[ $GITHUB_EVENT_NAME == "release" ]]; then
         export APPLICATION_ENV=${APPLICATION_ENV_PROD}
     fi
 }
@@ -44,7 +44,7 @@ send_slack_notification() {
 main() {
     if  [[ $GITHUB_REF == "refs/heads/dev" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/master" ]]; then
+        [[ $GITHUB_EVENT_NAME == "release" ]]; then
         #@--- run the replace function ---@#
         replace_env_varibles
 
