@@ -3,7 +3,7 @@
 
 from datetime import datetime
 from django.db import models
-from workflow.models import Program, ProjectAgreement, Office, Province
+from workflow.models import ProjectAgreement, Province
 from formlibrary.models import Service
 from .service import CreatedModifiedBy, StartEndDates
 
