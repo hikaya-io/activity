@@ -4,7 +4,8 @@
         "fields": {
             "name": "Training 1",
             "description": "Description training 1",
-            "duration": 25
+            "duration": 25,
+            "created_by": 1
         }
     },
     {
@@ -12,7 +13,8 @@
         "fields": {
             "name": "Training 2",
             "description": "Description training 2",
-            "duration": 25
+            "duration": 25,
+            "created_by": 1
         }
     },
     {
@@ -20,7 +22,8 @@
         "fields": {
             "name": "Training 3",
             "description": "Description training 3",
-            "duration": 25
+            "duration": 25,
+            "created_by": 2
         }
     }
 ]
