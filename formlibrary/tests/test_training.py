@@ -1,8 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.test import TestCase
-from workflow.models import Program, Office
-from formlibrary.models import Individual, Household, Training, Service
+from workflow.models import Program, Office, ActivityUser
+from formlibrary.models import Training, Service
+
 
 class TestTraining(TestCase):
     """
@@ -14,11 +15,14 @@ class TestTraining(TestCase):
         'fixtures/tests/trainings.json',
         'fixtures/tests/programs.json',
         'fixtures/tests/offices.json',
+        'fixtures/tests/users.json',
+        'fixtures/tests/activity-users.json',
     ]
 
     # Spec: https://github.com/hikaya-io/activity/issues/420
     # ? How does Service Type interact with other models
     def setUp(self):
+        self.activity_user = ActivityUser.objects.first()
         self.program = Program.objects.first()
         self.office = Office.objects.first()
         self.training = Training.objects.create(
@@ -30,13 +34,18 @@ class TestTraining(TestCase):
             end_date="04/15/2020",
             form_verified_by="Bruce",
             duration=30,
+            created_by=self.activity_user,
+            modified_by=self.activity_user
         )
         self.program.training_set.add(self.training)
+
     def test_create_training(self):
         training = Training.objects.create(
             name="New Training",
             description="Newly created training",
-            duration=30
+            duration=30,
+            created_by=self.activity_user,
+            modified_by=self.activity_user
         )
         # Test the inheritance
         self.assertIsInstance(training, Service)
@@ -64,7 +73,7 @@ class TestTraining(TestCase):
         """
         # TODO Use self.training, self.program, self.office...
         print(self)
-    
+
     def test_reverse_relationships(self):
         """
         Test how the reverse relationships of Training are set
@@ -105,5 +114,12 @@ class TestTraining(TestCase):
                 description="End date < Start date",
                 start_date="04/15/2020",
                 end_date="01/01/2019",
-                duration=0
+                duration=0,
+                created_by=self.activity_user,
+                modified_by=self.activity_user
             )
+
+    def test_tracks_creator_and_modifier(self):
+        # Properly testing this requires simulating a logged in user
+        self.assertIsInstance(self.training.created_by, ActivityUser)
+        self.assertIsInstance(self.training.modified_by, ActivityUser)

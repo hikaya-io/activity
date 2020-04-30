@@ -1,24 +1,32 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.test import TestCase
-from workflow.models import Program
-from formlibrary.models import Individual, Household, Distribution
+from workflow.models import ActivityUser
+from formlibrary.models import Distribution
+
 
 class TestDistribution(TestCase):
     """
     Test the Distribution model
     """
 
-    fixtures = ['fixtures/tests/organization.json']
+    fixtures = [
+        'fixtures/tests/users.json',
+        'fixtures/tests/activity-users.json',
+        'fixtures/tests/organization.json',
+    ]
 
     # Spec: https://github.com/hikaya-io/activity/issues/420
     # ? How does Service Type interact with other models
     def setUp(self):
+        self.activity_user = ActivityUser.objects.first()
         self.distribution = Distribution.objects.create(
             name="Distribution 1",
             description="First distribution",
             start_date="04/01/2020",
             end_date="04/15/2020",
+            created_by=self.activity_user,
+            modified_by=self.activity_user
         )
         # self.training.cases.add(self.individual, self.household)
 
@@ -46,5 +54,12 @@ class TestDistribution(TestCase):
                 name="Distribution 2",
                 description="End date < Start date",
                 start_date="04/15/2020",
-                end_date="01/01/2019"
+                end_date="01/01/2019",
+                created_by=self.activity_user,
+                modified_by=self.activity_user
             )
+
+    def test_tracks_creator_and_modifier(self):
+        # Properly testing this requires simulating a logged in user
+        self.assertIsInstance(self.distribution.created_by, ActivityUser)
+        self.assertIsInstance(self.distribution.modified_by, ActivityUser)
