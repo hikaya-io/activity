@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container" id="indicator_tracking_tables">
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'index' %}">My Dashboard</a></li>
+        <li class="active">Indicator tracking table</li>
+    </ul>
+    {% endblock %}
+
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+        <div class="sub-navigation-header">
+            <h4 class="page-title">Indicator tracking table</h4>
+        </div>
+    </div>
+
+    <!-- Report filters -->
+    <div class="report_filter">
+        <div class="sub-navigation-header">
+            <h4 class="page-title">Table filters</h4>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group" id="div_level_1">
+                        <label for="id_level_1">{{ user.activity_user.organization.level_1_label }}</label>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group" id="div_reporting_period">
+                        <label for="id_reporting_period">Reporting period</label>
+                        <hikaya-select
+                        :required="true"
+                        id="id_periodic_target"
+                        name="target_period"
+                        label="text"
+                        style="width: 200px"
+                        :searchable="false"
+                        v-model="period"
+                        placeholder="Select target period"
+                        :options="{{ programs }}"
+                        :reduce="target => target.id"
+                    >
+                    </hikaya-select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="btn-group" role="group" aria-label="">
+                        <button class="btn btn-primary btn-sm">
+                          View Report
+                        </button>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

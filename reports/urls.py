@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from .views import (
-    ReportData, ReportHome, IndicatorReportData, CollectedDataReportData, ProjectReportData
+    ReportData, IndicatorReportData, CollectedDataReportData, ProjectReportData,
+    IndicatorTrackingHome,
 )
 from django.urls import path
 
@@ -11,7 +12,7 @@ from django.urls import path
 
 urlpatterns = [
     # display reports
-    path('report/', ReportHome.as_view(), name='report_home'),
+    path('indicator_tracking/', IndicatorTrackingHome.as_view(), name='indicator_tracking_home'),
     path('report_data/project/', ProjectReportData.as_view(),
          name='project_report_data'),
     path('report_data/indicator/', IndicatorReportData.as_view(),

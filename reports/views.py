@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from django.views.generic import TemplateView, View
+from django.views.generic import View
 from workflow.models import ProjectAgreement, Program
-from indicators.models import CollectedData, Indicator
-from .forms import FilterForm
+from indicators.models import CollectedData, Indicator, IndicatorType, PeriodicTarget
 
 from django.db.models import Q
 from workflow.mixins import AjaxableResponseMixin
@@ -17,6 +16,9 @@ from workflow.export import ProjectAgreementResource
 from workflow.export import ProgramResource
 from indicators.export import CollectedDataResource
 from indicators.export import IndicatorResource
+
+from django.views.generic.list import ListView
+from django.shortcuts import render
 
 
 def make_filter(my_request):
@@ -74,20 +76,19 @@ def make_filter(my_request):
     return query_attrs
 
 
-class ReportHome(TemplateView):
-    """
-    List of available reports
-    """
-    template_name = 'report.html'
+class IndicatorTrackingHome(ListView):
+    '''
+        Main home page for indicator tracking table
+    '''
+    model = Indicator
+    template_name = 'reports/indicators/indicator_reports.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(ReportHome, self).get_context_data(**kwargs)
-        form = FilterForm()
-        context['form'] = form
+    def get(self, request, *args, **kwargs):
+        organization = request.user.activity_user.organization
 
-        context['criteria'] = json.dumps(kwargs)
-
-        return context
+        return render(request, self.template_name, {
+            'organization': organization,
+            'active': ['reports']})
 
 
 class ReportData(View, AjaxableResponseMixin):

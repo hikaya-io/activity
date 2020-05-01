@@ -2249,8 +2249,7 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
             indicator = Indicator.objects.filter(id=all_data['indicator_id'])
             indicator.update(**indicator_data)
             return Response({'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data}, status=status.HTTP_201_CREATED)
-        
-        print(serialized.errors)
+
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, *args, **kwargs):

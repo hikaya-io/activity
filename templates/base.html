@@ -206,6 +206,8 @@
             <ul class="dropdown-menu">
               <li>
                 <a href="/customdashboard/program_list/0/">{% trans 'Dashboards' %}</a>
+              </li><li>
+                <a href="{% url 'indicator_tracking_home' %}">{{ user.activity_user.organization.indicator_label }} {% trans 'Tracking Table' %}</a>
               </li>
             </ul>
           </li>
