@@ -1,4 +1,4 @@
-_UPDATED: 20200430_
+_UPDATED: 20200502_
 
 # Contributing to Hikaya
  
@@ -71,7 +71,7 @@ Our current maintainers are: Peter Odeny ([@odenypeter](https://github.com/odeny
 
 1. **Determine how many hours you can commit to each week.** Think about how many hours you can commit to each week. Currently many of our contributors spend around ~20-25 hours a week but there is no minimum, only that you set your own hours.
 2. **Come up with your own weekly schedule and propose it to the team.** If you have certain days and times you are tentatively available you can put together a schedule of what a typical week will look like so others can try and sync with you or know when to reach out on slack. These  are just tentative and used by other contributors to coordinate calls between each other.
-3. **Try to make at least of the sprint calls each week (Monday and Saturday 7 PM EAT).** If you can’t make a call, kindly write on the #sprint-planning slack channel or message me before hand so we can know if you are able to join or not. We just ask for communication courtesy but understand contributors won’t be able to make each call.
+3. **Try to make at least one of the sprint calls each week (Monday and Saturday 7 PM EAT).** If you can’t make a call, kindly write on the #sprint-planning slack channel or message me before hand so we can know if you are able to join or not. We just ask for communication courtesy but understand contributors won’t be able to make each call.
 4. **Ask for help when you need it** Our philosophy is to let contributors work on anything they think could add value to our apps. The core team at Hikaya will try to make themselves available to support any new onboarding or even have paired programming sessions on an issue to help you get started. We kindly ask all contributors to not be shy and ask for help when you need it.
 5. **Be open and communicate** If life has gotten busy or priorities have changed and you can no longer contribute, no worries, we completely understand! All we ask is for you to communicate and let us know upfront so we can plan accordingly. You're always welcome to pause and contribute another time.
 
