@@ -10,7 +10,7 @@ Thanks for checking out **Activity**. Activity is an open source project current
   - [Table of Contents](#table-of-contents)
   - [Ground rules and expectations](#ground-rules-and-expectations)
   - [How to contribute](#how-to-contribute)
-    - [Contributtion review process](#contribution-review-process)
+    - [Contribution review process](#contribution-review-process)
     - [For long-term contributors](#for-long-term-contributors)
     - [Tips on how to best engage and contribute](#tips-on-how-to-best-engage-and-contribute)
     - [Role of Maintainers](#role-of-maintainers)
@@ -70,10 +70,10 @@ Our current maintainers are: Peter Odeny ([@odenypeter](https://github.com/odeny
 ### Tips on how to best engage and contribute
 
 1. **Determine how many hours you can commit to each week.** Think about how many hours you can commit to each week. Currently many of our contributors spend around ~20-25 hours a week but there is no minimum, only that you set your own hours.
-2. **Come up with your own weekly schedule and propose it to the team.** If you have certain days and times you are tentatively available you can put together a schedule of what a typical week will look like so others can try and sync with you or know when to reach out on slack. These  are just tentative and used by other contributors to coordinating calls between each other.
+2. **Come up with your own weekly schedule and propose it to the team.** If you have certain days and times you are tentatively available you can put together a schedule of what a typical week will look like so others can try and sync with you or know when to reach out on slack. These  are just tentative and used by other contributors to coordinate calls between each other.
 3. **Try to make at least of the sprint calls each week (Monday and Saturday 7 PM EAT).** If you can’t make a call, kindly write on the #sprint-planning slack channel or message me before hand so we can know if you are able to join or not. We just ask for communication courtesy but understand contributors won’t be able to make each call.
 4. **Ask for help when you need it** Our philosophy is to let contributors work on anything they think could add value to our apps. The core team at Hikaya will try to make themselves available to support any new onboarding or even have paired programming sessions on an issue to help you get started. We kindly ask all contributors to not be shy and ask for help when you need it.
-5. **Be open and communicate** If life has gottten busy or priorities have changed and you can no longer contribute, no worries, we completely understand! All we ask is for you to communicate and let us know upfront so we can plan accordingly. You're always welcome to pause and contribute another time.
+5. **Be open and communicate** If life has gotten busy or priorities have changed and you can no longer contribute, no worries, we completely understand! All we ask is for you to communicate and let us know upfront so we can plan accordingly. You're always welcome to pause and contribute another time.
 
 ### Role of Maintainers
 
@@ -241,7 +241,7 @@ Bugs and features will be assigned a sprint, and within a sprint, they will be a
 
 ### Hardening Sprint
 
-The final week of the iteration is what we call the "Hardening Sprint". During this week we will fix the critical bugs and focus the entire week on improve test coverage by building unit and integration tests for any new features. 
+The final week of the month is what we call the "Hardening Sprint". During this week we will fix the critical bugs and focus the entire week on improving test coverage by building unit and integration tests for any new features. 
 
 Note:
 > Currently since we have been refactoring the app, the upcoming hardening sprints will be focused on adding tests to existing features. Our plan is to go app by app and build test
@@ -274,7 +274,22 @@ We use 3 main branches in all our repositories :
 
 ## Commits
 
-We use Github to track **Issues** and **Pull Requests* for all our work. When making commits, please ensure that you have create a separate branch off of the main `develop` branch before you begin making changes to the source code. Feel free to make commits as often as possible to your branch. If the issue you are working on has been open for a few days, consider pulling in the latest changes to keep in up to date with the main `develop` branch before you create a Pull Request. This will help you avoid merge conflicts when raising your Pull Request.
+We use Github to track **Issues** and **Pull Requests** for all our work. When making commits, please ensure that you have create a separate branch off of the main `develop` branch before you begin making changes to the source code. Feel free to make commits as often as possible to your branch. If the issue you are working on has been open for a few days, consider pulling in the latest changes to keep in up to date with the main `develop` branch before you create a Pull Request. This will help you avoid merge conflicts when raising your Pull Request.
+
+### Commit message format
+To ensure commit messages are readable when going through project history, we use a common commit message format. The message format by [Angular](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines) is very comprehensive and we find it useful to follow.
+
+Each commit message consists of a header, a body and a footer. The header is mandatory with the body and the footer as optional given the size of the commit. The header has a special format that includes a type, a scope, and a subject, where the scope of the header is optional.
+
+```
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
+```
+
+Please refer to the [Angular guidelines](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines) for more details on the format.
 
 ## Pull Requests
 
