@@ -1,9 +1,9 @@
 from django.core.exceptions import ValidationError
-from django.db import models
 from django.test import TestCase
 from workflow.models import Program, Office, ActivityUser
 from formlibrary.models import Training, Service
 from datetime import date
+
 
 class TestTraining(TestCase):
     """
@@ -114,7 +114,7 @@ class TestTraining(TestCase):
                 name="Training 2",
                 description="End date < Start date",
                 created_by=self.activity_user,
-                modified_by=self.activity_user
+                modified_by=self.activity_user,
                 start_date=date(2020, 10, 19),
                 end_date=date(2020, 10, 1),
                 duration=0,
