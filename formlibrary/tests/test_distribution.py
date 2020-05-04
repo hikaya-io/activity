@@ -1,9 +1,9 @@
 from django.core.exceptions import ValidationError
-from django.db import models
 from django.test import TestCase
 from workflow.models import ActivityUser
 from formlibrary.models import Distribution
 from datetime import date
+
 
 class TestDistribution(TestCase):
     """
@@ -23,10 +23,10 @@ class TestDistribution(TestCase):
         self.distribution = Distribution.objects.create(
             name="Distribution 1",
             description="First distribution",
+            start_date=date(2020, 10, 19),
+            end_date=date(2020, 11, 19),
             created_by=self.activity_user,
             modified_by=self.activity_user
-            start_date=date(2020, 10, 1),
-            end_date=date(2020, 10, 19),
         )
         # self.training.cases.add(self.individual, self.household)
 
@@ -53,10 +53,10 @@ class TestDistribution(TestCase):
             Distribution.objects.create(
                 name="Distribution 2",
                 description="End date < Start date",
+                start_date=date(2020, 10, 19),
+                end_date=date(2017, 11, 19),
                 created_by=self.activity_user,
                 modified_by=self.activity_user
-                start_date=date(2020, 10, 19),
-                end_date=date(2020, 10, 1),
             )
 
     def test_tracks_creator_and_modifier(self):

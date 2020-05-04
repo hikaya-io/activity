@@ -101,7 +101,7 @@ class DistributionTestCase(TestCase):
             end_date=date(2020, 10, 19),
             form_filled_by="test_form_filler",
             form_verified_by="test_form_verifier",
-            )
+        )
         new_distribution.save()
 
     def test_distribution_exists(self):
@@ -131,8 +131,8 @@ class IndividualTestCase(TestCase):
             end_date=date(2020, 10, 19),
             form_verified_by="Bruce",
             duration=30,
-            # trainers=None
-            trainer=None
+            # trainer=None,
+            trainer=None,
         )
         new_training.save()
         # get_training = TrainingAttendance.objects.get(
