@@ -40,6 +40,9 @@ class TestTraining(TestCase):
         )
         self.program.training_set.add(self.training)
 
+    ###############################################
+    # CRUD                                        #
+    ###############################################
     def test_create_training(self):
         training = Training.objects.create(
             name="New Training",
@@ -62,12 +65,43 @@ class TestTraining(TestCase):
 
     def test_edit_training(self):
         training = Training.objects.first()
-        # created_at = training.create_date
+        # Editing attributes
         training.name = "New name for the training"
         training.save()
-        self.assertEqual(training.name, "New name for the training")
+        updated_training = Training.objects.get(pk=training.pk)
+        self.assertEqual(updated_training.name, "New name for the training")
         # self.assertNotEqual(edit_date, created_at)
 
+    def test_delete_training(self):
+        # TODO
+        print("TODO")
+
+    ###############################################
+    # Dates fields                                #
+    ###############################################
+    def test_dates(self):
+        self.assertIsInstance(self.training.start_date, date)
+        self.assertIsInstance(self.training.end_date, date)
+        self.assertIsInstance(self.training.create_date, date)
+        self.assertIsInstance(self.training.modified_date, date)
+
+    def test_start_end_dates_validation(self):
+        "Test validation of start/end dates"
+        # ! Hint: https://docs.djangoproject.com/en/3.0/ref/models/instances/#validating-objects
+        with self.assertRaises(ValidationError):
+            Training.objects.create(
+                name="Training 2",
+                description="End date < Start date",
+                created_by=self.activity_user,
+                modified_by=self.activity_user,
+                start_date=date(2020, 10, 19),
+                end_date=date(2020, 10, 1),
+                duration=0,
+            )
+
+    ###############################################
+    # Relationships                               #
+    ###############################################
     def test_relationships(self):
         """
         Test that the relationships of Training model can be set
@@ -82,13 +116,9 @@ class TestTraining(TestCase):
         # TODO Use self.training, self.program, self.office...
         print(self)
 
-    def test_duration(self):
-        """
-        Test duration field is calculated is coherent with start/end dates
-        Still under discussion
-        """
-        print(self.training)
-
+    ###############################################
+    # Calculated fields                           #
+    ###############################################
     def test_total_number_of_participants(self):
         """
         Test the total number of participants in a Training is calculated
@@ -99,26 +129,15 @@ class TestTraining(TestCase):
         # print(self.training.name)
         # self.assertIs(self.training.cases, None)
 
-    ################################
-    # Start/End dates testing
-    ################################
-    def test_dates(self):
-        self.assertIsInstance(self.training.start_date, date)
-        self.assertIsInstance(self.training.end_date, date)
-
-    def test_start_end_dates(self):
-        "Test validation of start/end dates"
-        # ! Hint: https://docs.djangoproject.com/en/3.0/ref/models/instances/#validating-objects
-        with self.assertRaises(ValidationError):
-            Training.objects.create(
-                name="Training 2",
-                description="End date < Start date",
-                created_by=self.activity_user,
-                modified_by=self.activity_user,
-                start_date=date(2020, 10, 19),
-                end_date=date(2020, 10, 1),
-                duration=0,
-            )
+    ###############################################
+    # Other                                       #
+    ###############################################
+    def test_duration(self):
+        """
+        Test duration field is calculated is coherent with start/end dates
+        Still under discussion
+        """
+        print(self.training)
 
     def test_tracks_creator_and_modifier(self):
         # Properly testing this requires simulating a logged in user
