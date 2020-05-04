@@ -1,25 +1,32 @@
 from django.core.exceptions import ValidationError
-from django.db import models
 from django.test import TestCase
-from workflow.models import Program
-from formlibrary.models import Individual, Household, Distribution
+from workflow.models import ActivityUser
+from formlibrary.models import Distribution
 from datetime import date
+
 
 class TestDistribution(TestCase):
     """
     Test the Distribution model
     """
 
-    fixtures = ['fixtures/organization.json']
+    fixtures = [
+        'fixtures/tests/users.json',
+        'fixtures/tests/activity-users.json',
+        'fixtures/tests/organization.json',
+    ]
 
     # Spec: https://github.com/hikaya-io/activity/issues/420
     # ? How does Service Type interact with other models
     def setUp(self):
+        self.activity_user = ActivityUser.objects.first()
         self.distribution = Distribution.objects.create(
             name="Distribution 1",
             description="First distribution",
-            start_date=date(2020, 10, 1),
-            end_date=date(2020, 10, 19),
+            start_date=date(2020, 10, 19),
+            end_date=date(2020, 11, 19),
+            created_by=self.activity_user,
+            modified_by=self.activity_user
         )
         # self.training.cases.add(self.individual, self.household)
 
@@ -47,5 +54,12 @@ class TestDistribution(TestCase):
                 name="Distribution 2",
                 description="End date < Start date",
                 start_date=date(2020, 10, 19),
-                end_date=date(2020, 10, 1)
+                end_date=date(2017, 11, 19),
+                created_by=self.activity_user,
+                modified_by=self.activity_user
             )
+
+    def test_tracks_creator_and_modifier(self):
+        # Properly testing this requires simulating a logged in user
+        self.assertIsInstance(self.distribution.created_by, ActivityUser)
+        self.assertIsInstance(self.distribution.modified_by, ActivityUser)
