@@ -24,8 +24,10 @@ class StartEndDates(models.Model):
         return super(StartEndDates, self).save(**kwargs)
 
     def clean(self):
+        # ? What if only a single date is supplied? Should the start/end date
+        # ? Be higher/lower than today's date?
         super(StartEndDates, self).clean()
-        if self.end_date < self.start_date:
+        if None not in (self.start_date, self.end_date) and self.end_date < self.start_date:
             raise ValidationError("Sorry, End date must be greater than start date.")
 
     class Meta:
