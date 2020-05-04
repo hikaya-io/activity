@@ -14,14 +14,9 @@ class Training(Service):
     # ? Can a training have multiple trainers?
     # ? Can a trainer be in charge of multiple Trainings?
     trainer = models.ForeignKey(
-        Contact, null=True, blank=True, on_delete=models.SET_NULL)
+        Contact, null=True, blank=True, on_delete=models.SET_NULL, related_name="trainer_of")
     # ? Is this supplied in user input or calculated from start/end dates?
     duration = models.IntegerField(help_text="Number of days? Sessions?")
-
-    @property
-    def total_individuals_supported(self):
-        # TODO Check all individuals, and households and their individuals
-        return 0
 
     # @property
     # def attendance(self):
