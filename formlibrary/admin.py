@@ -8,6 +8,7 @@ from .models import (
 
 admin.site.register(Training)
 
+
 @admin.register(Individual)
 class IndividualAdmin(admin.ModelAdmin):
     list_display = ('site', 'first_name',)
@@ -17,7 +18,7 @@ class IndividualAdmin(admin.ModelAdmin):
 @admin.register(Distribution)
 class DistributionAdmin(admin.ModelAdmin):
     list_display = ('name', 'program',
-                    'initiation', 'create_date', 'edit_date')
+                    'create_date', 'modified_date')
     display = 'Program Dashboard'
 
 
