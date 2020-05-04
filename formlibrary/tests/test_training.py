@@ -3,7 +3,7 @@ from django.db import models
 from django.test import TestCase
 from workflow.models import Program, Office, ActivityUser
 from formlibrary.models import Training, Service
-
+from datetime import date
 
 class TestTraining(TestCase):
     """
@@ -30,12 +30,13 @@ class TestTraining(TestCase):
             description="Description training 1",
             program=self.program,
             office=self.office,
-            start_date="04/01/2020",
-            end_date="04/15/2020",
+            # cases=[self.individual, self.household],
+            start_date=date(2020, 10, 1),
+            end_date=date(2020, 10, 19),
             form_verified_by="Bruce",
             duration=30,
             created_by=self.activity_user,
-            modified_by=self.activity_user
+            modified_by=self.activity_user,
         )
         self.program.training_set.add(self.training)
 
@@ -45,7 +46,7 @@ class TestTraining(TestCase):
             description="Newly created training",
             duration=30,
             created_by=self.activity_user,
-            modified_by=self.activity_user
+            modified_by=self.activity_user,
         )
         # Test the inheritance
         self.assertIsInstance(training, Service)
@@ -102,8 +103,8 @@ class TestTraining(TestCase):
     # Start/End dates testing
     ################################
     def test_dates(self):
-        self.assertIsInstance(self.training.start_date, models.DateField)
-        self.assertIsInstance(self.training.end_date, models.DateField)
+        self.assertIsInstance(self.training.start_date, date)
+        self.assertIsInstance(self.training.end_date, date)
 
     def test_start_end_dates(self):
         "Test validation of start/end dates"
@@ -112,11 +113,11 @@ class TestTraining(TestCase):
             Training.objects.create(
                 name="Training 2",
                 description="End date < Start date",
-                start_date="04/15/2020",
-                end_date="01/01/2019",
-                duration=0,
                 created_by=self.activity_user,
                 modified_by=self.activity_user
+                start_date=date(2020, 10, 19),
+                end_date=date(2020, 10, 1),
+                duration=0,
             )
 
     def test_tracks_creator_and_modifier(self):

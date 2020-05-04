@@ -4,10 +4,10 @@
 from django.test import TestCase
 from workflow.models import (
     Program, Country, Province, ProjectAgreement, Sector,
-    ProjectType, SiteProfile, Office
+    ProjectType, SiteProfile, Office, Stakeholder
 )
-from formlibrary.models import TrainingAttendance, Distribution, Individual
-from datetime import datetime
+from formlibrary.models import TrainingAttendance, Distribution, Individual, Training
+from datetime import datetime, date
 
 
 class TrainingAttendanceTestCase(TestCase):
@@ -16,27 +16,28 @@ class TrainingAttendanceTestCase(TestCase):
         new_program = Program.objects.create(name="testprogram")
         new_program.save()
         get_program = Program.objects.get(name="testprogram")
+        stakeholder_obj = Stakeholder.objects.create(name="test_stakeholder")
         new_training = TrainingAttendance.objects.create(
             training_name="testtraining", program=get_program,
-            implementer="34",
+            implementer="test stakeholder",
             reporting_period="34",
             total_participants="34",
             location="34",
             community="34",
             training_duration="34",
-            start_date="34",
-            end_date="34",
+            start_date=date(2020, 10, 1),
+            end_date=date(2020, 10, 19),
             trainer_name="34",
             trainer_contact_num="34",
             form_filled_by="34",
             form_filled_by_contact_num="34",
-            total_male="34",
-            total_female="34",
-            total_age_0_14_male="34",
-            total_age_0_14_female="34",
-            total_age_15_24_male="34",
-            total_age_15_24_female="34",
-            total_age_25_59_male="34"
+            total_male=34,
+            total_female=34,
+            total_age_0_14_male=34,
+            total_age_0_14_female=34,
+            total_age_15_24_male=34,
+            total_age_15_24_female=34,
+            total_age_25_59_male=34
             )
         new_training.save()
 
@@ -75,6 +76,7 @@ class DistributionTestCase(TestCase):
         get_community = SiteProfile.objects.get(name="testcommunity")
         get_project_type = ProjectType.objects.get(id='1')
         get_sector = Sector.objects.get(id='2')
+        stakeholder_obj = Stakeholder.objects.create(id='1')
         new_agreement = ProjectAgreement.objects.create(
             program=get_program,
             project_name="testproject", project_type=get_project_type,
@@ -85,48 +87,27 @@ class DistributionTestCase(TestCase):
         get_agreement = ProjectAgreement.objects.get(
             project_name="testproject")
         new_distribution = Distribution.objects.create(
-            distribution_name="testdistribution", program=get_program,
+            name="testdistribution", program=get_program,
             initiation=get_agreement,
-            office_code=get_office,
-            distribution_indicator="34",
-            distribution_implementer="34",
+            office=get_office,
+            indicator="34",
+            implementer=stakeholder_obj,
             reporting_period="34",
             province=get_province,
             total_individuals_received_input="34",
             distribution_location="testlocation",
             input_type_distributed="testinputtype",
-            distributor_name_and_affiliation="testdistributorperson",
-            distributor_contact_number="1-dis-tri-bute",
-            start_date=datetime(
-               2015, 8, 4, 12, 30, 45),
-            end_date=datetime(
-               2015, 9, 5, 12, 30, 45),
+            start_date=date(2020, 10, 1),
+            end_date=date(2020, 10, 19),
             form_filled_by="test_form_filler",
-            form_filled_by_position="testdistributionmanager",
-            form_filled_by_contact_num="1-888-dst-rbut",
-            form_filled_date=datetime(
-               2016, 6, 1, 12, 30, 45),
             form_verified_by="test_form_verifier",
-            form_verified_by_position="testdistributionmanager",
-            form_verified_by_contact_num="1-888-dst-rbut",
-            form_verified_date=datetime(
-               2016, 6, 2, 12, 30, 45),
-            total_received_input="34",
-            total_male="34",
-            total_female="34",
-            total_age_0_14_male="34",
-            total_age_0_14_female="34",
-            total_age_15_24_male="34",
-            total_age_15_24_female="34",
-            total_age_25_59_male="34",
-            total_age_25_59_female="34"
             )
         new_distribution.save()
 
     def test_distribution_exists(self):
         """Check for Distribution object"""
         get_distribution = Distribution.objects.get(
-            distribution_name="testdistribution")
+            name="testdistribution")
         self.assertEqual(Distribution.objects.filter(
             id=get_distribution.id).count(), 1)
 
@@ -137,8 +118,22 @@ class IndividualTestCase(TestCase):
         new_program = Program.objects.create(name="testprogram")
         new_program.save()
         get_program = Program.objects.get(name="testprogram")
-        new_training = TrainingAttendance.objects.create(
-            training_name="testtraining", program=get_program)
+        new_training = Training.objects.create(
+            name="Training 1",
+            description="Description training 1",
+            program=None,
+            office=None,
+            site=None,
+            implementer=None,
+            cases=None,
+            # cases=[self.individual, self.household],
+            start_date=date(2020, 10, 1),
+            end_date=date(2020, 10, 19),
+            form_verified_by="Bruce",
+            duration=30,
+            # trainers=None
+            trainer=None
+        )
         new_training.save()
         # get_training = TrainingAttendance.objects.get(
         #     training_name="testtraining")

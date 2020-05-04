@@ -6,6 +6,7 @@ from datetime import datetime
 from django.db import models
 from workflow.models import Program, Office, Stakeholder, Site, Contact, ActivityUser
 from .case import Case
+from django.core.exceptions import ValidationError
 
 
 class StartEndDates(models.Model):
@@ -15,9 +16,17 @@ class StartEndDates(models.Model):
     # TODO move to its own place. A package named "core_mixins"
     # TODO Check the start_date < end_date and throw adequate error if else
     # TODO Will we need the same for a Slug field? Does Django offer one?
-    # TODO Do the same for created/modified at/by fields
-    start_date = models.CharField(max_length=255, null=True, blank=True)
-    end_date = models.CharField(max_length=255, null=True, blank=True)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+
+    def save(self, **kwargs):
+        self.clean()
+        return super(StartEndDates, self).save(**kwargs)
+
+    def clean(self):
+        super(StartEndDates, self).clean()
+        if self.end_date < self.start_date:
+            raise ValidationError("Sorry, End date must be greater than start date.")
 
     class Meta:
         abstract = True
