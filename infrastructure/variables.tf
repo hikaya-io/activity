@@ -35,3 +35,7 @@ variable "postgres_version" {
 variable "db_name" {
   description="name of the db to be created"
 }
+
+variable "tags" {
+  description="project name"
+}

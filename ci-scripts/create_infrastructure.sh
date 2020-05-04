@@ -25,7 +25,8 @@ set_up_cluster_dev_env() {
             -var "digital_ocean_token=$SERVICE_ACCESS_TOKEN" \
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
-            -var "db_name=$DB_NAME_DEV_ENV"
+            -var "db_name=$DB_NAME_DEV_ENV" \
+            -var "tags=$PROJECT_NAME"
         
         #@--- Apply the changes ---@#
         echo "+++++ Apply infrastructure ++++++++++"
@@ -39,6 +40,7 @@ set_up_cluster_dev_env() {
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
             -var "db_name=$DB_NAME_DEV_ENV" \
+            -var "tags=$PROJECT_NAME" \
             || echo "Resources exist"
     fi
 }
@@ -67,7 +69,8 @@ set_up_cluster_staging() {
             -var "digital_ocean_token=$SERVICE_ACCESS_TOKEN" \
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
-            -var "db_name=$DB_NAME_STAGING"
+            -var "db_name=$DB_NAME_STAGING" \
+            -var "tags=$PROJECT_NAME"
 
         #@--- Apply the changes ---@#
         echo "+++++ Apply infrastructure ++++++++++"
@@ -82,6 +85,7 @@ set_up_cluster_staging() {
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
             -var "db_name=$DB_NAME_STAGING" \
+            -var "tags=$PROJECT_NAME" \
             || echo "Resources exist"
     fi
     
@@ -110,7 +114,8 @@ set_up_cluster_prod() {
             -var "digital_ocean_token=$SERVICE_ACCESS_TOKEN" \
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
-            -var "db_name=$DB_NAME_PROD"
+            -var "db_name=$DB_NAME_PROD" \
+            -var "tags=$PROJECT_NAME"
         
         #@--- Apply the changes ---@#
         echo "+++++ Apply infrastructure ++++++++++"
@@ -125,6 +130,7 @@ set_up_cluster_prod() {
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
             -var "db_name=$DB_NAME_PROD" \
+            -var "tags=$PROJECT_NAME" \
             || echo "Resources exist"
     fi
 }
