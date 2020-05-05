@@ -4,7 +4,6 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib import admin
 from datetime import datetime
 from workflow.models import Program
 

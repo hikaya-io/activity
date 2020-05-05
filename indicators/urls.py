@@ -4,15 +4,18 @@
 from django.urls import path, re_path
 from .views import (
     IndicatorList, add_indicator, indicator_create, IndicatorCreate,
-    IndicatorUpdate, PeriodicTargetDeleteView,
-    PeriodicTargetView, CollectedDataReportData, CollectedDataCreate, CollectedDataDelete,
+    IndicatorUpdate, PeriodicTargetDeleteView, PeriodicTargetView,
+    CollectedDataReportData, CollectedDataCreate, CollectedDataDelete,
     CollectedDataList, CollectedDataUpdate, CollectedDataAdd, CollectedDataEdit,
-    CollectedDataDeleteVue, collecteddata_import, indicator_report, indicator_delete,
-    TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
-    program_indicator_report, indicator_data_report, IndicatorExport, service_json,
-    collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport, ObjectiveView, objectives_list, objectives_tree,
-    LevelView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
-    IndicatorTarget, IndicatorTypeView, DataCollectionFrequencyView, PeriodicTargetCreateView, IndicatorDataView)
+    CollectedDataDeleteVue, collecteddata_import, indicator_report,
+    indicator_delete, TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint,
+    IndicatorReport, program_indicator_report, indicator_data_report, IndicatorExport,
+    service_json, collected_data_json, program_indicators_json, IndicatorReportData,
+    IndicatorDataExport, ObjectiveView, objectives_list, objectives_tree, LevelView,
+    DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, IndicatorTarget,
+    IndicatorTypeView, DataCollectionFrequencyView, PeriodicTargetCreateView,
+    IndicatorDataView
+)
 
 urlpatterns = [
 

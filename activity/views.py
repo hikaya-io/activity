@@ -694,7 +694,9 @@ def admin_indicator_settings(request):
     user = get_object_or_404(ActivityUser, user=request.user)
     organization = user.organization
 
-    nav_links = get_nav_links('Indicator')
+    # ! Unused variable
+    # nav_links = get_nav_links('Indicator')
+
     return render(
         request,
         'admin/indicator_settings.html',
