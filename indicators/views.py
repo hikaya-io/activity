@@ -50,7 +50,7 @@ from django_tables2 import RequestConfig
 
 from workflow.models import (
     Program, SiteProfile, Country, Sector, ActivitySites, FormGuidance,
-    Documentation
+    Documentation, Organization
 )
 from workflow.mixins import AjaxableResponseMixin
 from workflow.admin import CountryResource
@@ -603,11 +603,11 @@ class IndicatorUpdate(UpdateView):
             for disagg in json.loads(disaggs):
                 if disagg.get('id', None) is None:
                     disagg_type = DisaggregationType.objects.create(
-                        disaggregation_type=disagg['type']
+                        disaggregation_type=disagg['disaggregation_type']
                     )
                 else:
                     disagg_type = DisaggregationType.objects.filter(id=int(disagg['id'])).first()
-                    disagg_type.disaggregation_type = disagg['type']
+                    disagg_type.disaggregation_type = disagg['disaggregation_type']
                     disagg_type.save()
 
                 # register disag to the indicator
@@ -672,6 +672,13 @@ class IndicatorDelete(DeleteView):
         return self.render_to_response(self.get_context_data(form=form))
 
     form_class = IndicatorForm
+
+
+def indicator_delete(request, pk):
+    indicator = Indicator.objects.get(pk=int(pk))
+    indicator.delete()
+
+    return redirect('/indicators/home/0/0/0/')
 
 
 class PeriodicTargetDeleteView(DeleteView):
@@ -2242,6 +2249,8 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
             indicator = Indicator.objects.filter(id=all_data['indicator_id'])
             indicator.update(**indicator_data)
             return Response({'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data}, status=status.HTTP_201_CREATED)
+        
+        print(serialized.errors)
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, *args, **kwargs):
@@ -2285,3 +2294,20 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
         indicator.update(**indicator_data)
         return Response({'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data},
                         status=status.HTTP_200_OK)
+
+
+class IndicatorDataView(GView):
+    """
+    View to fetch indicator data
+    """
+    def get(self, request):
+        try:
+            organization = Organization.objects.get(id=request.user.activity_user.organization.id)
+            indicators = Indicator.objects.filter(program__organization=organization)
+
+            return JsonResponse({
+                    'level_1_label': organization.level_1_label,
+                    'indicators':  IndicatorSerializer(indicators, many=True).data
+                })
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))

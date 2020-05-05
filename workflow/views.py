@@ -2944,7 +2944,7 @@ class GetCountries(GView):
     def get(self, request):
 
         try:
-            countries = Country.objects.values('id', 'country', 'code')
+            countries = Country.objects.values('id','latitude', 'longitude', 'country', 'code')
 
             return JsonResponse(list(countries), safe=False)
         except Exception as e:

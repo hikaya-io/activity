@@ -1,4 +1,7 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
 
 <link rel="stylesheet" href="{{ STATIC_URL }}css/select2.min.css" />
 <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
@@ -284,15 +287,15 @@
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
-    <li class="active">Collected Indicator Data</li>
+    <li><a href="{% url 'index' %}">{% trans 'Home Dashboard' %}</a></li>
+    <li class="active">{% trans 'Collected Indicator Data' %}</li>
   </ul>
   {% endblock %}
 
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">Collected Indicator Data</h4>
+      <h4 class="page-title">{% trans 'Collected Indicator Data' %}</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
@@ -308,8 +311,8 @@
   </div>
   <div id="sum1" style="display: none; float: right;">
     <p>
-      <b>Targeted Total:</b> <span class="badge" id="targeted1"></span>&nbsp;
-      <b>Achieved Total:</b> <span class="badge" id="achieved1"></span>
+      <b>{% trans 'Targeted Total' %}:</b> <span class="badge" id="targeted1"></span>&nbsp;
+      <b>{% trans 'Achieved Total' %}:</b> <span class="badge" id="achieved1"></span>
     </p>
   </div>
   <div>&nbsp;</div>
@@ -317,11 +320,11 @@
     <table border="2" cellspacing="5" cellpadding="5">
       <tbody>
         <tr>
-          <td>Start Date:</td>
+          <td>{% trans 'Start Date' %}:</td>
           <td><input type="text" id="dt1" class="datepicker" /></td>
         </tr>
         <tr>
-          <td>End Date:</td>
+          <td>{% trans 'End Date' %}:</td>
           <td><input type="text" id="dt2" class="datepicker" /></td>
         </tr>
       </tbody>
@@ -331,8 +334,8 @@
   </div>
   <div id="sum2" style="display: none; float: right;">
     <p>
-      <b>Targeted Total:</b> <span class="badge" id="targeted2"></span>&nbsp;
-      <b>Achieved Total:</b> <span class="badge" id="achieved2"></span>
+      <b>{% trans 'Targeted Total:' %}</b> <span class="badge" id="targeted2"></span>&nbsp;
+      <b>{% trans 'Achieved Total:' %}</b> <span class="badge" id="achieved2"></span>
     </p>
   </div>
   <br />

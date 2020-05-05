@@ -1,9 +1,10 @@
 
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Server Error{% endblock %}
+{% block title %}{% trans 'Server Error' %}{% endblock %}
 
-{% block page_title %}Server Error{% endblock page_title %}
+{% block page_title %}{% trans 'Server Error' %}{% endblock page_title %}
 
 {% block content %}
 
@@ -11,9 +12,9 @@
     <div class="error-page-content">
         <img src="/static/img/error-strokes.png" class="error-page-image"/>
         <p class="text-center error-code">500</p>
-        <p class="text-center error-message">There was a problem loading this page. <br/>
-             Notify your systems administrator if you think  <br /> you should not be seeing this page. </p>
-        <a href="/dashboard/0/" class="btn btn-success error-button">Go to home page</a>
+        <p class="text-center error-message">{% trans 'There was a problem loading this page.' %} <br/>
+            {% trans 'Notify your systems administrator if you think' %}  <br /> {% trans 'you should not be seeing this page.' %} </p>
+        <a href="/dashboard/0/" class="btn btn-success error-button">{% trans 'Go to home page' %}</a>
     </div>
 </div>
 

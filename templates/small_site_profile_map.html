@@ -96,18 +96,7 @@ new Vue({
 			{% endfor %}
 		
 			locations = [...locations];
-		
-			// we use the list of site markers to autozoom the map
-			// (featureGroup leaflet.js)
-		
-			// this check will catch empty lists that cause the following function
-			// to break the rendering of the map
-			if (locations !== undefined && locations.length != 0) {
-				let group = new L.featureGroup(
-					locations
-				);
-				map.fitBounds(group.getBounds());
-			}
+
 			if (adminBoundary) {
 				var myStyle = {
 					color: '#00CCCC',
