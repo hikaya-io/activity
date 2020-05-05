@@ -17,18 +17,16 @@ from activity.permissions import IsReadOnly
 from .export import IndicatorResource, CollectedDataResource
 from .serializers import (PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer,
                           IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer,
-                          ObjectiveSerializer,
-                          DisaggregationTypeSerializer, DisaggregationLabelSerializer, DisaggregationValueSerializer,
-                          DocumentationSerializer)
+                          ObjectiveSerializer, DocumentationSerializer)
 
 from .tables import IndicatorDataTable
 from .forms import (
-    IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
+    IndicatorForm, CollectedDataForm, StrategicObjectiveForm,
 )
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
     DisaggregationType, CollectedData, IndicatorType, Level, ExternalServiceRecord,
-    ExternalService, ActivityTable, StrategicObjective, Objective, DataCollectionFrequency, ActivityUser
+    ExternalService, ActivityTable, StrategicObjective, Objective, DataCollectionFrequency,
 )
 
 from django.db.models import Count, Sum, Min, Q
@@ -770,7 +768,7 @@ class CollectedDataEdit(GView):
         else:
             date = data.get('date_collected')
 
-        if data.get('documentation') == "" or data.get('documentation') == None:
+        if data.get('documentation') == "" or data.get('documentation') is None:
             documentation = None
         else:
             documentation = int(data.get('documentation'))
@@ -1104,7 +1102,7 @@ class DisaggregationLabelDeleteView(DeleteView):
             self.get_object().delete()
             return JsonResponse(dict(status=204))
 
-        except Exception as e:
+        except Exception:
             return JsonResponse(dict(status=400))
 
 
@@ -2146,6 +2144,8 @@ class StrategicObjectiveUpdateView(UpdateView):
 """
 Objectives views Vue.js
 """
+
+
 class ObjectiveView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Objective.objects.all()
     serializer_class = ObjectiveSerializer
@@ -2179,12 +2179,14 @@ class DataCollectionFrequencyView(generics.ListCreateAPIView, generics.RetrieveU
         organization = self.request.user.activity_user.organization.id
         return DataCollectionFrequency.objects.filter(organization=organization)
 
+
 """
 Level views
 """
 
+
 class LevelView(generics.ListCreateAPIView,
-                        generics.RetrieveUpdateDestroyAPIView):
+                generics.RetrieveUpdateDestroyAPIView):
     queryset = Level.objects.all()
     serializer_class = LevelSerializer
     permission_classes = [IsAuthenticated]
@@ -2249,7 +2251,7 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
             indicator = Indicator.objects.filter(id=all_data['indicator_id'])
             indicator.update(**indicator_data)
             return Response({'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data}, status=status.HTTP_201_CREATED)
-        
+
         print(serialized.errors)
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 

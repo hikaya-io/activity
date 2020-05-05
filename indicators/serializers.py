@@ -52,7 +52,9 @@ class CollectedDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CollectedData
-        fields = ['id', 'periodic_target', 'targeted', 'achieved', 'description', 'indicator', 'date_collected', 'evidence', 'disaggregation_value']
+        fields = ['id', 'periodic_target', 'targeted',
+                  'achieved', 'description', 'indicator',
+                  'date_collected', 'evidence', 'disaggregation_value']
 
 
 class PeriodicTargetSerializer(serializers.ModelSerializer):

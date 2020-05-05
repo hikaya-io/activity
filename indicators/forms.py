@@ -255,5 +255,3 @@ class LevelForm(forms.ModelForm):
             Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
         )
         super(LevelForm, self).__init__(*args, **kwargs)
-
-
