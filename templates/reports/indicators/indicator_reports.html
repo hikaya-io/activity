@@ -23,38 +23,97 @@
         </div>
         <div>
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <div class="form-group" id="div_level_1">
                         <label for="id_level_1">{{ user.activity_user.organization.level_1_label }}</label>
+                        <hikaya-select
+                            :required="true"
+                            v-validate="'required'"
+                            name="Programs"
+                            label="name"
+                            :searchable="true"
+                            :required="true"
+                            v-model="program_id"
+                            placeholder="Choose program"
+                            :options="programList"
+                            :reduce="program => program.id"
+                        >
+                        </hikaya-select>
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <div class="form-group" id="div_reporting_period">
-                        <label for="id_reporting_period">Reporting period</label>
+                        <label for="id_reporting_period">Reporting Period</label>
                         <hikaya-select
-                        :required="true"
-                        id="id_periodic_target"
-                        name="target_period"
-                        label="text"
-                        style="width: 200px"
-                        :searchable="false"
-                        v-model="period"
-                        placeholder="Select target period"
-                        :options="{{ programs }}"
-                        :reduce="target => target.id"
-                    >
-                    </hikaya-select>
+                            :required="true"
+                            v-validate="'required'"
+                            name="Reporting Period"
+                            label="label"
+                            :searchable="true"
+                            :disabled = "disabled_class"
+                            v-model="reporting_period_id"
+                            placeholder="Choose reporting period"
+                            :options="reporting_periods"
+                            :reduce="period => period.id"
+                        >
+                        </hikaya-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" id="start_date">
+                        <label for="startDate">Start Date</label>
+                        <input
+                            type="date"
+                            id="startDate"
+                            name="startDate"
+                            :disabled="true"
+                            :class="{ 
+                                'form-control': true, 
+                                }"
+                            v-model="start_date" 
+                            placeholder="Start Date"/>
+                    </div>
+                </div>
+    
+                <div class="col-md-6">
+                    <div class="form-group" id="end_date">
+                        <label for="endDate">End Date</label>
+                        <input
+                            type="date"
+                            id="endDate"
+                            name="endDate"
+                            :disabled="true"
+                            :class="{ 
+                                'form-control': true, 
+                                }"
+                            v-model="end_date" 
+                            placeholder="End Date"/>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="btn-group" role="group" aria-label="">
-                        <button class="btn btn-primary btn-sm">
+                        <button 
+                            class="btn btn-primary btn-sm"
+                            @click=processForm()>
                           View Report
                         </button>
                       </div>
                 </div>
             </div>
+
+            </div>
         </div>
+    </div>
+
+    <!-- Reports table-->
+    <div>
+        
     </div>
 </div>
 {% endblock content %}
+{% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}vue.js/hikaya_select.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}vue.js/reports/indicator_tracking.js"></script>
+{% endblock extra_js_in_body %}

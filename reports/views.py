@@ -3,7 +3,8 @@
 
 from django.views.generic import View
 from workflow.models import ProjectAgreement, Program
-from indicators.models import CollectedData, Indicator, IndicatorType, PeriodicTarget
+from indicators.models import CollectedData, Indicator, IndicatorType, PeriodicTarget, Level
+from indicators.serializers import CollectedDataSerializer, IndicatorSerializer, PeriodicTargetSerializer
 
 from django.db.models import Q
 from workflow.mixins import AjaxableResponseMixin
@@ -11,6 +12,7 @@ from django.http import HttpResponse, JsonResponse
 
 import json
 import simplejson
+import pendulum
 
 from workflow.export import ProjectAgreementResource
 from workflow.export import ProgramResource
@@ -19,6 +21,10 @@ from indicators.export import IndicatorResource
 
 from django.views.generic.list import ListView
 from django.shortcuts import render
+
+reporting_periods = [{"id": 1, "label": "Monthly"},
+                     {"id": 2, "label": "Quarterly"},
+                     {"id": 3, "label": "Annually"}]
 
 
 def make_filter(my_request):
@@ -304,3 +310,54 @@ def filter_json(request, service, **kwargs):
         'criteria': kwargs}
     print(final_dict)
     JsonResponse(final_dict, safe=False)
+
+
+class GenerateQuaterlyReport(View):
+
+    def get(self, request, *args, **kwargs):
+        program_id = int(self.kwargs.get('program_id'))
+        reporting_id = int(self.kwargs.get('reporting_id'))
+        raw_data = []
+
+        for report in reporting_periods:
+            if report['id'] == reporting_id:
+                report_period = report['label']
+
+        indicators = Indicator.objects.distinct().filter(program__id=program_id)
+        for ind in indicators:
+            periodic_targets = PeriodicTarget.objects.filter(indicator=ind.id).prefetch_related('collecteddata_set')\
+                                                            .order_by('customsort')
+            indicator = IndicatorSerializer(ind).data,
+            periodic_data = PeriodicTargetSerializer(periodic_targets, many=True).data
+            total_targeted = 0
+            total_achieved = 0
+
+            for data in indicator:
+                program = data['program'][0]
+                start_date = program['start_date']
+                end_date = program['end_date']
+
+            start = pendulum.parse(start_date)
+            end = pendulum.parse(end_date)
+
+            for data in periodic_data:
+                for collecteddata in data['collecteddata_set']:
+                    print(collecteddata)
+                    total_achieved += float(collecteddata['achieved'])
+                    total_targeted += float(collecteddata['targeted'])
+
+                # print(data)
+
+            print('tag')
+            print(total_achieved)
+            print(total_targeted)
+
+
+            raw_data.append(dict(
+                indicator=indicator,
+                periodic_data=periodic_data,
+                total_achieved=total_achieved,
+                total_targeted=total_targeted,
+            ))
+
+        return None

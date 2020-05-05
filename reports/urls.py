@@ -3,9 +3,9 @@
 
 from .views import (
     ReportData, IndicatorReportData, CollectedDataReportData, ProjectReportData,
-    IndicatorTrackingHome,
+    IndicatorTrackingHome, GenerateQuaterlyReport
 )
-from django.urls import path
+from django.urls import path, re_path
 
 
 # place app url patterns here
@@ -20,4 +20,11 @@ urlpatterns = [
     path('report_data/collecteddata/', CollectedDataReportData.as_view(),
          name='collecteddata_report_data'),
     path('report_data/', ReportData.as_view(), name='report_data'),
+
+
+    re_path(
+          r'quaterly_report/(?P<program_id>.*)/(?P<reporting_id>.*)',
+          GenerateQuaterlyReport.as_view(),
+          name='quaterly_report'
+    ),
 ]
