@@ -1286,13 +1286,13 @@ def program_indicators_json(AjaxableResponseMixin, program, indicator, type):
                                               'program_id': program})
 
 
-def tool(request):
-    """
-    Placeholder for Indicator planning Tool TBD
-    :param request:
-    :return:
-    """
-    return render(request, 'indicators/tool.html')
+# def tool(request):
+#     """
+#     Placeholder for Indicator planning Tool TBD
+#     :param request:
+#     :return:
+#     """
+#     return render(request, 'indicators/tool.html')
 
 
 # REPORT VIEWS
