@@ -189,11 +189,11 @@ class Migration(migrations.Migration):
             name='end_date',
             field=models.DateField(blank=True, null=True),
         ),
-        migrations.AlterField(
-            model_name='distribution',
-            name='id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
-        ),
+        # migrations.AlterField(
+        #     model_name='distribution',
+        #     name='id',
+        #     field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+        # ),
         # ! Fix of the above commented code: https://stackoverflow.com/a/30985282/4017403
         migrations.RemoveField(
             model_name='distribution',
