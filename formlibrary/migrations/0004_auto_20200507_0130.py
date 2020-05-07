@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('start_date', models.DateField(blank=True, null=True)),
                 ('end_date', models.DateField(blank=True, null=True)),
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                # ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=255)),
                 ('description', models.TextField(blank=True, max_length=550, null=True)),
                 ('form_verified_by', models.CharField(blank=True, max_length=255, null=True)),
@@ -46,6 +46,27 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
         ),
+        # ! Fix for the id of Training model: https://stackoverflow.com/a/46295704/4017403
+        # ? Was the training table already existent in the DB?
+        migrations.AlterField(
+            model_name='training',
+            name='id',
+            field=models.CharField(max_length=255),
+        ),
+        migrations.AlterField(
+            model_name='training',
+            name='id',
+            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+        ),
+        # migrations.RemoveField(
+        #     model_name='training',
+        #     name='id'
+        # ),
+        # migrations.AddField(
+        #     model_name='training',
+        #     name='id',
+        #     field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+        # ),
         migrations.AlterModelOptions(
             name='distribution',
             options={'ordering': ('name',)},
@@ -169,6 +190,16 @@ class Migration(migrations.Migration):
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AlterField(
+            model_name='distribution',
+            name='id',
+            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+        ),
+        # ! Fix of the above commented code: https://stackoverflow.com/a/30985282/4017403
+        migrations.RemoveField(
+            model_name='distribution',
+            name='id'
+        ),
+        migrations.AddField(
             model_name='distribution',
             name='id',
             field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
