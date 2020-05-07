@@ -4,7 +4,7 @@
 from datetime import datetime
 from django.db import models
 from workflow.models import Program, ProjectAgreement
-from .service import StartEndDates
+from utils.models import StartEndDates
 
 
 class TrainingAttendance(StartEndDates):
@@ -43,8 +43,8 @@ class TrainingAttendance(StartEndDates):
     # on save add create date or update edit date
     def save(self, *args, **kwargs):
         if self.create_date is None:
-            self.create_date = datetime.now()
-        self.edit_date = datetime.now()
+            self.create_date = datetime.utcnow()
+        self.edit_date = datetime.utcnow()
         super(TrainingAttendance, self).save()
 
     # displayed in admin templates

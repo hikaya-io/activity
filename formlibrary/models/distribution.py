@@ -13,13 +13,7 @@ class Distribution(Service):
     """
     # ? How is the item stored? CharField? Does it belong to an inventory?
     item_distributed = models.CharField(max_length=255, null=False, blank=False)
-    quantity = models.IntegerField(verbose_name="Number of items distributed")
-
-    def save(self, *args, **kwargs):
-        if self.create_date is None:
-            self.create_date = datetime.now()
-        self.edit_date = datetime.now()
-        super(Distribution, self).save()
+    quantity = models.IntegerField(verbose_name="Number of items distributed", default=0)
 
     # displayed in admin templates
     def __str__(self):
