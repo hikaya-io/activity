@@ -32,11 +32,10 @@ class Service(CreatedModifiedBy, CreatedModifiedDates, StartEndDates):
     cases = models.ManyToManyField(Case, blank=True)
     contacts = models.ManyToManyField(Contact, blank=True)
     form_verified_by = models.CharField(max_length=255, null=True, blank=True)
-    form_completed_by = models.CharField(max_length=255, null=True, blank=True)
+    form_filled_by = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         abstract = True
-        ordering = ('name',)
 
     @property
     def total_individuals_supported(self):
