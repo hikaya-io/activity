@@ -39,6 +39,7 @@ jobs:
       env: 
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
+        cp activity/settings/local-sample.py activity/settings/local.py
         pipenv install
         source $(python3 -m pipenv --venv)/bin/activate
         coverage run manage.py test
