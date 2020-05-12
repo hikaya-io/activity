@@ -49,11 +49,11 @@ class Migration(migrations.Migration):
             name='create_date',
             field=models.DateTimeField(blank=True, null=True, verbose_name='Creation date'),
         ),
-        migrations.AddField(
-            model_name='training',
-            name='id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
-        ),
+        # migrations.AddField(
+        #     model_name='training',
+        #     name='id',
+        #     field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+        # ),
         migrations.AddField(
             model_name='training',
             name='modified_date',
