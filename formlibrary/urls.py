@@ -25,10 +25,12 @@ from .views import (
     delete_training,
 )
 from django.urls import path
+from django.views.generic import TemplateView
 
 # place app url patterns here
 
 urlpatterns = [
+    path('comingsoon', TemplateView.as_view(template_name='formlibrary/comingsoon.html')),
     path('training_list/<slug:program>/<slug:project>/', TrainingList.as_view(),
          name='training_list'),
     path('add-training', add_training, name='add_training'),
