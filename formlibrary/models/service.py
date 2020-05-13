@@ -39,9 +39,9 @@ class CreatedModifiedDates(models.Model):
     # TODO Unit test this
     # This is the naming used in other models
     create_date = models.DateTimeField(verbose_name="Creation date", editable=False,
-                                        null=False, blank=False, auto_now_add=True)
+                                       null=False, blank=False, auto_now_add=True)
     modified_date = models.DateTimeField(verbose_name="Modification date", editable=False,
-                                        null=False, blank=False, auto_now=True)
+                                         null=False, blank=False, auto_now=True)
 
     class Meta:
         abstract = True
@@ -59,12 +59,14 @@ class CreatedModifiedDates(models.Model):
 class CreatedModifiedBy(models.Model):
     # TODO implement logic of setting these values
     created_by = models.ForeignKey(ActivityUser, null=True, editable=False,
-                                    verbose_name="Created by", related_name="+", on_delete=models.SET_NULL)
+                                   verbose_name="Created by", related_name="+", on_delete=models.SET_NULL)
     modified_by = models.ForeignKey(ActivityUser, null=True,  editable=False,
                                     verbose_name="Modified by", related_name="+", on_delete=models.SET_NULL)
 
     class Meta:
         abstract = True
+
+    # TODO Get the current user in the save method? Is that possible?
 
 
 class Service(CreatedModifiedBy, StartEndDates, models.Model):

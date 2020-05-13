@@ -2,12 +2,28 @@
 # -*- coding: utf-8 -*-
 
 from .views import (
-    TrainingList, add_training, add_distribution, TrainingListObjects,
-    IndividualList, IndividualCreate, IndividualListObjects,
-    IndividualUpdate, TrainingUpdate, delete_training, delete_individual,
-    TrainingCreate, DistributionList, DistributionCreate, DistributionListObjects,
-    DistributionUpdate, delete_distribution, GetAgreements,
-    TrainingParticipantListObjects, IndividualViewList, IndividualViewDetail)
+    DistributionCreate,
+    DistributionList,
+    DistributionListObjects,
+    DistributionUpdate,
+    GetAgreements,
+    IndividualCreate,
+    IndividualList,
+    IndividualListObjects,
+    IndividualUpdate,
+    IndividualViewDetail,
+    IndividualViewList,
+    TrainingCreate,
+    TrainingList,
+    TrainingListObjects,
+    TrainingParticipantListObjects,
+    TrainingUpdate,
+    add_distribution,
+    add_training,
+    delete_distribution,
+    delete_individual,
+    delete_training,
+)
 from django.urls import path
 
 # place app url patterns here
