@@ -13,6 +13,7 @@ from django.http import HttpResponse, JsonResponse
 import json
 import simplejson
 import pendulum
+import math  
 
 from workflow.export import ProjectAgreementResource
 from workflow.export import ProgramResource
@@ -104,7 +105,6 @@ class ReportData(View, AjaxableResponseMixin):
 
     def get(self, request, *args, **kwargs):
         filter = make_filter(self.request.GET)
-        print(filter)
         program_filter = filter['program']
         project_filter = filter['project']
         indicator_filter = filter['indicator']
@@ -241,9 +241,6 @@ class IndicatorReportData(View, AjaxableResponseMixin):
 
         indicator_serialized = json.dumps(list(indicator))
 
-        print(indicator_filter)
-        print(indicator.query)
-
         final_dict = {
             'criteria': indicator_filter, 'indicator': indicator_serialized,
             'indicator_count': indicator_count,
@@ -280,9 +277,6 @@ class CollectedDataReportData(View, AjaxableResponseMixin):
 
         collecteddata_serialized = json.dumps(list(collecteddata))
 
-        print(collecteddata_filter)
-        print(collecteddata.query)
-
         final_dict = {
             'criteria': collecteddata_filter,
             'collecteddata': collecteddata_serialized,
@@ -308,7 +302,6 @@ def filter_json(request, service, **kwargs):
     """
     final_dict = {
         'criteria': kwargs}
-    print(final_dict)
     JsonResponse(final_dict, safe=False)
 
 
@@ -333,6 +326,7 @@ class GenerateQuaterlyReport(View):
             total_achieved = 0
 
             for data in indicator:
+                baseline = float(data['baseline'])
                 program = data['program'][0]
                 start_date = program['start_date']
                 end_date = program['end_date']
@@ -340,24 +334,74 @@ class GenerateQuaterlyReport(View):
             start = pendulum.parse(start_date)
             end = pendulum.parse(end_date)
 
+            period = pendulum.period(start, end)
+
             for data in periodic_data:
                 for collecteddata in data['collecteddata_set']:
-                    print(collecteddata)
                     total_achieved += float(collecteddata['achieved'])
                     total_targeted += float(collecteddata['targeted'])
 
-                # print(data)
+            current = None
+            previous = None
+            count = 1
 
-            print('tag')
-            print(total_achieved)
-            print(total_targeted)
+            quaters = [dt for dt in period.range('months', 3)]
+            raw_quater_data = []
 
+            if quaters[-1] < end:
+                dt = quaters[-1]
+                dt = dt.add(months=3)
+                quaters.append(dt)
+
+            for dt in quaters:
+                target = 0
+                actual = 0
+                if dt == start:
+                    previous = dt
+                else:
+                    current = dt
+                    quater = pendulum.period(previous, current)
+
+                    for data in periodic_data:
+                        if pendulum.parse(data['end_date']) in quater:
+                            for collecteddata in data['collecteddata_set']:
+                                target += float(collecteddata['targeted'])
+                                actual += float(collecteddata['achieved'])
+
+                    name = 'Quater ' + str(count)
+
+                    if target == 0 and actual == 0:
+                        perct_met = "0%"
+                    elif target > baseline:
+                        perct_met = math.floor(actual / target * 100)
+                        perct_met = str(perct_met) + "%"
+                    elif target < baseline:
+                        perct_met = math.floor(((target - actual / target) + 1) * 100)
+                        perct_met = str(perct_met) + "%"
+                    raw_quater_data.append(dict(
+                        name=name,
+                        target=target,
+                        actual=actual,
+                        perct_met=perct_met
+                    ))
+                    count += 1
+
+                    previous = dt
+
+            if total_targeted > baseline:
+                eop_met = math.floor(total_achieved / total_targeted * 100)
+                eop_met = str(eop_met) + "%"
+            elif total_targeted < baseline:
+                eop_met = math.floor((baseline - total_achieved) / (baseline - total_targeted) * 100)
+                eop_met = str(eop_met) + "%"
 
             raw_data.append(dict(
                 indicator=indicator,
                 periodic_data=periodic_data,
                 total_achieved=total_achieved,
                 total_targeted=total_targeted,
+                total_perct_met=eop_met,
+                raw_data=raw_quater_data
             ))
 
-        return None
+        return JsonResponse({'data': raw_data})

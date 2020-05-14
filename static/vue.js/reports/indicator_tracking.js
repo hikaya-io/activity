@@ -12,6 +12,13 @@ new Vue({
         disabled_class: true,
         start_date: '',
         end_date:'',
+        report_data: null,
+        report_start: null,
+        report_end: null,
+        row_header_data: ['No.', 'Indicator', 'Level', 'Unit of Measure', 'Baseline', 'Target', 'Actual', '% Met'],
+        row_body_data: [],
+        loading : false,
+        no_data: true
     },
 
     beforeMount: function() {
@@ -42,7 +49,6 @@ new Vue({
             this.reporting_periods = []
 
             const diff = end.diff(start, 'months', true)
-            console.log(diff)
 
             if(Number(diff) >= 12){
                 this.reporting_periods = [ monthly, quaterly, annually]
@@ -55,28 +61,69 @@ new Vue({
 
         },
 
-        generateReport: function(){
-            try {
-				const response = this.makeRequest(
-					'GET',
-					`/reports/quaterly_report/${this.program_id}/${this.reporting_period_id}`
-				);
-				if (response) {
-					this.$validator.reset();
-				}
-			} catch (error) {
-				toastr.error('There was a problem saving');
-			}
-        },
 
         processForm: function() {
 			this.$validator.validateAll().then(res => {
 				if (res) {
-                    console.log('here')
+                    this.loading = true
+                    this.no_data = false
+                    this.report_data = null
 					this.generateReport()
 				}
 			});
-		},
+        },
+        
+        async generateReport(){
+            try {
+				const response = await this.makeRequest(
+					'GET',
+					`/reports/quaterly_report/${this.program_id}/${this.reporting_period_id}`
+				);
+				if (response) {
+                    this.report_data = response.data.data
+                    this.report_start = moment(this.report_data[0].indicator[0].program[0].start_date).format('MMMM DD, YYYY')
+                    this.report_end = moment(this.report_data[0].indicator[0].program[0].end_date).format('MMMM DD, YYYY')
+
+                    this.report_data[0].raw_data.forEach(data =>{
+                        this.row_header_data.push('Target')
+                        this.row_header_data.push('Actual')
+                        this.row_header_data.push('% Met')
+                    })
+
+                    this.report_data.forEach(data =>{
+                        let level_name = null
+
+                        if (data.indicator[0].level.length > 0){
+                            level_name = data.indicator[0].level[0].name
+                        }
+                        let raw_table_data = {
+                        'number': data.indicator[0].number || "-",
+                        'name': data.indicator[0].name,
+                        'level': level_name || "-",
+                        'unit_of_measure': data.indicator[0].unit_of_measure || "-",
+                        'baseline': data.indicator[0].baseline,
+                        'total_target': data.total_targeted,
+                        'total_achieved': data.total_achieved,
+                        'total_perct_met': data.total_perct_met,
+                        'raw': []
+                        }
+
+                        data.raw_data.forEach(row => {
+                            raw_table_data.raw.push(row.target || '-')
+                            raw_table_data.raw.push(row.actual || '-')
+                            raw_table_data.raw.push(row.perct_met)
+                        })
+
+                        this.row_body_data.push(raw_table_data)
+                    })
+                         
+                    this.$validator.reset();
+                    this.loading = false
+				}
+			} catch (error) {
+				toastr.error('There was a problem generating report');
+			}
+        },
         
     },
 

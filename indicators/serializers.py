@@ -36,7 +36,7 @@ class IndicatorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Indicator
-        fields = ['id', 'name', 'lop_target', 'baseline', 'rationale_for_target', 'disaggregation', 'program', 'level']
+        fields = ['id', 'name', 'lop_target', 'baseline', 'rationale_for_target', 'number','unit_of_measure','disaggregation', 'program', 'level']
 
 
 class DisaggregationValueSerializer(serializers.ModelSerializer):
