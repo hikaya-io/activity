@@ -4,7 +4,7 @@
 import uuid
 from datetime import datetime
 from django.db import models
-from workflow.models import Program, Office, Stakeholder, Site, Contact, ActivityUser
+from workflow.models import Program, Office, Stakeholder, SiteProfile, Contact, ActivityUser
 from .case import Case
 from django.core.exceptions import ValidationError
 
@@ -83,7 +83,7 @@ class Service(CreatedModifiedBy, StartEndDates, models.Model):
     office = models.ForeignKey(
         Office, null=True, blank=True, on_delete=models.SET_NULL)
     site = models.ForeignKey(
-        Site, null=True, blank=True, on_delete=models.SET_NULL)
+        SiteProfile, null=True, blank=True, on_delete=models.SET_NULL)
     # Can an implementer be in charge of multiple services?
     implementer = models.ForeignKey(
         Stakeholder, null=True, blank=True, on_delete=models.SET_NULL)

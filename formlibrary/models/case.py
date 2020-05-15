@@ -26,7 +26,6 @@ class Household(Case):
     name = models.CharField(max_length=255)
 
 
-
 class Individual(models.Model):
     """
     Individual, or person.
