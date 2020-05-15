@@ -74,7 +74,7 @@ class Service(CreatedModifiedBy, StartEndDates, models.Model):
     Abstract base class for all kinds of offered services.
     Spec: https://github.com/hikaya-io/activity/issues/412
     """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(max_length=550, null=True, blank=True)
     # Is a Program required for any type of service?

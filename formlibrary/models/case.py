@@ -14,7 +14,7 @@ class Case(models.Model):
     """
     # ! If Individuals already exist in the database, we change its ID
     # ! to UUID type, and hence can inherit from Case
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     label = models.CharField(max_length=255)
 
 
