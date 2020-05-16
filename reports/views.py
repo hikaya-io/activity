@@ -3,8 +3,8 @@
 
 from django.views.generic import View
 from workflow.models import ProjectAgreement, Program
-from indicators.models import CollectedData, Indicator, IndicatorType, PeriodicTarget, Level
-from indicators.serializers import CollectedDataSerializer, IndicatorSerializer, PeriodicTargetSerializer
+from indicators.models import CollectedData, Indicator, PeriodicTarget
+from indicators.serializers import IndicatorSerializer, PeriodicTargetSerializer
 
 from django.db.models import Q
 from workflow.mixins import AjaxableResponseMixin
@@ -13,7 +13,7 @@ from django.http import HttpResponse, JsonResponse
 import json
 import simplejson
 import pendulum
-import math  
+import math
 
 from workflow.export import ProjectAgreementResource
 from workflow.export import ProgramResource
@@ -23,9 +23,7 @@ from indicators.export import IndicatorResource
 from django.views.generic.list import ListView
 from django.shortcuts import render
 
-reporting_periods = [{"id": 1, "label": "Monthly"},
-                     {"id": 2, "label": "Quarterly"},
-                     {"id": 3, "label": "Annually"}]
+from .utils import create_periods_list
 
 
 def make_filter(my_request):
@@ -305,12 +303,15 @@ def filter_json(request, service, **kwargs):
     JsonResponse(final_dict, safe=False)
 
 
-class GenerateQuaterlyReport(View):
+class GenerateReport(View):
 
     def get(self, request, *args, **kwargs):
         program_id = int(self.kwargs.get('program_id'))
         reporting_id = int(self.kwargs.get('reporting_id'))
         raw_data = []
+        reporting_periods = [{"id": 1, "label": "Month"},
+                             {"id": 2, "label": "Quarter"},
+                             {"id": 3, "label": "Year"}]
 
         for report in reporting_periods:
             if report['id'] == reporting_id:
@@ -344,31 +345,26 @@ class GenerateQuaterlyReport(View):
             current = None
             previous = None
             count = 1
+            raw_period_data = []
 
-            quaters = [dt for dt in period.range('months', 3)]
-            raw_quater_data = []
+            periods = create_periods_list(report_period, period, end)
 
-            if quaters[-1] < end:
-                dt = quaters[-1]
-                dt = dt.add(months=3)
-                quaters.append(dt)
-
-            for dt in quaters:
+            for dt in periods:
                 target = 0
                 actual = 0
                 if dt == start:
                     previous = dt
                 else:
                     current = dt
-                    quater = pendulum.period(previous, current)
+                    period = pendulum.period(previous, current)
 
                     for data in periodic_data:
-                        if pendulum.parse(data['end_date']) in quater:
+                        if pendulum.parse(data['end_date']) in period:
                             for collecteddata in data['collecteddata_set']:
                                 target += float(collecteddata['targeted'])
                                 actual += float(collecteddata['achieved'])
 
-                    name = 'Quater ' + str(count)
+                    name = str(report_period) + ' ' + str(count)
 
                     if target == 0 and actual == 0:
                         perct_met = "0%"
@@ -378,7 +374,7 @@ class GenerateQuaterlyReport(View):
                     elif target < baseline:
                         perct_met = math.floor(((target - actual / target) + 1) * 100)
                         perct_met = str(perct_met) + "%"
-                    raw_quater_data.append(dict(
+                    raw_period_data.append(dict(
                         name=name,
                         target=target,
                         actual=actual,
@@ -401,7 +397,7 @@ class GenerateQuaterlyReport(View):
                 total_achieved=total_achieved,
                 total_targeted=total_targeted,
                 total_perct_met=eop_met,
-                raw_data=raw_quater_data
+                raw_data=raw_period_data
             ))
 
         return JsonResponse({'data': raw_data})

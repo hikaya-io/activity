@@ -41,20 +41,20 @@ new Vue({
         },
 
         generatePeriods: function(start_date, end_date){
-            const start = moment(start_date)
-            const end = moment(end_date)
+            const start = moment(start_date).startOf("month")
+            const end = moment(end_date).endOf("month")
             const monthly = {"id":'1', "label":"Monthly"}
-            const quaterly = {"id":'2', "label":"Quarterly"}
+            const quarterly = {"id":'2', "label":"Quarterly"}
             const annually = {"id":'3', "label":"Annually"}
             this.reporting_periods = []
 
             const diff = end.diff(start, 'months', true)
 
-            if(Number(diff) >= 12){
-                this.reporting_periods = [ monthly, quaterly, annually]
+            if(Number(diff) > 11.9){
+                this.reporting_periods = [ monthly, quarterly, annually]
 
             }else if(Number(diff) < 12 && Number(diff) >= 6){
-                this.reporting_periods = [ monthly, quaterly]
+                this.reporting_periods = [ monthly, quarterly]
             }else if(Number(diff) < 6){
                 this.reporting_periods = [ monthly]
             }
@@ -68,6 +68,8 @@ new Vue({
                     this.loading = true
                     this.no_data = false
                     this.report_data = null
+                    this.row_header_data = ['No.', 'Indicator', 'Level', 'Unit of Measure', 'Baseline', 'Target', 'Actual', '% Met'],
+                    this.row_body_data = []
 					this.generateReport()
 				}
 			});
@@ -77,7 +79,7 @@ new Vue({
             try {
 				const response = await this.makeRequest(
 					'GET',
-					`/reports/quaterly_report/${this.program_id}/${this.reporting_period_id}`
+					`/reports/quarterly_report/${this.program_id}/${this.reporting_period_id}`
 				);
 				if (response) {
                     this.report_data = response.data.data

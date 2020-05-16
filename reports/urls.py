@@ -3,7 +3,7 @@
 
 from .views import (
     ReportData, IndicatorReportData, CollectedDataReportData, ProjectReportData,
-    IndicatorTrackingHome, GenerateQuaterlyReport
+    IndicatorTrackingHome, GenerateReport
 )
 from django.urls import path, re_path
 
@@ -23,8 +23,8 @@ urlpatterns = [
 
 
     re_path(
-          r'quaterly_report/(?P<program_id>.*)/(?P<reporting_id>.*)',
-          GenerateQuaterlyReport.as_view(),
-          name='quaterly_report'
+          r'quarterly_report/(?P<program_id>.*)/(?P<reporting_id>.*)',
+          GenerateReport.as_view(),
+          name='quarterly_report'
     ),
 ]
