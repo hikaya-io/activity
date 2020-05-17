@@ -39,7 +39,7 @@ load-plugins=
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
 # I0011     locally-disabled   (module-level pylint overrides)
-disable=I0011,W0232,too-few-public-methods,abstract-class-little-used,abstract-class-not-used,too-many-public-methods,no-self-use,too-many-instance-attributes,duplicate-code,too-many-arguments,too-many-locals,too-many-lines,missing-class-docstring
+disable=I0011,W0232,too-few-public-methods,abstract-class-little-used,abstract-class-not-used,too-many-public-methods,no-self-use,too-many-instance-attributes,duplicate-code,too-many-arguments,too-many-locals,too-many-lines,missing-class-docstring,missing-function-docstring
 
 
 [REPORTS]
@@ -134,10 +134,10 @@ function-rgx=[a-z_][a-z0-9_]{2,50}$
 method-rgx=[a-z_][a-z0-9_]{2,30}$
 
 # Regular expression which should only match correct instance attribute names
-attr-rgx=[a-z_][a-z0-9_]{2,30}$
+attr-rgx=[a-z_][a-z0-9_]{1,30}$
 
 # Regular expression which should only match correct argument names
-argument-rgx=[a-z_][a-z0-9_]{2,30}$
+argument-rgx=[a-z_][a-z0-9_]{1,30}$
 
 # Regular expression which should only match correct variable names
 variable-rgx=[a-z_][a-z0-9_]{1,30}$
