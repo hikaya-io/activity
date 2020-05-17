@@ -39,7 +39,7 @@ load-plugins=
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
 # I0011     locally-disabled   (module-level pylint overrides)
-disable=I0011,W0232,too-few-public-methods,abstract-class-little-used,abstract-class-not-used,too-many-public-methods,no-self-use,too-many-instance-attributes,duplicate-code,too-many-arguments,too-many-locals,too-many-lines,missing-class-docstring,missing-function-docstring
+disable=I0011,W0232,too-few-public-methods,abstract-class-little-used,abstract-class-not-used,too-many-public-methods,no-self-use,too-many-instance-attributes,duplicate-code,too-many-arguments,too-many-locals,too-many-lines,missing-class-docstring,missing-function-docstring,missing-module-docstring
 
 
 [REPORTS]
