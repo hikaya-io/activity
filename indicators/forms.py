@@ -73,7 +73,8 @@ class IndicatorForm(forms.ModelForm):
         self.fields['program'].widget.attrs['readonly'] = "readonly"
         self.fields['target_frequency_start'].widget.attrs[
             'class'] = 'monthPicker'
-        self.fields['key_performance_indicator'].label = 'Key Performance Indicator for this {}'.format(self.organization.level_1_label)
+        self.fields['key_performance_indicator'].label = """Key Performance Indicator for
+             this {}""".format(self.organization.level_1_label)
         self.fields['objectives'].label = '{} objective'.format(self.organization.level_1_label)
         self.fields['program'].label = '{}'.format(self.organization.level_1_label)
         self.fields['level'].queryset = Level.objects.filter().order_by('sort', 'id')
@@ -140,7 +141,7 @@ class CollectedDataForm(forms.ModelForm):
         try:
             int(self.indicator)
             self.indicator = Indicator.objects.get(id=int(self.indicator))
-        except TypeError as e:
+        except TypeError:
             pass
         self.fields['target_frequency'].required = False
 
@@ -255,5 +256,3 @@ class LevelForm(forms.ModelForm):
             Submit('submit', 'Save Changes', css_class='btn-md btn-success'),
         )
         super(LevelForm, self).__init__(*args, **kwargs)
-
-
