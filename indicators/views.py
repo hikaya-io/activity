@@ -208,7 +208,8 @@ class IndicatorList(ListView):
 class IndicatorTarget(GView):
     def get(self, request, *args, **kwargs):
         indicator_id = int(self.kwargs['indicator_id'])
-        per_targets = PeriodicTarget.objects.filter(indicator=indicator_id).order_by('customsort', 'create_date', 'period')
+        per_targets = PeriodicTarget.objects.filter(indicator=indicator_id)\
+            .order_by('customsort', 'create_date', 'period')
         targets = []
         for target in per_targets:
             targets.append({"pk": target.id, "period": str(target), "target": target.target})
@@ -747,7 +748,8 @@ class CollectedDataAdd(GView):
                 for item in disaggs_list:
                     collected_data.disaggregation_value.create(
                         value=item["value"],
-                        disaggregation_label=DisaggregationLabel.objects.filter(id=int(item["disaggregation_label"])).first(),
+                        disaggregation_label=DisaggregationLabel.objects
+                        .filter(id=int(item["disaggregation_label"])).first(),
                     )
             collecteddata_set = CollectedData.objects.filter(id=model_to_dict(collected_data)['id']).first()
             return JsonResponse({'collected_data': CollectedDataSerializer(collecteddata_set).data})
@@ -1251,7 +1253,8 @@ def collected_data_json(AjaxableResponseMixin, indicator, program):
 
     return JsonResponse({
         'periodictargets': PeriodicTargetSerializer(periodic_targets, many=True).data,
-        'collecteddata_without_periodictargets': CollectedDataSerializer(collected_data_without_periodic_targets, many=True).data,
+        'collecteddata_without_periodictargets':
+        CollectedDataSerializer(collected_data_without_periodic_targets, many=True).data,
         'collected_sum': collected_sum,
         'indicator': IndicatorSerializer(ind).data,
         'program_id': program
