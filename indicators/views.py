@@ -2259,7 +2259,6 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
                 status=status.HTTP_201_CREATED
             )
 
-        print(serialized.errors)
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, *args, **kwargs):
