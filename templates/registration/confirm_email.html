@@ -1,14 +1,16 @@
 {% extends "base.html" %} {% block content %}
+{% load i18n %}
+
 <div class="container auth-container">
   <div class="row">
     <div class="col-md-10 col-md-offset-1">
-      <h1>Confirm Your Email Address</h1>
+      <h1>{% trans 'Confirm Your Email Address' %}</h1>
       <div class="panel panel-default auth-main">
         <div class="panel-body">
           <div class="text-center">
               <div class="form-group">
-                  <p>Proceed to your email account to confirm your email address to activate your account</p>
-                <a role="button" href="/accounts/login/" class="btn btn-success">Login</a>
+                  <p>{% trans 'Proceed to your email account to confirm your email address to activate your account' %}</p>
+                <a role="button" href="/accounts/login/" class="btn btn-success">{% trans 'Login' %}</a>
               </div>
           </div>
         </div>

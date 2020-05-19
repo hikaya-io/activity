@@ -22,25 +22,44 @@ new Vue({
         showTable: false,
         disabledClass: false,
         targets: [],
+        level_1_label: '',
         sum: 0,
         target_value: {},
         target_period_data: [],
-        frequencies: [{"id": "3", "text":"Annual"},
-                      {"id": "4", "text":"Semi-annual"},
-                      {"id": "5", "text":"Tri-annual"},
-                      {"id": "6", "text":"Quarterly"},
-                      {"id": "7", "text":"Monthly"}],       
+        frequencies: null,
+        indicatorList: []       
     },
     beforeMount: function() {
 		this.makeRequest('GET', '/indicators/periodic_target/')
 			.then(response => {
 				response.data.forEach(target => {
                     this.target_period_data.push(target)
-                })
+                })                
 			})
 			.catch(e => {
 				toastr.error('There was a problem loading targets from the database');
-			});
+            });
+            
+        this.makeRequest('GET', '/indicators/indicator_data')
+            .then(response => {
+                if(response.data){
+                    this.level_1_label = response.data.level_1_label
+                    this.frequencies = [{"id": "1", "text":`Life of ${this.level_1_label}`},
+                                        {"id": "3", "text":"Every Year"},
+                                        {"id": "4", "text":"Every Six Months"},
+                                        {"id": "5", "text":"Every Four Months"},
+                                        {"id": "6", "text":"Every Three Months"},
+                                        {"id": "7", "text":"Every Month"},
+                                        {"id": "8", "text":"Every Week"},
+                                        {"id": "9", "text":"Every Two Weeks"}]
+
+                    this.indicatorList = response.data.indicators
+
+                }
+            })
+            .catch(e => {
+				toastr.error('There was a problem loading Indicators from the database');
+            });
 	},
     methods: {
         makeRequest(method, url, data = null) {
@@ -85,7 +104,12 @@ new Vue({
                         case "7":
                           this.generateMonthlyTargets(periodStarts);
                           break;
-                
+                        case "8":
+                          this.generateWeeklyTargets(periodStarts);
+                          break;
+                        case "9":
+                          this.generateBiWeeklyTargets(periodStarts);
+                          break;
                         default:
                           break;
                     }
@@ -112,6 +136,68 @@ new Vue({
 
         showFields: function(){
             this.show = true
+
+            if (this.target_frequency == "1"){
+                this.generateLOPTargets();
+            }
+        },
+
+        generateLOPTargets: function(){
+            this.showTable = true
+            this.disabledClass = true
+            const period = `Life of ${this.level_1_label}`
+            const pk = 1
+            
+            this.indicatorList.forEach(indicator => {
+                if (indicator.id == this.indicator_id){
+                    const program = indicator.program[0]
+                    const start_date = moment(program.start_date).format("MMM DD, YYYY");
+                    const end_date = moment(program.end_date).format("MMM DD, YYYY");
+                    this.target_frequency_start = moment(program.start_date).format("YYYY-MM");
+                    this.targets = [...this.targets, { pk, start_date, end_date, period}];
+                }
+            })
+
+        },
+
+        generateWeeklyTargets: function(periodStart){
+            for (let i = 1; i <= this.number_of_target_periods; i++) {
+                const period = `Week ${i}`
+                const pk = `${i}`
+                let periodEnds = moment(periodStart)
+                let start_date = moment(periodStart)
+                            .startOf("day")
+                            .format("MMM DD, YYYY");
+                let end_date = moment(periodEnds)
+                            .add(7, "days")
+                            .endOf("day")
+                            .format("MMM DD, YYYY");
+
+                this.targets = [...this.targets, { pk, start_date, end_date, period}];
+
+                periodStart = moment(periodEnds).add(8, "days");
+            } 
+
+        },
+
+        generateBiWeeklyTargets: function(periodStart){
+            for (let i = 1; i <= this.number_of_target_periods; i++) {
+                const period = `Weeks ${i}`
+                const pk = `${i}`
+                let periodEnds = moment(periodStart)
+                let start_date = moment(periodStart)
+                            .startOf("day")
+                            .format("MMM DD, YYYY");
+                let end_date = moment(periodEnds)
+                            .add(14 ,"days")
+                            .endOf("day")
+                            .format("MMM DD, YYYY");
+
+                this.targets = [...this.targets, { pk, start_date, end_date, period}];
+
+                periodStart = moment(periodEnds).add(15, "days");
+            } 
+
         },
 
         generateYearlyTargets: function(periodStart){
@@ -127,10 +213,7 @@ new Vue({
                             .endOf("month")
                             .format("MMM DD, YYYY");
 
-                console.log(pk)
-                console.log(this.targets)
                 this.targets = [...this.targets, { pk, start_date, end_date, period}];
-                console.log(this.targets)
 
                 periodStart = moment(periodEnds).add(12, "months");
             }
@@ -235,12 +318,12 @@ new Vue({
             this.modalHeader = "Add Target Periods"
 
             this.target_period_data.forEach(target =>{
-                if(target.indicator.indicator_id == this.indicator_id){
+                if(target.indicator.id == this.indicator_id){
                     this.isEdit = true
-                    this.overall_target = target.indicator.indicator_lop
-                    this.sum = target.indicator.indicator_lop
+                    this.overall_target = target.indicator.lop_target
+                    this.sum = target.indicator.lop_target
                     this.baseline= target.indicator.baseline
-                    this.rationale= target.indicator.rationale
+                    this.rationale= target.indicator.rationale_for_target
                     const pk = target.id
                     const start_date = target.start_date
                     const end_date = target.end_date
@@ -271,6 +354,12 @@ new Vue({
                     this.target_frequency = "7"
                 }else if(this.targets[0].period.includes('Quarter')){
                     this.target_frequency = "6"
+                }else if(this.targets[0].period.includes('Weeks')){
+                    this.target_frequency = "9"
+                }else if(this.targets[0].period.includes('Week')){
+                    this.target_frequency = "8"
+                }else if(this.targets[0].period.includes('life')){
+                    this.target_frequency = "1"
                 }
 
                 
@@ -308,10 +397,7 @@ new Vue({
             for (var key in this.target_value) {
                 if (this.target_value.hasOwnProperty(key)) {
                     this.targets.forEach((target =>{
-                        console.log(typeof(key))
-                        console.log(target)
                         if (parseInt(key) === parseInt(target.pk)){
-                            console.log("sound")
                             target["target"] = this.target_value[key]
                         }
                     }))
@@ -362,10 +448,7 @@ new Vue({
             for (var key in this.target_value) {
                 if (this.target_value.hasOwnProperty(key)) {
                     this.targets.forEach((target =>{
-                        console.log(typeof(key))
-                        console.log(target)
                         if (parseInt(key) === parseInt(target.pk)){
-                            console.log("sound")
                             target["target"] = this.target_value[key]
                         }
                     }))

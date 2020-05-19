@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block page_title %}Documentation{% endblock %}
+{% load i18n %}
+
+{% block page_title %}{% trans 'Documentation' %}{% endblock %}
 
 {% block content %}
 <ul class="list-group">
@@ -10,7 +12,7 @@
     </div>
     </li>
 {% empty %}
-    <li class="list-group-item">No Documentation yet.</li>
+    <li class="list-group-item">{% trans 'No Documentation yet.' %}</li>
 {% endfor %}
 </ul>
 

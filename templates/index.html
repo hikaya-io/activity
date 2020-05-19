@@ -1,5 +1,6 @@
 {% extends "base.html" %} 
-{% load static %} 
+{% load i18n %}
+{% load static %}
 {% load humanize %} 
 {% block content%} 
 {% include './shared/level1_modal_form.html' %}
@@ -32,12 +33,12 @@
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">My Dashboard</h4>
+      <h4 class="page-title">{% trans 'My Dashboard' %}</h4>
     </div>
 
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
-        <span  class="text-filter">Filter by</span>
+        <span  class="text-filter">{% trans 'Filter by' %}</span>
       </div>
       <div class="sub-nav-item">
         <div class="btn-group" role="group">
@@ -62,7 +63,7 @@
                 data-toggle="tooltip"
                 data-placement="left"
                 title="All Programs"
-                >-- All --</a
+                >-- {% trans 'All' %} --</a
               >
             </li>
 
@@ -103,7 +104,7 @@
   <!-- workflows -->
   <div class="panel panel-dashboard rounded-0 mb-0">
     <div class="panel-heading white">
-      <h4 class="panel-title">Workflows</h4>
+      <h4 class="panel-title">{% trans 'Workflows' %}</h4>
     </div>
 
     <div class="panel-body">
@@ -144,11 +145,11 @@
               <a class="box box-info">
                 <p class="box-info-label">
                   {{ request.user.activity_user.organization.level_2_label }}
-                  Tracking
+                  {% trans 'Tracking' %}
                 </p>
                 <p class="box-info-number">{{ get_projects_tracking_count }}</p>
                 <p class="box-info-text">
-                  out of {{ get_projects | length }}
+                  {% trans 'out of' %} {{ get_projects | length }}
                   {{ request.user.activity_user.organization.level_2_label }}
                 </p>
               </a>
@@ -203,10 +204,10 @@
 
             <div class="col-md-12 col-xs-6">
               <a class="box box-info" role="button">
-                <p class="box-info-label">KPIs</p>
+                <p class="box-info-label">{% trans 'KPIs' %}</p>
                 <p class="box-info-number">{{ get_indicators_kpi_count }}</p>
                 <p class="box-info-text">
-                  out of {{ get_indicators | length }}
+                  {% trans 'out of' %} {{ get_indicators | length }}
                   {{ user.activity_user.organization.indicator_label }}
                 </p>
               </a>
@@ -214,21 +215,21 @@
 
             <div class="col-md-12 col-xs-6">
               <a class="box box-info" role="button">
-                <p class="box-info-label">Collected Data</p>
+                <p class="box-info-label">{% trans 'Collected Data' %}</p>
                 <p class="box-info-number">{{ get_collected_data_count }}</p>
               </a>
             </div>
           </div>
         </div>
         <div class="col-md-10">
-          <p>Latest {{get_latest_indicators | length }} Key Performance Indicators</p>
+          <p>{% trans 'Latest' %} {{get_latest_indicators | length }} {% trans 'Key Performance Indicators' %}</p>
           <table class="table" id="indicatorTargetActualsTable">
             <thead>
               <tr>
-                <th>Level</th>
-                <th>Indicator</th>
-                <th class="text-right">Target</th>
-                <th class="text-right">Actual</th>
+                <th>{% trans 'Level' %}</th>
+                <th>{% trans 'Indicator' %}</th>
+                <th class="text-right">{% trans 'Target' %}</th>
+                <th class="text-right">{% trans 'Actual' %}</th>
               </tr>
             </thead>
             <tbody>
@@ -256,7 +257,7 @@
   <!-- components -->
   <div class="panel panel-dashboard rounded-0 mb-0">
     <div class="panel-heading white">
-      <h4 class="panel-title">Components</h4>
+      <h4 class="panel-title">{% trans 'Components' %}</h4>
     </div>
 
     <div class="panel-body">
@@ -271,10 +272,10 @@
                   selected_program.id
                 }}/0/list/"
               >
-                <p class="box-info-label">Active {{ user.activity_user.organization.site_label }}</p>
+                <p class="box-info-label">{% trans 'Active' %} {{ user.activity_user.organization.site_label }}</p>
                 <p class="box-info-number">{{ get_active_locations_count }}</p>
                 <p class="box-info-text">
-                  out of {{ get_locations_count }} {{ user.activity_user.organization.site_label }}
+                  {% trans 'out of' %} {{ get_locations_count }} {{ user.activity_user.organization.site_label }}
                 </p>
               </a>
               {% else %}
@@ -282,10 +283,10 @@
                 class="box box-info"
                 href="/workflow/siteprofile_list/0/0/list/"
               >
-                <p class="box-info-label">Active Locations</p>
+                <p class="box-info-label">{% trans 'Active Locations' %}</p>
                 <p class="box-info-number">{{ get_active_locations_count }}</p>
                 <p class="box-info-text">
-                  out of {{ get_locations_count }} locations
+                  {% trans 'out of' %} {{ get_locations_count }} {% trans 'locations' %}
                 </p>
               </a>
               {% endif %}
@@ -297,15 +298,15 @@
                 class="box box-info"
                 href="/workflow/documentation_list/{{ selected_program.id }}/0/"
               >
-                <p class="box-info-label">Documents</p>
+                <p class="box-info-label">{% trans 'Documents' %}</p>
                 <p class="box-info-number">{{ get_documents_count }}</p>
-                <p class="box-info-text">linked to {{ user.activity_user.organization.level_1_label }}</p>
+                <p class="box-info-text">{% trans 'linked to' %} {{ user.activity_user.organization.level_1_label }}</p>
               </a>
               {% else %}
               <a class="box box-info" href="/workflow/documentation_list/0/0/">
-                <p class="box-info-label">Documents</p>
+                <p class="box-info-label">{% trans 'Documents' %}</p>
                 <p class="box-info-number">{{ get_documents_count }}</p>
-                <p class="box-info-text">linked to {{ user.activity_user.organization.level_1_label }}</p>
+                <p class="box-info-text">{% trans 'linked to' %} {{ user.activity_user.organization.level_1_label }}</p>
               </a>
               {% endif %}
             </div>
@@ -319,7 +320,7 @@
                 <p class="box-info-label">{{ user.activity_user.organization.stakeholder_label }}</p>
                 <p class="box-info-number">{{ get_stakeholders_count }}</p>
                 <p class="box-info-text">
-                  with {{ get_contacts_count }} contacts
+                  {% trans 'with' %} {{ get_contacts_count }} {% trans 'contacts' %}
                 </p>
               </a>
               {% else %}
@@ -327,7 +328,7 @@
                 <p class="box-info-label">{{ user.activity_user.organization.stakeholder_label }}</p>
                 <p class="box-info-number">{{ get_stakeholders_count }}</p>
                 <p class="box-info-text">
-                  with {{ get_contacts_count }} contacts
+                  {% trans 'with' %} {{ get_contacts_count }} {% trans 'contacts' %}
                 </p>
               </a>
               {% endif %}

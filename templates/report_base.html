@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -50,18 +52,18 @@
             </div>
             <div class="navbar-collapse collapse" role="navigation">
                 <ul class="nav navbar-nav">
-                    <li class="{{ home_tab }}"><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li class="{{ home_tab }}"><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home"></span> {% trans 'Home' %}</a></li>
 
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Workflow<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Workflow' %}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/workflow/dashboard/0/"><span class="glyphicon glyphicon-dashboard"></span> Program Dashboard</a></li>
+                            <li><a href="/workflow/dashboard/0/"><span class="glyphicon glyphicon-dashboard"></span> {% trans 'Program Dashboard' %}</a></li>
                             <!-- CONFUSING TO USER FOR NOW TAKING OUT MAY ADD BACK IN IF NEEDED
                             <li><a href="/workflow/projectproposal_list/0/"><span class="glyphicon glyphicon-th-list"></span> Project Proposal</a></li>
                             <li><a href="/workflow/projectagreement_list/0/"><span class="glyphicon glyphicon-th-list"></span> Project Agreement</a></li>
                             <li><a href="/workflow/projectcomplete_list/0/"><span class="glyphicon glyphicon-th-list"></span> Project Complete</a></li>
                             -->
-                            <li><a href="/workflow/documentation_list/0/"><span class="glyphicon glyphicon-th-list"></span> Documents</a></li>
+                            <li><a href="/workflow/documentation_list/0/"><span class="glyphicon glyphicon-th-list"></span> {% trans 'Documents' %}</a></li>
                             <li><a href="/workflow/siteprofile_list/0/0/"><span class="glyphicon glyphicon-th-list"></span> {{ user.activity_user.organization.site_label }}</a></li>
                             <li><a href="/workflow/stakeholder_list/0/"><span class="glyphicon glyphicon-th-list"></span> {{ user.activity_user.organization.stakeholder_label }}</a></li>
                         </ul>
@@ -70,14 +72,14 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.activity_user.organization.indicator_label }}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/indicators/home/0/0/0/"><span class="glyphicon glyphicon-dashboard"></span> Indicator Planning</a></li>
-                            <li><a href="/indicators/collecteddata/0/0/"><span class="glyphicon glyphicon-th-list"></span> Indicator Data</a></li>
-                            <li><a href="/indicators/report/0/0/0/"><span class="glyphicon glyphicon-check"></span> Indicator Library</a></li>
+                            <li><a href="/indicators/home/0/0/0/"><span class="glyphicon glyphicon-dashboard"></span> {% trans 'Indicator Planning' %}</a></li>
+                            <li><a href="/indicators/collecteddata/0/0/"><span class="glyphicon glyphicon-th-list"></span> {% trans 'Indicator Data' %}</a></li>
+                            <li><a href="/indicators/report/0/0/0/"><span class="glyphicon glyphicon-check"></span> {% trans 'Indicator Library' %}</a></li>
                         </ul>
                     </li>
 
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Form Library<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Form Library' %}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="/workflow/training_list/0/"><span class="glyphicon glyphicon-th-list"></span> {{ user.activity_user.organization.training_label }}</a></li>
                             <li><a href="/workflow/individual_list/0/"><span class="glyphicon glyphicon-th-list"></span> {{ user.activity_user.organization.individual_label }}</a></li>
@@ -85,11 +87,11 @@
                     </li>
 
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Reports' %}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/workflow/report/0/0/"><span class="glyphicon glyphicon-check"></span> Activity Report</a></li>
-                            <li><a href="/indicators/data/0/"><span class="glyphicon glyphicon-check"></span> Indicator Data Report</a></li>
-                            <li><a href="/workflow/report_builder" target="_new"><span class="glyphicon glyphicon-check"></span> Report Builder</a></li>
+                            <li><a href="/workflow/report/0/0/"><span class="glyphicon glyphicon-check"></span> {% trans 'Activity Report' %}</a></li>
+                            <li><a href="/indicators/data/0/"><span class="glyphicon glyphicon-check"></span> {% trans 'Indicator Data Report' %}</a></li>
+                            <li><a href="/workflow/report_builder" target="_new"><span class="glyphicon glyphicon-check"></span> {% trans 'Report Builder' %}</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -98,17 +100,17 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             {% if "demo" in request.build_absolute_uri %}
-                                <span class="label label-danger">DEMO SERVER</span>
+                                <span class="label label-danger">{% trans 'DEMO SERVER' %}</span>
                             {% elif  "127." in request.build_absolute_uri %}
-                                <span class="label label-danger">LOCAL SERVER</span>
+                                <span class="label label-danger">{% trans 'LOCAL SERVER' %}</span>
                             {% elif "dev" in request.build_absolute_uri %}
-                                <span class="label label-danger">DEV SERVER</span>
+                                <span class="label label-danger">{% trans 'DEV SERVER' %}</span>
                             {% endif %}
                             <span class="glyphicon glyphicon-user"></span> {{ user.userprofile.name }}<b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-lock"></span> Logout</a></li>
-                            <li><a href="{% url 'profile' %}"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                            <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-lock"></span> {% trans 'Logout' %}</a></li>
+                            <li><a href="{% url 'profile' %}"><span class="glyphicon glyphicon-user"></span> {% trans 'Profile' %}</a></li>
                             <li><a href="{% url 'profile' %}"><span>{{ user.userprofile.countries_list }}</span></a></li>
                         </ul>
                     </li><!-- .dropdown collapse -->
@@ -125,7 +127,7 @@
                     <div class="form-group">
                         <input type="password" name="password" placeholder="Password" class="form-control">
                     </div>
-                    <button type="submit" class="btn btn-success">Sign in</button>
+                    <button type="submit" class="btn btn-success">{% trans 'Sign in' %}</button>
                 </form>
                 {% endif %}
             </div><!-- .navbar-header collapse -->
@@ -169,7 +171,7 @@
                     <a href="http://www.hikaya.io" class="text-muted">Inspired in Kabul. Built in Portland.</a>
                 </div>
                 <div class="col-md-4 text-right">
-                    <a href="{% url 'documentation' %}" class="text-muted">Documentation</a> | <a href="{% url 'faq' %}" class="text-muted">FAQ</a> | <a onclick="newPopup('#','Activity Work - New Ticket'); return false;" href="#" class="text-muted">Feedback</a>
+                    <a href="{% url 'documentation' %}" class="text-muted">{% trans 'Documentation' %}</a> | <a href="{% url 'faq' %}" class="text-muted">{% trans 'FAQ' %}</a> | <a onclick="newPopup('#','Activity Work - New Ticket'); return false;" href="#" class="text-muted">{% trans 'Feedback' %}</a>
                 </div>
             </div>
         </div><!-- .footer collapse -->

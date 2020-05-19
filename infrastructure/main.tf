@@ -3,6 +3,7 @@ resource "digitalocean_kubernetes_cluster" "cluster" {
   name    = var.cluster_name
   region  = var.cluster_region
   version = var.kubernetes_version
+  tags    = [var.tags]
 
   # Node pool configuration. Allows for the use of variable to
   # make the whole configuration reusable. Sets autoscalling to
@@ -14,6 +15,7 @@ resource "digitalocean_kubernetes_cluster" "cluster" {
     auto_scale = true
     min_nodes  = var.min_node_number
     max_nodes  = var.max_node_number
+    tags    = [var.tags]
   }
 }
 
@@ -25,6 +27,7 @@ resource "digitalocean_database_cluster" "postgres-db" {
   size       = var.db_size
   region     = var.cluster_region
   node_count = 1
+  tags    = [var.tags]
 }
 
 # Configure database to be created

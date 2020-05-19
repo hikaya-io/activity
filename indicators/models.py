@@ -244,23 +244,23 @@ class IndicatorManager(models.Manager):
 
 class Indicator(models.Model):
     LOP = 1
-    MID_END = 2
     ANNUAL = 3
     SEMI_ANNUAL = 4
     TRI_ANNUAL = 5
     QUARTERLY = 6
     MONTHLY = 7
-    EVENT = 8
+    WEEKLY = 8
+    BIWEEKLY = 9
 
     TARGET_FREQUENCIES = (
         (LOP, 'Life of Program only'),
-        (MID_END, 'Midline and endline'),
-        (ANNUAL, 'Annual'),
-        (SEMI_ANNUAL, 'Semi-annual'),
-        (TRI_ANNUAL, 'Tri-annual'),
-        (QUARTERLY, 'Quarterly'),
-        (MONTHLY, 'Monthly'),
-        (EVENT, 'Event')
+        (ANNUAL, 'Every Year'),
+        (SEMI_ANNUAL, 'Every Six Months'),
+        (TRI_ANNUAL, 'Every Four Months'),
+        (QUARTERLY, 'Every Three Months'),
+        (MONTHLY, 'Every Month'),
+        (WEEKLY, 'Every Week'),
+        (BIWEEKLY, 'Every Two Weeks')
     )
 
     indicator_key = models.UUIDField(
@@ -452,9 +452,7 @@ class PeriodicTarget(models.Model):
     edit_date = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     def __str__(self):
-        if self.indicator.target_frequency == Indicator.LOP \
-                or self.indicator.target_frequency == Indicator.EVENT \
-                or self.indicator.target_frequency == Indicator.MID_END:
+        if self.indicator.target_frequency == Indicator.LOP:
             return self.period
         if self.start_date and self.end_date:
             return "%s (%s - %s)" % (

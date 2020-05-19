@@ -25,6 +25,7 @@ services:
       - POSTGRES_DB=activity_dev
     ports:
       - 5432:5432
+
   migration:
     build: .
     command: python manage.py migrate --noinput
