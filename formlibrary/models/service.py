@@ -69,7 +69,7 @@ class CreatedModifiedBy(models.Model):
     # TODO Get the current user in the save method? Is that possible?
 
 
-class Service(CreatedModifiedBy, StartEndDates, models.Model):
+class Service(CreatedModifiedBy, StartEndDates, CreatedModifiedDates, models.Model):
     """
     Abstract base class for all kinds of offered services.
     Spec: https://github.com/hikaya-io/activity/issues/412
@@ -91,10 +91,11 @@ class Service(CreatedModifiedBy, StartEndDates, models.Model):
     cases = models.ManyToManyField(Case, blank=True)
     contacts = models.ManyToManyField(Contact, blank=True)
     form_verified_by = models.CharField(max_length=255, null=True, blank=True)
-    form_filled_by = models.CharField(max_length=255, null=True, blank=True)
+    form_completed_by = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         abstract = True
+        ordering = ('name',)
 
     @property
     def total_individuals_supported(self):
