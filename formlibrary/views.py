@@ -3,18 +3,14 @@
 
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from django.core import serializers
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.mixins import ListModelMixin
 
 from .models import TrainingAttendance, Individual, Distribution
 from django.shortcuts import redirect
 
 from .forms import TrainingAttendanceForm, IndividualForm, DistributionForm
-from workflow.models import FormGuidance, Program, ProjectAgreement, ActivityUser
+from workflow.models import FormGuidance, Program, ProjectAgreement
 from django.utils.decorators import method_decorator
 from activity.util import get_country, group_excluded
 

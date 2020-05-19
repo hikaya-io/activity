@@ -9,20 +9,24 @@ class TrainingSerializer(serializers.ModelSerializer):
         model = TrainingAttendance
         fields = ['id', 'training_name', 'training_duration']
 
+
 class DistributionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Distribution
         fields = ['id', 'distribution_name']
+
 
 class SiteProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteProfile
         fields = ['id', 'name']
 
+
 class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
         fields = ['id', 'name']
+
 
 class IndividualSerializer(serializers.ModelSerializer):
     training = TrainingSerializer(many=True, read_only=True)

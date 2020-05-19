@@ -1733,7 +1733,7 @@ class LoggedUser(models.Model):
                     LoggedUser(username=user.username,
                                country=country, email=user.email).save()
 
-        except Exception as e:
+        except Exception:
             pass
 
     def logout_user(sender, request, user, **kwargs):
@@ -1757,7 +1757,7 @@ def get_user_country(request):
         response = json.loads(response)
         return response['country'].lower()
 
-    except Exception as e:
+    except Exception:
         response = "undefined"
         return response
 
