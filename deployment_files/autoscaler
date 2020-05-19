@@ -8,8 +8,8 @@ spec:
     apiVersion: apps/v1beta1
     kind: Deployment
     name: activity-app-${APPLICATION_ENV}
-  minReplicas: 2
-  maxReplicas: 8
+  minReplicas: ${MIN_PODS}
+  maxReplicas: ${MAX_PODS}
   metrics:
     - type: Resource
       resource:

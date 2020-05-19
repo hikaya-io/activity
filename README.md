@@ -16,7 +16,7 @@
   <i>A modern way for nonprofits to manage project activities and indicator results.<br/>Try out Activity using our hosted version at <a href="https://hikaya.io">hikaya.io</a>.</i>
   <br/>
   <br/>
-  <img src="static/img/example_app.png" alt="Activity" width="800" />
+  <img src="static/img/activity_home.png" alt="Activity" width="800" />
 </p>
 <p align="center">
   <a href="https://spectrum.chat/hikaya" rel="nofollow"><img src="https://withspectrum.github.io/badge/badge.svg" alt="Join the community on Spectrum"/></a>
@@ -109,33 +109,6 @@ Once your virtual environment is running, install the requirements.
 $ pip install -r requirements.txt
 ```
 
-### Install non-python dependencies
-
-1. **GDAL**
-
-On MacOs:
-
-```bash
-$ brew install gdal
-```
-
-On Windows:
-- You will need to download gdal core and gdal installer for your version of python.
-- Please read the following [instructions](https://pypi.org/project/GDAL/#windows) on how to properly install and test gdal.
-
-2. **Pango**
-
-On MacOs:
-
-```bash
-$ brew install pango
-```
-
-On Windows:
-- You will need Pango and Cairo for the application to run.
-- The runtime installer can be found [here](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases)
-- Download and install GTK+-3. 
-
 ### Create local copy of config file
 
 Copy the example config:
@@ -177,10 +150,22 @@ $ python manage.py migrate
 $ python manage.py createsuperuser
 ```
 
+## Run fixtures
+
 ### Add authorization groups
 
 ```bash
 $ python manage.py loaddata fixtures/auth_groups.json
+```
+
+### Add countries
+```bash
+$ python manage.py loaddata fixtures/countries.json
+```
+
+### Add sectors
+```bash
+$ python manage.py loaddata fixtures/sectors.json
 ```
 
 ### Run the app locally
@@ -313,8 +298,35 @@ GRANT ALL ON activity.* TO 'root'@'localhost' IDENTIFIED BY 'root';
 
 _NB:_ When you use these SQL queries, beware of not writing the quotes.
 
+## Install non-python dependencies
+
+1. **GDAL**
+
+On MacOs:
+
+```bash
+$ brew install gdal
+```
+
+On Windows:
+- You will need to download gdal core and gdal installer for your version of python.
+- Please read the following [instructions](https://pypi.org/project/GDAL/#windows) on how to properly install and test gdal.
+
+2. **Pango**
+
+On MacOs:
+
+```bash
+$ brew install pango
+```
+
+On Windows:
+- You will need Pango and Cairo for the application to run.
+- The runtime installer can be found [here](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases)
+- Download and install GTK+-3. 
+
 <br/>
 <br/>
 
 # Contributing
-Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team). We are always looking for a fresh set of :eyes: who want to contribute to **Activity**. Feel free to checkout our [contribution page](./CONTRIBUTING.md) or learn more about our [development process](https://github.com/hikaya-io/wiki/blob/master/start/development-process.md). You can reach out by creating an issue and we'll help you get started!
+Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team). We are always looking for a fresh set of :eyes: who want to contribute to **Activity**. Feel free to checkout our [contribution page](./CONTRIBUTING.md) or learn more about our [development process](https://team.hikaya.io/start/development-process.html). You can reach out by creating an issue and we'll help you get started!

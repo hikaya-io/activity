@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load crispy_forms_tags %}
 
 <input type="hidden" name="disaggregation_types" id="id_disaggregation_types" />
@@ -39,7 +40,7 @@
     $('#id_disaggregation').select2({ theme: 'bootstrap' });
     $('#id_indicator_type').select2({ theme: 'bootstrap' });
 
-    $('#id_disaggregation_types').attr('value', disagTypes);
+    $('#id_disaggregation_types').attr('value', JSON.stringify(disagTypes));
 
     // init disag types form
     initDisagTypes();
@@ -52,12 +53,12 @@
   function stringifyDisags() {
     disagTypes = [];
     for (let i = 1; i <= countDisaggTypes; i++) {
-      let disagType = { type: '', id: null, labels: [] };
+      let disagType = { disaggregation_type: '', id: null, labels: [] };
 
       // get disag type
       $(`#disagg_type_group_${i} .type`).each(function(index, elem) {
         const inputs = elem.getElementsByTagName('input');
-        disagType.type = $(inputs[0]).val();
+        disagType.disaggregation_type = $(inputs[0]).val();
         disagType.id = $(inputs[1]).val() || null;
       });
 

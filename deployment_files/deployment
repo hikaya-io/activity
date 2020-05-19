@@ -6,7 +6,7 @@ metadata:
   labels:
     app: activity-app-${APPLICATION_ENV}
 spec:
-  replicas: 2
+  replicas: ${MIN_PODS}
   selector:
     matchLabels:
       app: activity-app-${APPLICATION_ENV}

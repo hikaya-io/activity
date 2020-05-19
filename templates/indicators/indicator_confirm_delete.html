@@ -1,12 +1,39 @@
-{% extends "base.html" %}
-{% block page_title %}Indicator Confirm Delete{% endblock %}
-
-{% block content %}
-
-<form action="" method="post">{% csrf_token %}
-    <p>Are you sure you want to delete?</p>
-    <input type="submit" value="Confirm" />
-</form>
-
-
-{% endblock content %}
+<div
+	class="modal fade"
+	id="deleteIndicatorModal{{indicator.id}}"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="deleteItemModalLabel"
+>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="deleteIndicatorLabel">Confirm Delete</h4>
+			</div>
+			<div class="modal-body">
+				<p>
+					Are you sure you want to delete "<strong>{{ indicator.name }}"</strong>?
+				</p>
+				<div class="text-right">
+					<button 
+						type="submit"
+						class="btn btn-close" 
+						onclick="indicatorDeleteCancel()">
+						Cancel
+					</button>
+					<button
+						type="submit"
+						class="btn btn-danger"
+						onclick="indicatorDeleteItem()"
+						id="deleteItem{{ indicator.id }}"
+					>
+						Delete
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

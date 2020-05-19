@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <script>
     $(document).ready(function() {
         $('#programIndicatorsTable').DataTable();
@@ -6,11 +8,11 @@
 
 <table class="table table-condensed table-striped hiddenTable" id="programIndicatorsTable">
   <tr>
-    <th id="id_indicator_type_col_header">Indicator Type</th>
-    <th id="id_indicator_level_col_header">Indicator Level</th>
-    <th id="id_indicator_name_col_header">Indicator Name</th>
-    <th id="id_indicator_number_col_header">Indicator Number</th>
-    <th id="id_indicator_sector_col_header">Sector</th>
+    <th id="id_indicator_type_col_header">{% trans 'Indicator Type' %}</th>
+    <th id="id_indicator_level_col_header">{% trans 'Indicator Level' %}</th>
+    <th id="id_indicator_name_col_header">{% trans 'Indicator Name' %}</th>
+    <th id="id_indicator_number_col_header">{% trans 'Indicator Number' %}</th>
+    <th id="id_indicator_sector_col_header">{% trans 'Sector' %}</th>
     <th id="id_indicator_buttons_col_header">&nbsp;</th>
   </tr>
   {% for indicator in indicators %}
@@ -32,7 +34,7 @@
         {{ indicator.name }}
       </a>
       {% if indicator.key_performance_indicator %}
-      <span class="badge">KPI</span>
+      <span class="badge">{% trans 'KPI' %}</span>
       {% endif %}
     </td>
     <td id="id_indicator_number_{{ indicator.id }}">
@@ -46,7 +48,7 @@
         <a
           href="/indicators/indicator_update/{{ indicator.id }}"
           class="btn btn-xs btn-info indicator-link"
-          >Edit</a
+          >{% trans 'Edit' %}</a
         >
         <a
           id="id_indicator_data_count_btn_{{ indicator.id }}"
@@ -54,12 +56,12 @@
           class="btn btn-xs btn-success"
           data-toggle="collapse"
           data-target="#hidden-indicator-{{ indicator.id }}"
-          >Data {{ indicator.data_count }}
+          >{% trans 'Data' %} {{ indicator.data_count }}
         </a>
         <a
           href="/indicators/indicator_delete/{{ indicator.id }}"
           class="btn btn-xs btn-danger"
-          >Delete</a
+          >{% trans 'Delete' %}</a
         >
       </span>
     </td>

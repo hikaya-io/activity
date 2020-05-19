@@ -41,7 +41,7 @@ $(document).ready(() => {
             makeRequest(method, url, data = null) {
               axios.defaults.xsrfHeaderName = 'X-CSRFToken';
               axios.defaults.xsrfCookieName = 'csrftoken';
-              return axios({method, url, data});
+              return axios({ method, url, data });
             },
             async getTargets(item = null) {
               const res = await this.makeRequest(
@@ -55,19 +55,19 @@ $(document).ready(() => {
                 data.forEach(target => {
                   if (item) {
                     if (target.pk === item.periodic_target) {
-                      this.targets.push({"id": target.pk, "text": target.period, "target": target.target})
+                      this.targets.push({ "id": target.pk, "text": target.period, "target": target.target })
                       this.period = target.pk
                     }
                   } else {
-                    this.targets.push({"id": target.pk, "text": target.period, "target": target.target})
+                    this.targets.push({ "id": target.pk, "text": target.period, "target": target.target })
                   }
 
                 });
               }
             },
 
-            showDisaggregations: function(){
-              this.show_disaggregations= !this.show_disaggregations
+            showDisaggregations: function () {
+              this.show_disaggregations = !this.show_disaggregations
             },
 
             toggleResultModal: function (item = null) {
@@ -80,7 +80,27 @@ $(document).ready(() => {
               this.period = ''
               this.documentation = ''
               this.disaggregations = {}
-              this.show_disaggregations= false
+              this.show_disaggregations = false
+
+              if(this.showModal) {
+                let self = this;
+                setTimeout(() => {
+                  $("#dateCollected").datepicker({
+                    dateFormat: "yy-mm-dd",
+                    onSelect: function (dateText) {
+                      self.date_collected = dateText;
+                    }
+                  })
+                  if(item) {
+                    $("#dateCollected").datepicker('setDate', item.date_collected);
+                  } else {
+                    $("#dateCollected").datepicker('setDate', "");
+                  }
+                }, 0)
+              } else {
+                $("#dateCollected").datepicker('hide').datepicker('destroy');
+              }
+            
 
               if (item) {
                 this.isEdit = true;
@@ -91,11 +111,11 @@ $(document).ready(() => {
                 this.actual = item.achieved
                 this.documentation = item.evidence
                 if (item.disaggregation_value.length > 0) {
-                  this.show_disaggregations= true
+                  this.show_disaggregations = true
                   item.disaggregation_value.forEach(disaggregation => {
                     this.disaggregations[disaggregation.disaggregation_label.id] = disaggregation.value
                   })
-                  
+
                 }
               } else {
                 this.isEdit = false;
@@ -122,21 +142,21 @@ $(document).ready(() => {
               return moment(date, 'YYYY-MM-DDThh:mm:ssZ').format('YYYY-MM-DD');
             },
 
-            validateDisaggregations: function(){
+            validateDisaggregations: function () {
               let sum = 0
               this.validate_disaggregation = true
 
-              if (Object.keys(this.disaggregations).length > 0){
-                this.collectedData.indicator.disaggregation.forEach(disagg =>{
-                  disagg.disaggregation_label.forEach(disagg_label =>{
+              if (Object.keys(this.disaggregations).length > 0) {
+                this.collectedData.indicator.disaggregation.forEach(disagg => {
+                  disagg.disaggregation_label.forEach(disagg_label => {
                     const entries = Object.entries(this.disaggregations)
                     for (const [id, value] of entries) {
-                      if(parseInt(id) === disagg_label.id){
-                       sum += parseInt(value)
+                      if (parseInt(id) === disagg_label.id) {
+                        sum += parseInt(value)
                       }
                     }
                   })
-                  if(sum !== parseInt(this.actual)){
+                  if (sum !== parseInt(this.actual)) {
                     toastr.error(`Total for ${disagg.disaggregation_type} does not match the actual value`);
                     this.validate_disaggregation = false
                   }
@@ -169,7 +189,7 @@ $(document).ready(() => {
                   `/indicators/collecteddata/add`,
                   {
                     actual: this.actual,
-                    target: '250',
+                    target: this.target,
                     date_collected: this.date_collected,
                     period: this.period,
                     indicator: indicatorId,
@@ -226,6 +246,7 @@ $(document).ready(() => {
                     }
                   })
                   this.isEdit = false;
+                  this.currentResult = null;
                   this.modalHeader = 'Add Result';
                   this.toggleResultModal();
                 }
@@ -271,14 +292,14 @@ $(document).ready(() => {
           },
 
           watch: {
-             period: function(){
-               this.targets.forEach(tag => {
+            period: function () {
+              this.targets.forEach(tag => {
                 if (tag.id === Number(this.period)) {
                   this.target = tag.target
                 }
               })
 
-             }
+            }
           }
         }).$mount(`#details-${indicatorId}`);
       },

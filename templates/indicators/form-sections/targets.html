@@ -1,4 +1,6 @@
-{% load crispy_forms_tags %} {% load static %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
 
 <script src="{% static 'js/moment.js' %}"></script>
 
@@ -154,8 +156,7 @@
 
       if (
         selectedTarget !== 1 &&
-        selectedTarget !== 2 &&
-        selectedTarget !== 8
+        selectedTarget !== 2
       ) {
         $("#frequency_metadata").show();
         $("#id_targets").show();
@@ -427,6 +428,92 @@
         }
       }
 
+      function generateWeeklyTargets() {
+        for (let i = 1; i <= numberOfTargets; i++) {
+          let row = $("<tr>");
+          let period = `Week ${i}`;
+          let label = $("<th>").text(period);
+          let periodEnds = moment(periodStarts);
+
+          let start = moment(periodStarts)
+            .startOf("day")
+            .format("MMM DD, YYYY");
+          let end = moment(periodEnds)
+            .add(7, "days")
+            .endOf("day")
+            .format("MMM DD, YYYY");
+          let dateSpan = $("<small>").text(`${start} - ${end}`);
+          label.append("<br>", dateSpan);
+
+          // update the periods
+          periods = [...periods, { start, end, period }];
+
+          let input = $("<input>")
+            .addClass("form-control")
+            .attr({
+              type: "number",
+              id: `id_target_${i}`,
+              name: "periodic_targets[]"
+            })
+            .keyup(updateSum);
+
+          let value = $("<td>").append(input);
+
+          let removeTarget = $("<td>").addClass("text-danger");
+
+          row.append(label, value, removeTarget);
+
+          tbody.append(row);
+
+          periodStarts = moment(periodEnds).add(8, "days");
+
+          $("#clearTargets").show();
+        }
+      }
+
+      function generateBiWeeklyTargets() {
+        for (let i = 1; i <= numberOfTargets; i++) {
+          let row = $("<tr>");
+          let period = `Weeks ${i}`;
+          let label = $("<th>").text(period);
+          let periodEnds = moment(periodStarts);
+
+          let start = moment(periodStarts)
+            .startOf("month")
+            .format("MMM DD, YYYY");
+          let end = moment(periodEnds)
+            .add(14, "days")
+            .endOf("day")
+            .format("MMM DD, YYYY");
+          let dateSpan = $("<small>").text(`${start} - ${end}`);
+          label.append("<br>", dateSpan);
+
+          // update the periods
+          periods = [...periods, { start, end, period }];
+
+          let input = $("<input>")
+            .addClass("form-control")
+            .attr({
+              type: "number",
+              id: `id_target_${i}`,
+              name: "periodic_targets[]"
+            })
+            .keyup(updateSum);
+
+          let value = $("<td>").append(input);
+
+          let removeTarget = $("<td>").addClass("text-danger");
+
+          row.append(label, value, removeTarget);
+
+          tbody.append(row);
+
+          periodStarts = moment(periodEnds).add(15, "days");
+
+          $("#clearTargets").show();
+        }
+      }
+
       switch (selectedTarget) {
         case 3:
           generateYearlyTargets();
@@ -443,7 +530,12 @@
         case 7:
           generateMonthlyTargets();
           break;
-
+        case 8:
+          generateWeeklyTargets();
+          break;
+        case 9:
+          generateBiWeeklyTargets();
+          break;   
         default:
           break;
       }

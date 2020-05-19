@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% block content %}
+{% load i18n %}
 
 <script>
   $(document).ready(() => {
@@ -33,8 +34,8 @@
   </div>
   {% endfor %} {% endif %} {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="/">My Dashboard</a></li>
-    <li class="active">Profile</li>
+    <li><a href="/">{% trans 'My Dashboard' %}</a></li>
+    <li class="active">{% trans 'Profile' %}</li>
   </ul>
   {% endblock %}
 
@@ -42,14 +43,14 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        My Profile
+        {% trans 'My Profile' %}
       </h4>
     </div>
     <div class="sub-navigation-actions">
       <!-- sample action buttons -->
       <div class="btn-group" role="group" aria-label="">
         <a href="{% url 'change_password' %}" class="btn btn-primary btn-sm">
-          Change Password
+          {% trans 'Change Password' %}
         </a>
       </div>
     </div>
@@ -60,8 +61,8 @@
       {% crispy user_form user_form.helper %}
       {% crispy form form.helper %}
       <div>
-        <button type="Reset" class="btn btn-md btn-close" id="id-reset-btn">Cancel</button>
-        <button type="Submit" class="btn btn-md btn-success">Save</button>
+        <button type="Reset" class="btn btn-md btn-close" id="id-reset-btn">{% trans 'Cancel' %}</button>
+        <button type="Submit" class="btn btn-md btn-success">{% trans 'Save' %}</button>
       </div>
     </form>
   </div>
