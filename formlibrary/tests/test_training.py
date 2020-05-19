@@ -1,8 +1,8 @@
+from datetime import date
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from workflow.models import Program, Office, ActivityUser
 from formlibrary.models import Training, Service
-from datetime import date
 
 
 class TestTraining(TestCase):

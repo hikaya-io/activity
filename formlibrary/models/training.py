@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from .service import Service
 from workflow.models import Contact
+from .service import Service
 
 
 class Training(Service):
@@ -22,6 +22,5 @@ class Training(Service):
     # def attendance(self):
     #     """
     #     ? Return list of Individuals and their attendance as a percentage relative to `training_duration`.
-    #     TODO This is related to cases, which keeps track of attendance
     #     """
     #     return {}

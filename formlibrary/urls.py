@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+from django.views.generic import TemplateView
+from django.urls import path
 from .views import (
     DistributionCreate,
     DistributionList,
@@ -24,8 +26,6 @@ from .views import (
     delete_individual,
     delete_training,
 )
-from django.urls import path
-from django.views.generic import TemplateView
 
 # place app url patterns here
 
@@ -47,14 +47,14 @@ urlpatterns = [
          name='training_participants'),
 
     path(
-          r'individual/<int:pk>/',
-          IndividualViewDetail.as_view(),
-          name='Individual_detail'
+        r'individual/<int:pk>/',
+        IndividualViewDetail.as_view(),
+        name='Individual_detail'
     ),
     path(
-          r'individual/',
-          IndividualViewList.as_view(),
-          name='Individual_list'
+        r'individual/',
+        IndividualViewList.as_view(),
+        name='Individual_list'
     ),
     path('individual_list/<slug:program>/<slug:training>/<slug:distribution>/',
          IndividualList.as_view(), name='individual_list'),

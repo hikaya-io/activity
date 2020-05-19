@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+from datetime import date
 from django.test import TestCase
 from workflow.models import Program
 from formlibrary.models import TrainingAttendance, Individual, Training
-from datetime import date
 
 
 class TrainingAttendanceTestCase(TestCase):

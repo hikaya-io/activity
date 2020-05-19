@@ -4,24 +4,21 @@
 import uuid
 from datetime import datetime
 from django.db import models
+from django.core.exceptions import ValidationError
 from workflow.models import Program, Office, Stakeholder, SiteProfile, Contact, ActivityUser
 from .case import Case
-from django.core.exceptions import ValidationError
 
 
 class StartEndDates(models.Model):
     """
     Abstract Base Class to implement start/end dates fields
     """
-    # TODO move to its own place. A package named "core_mixins"
-    # TODO Check the start_date < end_date and throw adequate error if else
-    # TODO Will we need the same for a Slug field? Does Django offer one?
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
 
-    def save(self, **kwargs):
+    def save(self, *args, **kwargs):
         self.clean()
-        return super(StartEndDates, self).save(**kwargs)
+        return super(StartEndDates, self).save(*args, **kwargs)
 
     def clean(self):
         # ? What if only a single date is supplied? Should the start/end date
@@ -36,8 +33,6 @@ class StartEndDates(models.Model):
 
 class CreatedModifiedDates(models.Model):
     "Mixins for created/modified timestamps"
-    # TODO Unit test this
-    # This is the naming used in other models
     create_date = models.DateTimeField(verbose_name="Creation date", editable=False,
                                        null=False, blank=False, auto_now_add=True)
     modified_date = models.DateTimeField(verbose_name="Modification date", editable=False,
@@ -57,16 +52,14 @@ class CreatedModifiedDates(models.Model):
 
 
 class CreatedModifiedBy(models.Model):
-    # TODO implement logic of setting these values
+    # TODO Get the current user in the save method? Is that possible?
     created_by = models.ForeignKey(ActivityUser, null=True, editable=False,
                                    verbose_name="Created by", related_name="+", on_delete=models.SET_NULL)
-    modified_by = models.ForeignKey(ActivityUser, null=True,  editable=False,
+    modified_by = models.ForeignKey(ActivityUser, null=True, editable=False,
                                     verbose_name="Modified by", related_name="+", on_delete=models.SET_NULL)
 
     class Meta:
         abstract = True
-
-    # TODO Get the current user in the save method? Is that possible?
 
 
 class Service(CreatedModifiedBy, StartEndDates, CreatedModifiedDates, models.Model):

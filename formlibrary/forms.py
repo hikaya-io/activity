@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+from functools import partial
 from crispy_forms.helper import FormHelper
 from django import forms
-from .models import TrainingAttendance, Distribution, Individual
 from workflow.models import Program, ProjectAgreement, Office, Province, SiteProfile
-from functools import partial
+from .models import TrainingAttendance, Distribution, Individual
 
 
 class DatePicker(forms.DateInput):

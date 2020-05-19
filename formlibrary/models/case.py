@@ -57,7 +57,7 @@ class Individual(models.Model):
         if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
-        super(Individual, self).save()
+        super(Individual, self).save(*args, **kwargs)
 
     def __str__(self):
         if self.first_name is None:
