@@ -4,7 +4,8 @@
 from django.test import TestCase
 from workflow.models import (
     Organization, Program, Country, Province, ProjectAgreement, Sector,
-    ProjectComplete, ProjectType, SiteProfile, Office, Benchmarks, Budget
+    ProjectComplete, ProjectType, SiteProfile, Office, Benchmarks, Budget,
+    Checklist, ChecklistItem
 )
 
 
@@ -162,3 +163,44 @@ class CompleteTestCase(TestCase):
         get_complete = ProjectComplete.objects.get(project_name="testproject")
         self.assertEqual(ProjectComplete.objects.filter(
             id=get_complete.id).count(), 1)
+
+
+class ChecklistItemTest(TestCase):
+
+    fixtures = ['fixtures/tests/projecttype.json', 'fixtures/tests/sectors.json']
+
+    def setUp(self):
+        Organization.objects.create(name="Activity")
+        get_organization = Organization.objects.get(name="Activity")
+        Country.objects.create(
+            country="testcountry", organization=get_organization)
+        get_country = Country.objects.get(country="testcountry")
+        new_program = Program.objects.create(name="testprogram")
+        new_program.country.add(get_country)
+        new_province = Province.objects.create(
+            name="testprovince", country=get_country)
+        get_program = Program.objects.get(name="testprogram")
+        get_project_type = ProjectType.objects.get(id='1')
+        Office.objects.create(
+            name="testoffice", province=new_province)
+        get_office = Office.objects.get(name="testoffice")
+        get_sector = Sector.objects.get(id='2')
+        ProjectAgreement.objects.create(
+            program=get_program,
+            project_name="testproject",
+            project_type=get_project_type, activity_code="111222",
+            office=get_office, sector=get_sector)
+        get_agreement = ProjectAgreement.objects.get(
+            project_name="testproject")
+        Checklist.objects.create(name="test checklist created",
+                                 country=get_country, agreement=get_agreement)
+        get_checklist = Checklist.objects.get(name="test checklist created")
+        ChecklistItem.objects.create(item="checklistitem", checklist=get_checklist)
+
+    def test_CheckListItem_creation(self):
+        """Check for ChecklistItem Object creation"""
+        get_checklistItem = ChecklistItem.objects.get(item="checklistitem")
+        self.assertIsInstance(get_checklistItem, ChecklistItem)
+        self.assertEqual(get_checklistItem.item, get_checklistItem.__str__())
+        self.assertEqual(ChecklistItem.objects.filter(
+            item=get_checklistItem.item).count(), 1)
