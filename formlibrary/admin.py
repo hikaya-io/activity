@@ -17,8 +17,12 @@ class IndividualAdmin(admin.ModelAdmin):
 
 @admin.register(Distribution)
 class DistributionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'program',
-                    'initiation', 'create_date', 'modified_date')
+    list_display = (
+        'name',
+        'program',
+        'create_date',
+        'modified_date',
+    )
     display = 'Program Dashboard'
 
 
