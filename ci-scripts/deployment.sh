@@ -5,7 +5,8 @@ set +ex
 #@--- install kubectl and doctl ---@#
 install_kubectl_doctl() {
     if [[ $TRAVIS_BRANCH == "dev" ]] || \
-        [[ $TRAVIS_BRANCH == "staging" ]]; then
+        [[ $TRAVIS_BRANCH == "staging" ]] || \
+        [[ ! -z $TRAVIS_TAG ]]; then
         echo "++++++++++++ install kubectl ++++++++++++"
         curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 
@@ -35,7 +36,8 @@ auth_kubectl_cluster() {
         [[ $GITHUB_REF == "refs/heads/dev" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/master" ]]; then
+        [[ $GITHUB_EVENT_NAME == "release" ]] || \
+        [[ ! -z $TRAVIS_TAG ]]; then
         doctl auth init -t $SERVICE_ACCESS_TOKEN
         doctl -t $SERVICE_ACCESS_TOKEN kubernetes cluster kubeconfig save $CLUSTER_NAME
         kubectl create namespace $APPLICATION_ENV || echo "++++++ Namespace Exists ++++++"
@@ -62,7 +64,8 @@ deploy_app() {
         [[ $GITHUB_REF == "refs/heads/dev" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/master" ]]; then
+        [[ $GITHUB_EVENT_NAME == "release" ]] || \
+        [[ ! -z $TRAVIS_TAG ]]; then
         echo "------- generate deployfiles --------------"
         envsubst < ./deployment_files/deployment > deployment.yaml
         envsubst < ./deployment_files/service > service.yaml
@@ -109,7 +112,8 @@ replace_variables() {
     fi
 
     #@--- Replace necesary variables for production env ---@#
-    if [[ $GITHUB_REF == "refs/heads/master" ]]; then
+    if [[ $GITHUB_EVENT_NAME == "release" ]] || \
+        [[ ! -z $TRAVIS_TAG ]]; then
         export APPLICATION_ENV=${APPLICATION_ENV_PROD}
         export HOST_DOMAIN=${HOST_DOMAIN_PROD}
         export CLUSTER_NAME=${CLUSTER_NAME_PROD}

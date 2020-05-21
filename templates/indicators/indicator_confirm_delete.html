@@ -21,13 +21,13 @@
 					<button 
 						type="submit"
 						class="btn btn-close" 
-						onclick="deleteCancel()">
+						onclick="indicatorDeleteCancel()">
 						Cancel
 					</button>
 					<button
 						type="submit"
 						class="btn btn-danger"
-						onclick="deleteItem()"
+						onclick="indicatorDeleteItem()"
 						id="deleteItem{{ indicator.id }}"
 					>
 						Delete
@@ -37,32 +37,3 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	var itemId;
-	var activeButton;
-	/**
-	 * Set the Item to delete
-	 **/
-	function setItemToDelete(id) {
-		itemId = id;
-	}
-
-	/**
-	 * Redirect to the page to delete the item
-	 **/
-	function deleteItem() {
-		toastr.success('You have successfully delete the indicator');
-		setTimeout(() => {
-			window.location.href = `/indicators/indicator_delete/${itemId}/`;
-		}, 2000);
-	}
-
-	/**
-	 * reload the page to close the modal
-	 **/
-	function deleteCancel() {
-		window.location.reload();
-	}
-	$(document).ready(() => {});
-</script>

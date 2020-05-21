@@ -47,7 +47,6 @@ from .serializers import (
     )
 from rest_framework import generics
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from rest_framework.response import Response
 from django.views.generic.detail import View
 from django.forms.models import model_to_dict
 
@@ -74,6 +73,7 @@ APPROVALS = (
     ('new', 'New'),
 )
 
+
 # Program level1 serializer view
 class ProgramView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Program.objects.all()
@@ -88,6 +88,7 @@ class ProgramView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIV
         organization = self.request.user.activity_user.organization.id
         return Program.objects.filter(organization=organization)
 
+
 def date_handler(obj):
     return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
@@ -100,7 +101,7 @@ def list_workflow_level1(request):
     context = {'programs': programs,
                'get_all_sectors': get_all_sectors,
                'active': ['workflow']}
-   
+
     return render(request, 'workflow/level1.html', context)
 
 
@@ -2642,6 +2643,8 @@ def add_stakeholder(request):
 """
 ProfileType views
 """
+
+
 class ProfileTypeCreate(GView):
     """
     View to create ProfileType and return Json response
@@ -2728,6 +2731,8 @@ class ProfileTypeDelete(GView):
 """
 FundCode views
 """
+
+
 class FundCodeCreate(CreateView):
     """
     create Fund Code View
@@ -2944,7 +2949,7 @@ class GetCountries(GView):
     def get(self, request):
 
         try:
-            countries = Country.objects.values('id', 'country', 'code')
+            countries = Country.objects.values('id', 'latitude', 'longitude', 'country', 'code')
 
             return JsonResponse(list(countries), safe=False)
         except Exception as e:

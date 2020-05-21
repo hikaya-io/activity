@@ -11,7 +11,7 @@ on:
       - staging
   release:
     types:
-      - created
+      - published
 
 jobs:
   Build_and_test:
@@ -75,6 +75,7 @@ jobs:
         SERVICE_ACCESS_TOKEN: ${{ secrets.SERVICE_ACCESS_TOKEN }}
         DB_SIZE: ${{ secrets.DB_SIZE }}
         PG_VERSION: ${{ secrets.PG_VERSION }}
+        PROJECT_NAME: $$ {{ secrets.PROJECT_NAME }}
         DB_NAME_DEV_ENV: ${{ secrets.DB_NAME_DEV_ENV }}
         # staging vars, some are reused from dev_env
         BACKEND_BUCKET_STAGING: ${{ secrets.BACKEND_BUCKET_STAGING }}
@@ -163,6 +164,8 @@ jobs:
         HOST_DOMAIN: ${{ secrets.HOST_DOMAIN }}
         APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
         REGISTRY_OWNER: ${{ secrets.REGISTRY_OWNER }}
+        MIN_PODS: ${{ secrets.MIN_PODS }}
+        MAX_PODS: ${{ secrets.MAX_PODS }}
         # staging variables
         CLUSTER_NAME_STAGING: ${{ secrets.CLUSTER_NAME_STAGING }}
         HOST_DOMAIN_STAGING: ${{ secrets.HOST_DOMAIN_STAGING }}

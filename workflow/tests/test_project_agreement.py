@@ -10,7 +10,7 @@ from workflow.models import (
 
 class SiteProfileTestCase(TestCase):
 
-    fixtures = ['fixtures/organization.json', 'fixtures/profiletypes.json']
+    fixtures = ['fixtures/tests/organization.json', 'fixtures/tests/profiletypes.json']
 
     def setUp(self):
         new_organization = Organization.objects.create(name="Activity")
@@ -42,7 +42,7 @@ class SiteProfileTestCase(TestCase):
 
 class AgreementTestCase(TestCase):
 
-    fixtures = ['fixtures/projecttype.json', 'fixtures/sectors.json']
+    fixtures = ['fixtures/tests/projecttype.json', 'fixtures/tests/sectors.json']
 
     def setUp(self):
         new_organization = Organization.objects.create(name="Activity")
@@ -112,7 +112,7 @@ class AgreementTestCase(TestCase):
 
 class CompleteTestCase(TestCase):
 
-    fixtures = ['fixtures/projecttype.json', 'fixtures/sectors.json']
+    fixtures = ['fixtures/tests/projecttype.json', 'fixtures/tests/sectors.json']
 
     def setUp(self):
         new_organization = Organization.objects.create(name="Activity")

@@ -1,18 +1,36 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from .views import (
-    TrainingList, add_training, add_distribution, TrainingListObjects,
-    IndividualList, IndividualCreate, IndividualListObjects,
-    IndividualUpdate, TrainingUpdate, delete_training, delete_individual,
-    TrainingCreate, DistributionList, DistributionCreate, DistributionListObjects,
-    DistributionUpdate, delete_distribution, GetAgreements,
-    TrainingParticipantListObjects, IndividualViewList, IndividualViewDetail)
+from django.views.generic import TemplateView
 from django.urls import path
+from .views import (
+    DistributionCreate,
+    DistributionList,
+    DistributionListObjects,
+    DistributionUpdate,
+    GetAgreements,
+    IndividualCreate,
+    IndividualList,
+    IndividualListObjects,
+    IndividualUpdate,
+    IndividualViewDetail,
+    IndividualViewList,
+    TrainingCreate,
+    TrainingList,
+    TrainingListObjects,
+    TrainingParticipantListObjects,
+    TrainingUpdate,
+    add_distribution,
+    add_training,
+    delete_distribution,
+    delete_individual,
+    delete_training,
+)
 
 # place app url patterns here
 
 urlpatterns = [
+    path('comingsoon', TemplateView.as_view(template_name='formlibrary/comingsoon.html')),
     path('training_list/<slug:program>/<slug:project>/', TrainingList.as_view(),
          name='training_list'),
     path('add-training', add_training, name='add_training'),
@@ -29,14 +47,14 @@ urlpatterns = [
          name='training_participants'),
 
     path(
-          r'individual/<int:pk>/',
-          IndividualViewDetail.as_view(),
-          name='Individual_detail'
+        r'individual/<int:pk>/',
+        IndividualViewDetail.as_view(),
+        name='Individual_detail'
     ),
     path(
-          r'individual/',
-          IndividualViewList.as_view(),
-          name='Individual_list'
+        r'individual/',
+        IndividualViewList.as_view(),
+        name='Individual_list'
     ),
     path('individual_list/<slug:program>/<slug:training>/<slug:distribution>/',
          IndividualList.as_view(), name='individual_list'),
