@@ -276,6 +276,7 @@ LOCAL_APPS = (
     'tables',
     'reports',
     'adminreport',
+    'utils'
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

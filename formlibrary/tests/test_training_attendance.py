@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from datetime import date
 from django.test import TestCase
 from workflow.models import Program
 from formlibrary.models import TrainingAttendance, Individual, Training
+from datetime import datetime
+from pytz import timezone
 
 
 class TrainingAttendanceTestCase(TestCase):
@@ -25,8 +26,8 @@ class TrainingAttendanceTestCase(TestCase):
             location="34",
             community="34",
             training_duration="34",
-            start_date=date(2020, 10, 1),
-            end_date=date(2020, 10, 19),
+            start_date=datetime.strptime("2020-10-01 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
+            end_date=datetime.strptime("2020-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
             trainer_name="34",
             trainer_contact_num="34",
             form_filled_by="34",

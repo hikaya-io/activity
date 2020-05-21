@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import uuid
-from datetime import datetime
 from django.db import models
 from workflow.models import Program, SiteProfile
+from utils.models import CreatedModifiedDates
 
 
 class Case(models.Model):
@@ -26,7 +26,7 @@ class Household(Case):
     name = models.CharField(max_length=255)
 
 
-class Individual(models.Model):
+class Individual(CreatedModifiedDates):
     """
     Individual, or person.
     Subject to future changes: https://github.com/hikaya-io/activity/issues/403
@@ -43,8 +43,6 @@ class Individual(models.Model):
     signature = models.BooleanField(default=True)
     remarks = models.TextField(max_length=550, null=True, blank=True)
     program = models.ManyToManyField(Program, blank=True)
-    create_date = models.DateTimeField(null=True, blank=True)
-    edit_date = models.DateTimeField(null=True, blank=True)
 
     household = models.ForeignKey(
         Household, null=True, blank=True, on_delete=models.SET_NULL)
@@ -52,14 +50,5 @@ class Individual(models.Model):
     class Meta:
         ordering = ('first_name',)
 
-    # on save add create date or update edit date
-    def save(self, *args, **kwargs):
-        if self.create_date is None:
-            self.create_date = datetime.now()
-        self.edit_date = datetime.now()
-        super(Individual, self).save(*args, **kwargs)
-
     def __str__(self):
-        if self.first_name is None:
-            return "NULL"
         return self.first_name

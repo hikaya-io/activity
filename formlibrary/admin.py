@@ -17,23 +17,14 @@ class IndividualAdmin(admin.ModelAdmin):
 
 @admin.register(Distribution)
 class DistributionAdmin(admin.ModelAdmin):
-    list_display = (
-        'name',
-        'program',
-        'create_date',
-        'modified_date'
-    )
+    list_display = ('name', 'program',
+                    'initiation', 'create_date', 'modified_date')
     display = 'Program Dashboard'
 
 
 @admin.register(TrainingAttendance)
 class TrainingAttendanceAdmin(admin.ModelAdmin):
-    list_display = (
-        'training_name',
-        'program',
-        'project_agreement',
-        'create_date',
-        'edit_date'
-    )
+    list_display = ('training_name', 'program',
+                    'project_agreement', 'create_date', 'modified_date')
     display = 'Training Attendance'
     list_filter = ('program__country', 'program')
