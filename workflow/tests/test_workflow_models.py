@@ -3,9 +3,21 @@
 
 from django.test import TestCase
 from workflow.models import (
-    Organization, Program, Country, Province, ProjectAgreement, Sector,
-    ProjectComplete, ProjectType, SiteProfile, Office, Benchmarks, Budget,
-    Checklist, ChecklistItem
+    ActivityUser,
+    Benchmarks,
+    Budget,
+    Checklist,
+    ChecklistItem,
+    Country,
+    Office,
+    Organization,
+    Program,
+    ProjectAgreement,
+    ProjectComplete,
+    ProjectType,
+    Province,
+    Sector,
+    SiteProfile,
 )
 
 
@@ -167,40 +179,45 @@ class CompleteTestCase(TestCase):
 
 class ChecklistItemTest(TestCase):
 
-    fixtures = ['fixtures/tests/projecttype.json', 'fixtures/tests/sectors.json']
+    fixtures = [
+        'fixtures/tests/activity-users.json',
+        'fixtures/tests/offices.json',
+        'fixtures/tests/organization.json',
+        'fixtures/tests/programs.json',
+        'fixtures/tests/projecttype.json',
+        'fixtures/tests/sectors.json',
+        'fixtures/tests/users.json',
+        'fixtures/countries.json',
+    ]
 
     def setUp(self):
-        Organization.objects.create(name="Activity")
-        get_organization = Organization.objects.get(name="Activity")
-        Country.objects.create(
-            country="testcountry", organization=get_organization)
-        get_country = Country.objects.get(country="testcountry")
-        new_program = Program.objects.create(name="testprogram")
-        new_program.country.add(get_country)
-        new_province = Province.objects.create(
-            name="testprovince", country=get_country)
-        get_program = Program.objects.get(name="testprogram")
-        get_project_type = ProjectType.objects.get(id='1')
-        Office.objects.create(
-            name="testoffice", province=new_province)
-        get_office = Office.objects.get(name="testoffice")
-        get_sector = Sector.objects.get(id='2')
         ProjectAgreement.objects.create(
-            program=get_program,
             project_name="testproject",
-            project_type=get_project_type, activity_code="111222",
-            office=get_office, sector=get_sector)
-        get_agreement = ProjectAgreement.objects.get(
-            project_name="testproject")
-        Checklist.objects.create(name="test checklist created",
-                                 country=get_country, agreement=get_agreement)
-        get_checklist = Checklist.objects.get(name="test checklist created")
-        ChecklistItem.objects.create(item="checklistitem", checklist=get_checklist)
+            activity_code="111222",
+            program=Program.objects.first(),
+            project_type=ProjectType.objects.first(),
+            office=Office.objects.first(),
+            sector=Sector.objects.first(),
+        )
+        Checklist.objects.create(
+            name="test checklist created",
+            country=Country.objects.first(),
+            agreement=ProjectAgreement.objects.first(),
+        )
+        ChecklistItem.objects.create(
+            item="checklistitem",
+            checklist=Checklist.objects.first(),
+            owner=ActivityUser.objects.first(),
+        )
 
-    def test_CheckListItem_creation(self):
+    def test_checklistitem_creation(self):
         """Check for ChecklistItem Object creation"""
-        get_checklistItem = ChecklistItem.objects.get(item="checklistitem")
-        self.assertIsInstance(get_checklistItem, ChecklistItem)
-        self.assertEqual(get_checklistItem.item, get_checklistItem.__str__())
+        checklistItem = ChecklistItem.objects.get(item="checklistitem")
+        self.assertIsInstance(checklistItem, ChecklistItem)
+        self.assertEqual(checklistItem.item, checklistItem.__str__())
         self.assertEqual(ChecklistItem.objects.filter(
-            item=get_checklistItem.item).count(), 1)
+            item=checklistItem.item).count(), 1)
+        self.assertFalse(checklistItem.in_file)
+        self.assertFalse(checklistItem.not_applicable)
+        self.assertFalse(checklistItem.global_item)
+        self.assertIsInstance(checklistItem.owner, ActivityUser)
