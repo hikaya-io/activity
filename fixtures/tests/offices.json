@@ -1,0 +1,14 @@
+[
+    {
+        "model": "workflow.office",
+        "fields": {
+            "name": "Office 1"
+        }
+    },
+    {
+        "model": "workflow.office",
+        "fields": {
+            "name": "Office 2"
+        }
+    }
+]
