@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set +ex
+set -ex
 
 #@--- Function to authenticate to docker hub ---@#
 docker_hub_auth() {
