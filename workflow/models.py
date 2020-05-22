@@ -1702,8 +1702,8 @@ class LoggedUser(models.Model):
     ! This is currently an unused feature
     ! This is disabled by commenting out connecting the handler to the signals below.
     ! This has the standard permissions. Meaning any user can see all the logged users.
-    ? Can this be better implemented using the `is_authenticated` attribute of the base User?
-    ? https://docs.djangoproject.com/en/3.0/ref/contrib/auth/#django.contrib.auth.models.User.is_authenticated
+    ? If looking for reimplementing this, check out this SO thread:
+    ? https://stackoverflow.com/a/2723706/4017403
     """
     username = models.CharField(max_length=30, primary_key=True)
     country = models.CharField(max_length=100, blank=False)
