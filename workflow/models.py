@@ -1697,6 +1697,14 @@ class ChecklistItem(models.Model):
 
 # Logged users
 class LoggedUser(models.Model):
+    """
+    Model to keep track of currently logged in users
+    ! This is currently an unused feature
+    ! This is disabled by commenting out connecting the handler to the signals below.
+    ! This has the standard permissions. Meaning any user can see all the logged users.
+    ? Can this be better implemented using the `is_authenticated` attribute of the base User?
+    ? https://docs.djangoproject.com/en/3.0/ref/contrib/auth/#django.contrib.auth.models.User.is_authenticated
+    """
     username = models.CharField(max_length=30, primary_key=True)
     country = models.CharField(max_length=100, blank=False)
     email = models.CharField(max_length=100, blank=False,
@@ -1739,8 +1747,9 @@ class LoggedUser(models.Model):
         except LoggedUser.DoesNotExist:
             pass
 
-    user_logged_in.connect(login_user)
-    user_logged_out.connect(logout_user)
+    # ! Disabling the feature...
+    # user_logged_in.connect(login_user)
+    # user_logged_out.connect(logout_user)
 
 
 def get_user_country(request):
