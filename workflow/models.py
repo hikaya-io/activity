@@ -252,6 +252,9 @@ TITLE_CHOICES = (
 
 
 class ActivityUser(models.Model):
+    """
+    Custom User model. Extends base User model with a one-to-one field.
+    """
     title = models.CharField(blank=True, null=True,
                              max_length=3, choices=TITLE_CHOICES)
     name = models.CharField("Given Name", blank=True,
@@ -284,15 +287,6 @@ class ActivityUser(models.Model):
     def __str__(self):
         return self.name or ''
 
-    @property
-    def countries_list(self):
-        return ', '.join([x.code for x in self.countries.all()])
-
-    @property
-    def organizations_list(self):
-        return ', '.join([x.name for x in self.organizations.all()])
-
-    # on save add create date or update edit date
     def save(self, *args, **kwargs):
         if self.create_date is None:
             self.create_date = datetime.now()
