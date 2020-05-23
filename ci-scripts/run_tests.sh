@@ -17,6 +17,7 @@ setup_python() {
 
 #@--- Install and activate virtualenv ---@#
 install_activate_virtualenv() {
+    cp activity/settings/local-sample.py activity/settings/local.py
     pip3 install pipenv
     pipenv install
     source $(python3 -m pipenv --venv)/bin/activate
