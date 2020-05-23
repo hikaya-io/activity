@@ -1,16 +1,24 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
 
 from django.test import TestCase
 from workflow.models import (
-    Organization, Program, Country, Province, ProjectAgreement, Sector,
-    ProjectComplete, ProjectType, SiteProfile, Office, Benchmarks, Budget
+    Benchmarks,
+    Budget,
+    Country,
+    Office,
+    Organization,
+    Program,
+    ProjectAgreement,
+    ProjectComplete,
+    ProjectType,
+    Province,
+    Sector,
+    SiteProfile,
 )
 
 
-class SiteProfileTestCase(TestCase):
+class ProjectCompleteTestCase(TestCase):
 
-    fixtures = ['fixtures/tests/organization.json', 'fixtures/tests/profiletypes.json']
+    fixtures = ['fixtures/tests/projecttype.json', 'fixtures/tests/sectors.json']
 
     def setUp(self):
         new_organization = Organization.objects.create(name="Activity")
@@ -20,6 +28,10 @@ class SiteProfileTestCase(TestCase):
             country="testcountry", organization=get_organization)
         new_country.save()
         get_country = Country.objects.get(country="testcountry")
+        new_program = Program.objects.create(name="testprogram")
+        new_program.save()
+        new_program.country.add(get_country)
+        get_program = Program.objects.get(name="testprogram")
         new_province = Province.objects.create(
             name="testprovince", country=get_country)
         new_province.save()
@@ -32,15 +44,33 @@ class SiteProfileTestCase(TestCase):
             name="testcommunity", country=get_country, office=get_office,
             province=get_province)
         new_community.save()
-
-    def test_community_exists(self):
-        """Check for SiteProfile Object"""
         get_community = SiteProfile.objects.get(name="testcommunity")
-        self.assertEqual(SiteProfile.objects.filter(
-            id=get_community.id).count(), 1)
+        # load from fixtures
+        get_project_type = ProjectType.objects.get(id='1')
+        get_sector = Sector.objects.get(id='2')
+        new_agreement = ProjectAgreement.objects.create(
+            program=get_program,
+            project_name="testproject",
+            project_type=get_project_type, activity_code="111222",
+            office=get_office, sector=get_sector)
+        new_agreement.save()
+        new_agreement.site.add(get_community)
+        get_agreement = ProjectAgreement.objects.get(
+            project_name="testproject")
+        new_complete = ProjectComplete.objects.create(
+            program=get_program, project_name="testproject",
+            activity_code="111222", office=get_office, on_time=True,
+            community_handover=1, project_agreement=get_agreement)
+        new_complete.save()
+
+    def test_complete_exists(self):
+        """Check for Complete object"""
+        get_complete = ProjectComplete.objects.get(project_name="testproject")
+        self.assertEqual(ProjectComplete.objects.filter(
+            id=get_complete.id).count(), 1)
 
 
-class AgreementTestCase(TestCase):
+class ProjectAgreementTestCase(TestCase):
 
     fixtures = ['fixtures/tests/projecttype.json', 'fixtures/tests/sectors.json']
 
@@ -108,57 +138,3 @@ class AgreementTestCase(TestCase):
         """Check for Budget object"""
         get_budget = Budget.objects.get(contributor="testbudget")
         self.assertEqual(Budget.objects.filter(id=get_budget.id).count(), 1)
-
-
-class CompleteTestCase(TestCase):
-
-    fixtures = ['fixtures/tests/projecttype.json', 'fixtures/tests/sectors.json']
-
-    def setUp(self):
-        new_organization = Organization.objects.create(name="Activity")
-        new_organization.save()
-        get_organization = Organization.objects.get(name="Activity")
-        new_country = Country.objects.create(
-            country="testcountry", organization=get_organization)
-        new_country.save()
-        get_country = Country.objects.get(country="testcountry")
-        new_program = Program.objects.create(name="testprogram")
-        new_program.save()
-        new_program.country.add(get_country)
-        get_program = Program.objects.get(name="testprogram")
-        new_province = Province.objects.create(
-            name="testprovince", country=get_country)
-        new_province.save()
-        get_province = Province.objects.get(name="testprovince")
-        new_office = Office.objects.create(
-            name="testoffice", province=new_province)
-        new_office.save()
-        get_office = Office.objects.get(name="testoffice")
-        new_community = SiteProfile.objects.create(
-            name="testcommunity", country=get_country, office=get_office,
-            province=get_province)
-        new_community.save()
-        get_community = SiteProfile.objects.get(name="testcommunity")
-        # load from fixtures
-        get_project_type = ProjectType.objects.get(id='1')
-        get_sector = Sector.objects.get(id='2')
-        new_agreement = ProjectAgreement.objects.create(
-            program=get_program,
-            project_name="testproject",
-            project_type=get_project_type, activity_code="111222",
-            office=get_office, sector=get_sector)
-        new_agreement.save()
-        new_agreement.site.add(get_community)
-        get_agreement = ProjectAgreement.objects.get(
-            project_name="testproject")
-        new_complete = ProjectComplete.objects.create(
-            program=get_program, project_name="testproject",
-            activity_code="111222", office=get_office, on_time=True,
-            community_handover=1, project_agreement=get_agreement)
-        new_complete.save()
-
-    def test_complete_exists(self):
-        """Check for Complete object"""
-        get_complete = ProjectComplete.objects.get(project_name="testproject")
-        self.assertEqual(ProjectComplete.objects.filter(
-            id=get_complete.id).count(), 1)
