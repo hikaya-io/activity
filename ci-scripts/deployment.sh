@@ -16,7 +16,7 @@ install_kubectl_doctl() {
         # Add binary to path
         sudo mv ./kubectl /usr/local/bin/kubectl
 
-        # Check the version 
+        # Check the version
         kubectl version --client
 
         # Install digital ocean cli tool
@@ -43,7 +43,7 @@ auth_kubectl_cluster() {
         kubectl create namespace $APPLICATION_ENV || echo "++++++ Namespace Exists ++++++"
         kubectl create namespace ingress-nginx || echo "++++++ Namespace ingress-nginx Exists ++++++"
     fi
-    
+
     # fetch cluster nodes
     kubectl get nodes
 
@@ -77,26 +77,26 @@ deploy_app() {
 
         echo "+++++++  make deployments with kubectl +++++++"
         kubectl create clusterrolebinding serviceaccounts-cluster-admin --clusterrole=cluster-admin --group=system:serviceaccounts
-        kubectl apply -f deployment_files/man.yaml 
+        kubectl apply -f deployment_files/man.yaml
         kubectl apply --validate=false -f deployment_files/cert-config/cert-manager-0.12.0.yaml
         kubectl apply --validate=false -f deployment_files/metrics-server.yaml
         sleep 70
 
-        kubectl apply -f deployment_files/ingress-service.yaml 
-        kubectl apply -f cert-secret.yaml  
+        kubectl apply -f deployment_files/ingress-service.yaml
+        kubectl apply -f cert-secret.yaml
         kubectl apply --validate=false -f cert-issuer.yaml
         kubectl apply --validate=false -f certificate.yaml
-        kubectl apply -f deployment.yaml  
+        kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
-        kubectl apply -f autoscaler.yaml 
-        kubectl apply -f ingress-config.yaml   
+        kubectl apply -f autoscaler.yaml
+        kubectl apply -f ingress-config.yaml
         echo "--------- deployment made !! ----------------"
     fi
 }
 
 #@--- Function to replace some key variables ---@#
 replace_variables() {
-    
+
     #@--- Replace necesary variables for dev env ---@#
     if [[ $TRAVIS_BRANCH == "dev" ]] || \
         [[ $GITHUB_REF == "refs/heads/dev" ]]; then
@@ -122,7 +122,7 @@ replace_variables() {
 
 #@--- Main Function ---@#
 main() {
-    
+
     if [[ $TRAVIS_EVENT_TYPE != "pull_request" ]]; then
         #@--- Run install and setup function ---@#
         install_kubectl_doctl
