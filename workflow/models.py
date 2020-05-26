@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import json
 from urllib.request import urlopen
-from django.contrib.auth.signals import user_logged_in, user_logged_out
+# from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.db import models
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
@@ -1735,7 +1735,7 @@ class LoggedUser(models.Model):
                     LoggedUser(username=user.username,
                                country=country, email=user.email).save()
 
-        except Exception as e:
+        except Exception:
             pass
 
     def logout_user(sender, request, user, **kwargs):
@@ -1760,7 +1760,7 @@ def get_user_country(request):
         response = json.loads(response)
         return response['country'].lower()
 
-    except Exception as e:
+    except Exception:
         response = "undefined"
         return response
 
