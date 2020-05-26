@@ -4,8 +4,15 @@ set -ex
 
 #@--- Function to authenticate to docker hub ---@#
 docker_hub_auth() {
+    if [[ $TRAVIS_BRANCH == "dev" ]] || \
+        [[ $GITHUB_REF == "refs/heads/dev" ]] || \
+        [[ $TRAVIS_BRANCH == "staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
+        [[ $GITHUB_EVENT_NAME == "release" ]] || \
+        [[ ! -z $TRAVIS_TAG ]]; then
 
-    docker login -p=$DOCKER_HUB_PASSWD -u=$DOCKER_HUB_USERNM
+        docker login -p=$DOCKER_HUB_PASSWD -u=$DOCKER_HUB_USERNM
+    fi
 
 }
 
