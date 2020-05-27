@@ -71,7 +71,7 @@ class Command(BaseCommand):
 
                     self.stdout.write(self.style.SUCCESS(
                         '%s, Processed successfully.' % ind.id))
-                except ValueError as e:
+                except ValueError:
                     self.stdout.write(self.style.ERROR(
                         '%s, LOP [%s] is missing or not numeric.' %
                         (ind.id, ind.lop_target)))

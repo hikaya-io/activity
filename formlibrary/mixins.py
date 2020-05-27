@@ -8,14 +8,14 @@ from rest_framework import authentication, permissions
 from rest_framework.pagination import PageNumberPagination
 
 
-class LoggedInMixin(object):
+class LoggedInMixin:
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(LoggedInMixin, self).dispatch(*args, **kwargs)
 
 
-class AjaxableResponseMixin(object):
+class AjaxableResponseMixin:
     """
     Mixin to add AJAX support to a form.
     Must be used with an object-based FormView (e.g. CreateView)
@@ -42,7 +42,7 @@ class AjaxableResponseMixin(object):
             return response
 
 
-class APIDefaultsMixin(object):
+class APIDefaultsMixin:
     """Default settings for view authentication, permissions,
      filtering and pagination."""
 

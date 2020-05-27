@@ -161,9 +161,17 @@
           </li>
 
           <li class="dropdown {% if 'forms' in active %} active {% endif %}">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">{% trans 'Form Library' %} <i class="fa fa-angle-down"></i></a>
-            <ul class="dropdown-menu">
+            <a
+              href="/formlibrary/comingsoon"
+              {% comment %} class="dropdown-toggle"
+              data-toggle="dropdown" {% endcomment %}
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Form Library <i class="fa fa-angle-down"></i>
+            </a>
+            {% comment %} <ul class="dropdown-menu">
               <li>
                 <a href="/formlibrary/individual_list/0/0/0/"> {{ user.activity_user.organization.individual_label }}</a>
               </li>
@@ -173,7 +181,7 @@
               <li>
                 <a href="/formlibrary/training_list/0/0/"> {{ request.user.activity_user.organization.training_label }}</a>
               </li>
-            </ul>
+            </ul> {% endcomment %}
           </li>
 
           <li class="dropdown {% if 'components' in active %} active {% endif %}">
@@ -206,6 +214,8 @@
             <ul class="dropdown-menu">
               <li>
                 <a href="/customdashboard/program_list/0/">{% trans 'Dashboards' %}</a>
+              </li><li>
+                <a href="{% url 'indicator_tracking_home' %}">{{ user.activity_user.organization.indicator_label }} {% trans 'Tracking Table' %}</a>
               </li>
             </ul>
           </li>
@@ -288,13 +298,13 @@
   </nav>
 
   <!-- .navbar collapse -->
-  <script type="text/javascript">
+  <!-- <script type="text/javascript">
     var myElement = document.getElementById('navid');
     // myElement.style.backgroundColor =
     //   '#{{ user.activity_user.organization.theme_color }}';
 
     myElement.style.backgroundColor = '#fff';
-  </script>
+  </script> -->
 
   <div id="alerts" class="container">
     <!-- Any messages for users -->

@@ -300,7 +300,7 @@ def public_dashboard(request, id=0, public=0):
 
             evidence_tables.append(table)
 
-    except Exception as e:
+    except Exception:
         pass
 
     for p in get_projects:

@@ -980,7 +980,7 @@ class Stakeholder(models.Model):
         Program, blank=True, null=True, on_delete=models.SET_NULL)
     sectors = models.ManyToManyField(Sector, blank=True)
     stakeholder_register = models.BooleanField(
-        "Has this partner been added to stakeholder register?")
+        "Has this partner been added to stakeholder register?", default=False)
     formal_relationship_document = models.ForeignKey(
         'Documentation',
         verbose_name="Formal Written Description of Relationship",
@@ -1733,7 +1733,7 @@ class LoggedUser(models.Model):
                     LoggedUser(username=user.username,
                                country=country, email=user.email).save()
 
-        except Exception as e:
+        except Exception:
             pass
 
     def logout_user(sender, request, user, **kwargs):
@@ -1757,7 +1757,7 @@ def get_user_country(request):
         response = json.loads(response)
         return response['country'].lower()
 
-    except Exception as e:
+    except Exception:
         response = "undefined"
         return response
 

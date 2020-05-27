@@ -23,13 +23,21 @@ class DisaggregationTypeSerializer(serializers.ModelSerializer):
         fields = ['id', 'disaggregation_type', 'standard', 'disaggregation_label']
 
 
+class LevelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Level
+        fields = '__all__'
+
+
 class IndicatorSerializer(serializers.ModelSerializer):
     disaggregation = DisaggregationTypeSerializer(read_only=True, many=True)
     program = ProgramSerializer(read_only=True, many=True)
+    level = LevelSerializer(read_only=True, many=True)
 
     class Meta:
         model = Indicator
-        fields = ['id', 'name', 'lop_target', 'baseline', 'rationale_for_target', 'disaggregation', 'program']
+        fields = ['id', 'name', 'lop_target', 'baseline', 'rationale_for_target', 'number',
+                  'unit_of_measure', 'disaggregation', 'program', 'level']
 
 
 class DisaggregationValueSerializer(serializers.ModelSerializer):
@@ -52,7 +60,9 @@ class CollectedDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CollectedData
-        fields = ['id', 'periodic_target', 'targeted', 'achieved', 'description', 'indicator', 'date_collected', 'evidence', 'disaggregation_value']
+        fields = ['id', 'periodic_target', 'targeted',
+                  'achieved', 'description', 'indicator',
+                  'date_collected', 'evidence', 'disaggregation_value']
 
 
 class PeriodicTargetSerializer(serializers.ModelSerializer):
@@ -80,12 +90,6 @@ class DataCollectionFrequencySerializer(serializers.ModelSerializer):
 class ObjectiveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Objective
-        fields = '__all__'
-
-
-class LevelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Level
         fields = '__all__'
 
 

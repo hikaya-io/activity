@@ -116,7 +116,7 @@
                 <a class="text-danger"
                   href="#deleteIndicatorModal{{ indicator.id }}"
                   data-toggle="modal"
-                  onclick="setItemToDelete({{ indicator.id }})"
+                  onclick="setIndicatorItemToDelete({{ indicator.id }})"
                   data-target="#deleteIndicatorModal{{ indicator.id }}">
                   {% trans 'Delete' %}</a></li>
             </ul>
@@ -183,6 +183,7 @@
 </div>
 {% endblock content %}
 {% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}js/indicator_delete.js"></script>
 <script src="{{ STATIC_URL }}vue.js/hikaya_select.js"></script>
 <script src="{{ STATIC_URL }}vue.js/collected_data_table.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}vue.js/indicators/target_period.js"></script>

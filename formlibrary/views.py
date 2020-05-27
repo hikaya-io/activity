@@ -1,33 +1,28 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import json
+
+
+from django.contrib import messages
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Q
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
+from django.shortcuts import redirect
+from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.generic.detail import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from django.core import serializers
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.mixins import ListModelMixin
 
-from .models import TrainingAttendance, Individual, Distribution
-from django.shortcuts import redirect
+from activity.util import get_country, group_excluded
+from workflow.models import FormGuidance, Program, ProjectAgreement
 
 from .forms import TrainingAttendanceForm, IndividualForm, DistributionForm
-from workflow.models import FormGuidance, Program, ProjectAgreement, ActivityUser
-from django.utils.decorators import method_decorator
-from activity.util import get_country, group_excluded
-
-from django.shortcuts import render
-from django.contrib import messages
-from django.db.models import Q
-
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django.views.generic.detail import View
 from .mixins import AjaxableResponseMixin, CustomPagination
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-
+from .models import TrainingAttendance, Individual, Distribution
 from .serializers import IndividualSerializer
 
 
@@ -498,20 +493,23 @@ class TrainingListObjects(View, AjaxableResponseMixin):
         if int(self.kwargs['program']) == 0:
             get_training = TrainingAttendance.objects.all().filter(
                 program__country__in=countries).values(
-                'id', 'create_date',
-                'training_name',
-                'project_agreement__project_name')
+                    'id', 'create_date',
+                    'training_name',
+                    'project_agreement__project_name'
+                )
         elif program_id != 0 and project_id == 0:
             get_training = TrainingAttendance.objects.all().filter(
                 program=program_id).values(
-                'id', 'create_date', 'training_name',
-                'project_agreement__project_name')
+                    'id', 'create_date', 'training_name',
+                    'project_agreement__project_name'
+                )
         else:
             get_training = TrainingAttendance.objects.all().filter(
                 program_id=program_id,
                 project_agreement_id=project_id).values(
-                'id', 'create_date', 'training_name',
-                'project_agreement__project_name')
+                    'id', 'create_date', 'training_name',
+                    'project_agreement__project_name'
+                )
 
         get_training = json.dumps(list(get_training), cls=DjangoJSONEncoder)
 
@@ -552,7 +550,8 @@ class IndividualListObjects(View, AjaxableResponseMixin):
             get_individual = Individual.objects.all().filter(
                 program__id=program_id,
                 training__project_agreement=project_id).values(
-                'id', 'first_name', 'create_date')
+                    'id', 'first_name', 'create_date'
+                )
 
         get_individual = json.dumps(
             list(get_individual), cls=DjangoJSONEncoder)
@@ -575,7 +574,8 @@ class DistributionListObjects(View, AjaxableResponseMixin):
         elif program_id != 0 and project_id == 0:
             get_distribution = Distribution.objects.all().filter(
                 program_id=program_id).values(
-                'id', 'distribution_name', 'create_date', 'program')
+                    'id', 'distribution_name', 'create_date', 'program'
+                )
         else:
             get_distribution = Distribution.objects.all().filter(
                 program_id=program_id,
