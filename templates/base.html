@@ -121,11 +121,11 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="{% url 'index' %}">
-        {% if user.is_authenticated and user.activity_user.organization.logo.url %}
-          <img src="{{ user.activity_user.organization.logo.url }}" alt="Activity">
-        {% else %}
-          <img src="{{ STATIC_URL }}img/hikaya-activity-logo.png"  alt="Activity">
-        {% endif %}
+          {% if user.is_authenticated and user.activity_user.organization.logo.url %}
+            <img src="{{ user.activity_user.organization.logo.url }}" alt="Activity">
+          {% else %}
+            <img src="/static/img/hikaya-activity-logo.png" alt="Activity">
+          {% endif %}
         </a>
       </div>
 
