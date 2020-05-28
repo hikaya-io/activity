@@ -1,4 +1,6 @@
 {% load staticfiles %} {% load static %} {% load group_tag %}
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +20,7 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Hikaya - Activity: We help organizations tell their stories through data" />
+  <meta name="description" content="Hikaya - Activity: {% trans 'We help organizations tell their stories through data' %}" />
   <meta name="author" content="Hikaya" />
 
   <title>{% block title %} {{user.activity_user.organization.name}} / Activity {% endblock %}</title>
@@ -113,7 +115,7 @@
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
           data-target="#activity-navbar-collapse" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
+          <span class="sr-only">{% trans 'Toggle navigation' %}</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -133,7 +135,7 @@
         <ul class="nav navbar-nav">
           <li class="dropdown {% if 'workflow' in active %} active {% endif %}">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">Workflows <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+              aria-expanded="false">{% trans 'Workflows' %} <i class="fa fa-angle-down" aria-hidden="true"></i></a>
             <ul class="dropdown-menu">
               <li>
                 <a href="{% url 'level1_list' %}">{{ user.activity_user.organization.level_1_label }}</a>
@@ -147,21 +149,29 @@
 
           <li class="{% if 'indicators' in active %} active {% endif %}">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">Indicators <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+              aria-expanded="false">{% trans 'Indicators' %} <i class="fa fa-angle-down" aria-hidden="true"></i></a>
             <ul class="dropdown-menu">
               <li>
                 <a href="/indicators/home/0/0/0">{{ user.activity_user.organization.indicator_label }}</a>
               </li>
               <li>
-                <a href="{% url 'objectives' %}">Objectives</a>
+                <a href="{% url 'objectives' %}">{% trans 'Objectives' %}</a>
               </li>
             </ul>
           </li>
 
           <li class="dropdown {% if 'forms' in active %} active {% endif %}">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">Form Library <i class="fa fa-angle-down"></i></a>
-            <ul class="dropdown-menu">
+            <a
+              href="/formlibrary/comingsoon"
+              {% comment %} class="dropdown-toggle"
+              data-toggle="dropdown" {% endcomment %}
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Form Library <i class="fa fa-angle-down"></i>
+            </a>
+            {% comment %} <ul class="dropdown-menu">
               <li>
                 <a href="/formlibrary/individual_list/0/0/0/"> {{ user.activity_user.organization.individual_label }}</a>
               </li>
@@ -171,19 +181,19 @@
               <li>
                 <a href="/formlibrary/training_list/0/0/"> {{ request.user.activity_user.organization.training_label }}</a>
               </li>
-            </ul>
+            </ul> {% endcomment %}
           </li>
 
           <li class="dropdown {% if 'components' in active %} active {% endif %}">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">Components <i class="fa fa-angle-down"></i></a>
+              aria-expanded="false">{% trans 'Components' %} <i class="fa fa-angle-down"></i></a>
             <ul class="dropdown-menu">
               <li>
-                <a href="/workflow/contact_list/0/">Contacts</a>
+                <a href="/workflow/contact_list/0/">{% trans 'Contacts' %}</a>
               </li>
               <li>
                 <a href="/workflow/documentation_list/0/0/">
-                  Documents
+                  {% trans 'Documents' %}
                 </a>
               </li>
               <li>
@@ -200,55 +210,13 @@
 
           <li class="dropdown {% if 'reports' in active %} active {% endif %}">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">Reports <i class="fa fa-angle-down"></i></a>
+              aria-expanded="false">{% trans 'Reports' %} <i class="fa fa-angle-down"></i></a>
             <ul class="dropdown-menu">
               <li>
-                <a href="/customdashboard/program_list/0/">Dashboards</a>
+                <a href="/customdashboard/program_list/0/">{% trans 'Dashboards' %}</a>
+              </li><li>
+                <a href="{% url 'indicator_tracking_home' %}">{{ user.activity_user.organization.indicator_label }} {% trans 'Tracking Table' %}</a>
               </li>
-              <!-- <li>
-                    <a href="/reports/report/"
-                      >
-                      {{ user.activity_user.organization.level_1_label }}
-                      Report</a
-                    >
-                  </li> -->
-              <!-- <li>
-                    <a href="/workflow/report/0/none"
-                      >
-                      {{ user.activity_user.organization.level_2_label }}
-                      Report</a
-                    >
-                  </li> -->
-              <!-- <li>
-                    <a href="/indicators/collecteddata/0/0/0/"
-                      >
-                      Indicator Data Report</a
-                    >
-                  </li> -->
-              <!-- <li>
-                    <a href="/indicators/data/0/0/0/"
-                      >
-                      Indicator Visual Report</a
-                    >
-                  </li> -->
-              <!-- <li>
-                    <a href="/indicators/report/0/0/0/"
-                      >
-                      Indicator Library</a
-                    >
-                  </li> -->
-              <!-- <li>
-                    <a href="/indicators/tvareport/"
-                      > Target
-                      vs Actual Report</a
-                    >
-                  </li> -->
-              <!-- <li>
-                    <a href="/indicators/disrep/0"
-                      >
-                      Indicator Disaggregation Report</a
-                    >
-                  </li> -->
             </ul>
           </li>
         </ul>
@@ -259,17 +227,17 @@
               aria-expanded="false">{{ user.activity_user.name | make_list | first }} <span
                 class="fa fa-angle-down"></span></a>
             <ul class="dropdown-menu">
-              <li class="dropdown-header">signed in as <strong>{{user.username}}</strong></li>
+              <li class="dropdown-header">{% trans 'Signed in as' %} <strong>{{user.username}}</strong></li>
               <li class="divider"></li>
-              <li><a href="{% url 'profile' %}">Profile</a></li>
+              <li><a href="{% url 'profile' %}">{% trans 'Profile' %}</a></li>
               {% if user.is_superuser or user.activity_user|has_org_access:"Owner" %}
               <li>
-                <a href="{% url 'admin_profile_settings' %}">Organization Settings</a>
+                <a href="{% url 'admin_profile_settings' %}">{% trans 'Organization Settings' %}</a>
               </li>
               {% endif %}
               <li class="divider"></li>
               {% if user.activity_user.organizations %}
-              <li class="dropdown-header">Organizations</li>
+              <li class="dropdown-header">{% trans 'Organizations' %}</li>
               {% for org in user.activity_user.organizations.all %}
                 {% if user.activity_user|enabled_in_org:org.id%}
                   <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
@@ -281,13 +249,13 @@
               {% endfor %}
               <li>
                 <a href="/accounts/register/organization">
-                  <i class="fa fa-plus"></i> Add new Organization
+                  <i class="fa fa-plus"></i> {% trans 'Add new Organization' %}
                 </a>
               </li>
               {% endif %}
               <li class="divider"></li>
               <li>
-                <a href="{% url 'logout' %}" class="text-danger">Sign out</a>
+                <a href="{% url 'logout' %}" class="text-danger">{% trans 'Sign out' %}</a>
               </li>
             </ul>
           </li>
@@ -295,7 +263,7 @@
         {% else %}
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Login <i class="fa fa-angle-down"></i>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Login' %} <i class="fa fa-angle-down"></i>
             </a>
             <ul class="dropdown-menu" id="login-dropdown">
               <li>
@@ -313,7 +281,7 @@
 
                   <div class="text-right">
                     <button type="submit" class="btn btn-success">
-                      Sign in
+                      {% trans 'Sign in' %}
                     </button>
                   </div>
                 </form>
@@ -330,13 +298,13 @@
   </nav>
 
   <!-- .navbar collapse -->
-  <script type="text/javascript">
+  <!-- <script type="text/javascript">
     var myElement = document.getElementById('navid');
     // myElement.style.backgroundColor =
     //   '#{{ user.activity_user.organization.theme_color }}';
 
     myElement.style.backgroundColor = '#fff';
-  </script>
+  </script> -->
 
   <div id="alerts" class="container">
     <!-- Any messages for users -->
@@ -394,8 +362,8 @@
       {% else %}
       <div class="column col-xs-16 text-right">
         <a href="https://hikaya.io" class="text-muted">© 2020 Hikaya</a>
-        <a href="https://docs.hikaya.io" class="text-muted">Documentation</a>
-        <a href="https://github.com/hikaya-io/activity/blob/master/LICENSE" class="text-muted">License</a>
+        <a href="https://docs.hikaya.io" class="text-muted">{% trans 'Documentation' %}</a>
+        <a href="https://github.com/hikaya-io/activity/blob/master/LICENSE" class="text-muted">{% trans 'License' %}</a>
       </div>
       {% endif %}
     </div>

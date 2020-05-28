@@ -5,7 +5,8 @@ set +ex
 #@--- install kubectl and doctl ---@#
 install_kubectl_doctl() {
     if [[ $TRAVIS_BRANCH == "dev" ]] || \
-        [[ $TRAVIS_BRANCH == "staging" ]]; then
+        [[ $TRAVIS_BRANCH == "staging" ]] || \
+        [[ ! -z $TRAVIS_TAG ]]; then
         echo "++++++++++++ install kubectl ++++++++++++"
         curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 
@@ -15,7 +16,7 @@ install_kubectl_doctl() {
         # Add binary to path
         sudo mv ./kubectl /usr/local/bin/kubectl
 
-        # Check the version 
+        # Check the version
         kubectl version --client
 
         # Install digital ocean cli tool
@@ -35,13 +36,14 @@ auth_kubectl_cluster() {
         [[ $GITHUB_REF == "refs/heads/dev" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/master" ]]; then
+        [[ $GITHUB_EVENT_NAME == "release" ]] || \
+        [[ ! -z $TRAVIS_TAG ]]; then
         doctl auth init -t $SERVICE_ACCESS_TOKEN
         doctl -t $SERVICE_ACCESS_TOKEN kubernetes cluster kubeconfig save $CLUSTER_NAME
         kubectl create namespace $APPLICATION_ENV || echo "++++++ Namespace Exists ++++++"
         kubectl create namespace ingress-nginx || echo "++++++ Namespace ingress-nginx Exists ++++++"
     fi
-    
+
     # fetch cluster nodes
     kubectl get nodes
 
@@ -62,7 +64,8 @@ deploy_app() {
         [[ $GITHUB_REF == "refs/heads/dev" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/master" ]]; then
+        [[ $GITHUB_EVENT_NAME == "release" ]] || \
+        [[ ! -z $TRAVIS_TAG ]]; then
         echo "------- generate deployfiles --------------"
         envsubst < ./deployment_files/deployment > deployment.yaml
         envsubst < ./deployment_files/service > service.yaml
@@ -74,26 +77,26 @@ deploy_app() {
 
         echo "+++++++  make deployments with kubectl +++++++"
         kubectl create clusterrolebinding serviceaccounts-cluster-admin --clusterrole=cluster-admin --group=system:serviceaccounts
-        kubectl apply -f deployment_files/man.yaml 
+        kubectl apply -f deployment_files/man.yaml
         kubectl apply --validate=false -f deployment_files/cert-config/cert-manager-0.12.0.yaml
         kubectl apply --validate=false -f deployment_files/metrics-server.yaml
         sleep 70
 
-        kubectl apply -f deployment_files/ingress-service.yaml 
-        kubectl apply -f cert-secret.yaml  
+        kubectl apply -f deployment_files/ingress-service.yaml
+        kubectl apply -f cert-secret.yaml
         kubectl apply --validate=false -f cert-issuer.yaml
         kubectl apply --validate=false -f certificate.yaml
-        kubectl apply -f deployment.yaml  
+        kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
-        kubectl apply -f autoscaler.yaml 
-        kubectl apply -f ingress-config.yaml   
+        kubectl apply -f autoscaler.yaml
+        kubectl apply -f ingress-config.yaml
         echo "--------- deployment made !! ----------------"
     fi
 }
 
 #@--- Function to replace some key variables ---@#
 replace_variables() {
-    
+
     #@--- Replace necesary variables for dev env ---@#
     if [[ $TRAVIS_BRANCH == "dev" ]] || \
         [[ $GITHUB_REF == "refs/heads/dev" ]]; then
@@ -109,7 +112,8 @@ replace_variables() {
     fi
 
     #@--- Replace necesary variables for production env ---@#
-    if [[ $GITHUB_REF == "refs/heads/master" ]]; then
+    if [[ $GITHUB_EVENT_NAME == "release" ]] || \
+        [[ ! -z $TRAVIS_TAG ]]; then
         export APPLICATION_ENV=${APPLICATION_ENV_PROD}
         export HOST_DOMAIN=${HOST_DOMAIN_PROD}
         export CLUSTER_NAME=${CLUSTER_NAME_PROD}
@@ -118,7 +122,7 @@ replace_variables() {
 
 #@--- Main Function ---@#
 main() {
-    
+
     if [[ $TRAVIS_EVENT_TYPE != "pull_request" ]]; then
         #@--- Run install and setup function ---@#
         install_kubectl_doctl

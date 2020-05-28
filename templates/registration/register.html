@@ -1,8 +1,10 @@
 {% extends "base.html" %} {% block content %}
+{% load i18n %}
+
 <div class="container auth-container">
   <div class="row">
     <div class="col-md-10 col-md-offset-1">
-      <h1>Create an account</h1>
+      <h1>{% trans 'Create an account' %}</h1>
       <div
         class="btn-group btn-group-justified auth-nav"
         role="group"
@@ -13,7 +15,7 @@
             type="button"
             class="btn btn-default btn-sm"
             href="{% url 'login' %}"
-            ><strong>Login</strong></a
+            ><strong>{% trans 'Login' %}</strong></a
           >
         </div>
         <div class="btn-group" role="group">
@@ -21,14 +23,14 @@
             type="button"
             class="btn btn-login btn-sm"
             href="/accounts/register/user/none/"
-            ><strong>Register</strong></a
+            ><strong>{% trans 'Register' %}</strong></a
           >
         </div>
       </div>
       <div class="panel panel-default auth-main">
         <div class="panel-heading">
           <strong
-            >Fill in your details (mandatory fields are marked with *)</strong
+            >{% trans 'Fill in your details (mandatory fields are marked with *)' %}</strong
           >
         </div>
         <div class="panel-body">
@@ -42,7 +44,7 @@
               <div class="row">
                 <div class="col-md-6 form-group" id="div_first_name">
                   <label class="control-label" for="first_name"
-                    >First Name*</label
+                    >{% trans 'First Name' %}*</label
                   >
                   <input
                     type="text"
@@ -52,7 +54,7 @@
                   />
                 </div>
                 <div class="col-md-6 form-group" id="div_last_name">
-                  <label class="control-label" for="last_name">Last Name</label>
+                  <label class="control-label" for="last_name">{% trans 'Last Name' %}</label>
                   <input
                     type="text"
                     id="register_last_name"
@@ -63,7 +65,7 @@
               </div>
               <div class="row">
                 <div class="col-md-6 form-group" id="div_username">
-                  <label class="control-label" for="username">Username*</label>
+                  <label class="control-label" for="username">{% trans 'Username' %}*</label>
                   <input
                     type="text"
                     id="register_username"
@@ -87,7 +89,7 @@
                 </div>
                 <div class="col-md-6 form-group" id="div_email_address">
                   <label class="control-label" for="email_address"
-                    >Email Address*</label
+                    >{% trans 'Email Address' %}*</label
                   >
                   {% if email_address %}
                   <input
@@ -109,7 +111,7 @@
                   />
                   {% endif %}
                   <span id="emailHelpBlock" class="help-block hikaya-hide"
-                    >Invalid email address</span
+                    >{% trans 'Invalid email address' %}</span
                   >
                   {% if message_email %}
                   <script>
@@ -127,7 +129,7 @@
               </div>
               <div class="row">
                 <div class="col-md-6 form-group" id="div_password">
-                  <label class="control-label" for="password">Password*</label>
+                  <label class="control-label" for="password">{% trans 'Password' %}*</label>
                   <input
                     type="password"
                     id="register_password"
@@ -139,7 +141,7 @@
                 </div>
                 <div class="col-md-6 form-group" id="div_confirm_password">
                   <label class="control-label" for="confirm_password"
-                    >Confirm Password*</label
+                    >{% trans 'Confirm Password' %}*</label
                   >
                   <input
                     type="password"
@@ -153,7 +155,7 @@
               </div>
               <div class="form-group text-right">
                 <button type="reset" class="btn btn-md btn-close">
-                  Cancel
+                  {% trans 'Cancel' %}
                 </button>
                 <button
                   type="submit"
@@ -161,7 +163,7 @@
                   class="btn btn-md btn-primary"
                   disabled
                 >
-                  Sign up
+                  {% trans 'Sign up' %}
                 </button>
               </div>
             </form>

@@ -4,15 +4,18 @@
 from django.urls import path, re_path
 from .views import (
     IndicatorList, add_indicator, indicator_create, IndicatorCreate,
-    IndicatorUpdate, IndicatorDelete, PeriodicTargetDeleteView,
-    PeriodicTargetView, CollectedDataReportData, CollectedDataCreate, CollectedDataDelete,
+    IndicatorUpdate, PeriodicTargetDeleteView, PeriodicTargetView,
+    CollectedDataReportData, CollectedDataCreate, CollectedDataDelete,
     CollectedDataList, CollectedDataUpdate, CollectedDataAdd, CollectedDataEdit,
-    CollectedDataDeleteVue, collecteddata_import, indicator_report, indicator_delete,
-    TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint, IndicatorReport,
-    program_indicator_report, indicator_data_report, IndicatorExport, service_json,
-    collected_data_json, program_indicators_json, IndicatorReportData, IndicatorDataExport, ObjectiveView, objectives_list, objectives_tree, 
-    LevelView, DisaggregationTypeDeleteView, DisaggregationLabelDeleteView,
-    IndicatorTarget, IndicatorTypeView, DataCollectionFrequencyView, PeriodicTargetCreateView, IndicatorDataView)
+    CollectedDataDeleteVue, collecteddata_import, indicator_report,
+    indicator_delete, TVAReport, TVAPrint, DisaggregationReport, DisaggregationPrint,
+    IndicatorReport, program_indicator_report, indicator_data_report, IndicatorExport,
+    service_json, collected_data_json, program_indicators_json, IndicatorReportData,
+    IndicatorDataExport, ObjectiveView, objectives_list, objectives_tree, LevelView,
+    DisaggregationTypeDeleteView, DisaggregationLabelDeleteView, IndicatorTarget,
+    IndicatorTypeView, DataCollectionFrequencyView, PeriodicTargetCreateView,
+    IndicatorDataView
+)
 
 urlpatterns = [
 
@@ -111,23 +114,22 @@ urlpatterns = [
     path('get_target/<int:indicator_id>/', IndicatorTarget.as_view(),
          name='indicator-targets'),
 
-# Objectives
-     re_path(
-          r'objective/(?P<pk>.*)',
-          ObjectiveView.as_view(),
-          name='objective_list'
+    # Objectives
+    re_path(
+        r'objective/(?P<pk>.*)',
+        ObjectiveView.as_view(),
+        name='objective_list'
     ),
 
-     path('objectives', objectives_list, name='objectives'),
-     path('objectives/tree', objectives_tree, name='objectives-tree'),
-     path('disaggregation_type/delete/<int:pk>/',
+    path('objectives', objectives_list, name='objectives'),
+    path('objectives/tree', objectives_tree, name='objectives-tree'),
+    path('disaggregation_type/delete/<int:pk>/',
          DisaggregationTypeDeleteView.as_view(),
          name='disaggregation_type_delete'),
-     path(
+    path(
         'disaggregation_label/delete/<int:pk>/',
         DisaggregationLabelDeleteView.as_view(),
         name='disaggregation_label_delete'),
-     
 
     # Levels Urls
     re_path(

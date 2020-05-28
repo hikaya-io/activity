@@ -1,43 +1,44 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+from datetime import date
 from django.test import TestCase
-from workflow.models import (
-    Program, Country, Province, ProjectAgreement, Sector,
-    ProjectType, SiteProfile, Office
-)
-from formlibrary.models import TrainingAttendance, Distribution, Individual
-from datetime import datetime
+from workflow.models import Program
+from formlibrary.models import TrainingAttendance, Individual, Training
 
 
 class TrainingAttendanceTestCase(TestCase):
 
+    fixtures = [
+        'fixtures/tests/programs.json',
+    ]
+
     def setUp(self):
-        new_program = Program.objects.create(name="testprogram")
-        new_program.save()
-        get_program = Program.objects.get(name="testprogram")
+        program = Program.objects.first()
+        # stakeholder_obj = Stakeholder.objects.create(name="test_stakeholder")
         new_training = TrainingAttendance.objects.create(
-            training_name="testtraining", program=get_program,
-            implementer="34",
+            training_name="testtraining",
+            program=program,
+            implementer="test stakeholder",
             reporting_period="34",
             total_participants="34",
             location="34",
             community="34",
             training_duration="34",
-            start_date="34",
-            end_date="34",
+            start_date=date(2020, 10, 1),
+            end_date=date(2020, 10, 19),
             trainer_name="34",
             trainer_contact_num="34",
             form_filled_by="34",
             form_filled_by_contact_num="34",
-            total_male="34",
-            total_female="34",
-            total_age_0_14_male="34",
-            total_age_0_14_female="34",
-            total_age_15_24_male="34",
-            total_age_15_24_female="34",
-            total_age_25_59_male="34"
-            )
+            total_male=34,
+            total_female=34,
+            total_age_0_14_male=34,
+            total_age_0_14_female=34,
+            total_age_15_24_male=34,
+            total_age_15_24_female=34,
+            total_age_25_59_male=34
+        )
         new_training.save()
 
     def test_training_exists(self):
@@ -48,108 +49,27 @@ class TrainingAttendanceTestCase(TestCase):
             id=get_training.id).count(), 1)
 
 
-class DistributionTestCase(TestCase):
-
-    fixtures = ['fixtures/projecttype.json', 'fixtures/sectors.json']
-
-    def setUp(self):
-        new_program = Program.objects.create(name="testprogram")
-        new_program.save()
-        get_program = Program.objects.get(name="testprogram")
-        new_country = Country.objects.create(country="testcountry")
-        new_country.save()
-        get_country = Country.objects.get(country="testcountry")
-        new_province = Province.objects.create(
-            name="testprovince", country=get_country)
-        new_province.save()
-        get_province = Province.objects.get(name="testprovince")
-        new_office = Office.objects.create(
-            name="testoffice", province=new_province)
-        new_office.save()
-        get_office = Office.objects.get(name="testoffice")
-        # create project agreement -- and load from fixtures
-        new_community = SiteProfile.objects.create(
-            name="testcommunity", country=get_country, office=get_office,
-            province=get_province)
-        new_community.save()
-        get_community = SiteProfile.objects.get(name="testcommunity")
-        get_project_type = ProjectType.objects.get(id='1')
-        get_sector = Sector.objects.get(id='2')
-        new_agreement = ProjectAgreement.objects.create(
-            program=get_program,
-            project_name="testproject", project_type=get_project_type,
-            activity_code="111222", office=get_office,
-            sector=get_sector)
-        new_agreement.save()
-        new_agreement.site.add(get_community)
-        get_agreement = ProjectAgreement.objects.get(
-            project_name="testproject")
-        new_distribution = Distribution.objects.create(
-            distribution_name="testdistribution", program=get_program,
-            initiation=get_agreement,
-            office_code=get_office,
-            distribution_indicator="34",
-            distribution_implementer="34",
-            reporting_period="34",
-            province=get_province,
-            total_individuals_received_input="34",
-            distribution_location="testlocation",
-            input_type_distributed="testinputtype",
-            distributor_name_and_affiliation="testdistributorperson",
-            distributor_contact_number="1-dis-tri-bute",
-            start_date=datetime(
-               2015, 8, 4, 12, 30, 45),
-            end_date=datetime(
-               2015, 9, 5, 12, 30, 45),
-            form_filled_by="test_form_filler",
-            form_filled_by_position="testdistributionmanager",
-            form_filled_by_contact_num="1-888-dst-rbut",
-            form_filled_date=datetime(
-               2016, 6, 1, 12, 30, 45),
-            form_verified_by="test_form_verifier",
-            form_verified_by_position="testdistributionmanager",
-            form_verified_by_contact_num="1-888-dst-rbut",
-            form_verified_date=datetime(
-               2016, 6, 2, 12, 30, 45),
-            total_received_input="34",
-            total_male="34",
-            total_female="34",
-            total_age_0_14_male="34",
-            total_age_0_14_female="34",
-            total_age_15_24_male="34",
-            total_age_15_24_female="34",
-            total_age_25_59_male="34",
-            total_age_25_59_female="34"
-            )
-        new_distribution.save()
-
-    def test_distribution_exists(self):
-        """Check for Distribution object"""
-        get_distribution = Distribution.objects.get(
-            distribution_name="testdistribution")
-        self.assertEqual(Distribution.objects.filter(
-            id=get_distribution.id).count(), 1)
-
-
 class IndividualTestCase(TestCase):
 
+    fixtures = [
+        # 'fixtures/tests/organization.json',
+        'fixtures/tests/trainings.json',
+        # 'fixtures/tests/programs.json',
+        # 'fixtures/tests/offices.json',
+        'fixtures/tests/users.json',
+        'fixtures/tests/activity-users.json',
+    ]
+
     def setUp(self):
-        new_program = Program.objects.create(name="testprogram")
-        new_program.save()
-        get_program = Program.objects.get(name="testprogram")
-        new_training = TrainingAttendance.objects.create(
-            training_name="testtraining", program=get_program)
-        new_training.save()
-        # get_training = TrainingAttendance.objects.get(
-        #     training_name="testtraining")
-        new_benny = Individual.objects.create(
+        training = Training.objects.first()
+        individual = Individual.objects.create(
             first_name="Joe Test", father_name="Mr Test", age="42",
             gender="male", signature=False, remarks="life")
-        new_benny.training.add(new_training)
-        new_benny.save()
+        individual.training.add(training)
+        individual.save()
 
     def test_individual_exists(self):
-        """Check for Benny object"""
-        get_benny = Individual.objects.get(first_name="Joe Test")
+        """Check for the Individual object"""
+        get_individual = Individual.objects.get(first_name="Joe Test")
         self.assertEqual(Individual.objects.filter(
-            id=get_benny.id).count(), 1)
+            id=get_individual.id).count(), 1)
