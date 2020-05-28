@@ -7,6 +7,7 @@ html {
 
 body {
   height: 100%;
+  margin-top: 50px;
   font-family: "Lato", system-ui, sans-serif !important;
   background-color: #fafafa;
   font-size: 14px;
@@ -672,7 +673,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .auth-container {
-  min-height: 95vh;
+  min-height: 90vh;
   padding-top: 10vh;
 }
 
@@ -1161,7 +1162,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   justify-content: center;
   align-items: center;
   margin: auto;
-  min-height: 95vh;
+  min-height: 90vh;
 }
 
 .error-page-content {
