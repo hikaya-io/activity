@@ -1,3 +1,4 @@
+import django
 from activity import views
 from activity.views import (
     BookmarkList, BookmarkCreate, BookmarkDelete, BookmarkUpdate,
@@ -192,6 +193,7 @@ urlpatterns = [  # rest framework
          views.activate_acccount, name='activate'),
     path('oauth/',
          include('social_django.urls', namespace='social')),
+    path('errors/500/', django.views.defaults.server_error),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
