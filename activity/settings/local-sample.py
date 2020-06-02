@@ -9,7 +9,7 @@ import os
 
 from django.core.exceptions import ImproperlyConfigured
 
-DEBUG = True
+DEBUG = False
 
 # Normally you should not import ANYTHING from Django directly
 # into your settings, but ImproperlyConfigured is an exception.

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-26 18:57-0700\n"
+"POT-Creation-Date: 2020-05-26 21:07-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,15 +22,15 @@ msgstr ""
 msgid "Page Not found"
 msgstr "Page non trouvée"
 
-#: 400.html:14 404.html:19
+#: 400.html:14 404.html:15
 msgid "This is not the page you were looking for,"
 msgstr "Ceci n'est pas la page que vous cherchiez"
 
-#: 400.html:14 404.html:19
+#: 400.html:14 404.html:17
 msgid "you may be lost."
 msgstr "vous pourriez être perdu."
 
-#: 400.html:15 403.html:16 404.html:20 500.html:17
+#: 400.html:15 403.html:16 404.html:19 500.html:21
 msgid "Go to home page"
 msgstr "Aller à la page d'accueil"
 
@@ -52,7 +52,7 @@ msgstr "Vous ne disposez pas des autorisations appropriées"
 msgid "Contact your organization or country admin"
 msgstr "Veullez contactez votre organisation"
 
-#: 500.html:5 500.html:7
+#: 500.html:4 500.html:6
 msgid "Server Error"
 msgstr "Erreur Serveur"
 
@@ -60,13 +60,13 @@ msgstr "Erreur Serveur"
 msgid "There was a problem loading this page."
 msgstr "Un problème est survenu lors du chargement de cette page."
 
-#: 500.html:16
-msgid "Notify your systems administrator if you think"
-msgstr "Notifiez votre administrateur système si vous pense que"
+#: 500.html:17
+msgid "Notify your systems administrator if you"
+msgstr "Notifiez votre administrateur système si vous"
 
-#: 500.html:16
-msgid "you should not be seeing this page."
-msgstr "vous n'êtes pas censé voir cette page"
+#: 500.html:19
+msgid "think you should not be seeing this page."
+msgstr "pensez que vous n'êtes pas censé voir cette page"
 
 #: base.html:23
 msgid "We help organizations tell their stories through data"
@@ -89,23 +89,21 @@ msgstr "Indicateurs"
 msgid "Objectives"
 msgstr "Objectifs"
 
-#: base.html:165 report_base.html:82
-msgid "Form Library"
-msgstr "Librairie des formulaires"
-
-#: base.html:181 index.html:260
+#: base.html:191 index.html:260
 msgid "Components"
 msgstr "Composantes"
 
-#: base.html:184
+#: base.html:194
+#, fuzzy
+#| msgid "contacts"
 msgid "Contacts"
 msgstr "Contacts"
 
-#: base.html:188 index.html:301 index.html:307 report_base.html:66
+#: base.html:198 index.html:301 index.html:307 report_base.html:66
 msgid "Documents"
 msgstr "Documents"
 
-#: base.html:205 report_base.html:90
+#: base.html:215 report_base.html:90
 msgid "Reports"
 msgstr "Rapports"
 
@@ -114,10 +112,14 @@ msgid "Dashboards"
 msgstr "Mes tableaux de bord"
 
 #: base.html:220
+msgid "Tracking Table"
+msgstr "Table de Tracking"
+
+#: base.html:232
 msgid "Signed in as"
 msgstr "Connecté en tant que"
 
-#: base.html:222 registration/bookmark_form.html:7
+#: base.html:234 registration/bookmark_form.html:7
 #: registration/bookmark_list.html:6 registration/profile.html:38
 #: report_base.html:113
 msgid "Profile"
@@ -139,12 +141,12 @@ msgstr "Ajouter une nouvelle Organisation"
 msgid "Sign out"
 msgstr "Se déconnecter"
 
-#: base.html:256 registration/confirm_email.html:13 registration/login.html:8
+#: base.html:268 registration/confirm_email.html:13 registration/login.html:8
 #: registration/login.html:20 registration/register.html:18
 msgid "Login"
 msgstr "Se connecter"
 
-#: base.html:274 registration/login.html:71 report_base.html:130
+#: base.html:286 registration/login.html:71 report_base.html:130
 msgid "Sign in"
 msgstr "Se connecter"
 
@@ -152,17 +154,9 @@ msgstr "Se connecter"
 msgid "Documentation"
 msgstr "Documentation"
 
-#: base.html:356
+#: base.html:368
 msgid "License"
 msgstr "License"
-
-#: comingsoon.html:3
-msgid "We’re still working on this,"
-msgstr "Nous travaillons encore sur cela,"
-
-#: comingsoon.html:3
-msgid "stay tuned!"
-msgstr "restez à l'écoute"
 
 #: contact.html:4 report_base.html:174
 msgid "Feedback"
@@ -735,6 +729,10 @@ msgstr "Données des indicateurs"
 msgid "Indicator Library"
 msgstr "Librairie d'indicateurs"
 
+#: report_base.html:82
+msgid "Form Library"
+msgstr "Librairie des formulaires"
+
 #: report_base.html:92
 msgid "Activity Report"
 msgstr "Rapport Activity"
@@ -766,3 +764,9 @@ msgstr "Se déconnecter"
 #: report_base.html:174
 msgid "FAQ"
 msgstr "FAQ"
+
+#~ msgid "We’re still working on this,"
+#~ msgstr "Nous travaillons encore sur cela,"
+
+#~ msgid "stay tuned!"
+#~ msgstr "restez à l'écoute"
