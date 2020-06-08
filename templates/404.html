@@ -6,16 +6,16 @@
 {% block page_title %}{% trans 'Page Not found' %}{% endblock page_title %}
 
 {% block content %}
-{% comment %} <p>This is not the page you were looking for, you may be lost.</p>
-<img src="{{ STATIC_URL }}img/Portland-404.png" border="1"> 
-        <button type="submit" class="btn btn-success">
-            Go to home page
-        </button>{% endcomment %}
+
 <div class="error-page">
     <div class="error-page-content">
         <img src="{{ STATIC_URL }}img/error-strokes.png" class="error-page-image"/>
         <p class="text-center error-code">404</p>
-        <p class="text-center error-message">{% trans 'This is not the page you were looking for,' %} <br /> {% trans 'you may be lost.' %}</p>
+        <p class="text-center error-message">
+            {% trans 'This is not the page you were looking for,' %}
+            <br />
+            {% trans 'you may be lost.' %}
+        </p>
         <a href="/dashboard/0/" class="btn btn-success error-button">{% trans 'Go to home page' %}</a>
     </div>
 </div>

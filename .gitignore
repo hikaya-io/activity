@@ -92,3 +92,5 @@ db.sqlite3
 .idea/
 .vscode
 .history/
+
+assets/
