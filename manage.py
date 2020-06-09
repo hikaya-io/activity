@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+#added comment
 import os
 import sys
 
 if __name__ == "__main__":
 
-    debug = os.environ.get('DEBUG', None)
+    debug = os.environ.get('DEBUG', True)
     settings = 'activity.settings.local'
     try:
 
