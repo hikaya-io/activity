@@ -420,3 +420,6 @@ MAP_WIDGETS = {
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET =  os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
+
+# header setting for is_secure method on request object behavior control
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
