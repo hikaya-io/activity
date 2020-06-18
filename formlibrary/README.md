@@ -2,17 +2,28 @@
 
 > This is work in progress
 
+## DONE
+
+List of closed issues and fixed bugs related to `formlibrary`:
+
+1. Create a [Service model](https://github.com/hikaya-io/activity/issues/412)
+2. Update [Distribution](https://github.com/hikaya-io/activity/issues/419) and [Training](https://github.com/hikaya-io/activity/issues/421) models
+
 ## TODOs
 
 Here is the list of Github issues to implement, in rough order:
 
-1. Create a [Service model](https://github.com/hikaya-io/activity/issues/412)
-2. Update [Distribution](https://github.com/hikaya-io/activity/issues/419) and [Training](https://github.com/hikaya-io/activity/issues/421) models
-3. Adjust fields in [Individual model](https://github.com/hikaya-io/activity/issues/403)
-4. Create [Case model](https://github.com/hikaya-io/activity/issues/410)
-5. Create [Household model](https://github.com/hikaya-io/activity/issues/409)
-6. Create [Attendance models](https://github.com/hikaya-io/activity/issues/422)
-7. Create [Inventory model](https://github.com/hikaya-io/activity/issues/418)
+1. Adjust fields in [Individual model](https://github.com/hikaya-io/activity/issues/403)
+2. Create [Case model](https://github.com/hikaya-io/activity/issues/410)
+3. Create [Household model](https://github.com/hikaya-io/activity/issues/409)
+4. Create [Attendance models](https://github.com/hikaya-io/activity/issues/422)
+5. Create [Inventory model](https://github.com/hikaya-io/activity/issues/418)
+
+For the frontend tasks:
+
+1. [Re-implement Distribution modal using Vue](https://github.com/hikaya-io/activity/issues/310)
+2. [Re-implement Trainings modal using Vue](https://github.com/hikaya-io/activity/issues/309)
+3. [Re-implement Individual modal using Vue](https://github.com/hikaya-io/activity/issues/308)
 
 ## Models
 
@@ -26,13 +37,13 @@ Multi Table Inheritance between model `Service`, and the different kinds of serv
 
 `Service` is marked as an abstract class, since a service can't exist without being one, and only one, of the supported service types.
 
-`Case` is a parent model for `Individual` and `Household`?
+`Case`, used to refer to an individual, or a group of individuals, receiving a training/distribution, should be a parent model for `Individual` and `Household`.
 
 ### Models relationships
 
 Since much refactoring is planned, it is important to keep track of the relationships of the models, especially with models of other applications:
 
-TrainingAttendance:
+TrainingAttendance (Deprecated model):
 
     ===> workflow/Program
     ===> workflow/ProjectAgreement
