@@ -27,8 +27,7 @@ from .views import (
     delete_training,
 )
 
-# place app url patterns here
-
+# ! These patterns are to be reconsidered
 urlpatterns = [
     path('comingsoon', TemplateView.as_view(template_name='formlibrary/comingsoon.html')),
     path('training_list/<slug:program>/<slug:project>/', TrainingList.as_view(),
