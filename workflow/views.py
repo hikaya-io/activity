@@ -16,7 +16,7 @@ from .models import (
     FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
     Office, Organization, ProjectStatus
 )
-from formlibrary.models import TrainingAttendance, Distribution
+from formlibrary.models import Training, Distribution
 from indicators.models import CollectedData, ExternalService
 from django.utils import timezone
 
@@ -159,7 +159,7 @@ class ProjectDash(ListView):
                 project_id=self.kwargs['pk']).count()
             get_community_count = SiteProfile.objects.all().filter(
                 projectagreement__id=self.kwargs['pk']).count()
-            get_training_count = TrainingAttendance.objects.all().filter(
+            get_training_count = Training.objects.all().filter(
                 project_agreement_id=self.kwargs['pk']).count()
             get_distribution_count = Distribution.objects.all().filter(
                 initiation_id=self.kwargs['pk']).count()

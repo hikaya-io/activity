@@ -5,7 +5,12 @@ from functools import partial
 from crispy_forms.helper import FormHelper
 from django import forms
 from workflow.models import Program, ProjectAgreement, Office, Province, SiteProfile
-from .models import TrainingAttendance, Distribution, Individual
+from .models import (
+    # TrainingAttendance,
+    Distribution,
+    Individual,
+    Training,
+)
 
 
 class DatePicker(forms.DateInput):
@@ -17,6 +22,7 @@ class DatePicker(forms.DateInput):
     DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 
 
+"""
 class TrainingAttendanceForm(forms.ModelForm):
     start_date = forms.DateField(widget=DatePicker.DateInput(), required=False)
     end_date = forms.DateField(widget=DatePicker.DateInput(), required=False)
@@ -44,6 +50,7 @@ class TrainingAttendanceForm(forms.ModelForm):
 
         self.fields['training_name'].label = '{} name'.format(self.organization.training_label)
         self.fields['training_duration'].label = '{} duration'.format(self.organization.training_label)
+"""
 
 
 class DistributionForm(forms.ModelForm):
@@ -100,7 +107,7 @@ class IndividualForm(forms.ModelForm):
         super(IndividualForm, self).__init__(*args, **kwargs)
 
         organization = self.request.user.activity_user.organization
-        self.fields['training'].queryset = TrainingAttendance.objects.filter(
+        self.fields['training'].queryset = Training.objects.filter(
             program__organization=organization)
         self.fields['program'].queryset = Program.objects.filter(
             organization=organization)

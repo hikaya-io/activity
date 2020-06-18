@@ -1,11 +1,8 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
+"""
 from datetime import datetime
 from django.db import models
 from workflow.models import Program, ProjectAgreement
 from .service import StartEndDates
-
 
 class TrainingAttendance(StartEndDates):
     training_name = models.CharField(max_length=255)
@@ -55,8 +52,7 @@ class TrainingAttendance(StartEndDates):
 # ? Tracking of attendance needs the notion of a session/class: track the `attendees`
 # ? from the list of registered into the program
 # class Attendance(models.Model):
-#     """
 #     Attendance "sheet" to keep track of Individuals/Household participations to trainings.
 #     Spec: https://github.com/hikaya-io/activity/issues/422
-#     """
 #     number_of_sessions = models.IntegerField()
+"""
