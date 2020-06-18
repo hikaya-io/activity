@@ -3,7 +3,9 @@
 from django.contrib import admin
 
 from .models import (
-    TrainingAttendance, Distribution, Individual, Training
+    Distribution,
+    Individual,
+    Training,
 )
 
 admin.site.register(Training)
@@ -26,6 +28,7 @@ class DistributionAdmin(admin.ModelAdmin):
     display = 'Program Dashboard'
 
 
+"""
 @admin.register(TrainingAttendance)
 class TrainingAttendanceAdmin(admin.ModelAdmin):
     list_display = (
@@ -37,3 +40,4 @@ class TrainingAttendanceAdmin(admin.ModelAdmin):
     )
     display = 'Training Attendance'
     list_filter = ('program__country', 'program')
+"""
