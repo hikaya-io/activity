@@ -93,7 +93,6 @@ new Vue({
          * @param { boolean } saveNew - true to keep the modal open for additional posts
          */
 		processForm: function(saveNew = false) {
-			console.log("IN")
 			this.saveNew = saveNew;
 			this.$validator.validateAll().then(result => {
 				if (result) {
@@ -137,7 +136,7 @@ new Vue({
 					}
                 );
 				if (response.data) {
-					toastr.success(`Program ${this.name} successfully saved`);
+					toastr.success(`${this.level_1_label} ${this.name} successfully saved`);
 					this.programsList.unshift(response.data);
 
 					if (!saveNew) {
