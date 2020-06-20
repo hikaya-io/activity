@@ -1,17 +1,13 @@
 #App Specific CSS
 
-/* Sticky footer styles
--------------------------------------------------- */
 html {
   position: relative;
   min-height: 100%;
 }
 
 body {
-  /* Margin bottom by footer height */
   height: 100%;
   margin-top: 50px;
-  margin-bottom: 60px;
   font-family: "Lato", system-ui, sans-serif !important;
   background-color: #fafafa;
   font-size: 14px;
@@ -46,15 +42,12 @@ a:focus, a:hover {
 
 
 #footer {
-  /* removing sticky footer */
-  /* position: fixed; */
-  bottom: 0px;
-  width: 100%;
+  /* bottom: 0; */
+  /* width: 100%; */
   /* Set the fixed height of the footer here */
-  height: 40px;
+  /* height: 40px; */
   border-top: 1px solid #fafafa;
   background-color: #fafafa;
-  vertical-align: top;
   color: rgb(50, 50, 50);
   font-family: 'Lato', sans-serif;
   font-weight: 300;
@@ -680,8 +673,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .auth-container {
-  min-height: 85vh;
-  padding-top: 5vh;
+  min-height: 90vh;
+  padding-top: 10vh;
 }
 
 .auth-container h1 {
@@ -1169,6 +1162,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   justify-content: center;
   align-items: center;
   margin: auto;
+  min-height: 90vh;
 }
 
 .error-page-content {

@@ -1,441 +1,388 @@
 {% load staticfiles %} {% load static %} {% load group_tag %}
 {% load i18n %}
-
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <!-- Google Tag Manager -->
-  <script>
-    (function (w, d, s, l, i) {
-      w[l] = w[l] || []; w[l].push({
-        'gtm.start':
-          new Date().getTime(), event: 'gtm.js'
-      }); var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-KWBBGXK');
-  </script>
-  <!-- End Google Tag Manager -->
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Hikaya - Activity: {% trans 'We help organizations tell their stories through data' %}" />
-  <meta name="author" content="Hikaya" />
-
-  <title>{% block title %} {{user.activity_user.organization.name}} / Activity {% endblock %}</title>
-
-  <link rel="icon" href="{% static 'img/favicon.ico' %}" />
-
-<!--    <script src="https://unpkg.com/vue-tree-chart@1.2.6/dist/TreeChart.umd.min.js"></script>-->
-  <!-- end of Vue.js scripts -->
-
-  <link href="{% static 'css/admin.css' %}" rel="stylesheet" type="text/css" />
-  <link href="{% static 'css/vue_modal.css' %}" rel="stylesheet" type="text/css" />
-  <link href="{% static 'css/vue_tree.css' %}" rel="stylesheet" type="text/css" />
-  <link href="{% static 'css/components.css' %}" rel="stylesheet" type="text/css" />
-
-  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet" type="text/css" />
-  <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet" />
-
-  <!-- Datatables css for HTML tables -->
-  <link href="{% static 'DataTables/datatables.min.css' %}" rel="stylesheet" type="text/css" />
-
-  <!-- Bootstrap -->
-  <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-
-  <!-- Font Awesome -->
-  <link href="{% static 'css/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
-
-  <!-- jsTree -->
-  <link rel="stylesheet" href="{% static 'jstree/dist/themes/default/style.min.css' %}" />
-
-  <!-- hierachy chart -->
-  <link rel="stylesheet" href="{% static 'hierachy_chart/jquery.orgchart.css' %}" />
-
-  <!-- JQuery UI CSS -->
-  <link href="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.css' %}" rel="stylesheet" type="text/css" />
-
-  <!-- Dynamic table -->
-  <link rel="stylesheet" href="{% static 'css/select2.min.css' %} " />
-
-
-
-  <link href="{% static 'css/hikaya-bootstrap.css' %}" rel="stylesheet" type="text/css" />
-
-  <!--- Django Tables2 css -->
-  <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}" />
-
-  <!-- Hosted Leaflet CSS -->
-  <!-- <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" /> -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-  integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-  crossorigin=""/>
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
-  <link rel="stylesheet" href="{% static 'select2-bootstrap-theme/dist/select2-bootstrap.min.css' %}">
-
- <!-- Custom CSS -->
-  <link href="{% static 'css/app.css' %}" rel="stylesheet" type="text/css" />
-
-  {% block extra_js_in_header %}
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script type="text/javascript" src="{% static 'js/jquery-3.1.4.min.js' %}"></script>
-
-  <!-- App specific Javascript -->
-  <script type="text/javascript" src="{% static 'js/app.js' %}"></script>
-
-  <!-- Hosted Leaflet -->
-  <!-- <script src="{% static 'js/leaflet.js' %}"></script> -->
-  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-   crossorigin=""></script>
-
-  <!-- Vue.js scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vee-validate@2.1.7/dist/vee-validate.js"></script>
-  <script src="https://unpkg.com/vuejs-paginate@latest"></script>
-  <script src="https://unpkg.com/vue-select@latest"></script>
-  <link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
-   <!-- end of Vue.js scripts -->
-
-  {% endblock %}
-  {{ form.media }}
-</head>
-
-<body >
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KWBBGXK" height="0" width="0"
+  <head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+          'gtm.start':
+            new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-KWBBGXK');
+    </script>
+    <!-- End Google Tag Manager -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Hikaya - Activity: {% trans 'We help organizations tell their stories through data' %}" />
+    <meta name="author" content="Hikaya" />
+    <title>{% block title %} {{user.activity_user.organization.name}} / Activity {% endblock %}</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" />
+    <!--    <script src="https://unpkg.com/vue-tree-chart@1.2.6/dist/TreeChart.umd.min.js"></script>-->
+    <!-- end of Vue.js scripts -->
+    <link href="{% static 'css/admin.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/vue_modal.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/vue_tree.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/components.css' %}" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet" />
+    <!-- Datatables css for HTML tables -->
+    <link href="{% static 'DataTables/datatables.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Bootstrap -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Font Awesome -->
+    <link href="{% static 'css/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- jsTree -->
+    <link rel="stylesheet" href="{% static 'jstree/dist/themes/default/style.min.css' %}" />
+    <!-- hierachy chart -->
+    <link rel="stylesheet" href="{% static 'hierachy_chart/jquery.orgchart.css' %}" />
+    <!-- JQuery UI CSS -->
+    <link href="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Dynamic table -->
+    <link rel="stylesheet" href="{% static 'css/select2.min.css' %} " />
+    <link href="{% static 'css/hikaya-bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <!--- Django Tables2 css -->
+    <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}" />
+    <!-- Hosted Leaflet CSS -->
+    <!-- <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" /> -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin=""/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <link rel="stylesheet" href="{% static 'select2-bootstrap-theme/dist/select2-bootstrap.min.css' %}">
+    <!-- Custom CSS -->
+    <link href="{% static 'css/app.css' %}" rel="stylesheet" type="text/css" />
+    {% block extra_js_in_header %}
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" src="{% static 'js/jquery-3.1.4.min.js' %}"></script>
+    <!-- App specific Javascript -->
+    <script type="text/javascript" src="{% static 'js/app.js' %}"></script>
+    <!-- Hosted Leaflet -->
+    <!-- <script src="{% static 'js/leaflet.js' %}"></script> -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+      integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+      crossorigin=""></script>
+    <!-- Vue.js scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vee-validate@2.1.7/dist/vee-validate.js"></script>
+    <script src="https://unpkg.com/vuejs-paginate@latest"></script>
+    <script src="https://unpkg.com/vue-select@latest"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
+    <!-- end of Vue.js scripts -->
+    {% endblock %}
+    {{ form.media }}
+  </head>
+  <body >
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KWBBGXK" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-  <div class="activity-content">
-  <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-          data-target="#activity-navbar-collapse" aria-expanded="false">
-          <span class="sr-only">{% trans 'Toggle navigation' %}</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="{% url 'index' %}">
-        {% if user.is_authenticated and user.activity_user.organization.logo.url %}
-          <img src="{{ user.activity_user.organization.logo.url }}" alt="Activity">
-        {% else %}
-          <img src="{{ STATIC_URL }}img/hikaya-activity-logo.png"  alt="Activity">
-        {% endif %}
-        </a>
-      </div>
-
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="activity-navbar-collapse">
-        {% if user.is_authenticated %}
-        <ul class="nav navbar-nav">
-          <li class="dropdown {% if 'workflow' in active %} active {% endif %}">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">{% trans 'Workflows' %} <i class="fa fa-angle-down" aria-hidden="true"></i></a>
-            <ul class="dropdown-menu">
-              <li>
-                <a href="{% url 'level1_list' %}">{{ user.activity_user.organization.level_1_label }}</a>
-              </li>
-
-              <li>
-                <a href="/workflow/level2/list/0/none/">{{ user.activity_user.organization.level_2_label }}</a>
-              </li>
-            </ul>
-          </li>
-
-          <li class="{% if 'indicators' in active %} active {% endif %}">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">{% trans 'Indicators' %} <i class="fa fa-angle-down" aria-hidden="true"></i></a>
-            <ul class="dropdown-menu">
-              <li>
-                <a href="/indicators/home/0/0/0">{{ user.activity_user.organization.indicator_label }}</a>
-              </li>
-              <li>
-                <a href="{% url 'objectives' %}">{% trans 'Objectives' %}</a>
-              </li>
-            </ul>
-          </li>
-
-          <li class="dropdown {% if 'forms' in active %} active {% endif %}">
-            <a
-              href="/formlibrary/comingsoon"
-              {% comment %} class="dropdown-toggle"
-              data-toggle="dropdown" {% endcomment %}
-              role="button"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Form Library <i class="fa fa-angle-down"></i>
+    <!-- End Google Tag Manager (noscript) -->
+    <div class="activity-content">
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#activity-navbar-collapse" aria-expanded="false">
+            <span class="sr-only">{% trans 'Toggle navigation' %}</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'index' %}">
+            {% if user.is_authenticated and user.activity_user.organization.logo.url %}
+            <img src="{{ user.activity_user.organization.logo.url }}" alt="Activity">
+            {% else %}
+            <img src="/static/img/hikaya-activity-logo.png" alt="Activity">
+            {% endif %}
             </a>
-            {% comment %} <ul class="dropdown-menu">
-              <li>
-                <a href="/formlibrary/individual_list/0/0/0/"> {{ user.activity_user.organization.individual_label }}</a>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="activity-navbar-collapse">
+            {% if user.is_authenticated %}
+            <ul class="nav navbar-nav">
+              <li class="dropdown {% if 'workflow' in active %} active {% endif %}">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">{% trans 'Workflows' %} <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="{% url 'level1_list' %}">{{ user.activity_user.organization.level_1_label }}</a>
+                  </li>
+                  <li>
+                    <a href="/workflow/level2/list/0/none/">{{ user.activity_user.organization.level_2_label }}</a>
+                  </li>
+                </ul>
               </li>
-              <li>
-                <a href="/formlibrary/distribution_list/0/0/"> {{ user.activity_user.organization.distribution_label }}</a>
+              <li class="{% if 'indicators' in active %} active {% endif %}">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">{% trans 'Indicators' %} <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="/indicators/home/0/0/0">{{ user.activity_user.organization.indicator_label }}</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'objectives' %}">{% trans 'Objectives' %}</a>
+                  </li>
+                </ul>
               </li>
-              <li>
-                <a href="/formlibrary/training_list/0/0/"> {{ request.user.activity_user.organization.training_label }}</a>
-              </li>
-            </ul> {% endcomment %}
-          </li>
-
-          <li class="dropdown {% if 'components' in active %} active {% endif %}">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">{% trans 'Components' %} <i class="fa fa-angle-down"></i></a>
-            <ul class="dropdown-menu">
-              <li>
-                <a href="/workflow/contact_list/0/">{% trans 'Contacts' %}</a>
-              </li>
-              <li>
-                <a href="/workflow/documentation_list/0/0/">
-                  {% trans 'Documents' %}
+              <li class="dropdown {% if 'forms' in active %} active {% endif %}">
+                <a
+                href="/formlibrary/comingsoon"
+                {% comment %} class="dropdown-toggle"
+                data-toggle="dropdown" {% endcomment %}
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >
+                Form Library <i class="fa fa-angle-down"></i>
                 </a>
+                {% comment %} 
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="/formlibrary/individual_list/0/0/0/"> {{ user.activity_user.organization.individual_label }}</a>
+                  </li>
+                  <li>
+                    <a href="/formlibrary/distribution_list/0/0/"> {{ user.activity_user.organization.distribution_label }}</a>
+                  </li>
+                  <li>
+                    <a href="/formlibrary/training_list/0/0/"> {{ request.user.activity_user.organization.training_label }}</a>
+                  </li>
+                </ul>
+                {% endcomment %}
               </li>
-              <li>
-                <a href="/workflow/siteprofile_list/0/0/list">
-                  {{ user.activity_user.organization.site_label }}</a>
-              </li>
-              <li>
-                <a href="/workflow/stakeholder_list/0/0">
-                  {{ user.activity_user.organization.stakeholder_label }}
-                </a>
-              </li>
-            </ul>
-          </li>
-
-          <li class="dropdown {% if 'reports' in active %} active {% endif %}">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">{% trans 'Reports' %} <i class="fa fa-angle-down"></i></a>
-            <ul class="dropdown-menu">
-              <li>
-                <a href="/customdashboard/program_list/0/">{% trans 'Dashboards' %}</a>
-              </li><li>
-                <a href="{% url 'indicator_tracking_home' %}">{{ user.activity_user.organization.indicator_label }} {% trans 'Tracking Table' %}</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-
-        <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown bg-medium-grey mr-15">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">{{ user.activity_user.name | make_list | first }} <span
-                class="fa fa-angle-down"></span></a>
-            <ul class="dropdown-menu">
-              <li class="dropdown-header">{% trans 'Signed in as' %} <strong>{{user.username}}</strong></li>
-              <li class="divider"></li>
-              <li><a href="{% url 'profile' %}">{% trans 'Profile' %}</a></li>
-              {% if user.is_superuser or user.activity_user|has_org_access:"Owner" %}
-              <li>
-                <a href="{% url 'admin_profile_settings' %}">{% trans 'Organization Settings' %}</a>
-              </li>
-              {% endif %}
-              <li class="divider"></li>
-              {% if user.activity_user.organizations %}
-              <li class="dropdown-header">{% trans 'Organizations' %}</li>
-              {% for org in user.activity_user.organizations.all %}
-                {% if user.activity_user|enabled_in_org:org.id%}
-                  <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
-                    <a href="/accounts/organization/{{ org.id }}/">
-                      {{ org.name }}
+              <li class="dropdown {% if 'components' in active %} active {% endif %}">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">{% trans 'Components' %} <i class="fa fa-angle-down"></i></a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="/workflow/contact_list/0/">{% trans 'Contacts' %}</a>
+                  </li>
+                  <li>
+                    <a href="/workflow/documentation_list/0/0/">
+                    {% trans 'Documents' %}
                     </a>
                   </li>
-                {% endif %}
-              {% endfor %}
-              <li>
-                <a href="/accounts/register/organization">
-                  <i class="fa fa-plus"></i> {% trans 'Add new Organization' %}
-                </a>
+                  <li>
+                    <a href="/workflow/siteprofile_list/0/0/list">
+                    {{ user.activity_user.organization.site_label }}</a>
+                  </li>
+                  <li>
+                    <a href="/workflow/stakeholder_list/0/0">
+                    {{ user.activity_user.organization.stakeholder_label }}
+                    </a>
+                  </li>
+                </ul>
               </li>
-              {% endif %}
-              <li class="divider"></li>
-              <li>
-                <a href="{% url 'logout' %}" class="text-danger">{% trans 'Sign out' %}</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        {% else %}
-        <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Login' %} <i class="fa fa-angle-down"></i>
-            </a>
-            <ul class="dropdown-menu" id="login-dropdown">
-              <li>
-                <form class="form" role="form" method="post" action="{% url 'login' %}">
-                  {% csrf_token %}
-                  <div class="form-group">
-                    <input type="hidden" name="next" value="{{ next }}" />
-                  </div>
-                  <div class="form-group">
-                    <input type="text" name="username" placeholder="Username" class="form-control" />
-                  </div>
-                  <div class="form-group">
-                    <input type="password" name="password" placeholder="Password" class="form-control" />
-                  </div>
-
-                  <div class="text-right">
-                    <button type="submit" class="btn btn-success">
-                      {% trans 'Sign in' %}
-                    </button>
-                  </div>
-                </form>
+              <li class="dropdown {% if 'reports' in active %} active {% endif %}">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">{% trans 'Reports' %} <i class="fa fa-angle-down"></i></a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="/customdashboard/program_list/0/">{% trans 'Dashboards' %}</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'indicator_tracking_home' %}">{{ user.activity_user.organization.indicator_label }} {% trans 'Tracking Table' %}</a>
+                  </li>
+                </ul>
               </li>
             </ul>
-          </li>
-          <!-- .dropdown collapse -->
-        </ul>
-        {% endif %}
-      </div>
-      <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container-fluid -->
-  </nav>
-
-  <!-- .navbar collapse -->
-  <!-- <script type="text/javascript">
-    var myElement = document.getElementById('navid');
-    // myElement.style.backgroundColor =
-    //   '#{{ user.activity_user.organization.theme_color }}';
-
-    myElement.style.backgroundColor = '#fff';
-  </script> -->
-
-  <div id="alerts" class="container">
-    <!-- Any messages for users -->
-    {% block messages %}
-        {% if messages %}
-          {% for message in messages %}
-            {% if message.tags == 'error' %}
-              <div
-                class="alert alert-danger alert-dismissible rounded-0"
-                role="alert">
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="alert"
-                  aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                {{ message | safe }}
-              </div>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown bg-medium-grey mr-15">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">{{ user.activity_user.name | make_list | first }} <span
+                  class="fa fa-angle-down"></span></a>
+                <ul class="dropdown-menu">
+                  <li class="dropdown-header">{% trans 'Signed in as' %} <strong>{{user.username}}</strong></li>
+                  <li class="divider"></li>
+                  <li><a href="{% url 'profile' %}">{% trans 'Profile' %}</a></li>
+                  {% if user.is_superuser or user.activity_user|has_org_access:"Owner" %}
+                  <li>
+                    <a href="{% url 'admin_profile_settings' %}">{% trans 'Organization Settings' %}</a>
+                  </li>
+                  {% endif %}
+                  <li class="divider"></li>
+                  {% if user.activity_user.organizations %}
+                  <li class="dropdown-header">{% trans 'Organizations' %}</li>
+                  {% for org in user.activity_user.organizations.all %}
+                  {% if user.activity_user|enabled_in_org:org.id%}
+                  <li class="{% if user.activity_user.organization.id == org.id %} active {% endif %}">
+                    <a href="/accounts/organization/{{ org.id }}/">
+                    {{ org.name }}
+                    </a>
+                  </li>
+                  {% endif %}
+                  {% endfor %}
+                  <li>
+                    <a href="/accounts/register/organization">
+                    <i class="fa fa-plus"></i> {% trans 'Add new Organization' %}
+                    </a>
+                  </li>
+                  {% endif %}
+                  <li class="divider"></li>
+                  <li>
+                    <a href="{% url 'logout' %}" class="text-danger">{% trans 'Sign out' %}</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
             {% else %}
-              <div
-                class="alert alert-{{ message.tags }} alert-dismissible rounded-0"
-                role="alert">
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="alert"
-                  aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                {{ message | safe }}
-              </div>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Login' %} <i class="fa fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu" id="login-dropdown">
+                  <li>
+                    <form class="form" role="form" method="post" action="{% url 'login' %}">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <input type="hidden" name="next" value="{{ next }}" />
+                      </div>
+                      <div class="form-group">
+                        <input type="text" name="username" placeholder="Username" class="form-control" />
+                      </div>
+                      <div class="form-group">
+                        <input type="password" name="password" placeholder="Password" class="form-control" />
+                      </div>
+                      <div class="text-right">
+                        <button type="submit" class="btn btn-success">
+                        {% trans 'Sign in' %}
+                        </button>
+                      </div>
+                    </form>
+                  </li>
+                </ul>
+              </li>
+              <!-- .dropdown collapse -->
+            </ul>
             {% endif %}
-          {% endfor %}
-          <br />
+          </div>
+          <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+      </nav>
+      <!-- .navbar collapse -->
+      <!-- <script type="text/javascript">
+        var myElement = document.getElementById('navid');
+        // myElement.style.backgroundColor =
+        //   '#{{ user.activity_user.organization.theme_color }}';
+        
+        myElement.style.backgroundColor = '#fff';
+        </script> -->
+      <div id="alerts" class="container">
+        <!-- Any messages for users -->
+        {% block messages %}
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div
+          class="alert alert-danger alert-dismissible rounded-0"
+          role="alert">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          {{ message | safe }}
+        </div>
+        {% else %}
+        <div
+          class="alert alert-{{ message.tags }} alert-dismissible rounded-0"
+          role="alert">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          {{ message | safe }}
+        </div>
         {% endif %}
-    {% endblock messages %}
-  </div>
-
-
-  <!-- Main body content -->
-  {% block content %} {% endblock %}
-  <!--{% if not user.is_authenticated  %}
-                <a href="{% url "social:begin" "google-oauth2" %}">Google+</a>
-            {% endif %}-->
-  <!-- .container collapse -->
-
-  <div id="ajaxloading" class="modal ajax_loading"></div>
-  </div>
-
-  <div id="footer">
-    <!-- Sticky Footer -->
-    <div class="container">
-      {% if "links.html"|template_exists %} {% include "links.html" %}
-      {% else %}
-      <div class="column col-xs-16 text-right">
-        <a href="https://hikaya.io" class="text-muted">© 2020 Hikaya</a>
-        <a href="https://docs.hikaya.io" class="text-muted">{% trans 'Documentation' %}</a>
-        <a href="https://github.com/hikaya-io/activity/blob/master/LICENSE" class="text-muted">{% trans 'License' %}</a>
+        {% endfor %}
+        <br />
+        {% endif %}
+        {% endblock messages %}
       </div>
-      {% endif %}
+      <!-- Main body content -->
+      {% block content %} {% endblock %}
+      <!--{% if not user.is_authenticated  %}
+        <a href="{% url "social:begin" "google-oauth2" %}">Google+</a>
+        {% endif %}-->
+      <!-- .container collapse -->
+      <div id="ajaxloading" class="modal ajax_loading"></div>
     </div>
-  </div>
-  <!-- .footer collapse -->
-
-  <!-- data tables jquery javascript library -->
-  <script type="text/javascript" src="{% static 'DataTables/datatables.min.js' %}"></script>
-
-  <!-- Bootstrap compiled javascript plugins -->
-  <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-
-  <!-- for select2 -->
-  <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
-
-  <!-- For date formatting -->
-  <script type="text/javascript" src="{{ STATIC_URL }}js/moment.min.js"></script>
-
-  <!-- for notifications -->
-  <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-
-  <!-- chart.js javascript library -->
-
-
-  <!-- jQuery UI (necessary for datepicker as well as dataTables library -->
-  <script type="text/javascript" src="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
-
-  <!-- <script
+    <div id="footer" style>
+      <!-- Sticky Footer -->
+      <div class="container">
+        {% if "links.html"|template_exists %} {% include "links.html" %}
+        {% else %}
+        <div class="column col-xs-16 text-right">
+          <a href="https://hikaya.io" class="text-muted">© 2020 Hikaya</a>
+          <a href="https://docs.hikaya.io" class="text-muted">{% trans 'Documentation' %}</a>
+          <a href="https://github.com/hikaya-io/activity/blob/master/LICENSE" class="text-muted">{% trans 'License' %}</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <!-- .footer collapse -->
+    <!-- data tables jquery javascript library -->
+    <script type="text/javascript" src="{% static 'DataTables/datatables.min.js' %}"></script>
+    <!-- Bootstrap compiled javascript plugins -->
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <!-- for select2 -->
+    <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+    <!-- For date formatting -->
+    <script type="text/javascript" src="{{ STATIC_URL }}js/moment.min.js"></script>
+    <!-- for notifications -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <!-- jQuery UI (necessary for datepicker as well as dataTables library -->
+    <script type="text/javascript" src="{% static 'jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+    <!-- chart.js javascript library -->
+    <!-- <script
       type="text/javascript"
       src="{% static 'js/chart.js@2.8.0.min.js' %}"
-    ></script> -->
-
-  <script src="{% static 'hierachy_chart/jquery.orgchart.js' %}"></script>
-
-  <script type="text/javascript">
-    toastr.options = {
-      closeButton: false,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: 'toast-top-center',
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: '300',
-      hideDuration: '1000',
-      timeOut: '5000',
-      extendedTimeOut: '1000',
-      showEasing: 'swing',
-      hideEasing: 'linear',
-      showMethod: 'fadeIn',
-      hideMethod: 'fadeOut',
-    };
-  </script>
-
-  {% if offline_mode %}
-  <!--- offline mode so don't try andload the external fonts -->
-  {% else %}
-  <!-- Typekit (Fonts) -->
-  <script src="https://use.typekit.net/shi4wqr.js"></script>
-  <script>
-    try {
-      Typekit.load({ async: true });
-    } catch (e) { }
-  </script>
-  {% endif %}
-
-  <!--{% if GOOGLE_ANALYTICS_PROPERTY_ID %}
-            {% include "google_analytics.html" %}
-        {% endif %}-->
-
-  {% block extra_js_in_body %} {% endblock %}
-
-</body>
-
+      ></script> -->
+    <script src="{% static 'hierachy_chart/jquery.orgchart.js' %}"></script>
+    <script type="text/javascript">
+      toastr.options = {
+        closeButton: false,
+        debug: false,
+        newestOnTop: false,
+        progressBar: false,
+        positionClass: 'toast-top-center',
+        preventDuplicates: true,
+        onclick: null,
+        showDuration: '300',
+        hideDuration: '1000',
+        timeOut: '5000',
+        extendedTimeOut: '1000',
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut',
+      };
+    </script>
+    {% if offline_mode %}
+    <!--- offline mode so don't try andload the external fonts -->
+    {% else %}
+    <!-- Typekit (Fonts) -->
+    <script src="https://use.typekit.net/shi4wqr.js"></script>
+    <script>
+      try {
+        Typekit.load({ async: true });
+      } catch (e) { }
+    </script>
+    {% endif %}
+    <!--{% if GOOGLE_ANALYTICS_PROPERTY_ID %}
+      {% include "google_analytics.html" %}
+      {% endif %}-->
+    {% block extra_js_in_body %} {% endblock %}
+  </body>
 </html>

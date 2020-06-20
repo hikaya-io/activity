@@ -40,11 +40,6 @@ class TestDistribution(TestCase):
             description="Newly created distribution",
             start_date=datetime.strptime("2020-10-19 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
             end_date=datetime.strptime("2020-11-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
-            created_by=self.activity_user,
-            modified_by=self.activity_user,
-            quantity=100,
-        )
-        # Test the inheritance
         self.assertIsInstance(distribution, Service)
         # Check the Training is well saved
         created_distribution = Distribution.objects.get(pk=distribution.pk)
