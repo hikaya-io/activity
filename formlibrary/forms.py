@@ -4,7 +4,7 @@
 from functools import partial
 from crispy_forms.helper import FormHelper
 from django import forms
-from workflow.models import Program, ProjectAgreement, Office, Province, SiteProfile
+from workflow.models import Program, Office, SiteProfile
 from .models import (
     # TrainingAttendance,
     Distribution,
