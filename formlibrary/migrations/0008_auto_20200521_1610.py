@@ -15,17 +15,8 @@ class Migration(migrations.Migration):
             model_name='individual',
             name='edit_date',
         ),
-        migrations.RemoveField(
-            model_name='trainingattendance',
-            name='edit_date',
-        ),
         migrations.AddField(
             model_name='individual',
-            name='modified_date',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='Last Modification date'),
-        ),
-        migrations.AddField(
-            model_name='trainingattendance',
             name='modified_date',
             field=models.DateTimeField(blank=True, null=True, verbose_name='Last Modification date'),
         ),
@@ -121,21 +112,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='training',
-            name='start_date',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='Start date'),
-        ),
-        migrations.AlterField(
-            model_name='trainingattendance',
-            name='create_date',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='Creation date'),
-        ),
-        migrations.AlterField(
-            model_name='trainingattendance',
-            name='end_date',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='End date'),
-        ),
-        migrations.AlterField(
-            model_name='trainingattendance',
             name='start_date',
             field=models.DateTimeField(blank=True, null=True, verbose_name='Start date'),
         ),
