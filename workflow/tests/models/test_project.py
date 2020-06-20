@@ -20,9 +20,9 @@ class ProjectCompleteTestCase(TestCase):
 
     fixtures = [
         'fixtures/tests/organization.json',
-        'fixtures/tests/profiletypes.json'
-        'fixtures/tests/projecttype.json',
+        'fixtures/tests/profiletypes.json',
         'fixtures/tests/sectors.json',
+        'fixtures/tests/projecttype.json',
     ]
 
     def setUp(self):
