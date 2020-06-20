@@ -1,6 +1,3 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 from django.db import models
 from formlibrary.models import Service
 
@@ -13,6 +10,5 @@ class Distribution(Service):
     item_distributed = models.CharField(max_length=255, null=False, blank=False)
     quantity = models.IntegerField(verbose_name="Number of items distributed")
 
-    # displayed in admin templates
     def __str__(self):
         return "Distribution: " + self.name

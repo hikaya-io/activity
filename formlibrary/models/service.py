@@ -1,11 +1,14 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 import uuid
 from django.db import models
 from utils.models import CreatedModifiedBy, CreatedModifiedDates, StartEndDates
 from .case import Case
-from workflow.models import Program, Office, Stakeholder, SiteProfile, Contact
+from workflow.models import (
+    Contact,
+    Office,
+    Program,
+    SiteProfile,
+    Stakeholder,
+)
 
 
 class Service(CreatedModifiedBy, CreatedModifiedDates, StartEndDates):

@@ -27,7 +27,7 @@ set_up_cluster_dev_env() {
             -var "postgres_version=$PG_VERSION" \
             -var "db_name=$DB_NAME_DEV_ENV" \
             -var "tags=$PROJECT_NAME"
-        
+
         #@--- Apply the changes ---@#
         echo "+++++ Apply infrastructure ++++++++++"
         terraform apply -lock=false -auto-approve -var "cluster_name=$CLUSTER_NAME_DEV_ENV" \
@@ -88,7 +88,7 @@ set_up_cluster_staging() {
             -var "tags=$PROJECT_NAME" \
             || echo "Resources exist"
     fi
-    
+
 }
 
 #@--- Function to setup production cluster ---@#
@@ -116,7 +116,7 @@ set_up_cluster_prod() {
             -var "postgres_version=$PG_VERSION" \
             -var "db_name=$DB_NAME_PROD" \
             -var "tags=$PROJECT_NAME"
-        
+
         #@--- Apply the changes ---@#
         echo "+++++ Apply infrastructure ++++++++++"
         terraform apply -lock=false -auto-approve -target=digitalocean_kubernetes_cluster.cluster \
@@ -140,7 +140,7 @@ main() {
     cd infrastructure
 
     if [[ $TRAVIS_EVENT_TYPE != "pull_request" ]]; then
-    
+
             #@--- Run the setup dev-env cluster function ---@#
             set_up_cluster_dev_env
 
@@ -150,7 +150,7 @@ main() {
             #@--- Run the prod setup function ---@#
             set_up_cluster_prod
     fi
-    
+
 }
 
 #@--- Run the main function ---@#

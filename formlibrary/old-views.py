@@ -1,5 +1,6 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
+###############################################################
+# ! Legacy code for views.py left for reference purposes      #
+###############################################################
 
 import json
 

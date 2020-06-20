@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-22 04:01+0100\n"
+"POT-Creation-Date: 2020-05-26 21:07-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,15 +22,15 @@ msgstr ""
 msgid "Page Not found"
 msgstr "Page non trouvée"
 
-#: 400.html:14 404.html:19
+#: 400.html:14 404.html:15
 msgid "This is not the page you were looking for,"
 msgstr "Ceci n'est pas la page que vous cherchiez"
 
-#: 400.html:14 404.html:19
+#: 400.html:14 404.html:17
 msgid "you may be lost."
 msgstr "vous pourriez être perdu."
 
-#: 400.html:15 403.html:16 404.html:20 500.html:17
+#: 400.html:15 403.html:16 404.html:19 500.html:21
 msgid "Go to home page"
 msgstr "Aller à la page d'accueil"
 
@@ -52,7 +52,7 @@ msgstr "Vous ne disposez pas des autorisations appropriées"
 msgid "Contact your organization or country admin"
 msgstr "Veullez contactez votre organisation"
 
-#: 500.html:5 500.html:7
+#: 500.html:4 500.html:6
 msgid "Server Error"
 msgstr "Erreur Serveur"
 
@@ -60,13 +60,13 @@ msgstr "Erreur Serveur"
 msgid "There was a problem loading this page."
 msgstr "Un problème est survenu lors du chargement de cette page."
 
-#: 500.html:16
-msgid "Notify your systems administrator if you think"
-msgstr "Notifiez votre administrateur système si vous pense que"
+#: 500.html:17
+msgid "Notify your systems administrator if you"
+msgstr "Notifiez votre administrateur système si vous"
 
-#: 500.html:16
-msgid "you should not be seeing this page."
-msgstr "vous n'êtes pas censé voir cette page"
+#: 500.html:19
+msgid "think you should not be seeing this page."
+msgstr "pensez que vous n'êtes pas censé voir cette page"
 
 #: base.html:23
 msgid "We help organizations tell their stories through data"
@@ -76,113 +76,87 @@ msgstr "Nous aidons les organisations à raconter leurs histoires à travers les
 msgid "Toggle navigation"
 msgstr "Basculer la navigation"
 
-#: base.html:138 index.html:108
+#: base.html:138 index.html:107
 msgid "Workflows"
 msgstr "Workflows"
 
 #: base.html:152 indicators/indicator_form.html:42
 #: indicators/indicator_form_tab_ui.html:20
-#, fuzzy
-#| msgid "Indicator"
 msgid "Indicators"
-msgstr "Indicateur"
+msgstr "Indicateurs"
 
 #: base.html:158 indicators/indicator_list.html:108
-#, fuzzy
-#| msgid "Active"
 msgid "Objectives"
-msgstr "Actif"
+msgstr "Objectifs"
 
-#: base.html:165 report_base.html:82
-msgid "Form Library"
-msgstr "Librairie des formulaires"
-
-#: base.html:181 index.html:261
+#: base.html:191 index.html:260
 msgid "Components"
 msgstr "Composantes"
 
-#: base.html:184
+#: base.html:194
 #, fuzzy
 #| msgid "contacts"
 msgid "Contacts"
-msgstr "contacts"
+msgstr "Contacts"
 
-#: base.html:188 index.html:302 index.html:308 report_base.html:66
+#: base.html:198 index.html:301 index.html:307 report_base.html:66
 msgid "Documents"
 msgstr "Documents"
 
-#: base.html:205 report_base.html:90
+#: base.html:215 report_base.html:90
 msgid "Reports"
 msgstr "Rapports"
 
 #: base.html:208
-#, fuzzy
-#| msgid "My Dashboard"
 msgid "Dashboards"
-msgstr "Mon tableau de bord"
+msgstr "Mes tableaux de bord"
 
 #: base.html:220
-#, fuzzy
-#| msgid "Sign in"
-msgid "Signed in as"
-msgstr "Se connecter"
+msgid "Tracking Table"
+msgstr "Table de Tracking"
 
-#: base.html:222 registration/bookmark_form.html:7
+#: base.html:232
+msgid "Signed in as"
+msgstr "Connecté en tant que"
+
+#: base.html:234 registration/bookmark_form.html:7
 #: registration/bookmark_list.html:6 registration/profile.html:38
 #: report_base.html:113
 msgid "Profile"
 msgstr "Profile"
 
 #: base.html:225
-#, fuzzy
-#| msgid "Fill in organization details"
 msgid "Organization Settings"
-msgstr "Remplissez les données de l'organization"
+msgstr "Configuration de l'organization"
 
 #: base.html:230
-#, fuzzy
-#| msgid "Create an account"
 msgid "Organizations"
-msgstr "Créer un compte"
+msgstr "Organisations"
 
 #: base.html:242
-#, fuzzy
-#| msgid "Create an account"
 msgid "Add new Organization"
-msgstr "Créer un compte"
+msgstr "Ajouter une nouvelle Organisation"
 
 #: base.html:248
-#, fuzzy
-#| msgid "Sign in"
 msgid "Sign out"
-msgstr "Se connecter"
+msgstr "Se déconnecter"
 
-#: base.html:256 registration/confirm_email.html:13 registration/login.html:8
+#: base.html:268 registration/confirm_email.html:13 registration/login.html:8
 #: registration/login.html:20 registration/register.html:18
 msgid "Login"
 msgstr "Se connecter"
 
-#: base.html:274 registration/login.html:71 report_base.html:130
+#: base.html:286 registration/login.html:71 report_base.html:130
 msgid "Sign in"
 msgstr "Se connecter"
 
 #: base.html:355 documentation.html:4 report_base.html:174
-#, fuzzy
-#| msgid "Location"
 msgid "Documentation"
-msgstr "Localisation"
+msgstr "Documentation"
 
-#: base.html:356
+#: base.html:368
 msgid "License"
 msgstr "License"
-
-#: comingsoon.html:3
-msgid "We’re still working on this,"
-msgstr "Nous travaillons encore sur cela,"
-
-#: comingsoon.html:3
-msgid "stay tuned!"
-msgstr "restez à l'écoute"
 
 #: contact.html:4 report_base.html:174
 msgid "Feedback"
@@ -193,12 +167,8 @@ msgid "Message"
 msgstr "Message"
 
 #: contact.html:16
-msgid ""
-"Let us know if you are having a problem or would like to see something "
-"change."
-msgstr ""
-"Faites-nous savoir si vous rencontrez un problème ou si vous avez des "
-"suggestions"
+msgid "Let us know if you are having a problem or would like to see something change."
+msgstr "Faites-nous savoir si vous rencontrez un problème ou si vous avez des suggestions"
 
 #: documentation.html:15
 msgid "No Documentation yet."
@@ -225,107 +195,97 @@ msgstr "Aide"
 msgid "Cancel"
 msgstr "Annuler"
 
-#: index.html:37 indicators/indicator_form.html:41
+#: index.html:36 indicators/indicator_form.html:41
 #: indicators/indicator_form_tab_ui.html:19 indicators/indicator_list.html:13
 #: registration/profile.html:37
 msgid "My Dashboard"
 msgstr "Mon tableau de bord"
 
-#: index.html:42 indicators/indicator_list.html:27
+#: index.html:41 indicators/indicator_list.html:27
 msgid "Filter by"
 msgstr "Filtrer par"
 
-#: index.html:67 indicators/indicator_list.html:39
+#: index.html:66 indicators/indicator_list.html:39
 msgid "All"
 msgstr "Tout"
 
-#: index.html:149
+#: index.html:148
 msgid "Tracking"
 msgstr "Tracking"
 
-#: index.html:153 index.html:211 index.html:279 index.html:290
+#: index.html:152 index.html:210 index.html:278 index.html:289
 msgid "out of"
 msgstr "parmis"
 
-#: index.html:208
+#: index.html:207
 msgid "KPIs"
 msgstr "KPIs"
 
-#: index.html:219
+#: index.html:218
 msgid "Collected Data"
 msgstr "Données collectées"
 
-#: index.html:226
+#: index.html:225
 msgid "Latest"
 msgstr "Dernier"
 
-#: index.html:226
+#: index.html:225
 msgid "Key Performance Indicators"
 msgstr "Indicateurs clés de performance"
 
-#: index.html:230 indicators/indicator_list.html:66
+#: index.html:229 indicators/indicator_list.html:66
 msgid "Level"
 msgstr "Niveau"
 
-#: index.html:231 indicators/disaggregation_report.html:35
+#: index.html:230 indicators/disaggregation_report.html:35
 msgid "Indicator"
 msgstr "Indicateur"
 
-#: index.html:232 indicators/indicator_list.html:68
+#: index.html:231 indicators/indicator_list.html:68
 msgid "Target"
 msgstr "Cible"
 
-#: index.html:233 indicators/indicator_list.html:69
+#: index.html:232 indicators/indicator_list.html:69
 msgid "Actual"
 msgstr "Actuel"
 
-#: index.html:276
+#: index.html:275
 msgid "Active"
 msgstr "Actif"
 
-#: index.html:287
-#, fuzzy
-#| msgid "Location"
+#: index.html:286
 msgid "Active Locations"
-msgstr "Localisation"
+msgstr "Localisation actives"
 
-#: index.html:290
-#, fuzzy
-#| msgid "Location"
+#: index.html:289
 msgid "locations"
-msgstr "Localisation"
+msgstr "localisations"
 
-#: index.html:304 index.html:310
+#: index.html:303 index.html:309
 msgid "linked to"
 msgstr "lié à"
 
-#: index.html:324 index.html:332
+#: index.html:323 index.html:331
 msgid "with"
 msgstr "avec"
 
-#: index.html:324 index.html:332
+#: index.html:323 index.html:331
 msgid "contacts"
 msgstr "contacts"
 
 #: indicators/collecteddata_list.html:290
 #: indicators/disaggregation_report.html:9
-#, fuzzy
-#| msgid "My Dashboard"
 msgid "Home Dashboard"
-msgstr "Mon tableau de bord"
+msgstr "Tableau de bord d'acceuil"
 
 #: indicators/collecteddata_list.html:291
 #: indicators/collecteddata_list.html:298
-#, fuzzy
-#| msgid "Indicator"
 msgid "Collected Indicator Data"
-msgstr "Données des indicateurs"
+msgstr "Données collectées des indicateurs"
 
 #: indicators/collecteddata_list.html:314
-#, fuzzy
-#| msgid "Target"
 msgid "Targeted Total"
-msgstr "Cible"
+msgstr "Cible total"
 
 #: indicators/collecteddata_list.html:315
 msgid "Achieved Total"
@@ -349,36 +309,28 @@ msgstr "Total atteint:"
 
 #: indicators/disaggregation_report.html:10
 #: indicators/disaggregation_report.html:17
-#, fuzzy
-#| msgid "Indicator"
 msgid "Indicator Disaggregation Report"
-msgstr "Rapport des données d'indicateurs"
+msgstr "Rapport de désagrégation d'indicateurs"
 
 #: indicators/disaggregation_report.html:30
 msgid "PID"
 msgstr "PID"
 
 #: indicators/disaggregation_report.html:32
-#, fuzzy
-#| msgid "Indicator"
 msgid "IndicatorID"
-msgstr "Indicateur"
+msgstr "ID de l'indicateur"
 
 #: indicators/disaggregation_report.html:34
 msgid "Number"
 msgstr "Nombre"
 
 #: indicators/disaggregation_report.html:36
-#, fuzzy
-#| msgid "Target"
 msgid "LOP Target"
-msgstr "Cible"
+msgstr "Cible LOP"
 
 #: indicators/disaggregation_report.html:37
-#, fuzzy
-#| msgid "Actual"
 msgid "Actual Total"
-msgstr "Actuel"
+msgstr "Total actuel"
 
 #: indicators/disaggregation_report.html:38
 #: indicators/indicator_form_tab_ui.html:62
@@ -406,10 +358,8 @@ msgid "Details"
 msgstr "Détails"
 
 #: indicators/indicator_form.html:53
-#, fuzzy
-#| msgid "Indicator"
 msgid "indicator"
-msgstr "Indicateur"
+msgstr "indicateur"
 
 #: indicators/indicator_form_tab_ui.html:44
 msgid "Summary"
@@ -420,10 +370,8 @@ msgid "Performance"
 msgstr "Performance"
 
 #: indicators/indicator_form_tab_ui.html:67
-#, fuzzy
-#| msgid "Target"
 msgid "Targets"
-msgstr "Cible"
+msgstr "Cibles"
 
 #: indicators/indicator_form_tab_ui.html:76
 msgid "Data Acquisition"
@@ -446,16 +394,12 @@ msgid "List"
 msgstr "Liste"
 
 #: indicators/indicator_list.html:65 registration/organization_register.html:18
-#, fuzzy
-#| msgid "Last Name"
 msgid "Name"
-msgstr "Nom de famille"
+msgstr "Nom"
 
 #: indicators/indicator_list.html:70
-#, fuzzy
-#| msgid "Location"
 msgid "Actions"
-msgstr "Localisation"
+msgstr "Actions"
 
 #: indicators/indicator_list.html:98
 msgid "More"
@@ -470,16 +414,12 @@ msgid "Related"
 msgstr "En relation"
 
 #: indicators/indicator_list.html:107
-#, fuzzy
-#| msgid "Target"
 msgid "Target Periods"
-msgstr "Cible"
+msgstr "Periodes Cibles"
 
 #: indicators/indicator_list.html:109
-#, fuzzy
-#| msgid "Level"
 msgid "Levels"
-msgstr "Niveau"
+msgstr "Niveaux"
 
 #: indicators/indicator_list.html:110
 msgid "Sectors"
@@ -489,49 +429,39 @@ msgstr "Secteurs"
 msgid "Disaggregations"
 msgstr "Désagrégations"
 
-#: indicators/indicator_list.html:115
+#: indicators/indicator_list.html:114
 #: indicators/program_indicators_table.html:51
 msgid "Edit"
 msgstr "Éditer"
 
-#: indicators/indicator_list.html:116
+#: indicators/indicator_list.html:121
 #: indicators/program_indicators_table.html:64
 msgid "Delete"
 msgstr "Supprimer"
 
 #: indicators/program_indicators_table.html:11
-#, fuzzy
-#| msgid "Indicator"
 msgid "Indicator Type"
-msgstr "Indicateur"
+msgstr "Type d'indicateur"
 
 #: indicators/program_indicators_table.html:12
-#, fuzzy
-#| msgid "Indicator"
 msgid "Indicator Level"
-msgstr "Indicateur"
+msgstr "Level d'indicateur"
 
 #: indicators/program_indicators_table.html:13
-#, fuzzy
-#| msgid "Indicator"
 msgid "Indicator Name"
-msgstr "Données des indicateurs"
+msgstr "Nom de l'indicateur"
 
 #: indicators/program_indicators_table.html:14
-#, fuzzy
-#| msgid "Indicator"
 msgid "Indicator Number"
-msgstr "Librairie d'indicateurs"
+msgstr "Nombre ded l'indicateur"
 
 #: indicators/program_indicators_table.html:15
 msgid "Sector"
 msgstr "Secteur"
 
 #: indicators/program_indicators_table.html:37
-#, fuzzy
-#| msgid "KPIs"
 msgid "KPI"
-msgstr "KPIs"
+msgstr "KPI"
 
 #: indicators/program_indicators_table.html:59
 msgid "Data"
@@ -566,33 +496,23 @@ msgid "No bookmarks yet."
 msgstr "Aucun Bokmark"
 
 #: registration/change_password.html:2
-#, fuzzy
-#| msgid "Password"
 msgid "Password Update"
-msgstr "Mot de passe"
+msgstr "Modifier le mot de passe"
 
 #: registration/change_password.html:8 registration/profile.html:53
-#, fuzzy
-#| msgid "Password"
 msgid "Change Password"
-msgstr "Change mon mot de passe"
+msgstr "Changer le mot de passe"
 
 #: registration/change_password.html:11
-#, fuzzy
-#| msgid "Password"
 msgid "Change your password"
-msgstr "Change mon mot de passe"
+msgstr "Change votre mot de passe"
 
 #: registration/change_password.html:21
-#, fuzzy
-#| msgid "Password"
 msgid "Old Password"
 msgstr "Ancien mot de passe"
 
 #: registration/change_password.html:30
 #: registration/password_reset_confirm.html:17
-#, fuzzy
-#| msgid "Password"
 msgid "New Password"
 msgstr "Nouveau mot de passe"
 
@@ -601,8 +521,6 @@ msgid "Your password must be at least 6 characters"
 msgstr "Votre mot de passe doit contenir au moins 6 caractères"
 
 #: registration/change_password.html:43
-#, fuzzy
-#| msgid "Confirm New Password*"
 msgid "Confirm New Password"
 msgstr "Confirmer le nouveau mot de passe"
 
@@ -651,20 +569,16 @@ msgid "Forgot password?"
 msgstr "Mot de passe oublié?"
 
 #: registration/organization_register.html:6
-#, fuzzy
-#| msgid "Create an account"
 msgid "Create an Organization"
-msgstr "Créer un compte"
+msgstr "Créer une Organisation"
 
 #: registration/organization_register.html:9
 msgid "Fill in organization details"
 msgstr "Remplissez les données de l'organization"
 
 #: registration/organization_register.html:10
-#, fuzzy
-#| msgid "Fill in your details (mandatory fields are marked with *)"
 msgid "(mandatory fields are marked with *)"
-msgstr "Remplissez vos données (les champs obligatoires sont marqués d'un *)"
+msgstr "(les champs obligatoires sont marqués d'un *)"
 
 #: registration/organization_register.html:29
 msgid "Description"
@@ -687,10 +601,8 @@ msgid "Create"
 msgstr "Créer"
 
 #: registration/password_reset_complete.html:2
-#, fuzzy
-#| msgid "Password reset complete"
 msgid "Password reset Done"
-msgstr "réinitialisation du mot de passe terminée"
+msgstr "Réinitialisation du mot de passe terminée"
 
 #: registration/password_reset_complete.html:6
 msgid "Password reset complete"
@@ -701,8 +613,6 @@ msgid "Your password has been set. You may go ahead and"
 msgstr "Votre mot de passe a été défini. Vous pouvez continuer et"
 
 #: registration/password_reset_complete.html:9
-#, fuzzy
-#| msgid "Sign in"
 msgid "sign in"
 msgstr "Se connecter"
 
@@ -711,34 +621,24 @@ msgid "now"
 msgstr "maintenant"
 
 #: registration/password_reset_confirm.html:3
-#, fuzzy
-#| msgid "Confirm New Password*"
 msgid "Enter new password"
-msgstr "Confirmer le nouveau mot de passe"
+msgstr "Entrez le nouveau mot de passe"
 
 #: registration/password_reset_confirm.html:7
-#, fuzzy
-#| msgid "Password"
 msgid "Set New Password"
 msgstr "Nouveau mot de passe"
 
 #: registration/password_reset_confirm.html:10
-#, fuzzy
-#| msgid ""
-#| "Fill in your old, new and confirm your new password to change your "
-#| "password"
 msgid "Fill in a new password and confirm to reset your current password"
-msgstr "Veuillez changer votre mot de passe"
+msgstr "Saisissez un nouveau mot de passe et confirmez pour changer votre mot de passe actuel"
 
 #: registration/password_reset_confirm.html:29
 msgid "New password confirmation"
 msgstr "Confirmation du nouveau mot de passe"
 
 #: registration/password_reset_confirm.html:53
-#, fuzzy
-#| msgid "Password"
 msgid "Change my password"
-msgstr "Change mon mot de passe"
+msgstr "Changer mon mot de passe"
 
 #: registration/password_reset_done.html:6
 msgid "Success"
@@ -746,38 +646,24 @@ msgstr "Succès"
 
 #: registration/password_reset_done.html:8
 msgid "An email has been sent with instructions to reset your password."
-msgstr ""
-"Un e-mail a été envoyé avec des instructions pour réinitialiser votre mot de "
-"passe."
+msgstr "Un e-mail a été envoyé avec des instructions pour réinitialiser votre mot de passe."
 
 #: registration/password_reset_done.html:11
-msgid ""
-"If you don't receive an email, please make sure you've entered the address "
-"you registered with, and check your spam folder."
-msgstr ""
-"Si vous ne recevez pas d'e-mail, assurez-vous d'avoir entré l'adresse avec "
-"laquelle vous vous êtes enregistré et vérifiez votre spam."
+msgid "If you don't receive an email, please make sure you've entered the address you registered with, and check your spam folder."
+msgstr "Si vous ne recevez pas d'e-mail, assurez-vous d'avoir entré l'adresse avec laquelle vous vous êtes enregistré et vérifiez votre spam."
 
 #: registration/password_reset_email.html:17
 #: registration/password_reset_form.html:7
-#, fuzzy
-#| msgid "Password"
 msgid "Reset Password"
-msgstr "Nouveau mot de passe"
+msgstr "Réinitialiser votre mot de passe"
 
 #: registration/password_reset_form.html:3
-#, fuzzy
-#| msgid "Password"
 msgid "Password Reset"
-msgstr "Mot de passe"
+msgstr "Réinitialisation de mot de passe"
 
 #: registration/password_reset_form.html:10
-msgid ""
-"Fill in the email address tied to your account and submit to reset your "
-"password"
-msgstr ""
-"Remplissez l'adresse e-mail liée à votre compte et validez pour "
-"réinitialiser votre mot de passe"
+msgid "Fill in the email address tied to your account and submit to reset your password"
+msgstr "Remplissez l'adresse e-mail liée à votre compte et validez pour réinitialiser votre mot de passe"
 
 #: registration/password_reset_form.html:17 registration/register.html:92
 msgid "Email Address"
@@ -812,14 +698,10 @@ msgid "Invalid email address"
 msgstr "Adresse e-mail invalide"
 
 #: registration/register.html:144
-#, fuzzy
-#| msgid "Password"
 msgid "Confirm Password"
 msgstr "Confirmez le mot de passe"
 
 #: registration/register.html:166
-#, fuzzy
-#| msgid "Sign in"
 msgid "Sign up"
 msgstr "Se connecter"
 
@@ -828,44 +710,34 @@ msgid "Home"
 msgstr "Acceuil"
 
 #: report_base.html:58
-#, fuzzy
-#| msgid "Workflows"
 msgid "Workflow"
 msgstr "Workflow"
 
 #: report_base.html:60
-#, fuzzy
-#| msgid "My Dashboard"
 msgid "Program Dashboard"
-msgstr "Mon tableau de bord"
+msgstr "Tableau de bord du program"
 
 #: report_base.html:75
-#, fuzzy
-#| msgid "Indicator"
 msgid "Indicator Planning"
 msgstr "Planification des indicateurs"
 
 #: report_base.html:76
-#, fuzzy
-#| msgid "Indicator"
 msgid "Indicator Data"
 msgstr "Données des indicateurs"
 
 #: report_base.html:77
-#, fuzzy
-#| msgid "Indicator"
 msgid "Indicator Library"
 msgstr "Librairie d'indicateurs"
 
+#: report_base.html:82
+msgid "Form Library"
+msgstr "Librairie des formulaires"
+
 #: report_base.html:92
-#, fuzzy
-#| msgid "Activity URL"
 msgid "Activity Report"
 msgstr "Rapport Activity"
 
 #: report_base.html:93
-#, fuzzy
-#| msgid "Indicator"
 msgid "Indicator Data Report"
 msgstr "Rapport des données d'indicateurs"
 
@@ -892,3 +764,9 @@ msgstr "Se déconnecter"
 #: report_base.html:174
 msgid "FAQ"
 msgstr "FAQ"
+
+#~ msgid "We’re still working on this,"
+#~ msgstr "Nous travaillons encore sur cela,"
+
+#~ msgid "stay tuned!"
+#~ msgstr "restez à l'écoute"

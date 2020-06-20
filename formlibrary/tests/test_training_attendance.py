@@ -1,53 +1,5 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 from django.test import TestCase
-from workflow.models import Program
-from formlibrary.models import TrainingAttendance, Individual, Training
-from datetime import datetime
-from pytz import timezone
-
-
-class TrainingAttendanceTestCase(TestCase):
-
-    fixtures = [
-        'fixtures/tests/programs.json',
-    ]
-
-    def setUp(self):
-        program = Program.objects.first()
-        # stakeholder_obj = Stakeholder.objects.create(name="test_stakeholder")
-        new_training = TrainingAttendance.objects.create(
-            training_name="testtraining",
-            program=program,
-            implementer="test stakeholder",
-            reporting_period="34",
-            total_participants="34",
-            location="34",
-            community="34",
-            training_duration="34",
-            start_date=datetime.strptime("2020-10-01 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
-            end_date=datetime.strptime("2020-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
-            trainer_name="34",
-            trainer_contact_num="34",
-            form_filled_by="34",
-            form_filled_by_contact_num="34",
-            total_male=34,
-            total_female=34,
-            total_age_0_14_male=34,
-            total_age_0_14_female=34,
-            total_age_15_24_male=34,
-            total_age_15_24_female=34,
-            total_age_25_59_male=34
-        )
-        new_training.save()
-
-    def test_training_exists(self):
-        """Check for Training object"""
-        get_training = TrainingAttendance.objects.get(
-            training_name="testtraining")
-        self.assertEqual(TrainingAttendance.objects.filter(
-            id=get_training.id).count(), 1)
+from formlibrary.models import Individual, Training
 
 
 class IndividualTestCase(TestCase):
