@@ -47,5 +47,4 @@ class TrainingAttendance(StartEndDates):
 #     Attendance "sheet" to keep track of Individuals/Household participations to trainings.
 #     Spec: https://github.com/hikaya-io/activity/issues/422
 #     number_of_sessions = models.IntegerField()
-#     
 """
