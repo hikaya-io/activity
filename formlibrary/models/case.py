@@ -1,5 +1,4 @@
 import uuid
-from datetime import datetime
 from django.db import models
 from workflow.models import Program, SiteProfile
 from utils.models import CreatedModifiedDates
@@ -49,14 +48,4 @@ class Individual(CreatedModifiedDates):
         ordering = ('first_name',)
 
     def __str__(self):
-        if self.first_name is None:
-            return "Unamed Individual"
         return self.first_name
-
-    # on save add create date or update edit date
-    def save(self, *args, **kwargs):
-        if self.create_date is None:
-            self.create_date = datetime.now()
-        self.edit_date = datetime.now()
-        super(Individual, self).save(*args, **kwargs)
-

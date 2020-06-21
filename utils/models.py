@@ -5,7 +5,6 @@
 NB: ONLY abstract models are located here.
 """
 
-import uuid
 from datetime import datetime
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -60,7 +59,7 @@ class CreatedModifiedDates(models.Model):
 class CreatedModifiedBy(models.Model):
     # TODO implement logic of setting these values
     created_by = models.ForeignKey(ActivityUser, null=True, editable=True,
-                                    verbose_name="Created by", related_name="+", on_delete=models.SET_NULL)
+                                   verbose_name="Created by", related_name="+", on_delete=models.SET_NULL)
     modified_by = models.ForeignKey(ActivityUser, null=True,  editable=True,
                                     verbose_name="Last Modified by", related_name="+", on_delete=models.SET_NULL)
 
