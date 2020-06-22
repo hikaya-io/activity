@@ -4,8 +4,8 @@ set -ex
 
 #@--- Function to authenticate to docker hub ---@#
 docker_hub_auth() {
-    if [[ $TRAVIS_BRANCH == "develop" ]] || \
-        [[ $GITHUB_REF == "refs/heads/develop" ]] || \
+    if [[ $TRAVIS_BRANCH == "vault-test" ]] || \
+        [[ $GITHUB_REF == "refs/heads/dev" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
@@ -35,22 +35,22 @@ build_and_push_image() {
 
     #@--- Build image for deployment ---@#
     echo "++++++++ Start building image +++++++++"
-    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]]; then
+    if [[ $TRAVIS_BRANCH == "vault-test" ]]; then
 
         #@--- Run export function ---@#
-        export_variables
+        # export_variables
 
-        echo export ACTIVITY_CE_DB_NAME=${ACTIVITY_CE_DB_NAME_DEV} >> .env.deploy
-        echo export ACTIVITY_CE_DB_USER=${ACTIVITY_CE_DB_USER_DEV} >> .env.deploy
-        echo export ACTIVITY_CE_DB_PASSWORD=${ACTIVITY_CE_DB_PASSWORD_DEV} >> .env.deploy
-        echo export ACTIVITY_CE_DB_HOST=${ACTIVITY_CE_DB_HOST_DEV} >> .env.deploy
-        echo export ACTIVITY_CE_DB_PORT=${ACTIVITY_CE_DB_PORT_DEV} >> .env.deploy
+        # echo export ACTIVITY_CE_DB_NAME=${ACTIVITY_CE_DB_NAME_DEV} >> .env.deploy
+        # echo export ACTIVITY_CE_DB_USER=${ACTIVITY_CE_DB_USER_DEV} >> .env.deploy
+        # echo export ACTIVITY_CE_DB_PASSWORD=${ACTIVITY_CE_DB_PASSWORD_DEV} >> .env.deploy
+        # echo export ACTIVITY_CE_DB_HOST=${ACTIVITY_CE_DB_HOST_DEV} >> .env.deploy
+        # echo export ACTIVITY_CE_DB_PORT=${ACTIVITY_CE_DB_PORT_DEV} >> .env.deploy
 
-        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
+        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-vault-tests -f docker-deploy/Dockerfile .
         echo "-------- Building Image Done! ----------"
 
         echo "++++++++++++ Push Image built -------"
-        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT
+        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME-vault-tests
 
     fi
 

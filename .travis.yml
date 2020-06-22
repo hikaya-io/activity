@@ -11,22 +11,22 @@ notifications:
 jobs:
   include:
     #@--- Stage to run tests ---@#
-    - state: Build_and_test
-      name: "Tests Stage"
-      sudo: required
-    - script:
-      - chmod +x ci-scripts/run_tests.sh
-      - ./ci-scripts/run_tests.sh
+    # - state: Build_and_test
+    #   name: "Tests Stage"
+    #   sudo: required
+    # - script:
+    #   - chmod +x ci-scripts/run_tests.sh
+    #   - ./ci-scripts/run_tests.sh
 
     #@--- Stage to create the infrastructure ---@#
-    - stage: Infrastructure
-      name: "Setup_Infrastructure"
-    - script:
-      - export VER="0.12.21"
-      - wget https://releases.hashicorp.com/terraform/${VER}/terraform_${VER}_linux_amd64.zip
-      - unzip terraform_${VER}_linux_amd64.zip
-      - sudo mv terraform /usr/local/bin/
-      - chmod +x ci-scripts/create_infrastructure.sh && ./ci-scripts/create_infrastructure.sh
+    # - stage: Infrastructure
+    #   name: "Setup_Infrastructure"
+    # - script:
+    #   - export VER="0.12.21"
+    #   - wget https://releases.hashicorp.com/terraform/${VER}/terraform_${VER}_linux_amd64.zip
+    #   - unzip terraform_${VER}_linux_amd64.zip
+    #   - sudo mv terraform /usr/local/bin/
+    #   - chmod +x ci-scripts/create_infrastructure.sh && ./ci-scripts/create_infrastructure.sh
 
     #@--- Stage to build and push image ---@#
     - stage: Build docker Image
@@ -38,13 +38,13 @@ jobs:
       - ./ci-scripts/build_docker_image.sh
 
     #@--- Stage to deploy application ---@#
-    - stage: Deploy
-      services:
-        - docker
-      name: "Deploy to DO"
-      sudo: required
-    - script:
-      - export FILE_PATH="/home/travis/.docker/config.json"
-      - chmod +x ci-scripts/deployment.sh
-      - sudo apt-get install snapd -y
-      - ./ci-scripts/deployment.sh
+    # - stage: Deploy
+    #   services:
+    #     - docker
+    #   name: "Deploy to DO"
+    #   sudo: required
+    # - script:
+    #   - export FILE_PATH="/home/travis/.docker/config.json"
+    #   - chmod +x ci-scripts/deployment.sh
+    #   - sudo apt-get install snapd -y
+    #   - ./ci-scripts/deployment.sh
