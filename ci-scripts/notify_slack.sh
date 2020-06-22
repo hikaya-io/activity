@@ -17,7 +17,7 @@ replace_env_varibles() {
 
 #@--- Function to setup the message to be send ---@#
 setup_message() {
-    
+
     if [[ $DEPLOY == "success" ]]; then
         echo "++++++++++++ generate deployment message +++++++++++++"
         COMMIT_URL="https://github.com/hikaya-io/activity/commit/${TRAVIS_COMMIT}"
@@ -31,7 +31,7 @@ setup_message() {
 
 #@--- Function to send slack notification ---@#
 send_slack_notification() {
-    
+
     echo "++++++++++++ sending slack message +++++++++++++"
     echo $DEPLOYMENT_MESSAGE
     curl -X POST --data-urlencode \
@@ -42,7 +42,7 @@ send_slack_notification() {
 
 #@--- Main function ---@#
 main() {
-    if  [[ $GITHUB_REF == "refs/heads/dev" ]] || \
+    if  [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]]; then
         #@--- run the replace function ---@#
@@ -55,6 +55,6 @@ main() {
         send_slack_notification
     fi
 }
-    
+
 #@--- Run main function ---@#
 main

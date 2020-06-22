@@ -3,11 +3,11 @@ name: Activity
 on: 
   push:
     branches: 
-      - dev
+      - develop
       - staging
   pull_request:
     branches: 
-      - dev
+      - develop
       - staging
   release:
     types:
