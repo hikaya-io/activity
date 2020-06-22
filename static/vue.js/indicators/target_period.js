@@ -179,7 +179,6 @@ new Vue({
             } 
 
         },
-
         generateBiWeeklyTargets: function(periodStart){
             for (let i = 1; i <= this.number_of_target_periods; i++) {
                 const period = `Weeks ${i}`
@@ -437,6 +436,7 @@ new Vue({
                     })
                     toastr.success('Target periods were saved successfully');
                     this.$validator.reset();
+                    window.location.reload()
                 }
             } catch (error) {
                 toastr.error('There was a problems saving your data.');

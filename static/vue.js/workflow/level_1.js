@@ -136,7 +136,7 @@ new Vue({
 					}
                 );
 				if (response.data) {
-					toastr.success(`${this.level_1_label} successfully saved`);
+					toastr.success(`${this.level_1_label} ${this.name} successfully saved`);
 					this.programsList.unshift(response.data);
 
 					if (!saveNew) {
@@ -175,7 +175,7 @@ new Vue({
 					`/workflow/level1/${id}`
 				);
 				if (response.status === 204) {
-					toastr.success(`${this.level_1_label} was successfully Deleted`);
+					toastr.success(`${this.level_1_label} was successfully deleted`);
 					this.programsList = this.programsList.filter(item => +item.id !== +id);
 					this.showDeleteModal = !this.showDeleteModal;
 					this.modalHeader = `Add ${this.level_1_label}`; 
