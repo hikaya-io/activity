@@ -4,7 +4,7 @@ set +ex
 
 #@--- install kubectl and doctl ---@#
 install_kubectl_doctl() {
-    if [[ $TRAVIS_BRANCH == "dev" ]] || \
+    if [[ $TRAVIS_BRANCH == "develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
         echo "++++++++++++ install kubectl ++++++++++++"
@@ -32,8 +32,8 @@ install_kubectl_doctl() {
 #@--- Authorize kubectl to cluster ---@#
 auth_kubectl_cluster() {
     # Authenticate kubectl to the cluster
-    if [[ $TRAVIS_BRANCH == "dev" ]] || \
-        [[ $GITHUB_REF == "refs/heads/dev" ]] || \
+    if [[ $TRAVIS_BRANCH == "develop" ]] || \
+        [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
@@ -60,8 +60,8 @@ deploy_app() {
         --from-file=.dockerconfigjson=$FILE_PATH \
         --type=kubernetes.io/dockerconfigjson -n $APPLICATION_ENV
 
-    if [[ $TRAVIS_BRANCH == "dev" ]]  || \
-        [[ $GITHUB_REF == "refs/heads/dev" ]] || \
+    if [[ $TRAVIS_BRANCH == "develop" ]]  || \
+        [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
@@ -98,8 +98,8 @@ deploy_app() {
 replace_variables() {
 
     #@--- Replace necesary variables for dev env ---@#
-    if [[ $TRAVIS_BRANCH == "dev" ]] || \
-        [[ $GITHUB_REF == "refs/heads/dev" ]]; then
+    if [[ $TRAVIS_BRANCH == "develop" ]] || \
+        [[ $GITHUB_REF == "refs/heads/develop" ]]; then
         export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
     fi
 
