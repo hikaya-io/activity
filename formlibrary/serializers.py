@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from formlibrary.models import Individual, TrainingAttendance, Distribution
+from formlibrary.models import Individual, Training, Distribution
 from workflow.models import SiteProfile, Program
 
 
 class TrainingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TrainingAttendance
-        fields = ['id', 'training_name', 'training_duration']
+        model = Training
+        fields = ['id', 'name']
 
 
 class DistributionSerializer(serializers.ModelSerializer):
