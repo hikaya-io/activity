@@ -32,28 +32,44 @@ class Individual(models.Model):
     Subject to future changes: https://github.com/hikaya-io/activity/issues/403
     Also, will inherit from Case (subject to research/discussion)
     """
+    SEX_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female')
+    )
     first_name = models.CharField(max_length=255, null=True, blank=True)
-    training = models.ManyToManyField("formlibrary.training", blank=True)
-    distribution = models.ManyToManyField("formlibrary.distribution", blank=True)
-    father_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
+    #training = models.ManyToManyField("formlibrary.training", blank=True)
+    #distribution = models.ManyToManyField("formlibrary.distribution", blank=True)
+    #father_name = models.CharField(max_length=255, null=True, blank=True)
+    sex = models.CharField(choices=SEX_CHOICES, max_length=255, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
-    gender = models.CharField(max_length=255, null=True, blank=True)
+    date_of_birth = models.DateTimeField(null=True, blank=True)
+
+    household_id = models.ForeignKey(
+        Household, null=True, blank=True, on_delete=models.SET_NULL)
+    head_of_household = models.BooleanField(default=True)
+    id_type = models.CharField(max_length= 255, null=True, blank=True)
+    id_number = models.CharField(max_length= 255, null=True, blank=True)
+    primary_number = models.IntegerField(null=True, blank=True)
+    secondary_number = models.IntegerField(null=True, blank=True)
     site = models.ForeignKey(SiteProfile, null=True,
-                             blank=True, on_delete=models.SET_NULL)
+                              blank=True, on_delete=models.SET_NULL)
     signature = models.BooleanField(default=True)
-    remarks = models.TextField(max_length=550, null=True, blank=True)
-    program = models.ManyToManyField(Program, blank=True)
+    photo = models.ImageField(upload_to='', null=True, blank=True)
+    #remarks = models.TextField(max_length=550, null=True, blank=True)
+    #program = models.ManyToManyField(Program, blank=True)
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
+    # created_by = 
+    # modified_by = 
 
-    household = models.ForeignKey(
-        Household, null=True, blank=True, on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ('first_name',)
 
-    # on save add create date or update edit date
+    # on save add create date or update edit date and age calculation from DOB
     def save(self, *args, **kwargs):
+        age = datetime.now() - date_of_birth
         if self.create_date is None:
             self.create_date = datetime.now()
         self.edit_date = datetime.now()
