@@ -323,7 +323,6 @@ class GenerateReport(View):
                                                             .order_by('customsort')
             indicator = IndicatorSerializer(ind).data,
             periodic_data = PeriodicTargetSerializer(periodic_targets, many=True).data
-            total_targeted = 0
             total_achieved = 0
 
             for data in indicator:
@@ -331,6 +330,7 @@ class GenerateReport(View):
                 program = data['program'][0]
                 start_date = program['start_date']
                 end_date = program['end_date']
+                total_targeted = float(data['lop_target'])
 
             start = pendulum.parse(start_date)
             end = pendulum.parse(end_date)
@@ -340,7 +340,6 @@ class GenerateReport(View):
             for data in periodic_data:
                 for collecteddata in data['collecteddata_set']:
                     total_achieved += float(collecteddata['achieved'])
-                    total_targeted += float(collecteddata['targeted'])
 
             current = None
             previous = None
