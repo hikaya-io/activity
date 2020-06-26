@@ -79,7 +79,7 @@
           data: indicator,
           success: function (resp, status) {
             // notify success
-            toastr.success('Indicator was added sucessfully', `${resp}`);
+          toastr.success(`Indicator ${indicator.indicator_name} successfully saved`);
 
             //close modal
             $('#addIndicatorModal').modal('hide');

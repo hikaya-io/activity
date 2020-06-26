@@ -4,8 +4,8 @@ set -ex
 
 #@--- Function to authenticate to docker hub ---@#
 docker_hub_auth() {
-    if [[ $TRAVIS_BRANCH == "dev" ]] || \
-        [[ $GITHUB_REF == "refs/heads/dev" ]] || \
+    if [[ $TRAVIS_BRANCH == "develop" ]] || \
+        [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
@@ -35,7 +35,7 @@ build_and_push_image() {
 
     #@--- Build image for deployment ---@#
     echo "++++++++ Start building image +++++++++"
-    if [[ $TRAVIS_BRANCH == "dev" ]] || [[ $GITHUB_REF == "refs/heads/dev" ]]; then
+    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]]; then
 
         #@--- Run export function ---@#
         export_variables

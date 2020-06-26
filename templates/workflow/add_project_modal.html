@@ -34,7 +34,7 @@
         data,
         success: function (resp, status) {
           // notify success
-          toastr.success('Project was added successfully', `${resp}`);
+          toastr.success(`Project ${obj.project_name} successfully saved`);
 
           //close modal
           $('#addProjectModal').modal('hide');
