@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "+++++++++++++++++ Export environment variables ++++++++++++++++++++++++"
-source /vault/secrets/config
+source .env.deploy
 echo "+++++++++++++++++ Export Done ++++++++++++++++++++++++"
 
 echo "+++++++++++++++++ Initialize database migrations ++++++++++++++++++++++++"

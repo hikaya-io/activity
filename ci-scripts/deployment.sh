@@ -61,13 +61,29 @@ deploy_app() {
         --type=kubernetes.io/dockerconfigjson -n $APPLICATION_ENV
 
     if [[ $TRAVIS_BRANCH == "develop" ]]  || \
+        [[ $GITHUB_REF == "refs/heads/develop" ]]; then
+        envsubst < ./deployment_files/deployment-vault > deployment.yaml
+        envsubst < ./deployment_files/service_account > service_account.yaml
+        envsubst < ./deployment_files/token_review_srv_acc > token_review.yaml
+
+        kubectl apply -f service_account.yaml
+        kubectl apply -f token_review.yaml
+    fi
+
+    if [[ $TRAVIS_BRANCH == "staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
+        [[ $GITHUB_EVENT_NAME == "release" ]] || \
+        [[ ! -z $TRAVIS_TAG ]]; then
+            envsubst < ./deployment_files/deployment > deployment.yaml
+    fi
+
+    if [[ $TRAVIS_BRANCH == "develop" ]]  || \
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
         echo "------- generate deployfiles --------------"
-        envsubst < ./deployment_files/deployment > deployment.yaml
         envsubst < ./deployment_files/service > service.yaml
         envsubst < ./deployment_files/autoscaler > autoscaler.yaml
         envsubst < ./deployment_files/ingress-config > ingress-config.yaml
