@@ -36,15 +36,9 @@ build_and_push_image() {
     #@--- Build image for deployment ---@#
     echo "++++++++ Start building image +++++++++"
     if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]]; then
-
-        #@--- Run export function ---@#
-        export_variables
-
-        echo export ACTIVITY_CE_DB_NAME=${ACTIVITY_CE_DB_NAME_DEV} >> .env.deploy
-        echo export ACTIVITY_CE_DB_USER=${ACTIVITY_CE_DB_USER_DEV} >> .env.deploy
-        echo export ACTIVITY_CE_DB_PASSWORD=${ACTIVITY_CE_DB_PASSWORD_DEV} >> .env.deploy
-        echo export ACTIVITY_CE_DB_HOST=${ACTIVITY_CE_DB_HOST_DEV} >> .env.deploy
-        echo export ACTIVITY_CE_DB_PORT=${ACTIVITY_CE_DB_PORT_DEV} >> .env.deploy
+        old_line="source .env.deploy"
+        new_line='source /vault/secrets/config'
+        sed -i "s%$old_line%$new_line%g" docker-deploy/start_app.sh
 
         docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
         echo "-------- Building Image Done! ----------"
