@@ -15,9 +15,6 @@ class StartEndDates(models.Model):
     """
     Abstract Base Class to implement start/end dates fields
     """
-    # TODO move to its own place. A package named "core_mixins"
-    # TODO Check the start_date < end_date and throw adequate error if else
-    # TODO Will we need the same for a Slug field? Does Django offer one?
     start_date = models.DateTimeField(verbose_name="Start date", null=True, blank=True)
     end_date = models.DateTimeField(verbose_name="End date", null=True, blank=True)
 
@@ -30,7 +27,7 @@ class StartEndDates(models.Model):
         # ? Be higher/lower than today's date?
         super(StartEndDates, self).clean()
         if None not in (self.start_date, self.end_date) and self.end_date < self.start_date:
-            raise ValidationError("Sorry, End date must be greater than start date.")
+            raise ValidationError("Sorry, End date must be greater than Start date.")
 
     class Meta:
         abstract = True
@@ -40,7 +37,7 @@ class CreatedModifiedDates(models.Model):
     "Mixins for created/modified timestamps"
     # TODO Unit test this
     # This is the naming used in other models
-    create_date = models.DateTimeField(verbose_name="Creation date", null=True, blank=True)
+    create_date = models.DateTimeField(verbose_name="Creation date", default=datetime.now, null=True, blank=True)
     modified_date = models.DateTimeField(verbose_name="Last Modification date", null=True, blank=True)
 
     class Meta:
@@ -48,11 +45,9 @@ class CreatedModifiedDates(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Create/Edit dates in UTC timezone
+        Set Edit dates on save
         """
-        if self.create_date is None:
-            self.create_date = datetime.utcnow()
-        self.modified_date = datetime.utcnow()
+        self.modified_date = datetime.now()
         super().save(*args, **kwargs)
 
 
