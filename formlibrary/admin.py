@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
 from django.contrib import admin
 
 from .models import (
@@ -23,7 +21,7 @@ class DistributionAdmin(admin.ModelAdmin):
         'name',
         'program',
         'create_date',
-        'modified_date'
+        'modified_date',
     )
     display = 'Program Dashboard'
 

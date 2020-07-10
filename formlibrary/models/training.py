@@ -1,6 +1,3 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 from django.db import models
 from workflow.models import Contact
 from .service import Service
