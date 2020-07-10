@@ -1,6 +1,3 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 from django.test import TestCase
 from formlibrary.models import Individual, Training
 
