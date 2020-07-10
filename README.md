@@ -73,7 +73,7 @@ $ pip install virtualenv
 #### Create virtualenv
 
 ```bash
-$ virtualenv <myvirtualenvironmentname>
+$ virtualenv -p python3.7 <myvirtualenvironmentname>
 ```
 
 - by default it should prevent virtualenv from seeing your global packages
