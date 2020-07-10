@@ -1,13 +1,13 @@
 name: Activity
 
-on: 
+on:
   push:
-    branches: 
-      - dev
+    branches:
+      - develop
       - staging
   pull_request:
-    branches: 
-      - dev
+    branches:
+      - develop
       - staging
   release:
     types:
@@ -49,7 +49,7 @@ jobs:
         bash <(curl -s https://codecov.io/bash)
 
   Infrastructure:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     needs: Build_and_test
     steps:
     - uses: actions/checkout@v1
@@ -62,7 +62,7 @@ jobs:
         terraform version
 
     - name: Run infrastructure script
-      env: 
+      env:
         BACKEND_BUCKET_DEV_ENV: ${{ secrets.BACKEND_BUCKET_DEV_ENV }}
         STATE_FILE_DEV_ENV: ${{ secrets.STATE_FILE_DEV_ENV }}
         SPACES_ACCESS_KEY: ${{ secrets.SPACES_ACCESS_KEY }}
@@ -96,10 +96,10 @@ jobs:
         bash ./ci-scripts/create_infrastructure.sh
 
   Build_and_push_image:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     needs: Infrastructure
     steps:
-    - uses: actions/checkout@v1 
+    - uses: actions/checkout@v1
     - name: Setup docker-ce
       run: |
         sudo apt install apt-transport-https ca-certificates curl software-properties-common
@@ -176,6 +176,8 @@ jobs:
         APPLICATION_ENV_PROD: ${{ secrets.APPLICATION_ENV_PROD }}
         CLUSTER_NAME_PROD: ${{ secrets.CLUSTER_NAME_PROD }}
         HOST_DOMAIN_PROD: ${{ secrets.HOST_DOMAIN_PROD }}
+        # Vault
+        ROLE_NAME: ${{ secrets.ROLE_NAME }}
       run: |
         export TRAVIS_COMMIT=$GITHUB_SHA
         export FILE_PATH="/github/home/.docker/config.json"
