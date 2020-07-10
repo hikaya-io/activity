@@ -1,5 +1,5 @@
 # Language used usually but in or case we wish to not run
-# the default pip install command hence just setting the 
+# the default pip install command hence just setting the
 # language to minimal will work.
 language: minimal
 
