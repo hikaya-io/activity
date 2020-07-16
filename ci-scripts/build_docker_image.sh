@@ -6,7 +6,7 @@ set -ex
 docker_hub_auth() {
     if [[ $TRAVIS_BRANCH == "develop" ]] || \
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $TRAVIS_BRANCH == "optimize-resources-dev-stag" ]] || \
+        [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
@@ -40,30 +40,28 @@ build_and_push_image() {
         new_line='source /vault/secrets/config'
         sed -i "s%$old_line%$new_line%g" docker-deploy/start_app.sh
 
-        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
+        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME_DEV-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
         echo "-------- Building Image Done! ----------"
 
         echo "++++++++++++ Push Image built -------"
-        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT
+        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME_DEV-$TRAVIS_COMMIT
 
     fi
 
     #@--- Build staging image ---@#
 
-    if [[ $TRAVIS_BRANCH == "optimize-resources-dev-stag" ]] || \
+    if [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]]; then
         echo "++++++ Build Staging Image +++++++++++"
-
         old_line="source .env.deploy"
         new_line='source /vault/secrets/config'
         sed -i "s%$old_line%$new_line%g" docker-deploy/start_app.sh
-        export APPLICATION_ENV=${APPLICATION_ENV_STAGING}
 
-        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
+        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME_STAGING-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
         echo "-------- Building Image Done! ----------"
 
         echo "++++++++++++ Push Image built -------"
-        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT
+        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME_STAGING-$TRAVIS_COMMIT
 
     fi
 
