@@ -6,7 +6,7 @@ set -ex
 docker_hub_auth() {
     if [[ $TRAVIS_BRANCH == "develop" ]] || \
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $TRAVIS_BRANCH == "staging" ]] || \
+        [[ $TRAVIS_BRANCH == "optimize-resources-dev-stag" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
@@ -50,18 +50,13 @@ build_and_push_image() {
 
     #@--- Build staging image ---@#
 
-    if [[ $TRAVIS_BRANCH == "staging" ]] || \
+    if [[ $TRAVIS_BRANCH == "optimize-resources-dev-stag" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]]; then
         echo "++++++ Build Staging Image +++++++++++"
 
-        #@--- Run export function ---@#
-        export_variables
-
-        echo export ACTIVITY_CE_DB_NAME=${ACTIVITY_CE_DB_NAME_STAGING} >> .env.deploy
-        echo export ACTIVITY_CE_DB_USER=${ACTIVITY_CE_DB_USER_DEV} >> .env.deploy
-        echo export ACTIVITY_CE_DB_PASSWORD=${ACTIVITY_CE_DB_PASSWORD_DEV} >> .env.deploy
-        echo export ACTIVITY_CE_DB_HOST=${ACTIVITY_CE_DB_HOST_DEV} >> .env.deploy
-        echo export ACTIVITY_CE_DB_PORT=${ACTIVITY_CE_DB_PORT_DEV} >> .env.deploy
+        old_line="source .env.deploy"
+        new_line='source /vault/secrets/config'
+        sed -i "s%$old_line%$new_line%g" docker-deploy/start_app.sh
         export APPLICATION_ENV=${APPLICATION_ENV_STAGING}
 
         docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
