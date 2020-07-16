@@ -1,13 +1,13 @@
 kind: Service
 apiVersion: v1
 metadata: 
-  name: activity-app-service-${APPLICATION_ENV}
+  name: ${APPLICATION_NAME}-app-service-${APPLICATION_ENV}
   namespace: ${APPLICATION_ENV}
   labels: 
-    app: activity-app-${APPLICATION_ENV}
+    app: a${APPLICATION_NAME}-app-${APPLICATION_ENV}
 spec:
   selector:
-    app: activity-app-${APPLICATION_ENV}
+    app: ${APPLICATION_NAME}-app-${APPLICATION_ENV}
   ports:
     - port: 80
       name: http
