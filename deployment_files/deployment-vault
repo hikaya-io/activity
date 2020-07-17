@@ -6,7 +6,7 @@ metadata:
   labels:
     app: ${APPLICATION_NAME}-app-${APPLICATION_ENV}
 spec:
-  replicas: MIN_PODS
+  replicas: ${MIN_PODS}
   selector:
     matchLabels:
       app: ${APPLICATION_NAME}-app-${APPLICATION_ENV}
