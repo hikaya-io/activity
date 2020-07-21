@@ -41,7 +41,16 @@ jobs:
       run: |
         cp activity/settings/local-sample.py activity/settings/local.py
         pipenv install
+        docker run -dp 5432:5432 -e POSTGRES_PASSWORD='test_user' -e POSTGRES_USER="postgres" -e POSTGRES_DB='test_db' postgres:11
+        sleep 5
+        #@--- Check if db is up ---@#
+        docker ps
         source $(python3 -m pipenv --venv)/bin/activate
+        export ACTIVITY_CE_DB_NAME="test_db"
+        export ACTIVITY_CE_DB_USER=postgres
+        export ACTIVITY_CE_DB_HOST=0.0.0.0
+        export ACTIVITY_CE_DB_PORT=5432
+        export ACTIVITY_CE_DB_PASSWORD='test_user'
         coverage run manage.py test
         echo "++++++++ Show test coverage report +++++++"
         coverage report

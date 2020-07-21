@@ -15,12 +15,28 @@ setup_python() {
     pip3 install --upgrade pip
 }
 
+#@--- Setup postgresdb ---@#
+setup_postgresql() {
+    #@--- setup postgres db with docker, just for the test ---@#
+    docker run -dp 5432:5432 -e POSTGRES_PASSWORD='test_user' -e POSTGRES_USER="postgres" -e POSTGRES_DB='test_db' postgres:11
+    sleep 5
+    #@--- Check if db is up ---@#
+    docker ps
+}
+
 #@--- Install and activate virtualenv ---@#
 install_activate_virtualenv() {
     cp activity/settings/local-sample.py activity/settings/local.py
     pip3 install pipenv
     pipenv install
     source $(python3 -m pipenv --venv)/bin/activate
+
+    #@ --- export variables for the postgres db ---@#
+    export DB_NAME="test_db"
+    export DB_USER=postgres
+    export DB_HOST=0.0.0.0
+    export DB_PORT=5432
+    export DB_PASSWORD='test_user'
 }
 
 #@--- run linter ---@#
