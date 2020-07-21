@@ -1616,7 +1616,7 @@ class StakeholderForm(forms.ModelForm):
         )
         super(StakeholderForm, self).__init__(*args, **kwargs)
 
-        countries = get_country(self.request.user)
+        countries = Country.objects.all()
         users = ActivityUser.objects.filter(
             organization=self.request.user.activity_user.organization)
         self.fields['contact'].queryset = Contact.objects.filter(
