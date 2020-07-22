@@ -4,7 +4,6 @@ from utils.models import CreatedModifiedBy, CreatedModifiedDates
 
 
 class Inventory(Service, CreatedModifiedBy, CreatedModifiedDates):
-    serviceid = models.ForeignKey(Service, null=True, on_delete=models.SET_NULL)
     code = models.CharField(max_length=50, null=False, blank=False)
     name = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(max_length=550, null=False, blank=True)
@@ -14,4 +13,8 @@ class Inventory(Service, CreatedModifiedBy, CreatedModifiedDates):
 
     @property
     def total(self):
-        return self.quantity * self.unit_cost
+        if self.unit_cost is None:
+            return None
+        else:
+            return self.quantity * self.unit_cost
+
