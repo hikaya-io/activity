@@ -145,7 +145,7 @@ main() {
             set_up_cluster_dev_env
 
             #@--- Run function for staging cluster ---@#
-            set_up_cluster_staging
+            # set_up_cluster_staging
 
             #@--- Run the prod setup function ---@#
             set_up_cluster_prod
