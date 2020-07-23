@@ -17,4 +17,3 @@ class Inventory(Service, CreatedModifiedBy, CreatedModifiedDates):
             return None
         else:
             return self.quantity * self.unit_cost
-
