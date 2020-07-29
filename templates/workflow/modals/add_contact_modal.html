@@ -7,6 +7,11 @@
 			theme: 'bootstrap',
 			dropdownParent: $('#addContactModal'),
 		});
+		$('#country').select2({
+			placeholder: 'Select Country...',
+			theme: 'bootstrap',
+			dropdownParent: $('#addContactModal'),
+		});
 		// show quick add modal if quick-modal to true
 		const url = new URL(window.location.href);
 		if (url.searchParams.get('quick-modal')) {
@@ -122,6 +127,18 @@
 						<select class="form-control" id="stakeholder" name="stakeholder">
 							<option value=""></option>
 							{% for item in get_stakeholders %} {% if item.name %}
+							<option value="{{ item.id }} ">
+								{{ item.name | truncatechars:50 }}
+							</option>
+							{% endif %} {% endfor %}
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label for="country">Country</label>
+						<select name="country" id="country" class="form-control">
+							<option value=""></option>
+							{% for item in get_countries %} {% if item.name %}
 							<option value="{{ item.id }} ">
 								{{ item.name | truncatechars:50 }}
 							</option>
