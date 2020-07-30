@@ -18,7 +18,12 @@ from workflow.models import (
 
 class ProjectCompleteTestCase(TestCase):
 
-    fixtures = ['fixtures/tests/projecttype.json', 'fixtures/tests/sectors.json']
+    fixtures = [
+        'fixtures/tests/organization.json',
+        'fixtures/tests/profiletypes.json',
+        'fixtures/tests/sectors.json',
+        'fixtures/tests/projecttype.json',
+    ]
 
     def setUp(self):
         new_organization = Organization.objects.create(name="Activity")

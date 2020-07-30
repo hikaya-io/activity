@@ -49,10 +49,10 @@
         {% for distribution in get_distribution %}
         <tr>
           <td>
-            <a href="/formlibrary/distribution_update/{{distribution.id}}/" 
-              data-toggle="tooltip" 
-              title="{{ distribution.distribution_name }}">
-              {{ distribution.distribution_name | truncatechars:50 }}
+            <a href="/formlibrary/distribution_update/{{distribution.id}}/"
+              data-toggle="tooltip"
+              title="{{ distribution.name }}">
+              {{ distribution.name | truncatechars:50 }}
             </a>
           </td>
           <td>{{ distribution.start_date | date }}</td>
@@ -80,9 +80,9 @@
                 <li class="divider"></li>
                 <li class="text-danger">
                     <a
-                      class="text-danger" 
-                      href="#deleteItemModal{{distribution.id}}" 
-                      data-toggle="modal" 
+                      class="text-danger"
+                      href="#deleteItemModal{{distribution.id}}"
+                      data-toggle="modal"
                       onclick="setItemToDelete({{distribution.id}})"
                       data-target="#deleteItemModal{{distribution.id}}">
                       Delete

@@ -31,18 +31,10 @@ class TrainingAttendance(StartEndDates):
     total_age_15_24_female = models.IntegerField(null=True, blank=True)
     total_age_25_59_male = models.IntegerField(null=True, blank=True)
     total_age_25_59_female = models.IntegerField(null=True, blank=True)
-    create_date = models.DateTimeField(null=True, blank=True)
-    edit_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ('training_name',)
 
-    # on save add create date or update edit date
-    def save(self, *args, **kwargs):
-        if self.create_date is None:
-            self.create_date = datetime.now()
-        self.edit_date = datetime.now()
-        super(TrainingAttendance, self).save()
 
     # displayed in admin templates
     def __str__(self):

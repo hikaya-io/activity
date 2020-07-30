@@ -1,8 +1,9 @@
-from datetime import date
+from datetime import date, datetime
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from workflow.models import Program, Office, ActivityUser
 from formlibrary.models import Training, Service
+from pytz import timezone
 
 
 class TestTraining(TestCase):
@@ -31,8 +32,8 @@ class TestTraining(TestCase):
             program=self.program,
             office=self.office,
             # cases=[self.individual, self.household],
-            start_date=date(2020, 10, 1),
-            end_date=date(2020, 10, 19),
+            start_date=datetime.strptime("2020-10-01 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
+            end_date=datetime.strptime("2020-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
             form_verified_by="Bruce",
             duration=30,
             created_by=self.activity_user,
@@ -94,8 +95,8 @@ class TestTraining(TestCase):
                 description="End date < Start date",
                 created_by=self.activity_user,
                 modified_by=self.activity_user,
-                start_date=date(2020, 10, 19),
-                end_date=date(2020, 10, 1),
+                start_date=datetime.strptime("2020-10-01 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
+                end_date=datetime.strptime("2017-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
                 duration=0,
             )
 

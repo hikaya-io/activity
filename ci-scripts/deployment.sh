@@ -61,20 +61,22 @@ deploy_app() {
         --type=kubernetes.io/dockerconfigjson -n $APPLICATION_ENV
 
     if [[ $TRAVIS_BRANCH == "develop" ]]  || \
-        [[ $GITHUB_REF == "refs/heads/develop" ]]; then
+        [[ $GITHUB_REF == "refs/heads/develop" ]] || \
+        [[ $TRAVIS_BRANCH == "staging" ]] || \
+        [[ $GITHUB_REF == "refs/heads/staging" ]]; then
         envsubst < ./deployment_files/deployment-vault > deployment.yaml
         envsubst < ./deployment_files/service_account > service_account.yaml
         envsubst < ./deployment_files/token_review_srv_acc > token_review.yaml
+        envsubst < ./deployment_files/shared-ingress-config > ingress-config.yaml
 
         kubectl apply -f service_account.yaml
         kubectl apply -f token_review.yaml
     fi
 
-    if [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
-        [[ $GITHUB_EVENT_NAME == "release" ]] || \
+    if [[ $GITHUB_EVENT_NAME == "release" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
             envsubst < ./deployment_files/deployment > deployment.yaml
+            envsubst < ./deployment_files/ingress-config > ingress-config.yaml
     fi
 
     if [[ $TRAVIS_BRANCH == "develop" ]]  || \
@@ -86,7 +88,6 @@ deploy_app() {
         echo "------- generate deployfiles --------------"
         envsubst < ./deployment_files/service > service.yaml
         envsubst < ./deployment_files/autoscaler > autoscaler.yaml
-        envsubst < ./deployment_files/ingress-config > ingress-config.yaml
         envsubst < ./deployment_files/cert-config/cert-issuer > cert-issuer.yaml
         envsubst < ./deployment_files/cert-config/cert-secret > cert-secret.yaml
         envsubst < ./deployment_files/cert-config/certificate > certificate.yaml
@@ -98,7 +99,6 @@ deploy_app() {
         kubectl apply --validate=false -f deployment_files/metrics-server.yaml
         sleep 70
 
-        kubectl apply -f deployment_files/ingress-service.yaml
         kubectl apply -f cert-secret.yaml
         kubectl apply --validate=false -f cert-issuer.yaml
         kubectl apply --validate=false -f certificate.yaml
@@ -117,14 +117,20 @@ replace_variables() {
     if [[ $TRAVIS_BRANCH == "develop" ]] || \
         [[ $GITHUB_REF == "refs/heads/develop" ]]; then
         export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
+        export ROLE_NAME=${ROLE_NAME_DEV}
+        export SECRET_PATH=${SECRET_PATH_DEV}
+        export APPLICATION_NAME=${APPLICATION_NAME_DEV}
+        export MIN_PODS=${MIN_PODS_DEV}
     fi
 
     #@--- Replace necesary variables for staging env ---@#
     if [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]]; then
-        export APPLICATION_ENV=${APPLICATION_ENV_STAGING}
-        export HOST_DOMAIN=${HOST_DOMAIN_STAGING}
-        export CLUSTER_NAME=${CLUSTER_NAME_STAGING}
+        export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
+        export ROLE_NAME=${ROLE_NAME_DEV}
+        export SECRET_PATH=${SECRET_PATH_STAGING}
+        export APPLICATION_NAME=${APPLICATION_NAME_STAGING}
+        export MIN_PODS=${MIN_PODS_DEV}
     fi
 
     #@--- Replace necesary variables for production env ---@#
@@ -133,6 +139,8 @@ replace_variables() {
         export APPLICATION_ENV=${APPLICATION_ENV_PROD}
         export HOST_DOMAIN=${HOST_DOMAIN_PROD}
         export CLUSTER_NAME=${CLUSTER_NAME_PROD}
+        export MIN_PODS=${MIN_PODS_PROD}
+        export APPLICATION_NAME=${APPLICATION_NAME_PROD}
     fi
 }
 

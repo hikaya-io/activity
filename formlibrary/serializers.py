@@ -12,7 +12,7 @@ class TrainingSerializer(serializers.ModelSerializer):
 class DistributionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Distribution
-        fields = ['id', 'distribution_name']
+        fields = ['id', 'name']
 
 
 class SiteProfileSerializer(serializers.ModelSerializer):
