@@ -1589,9 +1589,7 @@ class ContactList(ListView):
             organization=user.organization)
 
         stakeholder_id = int(self.kwargs['stakeholder_id'])
-    
-        print(Country.objects.all())
-        print(get_stakeholders)
+
         if stakeholder_id != 0:
             get_contacts = get_contacts.filter(stakeholder__id=stakeholder_id)
 
@@ -1603,25 +1601,6 @@ class ContactList(ListView):
             'active': ['components']
         })
 
-
-# class ProjectAgreementImport(ListView):
-#     """
-#     Import a project agreement from Hikaya or other third party service
-#     """
-
-#     template_name = 'workflow/projectagreement_import.html'
-
-#     def get(self, request, *args, **kwargs):
-#         countries = get_country(request.user)
-#         get_programs = Program.objects.all().filter(
-#             funding_status="Funded", country__in=countries)
-#         get_services = ExternalService.objects.all()
-#         get_countries = Country.objects.all().filter(country__in=countries)
-
-#         return render(request, self.template_name,
-#                       {'get_programs': get_programs,
-#                        'get_services': get_services,
-#                        'get_countries': get_countries})
 
 class ContactCreate(GView):
     """
@@ -1639,11 +1618,10 @@ class ContactCreate(GView):
             address=data.get('address', ''),
             phone=data.get('phone_number', ''),
             organization=user.organization,
-            country=data.get('country'),
+            country_id=data.get('country'),
             stakeholder_id=data.get('stakeholder'),
             email=data.get('email', ''),
         )
-
         if contact:
             stakeholder_id = data.get('stakeholder', None)
             if stakeholder_id is not None:
@@ -1664,7 +1642,6 @@ class ContactUpdate(UpdateView):
     """
     model = Contact
     guidance = None
-
     @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
     def dispatch(self, request, *args, **kwargs):
         try:

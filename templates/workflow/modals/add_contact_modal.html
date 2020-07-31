@@ -32,7 +32,6 @@
 			formValue.forEach(item => {
 				obj[item.name] = item.value;
 			});
-
 			$.ajax({
 				url: "{% url 'add-contact' %}",
 				type: 'POST',
@@ -138,9 +137,9 @@
 						<label for="country">Country</label>
 						<select name="country" id="country" class="form-control">
 							<option value=""></option>
-							{% for item in get_countries %} {% if item.name %}
+							{% for item in get_countries %} {% if item.country %}
 							<option value="{{ item.id }} ">
-								{{ item.name | truncatechars:50 }}
+								{{ item.country }}
 							</option>
 							{% endif %} {% endfor %}
 						</select>
