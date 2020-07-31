@@ -1,15 +1,15 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 from functools import partial
 from crispy_forms.helper import FormHelper
 from django import forms
-from workflow.models import Program, ProjectAgreement, Office, Province, SiteProfile
 from .models import (
-    # TrainingAttendance,
     Distribution,
     Individual,
     Training,
+)
+from workflow.models import (
+    Office,
+    Program,
+    SiteProfile,
 )
 
 
@@ -75,18 +75,13 @@ class DistributionForm(forms.ModelForm):
 
         super(DistributionForm, self).__init__(*args, **kwargs)
 
-        self.fields['initiation'].queryset = ProjectAgreement.objects.filter(
-            program__organization=self.request.user.activity_user.organization)
         self.fields['program'].queryset = Program.objects.filter(
             organization=self.request.user.activity_user.organization)
-        self.fields['office_code'].queryset = Office.objects.filter(
+        self.fields['office'].queryset = Office.objects.filter(
             organization=self.request.user.activity_user.organization)
-        self.fields['province'].queryset = Province.objects.all()
 
-        self.fields['distribution_name'].label = '{} name'.format(self.organization.distribution_label)
-        self.fields['distribution_implementer'].label = '{} implementer'.format(self.organization.distribution_label)
-        self.fields['distribution_location'].label = '{} location'.format(self.organization.distribution_label)
-        self.fields['distribution_indicator'].label = '{} indicator'.format(self.organization.distribution_label)
+        self.fields['name'].label = '{} name'.format(self.organization.distribution_label)
+        self.fields['implementer'].label = '{} implementer'.format(self.organization.distribution_label)
 
 
 class IndividualForm(forms.ModelForm):

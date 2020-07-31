@@ -168,7 +168,7 @@
             <div v-show="showTable" class="col-md-12" id="id_targets">
                 <table id="targetsTable" class="table table-hover">
                     <tbody>
-                        <tr v-for="target in targets" :key="target.id">
+                        <tr v-for="(target, index) in targets" :key="target.id">
                             <th>[[target.period]]<br><small>[[target.start_date]] - [[target.end_date]]</small></th>
                             <td>
                                 <input 
@@ -179,9 +179,9 @@
                                 type="number" 
                                 :id="target.id"
                                 v-model= "target_value[target.pk]"
-                                name="target value"
+                                :name="'target value ' + (index + 1)"
                                 v-validate="'required'"/>
-                                <span v-show="errors.has('target value')" class="help is-danger">[[ errors.first('target value') ]]</span>
+                                <span v-show="errors.has(`target value ${index + 1}`)" class="help is-danger">[[ errors.first(`target value ${index + 1}`)]]</span>
                             </td>
                         </tr>
                         <tr>
