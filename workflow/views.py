@@ -1597,6 +1597,7 @@ class ContactList(ListView):
             'get_contacts': get_contacts,
             'get_stakeholders': get_stakeholders,
             'stakeholder_id': stakeholder_id,
+            'get_countries':  Country.objects.all(),
             'active': ['components']
         })
 
@@ -1617,6 +1618,7 @@ class ContactCreate(GView):
             address=data.get('address', ''),
             phone=data.get('phone_number', ''),
             organization=user.organization,
+            country_id=data.get('country'),
             stakeholder_id=data.get('stakeholder'),
             email=data.get('email', ''),
         )
