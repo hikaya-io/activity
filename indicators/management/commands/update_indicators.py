@@ -38,7 +38,7 @@ class Command(BaseCommand):
                 baseline_na = False
                 try:
                     lop = float(lop) if '.' in lop else int(lop)
-                except ValueError as e:
+                except ValueError:
                     self.stdout.write(self.style.ERROR(
                         '%s, invalid lop (%s)' % (indicator_id, lop)))
                     continue
@@ -46,7 +46,7 @@ class Command(BaseCommand):
                 try:
                     baseline = float(
                         baseline) if '.' in baseline else int(baseline)
-                except ValueError as e:
+                except ValueError:
                     if baseline and baseline.lower() == 'na' or \
                             baseline.lower() == 'n/a' or \
                             baseline.lower() == 'not applicable':
@@ -59,7 +59,7 @@ class Command(BaseCommand):
 
                 try:
                     indicator = Indicator.objects.get(pk=indicator_id)
-                except Indicator.DoesNotExist as e:
+                except Indicator.DoesNotExist:
                     self.stdout.write(self.style.ERROR(
                         '%s, does not exist!' % indicator_id))
                     continue
@@ -75,6 +75,6 @@ class Command(BaseCommand):
                     indicator.save()
                     self.stdout.write(self.style.SUCCESS(
                         "%s, updated successfully" % indicator.id))
-                except Exception as e:
+                except Exception:
                     self.stdout.write(self.style.ERROR(
                         '%s, failed to save!' % indicator.id))

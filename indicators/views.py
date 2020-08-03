@@ -17,18 +17,16 @@ from activity.permissions import IsReadOnly
 from .export import IndicatorResource, CollectedDataResource
 from .serializers import (PeriodicTargetSerializer, CollectedDataSerializer, IndicatorSerializer,
                           IndicatorTypeSerializer, DataCollectionFrequencySerializer, LevelSerializer,
-                          ObjectiveSerializer,
-                          DisaggregationTypeSerializer, DisaggregationLabelSerializer, DisaggregationValueSerializer,
-                          DocumentationSerializer)
+                          ObjectiveSerializer, DocumentationSerializer)
 
 from .tables import IndicatorDataTable
 from .forms import (
-    IndicatorForm, CollectedDataForm, StrategicObjectiveForm, ObjectiveForm, LevelForm
+    IndicatorForm, CollectedDataForm, StrategicObjectiveForm,
 )
 from .models import (
     Indicator, PeriodicTarget, DisaggregationLabel, DisaggregationValue,
     DisaggregationType, CollectedData, IndicatorType, Level, ExternalServiceRecord,
-    ExternalService, ActivityTable, StrategicObjective, Objective, DataCollectionFrequency, ActivityUser
+    ExternalService, ActivityTable, StrategicObjective, Objective, DataCollectionFrequency
 )
 
 from django.db.models import Count, Sum, Min, Q
@@ -210,9 +208,10 @@ class IndicatorList(ListView):
 class IndicatorTarget(GView):
     def get(self, request, *args, **kwargs):
         indicator_id = int(self.kwargs['indicator_id'])
-        periodic_targets = PeriodicTarget.objects.filter(indicator=indicator_id).order_by('customsort', 'create_date', 'period')
+        per_targets = PeriodicTarget.objects.filter(indicator=indicator_id)\
+            .order_by('customsort', 'create_date', 'period')
         targets = []
-        for target in periodic_targets:
+        for target in per_targets:
             targets.append({"pk": target.id, "period": str(target), "target": target.target})
 
         return JsonResponse({"data": targets})
@@ -398,7 +397,7 @@ class PeriodicTargetView(View):
             return HttpResponse(pts)
         try:
             num_targets = int(request.GET.get('num_targets', None))
-        except Exception as e:
+        except Exception:
             num_targets = PeriodicTarget.objects.filter(
                 indicator=indicator).count() + 1
 
@@ -749,7 +748,8 @@ class CollectedDataAdd(GView):
                 for item in disaggs_list:
                     collected_data.disaggregation_value.create(
                         value=item["value"],
-                        disaggregation_label=DisaggregationLabel.objects.filter(id=int(item["disaggregation_label"])).first(),
+                        disaggregation_label=DisaggregationLabel.objects
+                        .filter(id=int(item["disaggregation_label"])).first(),
                     )
             collecteddata_set = CollectedData.objects.filter(id=model_to_dict(collected_data)['id']).first()
             return JsonResponse({'collected_data': CollectedDataSerializer(collecteddata_set).data})
@@ -770,7 +770,7 @@ class CollectedDataEdit(GView):
         else:
             date = data.get('date_collected')
 
-        if data.get('documentation') == "" or data.get('documentation') == None:
+        if data.get('documentation') == "" or data.get('documentation') is None:
             documentation = None
         else:
             documentation = int(data.get('documentation'))
@@ -1039,7 +1039,8 @@ class CollectedDataUpdate(UpdateView):
             Q(disaggregation_type__indicator__id=self.request.POST.get('indicator')) |
             Q(disaggregation_type__standard=True)).distinct()
 
-        get_indicator = CollectedData.objects.get(id=self.kwargs['pk'])
+        # ! Unused variable
+        # get_indicator = CollectedData.objects.get(id=self.kwargs['pk'])
 
         # update the count with the value of Table unique count
         if form.instance.update_count_activity_table and \
@@ -1092,7 +1093,7 @@ class DisaggregationTypeDeleteView(DeleteView):
             self.get_object().delete()
             return JsonResponse(dict(status=204))
 
-        except Exception as e:
+        except Exception:
             return JsonResponse(dict(status=400))
 
 
@@ -1104,7 +1105,7 @@ class DisaggregationLabelDeleteView(DeleteView):
             self.get_object().delete()
             return JsonResponse(dict(status=204))
 
-        except Exception as e:
+        except Exception:
             return JsonResponse(dict(status=400))
 
 
@@ -1252,7 +1253,8 @@ def collected_data_json(AjaxableResponseMixin, indicator, program):
 
     return JsonResponse({
         'periodictargets': PeriodicTargetSerializer(periodic_targets, many=True).data,
-        'collecteddata_without_periodictargets': CollectedDataSerializer(collected_data_without_periodic_targets, many=True).data,
+        'collecteddata_without_periodictargets':
+        CollectedDataSerializer(collected_data_without_periodic_targets, many=True).data,
         'collected_sum': collected_sum,
         'indicator': IndicatorSerializer(ind).data,
         'program_id': program
@@ -1286,13 +1288,13 @@ def program_indicators_json(AjaxableResponseMixin, program, indicator, type):
                                               'program_id': program})
 
 
-def tool(request):
-    """
-    Placeholder for Indicator planning Tool TBD
-    :param request:
-    :return:
-    """
-    return render(request, 'indicators/tool.html')
+# def tool(request):
+#     """
+#     Placeholder for Indicator planning Tool TBD
+#     :param request:
+#     :return:
+#     """
+#     return render(request, 'indicators/tool.html')
 
 
 # REPORT VIEWS
@@ -2146,6 +2148,8 @@ class StrategicObjectiveUpdateView(UpdateView):
 """
 Objectives views Vue.js
 """
+
+
 class ObjectiveView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Objective.objects.all()
     serializer_class = ObjectiveSerializer
@@ -2179,12 +2183,14 @@ class DataCollectionFrequencyView(generics.ListCreateAPIView, generics.RetrieveU
         organization = self.request.user.activity_user.organization.id
         return DataCollectionFrequency.objects.filter(organization=organization)
 
+
 """
 Level views
 """
 
+
 class LevelView(generics.ListCreateAPIView,
-                        generics.RetrieveUpdateDestroyAPIView):
+                generics.RetrieveUpdateDestroyAPIView):
     queryset = Level.objects.all()
     serializer_class = LevelSerializer
     permission_classes = [IsAuthenticated]
@@ -2248,9 +2254,11 @@ class PeriodicTargetCreateView(generics.ListCreateAPIView, generics.RetrieveUpda
             serialized.save(indicator_id=all_data['indicator_id'])
             indicator = Indicator.objects.filter(id=all_data['indicator_id'])
             indicator.update(**indicator_data)
-            return Response({'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data}, status=status.HTTP_201_CREATED)
-        
-        print(serialized.errors)
+            return Response(
+                {'data': PeriodicTargetSerializer(self.get_queryset(), many=True).data},
+                status=status.HTTP_201_CREATED
+            )
+
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, *args, **kwargs):

@@ -1,0 +1,14 @@
+[
+    {
+        "model": "workflow.program",
+        "fields": {
+            "name": "Program 1"
+        }
+    },
+    {
+        "model": "workflow.program",
+        "fields": {
+            "name": "Program 2"
+        }
+    }
+]

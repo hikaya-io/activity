@@ -2,7 +2,7 @@
 FROM docker:19.03-dind
 
 # install kubectl and doctl
-RUN apk add curl sudo wget bash gettext && \
+RUN apk add curl sudo wget bash gettext git && \
     curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl && \
     chmod +x ./kubectl && \
     mv ./kubectl /usr/local/bin/kubectl && \

@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import json
 from urllib.request import urlopen
-from django.contrib.auth.signals import user_logged_in, user_logged_out
+# from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.db import models
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
@@ -252,6 +252,9 @@ TITLE_CHOICES = (
 
 
 class ActivityUser(models.Model):
+    """
+    Custom User model. Extends base User model with a one-to-one field.
+    """
     title = models.CharField(blank=True, null=True,
                              max_length=3, choices=TITLE_CHOICES)
     name = models.CharField("Given Name", blank=True,
@@ -284,15 +287,6 @@ class ActivityUser(models.Model):
     def __str__(self):
         return self.name or ''
 
-    @property
-    def countries_list(self):
-        return ', '.join([x.code for x in self.countries.all()])
-
-    @property
-    def organizations_list(self):
-        return ', '.join([x.name for x in self.organizations.all()])
-
-    # on save add create date or update edit date
     def save(self, *args, **kwargs):
         if self.create_date is None:
             self.create_date = datetime.now()
@@ -980,7 +974,7 @@ class Stakeholder(models.Model):
         Program, blank=True, null=True, on_delete=models.SET_NULL)
     sectors = models.ManyToManyField(Sector, blank=True)
     stakeholder_register = models.BooleanField(
-        "Has this partner been added to stakeholder register?")
+        "Has this partner been added to stakeholder register?", default=False)
     formal_relationship_document = models.ForeignKey(
         'Documentation',
         verbose_name="Formal Written Description of Relationship",
@@ -1703,6 +1697,14 @@ class ChecklistItem(models.Model):
 
 # Logged users
 class LoggedUser(models.Model):
+    """
+    Model to keep track of currently logged in users
+    ! This is currently an unused feature
+    ! This is disabled by commenting out connecting the handler to the signals below.
+    ! This has the standard permissions. Meaning any user can see all the logged users.
+    ? If looking for reimplementing this, check out this SO thread:
+    ? https://stackoverflow.com/a/2723706/4017403
+    """
     username = models.CharField(max_length=30, primary_key=True)
     country = models.CharField(max_length=100, blank=False)
     email = models.CharField(max_length=100, blank=False,
@@ -1733,7 +1735,7 @@ class LoggedUser(models.Model):
                     LoggedUser(username=user.username,
                                country=country, email=user.email).save()
 
-        except Exception as e:
+        except Exception:
             pass
 
     def logout_user(sender, request, user, **kwargs):
@@ -1745,8 +1747,9 @@ class LoggedUser(models.Model):
         except LoggedUser.DoesNotExist:
             pass
 
-    user_logged_in.connect(login_user)
-    user_logged_out.connect(logout_user)
+    # ! Disabling the feature...
+    # user_logged_in.connect(login_user)
+    # user_logged_out.connect(logout_user)
 
 
 def get_user_country(request):
@@ -1757,7 +1760,7 @@ def get_user_country(request):
         response = json.loads(response)
         return response['country'].lower()
 
-    except Exception as e:
+    except Exception:
         response = "undefined"
         return response
 

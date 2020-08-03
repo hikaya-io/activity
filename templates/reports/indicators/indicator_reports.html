@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container" id="indicator_tracking_tables">
+    {% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'index' %}">My Dashboard</a></li>
+        <li class="active">Indicator tracking table</li>
+    </ul>
+    {% endblock %}
+
+    <!-- Sub navigation -->
+    <div class="sub-navigation">
+        <div class="sub-navigation-header">
+            <h4 class="page-title">Indicator Performance Tracking Table</h4>
+        </div>
+    </div>
+
+    <!-- Report filters -->
+    <div class="report_filter">
+        <div class="sub-navigation-header">
+            <h4 class="page-title">Table filters</h4>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" id="div_level_1">
+                        <label for="id_level_1">{{ user.activity_user.organization.level_1_label }}</label>
+                        <hikaya-select
+                            :required="true"
+                            v-validate="'required'"
+                            name="Programs"
+                            label="name"
+                            :searchable="true"
+                            :required="true"
+                            v-model="program_id"
+                            placeholder="Choose program"
+                            :options="programList"
+                            :reduce="program => program.id"
+                        >
+                        </hikaya-select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group" id="div_reporting_period">
+                        <label for="id_reporting_period">Reporting Period</label>
+                        <hikaya-select
+                            :required="true"
+                            v-validate="'required'"
+                            name="Reporting Period"
+                            label="label"
+                            :searchable="true"
+                            :disabled = "disabled_class"
+                            v-model="reporting_period_id"
+                            placeholder="Choose reporting period"
+                            :options="reporting_periods"
+                            :reduce="period => period.id"
+                        >
+                        </hikaya-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" id="start_date">
+                        <label for="startDate">Start Date</label>
+                        <input
+                            type="date"
+                            id="startDate"
+                            name="startDate"
+                            :disabled="true"
+                            :class="{ 
+                                'form-control': true, 
+                                }"
+                            v-model="start_date" 
+                            placeholder="Start Date"/>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group" id="end_date">
+                        <label for="endDate">End Date</label>
+                        <input
+                            type="date"
+                            id="endDate"
+                            name="endDate"
+                            :disabled="true"
+                            :class="{ 
+                                'form-control': true, 
+                                }"
+                            v-model="end_date" 
+                            placeholder="End Date"/>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="btn-group" role="group" aria-label="">
+                        <button 
+                            class="btn btn-primary btn-sm"
+                            @click=processForm()>
+                          View Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports table-->
+    <div class="report_table">
+        <div v-if="!no_data">
+            <div v-if="!loading">
+                <div class="title" style="text-align: center; padding-top: 20px;">
+                    <h4>[[report_data[0].indicator[0].program[0].name]]</h4>
+                    <h5>[[report_start]] - [[report_end]]</h5>
+                </div>
+                <table class="table">
+                    <colgroup>
+                        <col span="5" />
+                        <col style="background-color: lightgrey;" span="3" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th colspan="5"> </th>
+                            <th colspan="3" style="text-align: center;">End of {{ user.activity_user.organization.level_1_label }}</th>
+                            <th v-for="data in report_data[0].raw_data" style="text-align: center;" colspan="3">[[data.name]]</th>
+                        </tr>
+                        <tr>
+                            <th v-for="row in row_header_data">[[row]]</th>    
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="data in row_body_data">
+                            <td>[[data.number]]</td>
+                            <td>[[data.name]]</td>
+                            <td>[[data.level]]</td>
+                            <td>[[data.unit_of_measure]]</td>
+                            <td>[[data.baseline]]</td>
+                            <td>[[data.total_target]]</td>
+                            <td>[[data.total_achieved]]</td>
+                            <td>[[data.total_perct_met]]</td>
+                            <td v-for="row in data.raw">[[row]]</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div v-else>
+                <div class="lds-ellipsis" style="height: 200px; margin-top: 50px;"><div></div><div></div><div></div><div></div></div>
+            </div>
+        </div>
+        <div v-else style="height: 250px; text-align: center; padding-top: 100px;">
+            <h4 >
+                No Report Filter Selected
+            </h4>
+        </div> 
+    </div>
+    
+</div>
+{% endblock content %}
+{% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}vue.js/hikaya_select.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}vue.js/reports/indicator_tracking.js"></script>
+{% endblock extra_js_in_body %}

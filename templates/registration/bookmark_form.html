@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% block bread_crumb %}
+{% load i18n %}
+
 <div>
 <ol class="breadcrumb">
-  <li><a href="accounts/profile/">Profile</a></li>
-  <li><a href="/bookmark_list">Bookmarks</a></li>
-  <li class="active">Bookmark Form</li>
+  <li><a href="accounts/profile/">{% trans 'Profile' %}</a></li>
+  <li><a href="/bookmark_list">{% trans 'Bookmarks' %}</a></li>
+  <li class="active">{% trans 'Bookmark Form' %}</li>
 </ol>
 </div>
 {% endblock %}
-{% block page_title %}Bookmark Form{% endblock %}
+{% block page_title %}{% trans 'Bookmark Form' %}{% endblock %}
 
 
 {% block content %}

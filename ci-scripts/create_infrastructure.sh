@@ -5,7 +5,7 @@ set +ex
 #@--- Function to setup the cluster ---@#
 set_up_cluster_dev_env() {
 
-    if [[ $TRAVIS_BRANCH == "dev" ]] || [[ $GITHUB_REF == "refs/heads/dev" ]]; then
+    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]]; then
 
         #@--- Initialize terraform ---@#
         echo " ----- inititalize the backend --------- "
@@ -25,8 +25,9 @@ set_up_cluster_dev_env() {
             -var "digital_ocean_token=$SERVICE_ACCESS_TOKEN" \
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
-            -var "db_name=$DB_NAME_DEV_ENV"
-        
+            -var "db_name=$DB_NAME_DEV_ENV" \
+            -var "tags=$PROJECT_NAME"
+
         #@--- Apply the changes ---@#
         echo "+++++ Apply infrastructure ++++++++++"
         terraform apply -lock=false -auto-approve -var "cluster_name=$CLUSTER_NAME_DEV_ENV" \
@@ -39,6 +40,7 @@ set_up_cluster_dev_env() {
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
             -var "db_name=$DB_NAME_DEV_ENV" \
+            -var "tags=$PROJECT_NAME" \
             || echo "Resources exist"
     fi
 }
@@ -67,7 +69,8 @@ set_up_cluster_staging() {
             -var "digital_ocean_token=$SERVICE_ACCESS_TOKEN" \
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
-            -var "db_name=$DB_NAME_STAGING"
+            -var "db_name=$DB_NAME_STAGING" \
+            -var "tags=$PROJECT_NAME"
 
         #@--- Apply the changes ---@#
         echo "+++++ Apply infrastructure ++++++++++"
@@ -82,14 +85,15 @@ set_up_cluster_staging() {
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
             -var "db_name=$DB_NAME_STAGING" \
+            -var "tags=$PROJECT_NAME" \
             || echo "Resources exist"
     fi
-    
+
 }
 
 #@--- Function to setup production cluster ---@#
 set_up_cluster_prod() {
-    if [[ $GITHUB_REF == "refs/heads/master" ]]; then
+    if [[ $GITHUB_EVENT_NAME == "release" ]] || [[ ! -z $TRAVIS_TAG ]]; then
 
         #@--- Initialize terraform ---@#
         echo " ----- inititalize the backend --------- "
@@ -110,8 +114,9 @@ set_up_cluster_prod() {
             -var "digital_ocean_token=$SERVICE_ACCESS_TOKEN" \
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
-            -var "db_name=$DB_NAME_PROD"
-        
+            -var "db_name=$DB_NAME_PROD" \
+            -var "tags=$PROJECT_NAME"
+
         #@--- Apply the changes ---@#
         echo "+++++ Apply infrastructure ++++++++++"
         terraform apply -lock=false -auto-approve -target=digitalocean_kubernetes_cluster.cluster \
@@ -125,6 +130,7 @@ set_up_cluster_prod() {
             -var "db_size=$DB_SIZE" \
             -var "postgres_version=$PG_VERSION" \
             -var "db_name=$DB_NAME_PROD" \
+            -var "tags=$PROJECT_NAME" \
             || echo "Resources exist"
     fi
 }
@@ -134,17 +140,17 @@ main() {
     cd infrastructure
 
     if [[ $TRAVIS_EVENT_TYPE != "pull_request" ]]; then
-    
+
             #@--- Run the setup dev-env cluster function ---@#
             set_up_cluster_dev_env
 
             #@--- Run function for staging cluster ---@#
-            set_up_cluster_staging
+            # set_up_cluster_staging
 
             #@--- Run the prod setup function ---@#
             set_up_cluster_prod
     fi
-    
+
 }
 
 #@--- Run the main function ---@#

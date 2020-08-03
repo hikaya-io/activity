@@ -1,5 +1,5 @@
 # Language used usually but in or case we wish to not run
-# the default pip install command hence just setting the 
+# the default pip install command hence just setting the
 # language to minimal will work.
 language: minimal
 
@@ -46,4 +46,5 @@ jobs:
     - script:
       - export FILE_PATH="/home/travis/.docker/config.json"
       - chmod +x ci-scripts/deployment.sh
+      - sudo apt-get install snapd -y
       - ./ci-scripts/deployment.sh

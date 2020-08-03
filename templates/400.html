@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Page Not found{% endblock %}
+{% block title %}{% trans 'Page Not found' %}{% endblock %}
 
-{% block page_title %}Page Not found{% endblock page_title %}
+{% block page_title %}{% trans 'Page Not found' %}{% endblock page_title %}
 
 {% block content %}
 
@@ -10,8 +11,8 @@
     <div class="error-page-content">
         <img src="/static/img/error-strokes.png" class="error-page-image"/>
         <p class="text-center error-code">400</p>
-        <p class="text-center error-message">This is not the page you were looking for, <br /> you may be lost.</p>
-        <a href="/dashboard/0/" class="btn btn-success error-button">Go to home page</a>
+        <p class="text-center error-message">{% trans 'This is not the page you were looking for,' %} <br /> {% trans 'you may be lost.' %}</p>
+        <a href="/dashboard/0/" class="btn btn-success error-button">{% trans 'Go to home page' %}</a>
     </div>
 </div>
 
