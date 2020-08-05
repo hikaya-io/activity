@@ -4,6 +4,7 @@ from workflow.models import Program, SiteProfile
 from utils.models import CreatedModifiedDates, CreatedModifiedBy
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from django.core.validators import RegexValidator
 
 
 class Case(models.Model):
@@ -17,12 +18,25 @@ class Case(models.Model):
     label = models.CharField(max_length=255)
 
 
-class Household(Case):
+class Household(Case, CreatedModifiedDates, CreatedModifiedBy):
     """
     Family, or group of people, living together
     Spec: https://github.com/hikaya-io/activity/issues/409
     """
     name = models.CharField(max_length=255)
+    individuals = models.ForeignKey(
+        'Individual', null=True, blank=True, on_delete=models.SET_NULL)
+    street = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    postal_code = models.IntegerField(blank=True, null=True)
+    country = models.CharField(max_length=255, blank=True, null=True)
+    phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$', message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.")
+    email_regex = RegexValidator(
+        regex=r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$', message="Invalid Email Address.")
+    prim_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+    secondary_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+    email = models.CharField(validators=[email_regex], max_length=100, blank=True)
 
 
 class Individual(Case, CreatedModifiedDates, CreatedModifiedBy):
