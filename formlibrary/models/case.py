@@ -5,6 +5,8 @@ from utils.models import CreatedModifiedDates, CreatedModifiedBy
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
+from django.core.files.images import get_image_dimensions
 
 
 class Case(models.Model):
@@ -39,6 +41,26 @@ class Household(Case, CreatedModifiedDates, CreatedModifiedBy):
     email = models.CharField(validators=[email_regex], max_length=100, blank=True)
 
 
+IMAGE_SPEC = {
+    "width": 2000,
+    "height": 500,
+    "limit_kb": 100
+}
+
+
+def validate_image(image, width=IMAGE_SPEC['width'],
+                   height=IMAGE_SPEC['height'],
+                   limit_kb=IMAGE_SPEC['limit_kb']):
+    file_size = image.file.size
+    if file_size > limit_kb * 1024:
+        raise ValidationError("Max size of file is %s KB" % limit_kb)
+    w, h = get_image_dimensions(image)
+    if w < width:
+        raise ValidationError("Min width is %s" % width)
+    if h < height:
+        raise ValidationError("Min height is %s" % height)
+
+
 class Individual(Case, CreatedModifiedDates, CreatedModifiedBy):
     """
     Individual, or person.
@@ -63,7 +85,7 @@ class Individual(Case, CreatedModifiedDates, CreatedModifiedBy):
     signature = models.BooleanField(default=True)
     site = models.ForeignKey(
         SiteProfile, null=True, blank=True, on_delete=models.SET_NULL)
-    photo = models.ImageField(upload_to=None, null=True, blank=True)
+    photo = models.ImageField(upload_to="media/images", validators=[validate_image], blank=True)
     description = models.TextField(max_length=550, null=True, blank=True)
     program = models.ForeignKey(
         Program, null=True, blank=True, on_delete=models.SET_NULL)
