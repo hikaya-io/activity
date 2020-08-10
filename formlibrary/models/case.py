@@ -36,7 +36,7 @@ class Household(Case, CreatedModifiedDates, CreatedModifiedBy):
         regex=r'^\+?1?\d{9,15}$', message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.")
     email_regex = RegexValidator(
         regex=r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$', message="Invalid Email Address.")
-    prim_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+    primary_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     secondary_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     email = models.CharField(validators=[email_regex], max_length=100, blank=True)
 
@@ -80,12 +80,14 @@ class Individual(Case, CreatedModifiedDates, CreatedModifiedBy):
     head_of_household = models.BooleanField(default=True)
     id_type = models.CharField(max_length=255, null=True, blank=True)
     id_number = models.CharField(max_length=255, null=True, blank=True)
-    primary_number = models.IntegerField(null=True, blank=True)
-    secondary_number = models.IntegerField(null=True, blank=True)
+    phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$', message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.")
+    primary_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+    secondary_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     signature = models.BooleanField(default=True)
     site = models.ForeignKey(
         SiteProfile, null=True, blank=True, on_delete=models.SET_NULL)
-    photo = models.ImageField(upload_to="media/images", validators=[validate_image], blank=True)
+    photo = models.ImageField(upload_to="media/images", validators=[validate_image], blank=True, null=True)
     description = models.TextField(max_length=550, null=True, blank=True)
     program = models.ForeignKey(
         Program, null=True, blank=True, on_delete=models.SET_NULL)

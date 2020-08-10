@@ -15,7 +15,7 @@ class IndividualTestCase(TestCase):
     ]
 
     def setUp(self):
-        household = Household.objects.create(name="MyHouse", prim_phone='40-29104782')
+        household = Household.objects.create(name="MyHouse", primary_phone='40-29104782')
         individual = Individual.objects.create(
             first_name="Nate", last_name="Test", date_of_birth=datetime.date(2000, 10, 10),
             sex="Male", signature=False, description="life", household_id=household)
