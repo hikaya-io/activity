@@ -5,7 +5,7 @@ from django.test import TestCase
 from workflow.models import (
     Organization, Program, Country, Province, ProjectAgreement, Sector,
     ProjectComplete, ProjectType, SiteProfile, Office, Budget,
-    Documentation, Checklist, ProjectStatus
+    Documentation, Checklist, ProjectStatus, Stakeholder, StakeholderType
 )
 
 
@@ -246,3 +246,32 @@ class CompleteTestCase(TestCase):
         get_complete = ProjectComplete.objects.get(project_name="testproject")
         self.assertEqual(ProjectComplete.objects.filter(
             id=get_complete.id).count(), 1)
+
+
+class StakeholderTestCase(TestCase):
+    def setUp(self):
+        Organization.objects.create(name="Activity")
+        get_organization = Organization.objects.get(name="Activity")
+        Documentation.objects.create(name="document created", description="documentation test")
+        get_documentation = Documentation.objects.get(name="document created")
+        # create a stakeholder type and assign to stakeholder
+        type = StakeholderType.objects.create(
+            name="Neutral", description="neutral stakeholder description", organization=get_organization)
+        type.save()
+        stakeholder = Stakeholder.objects.create(name="Nate", type=type, formal_relationship_document=get_documentation)
+        stakeholder.save()
+
+    def test_stakeholdertype_creation(self):
+        """Test creation of StakeholderType object"""
+        get_type = StakeholderType.objects.get(name="Neutral")
+        self.assertIsInstance(get_type, StakeholderType)
+        self.assertIn(get_type.name, get_type.__str__())
+
+    def test_stakeholder_creation(self):
+        """Test creation of Stakeholder object"""
+        get_stakeholder = Stakeholder.objects.get(name="Nate")
+        self.assertEqual(Stakeholder.objects.filter(
+            id=get_stakeholder.id).count(), 1)
+        self.assertIsInstance(get_stakeholder.formal_relationship_document, Documentation)
+        self.assertIsInstance(get_stakeholder, Stakeholder)
+        self.assertIn(get_stakeholder.name, get_stakeholder.__str__())
