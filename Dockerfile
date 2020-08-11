@@ -26,5 +26,5 @@ RUN pip install --upgrade pip
 COPY ./requirements.txt /usr/src/activity/requirements.txt
 RUN pip install -r requirements.txt
 
-# Copy project
+# Copy project.
 COPY . /usr/src/activity/
