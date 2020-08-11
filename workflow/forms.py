@@ -136,9 +136,9 @@ class ProgramForm(forms.ModelForm):
                    'program_uuid', 'organization', 'country')
 
     start_date = forms.DateTimeField(
-        widget=DatePicker.DateInput(), required=False)
+        widget=DatePicker.DateInput(), required=True)
     end_date = forms.DateTimeField(
-        widget=DatePicker.DateInput(), required=False)
+        widget=DatePicker.DateInput(), required=True)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
@@ -166,11 +166,10 @@ class ProgramForm(forms.ModelForm):
         start_date = self.cleaned_data['start_date']
         end_date = self.cleaned_data['end_date']
 
-        if end_date < start_date:
-            raise forms.ValidationError("End date must be later than start date")
+        if end_date and start_date is not None:
+            if end_date < start_date:
+                raise forms.ValidationError("End date must be later than start date")
 
-        # Always return a value to use as the new cleaned data, even if
-        # this method didn't change it.
         return end_date
 
 
@@ -305,9 +304,9 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
                'latitude': 'latitude'}), required=False)
 
     expected_start_date = forms.DateField(
-        widget=DatePicker.DateInput(), required=False)
+        widget=DatePicker.DateInput(), required=True)
     expected_end_date = forms.DateField(
-        widget=DatePicker.DateInput(), required=False)
+        widget=DatePicker.DateInput(), required=True)
     estimation_date = forms.DateField(
         widget=DatePicker.DateInput(), required=False)
     reviewed_by_date = forms.DateField(
@@ -415,11 +414,10 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
         expected_start_date = self.cleaned_data['expected_start_date']
         expected_end_date = self.cleaned_data['expected_end_date']
 
-        if expected_end_date < expected_start_date:
-            raise forms.ValidationError("Expected end date must be later than expected start date")
+        if expected_start_date and expected_end_date is not None:
+            if expected_end_date < expected_start_date:
+                raise forms.ValidationError("Expected end date must be later than expected start date")
 
-        # Always return a value to use as the new cleaned data, even if
-        # this method didn't change it.
         return expected_end_date
 
 
