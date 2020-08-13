@@ -1,8 +1,9 @@
-from datetime import date
+from datetime import date, datetime
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from workflow.models import ActivityUser
 from formlibrary.models import Distribution, Service
+from pytz import timezone
 
 
 class TestDistribution(TestCase):
@@ -11,9 +12,9 @@ class TestDistribution(TestCase):
     """
 
     fixtures = [
-        'fixtures/tests/users.json',
-        'fixtures/tests/activity-users.json',
-        'fixtures/tests/organization.json',
+        "fixtures/tests/users.json",
+        "fixtures/tests/activity-users.json",
+        "fixtures/tests/organization.json",
     ]
 
     # Spec: https://github.com/hikaya-io/activity/issues/420
@@ -23,8 +24,8 @@ class TestDistribution(TestCase):
         self.distribution = Distribution.objects.create(
             name="Distribution 1",
             description="First distribution",
-            start_date=date(2020, 10, 19),
-            end_date=date(2020, 11, 19),
+            start_date=datetime.strptime("2020-10-19 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone("UTC")),
+            end_date=datetime.strptime("2020-11-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone("UTC")),
             created_by=self.activity_user,
             modified_by=self.activity_user,
             quantity=100,
@@ -37,13 +38,12 @@ class TestDistribution(TestCase):
         distribution = Distribution.objects.create(
             name="New Distribution",
             description="Newly created distribution",
-            start_date=date(2020, 10, 19),
-            end_date=date(2020, 11, 19),
+            start_date=datetime.strptime("2020-10-19 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
+            end_date=datetime.strptime("2020-11-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
             created_by=self.activity_user,
             modified_by=self.activity_user,
             quantity=100,
         )
-        # Test the inheritance
         self.assertIsInstance(distribution, Service)
         # Check the Training is well saved
         created_distribution = Distribution.objects.get(pk=distribution.pk)
@@ -69,14 +69,16 @@ class TestDistribution(TestCase):
     # Dates fields                                #
     ###############################################
     def test_start_end_dates_validation(self):
-        "Test validation of start/end dates"
+        """
+        Test validation of start/end dates
+        """
         # ! Hint: https://docs.djangoproject.com/en/3.0/ref/models/instances/#validating-objects
         with self.assertRaises(ValidationError):
             Distribution.objects.create(
                 name="Distribution 1",
                 description="End date < Start date",
-                start_date=date(2020, 10, 19),
-                end_date=date(2017, 11, 19),
+                start_date=datetime.strptime("2020-10-19 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone("UTC")),
+                end_date=datetime.strptime("2017-11-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone("UTC")),
                 created_by=self.activity_user,
                 modified_by=self.activity_user,
                 quantity=100,

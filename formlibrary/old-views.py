@@ -1,6 +1,3 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 ###############################################################
 # ! Legacy code for views.py left for reference purposes      #
 ###############################################################
@@ -472,8 +469,9 @@ class DistributionUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(DistributionUpdate, self).get_context_data(**kwargs)
         context['form_title'] = 'Distribution Update Form'
-        distribution = Distribution.objects.get(pk=int(self.kwargs['pk']))
-        context['distribution_name'] = distribution.distribution_name
+        # distribution = Distribution.objects.get(pk=int(self.kwargs['pk']))
+        # context['distribution_name'] = distribution.name
+        context['name'] = context['distribution'].name
         return context
     form_class = DistributionForm
 
@@ -574,16 +572,15 @@ class DistributionListObjects(View, AjaxableResponseMixin):
         if program_id == 0:
             get_distribution = Distribution.objects.all().filter(
                 program__organization=request.user.activity_user.organization).\
-                values('id', 'distribution_name', 'create_date', 'program')
+                values('id', 'name', 'create_date', 'program')
         elif program_id != 0 and project_id == 0:
             get_distribution = Distribution.objects.all().filter(
                 program_id=program_id).values(
-                    'id', 'distribution_name', 'create_date', 'program'
-                )
+                'id', 'name', 'create_date', 'program')
         else:
             get_distribution = Distribution.objects.all().filter(
                 program_id=program_id,
-                initiation_id=project_id).values('id', 'distribution_name',
+                initiation_id=project_id).values('id', 'name',
                                                  'create_date', 'program')
 
         get_distribution = json.dumps(
@@ -633,7 +630,7 @@ def add_training(request):
 
 def add_distribution(request):
     data = {
-        'distribution_name': request.POST.get('distribution_name'),
+        'name': request.POST.get('distribution_name'),
         'start_date': request.POST.get('start_date'),
         'end_date': request.POST.get('end_date'),
         'program_id': int(request.POST.get('program')),

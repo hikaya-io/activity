@@ -36,7 +36,7 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Run Tests
-      env: 
+      env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
         cp activity/settings/local-sample.py activity/settings/local.py
@@ -107,7 +107,7 @@ jobs:
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
         sudo apt install docker-ce
         sudo docker version
-  
+
     - name: Build and Push
       env:
         DOCKER_HUB_USERNM: ${{ secrets.DOCKER_HUB_USERNM }}
@@ -129,9 +129,11 @@ jobs:
         GOOGLE_MAP_API_KEY: ${{ secrets.GOOGLE_MAP_API_KEY }}
         APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
         REGISTRY_OWNER: ${{ secrets.REGISTRY_OWNER }}
+        APPLICATION_NAME_DEV: ${{ secrets.APPLICATION_NAME_DEV }}
         # staging variables. others are reused from dev
         ACTIVITY_CE_DB_NAME_STAGING: ${{ secrets.ACTIVITY_CE_DB_NAME_STAGING }}
         APPLICATION_ENV_STAGING: ${{ secrets.APPLICATION_ENV_STAGING }}
+        APPLICATION_NAME_STAGING: ${{ secrets.APPLICATION_NAME_STAGING }}
         # Production Vars
         APPLICATION_ENV_PROD: ${{ secrets.APPLICATION_ENV_PROD }}
         ACTIVITY_CE_DB_NAME_PROD: ${{ secrets.ACTIVITY_CE_DB_NAME_PROD }}
@@ -149,7 +151,7 @@ jobs:
     needs: Build_and_push_image
     runs-on: ubuntu-latest
     container:
-      image: yagami22/ci-deploy-image 
+      image: yagami22/ci-deploy-image
     steps:
     - uses: actions/checkout@v1
     - name: Deploy to DO
@@ -162,22 +164,29 @@ jobs:
         B64_TOKEN: ${{ secrets.B64_TOKEN }}
         DEFAULT_NOTIFY: ${{ secrets.DEFAULT_NOTIFY }}
         RATE_LIMIT: ${{ secrets.RATE_LIMIT }}
-        HOST_DOMAIN: ${{ secrets.HOST_DOMAIN }}
         APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
         REGISTRY_OWNER: ${{ secrets.REGISTRY_OWNER }}
         MIN_PODS: ${{ secrets.MIN_PODS }}
         MAX_PODS: ${{ secrets.MAX_PODS }}
+        APPLICATION_NAME_DEV: ${{ secrets.APPLICATION_NAME_DEV }}
+        MIN_PODS_DEV: ${{ secrets.MIN_PODS_DEV }}
+        HOST_DOMAIN_DEV: ${{ secrets.HOST_DOMAIN_DEV }}
         # staging variables
         CLUSTER_NAME_STAGING: ${{ secrets.CLUSTER_NAME_STAGING }}
         HOST_DOMAIN_STAGING: ${{ secrets.HOST_DOMAIN_STAGING }}
         APPLICATION_ENV_STAGING: ${{ secrets.APPLICATION_ENV_STAGING }}
         SLACK_CHANNEL_HOOK: ${{ secrets.SLACK_CHANNEL_HOOK }}
+        APPLICATION_NAME_STAGING: ${{ secrets.APPLICATION_NAME_STAGING }}
         # Production Vars
         APPLICATION_ENV_PROD: ${{ secrets.APPLICATION_ENV_PROD }}
         CLUSTER_NAME_PROD: ${{ secrets.CLUSTER_NAME_PROD }}
         HOST_DOMAIN_PROD: ${{ secrets.HOST_DOMAIN_PROD }}
+        MIN_PODS_PROD: ${{ secrets.MIN_PODS_PROD }}
+        APPLICATION_NAME_PROD: ${{ secrets.APPLICATION_NAME_PROD }}
         # Vault
-        ROLE_NAME: ${{ secrets.ROLE_NAME }}
+        ROLE_NAME_DEV: ${{ secrets.ROLE_NAME_DEV}}
+        SECRET_PATH_DEV: ${{ secrets.SECRET_PATH_DEV }}
+        SECRET_PATH_STAGING: ${{ secrets.SECRET_PATH_STAGING }}
       run: |
         export TRAVIS_COMMIT=$GITHUB_SHA
         export FILE_PATH="/github/home/.docker/config.json"

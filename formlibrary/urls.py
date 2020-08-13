@@ -1,6 +1,3 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 from django.views.generic import TemplateView
 from django.urls import path
 # from .views import (

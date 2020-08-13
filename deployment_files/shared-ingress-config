@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: activity-app-${APPLICATION_ENV}
+  namespace: ${APPLICATION_ENV}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/limit-rps: "${RATE_LIMIT}"
+    cert-manager.io/issuer: "letsencrypt-${APPLICATION_ENV}-issuer"
+spec:
+  tls:
+  - hosts:
+    - ${HOST_DOMAIN_DEV}
+    - ${HOST_DOMAIN_STAGING}
+    secretName: letsencrypt-cert-${APPLICATION_ENV}-tls
+  rules:
+  - host: ${HOST_DOMAIN_DEV}
+    http:
+      paths:
+      - backend:
+          serviceName: ${APPLICATION_NAME_DEV}-app-service-${APPLICATION_ENV}
+          servicePort: 80
+  - host: ${HOST_DOMAIN_STAGING}
+    http:
+      paths:
+      - backend:
+          serviceName: ${APPLICATION_NAME_STAGING}-app-service-${APPLICATION_ENV}
+          servicePort: 80

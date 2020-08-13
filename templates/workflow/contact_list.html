@@ -58,6 +58,7 @@
         <th>Stakeholder</th>
         <th>Email</th>
         <th>Phone Number</th>
+        <th>Country</th>
         <th>City</th>
         <th>Address</th>
         <th class="text-right">Actions</th>
@@ -74,6 +75,7 @@
         <td>{% if contact.stakeholder  %}{{ contact.stakeholder }} {% else %} - {% endif %}</td>
         <td>{% if contact.email  %}{{ contact.email }} {% else %} - {% endif %}</td>
         <td>{% if contact.phone  %}{{ contact.phone }} {% else %} - {% endif %}</td>
+        <td>{% if contact.country  %}{{ contact.country }} {% else %} - {% endif %}</td>
         <td>{% if contact.city  %}{{ contact.city }} {% else %} - {% endif %}</td>
         <td>{% if contact.address  %}{{ contact.address }} {% else %} - {% endif %}</td>
         <td class="text-right">
