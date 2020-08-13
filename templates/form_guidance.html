@@ -1,3 +1,4 @@
+{% load i18n %}
 {% if view.guidance %} {% if view.guidance.guidance_link %}
 <span style="float: right;"
   ><a
@@ -5,14 +6,13 @@
     href="#"
     style="color: #888888"
     class="btn btn-link"
-    >Help</a
-  ></span
->
+    >{% trans 'Help' %}</a
+  ></span>
 {% endif %} {% if view.guidance.guidance %}
 <span
   style="float: right;"
   onclick="document.getElementById('guidance').style.display = 'block'"
-  ><a href="#" style="color: #888888" class="btn btn-link">Help</a></span
+  ><a href="#" style="color: #888888" class="btn btn-link">{% trans 'Help' %}</a></span
 >
 <span id="guidance">
   {{ view.guidance.guidance }}
@@ -21,7 +21,7 @@
     href="#"
     class="btn btn-link"
     onclick="document.getElementById('guidance').style.display = 'None'"
-    >Cancel</a
+    >{% trans 'Cancel' %}</a
   >
 </span>
 {% endif %} {% else %}

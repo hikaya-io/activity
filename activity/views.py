@@ -27,14 +27,14 @@ from django.views.decorators.csrf import csrf_protect
 from django.core.exceptions import MultipleObjectsReturned
 
 from indicators.models import (
-    CollectedData, Indicator, DataCollectionFrequency,
-    Level,
+    CollectedData, Indicator,
+    DataCollectionFrequency,
 )
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, ActivityUser, ActivityBookmarks, FormGuidance,
     Organization, UserInvite, Stakeholder, Contact, Documentation,
-    ActivityUserOrganizationGroup, ProfileType,
+    ActivityUserOrganizationGroup,
 )
 from activity.util import get_nav_links, send_invite_emails, \
     send_single_mail
@@ -694,12 +694,16 @@ def admin_indicator_settings(request):
     user = get_object_or_404(ActivityUser, user=request.user)
     organization = user.organization
 
-    nav_links = get_nav_links('Indicator')
+    # ! Unused variable
+    # nav_links = get_nav_links('Indicator')
+
     return render(
         request,
         'admin/indicator_settings.html',
-        {'organization': organization,
-        'active': 'indicator_settings'}
+        {
+            'organization': organization,
+            'active': 'indicator_settings'
+        }
     )
 
 
@@ -816,8 +820,6 @@ def update_user_access(request, pk, status):
         user_org_access.save()
 
     return redirect('/accounts/admin/users/all/all/')
-
-
 
 
 class BookmarkList(ListView):
@@ -1159,7 +1161,7 @@ def invite_existing_user(request, invite_uuid):
                 user_org_access.save()
 
                 messages.success(request,
-                               'You have successfully joined {}'.format(invite.organization.name))
+                                 'You have successfully joined {}'.format(invite.organization.name))
                 # TODO this renders the login form even if the user is logged in
                 return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 

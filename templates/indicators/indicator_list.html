@@ -1,4 +1,7 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
 {% include './add_indicator_modal.html' %}
 {% include './collected_data_table2.html'%}
 {% include 'ui-components/vue_modal.html'%}
@@ -7,7 +10,7 @@
 <div id="indicators_list" class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">My Dashboard</a></li>
+    <li><a href="{% url 'index' %}">{% trans 'My Dashboard' %}</a></li>
     <li class="active">{{ user.activity_user.organization.indicator_label }}</li>
   </ul>
   {% endblock %}
@@ -16,12 +19,12 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {{ user.activity_user.organization.indicator_label }} List
+        {{ user.activity_user.organization.indicator_label }} {% trans 'List' %}
       </h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
-        <span class="text-filter">Filter by</span>
+        <span class="text-filter">{% trans 'Filter by' %}</span>
       </div>
       <div class="sub-nav-item">
         <!-- filters -->
@@ -33,7 +36,7 @@
               <i class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></i>
             </button>
             <ul class="dropdown-menu">
-              <li class="{% if program_id == 0 %} active {% endif %}"><a href="/indicators/home/0/0/0/">-- All --</a>
+              <li class="{% if program_id == 0 %} active {% endif %}"><a href="/indicators/home/0/0/0/">-- {% trans 'All' %} --</a>
               </li>
               <li class="divider"></li>
               {% for program in get_programs %} {% if program.name %}
@@ -59,12 +62,12 @@
   <table class="table" id="indicatorsTable">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Level</th>
+        <th>{% trans 'Name' %}</th>
+        <th>{% trans 'Level' %}</th>
         <th>{{user.activity_user.organization.level_1_label}}</th>
-        <th>Target</th>
-        <th>Actual</th>
-        <th class="text-right">Actions</th>
+        <th>{% trans 'Target' %}</th>
+        <th>{% trans 'Actual' %}</th>
+        <th class="text-right">{% trans 'Actions' %}</th>
       </tr>
     </thead>
     <tbody>
@@ -92,31 +95,30 @@
         <td>{{ indicator.actual }}</td>
         <td class="text-right">
           <div class="btn-group">
-            <a role="button" href="" class="btn btn-default btn-sm disabled">More</a>
+            <a role="button" href="" class="btn btn-default btn-sm disabled">{% trans 'More' %}</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
-              <span class="sr-only">Toggle Dropdown</span>
+              <span class="sr-only">{% trans 'Toggle Dropdown' %}</span>
             </button>
             <ul class="dropdown-menu">
-              <li class="dropdown-header">Related</li>
+              <li class="dropdown-header">{% trans 'Related' %}</li>
               <!-- <li><a href="">Results</a></li> -->
-              <li><a @click="toggleTargetModal({{indicator.id}})" >Target Periods</a></li>
-              <li><a href="/indicators/indicator_update/{{indicator.id}}/">Objectives</a></li>
-              <li><a href="/indicators/indicator_update/{{indicator.id}}/">Levels</a></li>
-              <li><a href="/indicators/indicator_update/{{indicator.id}}/">Sectors</a></li>
-              <li><a href="/indicators/indicator_update/{{indicator.id}}/#disaggregation">Disaggregations</a></li>
+              <li><a @click="toggleTargetModal({{indicator.id}})">{% trans 'Target Periods' %}</a></li>
+              <li><a href="/indicators/indicator_update/{{indicator.id}}/">{% trans 'Objectives' %}</a></li>
+              <li><a href="/indicators/indicator_update/{{indicator.id}}/">{% trans 'Levels' %}</a></li>
+              <li><a href="/indicators/indicator_update/{{indicator.id}}/">{% trans 'Sectors' %}</a></li>
+              <li><a href="/indicators/indicator_update/{{indicator.id}}/#disaggregation">{% trans 'Disaggregations' %}</a></li>
 
               <li role="separator" class="divider"></li>
-
-              <li><a class="" href="{% url 'indicator_update' indicator.id %}">Edit</a></li>
+              <li><a class="" href="{% url 'indicator_update' indicator.id %}">{% trans 'Edit' %}</a></li>
               <li>
                 <a class="text-danger"
                   href="#deleteIndicatorModal{{ indicator.id }}"
                   data-toggle="modal"
-                  onclick="setItemToDelete({{ indicator.id }})"
+                  onclick="setIndicatorItemToDelete({{ indicator.id }})"
                   data-target="#deleteIndicatorModal{{ indicator.id }}">
-                  Delete</a></li>
+                  {% trans 'Delete' %}</a></li>
             </ul>
           </div>
         </td>
@@ -181,6 +183,7 @@
 </div>
 {% endblock content %}
 {% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}js/indicator_delete.js"></script>
 <script src="{{ STATIC_URL }}vue.js/hikaya_select.js"></script>
 <script src="{{ STATIC_URL }}vue.js/collected_data_table.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}vue.js/indicators/target_period.js"></script>
