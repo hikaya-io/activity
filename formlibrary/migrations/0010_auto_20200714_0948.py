@@ -2,6 +2,8 @@
 
 import datetime
 from django.db import migrations, models
+import django.db.models.deletion
+import formlibrary.models.case
 
 
 class Migration(migrations.Migration):
@@ -30,5 +32,198 @@ class Migration(migrations.Migration):
             model_name='training',
             name='create_date',
             field=models.DateTimeField(blank=True, default=datetime.datetime.now, null=True, verbose_name='Creation date'),
+        ),
+        migrations.RenameField(
+            model_name='individual',
+            old_name='remarks',
+            new_name='description',
+        ),
+        migrations.RenameField(
+            model_name='individual',
+            old_name='household',
+            new_name='household_id',
+        ),
+        migrations.RenameField(
+            model_name='individual',
+            old_name='father_name',
+            new_name='id_number',
+        ),
+        migrations.RenameField(
+            model_name='individual',
+            old_name='gender',
+            new_name='id_type',
+        ),
+        migrations.RemoveField(
+            model_name='individual',
+            name='distribution',
+        ),
+        migrations.RemoveField(
+            model_name='individual',
+            name='training',
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='created_by',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='workflow.ActivityUser', verbose_name='Created by'),
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='date_of_birth',
+            field=models.DateField(blank=True, null=True),
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='head_of_household',
+            field=models.BooleanField(default=True),
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='last_name',
+            field=models.CharField(blank=True, max_length=255, null=True),
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='modified_by',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='workflow.ActivityUser', verbose_name='Last Modified by'),
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='photo',
+            field=models.ImageField(blank=True, null=True, upload_to=None),
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='primary_number',
+            field=models.IntegerField(blank=True, null=True),
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='secondary_number',
+            field=models.IntegerField(blank=True, null=True),
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='sex',
+            field=models.CharField(blank=True, choices=[('M', 'Male'), ('F', 'Female')], max_length=1, null=True),
+        ),
+        migrations.RemoveField(
+            model_name='individual',
+            name='program',
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='program',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='workflow.Program'),
+        ),
+        migrations.RemoveField(
+            model_name='individual',
+            name='id',
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='case_ptr',
+            field=models.OneToOneField(auto_created=True, default=0, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='formlibrary.Case'),
+            preserve_default=False,
+        ),
+        migrations.RemoveField(
+            model_name='individual',
+            name='age',
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='city',
+            field=models.CharField(blank=True, max_length=255, null=True),
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='country',
+            field=models.CharField(blank=True, max_length=255, null=True),
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='create_date',
+            field=models.DateTimeField(blank=True, default=datetime.datetime.now, null=True, verbose_name='Creation date'),
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='created_by',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='workflow.ActivityUser', verbose_name='Created by'),
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='email',
+            field=models.CharField(blank=True, max_length=100, validators=[django.core.validators.RegexValidator(message='Invalid Email Address.', regex='^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$')]),
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='individuals',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='formlibrary.Individual'),
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='modified_by',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='workflow.ActivityUser', verbose_name='Last Modified by'),
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='modified_date',
+            field=models.DateTimeField(blank=True, null=True, verbose_name='Last Modification date'),
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='postal_code',
+            field=models.IntegerField(blank=True, null=True),
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='prim_phone',
+            field=models.CharField(blank=True, max_length=17, validators=[django.core.validators.RegexValidator(message="Phone number must be entered in the format: '+123456789'. Up to 15 digits allowed.", regex='^\\+?1?\\d{9,15}$')]),
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='secondary_phone',
+            field=models.CharField(blank=True, max_length=17, validators=[django.core.validators.RegexValidator(message="Phone number must be entered in the format: '+123456789'. Up to 15 digits allowed.", regex='^\\+?1?\\d{9,15}$')]),
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='street',
+            field=models.CharField(blank=True, max_length=255, null=True),
+        ),
+        migrations.RemoveField(
+            model_name='household',
+            name='prim_phone',
+        ),
+        migrations.RemoveField(
+            model_name='individual',
+            name='primary_number',
+        ),
+        migrations.RemoveField(
+            model_name='individual',
+            name='secondary_number',
+        ),
+        migrations.AddField(
+            model_name='household',
+            name='primary_phone',
+            field=models.CharField(blank=True, max_length=17, validators=[django.core.validators.RegexValidator(message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.", regex='^\\+?1?\\d{9,15}$')]),
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='primary_phone',
+            field=models.CharField(blank=True, max_length=17, validators=[django.core.validators.RegexValidator(message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.", regex='^\\+?1?\\d{9,15}$')]),
+        ),
+        migrations.AddField(
+            model_name='individual',
+            name='secondary_phone',
+            field=models.CharField(blank=True, max_length=17, validators=[django.core.validators.RegexValidator(message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.", regex='^\\+?1?\\d{9,15}$')]),
+        ),
+        migrations.AlterField(
+            model_name='household',
+            name='secondary_phone',
+            field=models.CharField(blank=True, max_length=17, validators=[django.core.validators.RegexValidator(message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.", regex='^\\+?1?\\d{9,15}$')]),
+        ),
+        migrations.AlterField(
+            model_name='individual',
+            name='photo',
+            field=models.ImageField(blank=True, null=True, upload_to='media/images', validators=[formlibrary.models.case.validate_image]),
         ),
     ]
