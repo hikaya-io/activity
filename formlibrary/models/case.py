@@ -13,7 +13,7 @@ class Case(CreatedModifiedDates, CreatedModifiedBy):
     # ! to UUID type, and hence can inherit from Case
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     label = models.CharField(max_length=255)
-    # the many to many relationship is defined in Service, so django 
+    # the many to many relationship is defined in Service, so django
     # should add a field with the Services automatically (I may be wrong on this though)
 
 
