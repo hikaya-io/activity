@@ -7,6 +7,13 @@ from dateutil.relativedelta import relativedelta
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
+import os
+from uuid import uuid4
+
+phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$', message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.")
+email_regex = RegexValidator(
+        regex=r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$', message="Invalid Email Address.")
 
 
 class Case(models.Model):
@@ -32,13 +39,14 @@ class Household(Case, CreatedModifiedDates, CreatedModifiedBy):
     city = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.IntegerField(blank=True, null=True)
     country = models.CharField(max_length=255, blank=True, null=True)
-    phone_regex = RegexValidator(
-        regex=r'^\+?1?\d{9,15}$', message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.")
-    email_regex = RegexValidator(
-        regex=r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$', message="Invalid Email Address.")
     primary_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     secondary_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     email = models.CharField(validators=[email_regex], max_length=100, blank=True)
+
+    def __str__(self):
+        if self.name is None:
+            return "NULL"
+        return self.name
 
 
 IMAGE_SPEC = {
@@ -61,6 +69,16 @@ def validate_image(image, width=IMAGE_SPEC['width'],
         raise ValidationError("Min height is %s" % height)
 
 
+def path_and_rename(instance, filename):
+    upload_to = 'media/images/'
+    ext = filename.split('.')[-1]
+    if instance.pk:
+        filename = '{}.{}'.format(instance.pk, ext)
+    else:
+        filename = '{}.{}'.format(uuid4().hex, ext)
+    return os.path.join(upload_to, filename)
+
+
 class Individual(Case, CreatedModifiedDates, CreatedModifiedBy):
     """
     Individual, or person.
@@ -80,14 +98,12 @@ class Individual(Case, CreatedModifiedDates, CreatedModifiedBy):
     head_of_household = models.BooleanField(default=True)
     id_type = models.CharField(max_length=255, null=True, blank=True)
     id_number = models.CharField(max_length=255, null=True, blank=True)
-    phone_regex = RegexValidator(
-        regex=r'^\+?1?\d{9,15}$', message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.")
     primary_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     secondary_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     signature = models.BooleanField(default=True)
     site = models.ForeignKey(
         SiteProfile, null=True, blank=True, on_delete=models.SET_NULL)
-    photo = models.ImageField(upload_to="media/images", validators=[validate_image], blank=True, null=True)
+    photo = models.FileField(upload_to=path_and_rename, validators=[validate_image], blank=True, null=True)
     description = models.TextField(max_length=550, null=True, blank=True)
     program = models.ForeignKey(
         Program, null=True, blank=True, on_delete=models.SET_NULL)
@@ -100,9 +116,6 @@ class Individual(Case, CreatedModifiedDates, CreatedModifiedBy):
 
     class Meta:
         ordering = ('first_name',)
-
-    def save(self, *args, **kwargs):
-        super(Individual, self).save(*args, **kwargs)
 
     def __str__(self):
         if self.first_name is None:
