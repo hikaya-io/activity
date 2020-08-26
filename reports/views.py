@@ -356,11 +356,14 @@ class GenerateReport(View):
                 else:
                     current = dt
                     period = pendulum.period(previous, current)
+                    periodic_targets = []
 
                     for data in periodic_data:
                         if pendulum.parse(data['end_date']) in period:
                             for collecteddata in data['collecteddata_set']:
-                                target += float(collecteddata['targeted'])
+                                if collecteddata['periodic_target'] not in periodic_targets:
+                                    target += float(collecteddata['targeted'])
+                                    periodic_targets.append(collecteddata['periodic_target'])
                                 actual += float(collecteddata['achieved'])
 
                     name = str(report_period) + ' ' + str(count)
