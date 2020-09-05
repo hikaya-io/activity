@@ -16,7 +16,7 @@ email_regex = RegexValidator(
         regex=r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$', message="Invalid Email Address.")
 
 
-class Case(models.Model):
+class Case(CreatedModifiedDates, CreatedModifiedBy):
     """
     Keeps track of Individuals/Households and their usage/participation in services
     Spec: https://github.com/hikaya-io/activity/issues/410
@@ -25,6 +25,8 @@ class Case(models.Model):
     # ! to UUID type, and hence can inherit from Case
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     label = models.CharField(max_length=255)
+    # the many to many relationship is defined in Service, so django
+    # should add a field with the Services automatically (I may be wrong on this though)
 
 
 class Household(Case, CreatedModifiedDates, CreatedModifiedBy):
