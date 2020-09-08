@@ -49,7 +49,7 @@ Navigate to the folder you want the repository to be stored in.
 Run the following command:
 
 ```bash
-$ git clone --branch dev https://github.com/hikaya-io/activity.git
+$ git clone --branch develop https://github.com/hikaya-io/activity.git
 ```
 
 Once cloned, navigate to the cloned repository with:
@@ -64,52 +64,26 @@ or similar for your OS.
 You can setup virtual environment either using `virtualenv` or `pipenv`.
 
 ### Using virtualenv
-#### Install virtualenv
-
 ```bash
-$ pip install virtualenv
+$ pip install virtualenv  # Install virtualenv
+$ virtualenv -p python3.7 <myvirtualenvironmentname>  # Create your virtual environment
+$ source <myvirtualenvironmentname>/bin/activate  # Activate your virtual environment on Linux...
+$ source <myvirtualenvironmentname>/script/activate # ... or on Windows
 ```
 
-#### Create virtualenv
+Virtualenv will take care of:
+- managing the project's dependencies in isolation from the system's packages:
+- providing a new Python binary/executable with the version specified (check this using `which python` on Linux and `python --version`)
 
-```bash
-$ virtualenv -p python3.7 <myvirtualenvironmentname>
-```
-
-- by default it should prevent virtualenv from seeing your global packages
-- . <myvirtualenvironmentname>/bin/activate allows us to just use pip from the command-line by adding to the path rather than the full path.
-
-#### Activate virtualenv
-
-```bash
-$ source <myvirtualenvironmentname>/bin/activate
-```
-
-for Windows users:
-
-```bash
-$ source <myvirtualenvironmentname>/script/activate
-```
 
 ### Using pipenv
-#### Install pipenv
 ```bash
-$ pip install pipenv
+$ pip install pipenv  # Install pipenv
+$ pipenv shell  # Create and activate the pipenv environment
+$ pip install -r requirements.txt  # Install the dependencies
 ```
 
-#### Create and activate virtual environment
-```bash
-$ pipenv shell
-```
-
-### Install requirements
-Once your virtual environment is running, install the requirements.
-
-```bash
-$ pip install -r requirements.txt
-```
-
-### Create local copy of config file
+### Django local config file
 
 Copy the example config:
 
@@ -121,7 +95,7 @@ $ cp activity/settings/local-sample.py activity/settings/local.py
 
 Edit database settings activity/settings/local.py as shown below.
 
-We will change the `ENGINE` parameter to the default value for postgres (although you can also user MySQL or Sqllite3 which is out-of-the-box supported by Django). We also need to add a default database name in the `NAME` option.
+We will change the `ENGINE` parameter to the default value for postgres (although you can also use MySQL or SqlLite3 which is out-of-the-box supported by Django). We also need to add a default database name in the `NAME` option.
 
 Since postgres is the preferred database for this project, we have provided extra instructions to help you set it up. These can be viewed [here](#postgresql-help).
 
@@ -140,59 +114,57 @@ Since postgres is the preferred database for this project, we have provided extr
 
 ### Set up DB
 
+To set up the database, we can use Django's migrations, which take care of propagating the defined models into our database schema:
+
 ```bash
 $ python manage.py migrate
 ```
 
-### Create super user (first time only)
+### Create superuser (first time only)
 
+A superuser is necessary to access Django's administration panel.
+To create one, use the following:
 ```bash
 $ python manage.py createsuperuser
 ```
 
+You can use the superuser you created to authenticate into the Django panel in http://localhost:8000/admin once you launch the API.
+
 ## Run fixtures
 
-### Add authorization groups
+In the `fixtures` folder, you can find JSON files that define sample data to populate the database, after setting its schema.
 
+Here are a few essential fixtures to load:
 ```bash
-$ python manage.py loaddata fixtures/auth_groups.json
-```
-
-### Add countries
-```bash
-$ python manage.py loaddata fixtures/countries.json
-```
-
-### Add sectors
-```bash
-$ python manage.py loaddata fixtures/sectors.json
+$ python manage.py loaddata fixtures/auth_groups.json  # Add authorization groups
+$ python manage.py loaddata fixtures/countries.json  # Add countries
+$ python manage.py loaddata fixtures/sectors.json  # Add sectors
 ```
 
 ### Run the app locally
 
-If you're using more then one settings file change manage.py to point to local or dev file first.
+If you're using more then one settings file change the `manage.py` file to point to local or dev file first.
 
 ```bash
 $ python manage.py runserver
 ```
 
-This will run the server on http://127.0.0.1:8000 (Don't open the link in your browser yet). You can configure the host and port as needed.
+This will run the server on http://127.0.0.1:8000
 
-### Create an activity user
+### Create an Activity User
 
-Once you have created your user account, you need to create an `activity user` that is linked to this user account.
+Once you have created your user account, you need to create an `Activity User` that is linked to this user account.
 
-Go to http://127.0.0.1:8000/admin and sign in using your superuser account. Under the `Workflow` model, you'll find `Activity users`. Create a new activity user making sure you associate your user under the `User` attribute.
+Go to http://127.0.0.1:8000/admin and sign in using your superuser account. Under the `Workflow` app, you'll find `Activity users`. Create a new `ActivityUser` instance and make sure you associate your user under the `User` attribute.
 
 ### Open the dashboard
 
 Before launching the dashboard on http://127.0.0.1:8000, you need to log out of the admin account first.
-This is to avoid an `AttributeError`. 
+This is to avoid an `AttributeError`.
 
-Use the same admin credentials on the dashboard login page.
+Log in using the same Admin credentials you used on the dashboard login page.
 
 ## Set up locally using Docker
-Ensure docker is installed on your local computer!
 
 ### Build the docker image
 ```bash
