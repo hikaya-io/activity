@@ -13,7 +13,7 @@ from workflow.models import (
 
 class Service(CreatedModifiedBy, CreatedModifiedDates, StartEndDates):
     """
-    Abstract base class for all kinds of offered services.
+    Abstract base class for all kinds of offered services (distributions, trainings...)
     Spec: https://github.com/hikaya-io/activity/issues/412
     """
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -26,10 +26,8 @@ class Service(CreatedModifiedBy, CreatedModifiedDates, StartEndDates):
         Office, null=True, blank=True, on_delete=models.SET_NULL)
     site = models.ForeignKey(
         SiteProfile, null=True, blank=True, on_delete=models.SET_NULL)
-    # Can an implementer be in charge of multiple services?
-    implementer = models.ForeignKey(
+    implementer = models.ForeignKey( # Can an implementer be in charge of multiple services?
         Stakeholder, null=True, blank=True, on_delete=models.SET_NULL)
-    # Cases relationship: Many To Many?
     cases = models.ManyToManyField(Case, blank=True)
     contacts = models.ManyToManyField(Contact, blank=True)
     form_verified_by = models.CharField(max_length=255, null=True, blank=True)
@@ -40,25 +38,22 @@ class Service(CreatedModifiedBy, CreatedModifiedDates, StartEndDates):
         ordering = ('name',)
 
     @property
+    def total_supported(self):
+        """
+        Number of Individuals, including Households, linked to the service
+        """
+        return 0
+
+    @property
     def total_individuals_supported(self):
         """
-        Number of Individuals, excluding Households, supported by the service
+        Number of Individuals, excluding Households, linked to the service
         """
-        # TODO Check all individuals, and households and their individuals
         return 0
 
     @property
     def total_households_supported(self):
         """
-        Number of Households, supported by the service
+        Number of Households linked to the service
         """
-        # TODO Check all individuals, and households and their individuals
-        return 0
-
-    @property
-    def total_supported(self):
-        """
-        Number of Individuals, including Households, supported by the service
-        """
-        # TODO Check all individuals, and households and their individuals
         return 0
