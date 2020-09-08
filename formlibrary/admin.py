@@ -24,18 +24,3 @@ class DistributionAdmin(admin.ModelAdmin):
         'modified_date',
     )
     display = 'Program Dashboard'
-
-
-"""
-@admin.register(TrainingAttendance)
-class TrainingAttendanceAdmin(admin.ModelAdmin):
-    list_display = (
-        'training_name',
-        'program',
-        'project_agreement',
-        'create_date',
-        'edit_date'
-    )
-    display = 'Training Attendance'
-    list_filter = ('program__country', 'program')
-"""

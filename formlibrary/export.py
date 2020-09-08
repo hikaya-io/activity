@@ -5,14 +5,6 @@ from .models import (
     Individual,
 )
 
-"""
-class TrainingAttendanceResource(resources.ModelResource):
-
-    class Meta:
-        model = TrainingAttendance
-"""
-
-
 class DistributionResource(resources.ModelResource):
 
     class Meta:
