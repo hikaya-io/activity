@@ -26,7 +26,7 @@ class Service(CreatedModifiedBy, CreatedModifiedDates, StartEndDates):
         Office, null=True, blank=True, on_delete=models.SET_NULL)
     site = models.ForeignKey(
         SiteProfile, null=True, blank=True, on_delete=models.SET_NULL)
-    implementer = models.ForeignKey( # Can an implementer be in charge of multiple services?
+    implementer = models.ForeignKey(  # Can an implementer be in charge of multiple services?
         Stakeholder, null=True, blank=True, on_delete=models.SET_NULL)
     cases = models.ManyToManyField(Case, blank=True)
     contacts = models.ManyToManyField(Contact, blank=True)

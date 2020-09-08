@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from formlibrary.models import Individual, Training, Distribution
-from workflow.models import SiteProfile, Program
 from workflow.serializers import SiteProfileSerializer, ProgramSerializer
 
 
