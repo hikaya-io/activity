@@ -240,37 +240,6 @@ pg_ctl -D /usr/local/var/postgres start # to start
 pg_ctl -D /usr/local/var/postgres stop # to stop
 ```
 
-## MySQL help
-
-### Django migrate access denied
-
-If you get access denied, it means you need to modify the config file and write your Mysql username and password in the file
-
-### Path issue
-
-To fix any issues related to your path that may come up during the django set up, run:
-
-```bash
-$ export PATH=$PATH:/usr/local/mysql/bin
-```
-
-or specify the path you have to your installed mysql_config file in the bin folder of mysql
-
-If you want this environment variable to be automatically set, please include it in your bash_profile or bashrc file.
-
-### Django settings file
-
-Replace user and password by your Mysql username and password
-
-### Set up Django's MySQL backing store
-
-```sql
-CREATE DATABASE 'activity';
-CREATE USER 'root';
-GRANT ALL ON activity.* TO 'root'@'localhost' IDENTIFIED BY 'root';
-```
-
-_NB:_ When you use these SQL queries, beware of not writing the quotes.
 
 ## Install non-python dependencies
 
@@ -283,7 +252,7 @@ $ brew install gdal
 ```
 
 On Windows:
-- You will need to download gdal core and gdal installer for your version of python.
+- You will need to download Gdal Core and Gdal installer for your version of Python.
 - Please read the following [instructions](https://pypi.org/project/GDAL/#windows) on how to properly install and test gdal.
 
 2. **Pango**
@@ -303,4 +272,12 @@ On Windows:
 <br/>
 
 # Contributing
-Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team). We are always looking for a fresh set of :eyes: who want to contribute to **Activity**. Feel free to checkout our [contribution page](./CONTRIBUTING.md) or learn more about our [development process](https://team.hikaya.io/start/development-process.html). You can reach out by creating an issue and we'll help you get started!
+
+Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team).
+
+Feel free to checkout and learn more about:
+
+- Our [contribution guide](./CONTRIBUTING.md)
+- Our [development process](https://team.hikaya.io/start/development-process.html)
+
+We are always looking for a fresh set of :eyes: who want to contribute to **Activity**, so if you are interested, you can reach out and create an issue and we'll help you get started!
