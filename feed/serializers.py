@@ -69,12 +69,6 @@ class PeriodicTargetSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProgramSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Program
-        fields = '__all__'
-
-
 class SectorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sector

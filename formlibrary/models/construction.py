@@ -4,8 +4,7 @@ from .service import Service
 
 class Construction(Service):
     """
-    Service of a construction project.
-    Not yet used model.
+    Service of a construction project
     """
     # implementer = stakeholder
     status = models.CharField(max_length=255)

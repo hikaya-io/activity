@@ -29,6 +29,12 @@ class ProgramSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SiteProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Program
+        fields = '__all__'
+
+
 class ProjectStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectStatus

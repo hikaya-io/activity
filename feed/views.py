@@ -12,7 +12,7 @@ import django_filters
 from .serializers import (
     PeriodicTargetSerializer, UserSerializer, ActivitytableSerializer,
     ActivityUserSerializer, OfficeSerializer, ProjectTypeSerializer,
-    ProgramSerializer, ProgramIndicatorSerializer, SectorSerializer,
+    ProgramIndicatorSerializer, SectorSerializer,
     SiteProfileSerializer, CompleteSerializer, CountrySerializer,
     StakeholderSerializer, ExternalServiceRecordSerializer, ExternalServiceSerializer,
     AgreementSerializer, LoggedUserSerializer, IndicatorSerializer, OrganizationSerializer,
@@ -22,11 +22,11 @@ from .serializers import (
     LevelSerializer, StrategicObjectiveSerializer, VillageSerializer, ContactSerializer,
     AdminLevelThreeSerializer, CollectedDataSerializer, CapacitySerializer,
     ReportingFrequencySerializer,
-
 )
 
 from activity.util import get_country
 from workflow.mixins import APIDefaultsMixin
+from workflow.serializers import ProgramSerializer
 
 from workflow.models import (
     Program, Sector, ProjectType, Office, SiteProfile, Country, ProjectComplete, Checklist,
