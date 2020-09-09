@@ -1,25 +1,15 @@
-from import_export import resources
+from import_export import resources  # https://django-import-export.readthedocs.io/en/latest/
 from .models import (
-    # TrainingAttendance,
     Distribution,
     Individual,
 )
 
-"""
-class TrainingAttendanceResource(resources.ModelResource):
-
-    class Meta:
-        model = TrainingAttendance
-"""
-
 
 class DistributionResource(resources.ModelResource):
-
     class Meta:
         model = Distribution
 
 
 class IndividualResource(resources.ModelResource):
-
     class Meta:
         model = Individual

@@ -4,6 +4,8 @@ from .training import Training
 
 
 class Session():
+    """
+    """
     date = models.DateTimeField()
     training_type = models.ForeignKey(
         Training, null=True, blank=False, on_delete=models.SET_NULL)
@@ -11,6 +13,8 @@ class Session():
 
 
 class Attendance():
+    """
+    """
     attendee = models.ForeignKey(Individual, on_delete=models.CASCADE)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     attendance = models.BooleanField(default=False)

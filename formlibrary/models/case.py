@@ -33,6 +33,7 @@ class Household(Case, CreatedModifiedDates, CreatedModifiedBy):
     """
     Family, or group of people, living together
     Spec: https://github.com/hikaya-io/activity/issues/409
+    ? How to know the individual's "role" in the household? (dad, mom, aunt...)
     """
     name = models.CharField(max_length=255)
     individuals = models.ForeignKey(
@@ -117,9 +118,9 @@ class Individual(Case, CreatedModifiedDates, CreatedModifiedBy):
         return delta.years
 
     class Meta:
-        ordering = ('first_name',)
+        ordering = ('last_name',)
 
     def __str__(self):
         if self.first_name is None:
-            return "NULL"
+            return ""
         return self.first_name
