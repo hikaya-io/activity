@@ -72,7 +72,7 @@ $ source <myvirtualenvironmentname>/script/activate # ... or on Windows
 ```
 
 Virtualenv will take care of:
-- managing the project's dependencies in isolation from the system's packages:
+- managing the project's dependencies in isolation from the system's packages
 - providing a new Python binary/executable with the version specified (check this using `which python` on Linux and `python --version`)
 
 
@@ -166,16 +166,18 @@ Log in using the same Admin credentials you used on the dashboard login page.
 
 ## Set up locally using Docker
 
-### Build the docker image
+### Build the docker images
+
 ```bash
 $ docker-compose build
 ```
 
 ### Run the container
+
 ```bash
 $ docker-compose up 
 ```
-you can add the `-d` flag to run the container in detached mode
+You can add the `-d` flag to run the container in detached mode
 
 ### Run and Build at the same time
 ```bash
