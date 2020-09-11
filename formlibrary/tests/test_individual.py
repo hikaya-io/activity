@@ -4,8 +4,6 @@ from django.urls import reverse
 import datetime
 from rest_framework.test import APIClient
 from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
-UserModel = get_user_model()
 
 
 class IndividualTestCase(TestCase):
@@ -17,7 +15,7 @@ class IndividualTestCase(TestCase):
     # ]
 
     def setUp(self):
-        self.User.objects.create(username='test', email="test@mail.com", password='password')
+        User.objects.create(username='test', email="test@mail.com", password='password')
 
         household = Household.objects.create(name="MyHouse", primary_phone='40-29104782')
         individual = Individual.objects.create(
@@ -57,7 +55,7 @@ class IndividualTestCase(TestCase):
         individual.save()
 
         updated_individual = Individual.objects.get(pk=individual.pk)
-        self.assertEqual(updated_individual.sex, "Female")
+        self.assertEqual(updated_individual.sex, "F")
 
     def test_delete_individual(self):
         individual = Individual.objects.filter(first_name="Nate")
