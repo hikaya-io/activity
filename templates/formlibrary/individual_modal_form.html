@@ -8,6 +8,15 @@
       dropdownParent: $("#addIndividualModal")
     });
 
+    $('#date_of_birth').datepicker({
+      dateFormat: 'yy-mm-dd',
+      onSelect: function(dateText, inst) {
+        let date = $(this).datepicker('getDate');
+        date.setDate(date.getDate() + 1);
+        date_of_birth = date;
+      },
+    });
+
     $("#gender").select2({
       theme: "bootstrap",
       placeholder: "Select gender...",
@@ -115,39 +124,67 @@
         <div class="modal-body">
           {% csrf_token %}
           <div class="form-group">
-            <label for="firstName">{{ request.user.activity_user.organization.individual_label }} Name</label>
+            <label for="firstName">First Name</label>
             <input
               type="text"
               id="firstName"
               name="first_name"
               class="form-control"
-              placeholder="{{ request.user.activity_user.organization.individual_label }}"
+              placeholder="First Name"
             />
           </div>
 
           <div class="form-group">
-            <label for="age">Age</label>
+            <label for="lastName">Last Name</label>
             <input
               type="text"
-              id="age"
-              name="age"
+              id="lastName"
+              name="last_name"
               class="form-control"
-              placeholder="Age"
+              placeholder="Last Name"
+            />
+          </div>
+
+
+          <div class="form-group">
+            <label for="date_of_birth">Date of birth</label>
+            <input type="text" id="date_of_birth" class="form-control" placeholder="Date of birth" name="date_of_birth"
+              autocomplete="off" />
+          </div>
+
+          <div class="form-group">
+            <label for="idNumber">ID Number</label>
+            <input
+              type="text"
+              id="idNumber"
+              name="id_number"
+              class="form-control"
+              placeholder="ID Number"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="primaryPhone">Primary Phone</label>
+            <input
+              type="text"
+              id="primaryPhone"
+              name="primary_phone"
+              class="form-control"
+              placeholder="Primary Phone"
             />
           </div>
 
           <div class="form-group">
             <label for="gender">Gender</label>
             <select
-              id="gender"
-              name="gender"
+              id="sex"
+              name="sex"
               class="form-control"
               placeholder="Gender"
             >
               <option value=""></option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
             </select>
           </div>
 

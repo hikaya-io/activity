@@ -48,8 +48,10 @@
     <thead>
       <tr>
         <th>{{ request.user.activity_user.organization.individual_label }} Name</th>
+        <th>Last Name</th>
         <th>Gender</th>
         <th>Age</th>
+        <th>Primary Phone</th>
         <th>Date created</th>
         <th class="text-right">Actions</th>
       </tr>
@@ -64,8 +66,16 @@
             {{ individual.first_name | truncatechars:50 }}
           </a>
         </td>
-        <td>{{ individual.gender }}</td>
+        <td>{{ individual.last_name }}</td>
+        <td>
+          {% if individual.sex == 'M'%}
+            Male
+          {% else %}
+            Female
+          {% endif%}
+        </td>
         <td>{{ individual.age }}</td>
+        <td>{{ individual.primary_phone }}</td>
         <td>{{ individual.create_date | date:'m-d-Y' }}</td>
         <td class="text-right">
           <!-- Split button -->
