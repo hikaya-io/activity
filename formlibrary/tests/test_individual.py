@@ -65,27 +65,24 @@ class IndividualTestCase(TestCase):
         self.assertEqual(individual.count(), 0)
 
     
-    def test_create_individual_request(self):
+    # def test_create_individual_request(self):
+        # individual = {
+        #     'first_name' : 'test',
+        #     # 'last_name' : 'test_last',
+        #     'date_of_birth' : '2000-10-10',
+        #     'sex' : 'M',
+        #     # 'signature' : False,
+        #     'description' : 'life',
+        #     'id_program' : '1',
+        #     'program' : '1'
+        # }
 
-        individual = {
-            'first_name' : 'test',
-            # 'last_name' : 'test_last',
-            'date_of_birth' : '2000-10-10',
-            'sex' : 'M',
-            # 'signature' : False,
-            'description' : 'life',
-            'id_program' : '1',
-            'program' : '1'
-        }
-
-        user = User.objects.get(username='test')
+        # user = User.objects.get(username='test')
         
-        url = reverse("individual_add", args=['0'])
-        self.client.force_authenticate(self.user)
+        # url = reverse("individual_add", args=['0'])
+        # self.client.force_authenticate(self.user)
         
-        resp = self.client.post(url, data=individual)
-        print("******resp*****")
-        print(resp)
-        self.assertContains(resp, 200)
+        # resp = self.client.post(url, data=individual)
+        # self.assertContains(resp, 200)
 
         
