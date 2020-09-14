@@ -2,28 +2,37 @@ from django.test import TestCase, Client
 from formlibrary.models import Individual, Household
 from django.urls import reverse
 import datetime
-from rest_framework.test import APIClient
+# from rest_framework.test import APIClient
 from django.contrib.auth.models import User
 
+from formlibrary.views import IndividualCreate
 
 class IndividualTestCase(TestCase):
 
-    # fixtures = [
-    #     'fixtures/tests/trainings.json',
-    #     'fixtures/tests/users.json',
-    #     'fixtures/tests/activity-users.json',
-    # ]
+    fixtures = [
+        'fixtures/tests/programs.json',
+        # 'fixtures/tests/users.json',
+        # 'fixtures/tests/activity-users.json',
+    ]
 
     def setUp(self):
-        User.objects.create(username='test', email="test@mail.com", password='password')
-
+        self.user = User.objects.create_user(
+            username='test',
+            email="test@mail.com",
+            password="password"
+        )
         household = Household.objects.create(name="MyHouse", primary_phone='40-29104782')
         individual = Individual.objects.create(
-            first_name="Nate", last_name="Test", date_of_birth=datetime.date(2000, 10, 10),
-            sex="M", signature=False, description="life", household_id=household)
-        individual.save()
+            first_name="Nate",
+            last_name="Test",
+            date_of_birth=datetime.date(2000, 10, 10),
+            sex="M",
+            signature=False,
+            description="life",
+            household_id=household
+        )
 
-        self.client = APIClient()
+        # self.client = APIClient()
 
     def _get_token(self, url, data):
         resp = self.client.get(url)
@@ -31,7 +40,7 @@ class IndividualTestCase(TestCase):
         print(resp.cookies)
         data['csrfmiddlewaretoken'] = resp.cookies['csrftoken'].value
         return data
-        
+
 
     def test_individual_create(self):
         """Check for the Individual object"""
@@ -48,7 +57,7 @@ class IndividualTestCase(TestCase):
         self.assertEqual(Individual.objects.filter(
             id=get_individual.id).count(), 0)
 
-    
+
     def test_edit_individual(self):
         individual = Individual.objects.first()
         individual.sex = "F"
@@ -62,25 +71,25 @@ class IndividualTestCase(TestCase):
         individual.delete()
         self.assertEqual(individual.count(), 0)
 
-    
-    # def test_create_individual_request(self):
-        # individual = {
-        #     'first_name' : 'test',
-        #     # 'last_name' : 'test_last',
-        #     'date_of_birth' : '2000-10-10',
-        #     'sex' : 'M',
-        #     # 'signature' : False,
-        #     'description' : 'life',
-        #     'id_program' : '1',
-        #     'program' : '1'
-        # }
+
+    def test_create_individual_request(self):
+        individual = {
+            'first_name' : 'test',
+            # 'last_name' : 'test_last',
+            'date_of_birth' : '2000-10-10',
+            'sex' : 'M',
+            # 'signature' : False,
+            'description' : 'life',
+            # 'id_program' : '100',
+            'program' : '1'
+        }
 
         # user = User.objects.get(username='test')
-        
-        # url = reverse("individual_add", args=['0'])
-        # self.client.force_authenticate(self.user)
-        
-        # resp = self.client.post(url, data=individual)
-        # self.assertContains(resp, 200)
 
-        
+        url = reverse("individual_add", args=['0'])
+
+        self.client.force_login(self.user, backend=None)
+
+        resp = self.client.post(url, data=individual)
+
+        self.assertContains(resp, 200)
