@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from formlibrary.models import Individual, Training, Distribution
+from formlibrary.models import Individual, Training, Distribution, Household
 from workflow.serializers import SiteProfileSerializer, ProgramSerializer
+from feed.serializers import ActivityUserSerializer
 
 
 class TrainingSerializer(serializers.ModelSerializer):
@@ -24,3 +25,20 @@ class IndividualSerializer(serializers.ModelSerializer):
     class Meta:
         model = Individual
         fields = ['id', 'first_name', 'age', 'gender', 'training', 'distribution', 'site', 'program']
+
+
+class HouseholdSerializer(serializers.ModelSerializer):
+    program = ProgramSerializer()
+
+    class Meta:
+        model = Household
+        fields = ['id', 'program']
+
+
+class HouseholdListDataSerializer(serializers.ModelSerializer):
+    program = ProgramSerializer()
+    created_by = ActivityUserSerializer()
+
+    class Meta:
+        model = Household
+        fields = ['id', 'name', 'program', 'created_by', 'create_date']

@@ -1,0 +1,138 @@
+<div id="household_list">
+  <div class="sub-navigation-header">
+    <h4 class="page-title">[[ household_label ]] List</h4>
+  </div>
+  <div class="sub-navigation-actions">
+    <div class="sub-nav-item">
+      <div class="btn-group" role="group" aria-label="...">
+        <a
+          role="button"
+          class="btn btn-sm btn-primary"
+          id="show-modal"
+          @click="toggleModal()"
+        >
+          <i class="fa fa-plus"></i> [[ household_label ]]
+        </a>
+      </div>
+    </div>
+  </div>
+
+          <!-- Household create modal -->
+  <modal v-if="showModal" @close="showModal = false">
+    <div slot="body">
+      {% include './modals/add_household_modal.html' %}
+    </div>
+    <div slot="footer">
+      {% include 'ui-components/quick_entry_modal_footer.html' %}
+    </div>
+    <h4 slot="header">[[modalHeader]]</h4>
+  </modal>
+
+  <!-- Household delete modal -->
+  <modal v-if="showDeleteModal" @close="showDeleteModal = false">
+    <h4 slot="header">[[modalHeader]]</h4>
+    <div slot="body">
+      <p>
+        Are you sure you want to delete <b>[[ itemToDelete.name ]]</b>?
+      </p>
+    </div>
+    <div slot="footer">
+      <div class="text-right">
+        <button
+          type="submit"
+          class="btn btn-close"
+          @click="showDeleteModal = false"
+        >
+          Cancel
+        </button>
+        <button
+          class="btn btn-danger"
+          @click="deleteHousehold(itemToDelete.id)"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </modal>
+
+  <div class="p-10" v-if="!householdsList.length">
+    {% include 'admin/no_data.html' %}
+  </div>
+
+  <!-- Table -->
+  <table class="table" id="householdTable" v-if="householdsList.length">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Program</th>
+        <th>Created By</th>
+        <th>Create Date</th>
+        <th class="text-right">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr v-cloak v-for="household in householdsList" v-if="household.name">
+        <td>
+          <!-- TODO1: Edit Household -->
+          <a v-bind:href="'/formlibrary/household_edit/'+household.id+'/'" data-toggle="tooltip" :title="household.name">
+              [[ household.name ]]
+          </a>
+        </td>
+        <td>[[ household.program.name ]]</td>
+        <td>[[ household.created_by.name ]]</td>
+        <td>[[ formatDate(household.create_date) ]]</td>
+        <!-- Actions -->
+        <td class="text-right">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm disabled">
+              More
+            </button>
+            <button
+              type="button"
+              class="btn btn-default btn-sm dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+
+            <!-- related list -->
+            <ul class="dropdown-menu">
+              <li class="dropdown-header">Related</li>
+              <li>
+                <!-- TODO1: list individual related to a household -->
+                <a href="#"
+                  >[[ individual_label ]]</a
+                >
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                
+                <!-- TODO1: Edit household implementation -->
+                <a v-bind:href="'/formlibrary/household_edit/'+household.id+'/'"
+                  >Edit</a
+                >
+              </li>
+              <li>
+                <a
+                  class="text-danger force-link"
+                  @click="toggleDeleteModal(household)"
+                  >Delete</a
+                >
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+</div>
+
+
+{% include 'ui-components/vue_modal.html'%} {% block extra_js_in_body %}
+<script type="text/javascript" src="{{ STATIC_URL }}vue.js/formlibrary/household.js"></script>
+{% endblock extra_js_in_body %}
