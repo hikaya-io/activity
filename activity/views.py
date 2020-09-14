@@ -496,6 +496,7 @@ def admin_configurations(request):
             'individual_label': data.get('individual_label'),
             'training_label': data.get('training_label'),
             'distribution_label': data.get('distribution_label'),
+            'household_label': data.get('household_label')
             # 'default_currency': data.get('default_currency')
         }
         organization = Organization.objects.filter(

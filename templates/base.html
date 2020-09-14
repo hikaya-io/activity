@@ -132,18 +132,21 @@
               </li>
               <li class="dropdown {% if 'forms' in active %} active {% endif %}">
                 <a
-                href="/formlibrary/comingsoon"
-                {% comment %} class="dropdown-toggle"
-                data-toggle="dropdown" {% endcomment %}
+                href="#"
+                class="dropdown-toggle"
+                data-toggle="dropdown"
                 role="button"
                 aria-haspopup="true"
                 aria-expanded="false"
                 >
                 Form Library <i class="fa fa-angle-down"></i>
                 </a>
-                {% comment %} 
                 <ul class="dropdown-menu">
+
                   <li>
+                    <a href="/formlibrary/household_list"> {{ request.user.activity_user.organization.household_label }}</a>
+                  </li>
+                  <!-- <li>
                     <a href="/formlibrary/individual_list/0/0/0/"> {{ user.activity_user.organization.individual_label }}</a>
                   </li>
                   <li>
@@ -151,9 +154,8 @@
                   </li>
                   <li>
                     <a href="/formlibrary/training_list/0/0/"> {{ request.user.activity_user.organization.training_label }}</a>
-                  </li>
+                  </li> -->
                 </ul>
-                {% endcomment %}
               </li>
               <li class="dropdown {% if 'components' in active %} active {% endif %}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
