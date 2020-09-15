@@ -1,8 +1,9 @@
 from django.test import TestCase, Client
 from formlibrary.models import Individual, Household
+from workflow.models import Organization, ActivityUser
 from django.urls import reverse
 import datetime
-# from rest_framework.test import APIClient
+from rest_framework.test import APIClient
 from django.contrib.auth.models import User
 
 from formlibrary.views import IndividualCreate
@@ -21,6 +22,9 @@ class IndividualTestCase(TestCase):
             email="test@mail.com",
             password="password"
         )
+
+        self.org = Organization.objects.create(name='test_org')
+        self.act_user = ActivityUser.objects.create(user=self.user, organization=self.org)
         household = Household.objects.create(name="MyHouse", primary_phone='40-29104782')
         individual = Individual.objects.create(
             first_name="Nate",
@@ -32,14 +36,7 @@ class IndividualTestCase(TestCase):
             household_id=household
         )
 
-        # self.client = APIClient()
-
-    def _get_token(self, url, data):
-        resp = self.client.get(url)
-        print("***resp****")
-        print(resp.cookies)
-        data['csrfmiddlewaretoken'] = resp.cookies['csrftoken'].value
-        return data
+        self.client = APIClient()
 
 
     def test_individual_create(self):
@@ -70,21 +67,18 @@ class IndividualTestCase(TestCase):
         individual = Individual.objects.filter(first_name="Nate")
         individual.delete()
         self.assertEqual(individual.count(), 0)
-
-
+    
     def test_create_individual_request(self):
         individual = {
             'first_name' : 'test',
-            # 'last_name' : 'test_last',
+            'last_name' : 'test_last',
             'date_of_birth' : '2000-10-10',
             'sex' : 'M',
-            # 'signature' : False,
+            'signature' : False,
             'description' : 'life',
-            # 'id_program' : '100',
+            'id_program' : '100',
             'program' : '1'
         }
-
-        # user = User.objects.get(username='test')
 
         url = reverse("individual_add", args=['0'])
 
@@ -92,4 +86,31 @@ class IndividualTestCase(TestCase):
 
         resp = self.client.post(url, data=individual)
 
-        self.assertContains(resp, 200)
+        self.assertEqual(resp.status_code, 201)
+
+    
+    def test_edit_individual_request(self):
+        individual = Individual.objects.first()
+        
+        url = reverse("individual_update", args=[individual.id])
+
+        self.client.force_login(self.user, backend=None)
+
+        data = {
+            'last_name' : 'test_last',
+            'sex' : "F",
+        }
+        resp = self.client.post(url, data=data)
+
+        self.assertEqual(resp.status_code, 200)
+
+    def test_delete_individual_request(self):
+        individual = Individual.objects.first()
+        
+        url = reverse("individual_delete", args=[individual.id])
+
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.url, '/formlibrary/individual_list/0/0/0/')
+
+

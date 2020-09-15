@@ -8,15 +8,6 @@
       dropdownParent: $("#addIndividualModal")
     });
 
-    $('#date_of_birth').datepicker({
-      dateFormat: 'yy-mm-dd',
-      onSelect: function(dateText, inst) {
-        let date = $(this).datepicker('getDate');
-        date.setDate(date.getDate() + 1);
-        date_of_birth = date;
-      },
-    });
-
     $("#gender").select2({
       theme: "bootstrap",
       placeholder: "Select gender...",
@@ -148,9 +139,17 @@
 
           <div class="form-group">
             <label for="date_of_birth">Date of birth</label>
-            <input type="text" id="date_of_birth" class="form-control" placeholder="Date of birth" name="date_of_birth"
-              autocomplete="off" />
+            <input
+                  type="date"
+                  id="date_of_birth"
+                  name="date_of_birth"
+                  class="form-control"
+                  style="width:200px;"
+                  v-validate="'required'"
+                  placeholder="Date of birth"
+                  :max="maxDate"/>
           </div>
+
 
           <div class="form-group">
             <label for="idNumber">ID Number</label>

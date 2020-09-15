@@ -30,7 +30,13 @@
     <div class="col-md-6">
         {{ form.program | as_crispy_field }}
     </div>
-	<div class="col-md-6">
+    <div class="col-md-6">
+        {{ form.signature | as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
         {{ form.description | as_crispy_field }}
     </div>
 </div>

@@ -60,7 +60,7 @@ class IndividualForm(forms.ModelForm):
         model = Individual
         exclude = ('created_by', 'modified_by', 'label')
 
-    date_of_birth = forms.DateField(widget=DatePicker.DateInput(), required=True)
+    date_of_birth = forms.DateTimeField(widget=DatePicker.DateInput(), required=True)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
