@@ -9,7 +9,6 @@ from django.contrib.auth.models import User
 
 class IndividualTestCase(TestCase):
 
-
     fixtures = [
         'fixtures/tests/programs.json',
         # 'fixtures/tests/users.json',
@@ -102,11 +101,9 @@ class IndividualTestCase(TestCase):
 
     def test_delete_individual_request(self):
         individual = Individual.objects.first()
-        
+
         url = reverse("individual_delete", args=[individual.id])
 
         resp = self.client.get(url)
 
         self.assertEqual(resp.url, '/formlibrary/individual_list/0/0/0/')
-
-
