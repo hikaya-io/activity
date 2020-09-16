@@ -4,7 +4,6 @@ from django import forms
 from .models import (
     Distribution,
     Individual,
-    Training,
 )
 from workflow.models import (
     Office,
@@ -54,7 +53,6 @@ class DistributionForm(forms.ModelForm):
 
 
 class IndividualForm(forms.ModelForm):
-
 
     class Meta:
         model = Individual

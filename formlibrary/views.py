@@ -3,7 +3,7 @@ from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from django.shortcuts import redirect
 
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from workflow.models import Program
@@ -73,9 +73,10 @@ class IndividualList(ListView):
                           'active': ['forms', 'individual_list']
                       })
 
+
 class IndividualUpdate(UpdateView):
     """
-    Training Form
+    Individual update
     """
     model = Individual
     template_name = 'formlibrary/individual_form.html'
@@ -95,9 +96,8 @@ class IndividualUpdate(UpdateView):
         context['active'] = ['formlibrary']
         return context
 
+
 def delete_individual(request, pk):
     individual = Individual.objects.get(pk=int(pk))
     individual.delete()
-
     return redirect('/formlibrary/individual_list/0/0/0/')
-
