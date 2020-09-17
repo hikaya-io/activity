@@ -33,7 +33,7 @@ class IndividualList(ListView):
     """
     model = Individual
     template_name = 'formlibrary/individual_list.html'
-    
+
     def get(self, request, *args, **kwargs):
 
         program_id = self.kwargs['program']
