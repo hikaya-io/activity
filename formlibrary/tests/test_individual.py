@@ -63,7 +63,7 @@ class IndividualTestCase(TestCase):
         individual = Individual.objects.filter(first_name="Nate")
         individual.delete()
         self.assertEqual(individual.count(), 0)
-    
+
     def test_create_individual_request(self):
         individual = {
             'first_name': 'test',
