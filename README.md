@@ -69,6 +69,7 @@ $ pip install virtualenv  # Install virtualenv
 $ virtualenv -p python3.7 <myvirtualenvironmentname>  # Create your virtual environment
 $ source <myvirtualenvironmentname>/bin/activate  # Activate your virtual environment on Linux...
 $ source <myvirtualenvironmentname>/script/activate # ... or on Windows
+$ pip install -r requirements.txt  # Install the dependencies
 ```
 
 Virtualenv will take care of:
