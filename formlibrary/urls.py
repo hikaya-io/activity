@@ -12,7 +12,7 @@ urlpatterns = [
     path('individual_list/<slug:program>/<slug:training>/<slug:distribution>/',
          IndividualList.as_view(), name='individual_list'),
     path('individual_add/<slug:id>/',
-            IndividualCreate.as_view(), name='individual_add'),
+         IndividualCreate.as_view(), name='individual_add'),
     path('individual_update/<slug:pk>/',
          IndividualUpdate.as_view(), name='individual_update'),
     path('individual_delete/<slug:pk>/',
