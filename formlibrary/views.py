@@ -42,7 +42,7 @@ class IndividualView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
             queryset = queryset.filter(distribution__in=distributions)
         if training_id is not None:
             training = Training.objects.filter(id=training_id)
-            queryset = queryset.filter(training__in=trainingattendances)
+            queryset = queryset.filter(training__in=training)
         return queryset
 
 
