@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
-from django.shortcuts import redirect
 from django.views.generic import View as GView
 
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
@@ -24,7 +23,6 @@ class IndividualView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
-
 
     def get_queryset(self):
         organization = self.request.user.activity_user.organization
@@ -115,6 +113,7 @@ class IndividualUpdate(UpdateView):
         context['active'] = ['formlibrary']
         return context
 
+
 class GetIndividualData(GView):
     """
     View all individaul data
@@ -131,7 +130,7 @@ class GetIndividualData(GView):
             individuals = Individual.objects.all().filter(
                 program__in=get_programs)
             get_individuals = IndividualSerializer(individuals, many=True)
-            
+
             return JsonResponse(
                 dict(
                     level_1_label=organization.level_1_label,
