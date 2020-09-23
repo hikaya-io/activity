@@ -1,6 +1,6 @@
 from django.test import TestCase
 from formlibrary.models import Individual, Household
-from workflow.models import Organization, ActivityUser
+from workflow.models import Organization, ActivityUser, Program
 from django.urls import reverse
 import datetime
 from rest_framework.test import APIClient
@@ -10,21 +10,17 @@ from django.contrib.auth.models import User
 class IndividualTestCase(TestCase):
 
     fixtures = [
+        'fixtures/tests/users.json',
+        'fixtures/tests/activity-users.json',
         'fixtures/tests/programs.json',
-        # 'fixtures/tests/users.json',
-        # 'fixtures/tests/activity-users.json',
+        'fixtures/tests/organization.json',
     ]
 
     def setUp(self):
-        self.user = User.objects.create_user(
-            username='test',
-            email="test@mail.com",
-            password="password"
-        )
+        self.user = User.objects.first()
 
-        self.org = Organization.objects.create(name='test_org')
-        self.act_user = ActivityUser.objects.create(user=self.user, organization=self.org)
-        household = Household.objects.create(name="MyHouse", primary_phone='40-29104782')
+        self.household = Household.objects.create(name="MyHouse", primary_phone='40-29104782')
+        self.program = Program.objects.first()
         self.individual = Individual.objects.create(
             first_name="Nate",
             last_name="Test",
@@ -32,7 +28,8 @@ class IndividualTestCase(TestCase):
             sex="M",
             signature=False,
             description="life",
-            household_id=household
+            household_id=self.household,
+            program_id=self.program.id
         )
 
         self.client = APIClient()
@@ -72,23 +69,18 @@ class IndividualTestCase(TestCase):
             'sex': 'M',
             'signature': False,
             'description': 'life',
-            'id_program': '100',
             'program': '1'
         }
 
-        url = reverse("individual_add", args=['0'])
-
+        url = reverse("individual", kwargs={'pk' : 0})
         self.client.force_login(self.user, backend=None)
 
         resp = self.client.post(url, data=individual)
-
         self.assertEqual(resp.status_code, 201)
 
     def test_edit_individual_request(self):
-        individual = Individual.objects.first()
 
-        url = reverse("individual_update", args=[individual.id])
-
+        url = reverse("individual_update", args=[self.individual.id])
         self.client.force_login(self.user, backend=None)
 
         data = {
@@ -96,14 +88,12 @@ class IndividualTestCase(TestCase):
             'sex': 'F',
         }
         resp = self.client.post(url, data=data)
-
         self.assertEqual(resp.status_code, 200)
 
     def test_delete_individual_request(self):
-        individual = Individual.objects.first()
+        
+        url = reverse("individual", kwargs={'pk' : self.individual.pk})
+        self.client.force_login(self.user, backend=None)
 
-        url = reverse("individual_delete", args=[individual.id])
-
-        resp = self.client.get(url)
-
-        self.assertEqual(resp.url, '/formlibrary/individual_list/0/0/0/')
+        resp = self.client.delete(url)
+        self.assertEqual(resp.status_code, 204)

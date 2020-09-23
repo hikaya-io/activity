@@ -2,8 +2,11 @@ from django.shortcuts import render
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from django.shortcuts import redirect
+from django.views.generic import View as GView
 
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from django.http import JsonResponse
+
 from rest_framework.permissions import IsAuthenticated
 
 from workflow.models import Program
@@ -14,7 +17,7 @@ from .models import Individual, Distribution, Training
 from .serializers import IndividualSerializer
 
 
-class IndividualCreate(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
+class IndividualView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
     queryset = Individual.objects.all()
     serializer_class = IndividualSerializer
     permission_classes = [IsAuthenticated]
@@ -22,9 +25,25 @@ class IndividualCreate(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+
     def get_queryset(self):
-        organization = self.request.user.activity_user.organization.id
-        return Individual.objects.filter(organization=organization)
+        organization = self.request.user.activity_user.organization
+        get_programs = Program.objects.all().filter(organization=organization)
+        queryset = Individual.objects.filter(program__in=get_programs)
+
+        program_id = self.request.query_params.get('program', None)
+        distribution_id = self.request.query_params.get('distribution', None)
+        training_id = self.request.query_params.get('training', None)
+        if program_id is not None:
+            programs = Program.objects.filter(id=program_id)
+            queryset = queryset.filter(program__in=programs)
+        if distribution_id is not None:
+            distributions = Distribution.objects.filter(id=distribution_id)
+            queryset = queryset.filter(distribution__in=distributions)
+        if training_id is not None:
+            trainingattendances = TrainingAttendance.objects.filter(id=training_id)
+            queryset = queryset.filter(training__in=trainingattendances)
+        return queryset
 
 
 class IndividualList(ListView):
@@ -32,7 +51,7 @@ class IndividualList(ListView):
     Individual
     """
     model = Individual
-    template_name = 'formlibrary/individual_list.html'
+    template_name = 'formlibrary/individual.html'
 
     def get(self, request, *args, **kwargs):
 
@@ -96,8 +115,33 @@ class IndividualUpdate(UpdateView):
         context['active'] = ['formlibrary']
         return context
 
+class GetIndividualData(GView):
+    """
+    View all individaul data
+    """
+    def get(self, request):
+        try:
+            organization = request.user.activity_user.organization
+            get_programs = Program.objects.all().filter(organization=organization)
 
-def delete_individual(request, pk):
-    individual = Individual.objects.get(pk=int(pk))
-    individual.delete()
-    return redirect('/formlibrary/individual_list/0/0/0/')
+            get_training = Training.objects.filter(
+                program__in=get_programs).values()
+            get_distribution = Distribution.objects.filter(
+                program__in=get_programs).values()
+            individuals = Individual.objects.all().filter(
+                program__in=get_programs)
+            get_individuals = IndividualSerializer(individuals, many=True)
+            
+            return JsonResponse(
+                dict(
+                    level_1_label=organization.level_1_label,
+                    individual_label=organization.individual_label,
+                    programs=list(get_programs.values()),
+                    trainings=list(get_training),
+                    distributions=list(get_distribution),
+                    individuals=list(get_individuals.data), safe=False
+
+                )
+            )
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))

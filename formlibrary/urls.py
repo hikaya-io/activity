@@ -1,21 +1,24 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from .views import (
-    IndividualCreate,
+    IndividualView,
     IndividualList,
     IndividualUpdate,
-    delete_individual,
+    GetIndividualData,
 )
 
 
 urlpatterns = [
+    re_path(
+         r'individual/(?P<pk>.*)',
+         IndividualView.as_view(), name='individual'),
+
+
     path('individual_list/<slug:program>/<slug:training>/<slug:distribution>/',
          IndividualList.as_view(), name='individual_list'),
-    path('individual_add/<slug:id>/',
-         IndividualCreate.as_view(), name='individual_add'),
     path('individual_update/<slug:pk>/',
          IndividualUpdate.as_view(), name='individual_update'),
-    path('individual_delete/<slug:pk>/',
-         delete_individual, name='individual_delete'),
+    path('individaul_data', GetIndividualData.as_view(),
+         name='individaul_data'),
 
 ]
