@@ -41,7 +41,7 @@ class IndividualView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
             distributions = Distribution.objects.filter(id=distribution_id)
             queryset = queryset.filter(distribution__in=distributions)
         if training_id is not None:
-            trainingattendances = TrainingAttendance.objects.filter(id=training_id)
+            training = Training.objects.filter(id=training_id)
             queryset = queryset.filter(training__in=trainingattendances)
         return queryset
 
