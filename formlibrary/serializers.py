@@ -24,10 +24,8 @@ class IndividualSerializer(serializers.ModelSerializer):
     class Meta:
         model = Individual
         fields = ['id', 'first_name', 'last_name', 'id_number', 'primary_phone',
-                  'date_of_birth', 'sex', 'age','training', 'distribution',
-                  'site', 'program', 'create_date']
-        
+                  'date_of_birth', 'sex', 'age','training', 'distribution', 'site', 'program', 'create_date']
+
         def get_age(self, obj):
             return obj.individual.age()
-
 

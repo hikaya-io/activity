@@ -1,6 +1,6 @@
 from django.test import TestCase
 from formlibrary.models import Individual, Household
-from workflow.models import Organization, ActivityUser, Program
+from workflow.models import Program
 from django.urls import reverse
 import datetime
 from rest_framework.test import APIClient
@@ -72,7 +72,7 @@ class IndividualTestCase(TestCase):
             'program': '1'
         }
 
-        url = reverse("individual", kwargs={'pk' : 0})
+        url = reverse("individual", kwargs={'pk': 0})
         self.client.force_login(self.user, backend=None)
 
         resp = self.client.post(url, data=individual)
@@ -91,8 +91,7 @@ class IndividualTestCase(TestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_delete_individual_request(self):
-        
-        url = reverse("individual", kwargs={'pk' : self.individual.pk})
+        url = reverse("individual", kwargs={'pk': self.individual.pk})
         self.client.force_login(self.user, backend=None)
 
         resp = self.client.delete(url)
