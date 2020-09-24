@@ -2,13 +2,15 @@
     {
         "model": "workflow.program",
         "fields": {
-            "name": "Program 1"
+            "name": "Program 1",
+            "organization": 1
         }
     },
     {
         "model": "workflow.program",
         "fields": {
-            "name": "Program 2"
+            "name": "Program 2",
+            "organization": 1
         }
     }
 ]
