@@ -1,0 +1,111 @@
+<form method="POST">
+  <div class="modal-body">
+    {% csrf_token %}
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="firstName">First Name</label>
+        <input
+          type="text"
+          id="firstName"
+          name="first_name"
+          v-model="create_data.first_name"
+          class="form-control"
+          placeholder="First Name"
+        />
+
+        <span v-show="errors.has('first_name')" class="help is-danger">[[ errors.first('first_name') ]]</span>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="lastName">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          name="last_name"
+          v-model="create_data.last_name"
+          class="form-control"
+          placeholder="Last Name"
+        />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="date_of_birth">Date of birth</label>
+        <input
+              type="date"
+              id="date_of_birth"
+              name="date_of_birth"
+              v-model="create_data.date_of_birth"
+              class="form-control"
+              style="width:200px;"
+              placeholder="Date of birth"/>
+      </div>
+
+
+      <div class="form-group col-md-6">
+        <label for="idNumber">ID Number</label>
+        <input
+          type="text"
+          id="idNumber"
+          name="id_number"
+          v-model="create_data.id_number"
+          class="form-control"
+          placeholder="ID Number"
+        />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="primaryPhone">Primary Phone</label>
+        <input
+          type="text"
+          id="primaryPhone"
+          name="primary_phone"
+          v-model="create_data.primary_phone"
+          class="form-control"
+          placeholder="Primary Phone"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="gender">Gender</label>
+        <select
+          id="sex"
+          name="sex"
+          v-model="create_data.sex"
+          class="form-control"
+          placeholder="Gender"
+        >
+          <option value=""></option>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+      </div>
+    </div>
+    <div 
+      :class="{
+                'form-group': true
+            }" 
+      >
+        <label for="programs">
+          [[ level_1_label ]]
+        </label>
+        <v-select
+              single
+              class="hikaya-select"
+              name="programs"
+              label="name"
+              :searchable="false"
+              v-model="create_data.program"
+              v-validate="'required'"
+              placeholder="Choose programs"
+              :options="programsList"
+              :reduce="program => program.id"
+          > 
+        </v-select>   
+
+      </div>
+  </div>
+</form>

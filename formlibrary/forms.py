@@ -4,7 +4,6 @@ from django import forms
 from .models import (
     Distribution,
     Individual,
-    Training,
     Household,
 )
 from workflow.models import (
@@ -58,30 +57,28 @@ class IndividualForm(forms.ModelForm):
 
     class Meta:
         model = Individual
-        exclude = ['create_date', 'edit_date']
+        exclude = ('created_by', 'modified_by', 'label')
+
+    date_of_birth = forms.DateTimeField(widget=DatePicker.DateInput(), required=True)
 
     def __init__(self, *args, **kwargs):
-        self.helper = FormHelper()
-        self.organization = kwargs.pop('organization')
         self.request = kwargs.pop('request')
+        self.organization = kwargs.pop('organization')
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
+        self.helper.form_tag = True
 
         super(IndividualForm, self).__init__(*args, **kwargs)
 
         organization = self.request.user.activity_user.organization
-        self.fields['training'].queryset = Training.objects.filter(
-            program__organization=organization)
         self.fields['program'].queryset = Program.objects.filter(
             organization=organization)
-        self.fields['distribution'].queryset = Distribution.objects.filter(
-            program__organization=organization)
         self.fields['site'].queryset = SiteProfile.objects.filter(
             organizations__id__contains=self.request.user.activity_user.organization.id)
-
-        self.fields['first_name'].label = '{} name'.format(self.organization.individual_label)
 
 
 class HouseholdForm(forms.ModelForm):

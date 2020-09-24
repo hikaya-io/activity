@@ -13,7 +13,7 @@
   {% endfor %} {% endif %} {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">My Dashboard</a></li>
-    <li><a href="/formlibrary/individual_list/0/0/">{{ request.user.activity_user.organization.individual_label }}</a></li>
+    <li><a href="/formlibrary/individual_list/0/0/0/">{{ request.user.activity_user.organization.individual_label }}</a></li>
     <li class="active">Details</li>
   </ul>
   {% endblock %}
@@ -29,11 +29,7 @@
         {% endif%}
       </h4>
     </div>
-    {% comment %}
-    <div class="sub-navigation-actions">
-      {% include "form_guidance.html" %}
-    </div>
-    {% endcomment %}
+
   </div>
   <div class="admin-content">
     <form method="POST">
@@ -72,7 +68,7 @@
 </div>
 <script>
   $("#reset-id-reset").click(() => {
-    window.location.href = "/formlibrary/distribution_list/0/0/";
+    window.location.href = "/formlibrary/individual_list/0/0/0/";
   });
   $(document).ready(function() {
     $("#id_site").select2({ theme: "bootstrap", placeholder: "select site" });

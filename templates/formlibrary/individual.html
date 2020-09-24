@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% block content %} 
+
+<script>
+  $(document).ready(function() {
+    $('#individualTable').DataTable();
+  });
+</script>
+
+<div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="/">My Dashboard</a></li>
+    <li class="active">
+      {{ request.user.activity_user.organization.individual_label }}
+    </li>
+  </ul>
+  {% endblock %}
+
+  <div class="bg-white mt-10 p-10 pt-0">
+		{% include '../formlibrary/individual_list.html' %}
+	</div>
+
+</div>
+ 
+{% endblock content %}

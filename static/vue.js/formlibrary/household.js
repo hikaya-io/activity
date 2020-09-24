@@ -18,13 +18,6 @@ new Vue({
 		showDeleteModal: false,
 		programsList: [],
 		programs: [],
-		street: '',
-		city:'',
-		country: '',
-		postal_code: '',
-		primary_phone: '',
-		secondary_phone: '',
-		email: '',
 		isEdit: false,
 		saveNew: false,
 
@@ -63,13 +56,6 @@ new Vue({
 			if (!item) {
 				this.name = '';
 				this.programs = [];
-				this.street = '';
-				this.city = '';
-				this.country = '';
-				this.postal_code = '';
-				this.primary_phone = '';
-				this.secondary_phone = '';
-				this.email = '';
 			}
 		},
 
@@ -110,14 +96,7 @@ new Vue({
 					`/formlibrary/household/`,
 					{
 						name: this.name, 
-						program: this.programs,
-						street: this.street,
-						city: this.city,
-						country: this.country,
-						postal_code: this.postal_code,
-						primary_phone: this.primary_phone,
-						secondary_phone: this.secondary_phone,
-						email: this.email,
+						program: this.programs
 					}
                 );
 				if (response.data) {
@@ -130,13 +109,6 @@ new Vue({
 					// resetting the form
 					this.name = '';
 					this.programs = [];
-					this.street = '';
-					this.city = '';
-					this.country = '';
-					this.postal_code = '';
-					this.primary_phone = '';
-					this.secondary_phone = '';
-					this.email = '';
 					this.$validator.reset();
 				}
 			} catch (error) {

@@ -24,15 +24,19 @@ class IndividualSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Individual
-        fields = ['id', 'first_name', 'age', 'gender', 'training', 'distribution', 'site', 'program']
+        fields = ['id', 'first_name', 'last_name', 'id_number', 'primary_phone',
+                  'date_of_birth', 'sex', 'age',
+                  'training', 'distribution', 'site', 'program', 'create_date']
+
+        def get_age(self, obj):
+            return obj.individual.age()
 
 
 class HouseholdSerializer(serializers.ModelSerializer):
-    program = ProgramSerializer()
 
     class Meta:
         model = Household
-        fields = ['id', 'program']
+        exclude = ['postal_code']
 
 
 class HouseholdListDataSerializer(serializers.ModelSerializer):
