@@ -18,7 +18,7 @@ urlpatterns = [
          IndividualList.as_view(), name='individual_list'),
     path('individual_update/<slug:pk>/',
          IndividualUpdate.as_view(), name='individual_update'),
-    path('individaul_data', GetIndividualData.as_view(),
-         name='individaul_data'),
+    path('individual_data', GetIndividualData.as_view(),
+         name='individual_data'),
 
 ]
