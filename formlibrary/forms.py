@@ -4,6 +4,7 @@ from django import forms
 from .models import (
     Distribution,
     Individual,
+    Household,
 )
 from workflow.models import (
     Office,
@@ -79,4 +80,26 @@ class IndividualForm(forms.ModelForm):
         self.fields['site'].queryset = SiteProfile.objects.filter(
             organizations__id__contains=self.request.user.activity_user.organization.id)
 
-        # self.fields['first_name'].label = '{} name'.format(self.organization.individual_label)
+
+class HouseholdForm(forms.ModelForm):
+
+    class Meta:
+        model = Household
+        fields = '__all__'
+        exclude = ['create_date', 'edit_date', 'created_by', 'label', 'organization', 'modified_by']
+
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.organization = kwargs.pop('organization')
+        self.request = kwargs.pop('request')
+        self.helper.form_method = 'post'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.error_text_inline = True
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+
+        super(HouseholdForm, self).__init__(*args, **kwargs)
+        organization = self.request.user.activity_user.organization
+        self.fields['program'].queryset = Program.objects.filter(
+            organization=organization)
+        self.fields['name'].label = '{} name'.format(self.organization.household_label)
