@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from workflow.models import Program, SiteProfile
+from workflow.models import Program, SiteProfile, Organization
 from utils.models import CreatedModifiedDates, CreatedModifiedBy
 from datetime import date
 from dateutil.relativedelta import relativedelta
@@ -42,9 +42,15 @@ class Household(Case, CreatedModifiedDates, CreatedModifiedBy):
     city = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.IntegerField(blank=True, null=True)
     country = models.CharField(max_length=255, blank=True, null=True)
+    organization = models.ForeignKey(Organization,
+                                     help_text='Household Organization',
+                                     blank=True, null=True,
+                                     on_delete=models.SET_NULL)
     primary_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     secondary_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     email = models.CharField(validators=[email_regex], max_length=100, blank=True)
+    program = models.ForeignKey(
+        Program, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         if self.name is None:

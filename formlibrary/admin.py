@@ -4,6 +4,7 @@ from .models import (
     Distribution,
     Individual,
     Training,
+    Household,
 )
 
 admin.site.register(Training)
@@ -24,3 +25,11 @@ class DistributionAdmin(admin.ModelAdmin):
         'modified_date',
     )
     display = 'Program Dashboard'
+
+
+@admin.register(Household)
+class HouseholdAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', )
+    search_fields = ('name',)
+    list_filter = ('name', )
+    display = 'Household'

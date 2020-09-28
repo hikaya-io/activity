@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block content %} 
+
+<div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="/">My Dashboard</a></li>
+    <li class="active">
+      {{ request.user.activity_user.organization.household_label }}
+    </li>
+  </ul>
+  {% endblock %}
+
+  <div class="bg-white mt-10 p-10 pt-0">
+		{% include '../formlibrary/household_list.html' %}
+	</div>
+
+</div>
+ 
+{% endblock content %}

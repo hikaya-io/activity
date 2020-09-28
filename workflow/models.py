@@ -194,6 +194,7 @@ class Organization(models.Model):
         blank=True, default='ADM0')
     create_date = models.DateTimeField(null=True, blank=True)
     edit_date = models.DateTimeField(null=True, blank=True)
+    household_label = models.CharField('Household label', default='Households', max_length=255)
 
     class Meta:
         ordering = ('name',)
