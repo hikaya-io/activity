@@ -24,26 +24,7 @@ new Vue({
 		
 	},
 	beforeMount: function() {
-		this.makeRequest('GET', '/formlibrary/household_list_data')
-			.then(response => {
-				if (response.data) {
-					this.householdsList = response.data.households.sort((a, b) => (a.name > b.name) ? 1 : -1);
-					this.programsList = response.data.programs;
-					this.household_label = response.data.household_label;
-					this.individual_label = response.data.individual_label;
-					this.modalHeader = `Add ${this.household_label}`; 
-
-					$(document).ready(() => {
-						$('#householdTable').DataTable({
-                            pageLength: 10,
-                            lengthMenu: [10, 15, 20]
-						});
-					});
-				}
-			})
-			.catch(e => {
-				toastr.error('There was a problem loading households from the database');
-			});
+		this.getHouseholdLists()
 	},
 	methods: {
         /**
@@ -84,6 +65,29 @@ new Vue({
 			});
 		},
 
+		getHouseholdLists: function() {
+			this.makeRequest('GET', '/formlibrary/household_list_data')
+			.then(response => {
+				if (response.data) {
+					this.householdsList = response.data.households.sort((a, b) => (a.name > b.name) ? 1 : -1);
+					this.programsList = response.data.programs;
+					this.household_label = response.data.household_label;
+					this.individual_label = response.data.individual_label;
+					this.modalHeader = `Add ${this.household_label}`; 
+
+					$(document).ready(() => {
+						if (!$.fn.dataTable.isDataTable('#householdTable'))
+							$('#householdTable').DataTable({
+								pageLength: 10,
+								lengthMenu: [10, 15, 20]
+							});
+					});
+				}
+			})
+			.catch(e => {
+				toastr.error('There was a problem loading households from the database');
+			});
+		},
 
         /**
          * create new fund code
@@ -101,8 +105,7 @@ new Vue({
                 );
 				if (response.data) {
 					toastr.success(`${this.household_label} ${this.name} successfully saved`);
-					this.householdsList.unshift(response.data);
-
+					this.getHouseholdLists()
 					if (!saveNew) {
 						this.toggleModal();
 					}

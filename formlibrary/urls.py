@@ -6,7 +6,7 @@ from .views import (
     IndividualUpdate,
     GetIndividualData,
     HouseholdView,
-    list_households,
+    HouseholdlList,
     HouseholdUpdate,
     HouseholdDataView,
 )
@@ -30,7 +30,7 @@ urlpatterns = [
          IndividualUpdate.as_view(), name='individual_update'),
     path('individaul_data', GetIndividualData.as_view(),
          name='individaul_data'),
-    path('household_list', list_households, name='household_list'),
+    path('household_list', HouseholdlList.as_view(), name='household_list'),
     path('household_list_data', HouseholdDataView.as_view(), name='household_list_data'),
     path('household_edit/<int:pk>/', HouseholdUpdate.as_view(), name='household_edit')
 

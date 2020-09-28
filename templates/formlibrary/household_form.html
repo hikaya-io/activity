@@ -17,7 +17,7 @@
   <ul class="breadcrumb">
     <li><a href="/">My Dashboard</a></li>
     <li><a href="/formlibrary/household_list">{{ user.activity_user.organization.household_label }}</a></li>
-    <li class="active">{{ household.name }}</li>
+    <li class="active">{{ current_household.name }}</li>
   </ul>
   {% endblock %}
 
@@ -52,4 +52,10 @@
   </form>
 </div>
 
+
+<script>
+  $("#reset-id-reset").click(() => {
+    window.location.href = "/formlibrary/household_list";
+  });
+</script>
 {% endblock %}

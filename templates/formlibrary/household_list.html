@@ -1,23 +1,27 @@
 <div id="household_list">
-  <div class="sub-navigation-header">
-    <h4 class="page-title">[[ household_label ]] List</h4>
-  </div>
-  <div class="sub-navigation-actions">
-    <div class="sub-nav-item">
-      <div class="btn-group" role="group" aria-label="...">
-        <a
-          role="button"
-          class="btn btn-sm btn-primary"
-          id="show-modal"
-          @click="toggleModal()"
-        >
-          <i class="fa fa-plus"></i> [[ household_label ]]
-        </a>
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">[[ household_label ]] List</h4>
+    </div>
+    <div class="sub-navigation-actions">	            
+      <div class="sub-nav-item">
+        <div class="btn-group" role="group" aria-label="...">
+          <a
+            role="button"
+            class="btn btn-sm btn-primary"
+            id="show-modal"
+            @click="toggleModal()"
+          >
+            <i class="fa fa-plus"></i> [[ household_label ]]
+          </a>
+        </div>
+
       </div>
     </div>
   </div>
 
-          <!-- Household create modal -->
+  <!-- Household create modal -->
   <modal v-if="showModal" @close="showModal = false">
     <div slot="body">
       {% include './modals/add_household_modal.html' %}
@@ -74,12 +78,11 @@
     <tbody>
       <tr v-cloak v-for="household in householdsList" v-if="household.name">
         <td>
-          <!-- TODO1: Edit Household -->
           <a v-bind:href="'/formlibrary/household_edit/'+household.id+'/'" data-toggle="tooltip" :title="household.name">
-              [[ household.name ]]
-          </a>
+            [[ household.name ]]
+        </a>
         </td>
-        <td>[[ household.program.name ]]</td>
+        <td v-if="household.program">[[ household.program.name ]]</td>
         <td>[[ household.created_by.name ]]</td>
         <td>[[ formatDate(household.create_date) ]]</td>
         <!-- Actions -->
@@ -110,8 +113,6 @@
               </li>
               <li role="separator" class="divider"></li>
               <li>
-                
-                <!-- TODO1: Edit household implementation -->
                 <a v-bind:href="'/formlibrary/household_edit/'+household.id+'/'"
                   >Edit</a
                 >
@@ -128,11 +129,8 @@
         </td>
       </tr>
     </tbody>
-
   </table>
 </div>
-
-
 {% include 'ui-components/vue_modal.html'%} {% block extra_js_in_body %}
 <script type="text/javascript" src="{{ STATIC_URL }}vue.js/formlibrary/household.js"></script>
 {% endblock extra_js_in_body %}

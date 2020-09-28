@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from django.contrib.auth.models import User
 from formlibrary.views import (
-    list_households, HouseholdDataView
+    HouseholdlList, HouseholdDataView
 )
 from workflow.models import ActivityUser, Organization
 
@@ -27,7 +27,7 @@ class HouseholdViewTestCase(TestCase):
         request = factory.get('household_list')
         request.user = self.user
         request.activity_user = self.activity_user
-        response = list_households(request)
+        response = HouseholdlList.as_view()(request)
         self.assertTrue(status.is_success(response.status_code))
         self.assertIn(request.user.username.encode(), response.content)
 

@@ -7,8 +7,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from django.http import JsonResponse
 
 from rest_framework.permissions import IsAuthenticated
-
-from workflow.models import Program, Organization, ActivityUser
+from workflow.models import Program, Organization
 
 from .forms import IndividualForm, HouseholdForm
 from .models import Individual, Distribution, Training, Household
@@ -155,7 +154,7 @@ class HouseholdView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
         organization = self.request.user.activity_user.organization
         request.data['organization'] = organization.id
         request.data['label'] = organization.household_label
-        request.data['program'] = request.data['program'][0] if request.data['program'] else ''
+        request.data['program'] = request.data['program'][0] if request.data['program'] else 0
         request.data['created_by'] = self.request.user.activity_user.id
         return self.create(request, *args, **kwargs)
 
@@ -167,14 +166,35 @@ class HouseholdView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
         return self.destroy(request, *args, **kwargs)
 
 
-def list_households(request):
-    user = ActivityUser.objects.filter(user=request.user).first()
-    households = Household.objects.filter(organization=user.organization)
-    context = {
-        'households': households,
-        'active': ['formlibrary']
-    }
-    return render(request, 'formlibrary/household.html', context)
+class HouseholdlList(ListView):
+    """
+    Individual
+    """
+    model = Individual
+    template_name = 'formlibrary/household.html'
+
+    def get(self, request, *args, **kwargs):
+
+        organization = request.user.activity_user.organization
+        get_households = Household.objects.all().filter(organization=organization)
+
+        context = {
+            'households': get_households,
+            'form_component': 'household_list',
+            'active': ['forms', 'household_list']
+        }
+
+        return render(request, self.template_name, context)
+
+
+# def list_households(request):
+#     user = ActivityUser.objects.filter(user=request.user).first()
+#     households = Household.objects.filter(organization=user.organization)
+#     context = {
+#         'households': households,
+#         'active': ['formlibrary']
+#     }
+#     return render(request, 'formlibrary/household.html', context)
 
 
 class HouseholdDataView(ListCreateAPIView):
