@@ -37,7 +37,7 @@ from workflow.models import (
     ActivityUserOrganizationGroup,
 )
 from activity.util import get_nav_links, send_invite_emails, \
-    send_single_mail
+    send_single_mail, user_signup_notification
 from activity.forms import (
     RegistrationForm, BookmarkForm, NewUserRegistrationForm)
 from django.core import serializers
@@ -147,6 +147,9 @@ def activate_acccount(request, uidb64, token):
 
         # send welcome mail
         send_welcome_email(request, user)
+
+        # send slack notification
+        user_signup_notification(user)
 
         # login(request, user)
         messages.success(
