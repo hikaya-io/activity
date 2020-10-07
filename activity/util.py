@@ -1,3 +1,6 @@
+import os
+import sys
+
 import unicodedata
 import json
 import requests
@@ -256,3 +259,43 @@ def send_single_mail(subject, email_from, email_to, data, email_txt, email_html)
     )
     msg.attach_alternative(email_html_content, "text/html")
     msg.send()
+
+
+def user_signup_notification(user):
+    url = os.environ.get('SLACK_WEBHOOK_URL')
+    message = ("A new user has signed up on activity")
+    title = ("New User Sign Up :zap:")
+    date = user.date_joined.strftime('%m-%d-%Y')
+
+    slack_data = {
+        "username": "new-user-notification",
+        "icon_emoji": ":bell:",
+        "attachments": [
+            {
+                "color": "#25ced1",
+                "fields": [
+                    {
+                        "title": title,
+                        "value": message,
+                    },
+                    {
+                        "title": "Username:",
+                        "value": user.username,
+                    },
+                    {
+                        "title": "Email:",
+                        "value": user.email,
+                    },
+                    {
+                        "title": "Date Joined:",
+                        "value": date,
+                    }
+                ],
+            },
+        ]
+    }
+    byte_length = str(sys.getsizeof(slack_data))
+    headers = {'Content-Type': "application/json", 'Content-Length': byte_length}
+    response = requests.post(url, data=json.dumps(slack_data), headers=headers)
+    if response.status_code != 200:
+        raise Exception(response.status_code, response.text)
