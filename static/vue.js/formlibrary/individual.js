@@ -34,7 +34,7 @@ new Vue({
     itemToDelete: null,
   },
   beforeMount: function() {
-    this.makeRequest('GET', '/formlibrary/individaul_data')
+    this.makeRequest('GET', '/formlibrary/individual_data')
     .then(response => {
       if (response.data) {
         this.level_1_label = response.data.level_1_label;
@@ -47,14 +47,14 @@ new Vue({
 
         $(document).ready(() => {
 						$('#individualsTable').DataTable({
-                            pageLength: 10,
-                            lengthMenu: [10, 15, 20]
+              pageLength: 10,
+              lengthMenu: [10, 15, 20]
 						});
 					});
       }
     })
     .catch(e => {
-      toastr.error('There was a problem loading individauls from the database');
+      toastr.error('There was a problem loading individuals from the database');
     })
   },
   methods: {

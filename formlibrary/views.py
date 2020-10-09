@@ -115,7 +115,7 @@ class IndividualUpdate(UpdateView):
 
 class GetIndividualData(GView):
     """
-    View all individaul data
+    View all individual data
     """
     def get(self, request):
         try:
