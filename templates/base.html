@@ -154,6 +154,9 @@
                     <a href="/formlibrary/training_list/0/0/"> {{ request.user.activity_user.organization.training_label }}</a>
                   </li>
                 {% endcomment %}
+                <li>
+                  <a href="/formlibrary/household_list"> {{ request.user.activity_user.organization.household_label }}</a>
+                </li>
                 </ul>
               </li>
               <li class="dropdown {% if 'components' in active %} active {% endif %}">

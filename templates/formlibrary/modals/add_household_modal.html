@@ -1,0 +1,45 @@
+<form method="POST">
+    <div class="modal-body">
+        {% csrf_token %}
+        <div :class="{ 
+            'form-group': true, 
+            'has-error': errors.has('name')
+            }"
+        >
+        <label for="name">[[ household_label ]] name*</label>
+            <input
+                type="text"
+                name="name"
+                :class="{ 
+                    'form-control': true, 
+                    'is-danger': errors.has('name') 
+                }"   
+                v-model="name" 
+                v-validate="'required'"
+                :placeholder="household_label"
+            />
+            <span v-show="errors.has('name')" class="help is-danger">[[ errors.first('name') ]]</span>
+        </div>
+
+        <div :class="{
+              'form-group': true
+          }"
+        >
+        <label for="programs">Program</label>
+        <v-select
+            multiple
+            class="hikaya-select"
+            inputId="programs"
+            name="programs"
+            label="name"
+            :searchable="false"
+            v-model="programs"
+            v-validate="'required'"
+            placeholder="Choose program"
+            :options="programsList"
+            :reduce="program => program.id"
+        > 
+        </v-select>
+      </div>      
+    </div>
+</form>
