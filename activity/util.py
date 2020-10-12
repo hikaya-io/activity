@@ -262,10 +262,10 @@ def send_single_mail(subject, email_from, email_to, data, email_txt, email_html)
 
 
 def user_signup_notification(user):
-    url = os.environ.get('SLACK_WEBHOOK_URL')
+    url = os.environ.get('SLACK_REGISTRATION_WEBHOOK')
     message = ("A new user has signed up on activity")
     title = ("New User Sign Up :zap:")
-    date = user.date_joined.strftime('%m-%d-%Y')
+    date = user.date_joined.strftime('%d-%m-%Y')
 
     slack_data = {
         "username": "new-user-notification",
