@@ -89,6 +89,7 @@ production.py
 
 .env
 .env.dev
+.venv
 db.sqlite3
 .idea/
 .vscode
