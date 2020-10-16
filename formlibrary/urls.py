@@ -9,6 +9,9 @@ from .views import (
     HouseholdlList,
     HouseholdUpdate,
     HouseholdDataView,
+    TrainingView,
+    TrainingUpdate,
+    GetTrainingData,
 )
 
 
@@ -24,6 +27,10 @@ urlpatterns = [
 
     ),
 
+    re_path(
+        r'training/(?P<pk>.*)',
+        TrainingView.as_view(), name='training'),
+
     path('individual_list/<slug:program>/<slug:training>/<slug:distribution>/',
          IndividualList.as_view(), name='individual_list'),
     path('individual_update/<slug:pk>/',
@@ -32,6 +39,12 @@ urlpatterns = [
          name='individual_data'),
     path('household_list', HouseholdlList.as_view(), name='household_list'),
     path('household_list_data', HouseholdDataView.as_view(), name='household_list_data'),
-    path('household_edit/<int:pk>/', HouseholdUpdate.as_view(), name='household_edit')
+    path('household_edit/<int:pk>/', HouseholdUpdate.as_view(), name='household_edit'),
+
+    path('training_update/<slug:pk>/',
+         TrainingUpdate.as_view(), name='training_update'),
+
+     path('training_data', GetTrainingData.as_view(),
+         name='training_data'),
 
 ]

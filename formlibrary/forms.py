@@ -5,6 +5,7 @@ from .models import (
     Distribution,
     Individual,
     Household,
+    Training,
 )
 from workflow.models import (
     Office,
@@ -103,3 +104,25 @@ class HouseholdForm(forms.ModelForm):
         self.fields['program'].queryset = Program.objects.filter(
             organization=organization)
         self.fields['name'].label = '{} name'.format(self.organization.household_label)
+
+
+class TrainingForm(forms.ModelForm):
+    class Meta:
+        model = Training
+        fields = '__all__'
+        exclude = ['create_date', 'edit_date']
+
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.organization = kwargs.pop('organization')
+        self.request = kwargs.pop('request')
+        self.helper.form_method = 'post'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.error_text_inline = True
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+
+        super(TrainingForm, self).__init__(*args, **kwargs)
+        # organization = self.request.user.activity_user.organization
+        # self.fields['program'].queryset = Program.objects.filter(
+        #     organization=organization)

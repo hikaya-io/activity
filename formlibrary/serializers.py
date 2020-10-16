@@ -46,3 +46,24 @@ class HouseholdListDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Household
         fields = ['id', 'name', 'program', 'created_by', 'create_date']
+
+
+class TrainingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Training
+        fields= '__all__'
+    # program = ProgramSerializer()
+    # program = serializers.IntegerField(required=False)
+
+    # class Meta:
+    #     model = Training
+    #     fields = ['id', 'name', 'program', 'duration', 'start_date', 'end_date']
+
+
+class TrainingListSerializer(serializers.ModelSerializer):
+    program = ProgramSerializer()
+    program = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = Training
+        fields = ['id', 'name', 'program', 'duration', 'start_date', 'end_date']
