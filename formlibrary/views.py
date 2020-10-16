@@ -9,10 +9,10 @@ from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from workflow.models import Program, Organization
 
-from .forms import IndividualForm, HouseholdForm
-from .models import Individual, Distribution, Training, Household
+from .forms import IndividualForm, HouseholdForm, TrainingForm
+from .models import Individual, Distribution, Training, Household, Service
 
-from .serializers import IndividualSerializer, HouseholdSerializer, HouseholdListDataSerializer
+from .serializers import IndividualSerializer, HouseholdSerializer, HouseholdListDataSerializer, TrainingSerializer
 
 
 class IndividualView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
@@ -117,6 +117,7 @@ class GetIndividualData(GView):
     """
     View all individual data
     """
+
     def get(self, request):
         try:
             organization = request.user.activity_user.organization
@@ -168,7 +169,7 @@ class HouseholdView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
 
 class HouseholdlList(ListView):
     """
-    Individual
+    Household
     """
     model = Individual
     template_name = 'formlibrary/household.html'
@@ -185,16 +186,6 @@ class HouseholdlList(ListView):
         }
 
         return render(request, self.template_name, context)
-
-
-# def list_households(request):
-#     user = ActivityUser.objects.filter(user=request.user).first()
-#     households = Household.objects.filter(organization=user.organization)
-#     context = {
-#         'households': households,
-#         'active': ['formlibrary']
-#     }
-#     return render(request, 'formlibrary/household.html', context)
 
 
 class HouseholdDataView(ListCreateAPIView):
@@ -222,12 +213,12 @@ class HouseholdDataView(ListCreateAPIView):
         serializer = self.get_serializer(queryset, many=True)
 
         data = dict(
-                household_label=organization.household_label,
-                individual_label=organization.individual_label,
-                households=list(serializer.data),
-                programs=list(programs),
-                safe=False
-            )
+            household_label=organization.household_label,
+            individual_label=organization.individual_label,
+            households=list(serializer.data),
+            programs=list(programs),
+            safe=False
+        )
         return JsonResponse(data)
 
 
@@ -249,3 +240,48 @@ class HouseholdUpdate(UpdateView):
         context['current_household'] = self.get_object()
         context['active'] = ['formlibrary']
         return context
+
+
+class TrainingView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
+    queryset = Training.objects.all()
+    serializer_class = TrainingSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization
+        get_programs = Program.objects.all().filter(organization=organization)
+        return Training.objects.filter(program__in=get_programs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class TrainingUpdate(UpdateView):
+    """
+    Training update
+    """
+    model = Training
+    template_name = 'formlibrary/training_form.html'
+    success_url = '/formlibrary/service_list'
+    form_class = TrainingForm
+
+    # add the request to the kwargs
+    def get_form_kwargs(self):
+        kwargs = super(TrainingUpdate, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        kwargs['organization'] = self.request.user.activity_user.organization
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(TrainingUpdate, self).get_context_data(**kwargs)
+        context['current_program'] = self.get_object()
+        context['active'] = ['formlibrary']
+        return context
+
+
+class GetTrainingData(ListCreateAPIView):
+    serializer_class = TrainingSerializer
+    pass
