@@ -9,10 +9,10 @@ from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from workflow.models import Program, Organization
 
-from .forms import IndividualForm, HouseholdForm, TrainingForm
+from .forms import IndividualForm, HouseholdForm, TrainingForm, DistributionForm
 from .models import Individual, Distribution, Training, Household, Service
 
-from .serializers import IndividualSerializer, HouseholdSerializer, HouseholdListDataSerializer, TrainingSerializer
+from .serializers import IndividualSerializer, HouseholdSerializer, HouseholdListDataSerializer, TrainingSerializer, DistributionSerializer
 
 
 class IndividualView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
@@ -282,6 +282,82 @@ class TrainingUpdate(UpdateView):
         return context
 
 
-class GetTrainingData(ListCreateAPIView):
-    serializer_class = TrainingSerializer
-    pass
+class GetTrainingData(GView):
+    
+    def get(self, request):
+        try:
+            organization = request.user.activity_user.organization
+            get_programs = Program.objects.all().filter(organization=organization)
+
+            get_training = Training.objects.filter(
+                program__in=get_programs).values()
+            return JsonResponse(
+                dict(
+                    trainings=list(get_training), safe=False
+
+                )
+            )
+        except Exception as e:
+            print(e)
+
+
+class DistributionView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
+    queryset = Distribution.objects.all()
+    serializer_class = DistributionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return self.create(request, *args, **kwargs)
+        except Exception as e:
+            print(e)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization
+        get_programs = Program.objects.all().filter(organization=organization)
+        return Distribution.objects.filter(program__in=get_programs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class DistributionUpdate(UpdateView):
+    """
+    Distribution update
+    """
+    model = Distribution
+    template_name = 'formlibrary/distribution_form.html'
+    success_url = '/formlibrary/service_list'
+    form_class = DistributionForm
+
+    # add the request to the kwargs
+    def get_form_kwargs(self):
+        kwargs = super(DistributionUpdate, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        kwargs['organization'] = self.request.user.activity_user.organization
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(DistributionUpdate, self).get_context_data(**kwargs)
+        context['current_program'] = self.get_object()
+        context['active'] = ['formlibrary']
+        return context
+
+
+class GetDistributionData(GView):
+    
+    def get(self, request):
+        try:
+            organization = request.user.activity_user.organization
+            get_programs = Program.objects.all().filter(organization=organization)
+
+            get_distribution = Distribution.objects.filter(
+                program__in=get_programs).values()
+            return JsonResponse(
+                dict(
+                    distributions=list(get_distribution), safe=False
+
+                )
+            )
+        except Exception as e:
+            print(e)

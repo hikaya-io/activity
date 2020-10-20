@@ -1,6 +1,6 @@
 from django.test import TestCase
 # from formlibrary.models import Individual, Household
-from formlibrary.models import Training
+from formlibrary.models import Training, Distribution
 from workflow.models import Program, Office, ActivityUser
 # from django.urls import reverse
 from rest_framework.test import APIClient
@@ -35,6 +35,14 @@ class ServiceTestCase(TestCase):
             duration=30,
             created_by=self.activity_user,
             modified_by=self.activity_user,
+        )
+        self.distribution = Distribution.objects.create(
+            name = "Distribution 1",
+            program_id = '1',
+            start_date = datetime.strptime("2020-10-01 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
+            end_date = datetime.strptime("2020-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
+            quantity = 1,
+            item_distributed = "test"
         )
         self.client = APIClient()
 
@@ -76,5 +84,46 @@ class ServiceTestCase(TestCase):
         self.client.force_login(self.user, backend=None)
 
         resp = self.client.get(url)
-        print(resp)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_service_distribution_create(self):
+        distribution = {
+            'name': "Distribution 1",
+            'program_id': '1',
+            'start_date': datetime.strptime("2020-10-01 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
+            'end_date': datetime.strptime("2020-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
+            'duration': 3,
+            'quantity': 1,
+            'item_distributed' : "test"
+        }
+        url = reverse("distribution", kwargs={'pk': 0})
+        self.client.force_login(self.user, backend=None)
+
+        resp = self.client.post(url, data=distribution)
+        self.assertEqual(resp.status_code, 201)
+
+    def test_service_distribution_edit(self):
+        url = reverse("distribution_update", args=[self.distribution.id])
+        self.client.force_login(self.user, backend=None)
+
+        data = {
+            'end_date': datetime.strptime("2020-10-20 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
+            'quantity': 3,
+        }
+
+        resp = self.client.post(url, data=data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_service_delete_distribution_request(self):
+        url = reverse("distribution", kwargs={'pk': self.distribution.pk})
+        self.client.force_login(self.user, backend=None)
+
+        resp = self.client.delete(url)
+        self.assertEqual(resp.status_code, 204)
+
+    def test_service_get_distribution_list(self):
+        url = reverse("distribution_data")
+        self.client.force_login(self.user, backend=None)
+
+        resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
