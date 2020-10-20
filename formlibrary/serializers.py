@@ -67,3 +67,10 @@ class TrainingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Training
         fields = ['id', 'name', 'program', 'duration', 'start_date', 'end_date']
+
+
+class DistributionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Distribution
+        fields= '__all__'
+        

@@ -12,6 +12,7 @@ from .views import (
     TrainingView,
     TrainingUpdate,
     GetTrainingData,
+    DistributionView,
 )
 
 
@@ -31,6 +32,10 @@ urlpatterns = [
         r'training/(?P<pk>.*)',
         TrainingView.as_view(), name='training'),
 
+    re_path(
+        r'distribution/(?P<pk>.*)',
+        DistributionView.as_view(), name='distribution'),
+
     path('individual_list/<slug:program>/<slug:training>/<slug:distribution>/',
          IndividualList.as_view(), name='individual_list'),
     path('individual_update/<slug:pk>/',
@@ -44,7 +49,13 @@ urlpatterns = [
     path('training_update/<slug:pk>/',
          TrainingUpdate.as_view(), name='training_update'),
 
-     path('training_data', GetTrainingData.as_view(),
+    path('training_data', GetTrainingData.as_view(),
          name='training_data'),
+
+    path('distribution_update/<slug:pk>/',
+         TrainingUpdate.as_view(), name='distribution_update'),
+
+     path('distribution_data', GetTrainingData.as_view(),
+         name='distribution_data'),
 
 ]
