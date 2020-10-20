@@ -40,6 +40,10 @@ a:focus, a:hover {
   border-radius: 0;
 }
 
+/* Push footer to bottom of page */
+.activity-content {
+    min-height: calc(100vh - 120px);
+}
 
 #footer {
   /* bottom: 0; */
