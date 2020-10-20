@@ -262,6 +262,11 @@ nav>div>.container {
   margin-bottom: -20px;
 }
 
+.alert-password-success {
+  margin-top: 16px;
+  margin-bottom: 0px;
+}
+
 #footer > .container {
   padding: 10px;
 }
