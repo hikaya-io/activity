@@ -170,7 +170,7 @@ class HouseholdlList(ListView):
     """
     Individual
     """
-    model = Individual
+    model = Household
     template_name = 'formlibrary/household.html'
 
     def get(self, request, *args, **kwargs):
@@ -187,14 +187,26 @@ class HouseholdlList(ListView):
         return render(request, self.template_name, context)
 
 
-# def list_households(request):
-#     user = ActivityUser.objects.filter(user=request.user).first()
-#     households = Household.objects.filter(organization=user.organization)
-#     context = {
-#         'households': households,
-#         'active': ['formlibrary']
-#     }
-#     return render(request, 'formlibrary/household.html', context)
+class HouseholdlIndividualList(ListView):
+    """
+    Individual
+    """
+    model = Individual
+    template_name = 'formlibrary/household_individuals.html'
+
+    def get(self, request, *args, **kwargs):
+
+        organization = request.user.activity_user.organization
+        get_household_individuals = Individual.objects.all().filter(organization=organization, \
+                                                                    household_id=organization.household_id)
+
+        context = {
+            'households': get_household_individuals,
+            'form_component': 'individual_list',
+            'active': ['forms', 'individual_list']
+        }
+
+        return render(request, self.template_name, context)
 
 
 class HouseholdDataView(ListCreateAPIView):

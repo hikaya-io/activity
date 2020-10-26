@@ -1,0 +1,70 @@
+
+<script type="text/x-template" id="individual-data-table-template">
+    <div id="results_table">
+        <!-- TODO: Check for Individual data -->
+        <div v-if="individualData">
+            <table class="table" id="collectedDataTable">
+                <tbody>
+                <tr>
+                    <th class="align-bottom" style="min-width:180px;">First Name</th>
+                    <th class="text-right align-bottom">Last Name</th>
+                    <th class="align-bottom" style="min-width: 125px;">Gender</th>
+                    <th class="text-right align-bottom">Date Created</th>
+                    <th class="align-bottom" style="width: 80px"></th>
+                </tr>
+                </tbody>
+
+            </table>
+            <div class="text-right">
+                <button @click="toggleIndividualModal();"
+                         role="button"
+                        class="btn btn-sm btn-success">Add Individual
+                </button>
+            </div>
+        </div>
+        <div v-else>
+            <table class="table table-condensed table-bordered" id="">
+                <tr>
+                    <td valign="top" style="padding-left:10px; font-size: 16px; color: #54585A;">
+                        {% include 'admin/no_data.html' %}
+                    </td>
+                </tr>
+            </table>
+            <div class="text-right">
+                <button @click="toggleResultModal();"
+                        role="button"
+                        class="btn btn-sm btn-success">[[modalHeader]]
+                </button>
+            </div>
+        </div>
+        <modal v-if="showModal" @close="showModal = false">
+            <div slot="body">
+                {% include './modals/individual_modal_form.html' %}
+            </div>
+            <div slot="footer">
+                {% include 'ui-components/quick_entry_modal_footer.html' %}
+            </div>
+            <h4 slot="header">[[modalHeader]]</h4>
+        </modal>
+        <modal v-if=showDeleteModal @close="showDeleteModal = false">
+            <div slot="body">
+              <p>Are you sure you want to delete this individual?</p>
+            </div>
+            <div slot="footer">
+              <div class="text-right">
+                <button type="submit" class="btn btn-close" @click="showDeleteModal = false">
+                  Cancel
+                </button>
+                <button
+                  class="btn btn-danger"
+                  @click=deleteResult(itemToDelete)
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+            <h4 slot="header">[[modalHeader]]</h4>
+          </modal>
+    </div>  
+</script>
+
