@@ -283,7 +283,7 @@ class TrainingUpdate(UpdateView):
 
 
 class GetTrainingData(GView):
-    
+
     def get(self, request):
         try:
             organization = request.user.activity_user.organization
@@ -345,7 +345,7 @@ class DistributionUpdate(UpdateView):
 
 
 class GetDistributionData(GView):
-    
+
     def get(self, request):
         try:
             organization = request.user.activity_user.organization
@@ -361,3 +361,25 @@ class GetDistributionData(GView):
             )
         except Exception as e:
             print(e)
+
+
+class ServicelList(ListView):
+    template_name = 'formlibrary/service.html'
+
+    def get(self, request, *args, **kwargs):
+
+        organization = request.user.activity_user.organization
+        get_programs = Program.objects.all().filter(organization=organization)
+        get_training = Training.objects.all().filter(
+            program__in=get_programs)
+        get_distribution = Distribution.objects.all().filter(
+            program__in=get_programs)
+
+        context = {
+            'service_types': {
+                'training': get_training,
+                'distribution': get_distribution
+            },
+        }
+
+        return render(request, self.template_name, context)
