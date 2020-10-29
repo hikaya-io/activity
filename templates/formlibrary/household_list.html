@@ -1,136 +1,177 @@
-<div id="household_list">
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+{% include './modals/individual_modal_form.html' %}
+{% include 'ui-components/vue_modal.html'%}
+
+{{ get_documentation|json_script:"documentation-data" }}
+<div id="households_list" class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">{% trans 'My Dashboard' %}</a></li>
+    <li class="active">{{ user.activity_user.organization.household_label }}</li>
+  </ul>
+  {% endblock %}
+
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">[[ household_label ]] List</h4>
+      <h4 class="page-title">
+        {{ user.activity_user.organization.household_label }} {% trans 'List' %}
+      </h4>
     </div>
-    <div class="sub-navigation-actions">	            
+    <div class="sub-navigation-actions">
+      <div class="sub-nav-item">
+        <span class="text-filter">{% trans 'Filter by' %}</span>
+      </div>
+      <div class="sub-nav-item">
+        <!-- filters -->
+        <div class="btn-group" role="group" aria-label="...">
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              {{ user.activity_user.organization.level_1_label }}
+              <i class="fa {% if program_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li class="{% if program_id == 0 %} active {% endif %}"><a href="/indicators/home/0/0/0/">-- {% trans 'All' %} --</a>
+              </li>
+              <li class="divider"></li>
+              {% for program in get_programs %} {% if program.name %}
+              <li class="{% if program_id == program.id %} active {% endif %}">
+                <a href="/indicators/home/{{program.id}}/0/0/">{{ program.name | truncatechars:30 }}</a>
+              </li>
+              {% endif %} {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <div class="sub-nav-item">
         <div class="btn-group" role="group" aria-label="...">
-          <a
-            role="button"
-            class="btn btn-sm btn-primary"
-            id="show-modal"
-            @click="toggleModal()"
-          >
-            <i class="fa fa-plus"></i> [[ household_label ]]
-          </a>
+          <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addIndicatorModal">
+            <i class="fa fa-plus"></i> {{ user.activity_user.organization.household_label }}
+          </button>
         </div>
-
       </div>
     </div>
   </div>
 
-  <!-- Household create modal -->
-  <modal v-if="showModal" @close="showModal = false">
+  <table class="table" id="indicatorsTable">
+    <thead>
+      <tr>
+
+        <th>{% trans 'Name' %}</th>
+        <th>{% trans 'program' %}</th>
+        <th>{% trans 'Created By' %}</th>
+        <th>{% trans 'Created Date' %}</th>
+        <th class="text-right">{% trans 'Actions' %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for household in households %}
+
+      <tr>
+        <td class="details-control" data-indicator-id="{{ household.id }}" data-program-id="{{ program_id }}">
+          <span class="expandable collapsed" data-toggle="collapse" href="#row-{{household.id}}" aria-expanded="false"
+            aria-controls="row-{{household.id}}">
+            <button class="btn btn-link"><i class="fa fa-angle-right"></i></button>
+          </span>
+          <a href="{% url 'household_edit' household.id %}" data-toggle="tooltip" title="{{ household.name }}">
+            {{ household.name | truncatechars:50}}
+          </a>
+          <!-- Needed to rotate icon on click -->
+          <div class="collapsed" id="row-{{household.id}}"></div>
+        </td>
+        <td data-toggle="tooltip" title="{{ household.program.name }}">
+          {{household.program.name | truncatechars:50}}
+        </td>
+        <td>{{household.created_by.name}}</td>
+        <td>{{household.create_date | date:"M d, Y"}}</td>
+        <td class="text-right">
+          <div class="btn-group">
+            <a role="button" href="" class="btn btn-default btn-sm disabled">{% trans 'More' %}</a>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+              <span class="sr-only">{% trans 'Toggle Dropdown' %}</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li class="dropdown-header">{% trans 'Related' %}</li>
+              <!-- <li><a href="">Results</a></li> -->
+              <!-- <li><a @click="toggleTargetModal({{indicator.id}})">{% trans 'Individuals' %}</a></li> -->
+              <li role="separator" class="divider"></li>
+              <li><a class="" href="{% url 'household_edit' household.id %}">{% trans 'Edit' %}</a></li>
+              <li>
+                <a class="text-danger force-link"
+                @click="toggleDeleteModal(household)">
+                  {% trans 'Delete' %}</a></li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- <modal v-if="showModal" @close="showModal = false">
     <div slot="body">
-      {% include './modals/add_household_modal.html' %}
+      {% include 'indicators/forms/target_period_modal.html' %}
     </div>
     <div slot="footer">
-      {% include 'ui-components/quick_entry_modal_footer.html' %}
+      {% include 'indicators/forms/target_period_form_footer.html' %}
     </div>
     <h4 slot="header">[[modalHeader]]</h4>
   </modal>
-
-  <!-- Household delete modal -->
-  <modal v-if="showDeleteModal" @close="showDeleteModal = false">
-    <h4 slot="header">[[modalHeader]]</h4>
+  <modal v-if=showDeleteModal @close="showDeleteModal = false" >
     <div slot="body">
-      <p>
-        Are you sure you want to delete <b>[[ itemToDelete.name ]]</b>?
-      </p>
+      <p>Are you sure you want to delete target periods? Any results added will also be deleted</p>
     </div>
     <div slot="footer">
       <div class="text-right">
-        <button
-          type="submit"
-          class="btn btn-close"
-          @click="showDeleteModal = false"
-        >
+        <button type="submit" class="btn btn-close" @click="showDeleteModal = false, modalHeader = 'Edit Target Modal'">
           Cancel
         </button>
         <button
           class="btn btn-danger"
-          @click="deleteHousehold(itemToDelete.id)"
+          @click=deleteTargets()
         >
           Delete
         </button>
       </div>
     </div>
-  </modal>
+    <h4 slot="header">[[modalHeader]]</h4>
+  </modal> -->
 
-  <div class="p-10" v-if="!householdsList.length">
-    {% include 'admin/no_data.html' %}
+  <div class="modal fade" role="dialog" id="conform_modal_div" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">Warning</h4>
+        </div>
+        <div class="modal-body" id="confirm_modal_body">
+          Are you sure?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-close" id="modal-btn-yes">
+            Yes
+          </button>
+          <button type="button" class="btn btn-primary" id="modal-btn-no">
+            No
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <!-- Table -->
-  <table class="table" id="householdTable" v-if="householdsList.length">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Program</th>
-        <th>Created By</th>
-        <th>Create Date</th>
-        <th class="text-right">Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr v-cloak v-for="household in householdsList" v-if="household.name">
-        <td>
-          <a v-bind:href="'/formlibrary/household_edit/'+household.id+'/'" data-toggle="tooltip" :title="household.name">
-            [[ household.name ]]
-        </a>
-        </td>
-        <td v-if="household.program">[[ household.program.name ]]</td>
-        <td>[[ household.created_by.name ]]</td>
-        <td>[[ formatDate(household.create_date) ]]</td>
-        <!-- Actions -->
-        <td class="text-right">
-          <div class="btn-group">
-            <button type="button" class="btn btn-default btn-sm disabled">
-              More
-            </button>
-            <button
-              type="button"
-              class="btn btn-default btn-sm dropdown-toggle"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <span class="caret"></span>
-              <span class="sr-only">Toggle Dropdown</span>
-            </button>
-
-            <!-- related list -->
-            <ul class="dropdown-menu">
-              <li class="dropdown-header">Related</li>
-              <li>
-                <!-- TODO1: list individual related to a household -->
-                <a href="#"
-                  >[[ individual_label ]]</a
-                >
-              </li>
-              <li role="separator" class="divider"></li>
-              <li>
-                <a v-bind:href="'/formlibrary/household_edit/'+household.id+'/'"
-                  >Edit</a
-                >
-              </li>
-              <li>
-                <a
-                  class="text-danger force-link"
-                  @click="toggleDeleteModal(household)"
-                  >Delete</a
-                >
-              </li>
-            </ul>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>
-{% include 'ui-components/vue_modal.html'%} {% block extra_js_in_body %}
+{% endblock content %}
+{% block extra_js_in_body %}
+<script src="{{ STATIC_URL }}js/indicator_delete.js"></script>
+<script src="{{ STATIC_URL }}vue.js/hikaya_select.js"></script>
+<script src="{{ STATIC_URL }}vue.js/collected_data_table.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}vue.js/formlibrary/household.js"></script>
 {% endblock extra_js_in_body %}

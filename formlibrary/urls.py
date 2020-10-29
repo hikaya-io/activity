@@ -9,6 +9,7 @@ from .views import (
     HouseholdlList,
     HouseholdUpdate,
     HouseholdDataView,
+    HouseholdlIndividualList
 )
 
 
@@ -32,6 +33,7 @@ urlpatterns = [
          name='individual_data'),
     path('household_list', HouseholdlList.as_view(), name='household_list'),
     path('household_list_data', HouseholdDataView.as_view(), name='household_list_data'),
-    path('household_edit/<int:pk>/', HouseholdUpdate.as_view(), name='household_edit')
+    path('household_edit/<int:pk>/', HouseholdUpdate.as_view(), name='household_edit'),
+    path('household_individual_list', HouseholdlIndividualList.as_view(), name='household__individual_list'),
 
 ]
