@@ -1,2 +1,25 @@
 {% extends "base.html" %} {% block content %} 
+<script>
+  $(document).ready(function() {
+    $('#serviceTable').DataTable();
+  });
+</script>
+
+<div class="container">
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="/">My Dashboard</a></li>
+    <li class="active">
+      {% comment %} {{ request.user.activity_user.organization.service_label }} {% endcomment %}
+      Service
+    </li>
+  </ul>
+  {% endblock %}
+
+  <div class="bg-white mt-10 p-10 pt-0">
+		{% include '../formlibrary/service_list.html' %}
+	</div>
+
+</div>
+
 {% endblock content %}

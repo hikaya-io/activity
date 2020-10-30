@@ -1,8 +1,8 @@
-<div id="individual_list">
+<div id="service_list">
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">[[ individual_label ]] List</h4>
+      <h4 class="page-title">Service List</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
@@ -20,13 +20,14 @@
             id="show-modal"
             @click="toggleModal()"
           >
-            <i class="fa fa-plus"></i> [[ individual_label ]]
+            <i class="fa fa-plus"></i> Service
           </a>
         </div>
-        <!-- Individual create modal -->
+
+        <!-- Service create modal -->
         <modal v-if="showModal" @close="showModal = false">
           <div slot="body">
-            {% include './modals/individual_modal_form.html' %}
+            {% include './modals/service_modal_form.html' %}
           </div>
           <div slot="footer">
             {% include 'ui-components/quick_entry_modal_footer.html' %}
@@ -34,7 +35,7 @@
           <h4 slot="header">[[modalHeader]]</h4>
         </modal>
 
-        <!-- individual delete modal -->
+        <!-- service delete modal -->
         <modal v-if="showDeleteModal" @close="showDeleteModal = false">
           <h4 slot="header">[[modalHeader]]</h4>
           <div slot="body">
@@ -65,40 +66,33 @@
   </div>
 
   <!-- Table -->
-  <table class="table" id="individualsTable" v-if="individualsList.length">
+  {% comment %} <table class="table" id="servicesTable" v-if="servicesList.length"> {% endcomment %}
+  <table class="table">
     <thead>
       <tr>
-        <th>[[ individual_label ]] Name</th>
-        <th>Last Name</th>
-        <th>Gender</th>
-        <th>Age</th>
-        <th>Primary Phone</th>
-        <th>Date created</th>
+        <th>Name</th>
+        <th>Service Type</th>
+        <th>Program</th>
+        <th>Created By</th>
+        <th>Create Date</th>
         <th class="text-right">Actions</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr v-cloak v-for="individual in individualsList" v-if="individual.first_name">
+      <tr v-cloak v-for="(service, index) in servicesList[0]" v-if="servicesList.length">
         <td>
-          <a v-bind:href="'/formlibrary/individual_update/'+ individual.id+'/'"
+          {% comment %} <a v-bind:href="'/formlibrary/individual_update/'+ individual.id+'/'"
             data-toggle="tooltip"
-            :title="individual.first_name">
-            [[ individual.first_name ]]
+            :title="individual.first_name"> {% endcomment %}
+          <a href="#">
+            [[ service.name ]]
           </a>
         </td>
-        <td>[[ individual.last_name ]]</td>
-        <td>
-          <div v-if="individual.sex == 'M'">
-            Male
-          </div>
-          <div v-else>
-            Female
-          </div>
-        </td>
-        <td>[[ individual.age ]]</td>
-        <td>[[ individual.primary_phone ]]</td>
-        <td>[[ formatDate(individual.create_date) ]]</td>
+        <td>[[ service.service_type ]]</td>
+        <td>[[ service.program.name ]]</td>
+        <td>[[ service.created_by.name ]]</td>
+        <td>[[ formatDate(service.create_date) ]]</td>
         <td class="text-right">
           <!-- Split button -->
           <div class="btn-group">
@@ -117,18 +111,18 @@
             </button>
             <ul class="dropdown-menu">
               <li>
-                <a href="/formlibrary/individual_list/0/0/0/">[[ individual_label ]]</a>
+                <a href="#">Service</a>
               </li>
               <li role="separator" class="divider"></li>
               <li>
-                <a v-bind:href="'/formlibrary/individual_update/'+individual.id+'/'"
+                <a href="#"
                   >Edit</a
                 >
               </li>
               <li>
                 <a
                   class="text-danger force-link"
-                  @click="toggleDeleteModal(individual)"
+                  @click="toggleDeleteModal(service)"
                   >Delete</a
                 >
               </li>
@@ -140,5 +134,5 @@
   </table>
 </div>
 {% include 'ui-components/vue_modal.html'%} {% block extra_js_in_body %}
-<script type="text/javascript" src="{{ STATIC_URL }}vue.js/formlibrary/individual.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}vue.js/formlibrary/service.js"></script>
 {% endblock extra_js_in_body %}
