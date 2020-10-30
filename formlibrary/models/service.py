@@ -10,6 +10,11 @@ from workflow.models import (
     Stakeholder,
 )
 
+SERVICE_TYPES = {
+    "training",
+    "distribution"
+}
+
 
 class Service(CreatedModifiedBy, CreatedModifiedDates, StartEndDates):
     """

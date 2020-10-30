@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from formlibrary.models import Individual, Training, Distribution, Household
+from formlibrary.models import Individual, Training, Distribution, Household, Service
 from workflow.serializers import SiteProfileSerializer, ProgramSerializer
 from feed.serializers import ActivityUserSerializer
 
@@ -48,29 +48,29 @@ class HouseholdListDataSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'program', 'created_by', 'create_date']
 
 
-class TrainingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Training
-        fields= '__all__'
-    # program = ProgramSerializer()
+class TrainingListDataSerializer(serializers.ModelSerializer):
+    program = ProgramSerializer()
+    created_by = ActivityUserSerializer()
     # program = serializers.IntegerField(required=False)
 
-    # class Meta:
-    #     model = Training
-    #     fields = ['id', 'name', 'program', 'duration', 'start_date', 'end_date']
-
-
-class TrainingListSerializer(serializers.ModelSerializer):
-    program = ProgramSerializer()
-    program = serializers.IntegerField(required=False)
-
     class Meta:
         model = Training
-        fields = ['id', 'name', 'program', 'duration', 'start_date', 'end_date']
+        # fields = '__all__'
+        fields = ['id', 'name', 'created_by', 'create_date', 'program']
 
 
 class DistributionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Distribution
-        fields= '__all__'
-        
+        fields = '__all__'
+
+
+class DistributionListDataSerializer(serializers.ModelSerializer):
+    program = ProgramSerializer()
+    created_by = ActivityUserSerializer()
+    # program = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = Training
+        # fields = '__all__'
+        fields = ['id', 'name', 'created_by', 'create_date', 'program']
