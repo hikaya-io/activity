@@ -12,7 +12,13 @@ from workflow.models import Program, Organization
 from .forms import IndividualForm, HouseholdForm, TrainingForm, DistributionForm
 from .models import Individual, Distribution, Training, Household, Service
 
-from .serializers import IndividualSerializer, HouseholdSerializer, HouseholdListDataSerializer, TrainingSerializer, DistributionSerializer
+from .serializers import (IndividualSerializer,
+                          HouseholdSerializer,
+                          HouseholdListDataSerializer,
+                          TrainingSerializer,
+                          DistributionSerializer,
+                          TrainingListDataSerializer,
+                          DistributionListDataSerializer)
 
 
 class IndividualView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
@@ -289,16 +295,20 @@ class GetTrainingData(GView):
             organization = request.user.activity_user.organization
             get_programs = Program.objects.all().filter(organization=organization)
 
-            get_training = Training.objects.filter(
-                program__in=get_programs).values()
+            trainings = Training.objects.all().filter(
+                program__in=get_programs)
+
+            get_trainings = TrainingListDataSerializer(trainings, many=True, context={'request': request})
             return JsonResponse(
                 dict(
-                    trainings=list(get_training), safe=False
+                    level_1_label=organization.level_1_label,
+                    training_label=organization.training_label,
+                    trainings=list(get_trainings.data), safe=False
 
                 )
             )
         except Exception as e:
-            print(e)
+            return JsonResponse(dict(error=str(e)))
 
 
 class DistributionView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
@@ -351,11 +361,15 @@ class GetDistributionData(GView):
             organization = request.user.activity_user.organization
             get_programs = Program.objects.all().filter(organization=organization)
 
-            get_distribution = Distribution.objects.filter(
-                program__in=get_programs).values()
+            distributions = Distribution.objects.all().filter(
+                program__in=get_programs)
+
+            get_distributions = DistributionListDataSerializer(distributions, many=True, context={'request': request})
             return JsonResponse(
                 dict(
-                    distributions=list(get_distribution), safe=False
+                    level_1_label=organization.level_1_label,
+                    distribution_label=organization.distribution_label,
+                    distributions=list(get_distributions.data), safe=False
 
                 )
             )

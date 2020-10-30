@@ -13,6 +13,9 @@ new Vue({
         level_1_label: '',
         individual_label: '',
         modalHeader: '',
+        servicesList: [],
+        trainingList: [],
+        distributionList: [],
         training_data: {
             name: "",
             program_id: 0,
@@ -36,8 +39,38 @@ new Vue({
         itemToDelete: null,
     },
     beforeMount: function() {
-        this.individual_label = 'Service';
-        this.modalHeader = `Add Service`;
+        var servicelist = []
+        this.makeRequest('GET', '/formlibrary/training_data')
+            .then(response => {
+                if (response.data) {
+                    this.level_1_label = response.data.level_1_label;
+                    this.trainingList = response.data.trainings.sort((a, b) => (a.name > b.name) ? 1 : -1);
+
+                    this.trainingList.forEach(function(training, index) {
+                        this.training_data = training
+                        this.training_data.service_type = "Training"
+                        servicelist.push(this.training_data)
+                    });
+                    return this.makeRequest('GET', '/formlibrary/distribution_data')
+                }
+            })
+            .then(response => {
+                if (response.data) {
+                    this.distributionList = response.data.distributions.sort((a, b) => (a.name > b.name) ? 1 : -1);
+
+                    this.distributionList.forEach(function(distribution, index) {
+                        this.distribution_data = distribution
+                        this.distribution_data.service_type = "Distribution"
+                        servicelist.push(distribution)
+                    })
+                    this.servicesList.push(servicelist)
+                }
+            })
+            .catch(e => {
+                console.log(e)
+                toastr.error('There was a problem loading data from the database');
+            })
+
     },
     methods: {
         /**
