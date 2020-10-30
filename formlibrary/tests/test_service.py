@@ -50,9 +50,9 @@ class ServiceTestCase(TestCase):
         training = {
             'name': "Training 1",
             'program_id': '1',
+            'duration': 2,
             'start_date': datetime.strptime("2020-10-01 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
             'end_date': datetime.strptime("2020-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
-            'duration': 3,
         }
         url = reverse("training", kwargs={'pk': 0})
         self.client.force_login(self.user, backend=None)
