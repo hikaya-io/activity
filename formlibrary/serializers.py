@@ -7,7 +7,7 @@ from feed.serializers import ActivityUserSerializer
 class TrainingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Training
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'duration']
 
 
 class DistributionSerializer(serializers.ModelSerializer):
@@ -45,17 +45,15 @@ class HouseholdListDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Household
-        fields = ['id', 'name', 'program', 'created_by', 'create_date']
+        fields = ['id', 'name', 'duration', 'program', 'created_by', 'create_date']
 
 
 class TrainingListDataSerializer(serializers.ModelSerializer):
     program = ProgramSerializer()
     created_by = ActivityUserSerializer()
-    # program = serializers.IntegerField(required=False)
 
     class Meta:
         model = Training
-        # fields = '__all__'
         fields = ['id', 'name', 'created_by', 'create_date', 'program']
 
 
@@ -68,9 +66,7 @@ class DistributionSerializer(serializers.ModelSerializer):
 class DistributionListDataSerializer(serializers.ModelSerializer):
     program = ProgramSerializer()
     created_by = ActivityUserSerializer()
-    # program = serializers.IntegerField(required=False)
 
     class Meta:
         model = Training
-        # fields = '__all__'
         fields = ['id', 'name', 'created_by', 'create_date', 'program']
