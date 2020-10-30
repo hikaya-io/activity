@@ -37,12 +37,12 @@ class ServiceTestCase(TestCase):
             modified_by=self.activity_user,
         )
         self.distribution = Distribution.objects.create(
-            name = "Distribution 1",
-            program_id = '1',
-            start_date = datetime.strptime("2020-10-01 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
-            end_date = datetime.strptime("2020-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
-            quantity = 1,
-            item_distributed = "test"
+            name="Distribution 1",
+            program_id='1',
+            start_date=datetime.strptime("2020-10-01 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
+            end_date=datetime.strptime("2020-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
+            quantity=1,
+            item_distributed="test"
         )
         self.client = APIClient()
 
@@ -94,7 +94,7 @@ class ServiceTestCase(TestCase):
             'end_date': datetime.strptime("2020-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
             'duration': 3,
             'quantity': 1,
-            'item_distributed' : "test"
+            'item_distributed': "test"
         }
         url = reverse("distribution", kwargs={'pk': 0})
         self.client.force_login(self.user, backend=None)
