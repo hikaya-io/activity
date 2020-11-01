@@ -1,0 +1,94 @@
+<form method="POST">
+  <div class="modal-body">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6">
+      
+       <div class="form-group">
+        <label for="name">Name</label>
+          <input
+          type="text"
+          id="name"
+          name="name"
+          v-model="service_data.name"
+          class="form-control"
+          placeholder="Name"
+        />
+
+        {% comment %} <span v-show="errors.has('name')" class="help is-danger">[[ errors.first('first_name') ]]</span> {% endcomment %}
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="duration">Service Type</label>
+          <select id="service_types" class="form-control" name="service_types">
+            <option :value="[[ service_type ]]" v-for="service_type in service_types" v-if="service_types.length">[[ service_type ]]</option>
+          </select>
+        </div>
+      </div>  
+    </div>
+    
+    <div class="row">
+      <div class="col-md-4">
+      
+       <div class="form-group">
+        <label for="item_distributed">Item Distributed</label>
+          <input
+          type="text"
+          id="item_distributed"
+          name="item_distributed"
+          v-model="service_data.item_distributed"
+          class="form-control"
+          placeholder="Item Distributed"
+        />
+
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="quantity">Quantity</label>
+            <input
+              type="text"
+              id="quantity"
+              name="quantity"
+              v-model="service_data.quantity"
+              class="form-control"
+              placeholder="Quantity"
+          />
+        </div>
+      </div>  
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="duration">Durantion</label>
+            <input
+              type="text"
+              id="duration"
+              name="duration"
+              v-model="service_data.duration"
+              class="form-control"
+              placeholder="Duration"
+          />
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="startDate">Start Date</label>
+          <input type="text" id="startDate" class="form-control" placeholder="Start Date" name="start_date"
+          autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="endDate">End Date</label>
+          <input type="text" id="endDate" class="form-control" placeholder="End Date" name="end_date"
+          autocomplete="off" />
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
