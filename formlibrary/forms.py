@@ -110,7 +110,10 @@ class TrainingForm(forms.ModelForm):
     class Meta:
         model = Training
         fields = '__all__'
-        exclude = ['create_date', 'edit_date']
+        exclude = ['create_date', 'edit_date', 'created_by', 'label', 'organization', 'modified_by']
+
+    start_date = forms.DateTimeField(widget=DatePicker.DateInput(), required=True)
+    end_date = forms.DateTimeField(widget=DatePicker.DateInput(), required=True)
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
