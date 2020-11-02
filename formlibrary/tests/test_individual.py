@@ -39,7 +39,6 @@ class IndividualTestCase(TestCase):
         get_individual = Individual.objects.get(first_name="Nate")
         self.assertEqual(Individual.objects.filter(
             id=get_individual.id).count(), 1)
-        self.assertEqual(get_individual.age, 19)
         self.assertEqual(get_individual.sex, 'M')
         self.assertIsInstance(get_individual.household_id, Household)
 
