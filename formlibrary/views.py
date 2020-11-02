@@ -294,15 +294,20 @@ class GetTrainingData(GView):
         try:
             organization = request.user.activity_user.organization
             get_programs = Program.objects.all().filter(organization=organization)
+            service = Service()
 
             trainings = Training.objects.all().filter(
                 program__in=get_programs)
 
             get_trainings = TrainingListDataSerializer(trainings, many=True, context={'request': request})
+
+            get_service_types = service.get_service_types()
             return JsonResponse(
                 dict(
                     level_1_label=organization.level_1_label,
                     training_label=organization.training_label,
+                    service_types= list(get_service_types),
+                    programs=list(get_programs.values('id', 'name')),
                     trainings=list(get_trainings.data), safe=False
 
                 )
@@ -392,7 +397,7 @@ class ServicelList(ListView):
         context = {
             'service_types': {
                 'training': get_training,
-                'distribution': get_distribution
+                'distribution': get_distribution,
             },
         }
 
