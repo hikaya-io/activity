@@ -16,6 +16,18 @@ new Vue({
         servicesList: [],
         trainingList: [],
         distributionList: [],
+        programsList: [],
+        service_types: [],
+        service_data: {
+            name: "",
+            program_id: 0,
+            start_date: "",
+            end_date: "",
+            duration: 0,
+            quantity: "",
+            item_distributed: "",
+            service_type: ""
+        },
         training_data: {
             name: "",
             program_id: 0,
@@ -39,12 +51,50 @@ new Vue({
         itemToDelete: null,
     },
     beforeMount: function() {
-        var servicelist = []
-        this.makeRequest('GET', '/formlibrary/training_data')
+        this.getServiceData()
+    },
+    methods: {
+        /**
+         * open or close the fund code form modal
+         * @param { object } item - fund code item
+         */
+        toggleModal: function(item = null) {
+            this.showModal = !this.showModal;
+            this.modalHeader = `Add Service`;
+            if (!item) {
+                this.service_data = {
+                    name: "",
+                    program_id: 0,
+                    start_date: "",
+                    end_date: "",
+                    duration: 0,
+                    quantity: "",
+                    item_distributed: "",
+                    service_type: ""
+                }
+            }
+        },
+        /**
+         * Format date
+         * @param {string} date - date to be formatted
+         */
+        formatDate: function(date) {
+            return date ? moment(date, 'YYYY-MM-DDThh:mm:ssZ').format('YYYY-MM-DD') : '';
+        },
+
+        customFormatter(date) {
+            return moment(date).format('DD.MM.YYYY');
+        },
+
+        getServiceData(){
+           var servicelist = []
+           this.makeRequest('GET', '/formlibrary/training_data')
             .then(response => {
                 if (response.data) {
                     this.level_1_label = response.data.level_1_label;
                     this.trainingList = response.data.trainings.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                    this.programsList = response.data.programs.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                    this.service_types = response.data.service_types
 
                     this.trainingList.forEach(function(training, index) {
                         this.training_data = training
@@ -70,38 +120,6 @@ new Vue({
                 console.log(e)
                 toastr.error('There was a problem loading data from the database');
             })
-
-    },
-    methods: {
-        /**
-         * open or close the fund code form modal
-         * @param { object } item - fund code item
-         */
-        toggleModal: function(item = null) {
-            this.showModal = !this.showModal;
-            this.modalHeader = `Add Service`;
-            // if (!item) {
-            //     this.create_data = {
-            //         first_name: '',
-            //         last_name: '',
-            //         date_of_birth: '',
-            //         id_number: 0,
-            //         primary_phone: '',
-            //         sex: '',
-            //         program: 0,
-            //     }
-            // }
-        },
-        /**
-         * Format date
-         * @param {string} date - date to be formatted
-         */
-        formatDate: function(date) {
-            return date ? moment(date, 'YYYY-MM-DDThh:mm:ssZ').format('YYYY-MM-DD') : '';
-        },
-
-        customFormatter(date) {
-            return moment(date).format('DD.MM.YYYY');
         },
 
         /**
@@ -132,7 +150,36 @@ new Vue({
          * @param { boolean } saveNew - true if a user wants to make multiple posts
          */
         async postData(saveNew) {
+            try {
+                var url = `/formlibrary/${this.service_data.service_type}/` 
+                const response = await this.makeRequest(
+                    'POST',
+                    url,
+                    this.service_data
+                );
+                if (response.data) {
+                    toastr.success(`${this.level_1_label} ${this.name} successfully saved`);
+                    // this.individualsList.unshift(response.data);
 
+                    if (!saveNew) {
+                        this.toggleModal();
+                    }
+                    // resetting the form
+                    this.service_data = {
+                        name: "",
+                        program_id: 0,
+                        start_date: "",
+                        end_date: "",
+                        duration: 0,
+                        quantity: "",
+                        item_distributed: "",
+                        service_type: ""
+                    }
+                    this.$validator.reset();
+                }
+            } catch (error) {
+                toastr.error('There was a problem saving your data');
+            }
         },
 
         /**
@@ -163,7 +210,7 @@ new Vue({
          * Check if fund code form is valid
          */
         isFormValid() {
-            // return this.create_data.program;
+            return this.service_data.service_type;
         },
     },
 })
