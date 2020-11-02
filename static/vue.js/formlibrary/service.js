@@ -19,8 +19,9 @@ new Vue({
         programsList: [],
         service_types: [],
         service_data: {
+            id: 0,
             name: "",
-            program_id: 0,
+            program: 0,
             start_date: "",
             end_date: "",
             duration: 0,
@@ -152,6 +153,7 @@ new Vue({
         async postData(saveNew) {
             try {
                 var url = `/formlibrary/${this.service_data.service_type}/` 
+                this.service_data.program_id = this.service_data.program
                 const response = await this.makeRequest(
                     'POST',
                     url,
@@ -159,7 +161,7 @@ new Vue({
                 );
                 if (response.data) {
                     toastr.success(`${this.level_1_label} ${this.name} successfully saved`);
-                    // this.individualsList.unshift(response.data);
+                    this.getServiceData()
 
                     if (!saveNew) {
                         this.toggleModal();
@@ -167,7 +169,7 @@ new Vue({
                     // resetting the form
                     this.service_data = {
                         name: "",
-                        program_id: 0,
+                        program: 0,
                         start_date: "",
                         end_date: "",
                         duration: 0,
