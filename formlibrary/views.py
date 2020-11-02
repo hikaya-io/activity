@@ -254,6 +254,9 @@ class TrainingView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
+        request.data['created_by_id'] = self.request.user.activity_user.id
+        request.data['form_verified_by'] = self.request.user.activity_user.id
+        request.data['form_completed_by'] = self.request.user.activity_user.id       
         return self.create(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -271,7 +274,7 @@ class TrainingUpdate(UpdateView):
     """
     model = Training
     template_name = 'formlibrary/training_form.html'
-    success_url = '/formlibrary/service_list'
+    success_url = '/formlibrary/services_list'
     form_class = TrainingForm
 
     # add the request to the kwargs

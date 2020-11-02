@@ -60,6 +60,6 @@ urlpatterns = [
     path('distribution_data', GetDistributionData.as_view(),
          name='distribution_data'),
 
-    path('sevices_list', ServicelList.as_view(), name='service_list'),
+    path('services_list', ServicelList.as_view(), name='service_list'),
 
 ]
