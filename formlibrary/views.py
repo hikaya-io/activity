@@ -253,10 +253,7 @@ class TrainingView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
     serializer_class = TrainingSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        request.data['created_by_id'] = self.request.user.activity_user.id
-        request.data['form_verified_by'] = self.request.user.activity_user.id
-        request.data['form_completed_by'] = self.request.user.activity_user.id       
+    def post(self, request, *args, **kwargs):   
         return self.create(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -325,8 +322,8 @@ class DistributionView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        try:
-            return self.create(request, *args, **kwargs)
+        try:  
+           return self.create(request, *args, **kwargs)
         except Exception as e:
             print(e)
 
@@ -345,7 +342,7 @@ class DistributionUpdate(UpdateView):
     """
     model = Distribution
     template_name = 'formlibrary/distribution_form.html'
-    success_url = '/formlibrary/service_list'
+    success_url = '/formlibrary/services_list'
     form_class = DistributionForm
 
     # add the request to the kwargs
