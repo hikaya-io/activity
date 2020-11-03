@@ -254,7 +254,12 @@ class TrainingView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        try:
+            request.data['program'] = request.data['program_id']
+            request.data['created_by'] = self.request.user.activity_user.id
+            return self.create(request, *args, **kwargs)
+        except Exception as e:
+            print(e)
 
     def get_queryset(self):
         organization = self.request.user.activity_user.organization
@@ -323,6 +328,8 @@ class DistributionView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
 
     def post(self, request, *args, **kwargs):
         try:
+            request.data['program'] = request.data['program_id']
+            request.data['created_by'] = self.request.user.activity_user.id
             return self.create(request, *args, **kwargs)
         except Exception as e:
             print(e)
