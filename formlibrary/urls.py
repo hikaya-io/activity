@@ -13,6 +13,7 @@ from .views import (
     TrainingUpdate,
     GetTrainingData,
     DistributionView,
+    DistributionUpdate,
     GetDistributionData,
     ServicelList,
 )
@@ -55,7 +56,7 @@ urlpatterns = [
          name='training_data'),
 
     path('distribution_update/<slug:pk>/',
-         TrainingUpdate.as_view(), name='distribution_update'),
+         DistributionUpdate.as_view(), name='distribution_update'),
 
     path('distribution_data', GetDistributionData.as_view(),
          name='distribution_data'),
