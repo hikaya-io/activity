@@ -191,7 +191,6 @@ new Vue({
         async deleteService(id, service_type) {
             try {
                 var url = `/formlibrary/${service_type.toLowerCase()}/${id}`
-                console.log(url)
                 const response = await this.makeRequest(
                     'DELETE',
                     url
@@ -206,7 +205,6 @@ new Vue({
                     toastr.error('There was a problem deleting program');
                 }
             } catch (error) {
-                console.log(error)
                 toastr.error('There was a server error');
             }
         },
