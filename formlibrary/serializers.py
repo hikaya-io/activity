@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from formlibrary.models import Individual, Training, Distribution, Household, Service
+from formlibrary.models import Individual, Training, Distribution, Household
 from workflow.serializers import SiteProfileSerializer, ProgramSerializer
 from feed.serializers import ActivityUserSerializer
 

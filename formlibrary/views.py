@@ -253,7 +253,7 @@ class TrainingView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
     serializer_class = TrainingSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):   
+    def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -306,7 +306,7 @@ class GetTrainingData(GView):
                 dict(
                     level_1_label=organization.level_1_label,
                     training_label=organization.training_label,
-                    service_types= list(get_service_types),
+                    service_types=list(get_service_types),
                     programs=list(get_programs.values('id', 'name')),
                     trainings=list(get_trainings.data), safe=False
 
@@ -322,8 +322,8 @@ class DistributionView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        try:  
-           return self.create(request, *args, **kwargs)
+        try:
+            return self.create(request, *args, **kwargs)
         except Exception as e:
             print(e)
 
