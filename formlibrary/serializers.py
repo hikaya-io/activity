@@ -58,13 +58,9 @@ class TrainingListDataSerializer(serializers.ModelSerializer):
 
 
 class DistributionSerializer(serializers.ModelSerializer):
-    start_date = serializers.DateField(input_formats=['YYYY-MM-DDThh:mm',])
-    end_date = serializers.DateField(input_formats=['YYYY-MM-DDThh:mm',])
-
-    
     class Meta:
         model = Distribution
-        fields = '__all__'
+        fields = ['id', 'name', 'quantity', 'item_distributed']
 
 
 class DistributionListDataSerializer(serializers.ModelSerializer):
