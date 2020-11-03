@@ -46,20 +46,6 @@ class ServiceTestCase(TestCase):
         )
         self.client = APIClient()
 
-    def test_service_training_create(self):
-        training = {
-            'name': "Training 1",
-            'program_id': '1',
-            'duration': 2,
-            'start_date': datetime.strptime("2020-10-01 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
-            'end_date': datetime.strptime("2020-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
-        }
-        url = reverse("training", kwargs={'pk': 0})
-        self.client.force_login(self.user, backend=None)
-
-        resp = self.client.post(url, data=training)
-        self.assertEqual(resp.status_code, 201)
-
     def test_service_training_edit(self):
         url = reverse("training_update", args=[self.training.id])
         self.client.force_login(self.user, backend=None)
@@ -85,21 +71,6 @@ class ServiceTestCase(TestCase):
 
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-
-    def test_service_distribution_create(self):
-        distribution = {
-            'name': "Distribution 1",
-            'program_id': '1',
-            'start_date': datetime.strptime("2020-10-01 15:34", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
-            'end_date': datetime.strptime("2020-10-19 15:55", "%Y-%m-%d %H:%M").replace(tzinfo=timezone('UTC')),
-            'quantity': 1,
-            'item_distributed': "test"
-        }
-        url = reverse("distribution", kwargs={'pk': 0})
-        self.client.force_login(self.user, backend=None)
-
-        resp = self.client.post(url, data=distribution)
-        self.assertEqual(resp.status_code, 201)
 
     def test_service_distribution_edit(self):
         url = reverse("distribution_update", args=[self.distribution.id])

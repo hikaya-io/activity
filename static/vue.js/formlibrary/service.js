@@ -161,6 +161,7 @@ new Vue({
                 );
                 if (response.data) {
                     toastr.success(`${this.level_1_label} ${this.name} successfully saved`);
+                    this.servicesList = []
                     this.getServiceData()
 
                     if (!saveNew) {
