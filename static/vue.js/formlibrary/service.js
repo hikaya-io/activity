@@ -87,40 +87,40 @@ new Vue({
             return moment(date).format('DD.MM.YYYY');
         },
 
-        getServiceData(){
-           var servicelist = []
-           this.makeRequest('GET', '/formlibrary/training_data')
-            .then(response => {
-                if (response.data) {
-                    this.level_1_label = response.data.level_1_label;
-                    this.trainingList = response.data.trainings.sort((a, b) => (a.name > b.name) ? 1 : -1);
-                    this.programsList = response.data.programs.sort((a, b) => (a.name > b.name) ? 1 : -1);
-                    this.service_types = response.data.service_types
+        getServiceData() {
+            var servicelist = []
+            this.makeRequest('GET', '/formlibrary/training_data')
+                .then(response => {
+                    if (response.data) {
+                        this.level_1_label = response.data.level_1_label;
+                        this.trainingList = response.data.trainings.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                        this.programsList = response.data.programs.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                        this.service_types = response.data.service_types
 
-                    this.trainingList.forEach(function(training, index) {
-                        this.training_data = training
-                        this.training_data.service_type = "Training"
-                        servicelist.push(this.training_data)
-                    });
-                    return this.makeRequest('GET', '/formlibrary/distribution_data')
-                }
-            })
-            .then(response => {
-                if (response.data) {
-                    this.distributionList = response.data.distributions.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                        this.trainingList.forEach(function(training, index) {
+                            this.training_data = training
+                            this.training_data.service_type = "Training"
+                            servicelist.push(this.training_data)
+                        });
+                        return this.makeRequest('GET', '/formlibrary/distribution_data')
+                    }
+                })
+                .then(response => {
+                    if (response.data) {
+                        this.distributionList = response.data.distributions.sort((a, b) => (a.name > b.name) ? 1 : -1);
 
-                    this.distributionList.forEach(function(distribution, index) {
-                        this.distribution_data = distribution
-                        this.distribution_data.service_type = "Distribution"
-                        servicelist.push(distribution)
-                    })
-                    this.servicesList.push(servicelist)
-                }
-            })
-            .catch(e => {
-                console.log(e)
-                toastr.error('There was a problem loading data from the database');
-            })
+                        this.distributionList.forEach(function(distribution, index) {
+                            this.distribution_data = distribution
+                            this.distribution_data.service_type = "Distribution"
+                            servicelist.push(distribution)
+                        })
+                        this.servicesList.push(servicelist)
+                    }
+                })
+                .catch(e => {
+                    console.log(e)
+                    toastr.error('There was a problem loading data from the database');
+                })
         },
 
         /**
@@ -152,7 +152,7 @@ new Vue({
          */
         async postData(saveNew) {
             try {
-                var url = `/formlibrary/${this.service_data.service_type}/` 
+                var url = `/formlibrary/${this.service_data.service_type}/`
                 this.service_data.program_id = this.service_data.program
                 const response = await this.makeRequest(
                     'POST',
@@ -188,7 +188,28 @@ new Vue({
          * delete service
          * @param { number } id - id of the service to be deleted
          */
-        async deleteService(id) {},
+        async deleteService(id, service_type) {
+            try {
+                var url = `/formlibrary/${service_type.toLowerCase()}/${id}`
+                console.log(url)
+                const response = await this.makeRequest(
+                    'DELETE',
+                    url
+                );
+                if (response.status === 204) {
+                    toastr.success(`${this.level_1_label} was successfully deleted`);
+                    this.servicesList = []
+                    this.getServiceData()
+                    this.showDeleteModal = !this.showDeleteModal;
+                    this.itemToDelete = null;
+                } else {
+                    toastr.error('There was a problem deleting program');
+                }
+            } catch (error) {
+                console.log(error)
+                toastr.error('There was a server error');
+            }
+        },
 
         /**
          * make requests for CRUD operations using axios
