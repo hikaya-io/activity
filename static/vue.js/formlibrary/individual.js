@@ -17,9 +17,6 @@ new Vue({
             first_name: '',
             last_name: '',
             date_of_birth: '',
-            id_number: 0,
-            primary_phone: '',
-            sex: '',
             program: 0,
         },
         individualsList: [],
@@ -105,11 +102,15 @@ new Vue({
          */
         processForm: function(saveNew = false) {
             this.saveNew = saveNew;
-            if (saveNew) {
-                this.postData(saveNew);
-            } else {
-                this.postData();
-            }
+            this.$validator.validateAll().then(result => {
+                if (result) {
+                    if (saveNew) {
+                        this.postData(saveNew);
+                    } else {
+                        this.postData();
+                    }
+                }
+            });
         },
 
         /**
