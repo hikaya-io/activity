@@ -1,0 +1,26 @@
+{% load crispy_forms_tags %}
+<div class="row">
+	<div class="col-md-6">
+			{{ form.id_type | as_crispy_field }}
+	</div>
+	<div class="col-md-6">
+			{{ form.id_number | as_crispy_field }}
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+			{{ form.primary_phone | as_crispy_field }}
+	</div>
+	<div class="col-md-6">
+			{{ form.secondary_phone | as_crispy_field }}
+	</div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form.signature | as_crispy_field }}
+    </div>
+    <div class="col-md-6">
+        {{ form.photo | as_crispy_field }}
+    </div>
+</div>
