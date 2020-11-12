@@ -95,17 +95,17 @@
           <div v-else-if="individual.sex == 'F'">
             Female
           </div>
-          {% comment %} <div v-else>
-            N/A
-          </div> {% endcomment %}
+          <div v-else>
+            -
+          </div> 
         </td>
         <td>
           <div v-if="individual.age > 0">
             [[ individual.age ]]
           </div>
-          {% comment %} <div v-else>
-           N/A
-          </div> {% endcomment %}
+          <div v-else>
+           -
+          </div> 
         </td>
         <td>[[ individual.primary_phone ]]</td>
         <td>[[ formatDate(individual.create_date) ]]</td>
