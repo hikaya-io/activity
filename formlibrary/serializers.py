@@ -5,13 +5,12 @@ from feed.serializers import ActivityUserSerializer
 
 
 class TrainingSerializer(serializers.ModelSerializer):
-    start_date = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', ])
-    end_date = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', ])
+    program = ProgramSerializer()
+    created_by = ActivityUserSerializer()
 
     class Meta:
         model = Training
-        fields = '__all__'
-        # fields = ['id', 'name', 'duration']
+        fields = ['id', 'name', 'created_by', 'create_date', 'program']
 
 
 class DistributionSerializer(serializers.ModelSerializer):
@@ -52,29 +51,12 @@ class HouseholdListDataSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'duration', 'program', 'created_by', 'create_date']
 
 
-class TrainingListDataSerializer(serializers.ModelSerializer):
-    program = ProgramSerializer()
-    created_by = ActivityUserSerializer()
-
-    class Meta:
-        model = Training
-        fields = ['id', 'name', 'created_by', 'create_date', 'program']
-
 
 class DistributionSerializer(serializers.ModelSerializer):
-    start_date = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', ])
-    end_date = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', ])
-
-    class Meta:
-        model = Distribution
-        fields = '__all__'
-        # fields = ['id', 'name', 'quantity', 'item_distributed']
-
-
-class DistributionListDataSerializer(serializers.ModelSerializer):
     program = ProgramSerializer()
     created_by = ActivityUserSerializer()
 
     class Meta:
         model = Distribution
         fields = ['id', 'name', 'created_by', 'create_date', 'program']
+
