@@ -11,9 +11,9 @@ import os
 from uuid import uuid4
 
 phone_regex = RegexValidator(
-        regex=r'^\+?1?\d{9,15}$', message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.")
+    regex=r'^\+?1?\d{9,15}$', message="Invalid Phone Number. Format: '+123456789'. Up to 15 digits allowed.")
 email_regex = RegexValidator(
-        regex=r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$', message="Invalid Email Address.")
+    regex=r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$', message="Invalid Email Address.")
 
 
 class Case(CreatedModifiedDates, CreatedModifiedBy):
@@ -59,7 +59,7 @@ class Household(Case, CreatedModifiedDates, CreatedModifiedBy):
 
 
 IMAGE_SPEC = {
-    "width": 2000,
+    "width": 500,
     "height": 500,
     "limit_kb": 100
 }

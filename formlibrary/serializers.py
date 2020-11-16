@@ -30,7 +30,7 @@ class IndividualSerializer(serializers.ModelSerializer):
         model = Individual
         fields = ['id', 'first_name', 'last_name', 'id_number', 'primary_phone',
                   'date_of_birth', 'sex', 'age',
-                  'training', 'distribution', 'site', 'program', 'create_date']
+                  'training', 'distribution', 'site', 'program', 'create_date', 'photo']
 
         def get_age(self, obj):
             return obj.individual.age()
