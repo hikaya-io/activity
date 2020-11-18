@@ -5,6 +5,7 @@ from .models import (
     Distribution,
     Individual,
     Household,
+    Training,
 )
 from workflow.models import (
     Office,
@@ -31,7 +32,7 @@ class DistributionForm(forms.ModelForm):
 
     class Meta:
         model = Distribution
-        exclude = ['create_date', 'edit_date']
+        exclude = ['create_date', 'edit_date', 'modified_by', 'created_by']
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
@@ -103,3 +104,33 @@ class HouseholdForm(forms.ModelForm):
         self.fields['program'].queryset = Program.objects.filter(
             organization=organization)
         self.fields['name'].label = '{} name'.format(self.organization.household_label)
+
+
+class TrainingForm(forms.ModelForm):
+    class Meta:
+        model = Training
+        fields = '__all__'
+        exclude = ['create_date', 'edit_date', 'created_by', 'label', 'organization', 'modified_by']
+
+    start_date = forms.DateTimeField(widget=DatePicker.DateInput(), required=True)
+    end_date = forms.DateTimeField(widget=DatePicker.DateInput(), required=True)
+
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.organization = kwargs.pop('organization')
+        self.request = kwargs.pop('request')
+        self.helper.form_method = 'post'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.error_text_inline = True
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+
+        super(TrainingForm, self).__init__(*args, **kwargs)
+
+        self.fields['program'].queryset = Program.objects.filter(
+            organization=self.request.user.activity_user.organization)
+        self.fields['office'].queryset = Office.objects.filter(
+            organization=self.request.user.activity_user.organization)
+
+        self.fields['name'].label = '{} name'.format(self.organization.training_label)
+        self.fields['implementer'].label = '{} implementer'.format(self.organization.training_label)

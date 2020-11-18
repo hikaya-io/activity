@@ -10,6 +10,11 @@ from workflow.models import (
     Stakeholder,
 )
 
+SERVICE_TYPES = {
+    "training",
+    "distribution"
+}
+
 
 class Service(CreatedModifiedBy, CreatedModifiedDates, StartEndDates):
     """
@@ -57,3 +62,6 @@ class Service(CreatedModifiedBy, CreatedModifiedDates, StartEndDates):
         Number of Households linked to the service
         """
         return 0
+
+    def get_service_types(self):
+        return SERVICE_TYPES

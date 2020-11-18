@@ -8,25 +8,43 @@ Vue.component('modal', {
 // start app
 new Vue({
     delimiters: ['[[', ']]'],
-    el: '#individual_list',
+    el: '#service_list',
     data: {
         level_1_label: '',
         individual_label: '',
         modalHeader: '',
-        create_data: {
-            first_name: '',
-            last_name: '',
-            date_of_birth: '',
-            id_number: 0,
-            primary_phone: '',
-            sex: '',
-            program: 0,
-        },
-        individualsList: [],
+        servicesList: [],
         trainingList: [],
-        distributionsList: [],
+        distributionList: [],
         programsList: [],
-        programs: [],
+        service_types: [],
+        service_data: {
+            id: 0,
+            name: "",
+            program: 0,
+            start_date: "",
+            end_date: "",
+            duration: 0,
+            quantity: "",
+            item_distributed: "",
+            service_type: ""
+        },
+        training_data: {
+            name: "",
+            program_id: 0,
+            start_date: "",
+            end_date: "",
+            duration: 0,
+        },
+        distribution_data: {
+            name: "",
+            program_id: 0,
+            start_date: "",
+            end_date: "",
+            duration: 0,
+            quantity: "",
+            item_distributed: "",
+        },
         showModal: false,
         isEdit: false,
         saveNew: false,
@@ -34,28 +52,7 @@ new Vue({
         itemToDelete: null,
     },
     beforeMount: function() {
-        this.makeRequest('GET', '/formlibrary/individual_data')
-            .then(response => {
-                if (response.data) {
-                    this.level_1_label = response.data.level_1_label;
-                    this.individual_label = response.data.individual_label;
-                    this.modalHeader = `Add ${this.individual_label}`;
-                    this.programsList = response.data.programs.sort((a, b) => (a.name > b.name) ? 1 : -1);
-                    this.individualsList = response.data.individuals;
-                    this.trainingList = response.data.trainings;
-                    this.distributionsList = response.data.distributions;
-
-                    $(document).ready(() => {
-                        $('#individualsTable').DataTable({
-                            pageLength: 10,
-                            lengthMenu: [10, 15, 20]
-                        });
-                    });
-                }
-            })
-            .catch(e => {
-                toastr.error('There was a problem loading individuals from the database');
-            })
+        this.getServiceData()
     },
     methods: {
         /**
@@ -64,16 +61,17 @@ new Vue({
          */
         toggleModal: function(item = null) {
             this.showModal = !this.showModal;
-            this.modalHeader = `Add ${this.individual_label}`;
+            this.modalHeader = `Add Service`;
             if (!item) {
-                this.create_data = {
-                    first_name: '',
-                    last_name: '',
-                    date_of_birth: '',
-                    id_number: 0,
-                    primary_phone: '',
-                    sex: '',
-                    program: 0,
+                this.service_data = {
+                    name: "",
+                    program_id: 0,
+                    start_date: "",
+                    end_date: "",
+                    duration: 0,
+                    quantity: "",
+                    item_distributed: "",
+                    service_type: ""
                 }
             }
         },
@@ -87,6 +85,42 @@ new Vue({
 
         customFormatter(date) {
             return moment(date).format('DD.MM.YYYY');
+        },
+
+        getServiceData() {
+            var servicelist = []
+            this.makeRequest('GET', '/formlibrary/training_data')
+                .then(response => {
+                    if (response.data) {
+                        this.level_1_label = response.data.level_1_label;
+                        this.trainingList = response.data.trainings.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                        this.programsList = response.data.programs.sort((a, b) => (a.name > b.name) ? 1 : -1);
+                        this.service_types = response.data.service_types
+
+                        this.trainingList.forEach(function(training, index) {
+                            this.training_data = training
+                            this.training_data.service_type = "Training"
+                            servicelist.push(this.training_data)
+                        });
+                        return this.makeRequest('GET', '/formlibrary/distribution_data')
+                    }
+                })
+                .then(response => {
+                    if (response.data) {
+                        this.distributionList = response.data.distributions.sort((a, b) => (a.name > b.name) ? 1 : -1);
+
+                        this.distributionList.forEach(function(distribution, index) {
+                            this.distribution_data = distribution
+                            this.distribution_data.service_type = "Distribution"
+                            servicelist.push(distribution)
+                        })
+                        this.servicesList.push(servicelist)
+                    }
+                })
+                .catch(e => {
+                    console.log(e)
+                    toastr.error('There was a problem loading data from the database');
+                })
         },
 
         /**
@@ -118,27 +152,31 @@ new Vue({
          */
         async postData(saveNew) {
             try {
+                var url = `/formlibrary/${this.service_data.service_type}/`
+                this.service_data.program_id = this.service_data.program
                 const response = await this.makeRequest(
                     'POST',
-                    `/formlibrary/individual/`,
-                    this.create_data
+                    url,
+                    this.service_data
                 );
                 if (response.data) {
                     toastr.success(`${this.level_1_label} ${this.name} successfully saved`);
-                    this.individualsList.unshift(response.data);
+                    this.servicesList = []
+                    this.getServiceData()
 
                     if (!saveNew) {
                         this.toggleModal();
                     }
                     // resetting the form
-                    this.create_data = {
-                        first_name: '',
-                        last_name: '',
-                        date_of_birth: '',
-                        id_number: 0,
-                        primary_phone: '',
-                        sex: '',
+                    this.service_data = {
+                        name: "",
                         program: 0,
+                        start_date: "",
+                        end_date: "",
+                        duration: 0,
+                        quantity: "",
+                        item_distributed: "",
+                        service_type: ""
                     }
                     this.$validator.reset();
                 }
@@ -148,30 +186,21 @@ new Vue({
         },
 
         /**
-         * delete individual
-         * @param { number } id - id of the individual to be deleted
+         * delete service
+         * @param { number } id - id of the service to be deleted
          */
-        toggleDeleteModal: function(data) {
-            this.showDeleteModal = !this.showDeleteModal;
-            this.modalHeader = 'Confirm delete';
-            this.itemToDelete = data;
-        },
-
-        /**
-         * delete individual
-         * @param { number } id - id of the individual to be deleted
-         */
-        async deleteIndividual(id) {
+        async deleteService(id, service_type) {
             try {
+                var url = `/formlibrary/${service_type.toLowerCase()}/${id}`
                 const response = await this.makeRequest(
                     'DELETE',
-                    `/formlibrary/individual/${id}`
+                    url
                 );
                 if (response.status === 204) {
                     toastr.success(`${this.level_1_label} was successfully deleted`);
-                    this.individualsList = this.individualsList.filter(item => +item.id !== +id);
+                    this.servicesList = []
+                    this.getServiceData()
                     this.showDeleteModal = !this.showDeleteModal;
-                    this.modalHeader = `Add ${this.level_1_label}`;
                     this.itemToDelete = null;
                 } else {
                     toastr.error('There was a problem deleting program');
@@ -197,15 +226,13 @@ new Vue({
                 data
             });
         },
-
     },
-
     computed: {
         /**
          * Check if fund code form is valid
          */
         isFormValid() {
-            return this.create_data.program;
+            return this.service_data.service_type;
         },
     },
 })

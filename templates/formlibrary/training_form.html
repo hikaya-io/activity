@@ -1,0 +1,76 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  {% if form.errors %}
+  <div class="help-block">
+    {% for field in form %} {% for error in field.errors %}
+      <strong><i>{{ field.label }}</i> - {{ error | escape }}</strong>
+    {% endfor %} {% endfor %}
+  </div>
+  {% for error in form.non_field_errors %}
+  <div class="alert alert-error">
+    <strong>{{ error | escape }}</strong>
+  </div>
+  {% endfor %} {% endif %} 
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'index' %}">My Dashboard</a></li>
+    <li><a href="/formlibrary/services_list">{{ request.user.activity_user.organization.training_label }}</a></li>
+    <li class="active">Details</li>
+  </ul>
+  {% endblock %}
+
+  <!-- Sub navigation -->
+  <div class="sub-navigation">
+    <div class="sub-navigation-header">
+      <h4 class="page-title">
+         Training Details
+      </h4>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    <form method="POST">
+      {% csrf_token %}
+      <div id="training-tab">
+        <ul class="nav nav-tabs">
+          <li class="active">
+            <a href="#details" data-toggle="tab">{{ request.user.activity_user.organization.training_label }} Details</a>
+          </li>
+        </ul>
+        
+        <div class="tab-content clearfix">
+          <div class="tab-pane active" id="details">
+            {% include 'formlibrary/form-sections/training/details.html' %}
+          </div>
+        </div>
+      </div>
+      <div class="">
+        <button type="reset" id="reset-id-reset" class="btn btn-md btn-close">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-md btn-success">
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  $("#reset-id-reset").click(() => {
+    window.location.href = "/formlibrary/services_list";
+  });
+  $(document).ready(function() {
+    $("#id_site").select2({ theme: "bootstrap", placeholder: "select site" });
+    $("#id_program").select2({ theme: "bootstrap" });
+    $("#id_site").select2({ theme: "bootstrap" });
+    $("#id_training").select2({
+      placeholder: "select training",
+      theme: "bootstrap"
+    });
+    $("#id_distribution").select2({
+      placeholder: "select distribution",
+      theme: "bootstrap"
+    });
+  });
+</script>
+{% endblock content %}

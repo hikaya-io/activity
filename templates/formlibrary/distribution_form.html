@@ -13,7 +13,7 @@
     {% endfor %} {% endif %} {% block breadcrumbs %}
     <ul class="breadcrumb">
       <li><a href="/">My Dashboard</a></li>
-      <li><a href="/formlibrary/distribution_list/0/0/">{{ request.user.activity_user.organization.distribution_label }}</a></li>
+      <li><a href="/formlibrary/services_list">{{ request.user.activity_user.organization.distribution_label }}</a></li>
       <li class="active">Details</li>
     </ul>
   {% endblock %}
@@ -22,18 +22,9 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {% if distribution_name %}
-          {{ distribution_name }} 
-        {% else %} 
-          {{ form_title }} 
-        {% endif %}
+        Distribution Details
       </h4>
     </div>
-    {% comment %}
-    <div class="sub-navigation-actions">
-      {% include "form_guidance.html" %}
-    </div>
-    {% endcomment %}
   </div>
   <div class="admin-content">
     <form method="POST">
@@ -43,21 +34,11 @@
           <li class="active">
             <a href="#details" data-toggle="tab">{{ request.user.activity_user.organization.distribution_label }} Details</a>
           </li>
-          <li>
-            <a href="#information" data-toggle="tab">Additional Information</a>
-          </li>
-          <li><a href="#participants" data-toggle="tab">Participants</a></li>
         </ul>
 
         <div class="tab-content clearfix">
           <div class="tab-pane active" id="details">
             {% include 'formlibrary/form-sections/distribution/details.html' %}
-          </div>
-          <div class="tab-pane" id="information">
-            {% include 'formlibrary/form-sections/distribution/additional_info.html' %}
-          </div>
-          <div class="tab-pane" id="participants">
-            {% include 'formlibrary/form-sections/distribution/participants.html' %}
           </div>
         </div>
       </div>
@@ -74,7 +55,7 @@
 </div>
 <script>
   $("#reset-id-reset").click(() => {
-    window.location.href = "/formlibrary/distribution_list/0/0/";
+    window.location.href = "/formlibrary/services_list";
   });
   $(document).ready(() => {
     $("#id_program").select2({ theme: "bootstrap" });

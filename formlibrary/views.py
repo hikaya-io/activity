@@ -9,10 +9,16 @@ from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from workflow.models import Program, Organization
 
-from .forms import IndividualForm, HouseholdForm
-from .models import Individual, Distribution, Training, Household
+from .forms import IndividualForm, HouseholdForm, TrainingForm, DistributionForm
+from .models import Individual, Distribution, Training, Household, Service
 
-from .serializers import IndividualSerializer, HouseholdSerializer, HouseholdListDataSerializer
+from .serializers import (IndividualSerializer,
+                          HouseholdSerializer,
+                          HouseholdListDataSerializer,
+                          TrainingSerializer,
+                          TrainingListSerializer,
+                          DistributionSerializer,
+                          DistributionListSerializer)
 
 
 class IndividualView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
@@ -61,7 +67,7 @@ class IndividualList(ListView):
 
         get_training = Training.objects.filter(
             program__in=get_programs)
-        get_distribution = Distribution.objects.filter(
+        get_distributions = Distribution.objects.filter(
             program__in=get_programs)
         get_individuals = Individual.objects.filter(
             program__in=get_programs)
@@ -81,7 +87,7 @@ class IndividualList(ListView):
                           'get_individuals': get_individuals,
                           'program_id': int(program_id),
                           'get_programs': get_programs,
-                          'get_distribution': get_distribution,
+                          'get_distributions': get_distributions,
                           'get_training': get_training,
                           'training_id': int(training_id),
                           'distribution_id': int(distribution_id),
@@ -117,6 +123,7 @@ class GetIndividualData(GView):
     """
     View all individual data
     """
+
     def get(self, request):
         try:
             organization = request.user.activity_user.organization
@@ -168,7 +175,7 @@ class HouseholdView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
 
 class HouseholdlList(ListView):
     """
-    Individual
+    Household
     """
     model = Individual
     template_name = 'formlibrary/household.html'
@@ -185,16 +192,6 @@ class HouseholdlList(ListView):
         }
 
         return render(request, self.template_name, context)
-
-
-# def list_households(request):
-#     user = ActivityUser.objects.filter(user=request.user).first()
-#     households = Household.objects.filter(organization=user.organization)
-#     context = {
-#         'households': households,
-#         'active': ['formlibrary']
-#     }
-#     return render(request, 'formlibrary/household.html', context)
 
 
 class HouseholdDataView(ListCreateAPIView):
@@ -222,12 +219,12 @@ class HouseholdDataView(ListCreateAPIView):
         serializer = self.get_serializer(queryset, many=True)
 
         data = dict(
-                household_label=organization.household_label,
-                individual_label=organization.individual_label,
-                households=list(serializer.data),
-                programs=list(programs),
-                safe=False
-            )
+            household_label=organization.household_label,
+            individual_label=organization.individual_label,
+            households=list(serializer.data),
+            programs=list(programs),
+            safe=False
+        )
         return JsonResponse(data)
 
 
@@ -249,3 +246,161 @@ class HouseholdUpdate(UpdateView):
         context['current_household'] = self.get_object()
         context['active'] = ['formlibrary']
         return context
+
+
+class TrainingView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
+    queryset = Training.objects.all()
+    serializer_class = TrainingSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            request.data['program'] = request.data['program_id']
+            request.data['created_by'] = self.request.user.activity_user.id
+            return self.create(request, *args, **kwargs)
+        except Exception as e:
+            print(e)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization
+        get_programs = Program.objects.all().filter(organization=organization)
+        return Training.objects.filter(program__in=get_programs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class TrainingUpdate(UpdateView):
+    """
+    Training update
+    """
+    model = Training
+    template_name = 'formlibrary/training_form.html'
+    success_url = '/formlibrary/services_list'
+    form_class = TrainingForm
+
+    # add the request to the kwargs
+    def get_form_kwargs(self):
+        kwargs = super(TrainingUpdate, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        kwargs['organization'] = self.request.user.activity_user.organization
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(TrainingUpdate, self).get_context_data(**kwargs)
+        context['current_program'] = self.get_object()
+        context['active'] = ['formlibrary']
+        return context
+
+
+class GetTrainingData(GView):
+
+    def get(self, request):
+        organization = request.user.activity_user.organization
+        get_programs = Program.objects.filter(organization=organization)
+        service = Service()
+
+        trainings = Training.objects.filter(
+            program__in=get_programs)
+
+        get_trainings = TrainingListSerializer(trainings, many=True, context={'request': request})
+
+        get_service_types = service.get_service_types()
+        return JsonResponse(
+            dict(
+                level_1_label=organization.level_1_label,
+                training_label=organization.training_label,
+                service_types=list(get_service_types),
+                programs=list(get_programs.values('id', 'name')),
+                trainings=list(get_trainings.data), safe=False
+
+            )
+        )
+
+
+class DistributionView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
+    queryset = Distribution.objects.all()
+    serializer_class = DistributionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            request.data['program'] = request.data['program_id']
+            request.data['created_by'] = self.request.user.activity_user.id
+            return self.create(request, *args, **kwargs)
+        except Exception as e:
+            print(e)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization
+        get_programs = Program.objects.all().filter(organization=organization)
+        return Distribution.objects.filter(program__in=get_programs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class DistributionUpdate(UpdateView):
+    """
+    Distribution update
+    """
+    model = Distribution
+    template_name = 'formlibrary/distribution_form.html'
+    success_url = '/formlibrary/services_list'
+    form_class = DistributionForm
+
+    # add the request to the kwargs
+    def get_form_kwargs(self):
+        kwargs = super(DistributionUpdate, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        kwargs['organization'] = self.request.user.activity_user.organization
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(DistributionUpdate, self).get_context_data(**kwargs)
+        context['current_program'] = self.get_object()
+        context['active'] = ['formlibrary']
+        return context
+
+
+class GetDistributionData(GView):
+
+    def get(self, request):
+        organization = request.user.activity_user.organization
+        get_programs = Program.objects.filter(organization=organization)
+
+        distributions = Distribution.objects.filter(
+            program__in=get_programs)
+
+        get_distributions = DistributionListSerializer(distributions, many=True, context={'request': request})
+        return JsonResponse(
+            dict(
+                level_1_label=organization.level_1_label,
+                distribution_label=organization.distribution_label,
+                distributions=list(get_distributions.data), safe=False
+
+            )
+        )
+
+
+class ServicelList(ListView):
+    template_name = 'formlibrary/service.html'
+
+    def get(self, request, *args, **kwargs):
+
+        organization = request.user.activity_user.organization
+
+        get_programs = Program.objects.all().filter(organization=organization)
+        get_training = Training.objects.filter(
+            program__in=get_programs)
+
+        context = {
+            'service_types': {
+                'training': get_training,
+            },
+            'get_programs': get_programs,
+            'get_training': get_training,
+            'form_component': 'service_list',
+        }
+
+        return render(request, self.template_name, context)
