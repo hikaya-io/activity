@@ -32,7 +32,7 @@ class DistributionForm(forms.ModelForm):
 
     class Meta:
         model = Distribution
-        exclude = ['create_date', 'edit_date']
+        exclude = ['create_date', 'edit_date', 'modified_by', 'created_by']
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()

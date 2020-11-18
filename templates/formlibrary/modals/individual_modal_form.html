@@ -43,8 +43,7 @@
               v-model="create_data.date_of_birth"
               class="form-control"
               style="width:200px;"
-              placeholder="Date of birth"
-              v-validate="'required'"/>
+              placeholder="Date of birth"/>
 
         <span v-show="errors.has('date_of_birth')" class="help is-danger">[[ errors.first('date_of_birth') ]]</span>
       </div>

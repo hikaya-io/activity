@@ -107,7 +107,14 @@
            -
           </div> 
         </td>
-        <td>[[ individual.primary_phone ]]</td>
+        <td>
+          <div v-if="individual.primary_phone">
+            [[ individual.primary_phone ]]
+          </div>
+          <div v-else>
+           -
+          </div>
+        </td>
         <td>[[ formatDate(individual.create_date) ]]</td>
         <td class="text-right">
           <!-- Split button -->
