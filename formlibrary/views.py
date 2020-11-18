@@ -65,7 +65,7 @@ class IndividualList(ListView):
 
         get_training = Training.objects.filter(
             program__in=get_programs)
-        get_distribution = Distribution.objects.filter(
+        get_distributions = Distribution.objects.filter(
             program__in=get_programs)
         get_individuals = Individual.objects.filter(
             program__in=get_programs)
@@ -85,7 +85,7 @@ class IndividualList(ListView):
                           'get_individuals': get_individuals,
                           'program_id': int(program_id),
                           'get_programs': get_programs,
-                          'get_distribution': get_distribution,
+                          'get_distributions': get_distributions,
                           'get_training': get_training,
                           'training_id': int(training_id),
                           'distribution_id': int(distribution_id),
@@ -393,17 +393,18 @@ class ServicelList(ListView):
     def get(self, request, *args, **kwargs):
 
         organization = request.user.activity_user.organization
+
         get_programs = Program.objects.all().filter(organization=organization)
-        get_training = Training.objects.all().filter(
-            program__in=get_programs)
-        get_distribution = Distribution.objects.all().filter(
+        get_training = Training.objects.filter(
             program__in=get_programs)
 
         context = {
             'service_types': {
                 'training': get_training,
-                'distribution': get_distribution,
             },
+            'get_programs': get_programs,
+            'get_training': get_training,
+            'form_component': 'service_list',
         }
 
         return render(request, self.template_name, context)

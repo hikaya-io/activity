@@ -82,10 +82,7 @@
     <tbody>
       <tr v-cloak v-for="(service, index) in servicesList[0]" v-if="servicesList.length">
         <td>
-          {% comment %} <a v-bind:href="'/formlibrary/individual_update/'+ individual.id+'/'"
-            data-toggle="tooltip"
-            :title="individual.first_name"> {% endcomment %}
-          <a href="#">
+          <a v-bind:href="'/formlibrary/'+service.service_type.toLowerCase()+'_update/'+service.id">
             [[ service.name ]]
           </a>
         </td>
