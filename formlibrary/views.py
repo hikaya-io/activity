@@ -16,7 +16,9 @@ from .serializers import (IndividualSerializer,
                           HouseholdSerializer,
                           HouseholdListDataSerializer,
                           TrainingSerializer,
-                          DistributionSerializer)
+                          TrainingListSerializer,
+                          DistributionSerializer,
+                          DistributionListSerializer)
 
 
 class IndividualView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
@@ -302,7 +304,7 @@ class GetTrainingData(GView):
             trainings = Training.objects.all().filter(
                 program__in=get_programs)
 
-            get_trainings = TrainingSerializer(trainings, many=True, context={'request': request})
+            get_trainings = TrainingListSerializer(trainings, many=True, context={'request': request})
 
             get_service_types = service.get_service_types()
             return JsonResponse(
@@ -374,7 +376,7 @@ class GetDistributionData(GView):
             distributions = Distribution.objects.all().filter(
                 program__in=get_programs)
 
-            get_distributions = DistributionSerializer(distributions, many=True, context={'request': request})
+            get_distributions = DistributionListSerializer(distributions, many=True, context={'request': request})
             return JsonResponse(
                 dict(
                     level_1_label=organization.level_1_label,
