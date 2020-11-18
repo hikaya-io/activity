@@ -25,7 +25,7 @@ class TrainingListSerializer(serializers.ModelSerializer):
 class DistributionSerializer(serializers.ModelSerializer):
     start_date = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', ])
     end_date = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', ])
-    
+
     class Meta:
         model = Distribution
         fields = '__all__'
@@ -38,6 +38,7 @@ class DistributionListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Distribution
         fields = ['id', 'name', 'created_by', 'create_date', 'program']
+
 
 class IndividualSerializer(serializers.ModelSerializer):
     training = TrainingSerializer(many=True, read_only=True)
@@ -69,7 +70,3 @@ class HouseholdListDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Household
         fields = ['id', 'name', 'duration', 'program', 'created_by', 'create_date']
-
-
-
-
