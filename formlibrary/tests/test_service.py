@@ -94,6 +94,4 @@ class ServiceTestCase(TestCase):
         self.client.force_login(self.user, backend=None)
 
         resp = self.client.get(url)
-        print("*********")
-        print(resp)
         self.assertEqual(resp.status_code, 200)
