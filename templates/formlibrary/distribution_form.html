@@ -13,7 +13,7 @@
     {% endfor %} {% endif %} {% block breadcrumbs %}
     <ul class="breadcrumb">
       <li><a href="/">My Dashboard</a></li>
-      <li><a href="/formlibrary/distribution_list/">{{ request.user.activity_user.organization.distribution_label }}</a></li>
+      <li><a href="/formlibrary/services_list">{{ request.user.activity_user.organization.distribution_label }}</a></li>
       <li class="active">Details</li>
     </ul>
   {% endblock %}
@@ -22,18 +22,9 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {% if name %}
-          {{ name }} 
-        {% else %} 
-          {{ form_title }} 
-        {% endif %}
+        Distribution Details
       </h4>
     </div>
-    {% comment %}
-    <div class="sub-navigation-actions">
-      {% include "form_guidance.html" %}
-    </div>
-    {% endcomment %}
   </div>
   <div class="admin-content">
     <form method="POST">
@@ -64,7 +55,7 @@
 </div>
 <script>
   $("#reset-id-reset").click(() => {
-    window.location.href = "/formlibrary/distribution_list/0/0/";
+    window.location.href = "/formlibrary/services_list";
   });
   $(document).ready(() => {
     $("#id_program").select2({ theme: "bootstrap" });

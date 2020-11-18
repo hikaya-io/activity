@@ -77,7 +77,7 @@
         <li class="{% if training_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/{{program_id}}/0/{{distribution_id}}/">--All--</a></li>
         {% for training in get_training %}
         <li class="{% if training_id == training.id %} active {% endif %}">
-          <a href="/formlibrary/{{form_component}}/{{program_id}}/{{training.id}}/{{distribution_id}}">{{ training.training_name | truncatechars:30}}</a>
+          <a href="/formlibrary/{{form_component}}/{{program_id}}/{{training.id}}/{{distribution_id}}">{{ training.name | truncatechars:30}}</a>
         </li>
         {% endfor %}
       </ul>
@@ -97,7 +97,30 @@
         <li class="{% if distribution_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/{{program_id}}/{{training_id}}/0/">--All--</a></li>
         {% for distribution in get_distribution %}
         <li class="{% if distribution_id == distribution.id %} active {% endif %}">
-          <a href="/formlibrary/{{form_component}}/{{program_id}}/{{training_id}}/{{distribution.id}}">{{ distribution.distribution_name | truncatechars:30}}</a>
+          <a href="/formlibrary/{{form_component}}/{{program_id}}/{{training_id}}/{{distribution.id}}">{{ distribution.name | truncatechars:30}}</a>
+        </li>
+        {% endfor %}
+      </ul>
+  </div>
+  {% endif %}
+
+  {% if  form_component ==  'service_list' %}
+  <div class="btn-group" role="group">
+      <button
+        type="button"
+        class="btn btn-sm btn-default dropdown-toggle"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        {{ user.activity_user.organization.training_label }}
+        <span class="fa {% if training_id == 0 %} fa-angle-down {% else %} fa-filter {% endif %}"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li class="{% if training_id == 0 %} active {% endif %}"><a href="/formlibrary/{{form_component}}/{{program_id}}/0/{{distribution_id}}/">--All--</a></li>
+        {% for training in get_training %}
+        <li class="{% if training_id == training.id %} active {% endif %}">
+          <a href="/formlibrary/{{form_component}}/{{program_id}}/{{training.id}}/{{distribution_id}}">{{ training.name | truncatechars:30}}</a>
         </li>
         {% endfor %}
       </ul>

@@ -16,9 +16,9 @@ from .serializers import (IndividualSerializer,
                           HouseholdSerializer,
                           HouseholdListDataSerializer,
                           TrainingSerializer,
+                          TrainingListSerializer,
                           DistributionSerializer,
-                          TrainingListDataSerializer,
-                          DistributionListDataSerializer)
+                          DistributionListSerializer)
 
 
 class IndividualView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
@@ -67,7 +67,7 @@ class IndividualList(ListView):
 
         get_training = Training.objects.filter(
             program__in=get_programs)
-        get_distribution = Distribution.objects.filter(
+        get_distributions = Distribution.objects.filter(
             program__in=get_programs)
         get_individuals = Individual.objects.filter(
             program__in=get_programs)
@@ -87,7 +87,7 @@ class IndividualList(ListView):
                           'get_individuals': get_individuals,
                           'program_id': int(program_id),
                           'get_programs': get_programs,
-                          'get_distribution': get_distribution,
+                          'get_distributions': get_distributions,
                           'get_training': get_training,
                           'training_id': int(training_id),
                           'distribution_id': int(distribution_id),
@@ -296,29 +296,26 @@ class TrainingUpdate(UpdateView):
 class GetTrainingData(GView):
 
     def get(self, request):
-        try:
-            organization = request.user.activity_user.organization
-            get_programs = Program.objects.all().filter(organization=organization)
-            service = Service()
+        organization = request.user.activity_user.organization
+        get_programs = Program.objects.filter(organization=organization)
+        service = Service()
 
-            trainings = Training.objects.all().filter(
-                program__in=get_programs)
+        trainings = Training.objects.filter(
+            program__in=get_programs)
 
-            get_trainings = TrainingListDataSerializer(trainings, many=True, context={'request': request})
+        get_trainings = TrainingListSerializer(trainings, many=True, context={'request': request})
 
-            get_service_types = service.get_service_types()
-            return JsonResponse(
-                dict(
-                    level_1_label=organization.level_1_label,
-                    training_label=organization.training_label,
-                    service_types=list(get_service_types),
-                    programs=list(get_programs.values('id', 'name')),
-                    trainings=list(get_trainings.data), safe=False
+        get_service_types = service.get_service_types()
+        return JsonResponse(
+            dict(
+                level_1_label=organization.level_1_label,
+                training_label=organization.training_label,
+                service_types=list(get_service_types),
+                programs=list(get_programs.values('id', 'name')),
+                trainings=list(get_trainings.data), safe=False
 
-                )
             )
-        except Exception as e:
-            return JsonResponse(dict(error=str(e)))
+        )
 
 
 class DistributionView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
@@ -369,24 +366,21 @@ class DistributionUpdate(UpdateView):
 class GetDistributionData(GView):
 
     def get(self, request):
-        try:
-            organization = request.user.activity_user.organization
-            get_programs = Program.objects.all().filter(organization=organization)
+        organization = request.user.activity_user.organization
+        get_programs = Program.objects.filter(organization=organization)
 
-            distributions = Distribution.objects.all().filter(
-                program__in=get_programs)
+        distributions = Distribution.objects.filter(
+            program__in=get_programs)
 
-            get_distributions = DistributionListDataSerializer(distributions, many=True, context={'request': request})
-            return JsonResponse(
-                dict(
-                    level_1_label=organization.level_1_label,
-                    distribution_label=organization.distribution_label,
-                    distributions=list(get_distributions.data), safe=False
+        get_distributions = DistributionListSerializer(distributions, many=True, context={'request': request})
+        return JsonResponse(
+            dict(
+                level_1_label=organization.level_1_label,
+                distribution_label=organization.distribution_label,
+                distributions=list(get_distributions.data), safe=False
 
-                )
             )
-        except Exception as e:
-            print(e)
+        )
 
 
 class ServicelList(ListView):
@@ -395,17 +389,18 @@ class ServicelList(ListView):
     def get(self, request, *args, **kwargs):
 
         organization = request.user.activity_user.organization
+
         get_programs = Program.objects.all().filter(organization=organization)
-        get_training = Training.objects.all().filter(
-            program__in=get_programs)
-        get_distribution = Distribution.objects.all().filter(
+        get_training = Training.objects.filter(
             program__in=get_programs)
 
         context = {
             'service_types': {
                 'training': get_training,
-                'distribution': get_distribution,
             },
+            'get_programs': get_programs,
+            'get_training': get_training,
+            'form_component': 'service_list',
         }
 
         return render(request, self.template_name, context)

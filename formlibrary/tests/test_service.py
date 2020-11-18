@@ -1,8 +1,6 @@
 from django.test import TestCase
-# from formlibrary.models import Individual, Household
 from formlibrary.models import Training, Distribution
 from workflow.models import Program, Office, ActivityUser
-# from django.urls import reverse
 from rest_framework.test import APIClient
 from django.contrib.auth.models import User
 from pytz import timezone

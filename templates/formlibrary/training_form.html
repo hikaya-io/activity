@@ -22,19 +22,21 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {% if name %}
-          {{ name }}
-        {% else %}
-          {{ form_title }}
-        {% endif%}
+         Training Details
       </h4>
     </div>
-
   </div>
+
   <div class="admin-content">
     <form method="POST">
       {% csrf_token %}
-      <div id="individual-tab">
+      <div id="training-tab">
+        <ul class="nav nav-tabs">
+          <li class="active">
+            <a href="#details" data-toggle="tab">{{ request.user.activity_user.organization.training_label }} Details</a>
+          </li>
+        </ul>
+        
         <div class="tab-content clearfix">
           <div class="tab-pane active" id="details">
             {% include 'formlibrary/form-sections/training/details.html' %}
@@ -54,7 +56,7 @@
 </div>
 <script>
   $("#reset-id-reset").click(() => {
-    window.location.href = "/formlibrary/service_list/";
+    window.location.href = "/formlibrary/services_list";
   });
   $(document).ready(function() {
     $("#id_site").select2({ theme: "bootstrap", placeholder: "select site" });

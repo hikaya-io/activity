@@ -10,8 +10,7 @@
   <ul class="breadcrumb">
     <li><a href="/">My Dashboard</a></li>
     <li class="active">
-      {% comment %} {{ request.user.activity_user.organization.service_label }} {% endcomment %}
-      Service
+      {{ request.user.activity_user.organization.service_label }}
     </li>
   </ul>
   {% endblock %}

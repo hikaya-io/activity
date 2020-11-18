@@ -11,13 +11,33 @@ class TrainingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Training
         fields = '__all__'
-        # fields = ['id', 'name', 'duration']
+
+
+class TrainingListSerializer(serializers.ModelSerializer):
+    program = ProgramSerializer()
+    created_by = ActivityUserSerializer()
+
+    class Meta:
+        model = Training
+        fields = ['id', 'name', 'created_by', 'create_date', 'program']
 
 
 class DistributionSerializer(serializers.ModelSerializer):
+    start_date = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', ])
+    end_date = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', ])
+
     class Meta:
         model = Distribution
-        fields = ['id', 'name']
+        fields = '__all__'
+
+
+class DistributionListSerializer(serializers.ModelSerializer):
+    program = ProgramSerializer()
+    created_by = ActivityUserSerializer()
+
+    class Meta:
+        model = Distribution
+        fields = ['id', 'name', 'created_by', 'create_date', 'program']
 
 
 class IndividualSerializer(serializers.ModelSerializer):
@@ -29,8 +49,8 @@ class IndividualSerializer(serializers.ModelSerializer):
     class Meta:
         model = Individual
         fields = ['id', 'first_name', 'last_name', 'id_number', 'primary_phone',
-                  'date_of_birth', 'sex', 'age',
-                  'training', 'distribution', 'site', 'program', 'create_date', 'photo']
+                  'sex', 'age', 'training', 'distribution',
+                  'site', 'program', 'create_date']
 
         def get_age(self, obj):
             return obj.individual.age()
