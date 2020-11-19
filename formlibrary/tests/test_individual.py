@@ -87,7 +87,9 @@ class IndividualTestCase(TestCase):
             'sex': 'F',
         }
         resp = self.client.post(url, data=data)
-        self.assertEqual(resp.status_code, 200)
+
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.url, '/formlibrary/individual_list/0/0/0')
 
     def test_delete_individual_request(self):
         url = reverse("individual", kwargs={'pk': self.individual.pk})

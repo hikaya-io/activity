@@ -58,9 +58,15 @@ class IndividualForm(forms.ModelForm):
 
     class Meta:
         model = Individual
+        # fields = '__all__'
         exclude = ('created_by', 'modified_by', 'label')
 
-    date_of_birth = forms.DateTimeField(widget=DatePicker.DateInput(), required=True)
+    date_of_birth = forms.DateTimeField(widget=DatePicker.DateInput(), required=False)
+    age = forms.CharField(
+        label='Age',
+        widget=forms.TextInput(attrs={'disabled': True, }),
+        required=False
+    )
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
@@ -80,6 +86,8 @@ class IndividualForm(forms.ModelForm):
             organization=organization)
         self.fields['site'].queryset = SiteProfile.objects.filter(
             organizations__id__contains=self.request.user.activity_user.organization.id)
+        self.fields['household_id'].queryset = Household.objects.filter(organization=organization)
+        self.fields['age'].initial = str(self.instance.age)
 
 
 class HouseholdForm(forms.ModelForm):
