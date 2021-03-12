@@ -64,13 +64,14 @@ deploy_app() {
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]]; then
-        envsubst < ./deployment_files/deployment-vault > deployment.yaml
-        envsubst < ./deployment_files/service_account > service_account.yaml
-        envsubst < ./deployment_files/token_review_srv_acc > token_review.yaml
+        # envsubst < ./deployment_files/deployment-vault > deployment.yaml # ! This is where vault values are integrated
+        envsubst < ./deployment_files/deployment > deployment.yaml
+        envsubst < ./deployment_files/service_account > service_account.yaml # ?
+        # envsubst < ./deployment_files/token_review_srv_acc > token_review.yaml # ?
         envsubst < ./deployment_files/shared-ingress-config > ingress-config.yaml
 
         kubectl apply -f service_account.yaml
-        kubectl apply -f token_review.yaml
+        # kubectl apply -f token_review.yaml
     fi
 
     if [[ $GITHUB_EVENT_NAME == "release" ]] || \
