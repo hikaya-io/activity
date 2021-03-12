@@ -35,7 +35,7 @@ build_and_push_image() {
 
     #@--- Build image for deployment ---@#
     echo "++++++++ Start building image +++++++++"
-    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/heads/725-separate-from-vault" ]]
+    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/731/merge" ]]
     then
         # old_line="source .env.deploy"
         # new_line='source /vault/secrets/config' # ?!
