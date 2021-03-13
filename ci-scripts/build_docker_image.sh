@@ -9,6 +9,7 @@ docker_hub_auth() {
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
+        [[ $GITHUB_REF == "refs/pull/731/merge" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
 
         docker login -p=$DOCKER_HUB_PASSWD -u=$DOCKER_HUB_USERNM
