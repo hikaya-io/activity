@@ -36,6 +36,7 @@ auth_kubectl_cluster() {
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
+        [[ $GITHUB_REF == "refs/pull/731/merge" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
         doctl auth init -t $SERVICE_ACCESS_TOKEN
