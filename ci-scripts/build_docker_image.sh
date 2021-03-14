@@ -52,11 +52,13 @@ build_and_push_image() {
         echo export ACTIVITY_CE_DB_PORT=${ACTIVITY_CE_DB_PORT_DEV} >> .env.deploy
         # export APPLICATION_ENV=${APPLICATION_ENV_DEV}
         export APPLICATION_ENV="env"
-        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME_DEV-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
+        echo $APPLICATION_NAME
+        export APPLICATION_NAME="activity"
+        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
         echo "-------- Building Image Done! ----------"
 
         echo "++++++++++++ Push Image built -------"
-        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME_DEV-$TRAVIS_COMMIT
+        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT
 
     fi
 
