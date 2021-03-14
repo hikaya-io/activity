@@ -128,7 +128,7 @@ replace_variables() {
         export MIN_PODS=${MIN_PODS_DEV}
 
         export HOST_DOMAIN=${HOST_DOMAIN_DEV}
-        export APPLICATION_ENV=${APPLICATION_ENV_DEV}
+        export APPLICATION_ENV="dev"
 
     fi
 
