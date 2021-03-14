@@ -122,6 +122,10 @@ replace_variables() {
         # export SECRET_PATH=${SECRET_PATH_DEV}
         export APPLICATION_NAME=${APPLICATION_NAME_DEV}
         export MIN_PODS=${MIN_PODS_DEV}
+
+        export HOST_DOMAIN=${HOST_DOMAIN_DEV}
+        export APPLICATION_ENV=${APPLICATION_ENV_DEV}
+
     fi
 
     #@--- Replace necesary variables for staging env ---@#
@@ -132,6 +136,9 @@ replace_variables() {
         # export SECRET_PATH=${SECRET_PATH_STAGING}
         export APPLICATION_NAME=${APPLICATION_NAME_STAGING}
         export MIN_PODS=${MIN_PODS_DEV}
+
+        export HOST_DOMAIN=${HOST_DOMAIN_STAGING}
+        export APPLICATION_ENV=${APPLICATION_ENV_STAGING}
     fi
 
     #@--- Replace necesary variables for production env ---@#
