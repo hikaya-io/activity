@@ -118,8 +118,8 @@ replace_variables() {
     if [[ $TRAVIS_BRANCH == "develop" ]] || \
         [[ $GITHUB_REF == "refs/heads/develop" ]]; then
         export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
-        export ROLE_NAME=${ROLE_NAME_DEV}
-        export SECRET_PATH=${SECRET_PATH_DEV}
+        # export ROLE_NAME=${ROLE_NAME_DEV}
+        # export SECRET_PATH=${SECRET_PATH_DEV}
         export APPLICATION_NAME=${APPLICATION_NAME_DEV}
         export MIN_PODS=${MIN_PODS_DEV}
     fi
@@ -128,8 +128,8 @@ replace_variables() {
     if [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]]; then
         export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
-        export ROLE_NAME=${ROLE_NAME_DEV}
-        export SECRET_PATH=${SECRET_PATH_STAGING}
+        # export ROLE_NAME=${ROLE_NAME_DEV}
+        # export SECRET_PATH=${SECRET_PATH_STAGING}
         export APPLICATION_NAME=${APPLICATION_NAME_STAGING}
         export MIN_PODS=${MIN_PODS_DEV}
     fi
