@@ -67,7 +67,7 @@ deploy_app() {
         [[ $GITHUB_REF == "refs/pull/731/merge" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]]; then
         # envsubst < ./deployment_files/deployment-vault > deployment.yaml # ! This is where vault values are integrated
-        export APPLICATION_NAME
+        # export APPLICATION_NAME
         envsubst < ./deployment_files/deployment > deployment.yaml
         envsubst < ./deployment_files/service_account > service_account.yaml # ?
         # envsubst < ./deployment_files/token_review_srv_acc > token_review.yaml # ?

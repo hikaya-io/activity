@@ -51,7 +51,7 @@ build_and_push_image() {
         echo export ACTIVITY_CE_DB_HOST=${ACTIVITY_CE_DB_HOST_DEV} >> .env.deploy
         echo export ACTIVITY_CE_DB_PORT=${ACTIVITY_CE_DB_PORT_DEV} >> .env.deploy
         # export APPLICATION_ENV=${APPLICATION_ENV_DEV}
-        export APPLICATION_ENV="env"
+        export APPLICATION_ENV="dev"
         echo $APPLICATION_NAME
         export APPLICATION_NAME="activity"
         docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
