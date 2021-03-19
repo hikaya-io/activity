@@ -41,7 +41,7 @@ django-simple-history==2.7.2
 django-tables2==2.0.6
 django-uuidfield==0.5.0
 django-wysiwyg==0.8.0
-djangorestframework==3.9.3
+djangorestframework==3.11.2
 docopt==0.6.2
 entrypoints==0.3
 et-xmlfile==1.0.1
