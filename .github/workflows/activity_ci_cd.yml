@@ -161,6 +161,8 @@ jobs:
         SERVICE_ACCESS_TOKEN: ${{ secrets.SERVICE_ACCESS_TOKEN }}
         DOCKER_HUB_USERNM: ${{ secrets.DOCKER_HUB_USERNM }}
         DOCKER_HUB_PASSWD: ${{ secrets.DOCKER_HUB_PASSWD }}
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+        DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         B64_TOKEN: ${{ secrets.B64_TOKEN }}
         DEFAULT_NOTIFY: ${{ secrets.DEFAULT_NOTIFY }}
         RATE_LIMIT: ${{ secrets.RATE_LIMIT }}
