@@ -36,7 +36,6 @@ auth_kubectl_cluster() {
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
-        [[ $GITHUB_REF == "refs/pull/731/merge" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
         doctl auth init -t $SERVICE_ACCESS_TOKEN
@@ -64,7 +63,6 @@ deploy_app() {
     if [[ $TRAVIS_BRANCH == "develop" ]]  || \
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/pull/731/merge" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]]; then
         envsubst < ./deployment_files/deployment > deployment.yaml
         envsubst < ./deployment_files/service_account > service_account.yaml
@@ -83,7 +81,6 @@ deploy_app() {
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
-        [[ $GITHUB_REF == "refs/pull/731/merge" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
         echo "------- generate deployfiles --------------"
@@ -116,7 +113,6 @@ replace_variables() {
 
     #@--- Replace necesary variables for dev env ---@#
     if [[ $TRAVIS_BRANCH == "develop" ]] || \
-        [[ $GITHUB_REF == "refs/pull/731/merge" ]] || \
         [[ $GITHUB_REF == "refs/heads/develop" ]]; then
         export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
         # export APPLICATION_NAME=${APPLICATION_NAME_DEV}
