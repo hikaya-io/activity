@@ -21,12 +21,6 @@ ENV ACTIVITY_CE_DB_PASSWORD=activity
 ENV ACTIVITY_CE_DB_HOST=db
 ENV ACTIVITY_CE_DB_PORT=5432
 
-# Fix of https://github.com/pyca/cryptography/issues/5771
-# starting cryptography>=3.5, Rust is required to build it (or a later version of PIP for wheel download)
-# Updating cryptography requries Rust installation
-# In cryptography < 3.5, which we use, it can be disabled using the below env var
-ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
-
 # Install dependencies
 RUN pip install --upgrade pip
 COPY ./requirements.txt /usr/src/activity/requirements.txt
