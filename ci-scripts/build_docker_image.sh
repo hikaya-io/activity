@@ -50,6 +50,8 @@ build_and_push_image() {
         docker logout
         docker login -p=$DOCKER_HUB_PASSWORD -u=$DOCKER_HUB_USERNAME
         docker tag $REGISTRY_OWNER/activity:$APPLICATION_NAME_DEV-$TRAVIS_COMMIT hikaya/activity:$TRAVIS_COMMIT
+        docker push hikaya/activity:$TRAVIS_COMMIT
+
     fi
 
     #@--- Build staging image ---@#
