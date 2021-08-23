@@ -112,6 +112,8 @@ jobs:
       env:
         DOCKER_HUB_USERNM: ${{ secrets.DOCKER_HUB_USERNM }}
         DOCKER_HUB_PASSWD: ${{ secrets.DOCKER_HUB_PASSWD }}
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+        DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         ACTIVITY_CE_DB_NAME_DEV: ${{ secrets.ACTIVITY_CE_DB_NAME_DEV }}
         ACTIVITY_CE_DB_USER_DEV: ${{ secrets.ACTIVITY_CE_DB_USER_DEV }}
         ACTIVITY_CE_DB_PASSWORD_DEV: ${{ secrets.ACTIVITY_CE_DB_PASSWORD_DEV }}
