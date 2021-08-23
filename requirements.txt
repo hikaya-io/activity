@@ -94,7 +94,7 @@ sqlparse==0.3.0
 tablib==0.13.0
 tinycss2==1.0.2
 uritemplate==3.0.0
-urllib3==1.24.3
+urllib3==1.26.5
 wcwidth==0.1.8
 WeasyPrint==47
 webencodings==0.5.1
