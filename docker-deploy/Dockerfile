@@ -21,6 +21,13 @@ RUN apk add bash gcc musl-dev jpeg-dev zlib-dev libffi-dev cairo-dev pango-dev g
     
 # Copy all project files
 COPY . /app
+ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
+
+# Fix of https://github.com/pyca/cryptography/issues/5771
+# starting cryptography>=3.5, Rust is required to build it (or a later version of PIP for wheel download)
+# Updating cryptography requries Rust installation
+# In cryptography < 3.5, which we use, it can be disabled using the below env var
+ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 
 # Make the start file executable and delete installation cache, reduces image size
 RUN pip install -r requirements.txt && \
