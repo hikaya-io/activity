@@ -13,7 +13,6 @@ docker_hub_auth() {
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
-        [[ $GITHUB_REF == "refs/pull/753/merge" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
 
         docker login -p=$DOCKER_HUB_PASSWD -u=$DOCKER_HUB_USERNM
@@ -45,13 +44,13 @@ build_and_push_image() {
     then
         tag=$TAG_NAME
     fi
-    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/753/merge" ]]
+    if [[ $GITHUB_REF == "refs/heads/develop" ]]
     then
         ts=$(timestamp)
         tag="dev-${ts}"
     fi
     echo "++++++++ Start building image +++++++++"
-    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/753/merge" ]]; then
+    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]]; then
         old_line="source .env.deploy"
         new_line='source /vault/secrets/config'
         sed -i "s%$old_line%$new_line%g" docker-deploy/start_app.sh
