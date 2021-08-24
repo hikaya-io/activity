@@ -56,7 +56,7 @@ build_and_push_image() {
 
     #@--- Build production image ---@#
 
-    if [[ $GITHUB_EVENT_NAME == "release" ]] || [[ ! -z $TRAVIS_TAG ]]; then
+    if [[ $GITHUB_EVENT_NAME == "release" ]]; then
 
         # Create prod settings file and modify dockerfile for production image
         old_line='mv /app/activity/settings/local-sample.py /app/activity/settings/local.py'

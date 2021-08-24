@@ -48,7 +48,8 @@ set_up_cluster_dev_env() {
 
 #@--- Function to setup production cluster ---@#
 set_up_cluster_prod() {
-    if [[ $GITHUB_EVENT_NAME == "release" ]] || [[ ! -z $TRAVIS_TAG ]]; then
+    if [[ $GITHUB_EVENT_NAME == "release" ]];
+    then
 
         #@--- Initialize terraform ---@#
         echo " ----- inititalize the backend --------- "
