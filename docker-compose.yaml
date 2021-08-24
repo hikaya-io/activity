@@ -13,7 +13,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ./.env.dev
+      - ./.env.docker-compose
 
   db:
     image: postgres:12.0-alpine
