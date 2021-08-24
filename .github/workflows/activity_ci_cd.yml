@@ -131,7 +131,6 @@ jobs:
         ACTIVITY_CE_DB_HOST_PROD: ${{ secrets.ACTIVITY_CE_DB_HOST_PROD }}
         ACTIVITY_CE_DB_PORT_PROD: ${{ secrets.ACTIVITY_CE_DB_PORT_PROD }}
       run: |
-        export TRAVIS_COMMIT=$GITHUB_SHA
         chmod +x ci-scripts/build_docker_image.sh
         bash ./ci-scripts/build_docker_image.sh
 
@@ -168,7 +167,6 @@ jobs:
         MIN_PODS_PROD: ${{ secrets.MIN_PODS_PROD }}
         APPLICATION_NAME_PROD: ${{ secrets.APPLICATION_NAME_PROD }}
       run: |
-        export TRAVIS_COMMIT=$GITHUB_SHA
         export FILE_PATH="/github/home/.docker/config.json"
         chmod +x ci-scripts/deployment.sh
         bash ./ci-scripts/deployment.sh
