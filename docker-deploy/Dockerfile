@@ -1,5 +1,5 @@
 # Set base image
-FROM python:3.6-alpine
+FROM python:3.7-alpine
 
 # Set working directory
 WORKDIR /app
@@ -11,6 +11,10 @@ ENV PYTHONUNBUFFERED 1
 
 # Update default packages and install application dependancies
 RUN apk -U update --no-cache 
+
+# https://github.com/pyca/cryptography/blob/main/docs/installation.rst#alpine
+RUN apk add openssl-dev cargo
+
 RUN apk add bash gcc musl-dev jpeg-dev zlib-dev libffi-dev cairo-dev pango-dev gdk-pixbuf && \
     apk add postgresql-dev gcc python3-dev musl-dev && \
     pip install --upgrade pip 
