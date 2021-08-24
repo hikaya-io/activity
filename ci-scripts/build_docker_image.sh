@@ -97,16 +97,9 @@ build_and_push_image() {
 }
 
 
-#@--- main function ---@#
 main() {
-    if [[ $TRAVIS_EVENT_TYPE != "pull_request" ]]; then
-        #@--- Run the auth fucntion ---@#
-        docker_hub_auth
-
-        #@--- Run the build function ---@#
-        build_and_push_image
-    fi
+    docker_hub_auth
+    build_and_push_image
 }
 
-#@--- Run the main function ---@#
 main

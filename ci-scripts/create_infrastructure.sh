@@ -90,20 +90,11 @@ set_up_cluster_prod() {
     fi
 }
 
-#@--- Main function ---@#
 main() {
     cd infrastructure
 
-    if [[ $TRAVIS_EVENT_TYPE != "pull_request" ]]; then
-
-            #@--- Run the setup dev-env cluster function ---@#
-            set_up_cluster_dev_env
-
-            #@--- Run the prod setup function ---@#
-            set_up_cluster_prod
-    fi
-
+    set_up_cluster_dev_env
+    set_up_cluster_prod
 }
 
-#@--- Run the main function ---@#
 main

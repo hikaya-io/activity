@@ -128,24 +128,11 @@ replace_variables() {
     fi
 }
 
-#@--- Main Function ---@#
 main() {
-
-    if [[ $TRAVIS_EVENT_TYPE != "pull_request" ]]; then
-        #@--- Run install and setup function ---@#
-        install_kubectl_doctl
-
-        #@--- run the replace function ---@#
-        replace_variables
-
-        #@--- Run the setup function ---@#
-        auth_kubectl_cluster
-
-        #@--- Run deployment functio ---@#
-        deploy_app
-    fi
-
+    install_kubectl_doctl
+    replace_variables
+    auth_kubectl_cluster
+    deploy_app
 }
 
-#@--- Run the main function ---@#
 main

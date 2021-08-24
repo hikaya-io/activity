@@ -37,7 +37,6 @@ send_slack_notification() {
 
 }
 
-#@--- Main function ---@#
 main() {
     if  [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]]; then
@@ -52,5 +51,4 @@ main() {
     fi
 }
 
-#@--- Run main function ---@#
 main

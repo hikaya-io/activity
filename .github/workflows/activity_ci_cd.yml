@@ -84,7 +84,6 @@ jobs:
         K8S_VERSION_PROD: ${{ secrets.K8S_VERSION_PROD }}
         DB_NAME_PROD: ${{ secrets.DB_NAME_PROD }}
       run: |
-        export TRAVIS_EVENT_TYPE="push"
         chmod +x ci-scripts/create_infrastructure.sh
         bash ./ci-scripts/create_infrastructure.sh
 
@@ -133,7 +132,6 @@ jobs:
         ACTIVITY_CE_DB_PORT_PROD: ${{ secrets.ACTIVITY_CE_DB_PORT_PROD }}
       run: |
         export TRAVIS_COMMIT=$GITHUB_SHA
-        export TRAVIS_EVENT_TYPE="push"
         chmod +x ci-scripts/build_docker_image.sh
         bash ./ci-scripts/build_docker_image.sh
 
@@ -172,7 +170,6 @@ jobs:
       run: |
         export TRAVIS_COMMIT=$GITHUB_SHA
         export FILE_PATH="/github/home/.docker/config.json"
-        export TRAVIS_EVENT_TYPE="push"
         chmod +x ci-scripts/deployment.sh
         bash ./ci-scripts/deployment.sh
         if [[ $? -eq 0 ]]; then
