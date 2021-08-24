@@ -3,11 +3,8 @@
 set -ex
 set -o pipefail
 
-#@--- Fuction to replace varibels for branch staging ---@#
-replace_env_varibles() {
-    if [[ $GITHUB_REF == "refs/heads/staging" ]]; then
-        export APPLICATION_ENV=${APPLICATION_ENV_STAGING}
-    fi
+#@--- Fuction to replace variables for branch staging ---@#
+replace_env_variables() {
 
     if [[ $GITHUB_EVENT_NAME == "release" ]]; then
         export APPLICATION_ENV=${APPLICATION_ENV_PROD}
@@ -43,7 +40,6 @@ send_slack_notification() {
 #@--- Main function ---@#
 main() {
     if  [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]]; then
         #@--- run the replace function ---@#
         replace_env_varibles

@@ -5,7 +5,6 @@ set +ex
 #@--- install kubectl and doctl ---@#
 install_kubectl_doctl() {
     if [[ $TRAVIS_BRANCH == "develop" ]] || \
-        [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
         echo "++++++++++++ install kubectl ++++++++++++"
         curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
@@ -34,8 +33,6 @@ auth_kubectl_cluster() {
     # Authenticate kubectl to the cluster
     if [[ $TRAVIS_BRANCH == "develop" ]] || \
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
         doctl auth init -t $SERVICE_ACCESS_TOKEN
@@ -61,9 +58,8 @@ deploy_app() {
         --type=kubernetes.io/dockerconfigjson -n $APPLICATION_ENV
 
     if [[ $TRAVIS_BRANCH == "develop" ]]  || \
-        [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]]; then
+        [[ $GITHUB_REF == "refs/heads/develop" ]];
+    then
         envsubst < ./deployment_files/deployment > deployment.yaml
         envsubst < ./deployment_files/service_account > service_account.yaml
         envsubst < ./deployment_files/shared-ingress-config > ingress-config.yaml
@@ -79,8 +75,6 @@ deploy_app() {
 
     if [[ $TRAVIS_BRANCH == "develop" ]]  || \
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
         echo "------- generate deployfiles --------------"
@@ -121,16 +115,6 @@ replace_variables() {
         export APPLICATION_ENV="dev"
         export APPLICATION_NAME="activity"
 
-    fi
-
-    #@--- Replace necesary variables for staging env ---@#
-    if [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]]; then
-        export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
-        export ROLE_NAME=${ROLE_NAME_DEV}
-        export SECRET_PATH=${SECRET_PATH_STAGING}
-        export APPLICATION_NAME=${APPLICATION_NAME_STAGING}
-        export MIN_PODS=${MIN_PODS_DEV}
     fi
 
     #@--- Replace necesary variables for production env ---@#

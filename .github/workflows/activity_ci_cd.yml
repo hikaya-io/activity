@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - develop
-      - staging
   pull_request:
     branches:
       - develop
-      - staging
   release:
     types:
       - published
@@ -78,12 +76,6 @@ jobs:
         PG_VERSION: ${{ secrets.PG_VERSION }}
         PROJECT_NAME: $$ {{ secrets.PROJECT_NAME }}
         DB_NAME_DEV_ENV: ${{ secrets.DB_NAME_DEV_ENV }}
-        # staging vars, some are reused from dev_env
-        BACKEND_BUCKET_STAGING: ${{ secrets.BACKEND_BUCKET_STAGING }}
-        STATE_FILE_STAGING: ${{ secrets.STATE_FILE_STAGING }}
-        CLUSTER_NAME_STAGING: ${{ secrets.CLUSTER_NAME_STAGING }}
-        K8S_VERSION_STAGING: ${{ secrets.K8S_VERSION_STAGING }}
-        DB_NAME_STAGING: ${{ secrets.DB_NAME_STAGING }}
         # Prod vars
         BACKEND_BUCKET_PROD: ${{ secrets.BACKEND_BUCKET_PROD }}
         STATE_FILE_PROD: ${{ secrets.STATE_FILE_PROD }}
@@ -130,10 +122,6 @@ jobs:
         APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
         REGISTRY_OWNER: ${{ secrets.REGISTRY_OWNER }}
         APPLICATION_NAME_DEV: ${{ secrets.APPLICATION_NAME_DEV }}
-        # staging variables. others are reused from dev
-        ACTIVITY_CE_DB_NAME_STAGING: ${{ secrets.ACTIVITY_CE_DB_NAME_STAGING }}
-        APPLICATION_ENV_STAGING: ${{ secrets.APPLICATION_ENV_STAGING }}
-        APPLICATION_NAME_STAGING: ${{ secrets.APPLICATION_NAME_STAGING }}
         # Production Vars
         APPLICATION_ENV_PROD: ${{ secrets.APPLICATION_ENV_PROD }}
         ACTIVITY_CE_DB_NAME_PROD: ${{ secrets.ACTIVITY_CE_DB_NAME_PROD }}
@@ -171,12 +159,7 @@ jobs:
         APPLICATION_NAME_DEV: ${{ secrets.APPLICATION_NAME_DEV }}
         MIN_PODS_DEV: ${{ secrets.MIN_PODS_DEV }}
         HOST_DOMAIN_DEV: ${{ secrets.HOST_DOMAIN_DEV }}
-        # staging variables
-        CLUSTER_NAME_STAGING: ${{ secrets.CLUSTER_NAME_STAGING }}
-        HOST_DOMAIN_STAGING: ${{ secrets.HOST_DOMAIN_STAGING }}
-        APPLICATION_ENV_STAGING: ${{ secrets.APPLICATION_ENV_STAGING }}
         SLACK_CHANNEL_HOOK: ${{ secrets.SLACK_CHANNEL_HOOK }}
-        APPLICATION_NAME_STAGING: ${{ secrets.APPLICATION_NAME_STAGING }}
         # Production Vars
         APPLICATION_ENV_PROD: ${{ secrets.APPLICATION_ENV_PROD }}
         CLUSTER_NAME_PROD: ${{ secrets.CLUSTER_NAME_PROD }}
