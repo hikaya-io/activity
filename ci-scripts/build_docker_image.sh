@@ -2,6 +2,10 @@
 
 set -ex
 
+timestamp() {
+  date +"%Y-%m-%dT%H-%M-%SZ" # current time
+}
+
 #@--- Function to authenticate to docker hub ---@#
 docker_hub_auth() {
     if [[ $TRAVIS_BRANCH == "develop" ]] || \
@@ -35,6 +39,17 @@ export_variables() {
 build_and_push_image() {
 
     #@--- Build image for deployment ---@#
+
+    # Tag of the Docker image
+    if [[ $GITHUB_EVENT_NAME == "release" ]]
+    then
+        tag=$TAG_NAME
+    fi
+    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/753/merge" ]]
+    then
+        ts=$(timestamp)
+        tag="dev-${ts}"
+    fi
     echo "++++++++ Start building image +++++++++"
     if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/753/merge" ]]; then
         old_line="source .env.deploy"
@@ -47,11 +62,10 @@ build_and_push_image() {
         echo "++++++++++++ Push Image built -------"
         docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME_DEV-$TRAVIS_COMMIT
 
-        # TODO add timestamp
         docker logout
         docker login -p=$DOCKER_HUB_PASSWORD -u=$DOCKER_HUB_USERNAME
-        docker tag $REGISTRY_OWNER/activity:$APPLICATION_NAME_DEV-$TRAVIS_COMMIT hikaya/activity:$TRAVIS_COMMIT
-        docker push hikaya/activity:$TRAVIS_COMMIT
+        docker tag $REGISTRY_OWNER/activity:$APPLICATION_NAME_DEV-$TRAVIS_COMMIT hikaya/activity:$tag
+        docker push hikaya/activity:$tag
 
     fi
 

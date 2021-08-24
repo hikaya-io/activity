@@ -110,6 +110,7 @@ jobs:
 
     - name: Build and Push
       env:
+        TAG_NAME: ${{ github.event.release.tag_name }}
         DOCKER_HUB_USERNM: ${{ secrets.DOCKER_HUB_USERNM }}
         DOCKER_HUB_PASSWD: ${{ secrets.DOCKER_HUB_PASSWD }}
         DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
