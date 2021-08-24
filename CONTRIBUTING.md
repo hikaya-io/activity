@@ -112,8 +112,8 @@ monitoring the minor release and fix critical issues.
 > **Final Week**: See `Hardening Sprint`. The team improves test coverage by building tests and cleaning up unused code and templates. Deploy to `production` and showcase new features.
 
 We follow a typical checklist before we ship new features:<br>
-✅Pull Requests are reviewed and merged to `dev` branch.<br>
-✅Issue is deployed to `staging` environment and passes user acceptance testing (UAT).<br>
+✅Pull Requests are reviewed and merged to `develop` branch.<br>
+✅The PR is deployed to `development` environment and passes user acceptance testing (UAT).<br>
 ✅Manually execute the Smoke Test on all supported platforms.<br>
 ✅Release notes updated.<br>
 ✅Deploy to `production`.<br>
@@ -226,7 +226,6 @@ We use **Github Projects** to manage our current sprints with automated workflow
 - `In progress`
 - `Pull request`
 - `Dev testing`
-- `Staging`
 - `Done`
 
 Before every sprint, we archived all issues in the `Done` columns and add issue cards with the current sprint milestone tagged to them. During our sprint calls, the team will groom, discuss, and assign cards to contributors to work on.
@@ -249,7 +248,7 @@ Note:
 During this period we make a build available on the insiders channel. We will monitor incoming issues from this release, fix any critical bugs that arise, and then produce a final stable release for the monthly iteration.
 
 ## QA testing
-We perform QA testing when features are merged from `develop` to `staging`. We use automated end-to-end testing to provide a strong foundation for functional testing.
+We perform QA testing when features are merged into `develop`. We use automated end-to-end testing to provide a strong foundation for functional testing.
 
 ---
 
@@ -264,8 +263,7 @@ We perform QA testing when features are merged from `develop` to `staging`. We u
 We use 3 main branches in all our repositories :
 
 `Dev` (or `Develop`) - All bug fixes, defects, and tasks.<br>
-`Feature branches` (i.e. ACT-001) - All feature branches must be named like: ACT-001 (where ACT-001 is the issue number on GitHub).<br>
-`Staging` - This is our QA testing environment<br>
+`Feature branches`: All feature branches must be named like `123-explanation-of-feature-fix`, where 123 is the issue number on GitHub.<br>
 `Master` - Clean code in production environment<br>
 
 > **Note:**
