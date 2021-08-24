@@ -17,10 +17,10 @@ setup_message() {
 
     if [[ $DEPLOY == "success" ]]; then
         echo "++++++++++++ generate deployment message +++++++++++++"
-        COMMIT_URL="https://github.com/hikaya-io/activity/commit/${TRAVIS_COMMIT}"
+        COMMIT_URL="https://github.com/hikaya-io/activity/commit/${GITHUB_SHA}"
         DEPLOYMENT_MESSAGE="*Success* :white_check_mark: The following commit was deployed to *_activity ${APPLICATION_ENV}_* by ${EMOJI} \n [Message]: $TRAVIS_COMMIT_MESSAGE \n [Link]: ${COMMIT_URL}"
     else
-        COMMIT_URL="https://github.com/hikaya-io/activity/commit/${TRAVIS_COMMIT}"
+        COMMIT_URL="https://github.com/hikaya-io/activity/commit/${GITHUB_SHA}"
         DEPLOYMENT_MESSAGE="*Failed* :no_entry: The following commit was unable to deploy to *_activity ${APPLICATION_ENV}_* by ${EMOJI} \n [Message]: $TRAVIS_COMMIT_MESSAGE \n [Link]: ${COMMIT_URL}"
     fi
 

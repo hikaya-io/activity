@@ -47,11 +47,11 @@ build_and_push_image() {
 
         export APPLICATION_ENV="dev"
         export APPLICATION_NAME="activity"
-        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
+        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$GITHUB_SHA -f docker-deploy/Dockerfile .
         echo "-------- Building Image Done! ----------"
 
         echo "++++++++++++ Push Image built -------"
-        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT
+        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$GITHUB_SHA
 
     fi
 
@@ -83,11 +83,11 @@ build_and_push_image() {
         echo export ACTIVITY_CE_DB_PORT=${ACTIVITY_CE_DB_PORT_PROD} >> .env.deploy
         export APPLICATION_ENV=${APPLICATION_ENV_PROD}
 
-        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT -f docker-deploy/Dockerfile .
+        docker build -t $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$GITHUB_SHA -f docker-deploy/Dockerfile .
         echo "-------- Building Image Done! ----------"
 
         echo "++++++++++++ Push Image built -------"
-        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$TRAVIS_COMMIT
+        docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$GITHUB_SHA
 
     fi
 
