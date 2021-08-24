@@ -5,7 +5,7 @@ set +ex
 #@--- Function to setup the cluster ---@#
 set_up_cluster_dev_env() {
 
-    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/heads/733-refactor-ci" ]];
+    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/757/merge" ]];
     then
 
         #@--- Initialize terraform ---@#

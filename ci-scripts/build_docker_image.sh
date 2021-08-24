@@ -4,11 +4,10 @@ set -ex
 
 #@--- Function to authenticate to docker hub ---@#
 docker_hub_auth() {
-    if [[ $TRAVIS_BRANCH == "develop" ]] || \
-        [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $GITHUB_REF == "refs/heads/733-refactor-ci" ]] || \
-        [[ $GITHUB_EVENT_NAME == "release" ]] || \
-        [[ ! -z $TRAVIS_TAG ]]; then
+    if [[ $GITHUB_REF == "refs/heads/develop" ]] || \
+        [[ $GITHUB_REF == "refs/pull/757/merge" ]] || \
+        [[ $GITHUB_EVENT_NAME == "release" ]];
+    then
 
         docker login -p=$DOCKER_HUB_PASSWD -u=$DOCKER_HUB_USERNM
     fi
@@ -34,7 +33,7 @@ build_and_push_image() {
 
     #@--- Build image for deployment ---@#
     echo "++++++++ Start building image +++++++++"
-    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/heads/733-refactor-ci" ]]
+    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/757/merge" ]]
     then
         #@--- Run export function ---@#
         export_variables
