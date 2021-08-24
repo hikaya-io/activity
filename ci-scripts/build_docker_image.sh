@@ -6,6 +6,7 @@ set -ex
 docker_hub_auth() {
     if [[ $TRAVIS_BRANCH == "develop" ]] || \
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
+        [[ $GITHUB_REF == "refs/heads/733-refactor-ci" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
 
@@ -33,7 +34,7 @@ build_and_push_image() {
 
     #@--- Build image for deployment ---@#
     echo "++++++++ Start building image +++++++++"
-    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]]
+    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/heads/733-refactor-ci" ]]
     then
         #@--- Run export function ---@#
         export_variables
