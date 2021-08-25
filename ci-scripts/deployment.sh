@@ -64,13 +64,11 @@ deploy_app() {
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]]; then
-        envsubst < ./deployment_files/deployment-vault > deployment.yaml
+        envsubst < ./deployment_files/deployment > deployment.yaml
         envsubst < ./deployment_files/service_account > service_account.yaml
-        envsubst < ./deployment_files/token_review_srv_acc > token_review.yaml
         envsubst < ./deployment_files/shared-ingress-config > ingress-config.yaml
 
         kubectl apply -f service_account.yaml
-        kubectl apply -f token_review.yaml
     fi
 
     if [[ $GITHUB_EVENT_NAME == "release" ]] || \
@@ -117,10 +115,12 @@ replace_variables() {
     if [[ $TRAVIS_BRANCH == "develop" ]] || \
         [[ $GITHUB_REF == "refs/heads/develop" ]]; then
         export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
-        export ROLE_NAME=${ROLE_NAME_DEV}
-        export SECRET_PATH=${SECRET_PATH_DEV}
-        export APPLICATION_NAME=${APPLICATION_NAME_DEV}
+        # export APPLICATION_NAME=${APPLICATION_NAME_DEV}
         export MIN_PODS=${MIN_PODS_DEV}
+        export HOST_DOMAIN=${HOST_DOMAIN_DEV}
+        export APPLICATION_ENV="dev"
+        export APPLICATION_NAME="activity"
+
     fi
 
     #@--- Replace necesary variables for staging env ---@#
