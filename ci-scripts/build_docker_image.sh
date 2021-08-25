@@ -72,7 +72,8 @@ build_and_push_image() {
 
         docker logout
         docker login -p=$DOCKER_HUB_PASSWORD -u=$DOCKER_HUB_USERNAME
-        docker tag $REGISTRY_OWNER/activity:$APPLICATION_NAME_DEV-$TRAVIS_COMMIT hikaya/activity:$tag
+        rm .env.deploy
+        docker build -t hikaya/activity:$tag -f docker-deploy/Dockerfile .
         docker push hikaya/activity:$tag
 
     fi
