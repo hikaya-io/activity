@@ -33,3 +33,5 @@ RUN pip install -r requirements.txt
 
 # Copy project.
 COPY . /usr/src/activity/
+
+ENTRYPOINT ["sh", "start.sh"]
