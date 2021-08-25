@@ -29,9 +29,7 @@ install_kubectl_doctl() {
 #@--- Authorize kubectl to cluster ---@#
 auth_kubectl_cluster() {
     # Authenticate kubectl to the cluster
-    if [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $GITHUB_REF == "refs/pull/757/merge" ]] || \
-        [[ $GITHUB_EVENT_NAME == "release" ]];
+    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_EVENT_NAME == "release" ]]
     then
         doctl auth init -t $SERVICE_ACCESS_TOKEN
         doctl -t $SERVICE_ACCESS_TOKEN kubernetes cluster kubeconfig save $CLUSTER_NAME
@@ -55,7 +53,7 @@ deploy_app() {
         --from-file=.dockerconfigjson=$FILE_PATH \
         --type=kubernetes.io/dockerconfigjson -n $APPLICATION_ENV
 
-    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/757/merge" ]];
+    if [[ $GITHUB_REF == "refs/heads/develop" ]]
     then
         envsubst < ./deployment_files/deployment > deployment.yaml
         envsubst < ./deployment_files/service_account > service_account.yaml
@@ -70,9 +68,7 @@ deploy_app() {
             envsubst < ./deployment_files/ingress-config > ingress-config.yaml
     fi
 
-    if [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $GITHUB_REF == "refs/pull/757/merge" ]] || \
-        [[ $GITHUB_EVENT_NAME == "release" ]];
+    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_EVENT_NAME == "release" ]]
     then
         echo "------- generate deployfiles --------------"
         envsubst < ./deployment_files/service > service.yaml
@@ -103,7 +99,7 @@ deploy_app() {
 replace_variables() {
 
     #@--- Replace necesary variables for dev env ---@#
-    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/757/merge" ]];
+    if [[ $GITHUB_REF == "refs/heads/develop" ]]
     then
         export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
         # export APPLICATION_NAME=${APPLICATION_NAME_DEV}
