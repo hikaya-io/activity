@@ -60,7 +60,7 @@ $ cd activity
 
 or similar for your OS.
 
-## Setting up on Virtual Environment
+## Setup the Virtual Environment
 You can setup virtual environment either using `virtualenv` or `pipenv`.
 
 ### Using virtualenv
@@ -71,12 +71,6 @@ $ source <myvirtualenvironmentname>/bin/activate  # Activate your virtual enviro
 $ source <myvirtualenvironmentname>/script/activate # ... or on Windows
 $ pip install -r requirements.txt  # Install the dependencies
 ```
-
-Virtualenv will take care of:
-- managing the project's dependencies in isolation from the system's packages
-- providing a new Python binary/executable with the version specified (check this using `which python` on Linux and `python --version`)
-
-
 ### Using pipenv
 ```bash
 $ pip install pipenv  # Install pipenv
@@ -194,7 +188,8 @@ $ docker-compose exec web python manage.py createsuperuser
 ```
 
 ### Create 'Activity users'
-- Before logging in to the application you will need to go to the admin console (http://localhost:8000/admin/).
+Before logging in to the application, you will need to create an Activity User through Django's Admin Dashboard.
+- Go to the Admin dashboard: http://localhost:8000/admin/.
 - Navigate to `Workflow > Activity users` and add an Activity user.
 - Make to sure to select the superuser name you created earlier.
 
@@ -211,67 +206,6 @@ The `operation` in this case can be: `makemigrations`, `migrate`, `collectstatic
 <br/>
 <br/>
 
-# Extra information
-
-## Postgresql help
-
-### Install
-
-On MacOS:
-
-```bash
-$ brew update
-$ brew install postgresql
-$ initdb /usr/local/var/postgres
-$ pg_ctl -D /usr/local/var/postgres start
-$ createdb <mydatabasename>
-```
-On Windows:
-- Download and install the latest stable installer for PostgreSQL
-- You can use the SQL Shell that comes along with the application to run the following commands
-- To create a database run the command
-```bash
-$ create database <mydatabasename>;
-```
-
-### Manage
-
-```bash
-pg_ctl -D /usr/local/var/postgres start # to start
-pg_ctl -D /usr/local/var/postgres stop # to stop
-```
-
-
-## Install non-python dependencies
-
-1. **GDAL**
-
-On MacOs:
-
-```bash
-$ brew install gdal
-```
-
-On Windows:
-- You will need to download Gdal Core and Gdal installer for your version of Python.
-- Please read the following [instructions](https://pypi.org/project/GDAL/#windows) on how to properly install and test gdal.
-
-2. **Pango**
-
-On MacOs:
-
-```bash
-$ brew install pango
-```
-
-On Windows:
-- You will need Pango and Cairo for the application to run.
-- The runtime installer can be found [here](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases)
-- Download and install GTK+-3. 
-
-<br/>
-<br/>
-
 # Contributing
 
 Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team).
@@ -282,3 +216,5 @@ Feel free to checkout and learn more about:
 - Our [development process](https://team.hikaya.io/start/development-process.html)
 
 We are always looking for a fresh set of :eyes: who want to contribute to **Activity**, so if you are interested, you can reach out and create an issue and we'll help you get started!
+
+<!-- TODO point to Github discussions -->
