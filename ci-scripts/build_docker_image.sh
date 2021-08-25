@@ -2,6 +2,10 @@
 
 set -ex
 
+timestamp() {
+  date +"%Y-%m-%dT%H-%M-%SZ" # current time
+}
+
 #@--- Function to authenticate to docker hub ---@#
 docker_hub_auth() {
     if [[ $GITHUB_REF == "refs/heads/develop" ]] || \
@@ -32,6 +36,17 @@ export_variables() {
 build_and_push_image() {
 
     #@--- Build image for deployment ---@#
+
+    # Tag of the Docker image
+    if [[ $GITHUB_EVENT_NAME == "release" ]]
+    then
+        tag=$TAG_NAME
+    fi
+    if [[ $GITHUB_REF == "refs/heads/develop" ]]
+    then
+        ts=$(timestamp)
+        tag="dev-${ts}"
+    fi
     echo "++++++++ Start building image +++++++++"
     if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/757/merge" ]]
     then
@@ -51,6 +66,11 @@ build_and_push_image() {
 
         echo "++++++++++++ Push Image built -------"
         docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$GITHUB_SHA
+
+        docker logout
+        docker login -p=$DOCKER_HUB_PASSWORD -u=$DOCKER_HUB_USERNAME
+        docker tag $REGISTRY_OWNER/activity:$APPLICATION_NAME_DEV-$TRAVIS_COMMIT hikaya/activity:$tag
+        docker push hikaya/activity:$tag
 
     fi
 
