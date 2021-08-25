@@ -12,6 +12,7 @@ docker_hub_auth() {
         [[ $GITHUB_REF == "refs/heads/develop" ]] || \
         [[ $TRAVIS_BRANCH == "staging" ]] || \
         [[ $GITHUB_REF == "refs/heads/staging" ]] || \
+        [[ $GITHUB_REF == "refs/pull/731/merge" ]] || \
         [[ $GITHUB_EVENT_NAME == "release" ]] || \
         [[ ! -z $TRAVIS_TAG ]]; then
 
@@ -44,13 +45,13 @@ build_and_push_image() {
     then
         tag=$TAG_NAME
     fi
-    if [[ $GITHUB_REF == "refs/heads/develop" ]]
+    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/731/merge" ]]
     then
         ts=$(timestamp)
         tag="dev-${ts}"
     fi
     echo "++++++++ Start building image +++++++++"
-    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]]
+    if [[ $TRAVIS_BRANCH == "develop" ]] || [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_REF == "refs/pull/731/merge" ]]
     then
         #@--- Run export function ---@#
         export_variables
