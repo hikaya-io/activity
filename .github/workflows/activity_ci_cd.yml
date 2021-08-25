@@ -45,7 +45,6 @@ jobs:
         coverage report
         echo "----------- Upload test coverage ---------"
         bash <(curl -s https://codecov.io/bash)
-        echo ${{github.ref}}
 
   Infrastructure:
     runs-on: ubuntu-latest
