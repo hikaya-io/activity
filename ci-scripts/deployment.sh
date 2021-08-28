@@ -4,40 +4,33 @@ set +ex
 
 #@--- install kubectl and doctl ---@#
 install_kubectl_doctl() {
-    if [[ $TRAVIS_BRANCH == "develop" ]] || \
-        [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ ! -z $TRAVIS_TAG ]]; then
-        echo "++++++++++++ install kubectl ++++++++++++"
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+    # TODO replace with GA
+    echo "++++++++++++ install kubectl ++++++++++++"
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 
-        # Make downloaded binary executable
-        chmod +x ./kubectl
+    # Make downloaded binary executable
+    chmod +x ./kubectl
 
-        # Add binary to path
-        sudo mv ./kubectl /usr/local/bin/kubectl
+    # Add binary to path
+    sudo mv ./kubectl /usr/local/bin/kubectl
 
-        # Check the version
-        kubectl version --client
+    # Check the version
+    kubectl version --client
 
-        # Install digital ocean cli tool
-        sudo snap install doctl
-        sudo snap connect doctl:kube-config
+    # Install digital ocean cli tool
+    sudo snap install doctl
+    sudo snap connect doctl:kube-config
 
-        sudo apt-get install gettext -y
+    sudo apt-get install gettext -y
 
-        mkdir /home/travis/.kube
-    fi
+    mkdir /home/travis/.kube
 }
 
 #@--- Authorize kubectl to cluster ---@#
 auth_kubectl_cluster() {
     # Authenticate kubectl to the cluster
-    if [[ $TRAVIS_BRANCH == "develop" ]] || \
-        [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
-        [[ $GITHUB_EVENT_NAME == "release" ]] || \
-        [[ ! -z $TRAVIS_TAG ]]; then
+    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_EVENT_NAME == "release" ]]
+    then
         doctl auth init -t $SERVICE_ACCESS_TOKEN
         doctl -t $SERVICE_ACCESS_TOKEN kubernetes cluster kubeconfig save $CLUSTER_NAME
         kubectl create namespace $APPLICATION_ENV || echo "++++++ Namespace Exists ++++++"
@@ -60,10 +53,8 @@ deploy_app() {
         --from-file=.dockerconfigjson=$FILE_PATH \
         --type=kubernetes.io/dockerconfigjson -n $APPLICATION_ENV
 
-    if [[ $TRAVIS_BRANCH == "develop" ]]  || \
-        [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]]; then
+    if [[ $GITHUB_REF == "refs/heads/develop" ]]
+    then
         envsubst < ./deployment_files/deployment > deployment.yaml
         envsubst < ./deployment_files/service_account > service_account.yaml
         envsubst < ./deployment_files/shared-ingress-config > ingress-config.yaml
@@ -71,18 +62,14 @@ deploy_app() {
         kubectl apply -f service_account.yaml
     fi
 
-    if [[ $GITHUB_EVENT_NAME == "release" ]] || \
-        [[ ! -z $TRAVIS_TAG ]]; then
+    if [[ $GITHUB_EVENT_NAME == "release" ]];
+    then
             envsubst < ./deployment_files/deployment > deployment.yaml
             envsubst < ./deployment_files/ingress-config > ingress-config.yaml
     fi
 
-    if [[ $TRAVIS_BRANCH == "develop" ]]  || \
-        [[ $GITHUB_REF == "refs/heads/develop" ]] || \
-        [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]] || \
-        [[ $GITHUB_EVENT_NAME == "release" ]] || \
-        [[ ! -z $TRAVIS_TAG ]]; then
+    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_EVENT_NAME == "release" ]]
+    then
         echo "------- generate deployfiles --------------"
         envsubst < ./deployment_files/service > service.yaml
         envsubst < ./deployment_files/autoscaler > autoscaler.yaml
@@ -112,8 +99,8 @@ deploy_app() {
 replace_variables() {
 
     #@--- Replace necesary variables for dev env ---@#
-    if [[ $TRAVIS_BRANCH == "develop" ]] || \
-        [[ $GITHUB_REF == "refs/heads/develop" ]]; then
+    if [[ $GITHUB_REF == "refs/heads/develop" ]]
+    then
         export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
         # export APPLICATION_NAME=${APPLICATION_NAME_DEV}
         export MIN_PODS=${MIN_PODS_DEV}
@@ -123,19 +110,9 @@ replace_variables() {
 
     fi
 
-    #@--- Replace necesary variables for staging env ---@#
-    if [[ $TRAVIS_BRANCH == "staging" ]] || \
-        [[ $GITHUB_REF == "refs/heads/staging" ]]; then
-        export CLUSTER_NAME=${CLUSTER_NAME_DEV_ENV}
-        export ROLE_NAME=${ROLE_NAME_DEV}
-        export SECRET_PATH=${SECRET_PATH_STAGING}
-        export APPLICATION_NAME=${APPLICATION_NAME_STAGING}
-        export MIN_PODS=${MIN_PODS_DEV}
-    fi
-
     #@--- Replace necesary variables for production env ---@#
-    if [[ $GITHUB_EVENT_NAME == "release" ]] || \
-        [[ ! -z $TRAVIS_TAG ]]; then
+    if [[ $GITHUB_EVENT_NAME == "release" ]];
+    then
         export APPLICATION_ENV=${APPLICATION_ENV_PROD}
         export HOST_DOMAIN=${HOST_DOMAIN_PROD}
         export CLUSTER_NAME=${CLUSTER_NAME_PROD}
@@ -144,24 +121,11 @@ replace_variables() {
     fi
 }
 
-#@--- Main Function ---@#
 main() {
-
-    if [[ $TRAVIS_EVENT_TYPE != "pull_request" ]]; then
-        #@--- Run install and setup function ---@#
-        install_kubectl_doctl
-
-        #@--- run the replace function ---@#
-        replace_variables
-
-        #@--- Run the setup function ---@#
-        auth_kubectl_cluster
-
-        #@--- Run deployment functio ---@#
-        deploy_app
-    fi
-
+    install_kubectl_doctl
+    replace_variables
+    auth_kubectl_cluster
+    deploy_app
 }
 
-#@--- Run the main function ---@#
 main

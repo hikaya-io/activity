@@ -43,7 +43,6 @@ report_coverage() {
 }
 
 
-#@--- Main function ---@#
 main() {
 
     #@--- run Setup finction ---@#
@@ -62,5 +61,4 @@ main() {
     report_coverage
 }
 
-#@--- Run main function ---@#
 main

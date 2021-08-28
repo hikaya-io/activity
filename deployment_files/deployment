@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: activity-app-${APPLICATION_ENV}
-          image: docker.io/${REGISTRY_OWNER}/activity:${APPLICATION_NAME}-${APPLICATION_ENV}-${TRAVIS_COMMIT}
+          image: docker.io/${REGISTRY_OWNER}/activity:${APPLICATION_NAME}-${APPLICATION_ENV}-${GITHUB_SHA}
           imagePullPolicy: Always
           resources:
             limits:
