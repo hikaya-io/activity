@@ -33,7 +33,7 @@ django-localflavor==2.1
 django-map-widgets==0.2.2
 django-mathfilters==0.4.0
 django-multiupload==0.5.2
-django-registration==3.0
+django-registration==3.1.2
 django-report-utils==0.3.15
 django-rest-swagger==2.2.0
 django-select2==7.2.2
@@ -47,12 +47,12 @@ entrypoints==0.3
 et-xmlfile==1.0.1
 flake8==3.7.9
 html5lib==1.0.1
-httplib2==0.18.0
+httplib2==0.19.0
 idna==2.8
 importlib-metadata==1.5.0
 itypes==1.1.0
 jdcal==1.4.1
-Jinja2==2.10.1
+Jinja2==2.11.3
 macholib==1.11
 MarkupSafe==1.1.1
 mccabe==0.6.1
@@ -66,7 +66,7 @@ pendulum==2.0.5
 Pillow==8.2.0
 pluggy==0.13.1
 psycopg2-binary==2.8.4
-py==1.8.1
+py==1.10.0
 pyasn1==0.4.5
 pycodestyle==2.5.0
 pycparser==2.19
