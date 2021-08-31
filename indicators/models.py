@@ -545,7 +545,7 @@ class CollectedData(models.Model):
     def save(self, *args, **kwargs):
         if self.create_date is None:
             self.create_date = datetime.now()
-        self.edit_date = datetime.utcnow()
+        self.edit_date = datetime.now()
         super(CollectedData, self).save()
 
     # displayed in admin templates
