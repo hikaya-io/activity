@@ -17,7 +17,7 @@ cssselect2==0.2.1
 defusedxml==0.6.0
 dicttoxml==1.7.4
 diff-match-patch==20181111
-Django==2.2.13
+Django==2.2.24
 django-appconf==1.0.3
 django-bootstrap-modal-forms==1.5.0
 django-ckeditor==5.7.0
