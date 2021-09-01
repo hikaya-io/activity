@@ -215,6 +215,4 @@ Feel free to checkout and learn more about:
 - Our [contribution guide](./CONTRIBUTING.md)
 - Our [development process](https://team.hikaya.io/start/development-process.html)
 
-We are always looking for a fresh set of :eyes: who want to contribute to **Activity**, so if you are interested, you can reach out and create an issue and we'll help you get started!
-
-<!-- TODO point to Github discussions -->
+We are always looking for a fresh set of :eyes: who want to contribute to **Activity**, so if you are interested, you can reach out in our [issues board](https://github.com/hikaya-io/activity/issues) or [open a Github discussion](https://github.com/hikaya-io/activity/discussions) and we'll help you get started!
