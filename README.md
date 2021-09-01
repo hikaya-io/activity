@@ -34,32 +34,28 @@ Once all your changes have been committed to the repo, and before pushing them, 
 <br/>
 <br/>
 
+# Getting started
+
+For a first run, we recommend using [Docker Compose](https://docs.docker.com/compose/). Clone the repository and launch Activity and its PostgreSQL database using the following:
+
+```bash
+git clone --branch develop https://github.com/hikaya-io/activity.git && cd activity
+docker-compose up
+```
+
+Activity should be accessible at http://localhost:8080
+
+For a development setup, we recommend running Activity locally inside a Python virtual environment, and the rest of dependencies using Docker Compose.
+
+For other setup options, please check our [installation guide](./docs/installation.md) that covers:
+1. Development setup with hot reload
+2. Python virtual environment and dependencies installation
+3. Django config file & Django "superuser" creation
+4. Running migrations & fixtures
+5. Gaining access to local Activity instance
+
+
 # Local Setup
-
-**Note**: You should use `Python 3.7.5` for this project, meaning you may need to use `python3` or `pip3` in the following instructions (you can use the package manager on your OS, brew for mac, to install python 3).
-
-Open up your terminal and follow the instructions listed below.
-
-See [these instructions for additional information](#extra-information).
-
-## Clone the github repository
-
-Navigate to the folder you want the repository to be stored in.
-
-Run the following command:
-
-```bash
-$ git clone --branch develop https://github.com/hikaya-io/activity.git
-```
-
-Once cloned, navigate to the cloned repository with:
-
-```bash
-$ cd activity
-```
-
-or similar for your OS.
-
 ## Setup the Virtual Environment
 You can setup virtual environment either using `virtualenv` or `pipenv`.
 
