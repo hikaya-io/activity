@@ -7,7 +7,7 @@ You're almost there
 Activity is an open source product brought to you by your friends at 
 https://hikaya.io
 
-Copyright © 2020 Hikaya
+Copyright © 2021 Hikaya
 All rights reserved.
 
 This email was sent to {{user.email}} because you created an Activity account. 

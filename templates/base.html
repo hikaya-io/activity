@@ -98,7 +98,7 @@
             {% if user.is_authenticated and user.activity_user.organization.logo.url %}
             <img src="{{ user.activity_user.organization.logo.url }}" alt="Activity">
             {% else %}
-            <img src="/static/img/hikaya-activity-logo.png" alt="Activity">
+            <img src="https://s3.hikaya.io/activity/activity-wordmark.png" alt="Activity">
             {% endif %}
             </a>
           </div>
