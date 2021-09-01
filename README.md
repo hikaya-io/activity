@@ -159,53 +159,6 @@ This is to avoid an `AttributeError`.
 
 Log in using the same Admin credentials you used on the dashboard login page.
 
-## Set up locally using Docker
-
-### Build the docker images
-
-```bash
-$ docker-compose build
-```
-
-### Run the container
-
-```bash
-$ docker-compose up 
-```
-You can add the `-d` flag to run the container in detached mode
-
-### Run and Build at the same time
-```bash
-$ docker-compose up -d --build
-
-If docker is exiting due to postgres connection issues. Stop your local postgres instance, then rerun the above command
-
-```
-
-### Create Superuser
-```bash
-$ docker-compose exec web python manage.py createsuperuser
-```
-
-### Create 'Activity users'
-Before logging in to the application, you will need to create an Activity User through Django's Admin Dashboard.
-- Go to the Admin dashboard: http://localhost:8000/admin/.
-- Navigate to `Workflow > Activity users` and add an Activity user.
-- Make to sure to select the superuser name you created earlier.
-
-### Open the dashboard
-- Please make sure to log out of the admin console to avoid `AttributeError`.
-- Go back to the main page to log in and create an organization to access the main dashboard (http://localhost:8000/)
-
-### To run any other django commands
-```bash
-$ docker-compose exec web python manage.py [operation]
-```
-The `operation` in this case can be: `makemigrations`, `migrate`, `collectstatic` etc
-
-<br/>
-<br/>
-
 # Contributing
 
 Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team).
