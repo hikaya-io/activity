@@ -5,7 +5,7 @@ services:
 
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: ["sh", "start.sh"]
     volumes:
       - .:/usr/src/activity/
     ports:
@@ -13,7 +13,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ./.env.dev
+      - ./.env.docker-compose
 
   db:
     image: postgres:12.0-alpine
@@ -26,12 +26,5 @@ services:
     ports:
       - 5432:5432
 
-  migration:
-    build: .
-    command: python manage.py migrate --noinput
-    volumes:
-      - .:/usr/src/activity/
-    depends_on:
-      - db
 volumes:
   postgres_data:
