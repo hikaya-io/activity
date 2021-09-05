@@ -39,7 +39,7 @@ If you'd like to run your own copy of Activity or contribute to its development,
 
 > For the sake of similarity between developers environments and the deployment environments, we **strongly** recommend using [Docker Compose](https://docs.docker.com/compose/). For more details, see our [installation guide](./docs/installation).
 
-> Clone the repository and launch Activity and its PostgreSQL database using the following:
+Clone the repository and launch Activity and its PostgreSQL database using the following:
 
 ```bash
 git clone --branch develop https://github.com/hikaya-io/activity.git && cd activity
@@ -47,6 +47,7 @@ docker-compose up
 ```
 
 This will:
+
 1. Pull needed Docker images
 2. Launch PostgreSQL
 3. Build and launch Activity
@@ -67,7 +68,7 @@ docker-compose exec app python manage.py loaddata fixtures/countries.json  # Add
 docker-compose exec app python manage.py loaddata fixtures/sectors.json  # Add sectors
 ```
 
-2. Create a Django superuser/admin: `docker-compose exec app python manage.py createsuperuser`
+2. Create a Django superuser/admin: `docker-compose exec app python manage.py createsuperuser`. You can now use it to login at http://localhost:8000/admin
 3. Signup with a new user on Activity. Activate it through Django Admin Dashboard on http://localhost:8000/admin/workflow/activityuser/
 
 # Contributing
