@@ -44,6 +44,7 @@ django==2.2.13
     # via
     #   -r requirements.in
     #   django-appconf
+    #   django-debug-toolbar
     #   django-filter
     #   django-import-export
     #   django-select2
@@ -55,6 +56,8 @@ django-appconf==1.0.3
 django-ckeditor==5.7.0
     # via -r requirements.in
 django-crispy-forms==1.7.2
+    # via -r requirements.in
+django-debug-toolbar==1.11
     # via -r requirements.in
 django-extensions==2.1.6
     # via -r requirements.in
@@ -147,7 +150,9 @@ social-auth-app-django==3.1.0
 social-auth-core==4.1.0
     # via social-auth-app-django
 sqlparse==0.4.1
-    # via django
+    # via
+    #   django
+    #   django-debug-toolbar
 tablib==3.0.0
     # via django-import-export
 tinycss2==1.1.0
