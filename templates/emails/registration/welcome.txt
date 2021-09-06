@@ -9,7 +9,7 @@ Login to activity
 
 {{domain}}/accounts/login/
 
-Copyright © 2020 Hikaya
+Copyright © 2021 Hikaya
 All rights reserved.
 
 This email was sent to {{user.email}} because you registered a new Activity account.

@@ -3,7 +3,7 @@ version: '3.7'
 
 services:
 
-  web:
+  app:
     build: .
     command: ["sh", "start.sh"]
     volumes:
