@@ -5,19 +5,20 @@
 1. Development setup with hot reload
 2. Python virtual environment and dependencies installation
 3. Django config file & Django "superuser" creation
-4. Running migrations & fixtures
-5. Gaining access to local Activity instance
-
-
-1. Running Activity locally and PostgreSQL using Docker Compose
-
 
 ## Recommended setup
 
+docker-compose up -d
 
-Checks logs and -f
-Check containers
-Get a bash terminal
+This will launch the Activity app and a PostgreSQL database.
+
+To see how the Activity Docker container is built, please check the [Dockerfile](../Dockerfile).
+From inside the Activity Docker container, the script `start.sh` will be executed.
+The Activity code is mounted using a [Docker Volume](), which allows your changes to the code to be reflected in the Activity Docker container.
+
+To check the running Docker containers: `docker ps -a`
+To inspect and follow the logs: `docker-compose logs -f`
+To get a BASH terminal into the Activity container: `docker-compose exec -ti api bash`
 
 ## Alternative setup
 
@@ -32,8 +33,8 @@ pip-tools sync
 
 3. Launch a PostgreSQL instance and create a database in it (alternatively `docker-compose up -d db`) 
 
-4. Configure environment variables. See more details
-<!-- Which file exactly -->
+4. Configure environment variables.
+<!-- TODO Which file exactly -->
 
 5. Make and apply migrations
 
