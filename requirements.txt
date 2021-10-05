@@ -40,7 +40,7 @@ defusedxml==0.7.1
     #   social-auth-core
 diff-match-patch==20200713
     # via django-import-export
-django==2.2.13
+django==2.2.24
     # via
     #   -r requirements.in
     #   django-appconf
