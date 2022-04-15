@@ -7,13 +7,13 @@ timestamp() {
 }
 
 #@--- Function to authenticate to docker hub ---@#
-docker_hub_auth() {
-    if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_EVENT_NAME == "release" ]]
-    then
-        docker login -p=$DOCKER_HUB_PASSWD -u=$DOCKER_HUB_USERNM
-    fi
+# docker_hub_auth() {
+#     if [[ $GITHUB_REF == "refs/heads/develop" ]] || [[ $GITHUB_EVENT_NAME == "release" ]]
+#     then
+#         docker login -p=$DOCKER_HUB_PASSWD -u=$DOCKER_HUB_USERNM
+#     fi
 
-}
+# }
 
 #@--- Function to export env variables ---@#
 export_variables() {
@@ -65,10 +65,10 @@ build_and_push_image() {
         docker push $REGISTRY_OWNER/activity:$APPLICATION_NAME-$APPLICATION_ENV-$GITHUB_SHA
 
         docker logout
-        docker login -p=$DOCKER_HUB_PASSWORD -u=$DOCKER_HUB_USERNAME
+        docker login registry.digitalocean.com -p=$DOCKER_HUB_PASSWORD -u=$DOCKER_HUB_USERNAME
         rm .env.deploy
-        docker build -t hikaya/activity:$tag -f docker-deploy/Dockerfile .
-        docker push hikaya/activity:$tag
+        docker build -t registry.digitalocean.com/hikaya/activity:$tag -f docker-deploy/Dockerfile .
+        docker push registry.digitalocean.com/hikaya/activity:$tag
 
     fi
 
@@ -115,7 +115,7 @@ build_and_push_image() {
 
 
 main() {
-    docker_hub_auth
+    # docker_hub_auth
     build_and_push_image
 }
 
