@@ -1,5 +1,5 @@
 coverage==5.0.3
-Django==2.2.13
+Django==2.2.28
 django-ckeditor==5.7.0 # All references are in the initial commit
 django-crispy-forms==1.7.2 # ?
 django-extensions==2.1.6
