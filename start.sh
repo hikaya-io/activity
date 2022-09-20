@@ -1,5 +1,11 @@
 #!/bin/sh
 
+echo "+++++++++++++++++ Copy Settings File ++++++++++++++++++++++++"
+ls activity/settings/
+cp activity/settings/local-sample.py activity/settings/local.py
+ls activity/settings/
+echo "------------------- Copying Settings file Done!!! ------------------------"
+
 echo "+++++++++++++++++ Initialize database migrations ++++++++++++++++++++++++"
 python manage.py makemigrations
 echo "------------------- Initialize database migrations Done!!! ------------------------"
