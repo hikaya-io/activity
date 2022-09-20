@@ -43,6 +43,7 @@ Clone the repository and launch Activity and its PostgreSQL database using the f
 
 ```bash
 git clone --branch develop https://github.com/hikaya-io/activity.git && cd activity
+cp activity/settings/local-sample.py activity/settings/local.py
 docker-compose up
 ```
 

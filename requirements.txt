@@ -107,7 +107,7 @@ pillow==8.3.2
     # via
     #   -r requirements.in
     #   cairosvg
-psycopg2-binary==2.8.4
+psycopg2-binary>=2.8,<2.9
     # via -r requirements.in
 pycparser==2.20
     # via cffi
