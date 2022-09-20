@@ -3,7 +3,7 @@ Django==2.2.13
 django-ckeditor==5.7.0 # All references are in the initial commit
 django-crispy-forms==1.7.2 # ?
 django-extensions==2.1.6
-django-filter==2.1.0 # Used. All references very old
+django-filter==2.4.0 # Used. All references very old
 django-import-export==1.2.0 # Is it really used?
 django-mathfilters==0.4.0 # Only used in templates/workflow/projectdashboard_list.html
 django-rest-swagger==2.2.0

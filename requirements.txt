@@ -61,7 +61,7 @@ django-debug-toolbar==1.11
     # via -r requirements.in
 django-extensions==2.1.6
     # via -r requirements.in
-django-filter==2.1.0
+django-filter==2.4.0
     # via -r requirements.in
 django-import-export==1.2.0
     # via -r requirements.in
@@ -107,7 +107,7 @@ pillow==8.3.2
     # via
     #   -r requirements.in
     #   cairosvg
-psycopg2-binary>=2.8,<2.9
+psycopg2-binary==2.8.4
     # via -r requirements.in
 pycparser==2.20
     # via cffi
