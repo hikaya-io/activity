@@ -82,7 +82,7 @@
                   </div> -->
               </div>
             </form>
-            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">{% trans 'Login with Google' %}</a>
+            {% comment %} <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">{% trans 'Login with Google' %}</a> {% endcomment %}
             <div class="col-md-12 text-center">
               <a class="forgot-password" href="/accounts/user/password_reset/">
                 {% trans 'Forgot password?' %}
