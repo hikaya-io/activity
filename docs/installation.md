@@ -8,7 +8,10 @@
 
 ## Recommended setup
 
-docker-compose up -d
+```bash
+cp activity/settings/local-sample.py activity/settings/local.py
+docker-compose up
+```
 
 This will launch the Activity app and a PostgreSQL database.
 
