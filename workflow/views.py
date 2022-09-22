@@ -16,7 +16,7 @@ from .models import (
     FormGuidance, StakeholderType, FundCode, ActivityBookmarks, ActivityUser,
     Office, Organization, ProjectStatus
 )
-from formlibrary.models import TrainingAttendance, Distribution
+from formlibrary.models import Training, Distribution
 from indicators.models import CollectedData, ExternalService
 from django.utils import timezone
 
@@ -47,7 +47,6 @@ from .serializers import (
     )
 from rest_framework import generics
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from rest_framework.response import Response
 from django.views.generic.detail import View
 from django.forms.models import model_to_dict
 
@@ -74,6 +73,7 @@ APPROVALS = (
     ('new', 'New'),
 )
 
+
 # Program level1 serializer view
 class ProgramView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Program.objects.all()
@@ -88,6 +88,7 @@ class ProgramView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIV
         organization = self.request.user.activity_user.organization.id
         return Program.objects.filter(organization=organization)
 
+
 def date_handler(obj):
     return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
@@ -100,7 +101,7 @@ def list_workflow_level1(request):
     context = {'programs': programs,
                'get_all_sectors': get_all_sectors,
                'active': ['workflow']}
-   
+
     return render(request, 'workflow/level1.html', context)
 
 
@@ -158,7 +159,7 @@ class ProjectDash(ListView):
                 project_id=self.kwargs['pk']).count()
             get_community_count = SiteProfile.objects.all().filter(
                 projectagreement__id=self.kwargs['pk']).count()
-            get_training_count = TrainingAttendance.objects.all().filter(
+            get_training_count = Training.objects.all().filter(
                 project_agreement_id=self.kwargs['pk']).count()
             get_distribution_count = Distribution.objects.all().filter(
                 initiation_id=self.kwargs['pk']).count()
@@ -1597,6 +1598,7 @@ class ContactList(ListView):
             'get_contacts': get_contacts,
             'get_stakeholders': get_stakeholders,
             'stakeholder_id': stakeholder_id,
+            'get_countries':  Country.objects.all(),
             'active': ['components']
         })
 
@@ -1617,6 +1619,7 @@ class ContactCreate(GView):
             address=data.get('address', ''),
             phone=data.get('phone_number', ''),
             organization=user.organization,
+            country_id=data.get('country'),
             stakeholder_id=data.get('stakeholder'),
             email=data.get('email', ''),
         )
@@ -2642,6 +2645,8 @@ def add_stakeholder(request):
 """
 ProfileType views
 """
+
+
 class ProfileTypeCreate(GView):
     """
     View to create ProfileType and return Json response
@@ -2728,6 +2733,8 @@ class ProfileTypeDelete(GView):
 """
 FundCode views
 """
+
+
 class FundCodeCreate(CreateView):
     """
     create Fund Code View
@@ -2944,7 +2951,7 @@ class GetCountries(GView):
     def get(self, request):
 
         try:
-            countries = Country.objects.values('id', 'country', 'code')
+            countries = Country.objects.values('id', 'latitude', 'longitude', 'country', 'code')
 
             return JsonResponse(list(countries), safe=False)
         except Exception as e:

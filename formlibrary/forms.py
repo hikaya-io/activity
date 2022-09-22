@@ -1,11 +1,17 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
+from functools import partial
 from crispy_forms.helper import FormHelper
 from django import forms
-from .models import TrainingAttendance, Distribution, Individual
-from workflow.models import Program, ProjectAgreement, Office, Province, SiteProfile
-from functools import partial
+from .models import (
+    Distribution,
+    Individual,
+    Household,
+    Training,
+)
+from workflow.models import (
+    Office,
+    Program,
+    SiteProfile,
+)
 
 
 class DatePicker(forms.DateInput):
@@ -17,35 +23,6 @@ class DatePicker(forms.DateInput):
     DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 
 
-class TrainingAttendanceForm(forms.ModelForm):
-    start_date = forms.DateField(widget=DatePicker.DateInput(), required=False)
-    end_date = forms.DateField(widget=DatePicker.DateInput(), required=False)
-
-    class Meta:
-        model = TrainingAttendance
-        exclude = ['create_date', 'edit_date']
-
-    def __init__(self, *args, **kwargs):
-        self.helper = FormHelper()
-        self.request = kwargs.pop('request')
-        self.organization = kwargs.pop('organization')
-        self.helper.form_error_title = 'Form Errors'
-        self.helper.error_text_inline = True
-        self.helper.help_text_inline = True
-        self.helper.html5_required = True
-
-        super(TrainingAttendanceForm, self).__init__(*args, **kwargs)
-
-        self.fields['project_agreement'].queryset = \
-            ProjectAgreement.objects.filter(
-                program__organization=self.request.user.activity_user.organization)
-        self.fields['program'].queryset = Program.objects.filter(
-            organization=self.request.user.activity_user.organization)
-
-        self.fields['training_name'].label = '{} name'.format(self.organization.training_label)
-        self.fields['training_duration'].label = '{} duration'.format(self.organization.training_label)
-
-
 class DistributionForm(forms.ModelForm):
 
     start_date = forms.DateField(widget=DatePicker.DateInput(), required=False)
@@ -55,7 +32,7 @@ class DistributionForm(forms.ModelForm):
 
     class Meta:
         model = Distribution
-        exclude = ['create_date', 'edit_date']
+        exclude = ['create_date', 'edit_date', 'modified_by', 'created_by']
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
@@ -68,45 +45,100 @@ class DistributionForm(forms.ModelForm):
 
         super(DistributionForm, self).__init__(*args, **kwargs)
 
-        self.fields['initiation'].queryset = ProjectAgreement.objects.filter(
-            program__organization=self.request.user.activity_user.organization)
         self.fields['program'].queryset = Program.objects.filter(
             organization=self.request.user.activity_user.organization)
-        self.fields['office_code'].queryset = Office.objects.filter(
+        self.fields['office'].queryset = Office.objects.filter(
             organization=self.request.user.activity_user.organization)
-        self.fields['province'].queryset = Province.objects.all()
 
-        self.fields['distribution_name'].label = '{} name'.format(self.organization.distribution_label)
-        self.fields['distribution_implementer'].label = '{} implementer'.format(self.organization.distribution_label)
-        self.fields['distribution_location'].label = '{} location'.format(self.organization.distribution_label)
-        self.fields['distribution_indicator'].label = '{} indicator'.format(self.organization.distribution_label)
+        self.fields['name'].label = '{} name'.format(self.organization.distribution_label)
+        self.fields['implementer'].label = '{} implementer'.format(self.organization.distribution_label)
 
 
 class IndividualForm(forms.ModelForm):
 
     class Meta:
         model = Individual
-        exclude = ['create_date', 'edit_date']
+        # fields = '__all__'
+        exclude = ('created_by', 'modified_by', 'label')
+
+    date_of_birth = forms.DateTimeField(widget=DatePicker.DateInput(), required=False)
+    age = forms.CharField(
+        label='Age',
+        widget=forms.TextInput(attrs={'disabled': True, }),
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        self.organization = kwargs.pop('organization')
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.error_text_inline = True
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+        self.helper.form_tag = True
+
+        super(IndividualForm, self).__init__(*args, **kwargs)
+
+        organization = self.request.user.activity_user.organization
+        self.fields['program'].queryset = Program.objects.filter(
+            organization=organization)
+        self.fields['site'].queryset = SiteProfile.objects.filter(
+            organizations__id__contains=self.request.user.activity_user.organization.id)
+        self.fields['household_id'].queryset = Household.objects.filter(organization=organization)
+        self.fields['age'].initial = str(self.instance.age)
+
+
+class HouseholdForm(forms.ModelForm):
+
+    class Meta:
+        model = Household
+        fields = '__all__'
+        exclude = ['create_date', 'edit_date', 'created_by', 'label', 'organization', 'modified_by']
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.organization = kwargs.pop('organization')
         self.request = kwargs.pop('request')
+        self.helper.form_method = 'post'
         self.helper.form_error_title = 'Form Errors'
         self.helper.error_text_inline = True
         self.helper.help_text_inline = True
         self.helper.html5_required = True
 
-        super(IndividualForm, self).__init__(*args, **kwargs)
-
+        super(HouseholdForm, self).__init__(*args, **kwargs)
         organization = self.request.user.activity_user.organization
-        self.fields['training'].queryset = TrainingAttendance.objects.filter(
-            program__organization=organization)
         self.fields['program'].queryset = Program.objects.filter(
             organization=organization)
-        self.fields['distribution'].queryset = Distribution.objects.filter(
-            program__organization=organization)
-        self.fields['site'].queryset = SiteProfile.objects.filter(
-            organizations__id__contains=self.request.user.activity_user.organization.id)
+        self.fields['name'].label = '{} name'.format(self.organization.household_label)
 
-        self.fields['first_name'].label = '{} name'.format(self.organization.individual_label)
+
+class TrainingForm(forms.ModelForm):
+    class Meta:
+        model = Training
+        fields = '__all__'
+        exclude = ['create_date', 'edit_date', 'created_by', 'label', 'organization', 'modified_by']
+
+    start_date = forms.DateTimeField(widget=DatePicker.DateInput(), required=True)
+    end_date = forms.DateTimeField(widget=DatePicker.DateInput(), required=True)
+
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.organization = kwargs.pop('organization')
+        self.request = kwargs.pop('request')
+        self.helper.form_method = 'post'
+        self.helper.form_error_title = 'Form Errors'
+        self.helper.error_text_inline = True
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+
+        super(TrainingForm, self).__init__(*args, **kwargs)
+
+        self.fields['program'].queryset = Program.objects.filter(
+            organization=self.request.user.activity_user.organization)
+        self.fields['office'].queryset = Office.objects.filter(
+            organization=self.request.user.activity_user.organization)
+
+        self.fields['name'].label = '{} name'.format(self.organization.training_label)
+        self.fields['implementer'].label = '{} implementer'.format(self.organization.training_label)

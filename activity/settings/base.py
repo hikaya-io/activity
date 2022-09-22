@@ -70,6 +70,7 @@ TIME_ZONE = 'America/Los_Angeles'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'fr-FR'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
@@ -78,7 +79,11 @@ SITE_ID = 1
 USE_I18N = True
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-l10n
-USE_L10N = False
+USE_L10N = True
+
+LOCALE_PATHS = (
+    normpath(join(SITE_ROOT, 'templates/locale')),
+)
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
 USE_TZ = True
@@ -271,6 +276,7 @@ LOCAL_APPS = (
     'tables',
     'reports',
     'adminreport',
+    'utils'
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -415,3 +421,6 @@ MAP_WIDGETS = {
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET =  os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
+
+# header setting for is_secure method on request object behavior control
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

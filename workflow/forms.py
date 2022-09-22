@@ -136,9 +136,9 @@ class ProgramForm(forms.ModelForm):
                    'program_uuid', 'organization', 'country')
 
     start_date = forms.DateTimeField(
-        widget=DatePicker.DateInput(), required=False)
+        widget=DatePicker.DateInput(), required=True)
     end_date = forms.DateTimeField(
-        widget=DatePicker.DateInput(), required=False)
+        widget=DatePicker.DateInput(), required=True)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
@@ -161,6 +161,16 @@ class ProgramForm(forms.ModelForm):
             organization=self.request.user.activity_user.organization).all()
         self.fields['name'].label = '{} Name'.format(self.organization.level_1_label)
         self.fields['description'].label = '{} Description'.format(self.organization.level_1_label)
+
+    def clean_end_date(self):
+        start_date = self.cleaned_data['start_date']
+        end_date = self.cleaned_data['end_date']
+
+        if end_date and start_date is not None:
+            if end_date < start_date:
+                raise forms.ValidationError("End date must be later than start date")
+
+        return end_date
 
 
 class ProjectAgreementForm(forms.ModelForm):
@@ -294,9 +304,9 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
                'latitude': 'latitude'}), required=False)
 
     expected_start_date = forms.DateField(
-        widget=DatePicker.DateInput(), required=False)
+        widget=DatePicker.DateInput(), required=True)
     expected_end_date = forms.DateField(
-        widget=DatePicker.DateInput(), required=False)
+        widget=DatePicker.DateInput(), required=True)
     estimation_date = forms.DateField(
         widget=DatePicker.DateInput(), required=False)
     reviewed_by_date = forms.DateField(
@@ -399,6 +409,16 @@ class ProjectAgreementSimpleForm(forms.ModelForm):
                 'disabled'] = "disabled"
             self.fields[
                 'approval'].help_text = "Approval level permissions required"
+
+    def clean_expected_end_date(self):
+        expected_start_date = self.cleaned_data['expected_start_date']
+        expected_end_date = self.cleaned_data['expected_end_date']
+
+        if expected_start_date and expected_end_date is not None:
+            if expected_end_date < expected_start_date:
+                raise forms.ValidationError("Expected end date must be later than expected start date")
+
+        return expected_end_date
 
 
 class ProjectCompleteCreateForm(forms.ModelForm):
@@ -1254,7 +1274,9 @@ class SiteProfileForm(forms.ModelForm):
                   <div class='panel panel-default'>
 
                   <!-- Default panel contents -->
-                  <div class='panel-heading'>{{request.user.activity_user.organization.level_1_label}} in this Site</div>
+                  <div class='panel-heading'>
+                  {{request.user.activity_user.organization.level_1_label}} in this Site
+                  </div>
                     {% if get_projects %}
                       <!-- Table -->
                       <table class="table">
@@ -1614,7 +1636,7 @@ class StakeholderForm(forms.ModelForm):
         )
         super(StakeholderForm, self).__init__(*args, **kwargs)
 
-        countries = get_country(self.request.user)
+        countries = Country.objects.all()
         users = ActivityUser.objects.filter(
             organization=self.request.user.activity_user.organization)
         self.fields['contact'].queryset = Contact.objects.filter(

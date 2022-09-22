@@ -1,4 +1,6 @@
 {% load crispy_forms_tags %}
+{% load i18n %}
+
 <div id="numDataPoints" style="display: none;">{{ object.collecteddata_set.all.count }}</div>
 <div id="initialTargetFrequencyValue" style="display:none;">{{ object.target_frequency }}</div>
 <form action="{% url 'indicator_update' indicator.id %}" id="indicator_update_form" class="form-horizontal" method="post" novalidate>

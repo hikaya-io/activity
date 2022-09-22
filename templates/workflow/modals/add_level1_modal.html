@@ -45,7 +45,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group" id="div_start_date">
-                    <label for="startDate">Start Date</label>
+                    <label for="startDate">Start Date*</label>
                     <input
                         type="date"
                         id="startDate"
@@ -54,6 +54,7 @@
                             'form-control': true, 
                             }"
                         style="width:200px;"
+                        v-validate="'required'"
                         v-model="start_date" 
                         placeholder="Start Date"
                         v-on:change="setMinDate()"
@@ -63,7 +64,7 @@
 
             <div class="col-md-6">
                 <div class="form-group" id="div_end_date">
-                    <label for="endDate">End Date</label>
+                    <label for="endDate">End Date*</label>
                     <input
                         type="date"
                         id="endDate"
@@ -72,6 +73,7 @@
                             'form-control': true, 
                             }"
                         style="width:200px;"
+                        v-validate="'required'"
                         v-model="end_date" 
                         placeholder="End Date"
                         v-on:change="setMaxDate()"

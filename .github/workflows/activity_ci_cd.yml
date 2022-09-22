@@ -1,46 +1,41 @@
 name: Activity
 
-on: 
+on:
   push:
-    branches: 
-      - dev
-      - staging
+    branches:
+      - develop
   pull_request:
-    branches: 
-      - dev
-      - staging
+    branches:
+      - develop
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
   release:
     types:
-      - created
+      - published
 
 jobs:
-  Build_and_test:
+  Build_lint_test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Set up Python 3.7
+    - name: Set up Python 3.8
       uses: actions/setup-python@v1
       with:
-        python-version: 3.7
-    - name: Install dependencies
-      run: |
-        sudo apt-get update -y
-        sudo apt-get install gdal-bin
-        python -m pip install --upgrade pip
-        pip install pipenv
+        python-version: 3.8
     - name: Lint with flake8
       run: |
         pip install flake8
         # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics # TODO use a main flake8 config file
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Run Tests
-      env: 
+      env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
-        pipenv install
-        source $(python3 -m pipenv --venv)/bin/activate
+        cp activity/settings/local-sample.py activity/settings/local.py
+        pip install pip-tools && pip-sync
         coverage run manage.py test
         echo "++++++++ Show test coverage report +++++++"
         coverage report
@@ -48,8 +43,9 @@ jobs:
         bash <(curl -s https://codecov.io/bash)
 
   Infrastructure:
-    runs-on: ubuntu-latest 
-    needs: Build_and_test
+    runs-on: ubuntu-latest
+    needs: Build_lint_test
+    if: github.ref == 'refs/heads/develop' || github.event_name == 'release'
     steps:
     - uses: actions/checkout@v1
     - name: Setup terraform
@@ -61,7 +57,7 @@ jobs:
         terraform version
 
     - name: Run infrastructure script
-      env: 
+      env:
         BACKEND_BUCKET_DEV_ENV: ${{ secrets.BACKEND_BUCKET_DEV_ENV }}
         STATE_FILE_DEV_ENV: ${{ secrets.STATE_FILE_DEV_ENV }}
         SPACES_ACCESS_KEY: ${{ secrets.SPACES_ACCESS_KEY }}
@@ -75,13 +71,8 @@ jobs:
         SERVICE_ACCESS_TOKEN: ${{ secrets.SERVICE_ACCESS_TOKEN }}
         DB_SIZE: ${{ secrets.DB_SIZE }}
         PG_VERSION: ${{ secrets.PG_VERSION }}
+        PROJECT_NAME: $$ {{ secrets.PROJECT_NAME }}
         DB_NAME_DEV_ENV: ${{ secrets.DB_NAME_DEV_ENV }}
-        # staging vars, some are reused from dev_env
-        BACKEND_BUCKET_STAGING: ${{ secrets.BACKEND_BUCKET_STAGING }}
-        STATE_FILE_STAGING: ${{ secrets.STATE_FILE_STAGING }}
-        CLUSTER_NAME_STAGING: ${{ secrets.CLUSTER_NAME_STAGING }}
-        K8S_VERSION_STAGING: ${{ secrets.K8S_VERSION_STAGING }}
-        DB_NAME_STAGING: ${{ secrets.DB_NAME_STAGING }}
         # Prod vars
         BACKEND_BUCKET_PROD: ${{ secrets.BACKEND_BUCKET_PROD }}
         STATE_FILE_PROD: ${{ secrets.STATE_FILE_PROD }}
@@ -89,15 +80,15 @@ jobs:
         K8S_VERSION_PROD: ${{ secrets.K8S_VERSION_PROD }}
         DB_NAME_PROD: ${{ secrets.DB_NAME_PROD }}
       run: |
-        export TRAVIS_EVENT_TYPE="push"
         chmod +x ci-scripts/create_infrastructure.sh
         bash ./ci-scripts/create_infrastructure.sh
 
   Build_and_push_image:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     needs: Infrastructure
+    if: github.ref == 'refs/heads/develop' || github.event_name == 'release'
     steps:
-    - uses: actions/checkout@v1 
+    - uses: actions/checkout@v1
     - name: Setup docker-ce
       run: |
         sudo apt install apt-transport-https ca-certificates curl software-properties-common
@@ -105,11 +96,14 @@ jobs:
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
         sudo apt install docker-ce
         sudo docker version
-  
+
     - name: Build and Push
       env:
+        TAG_NAME: ${{ github.event.release.tag_name }}
         DOCKER_HUB_USERNM: ${{ secrets.DOCKER_HUB_USERNM }}
         DOCKER_HUB_PASSWD: ${{ secrets.DOCKER_HUB_PASSWD }}
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+        DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         ACTIVITY_CE_DB_NAME_DEV: ${{ secrets.ACTIVITY_CE_DB_NAME_DEV }}
         ACTIVITY_CE_DB_USER_DEV: ${{ secrets.ACTIVITY_CE_DB_USER_DEV }}
         ACTIVITY_CE_DB_PASSWORD_DEV: ${{ secrets.ACTIVITY_CE_DB_PASSWORD_DEV }}
@@ -127,9 +121,7 @@ jobs:
         GOOGLE_MAP_API_KEY: ${{ secrets.GOOGLE_MAP_API_KEY }}
         APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
         REGISTRY_OWNER: ${{ secrets.REGISTRY_OWNER }}
-        # staging variables. others are reused from dev
-        ACTIVITY_CE_DB_NAME_STAGING: ${{ secrets.ACTIVITY_CE_DB_NAME_STAGING }}
-        APPLICATION_ENV_STAGING: ${{ secrets.APPLICATION_ENV_STAGING }}
+        APPLICATION_NAME_DEV: ${{ secrets.APPLICATION_NAME_DEV }}
         # Production Vars
         APPLICATION_ENV_PROD: ${{ secrets.APPLICATION_ENV_PROD }}
         ACTIVITY_CE_DB_NAME_PROD: ${{ secrets.ACTIVITY_CE_DB_NAME_PROD }}
@@ -138,16 +130,15 @@ jobs:
         ACTIVITY_CE_DB_HOST_PROD: ${{ secrets.ACTIVITY_CE_DB_HOST_PROD }}
         ACTIVITY_CE_DB_PORT_PROD: ${{ secrets.ACTIVITY_CE_DB_PORT_PROD }}
       run: |
-        export TRAVIS_COMMIT=$GITHUB_SHA
-        export TRAVIS_EVENT_TYPE="push"
         chmod +x ci-scripts/build_docker_image.sh
         bash ./ci-scripts/build_docker_image.sh
 
   Deploy:
     needs: Build_and_push_image
     runs-on: ubuntu-latest
+    if: github.event_name == 'release'
     container:
-      image: yagami22/ci-deploy-image 
+      image: yagami22/ci-deploy-image
     steps:
     - uses: actions/checkout@v1
     - name: Deploy to DO
@@ -157,25 +148,27 @@ jobs:
         SERVICE_ACCESS_TOKEN: ${{ secrets.SERVICE_ACCESS_TOKEN }}
         DOCKER_HUB_USERNM: ${{ secrets.DOCKER_HUB_USERNM }}
         DOCKER_HUB_PASSWD: ${{ secrets.DOCKER_HUB_PASSWD }}
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+        DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         B64_TOKEN: ${{ secrets.B64_TOKEN }}
         DEFAULT_NOTIFY: ${{ secrets.DEFAULT_NOTIFY }}
         RATE_LIMIT: ${{ secrets.RATE_LIMIT }}
-        HOST_DOMAIN: ${{ secrets.HOST_DOMAIN }}
         APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
         REGISTRY_OWNER: ${{ secrets.REGISTRY_OWNER }}
-        # staging variables
-        CLUSTER_NAME_STAGING: ${{ secrets.CLUSTER_NAME_STAGING }}
-        HOST_DOMAIN_STAGING: ${{ secrets.HOST_DOMAIN_STAGING }}
-        APPLICATION_ENV_STAGING: ${{ secrets.APPLICATION_ENV_STAGING }}
+        MIN_PODS: ${{ secrets.MIN_PODS }}
+        MAX_PODS: ${{ secrets.MAX_PODS }}
+        APPLICATION_NAME_DEV: ${{ secrets.APPLICATION_NAME_DEV }}
+        MIN_PODS_DEV: ${{ secrets.MIN_PODS_DEV }}
+        HOST_DOMAIN_DEV: ${{ secrets.HOST_DOMAIN_DEV }}
         SLACK_CHANNEL_HOOK: ${{ secrets.SLACK_CHANNEL_HOOK }}
         # Production Vars
         APPLICATION_ENV_PROD: ${{ secrets.APPLICATION_ENV_PROD }}
         CLUSTER_NAME_PROD: ${{ secrets.CLUSTER_NAME_PROD }}
         HOST_DOMAIN_PROD: ${{ secrets.HOST_DOMAIN_PROD }}
+        MIN_PODS_PROD: ${{ secrets.MIN_PODS_PROD }}
+        APPLICATION_NAME_PROD: ${{ secrets.APPLICATION_NAME_PROD }}
       run: |
-        export TRAVIS_COMMIT=$GITHUB_SHA
         export FILE_PATH="/github/home/.docker/config.json"
-        export TRAVIS_EVENT_TYPE="push"
         chmod +x ci-scripts/deployment.sh
         bash ./ci-scripts/deployment.sh
         if [[ $? -eq 0 ]]; then

@@ -1,181 +1,27 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
-from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic.list import ListView
-from django.core import serializers
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.mixins import ListModelMixin
-
-from .models import TrainingAttendance, Individual, Distribution
-from django.shortcuts import redirect
-
-from .forms import TrainingAttendanceForm, IndividualForm, DistributionForm
-from workflow.models import FormGuidance, Program, ProjectAgreement, ActivityUser
-from django.utils.decorators import method_decorator
-from activity.util import get_country, group_excluded
-
 from django.shortcuts import render
-from django.contrib import messages
-from django.db.models import Q
+from django.views.generic.edit import UpdateView
+from django.views.generic.list import ListView
+from django.views.generic import View as GView
 
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django.views.generic.detail import View
-from .mixins import AjaxableResponseMixin, CustomPagination
-import json
-from django.core.serializers.json import DjangoJSONEncoder
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from django.http import JsonResponse
 
-from .serializers import IndividualSerializer
+from rest_framework.permissions import IsAuthenticated
+from workflow.models import Program, Organization
 
+from .forms import IndividualForm, HouseholdForm, TrainingForm, DistributionForm
+from .models import Individual, Distribution, Training, Household, Service
 
-class TrainingList(ListView):
-    """
-    Training Attendance
-    """
-    model = TrainingAttendance
-    template_name = 'formlibrary/training_list.html'
-
-    def get(self, request, *args, **kwargs):
-
-        project_agreement_id = self.kwargs['project']
-        get_programs = Program.objects.all().filter(
-            organization=request.user.activity_user.organization).distinct()
-
-        get_projects = ProjectAgreement.objects.filter(
-            program__organization=request.user.activity_user.organization).distinct()
-
-        get_training = TrainingAttendance.objects.all().filter(
-            program__organization=request.user.activity_user.organization)
-
-        program_id = int(self.kwargs['program'])
-        project_id = int(self.kwargs['project'])
-
-        # filter by program
-        if program_id != 0:
-            get_training = TrainingAttendance.objects.all().filter(
-                program_id=program_id)
-
-        # filter by projects
-        if project_id != 0:
-            get_training = TrainingAttendance.objects.all().filter(
-                project_agreement_id=project_id)
-
-        return render(request, self.template_name, {
-            'get_training': get_training,
-            'project_agreement_id': project_agreement_id,
-            'form_component': 'training_list',
-            'get_programs': get_programs,
-            'get_projects': get_projects,
-            'program_id': program_id,
-            'project_id': project_id,
-            'active': ['forms', 'training_list']
-        })
+from .serializers import (IndividualSerializer,
+                          HouseholdSerializer,
+                          HouseholdListDataSerializer,
+                          TrainingSerializer,
+                          TrainingListSerializer,
+                          DistributionSerializer,
+                          DistributionListSerializer)
 
 
-class TrainingCreate(CreateView):
-    """
-    Training Form
-    """
-    model = TrainingAttendance
-    guidance = None
-
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="Training")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(TrainingCreate, self).dispatch(request, *args, **kwargs)
-
-    # add the request to the kwargs
-    def get_form_kwargs(self):
-        kwargs = super(TrainingCreate, self).get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super(TrainingCreate, self).get_context_data(**kwargs)
-        context['form_title'] = 'Training Attendance Create Form'
-        return context
-
-    def get_initial(self):
-        initial = {
-            'agreement': self.kwargs['id'],
-        }
-
-        return initial
-
-    def form_invalid(self, form):
-
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Training Created!')
-        redirect_url = '/formlibrary/training_list/0/0/'
-        return HttpResponseRedirect(redirect_url)
-
-    form_class = TrainingAttendanceForm
-
-
-class TrainingUpdate(UpdateView):
-    """
-    Training Form
-    """
-    model = TrainingAttendance
-    success_url = '/formlibrary/training_list/0/0/'
-    guidance = None
-
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="Training")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(TrainingUpdate, self).dispatch(request, *args, **kwargs)
-
-    # add the request to the kwargs
-    def get_form_kwargs(self):
-        kwargs = super(TrainingUpdate, self).get_form_kwargs()
-        kwargs['organization'] = self.request.user.activity_user.organization
-        kwargs['request'] = self.request
-        return kwargs
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Training Updated!')
-        redirect_url = '/formlibrary/training_list/0/0/'
-        return HttpResponseRedirect(redirect_url)
-
-    def get_context_data(self, **kwargs):
-        context = super(TrainingUpdate, self).get_context_data(**kwargs)
-        training = TrainingAttendance.objects.get(pk=int(self.kwargs['pk']))
-        context['training_name'] = training.training_name
-        context['form_title'] = 'Training Attendance Update Form'
-        return context
-
-    form_class = TrainingAttendanceForm
-
-
-def delete_training(request, pk):
-    """
-    Delete distribution
-    """
-    distribution = TrainingAttendance.objects.get(pk=int(pk))
-    distribution.delete()
-    return redirect('/formlibrary/training_list/0/0/')
-
-
-class IndividualViewList(ListCreateAPIView):
+class IndividualView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
     queryset = Individual.objects.all()
     serializer_class = IndividualSerializer
     permission_classes = [IsAuthenticated]
@@ -184,7 +30,10 @@ class IndividualViewList(ListCreateAPIView):
         return self.create(request, *args, **kwargs)
 
     def get_queryset(self):
-        queryset = Individual.objects.all()
+        organization = self.request.user.activity_user.organization
+        get_programs = Program.objects.all().filter(organization=organization)
+        queryset = Individual.objects.filter(program__in=get_programs)
+
         program_id = self.request.query_params.get('program', None)
         distribution_id = self.request.query_params.get('distribution', None)
         training_id = self.request.query_params.get('training', None)
@@ -195,15 +44,9 @@ class IndividualViewList(ListCreateAPIView):
             distributions = Distribution.objects.filter(id=distribution_id)
             queryset = queryset.filter(distribution__in=distributions)
         if training_id is not None:
-            trainingattendances = TrainingAttendance.objects.filter(id=training_id)
-            queryset = queryset.filter(training__in=trainingattendances)
+            training = Training.objects.filter(id=training_id)
+            queryset = queryset.filter(training__in=training)
         return queryset
-
-
-class IndividualViewDetail(RetrieveUpdateDestroyAPIView):
-    queryset = Individual.objects.all()
-    serializer_class = IndividualSerializer
-    permission_classes = [IsAuthenticated]
 
 
 class IndividualList(ListView):
@@ -211,7 +54,7 @@ class IndividualList(ListView):
     Individual
     """
     model = Individual
-    template_name = 'formlibrary/individual_list.html'
+    template_name = 'formlibrary/individual.html'
 
     def get(self, request, *args, **kwargs):
 
@@ -222,9 +65,9 @@ class IndividualList(ListView):
         organization = request.user.activity_user.organization
         get_programs = Program.objects.all().filter(organization=organization)
 
-        get_training = TrainingAttendance.objects.filter(
+        get_training = Training.objects.filter(
             program__in=get_programs)
-        get_distribution = Distribution.objects.filter(
+        get_distributions = Distribution.objects.filter(
             program__in=get_programs)
         get_individuals = Individual.objects.filter(
             program__in=get_programs)
@@ -244,7 +87,7 @@ class IndividualList(ListView):
                           'get_individuals': get_individuals,
                           'program_id': int(program_id),
                           'get_programs': get_programs,
-                          'get_distribution': get_distribution,
+                          'get_distributions': get_distributions,
                           'get_training': get_training,
                           'training_id': int(training_id),
                           'distribution_id': int(distribution_id),
@@ -253,391 +96,311 @@ class IndividualList(ListView):
                       })
 
 
-class IndividualCreate(CreateView):
-    """
-    Individual Form
-    """
-    model = Individual
-    guidance = None
-
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="Individual")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(IndividualCreate, self).dispatch(
-            request, *args, **kwargs)
-
-    def get_initial(self):
-        organization = self.request.user.activity_user.organization
-        initial = {
-            # 'training': self.kwargs['id'],
-            "program": Program.objects.filter(
-                organization=organization).first()
-        }
-
-        return initial
-
-    # add the request to the kwargs
-    def get_form_kwargs(self):
-        kwargs = super(IndividualCreate, self).get_form_kwargs()
-        kwargs['organization'] = self.request.user.activity_user.organization
-        kwargs['request'] = self.request
-        return kwargs
-
-    def form_invalid(self, form):
-
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-        return HttpResponse({'success': True})
-
-    form_class = IndividualForm
-
-
 class IndividualUpdate(UpdateView):
     """
-    Training Form
+    Individual update
     """
     model = Individual
-    guidance = None
-
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="Individual")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(IndividualUpdate, self).dispatch(
-            request, *args, **kwargs)
+    template_name = 'formlibrary/individual_form.html'
+    success_url = '/formlibrary/individual_list/0/0/0'
+    form_class = IndividualForm
 
     # add the request to the kwargs
     def get_form_kwargs(self):
         kwargs = super(IndividualUpdate, self).get_form_kwargs()
-        kwargs['organization'] = self.request.user.activity_user.organization
         kwargs['request'] = self.request
+        kwargs['organization'] = self.request.user.activity_user.organization
         return kwargs
 
     def get_context_data(self, **kwargs):
         context = super(IndividualUpdate, self).get_context_data(**kwargs)
-        individual = Individual.objects.get(pk=int(self.kwargs['pk']))
-        context['first_name'] = individual.first_name
-        context['form_title'] = 'Individual Update Form'
+        context['current_program'] = self.get_object()
+        context['active'] = ['formlibrary']
         return context
 
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-        return self.render_to_response(self.get_context_data(form=form))
 
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Individual Updated!')
-
-        return redirect('/formlibrary/individual_list/0/0/0/')
-
-    form_class = IndividualForm
-
-
-def delete_individual(request, pk):
-    individual = Individual.objects.get(pk=int(pk))
-    individual.delete()
-
-    return redirect('/formlibrary/individual_list/0/0/0/')
-
-
-class DistributionList(ListView):
+class GetIndividualData(GView):
     """
-    Distribution
+    View all individual data
     """
-    model = Distribution
-    template_name = 'formlibrary/distribution_list.html'
+
+    def get(self, request):
+        try:
+            organization = request.user.activity_user.organization
+            get_programs = Program.objects.all().filter(organization=organization)
+
+            get_training = Training.objects.filter(
+                program__in=get_programs).values()
+            get_distribution = Distribution.objects.filter(
+                program__in=get_programs).values()
+            individuals = Individual.objects.all().filter(
+                program__in=get_programs)
+            get_individuals = IndividualSerializer(individuals, many=True)
+
+            return JsonResponse(
+                dict(
+                    level_1_label=organization.level_1_label,
+                    individual_label=organization.individual_label,
+                    programs=list(get_programs.values()),
+                    trainings=list(get_training),
+                    distributions=list(get_distribution),
+                    individuals=list(get_individuals.data), safe=False
+
+                )
+            )
+        except Exception as e:
+            return JsonResponse(dict(error=str(e)))
+
+
+class HouseholdView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
+    queryset = Household.objects.all()
+    serializer_class = HouseholdSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        organization = self.request.user.activity_user.organization
+        request.data['organization'] = organization.id
+        request.data['label'] = organization.household_label
+        request.data['program'] = request.data['program'][0] if request.data['program'] else 0
+        request.data['created_by'] = self.request.user.activity_user.id
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return Household.objects.filter(organization=organization)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class HouseholdlList(ListView):
+    """
+    Household
+    """
+    model = Individual
+    template_name = 'formlibrary/household.html'
 
     def get(self, request, *args, **kwargs):
 
-        program_id = self.kwargs['program']
-        project_id = self.kwargs['project']
-        get_programs = Program.objects.all().filter(
-            organization=request.user.activity_user.organization).distinct()
+        organization = request.user.activity_user.organization
+        get_households = Household.objects.all().filter(organization=organization)
 
-        get_projects = ProjectAgreement.objects.filter(
-            program__organization=request.user.activity_user.organization)
+        context = {
+            'households': get_households,
+            'form_component': 'household_list',
+            'active': ['forms', 'household_list']
+        }
 
-        get_distribution = Distribution.objects.all().filter(
-            program__organization=request.user.activity_user.organization)
-
-        if int(program_id) != 0:
-            get_distribution = Distribution.objects.all().filter(
-                program_id=int(program_id))
-        if int(project_id) != 0:
-            get_distribution = Distribution.objects.all().filter(
-                initiation_id=int(program_id))
-
-        return render(request, self.template_name, {
-            'get_distribution': get_distribution,
-            'program_id': int(program_id),
-            'project_id': int(project_id),
-            'get_programs': get_programs,
-            'get_projects': get_projects,
-            'form_component': 'distribution_list',
-            'active': ['forms', 'distribution_list']
-        })
+        return render(request, self.template_name, context)
 
 
-class DistributionCreate(CreateView):
+class HouseholdDataView(ListCreateAPIView):
+
+    serializer_class = HouseholdListDataSerializer
     """
-    Distribution Form
+    View to fetch all households
     """
-    model = Distribution
-    guidance = None
-    success_url = '/formlibrary/distribution_list/0/0/'
 
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="Distribution")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(DistributionCreate, self).dispatch(
-            request, *args, **kwargs)
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization.id
+        return Household.objects.filter(organization=organization)
+
+    def get(self, request, *args, **kwargs):
+        organization = Organization.objects.get(id=request.user.activity_user.organization.id)
+        programs = Program.objects.all().filter(organization=organization).values('id', 'name')
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+
+        data = dict(
+            household_label=organization.household_label,
+            individual_label=organization.individual_label,
+            households=list(serializer.data),
+            programs=list(programs),
+            safe=False
+        )
+        return JsonResponse(data)
+
+
+class HouseholdUpdate(UpdateView):
+    model = Household
+    template_name = 'formlibrary/household_form.html'
+    success_url = '/formlibrary/household_list'
+    form_class = HouseholdForm
 
     # add the request to the kwargs
     def get_form_kwargs(self):
-        kwargs = super(DistributionCreate, self).get_form_kwargs()
+        kwargs = super(HouseholdUpdate, self).get_form_kwargs()
         kwargs['request'] = self.request
+        kwargs['organization'] = self.request.user.activity_user.organization
         return kwargs
 
-    def get_initial(self):
-        initial = {
-            'program': self.kwargs['id']
-        }
+    def get_context_data(self, **kwargs):
+        context = super(HouseholdUpdate, self).get_context_data(**kwargs)
+        context['current_household'] = self.get_object()
+        context['active'] = ['formlibrary']
+        return context
 
-        return initial
 
-    def form_invalid(self, form):
+class TrainingView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
+    queryset = Training.objects.all()
+    serializer_class = TrainingSerializer
+    permission_classes = [IsAuthenticated]
 
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
+    def post(self, request, *args, **kwargs):
+        try:
+            request.data['program'] = request.data['program_id']
+            request.data['created_by'] = self.request.user.activity_user.id
+            return self.create(request, *args, **kwargs)
+        except Exception as e:
+            print(e)
 
-        return self.render_to_response(self.get_context_data(form=form))
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization
+        get_programs = Program.objects.all().filter(organization=organization)
+        return Training.objects.filter(program__in=get_programs)
 
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Distribution Created!')
-        # latest = Distribution.objects.latest('id')
-        redirect_url = '/formlibrary/distribution_list/0/0/'
-        return HttpResponseRedirect(redirect_url)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class TrainingUpdate(UpdateView):
+    """
+    Training update
+    """
+    model = Training
+    template_name = 'formlibrary/training_form.html'
+    success_url = '/formlibrary/services_list'
+    form_class = TrainingForm
+
+    # add the request to the kwargs
+    def get_form_kwargs(self):
+        kwargs = super(TrainingUpdate, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        kwargs['organization'] = self.request.user.activity_user.organization
+        return kwargs
 
     def get_context_data(self, **kwargs):
-        context = super(DistributionCreate, self).get_context_data(**kwargs)
-        context['form_title'] = 'Distribution Create Form'
+        context = super(TrainingUpdate, self).get_context_data(**kwargs)
+        context['current_program'] = self.get_object()
+        context['active'] = ['formlibrary']
         return context
-    form_class = DistributionForm
+
+
+class GetTrainingData(GView):
+
+    def get(self, request):
+        organization = request.user.activity_user.organization
+        get_programs = Program.objects.filter(organization=organization)
+        service = Service()
+
+        trainings = Training.objects.filter(
+            program__in=get_programs)
+
+        get_trainings = TrainingListSerializer(trainings, many=True, context={'request': request})
+
+        get_service_types = service.get_service_types()
+        return JsonResponse(
+            dict(
+                level_1_label=organization.level_1_label,
+                training_label=organization.training_label,
+                service_types=list(get_service_types),
+                programs=list(get_programs.values('id', 'name')),
+                trainings=list(get_trainings.data), safe=False
+
+            )
+        )
+
+
+class DistributionView(ListCreateAPIView, RetrieveUpdateDestroyAPIView):
+    queryset = Distribution.objects.all()
+    serializer_class = DistributionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            request.data['program'] = request.data['program_id']
+            request.data['created_by'] = self.request.user.activity_user.id
+            return self.create(request, *args, **kwargs)
+        except Exception as e:
+            print(e)
+
+    def get_queryset(self):
+        organization = self.request.user.activity_user.organization
+        get_programs = Program.objects.all().filter(organization=organization)
+        return Distribution.objects.filter(program__in=get_programs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class DistributionUpdate(UpdateView):
     """
-    Distribution Form
+    Distribution update
     """
     model = Distribution
-    success_url = '/formlibrary/distribution_list/0/0/'
-    guidance = None
-
-    @method_decorator(group_excluded('ViewOnly', url='workflow/permission'))
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.guidance = FormGuidance.objects.get(form="Distribution")
-        except FormGuidance.DoesNotExist:
-            self.guidance = None
-        return super(DistributionUpdate, self).dispatch(
-            request, *args, **kwargs)
+    template_name = 'formlibrary/distribution_form.html'
+    success_url = '/formlibrary/services_list'
+    form_class = DistributionForm
 
     # add the request to the kwargs
     def get_form_kwargs(self):
         kwargs = super(DistributionUpdate, self).get_form_kwargs()
-        kwargs['organization'] = self.request.user.activity_user.organization
         kwargs['request'] = self.request
+        kwargs['organization'] = self.request.user.activity_user.organization
         return kwargs
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid Form', fail_silently=False)
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Success, Distribution Updated!')
-        return redirect(self.success_url)
 
     def get_context_data(self, **kwargs):
         context = super(DistributionUpdate, self).get_context_data(**kwargs)
-        context['form_title'] = 'Distribution Update Form'
-        distribution = Distribution.objects.get(pk=int(self.kwargs['pk']))
-        context['distribution_name'] = distribution.distribution_name
+        context['current_program'] = self.get_object()
+        context['active'] = ['formlibrary']
         return context
-    form_class = DistributionForm
 
 
-def delete_distribution(request, pk):
-    """
-    Delete distribution
-    """
-    distribution = Distribution.objects.get(pk=int(pk))
-    distribution.delete()
-    return redirect('/formlibrary/distribution_list/0/0/')
+class GetDistributionData(GView):
+
+    def get(self, request):
+        organization = request.user.activity_user.organization
+        get_programs = Program.objects.filter(organization=organization)
+
+        distributions = Distribution.objects.filter(
+            program__in=get_programs)
+
+        get_distributions = DistributionListSerializer(distributions, many=True, context={'request': request})
+        return JsonResponse(
+            dict(
+                level_1_label=organization.level_1_label,
+                distribution_label=organization.distribution_label,
+                distributions=list(get_distributions.data), safe=False
+
+            )
+        )
 
 
-class TrainingListObjects(View, AjaxableResponseMixin):
-
-    def get(self, request, *args, **kwargs):
-
-        program_id = int(self.kwargs['program'])
-        project_id = int(self.kwargs['project'])
-        countries = get_country(request.user)
-        if int(self.kwargs['program']) == 0:
-            get_training = TrainingAttendance.objects.all().filter(
-                program__country__in=countries).values(
-                'id', 'create_date',
-                'training_name',
-                'project_agreement__project_name')
-        elif program_id != 0 and project_id == 0:
-            get_training = TrainingAttendance.objects.all().filter(
-                program=program_id).values(
-                'id', 'create_date', 'training_name',
-                'project_agreement__project_name')
-        else:
-            get_training = TrainingAttendance.objects.all().filter(
-                program_id=program_id,
-                project_agreement_id=project_id).values(
-                'id', 'create_date', 'training_name',
-                'project_agreement__project_name')
-
-        get_training = json.dumps(list(get_training), cls=DjangoJSONEncoder)
-
-        final_dict = {'get_training': get_training}
-
-        return JsonResponse(final_dict, safe=False)
-
-
-class TrainingParticipantListObjects(ListAPIView):
-
-    serializer_class = IndividualSerializer
-    pagination_class = CustomPagination
-
-    def get_queryset(self):
-        pk = int(self.kwargs['pk'])
-        return Individual.objects.filter(
-            training__pk=pk
-        ).prefetch_related('training')
-
-
-class IndividualListObjects(View, AjaxableResponseMixin):
+class ServicelList(ListView):
+    template_name = 'formlibrary/service.html'
 
     def get(self, request, *args, **kwargs):
 
-        program_id = int(self.kwargs['program'])
-        project_id = int(self.kwargs['project'])
-        organization = self.request.user.activity_user.organization
+        organization = request.user.activity_user.organization
 
-        if program_id == 0:
-            get_individual = Individual.objects.all().filter(
-                Q(program__organization=organization)) \
-                .values('id', 'first_name', 'create_date')
-        elif program_id != 0 and project_id == 0:
-            get_individual = Individual.objects.all().filter(
-                program__id=program_id).values('id', 'first_name',
-                                               'create_date')
-        else:
-            get_individual = Individual.objects.all().filter(
-                program__id=program_id,
-                training__project_agreement=project_id).values(
-                'id', 'first_name', 'create_date')
+        get_programs = Program.objects.all().filter(organization=organization)
+        get_training = Training.objects.filter(
+            program__in=get_programs)
 
-        get_individual = json.dumps(
-            list(get_individual), cls=DjangoJSONEncoder)
+        context = {
+            'service_types': {
+                'training': get_training,
+            },
+            'get_programs': get_programs,
+            'get_training': get_training,
+            'form_component': 'service_list',
+        }
 
-        final_dict = {'get_individual': get_individual}
-
-        return JsonResponse(final_dict, safe=False)
-
-
-class DistributionListObjects(View, AjaxableResponseMixin):
-
-    def get(self, request, *args, **kwargs):
-
-        program_id = int(self.kwargs['program'])
-        project_id = int(self.kwargs['project'])
-        if program_id == 0:
-            get_distribution = Distribution.objects.all().filter(
-                program__organization=request.user.activity_user.organization).\
-                values('id', 'distribution_name', 'create_date', 'program')
-        elif program_id != 0 and project_id == 0:
-            get_distribution = Distribution.objects.all().filter(
-                program_id=program_id).values(
-                'id', 'distribution_name', 'create_date', 'program')
-        else:
-            get_distribution = Distribution.objects.all().filter(
-                program_id=program_id,
-                initiation_id=project_id).values('id', 'distribution_name',
-                                                 'create_date', 'program')
-
-        get_distribution = json.dumps(
-            list(get_distribution), cls=DjangoJSONEncoder)
-
-        final_dict = {'get_distribution': get_distribution}
-
-        return JsonResponse(final_dict, safe=False)
-
-
-# program and project & training filters
-class GetAgreements(View, AjaxableResponseMixin):
-
-    def get(self, request, *args, **kwargs):
-
-        program_id = self.kwargs['program']
-        if program_id != 0:
-            get_agreements = ProjectAgreement.objects.all().filter(
-                program=program_id).values('id', 'project_name')
-        else:
-            pass
-
-        final_dict = {}
-        if get_agreements:
-            get_agreements = json.dumps(
-                list(get_agreements), cls=DjangoJSONEncoder)
-            final_dict = {'get_agreements': get_agreements}
-
-        return JsonResponse(final_dict, safe=False)
-
-
-def add_training(request):
-    data = {
-        'training_name': request.POST.get('training_name'),
-        'start_date': request.POST.get('start_date'),
-        'end_date': request.POST.get('end_date'),
-        'program_id': int(request.POST.get('program')),
-    }
-
-    instance = TrainingAttendance.objects.create(**data)
-
-    if instance.id:
-        return HttpResponse({'success': True})
-
-    return HttpResponse({'success': False})
-
-
-def add_distribution(request):
-    data = {
-        'distribution_name': request.POST.get('distribution_name'),
-        'start_date': request.POST.get('start_date'),
-        'end_date': request.POST.get('end_date'),
-        'program_id': int(request.POST.get('program')),
-    }
-
-    instance = Distribution.objects.create(**data)
-
-    if instance.id:
-        return HttpResponse({'success': True})
-
-    return HttpResponse({'success': False})
+        return render(request, self.template_name, context)

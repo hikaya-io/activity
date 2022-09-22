@@ -1,0 +1,26 @@
+coverage==5.0.3
+Django==2.2.28
+django-ckeditor==5.7.0 # All references are in the initial commit
+django-crispy-forms==1.7.2 # ?
+django-extensions==2.1.6
+django-filter==2.4.0 # Used. All references very old
+django-import-export==1.2.0 # Is it really used?
+django-mathfilters==0.4.0 # Only used in templates/workflow/projectdashboard_list.html
+django-rest-swagger==2.2.0
+django-select2==7.2.2
+django-simple-history==2.7.2
+django-tables2==2.0.6
+django-uuidfield==0.5.0
+django-wysiwyg==0.8.0
+djangorestframework==3.11.2
+pendulum==2.0.5
+Pillow==9.0.1
+psycopg2-binary>=2.8,<2.9
+pytz==2019.1
+requests==2.21.0
+simplejson==3.16.0
+social-auth-app-django==3.1.0
+WeasyPrint==47
+whitenoise==5.0.1
+
+django-debug-toolbar==1.11 # Currently necessary. To be moved to a Dev dependency

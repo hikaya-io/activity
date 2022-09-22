@@ -16,15 +16,18 @@ class ProgramLinksAdmin(admin.ModelAdmin):
     list_display = ('program', 'create_date', 'edit_date')
     display = 'Program Link'
 
+
 @admin.register(Link)
 class LinkAdmin(admin.ModelAdmin):
     list_display = ('link', 'create_date', 'edit_date')
     display = 'Link'
 
+
 @admin.register(ProgramNarratives)
 class ProgramNarrativesAdmin(admin.ModelAdmin):
     list_display = ('narrative', 'create_date', 'edit_date')
     display = 'Overlay Narrative'
+
 
 @admin.register(JupyterNotebooks)
 class JupyterNotebooksAdmin(admin.ModelAdmin):

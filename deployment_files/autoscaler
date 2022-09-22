@@ -1,15 +1,15 @@
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: activity-app-${APPLICATION_ENV}
+  name: ${APPLICATION_NAME}-app-${APPLICATION_ENV}
   namespace: ${APPLICATION_ENV}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1beta1
     kind: Deployment
-    name: activity-app-${APPLICATION_ENV}
-  minReplicas: 2
-  maxReplicas: 8
+    name: ${APPLICATION_NAME}-app-${APPLICATION_ENV}
+  minReplicas: ${MIN_PODS}
+  maxReplicas: ${MAX_PODS}
   metrics:
     - type: Resource
       resource:

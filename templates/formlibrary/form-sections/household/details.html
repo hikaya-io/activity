@@ -1,0 +1,43 @@
+{% load crispy_forms_tags %}
+
+<div class="form-group">
+  {{ form.name | as_crispy_field }}
+</div>
+
+<div class="form-group">
+  {{ form.program | as_crispy_field }}
+</div>
+
+<div class="form-group">
+    {{ form.street | as_crispy_field }}
+</div>
+
+<div class="form-group">
+    {{ form.city | as_crispy_field }}
+</div>
+
+<div class="form-group">
+    {{ form.country | as_crispy_field }}
+</div>
+
+<div class="form-group">
+    {{ form.postal_code | as_crispy_field }}
+</div>
+
+<div class="form-group">
+    {{ form.primary_phone | as_crispy_field }}
+</div>
+
+<div class="form-group">
+    {{ form.secondary_phone | as_crispy_field }}
+</div>
+
+<div class="form-group">
+    {{ form.email | as_crispy_field }}
+</div>
+
+<script>
+  $(document).ready(() => {
+    $('#program').select2({ theme: 'bootstrap' });
+  });
+</script>

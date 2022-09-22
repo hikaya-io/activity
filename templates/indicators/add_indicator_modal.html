@@ -1,3 +1,4 @@
+
 <script>
   $(document).ready(() => {
     $('#indicatorWorkflowLevel1').select2({
@@ -78,7 +79,7 @@
           data: indicator,
           success: function (resp, status) {
             // notify success
-            toastr.success('Indicator was added sucessfully', `${resp}`);
+          toastr.success(`Indicator ${indicator.indicator_name} successfully saved`);
 
             //close modal
             $('#addIndicatorModal').modal('hide');
@@ -111,6 +112,8 @@
     saveIndicator('createNewIndicatorAndNew');
   });
 </script>
+
+{% load i18n %}
 
 <!-- Modal for captring data -->
 <div class="modal fade" tabindex="-1" role="dialog" id="addIndicatorModal" aria-labelledby="addIndicatorModal">

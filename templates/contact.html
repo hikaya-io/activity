@@ -1,9 +1,11 @@
 {% extends "base.html" %}
-{% block page_title %}Feedback{% endblock %}
+{% load i18n %}
+
+{% block page_title %}{% trans 'Feedback' %}{% endblock %}
 
 {% if messages %}
 <ul class="messages">
-    <p>Message:</p>
+    <p>{% trans 'Message' %}:</p>
     {% for message in messages %}
     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
@@ -11,7 +13,7 @@
 {% endif %}
 
 {% block content %}
-	<p>Let us know if you are having a problem or would like to see something change.</p>
+	<p>{% trans 'Let us know if you are having a problem or would like to see something change.' %}</p>
         {% csrf_token %}
     {% load crispy_forms_tags %}
     {% crispy form form.helper %}

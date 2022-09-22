@@ -13,7 +13,7 @@
   {% endfor %} {% endif %} {% block breadcrumbs %}
   <ul class="breadcrumb">
     <li><a href="{% url 'index' %}">My Dashboard</a></li>
-    <li><a href="/formlibrary/individual_list/0/0/">{{ request.user.activity_user.organization.individual_label }}</a></li>
+    <li><a href="/formlibrary/individual_list/0/0/0/">{{ request.user.activity_user.organization.individual_label }}</a></li>
     <li class="active">Details</li>
   </ul>
   {% endblock %}
@@ -22,40 +22,28 @@
   <div class="sub-navigation">
     <div class="sub-navigation-header">
       <h4 class="page-title">
-        {% if first_name %}
-          {{ first_name }}
-        {% else %}
-          {{ form_title }}
-        {% endif%}
+        Individual Details
       </h4>
     </div>
-    {% comment %}
-    <div class="sub-navigation-actions">
-      {% include "form_guidance.html" %}
-    </div>
-    {% endcomment %}
+
   </div>
   <div class="admin-content">
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <div id="individual-tab">
         <ul class="nav nav-tabs">
           <li class="active">
-            <a href="#details" data-toggle="tab">{{ request.user.activity_user.organization.individual_label }} Details</a>
+            <a href="#demographics" data-toggle="tab">Demographics</a>
           </li>
-          <li><a href="#information" data-toggle="tab">Services</a></li>
-          <li><a href="#participants" data-toggle="tab">Related</a></li>
+          <li><a href="#information" data-toggle="tab">Contacts</a></li>
         </ul>
 
         <div class="tab-content clearfix">
-          <div class="tab-pane active" id="details">
+          <div class="tab-pane active" id="demographics">
             {% include 'formlibrary/form-sections/individual/details.html' %}
           </div>
           <div class="tab-pane" id="information">
-            {% include 'formlibrary/form-sections/individual/services.html' %}
-          </div>
-          <div class="tab-pane" id="participants">
-            {% include 'formlibrary/form-sections/individual/related.html' %}
+            {% include 'formlibrary/form-sections/individual/contacts.html' %}
           </div>
         </div>
       </div>
@@ -72,7 +60,7 @@
 </div>
 <script>
   $("#reset-id-reset").click(() => {
-    window.location.href = "/formlibrary/distribution_list/0/0/";
+    window.location.href = "/formlibrary/individual_list/0/0/0/";
   });
   $(document).ready(function() {
     $("#id_site").select2({ theme: "bootstrap", placeholder: "select site" });

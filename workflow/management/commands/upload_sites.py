@@ -105,14 +105,14 @@ class Command(BaseCommand):
 
                 try:
                     lat = float(latitude)
-                except ValueError as e:
+                except ValueError:
                     lat = None
                     self.stdout.write(self.style.WARNING(
                         '%s, invalid latitude = %s' % (site_name, latitude)))
 
                 try:
                     lon = float(longitude)
-                except ValueError as e:
+                except ValueError:
                     lon = None
                     self.stdout.write(self.style.WARNING(
                         '%s, invalid longitude = %s' % (site_name, longitude)))

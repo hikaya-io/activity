@@ -27,17 +27,17 @@ from django.views.decorators.csrf import csrf_protect
 from django.core.exceptions import MultipleObjectsReturned
 
 from indicators.models import (
-    CollectedData, Indicator, DataCollectionFrequency,
-    Level,
+    CollectedData, Indicator,
+    DataCollectionFrequency,
 )
 from workflow.models import (
     ProjectAgreement, ProjectComplete, Program,
     SiteProfile, Sector, ActivityUser, ActivityBookmarks, FormGuidance,
     Organization, UserInvite, Stakeholder, Contact, Documentation,
-    ActivityUserOrganizationGroup, ProfileType,
+    ActivityUserOrganizationGroup,
 )
 from activity.util import get_nav_links, send_invite_emails, \
-    send_single_mail
+    send_single_mail, user_signup_notification
 from activity.forms import (
     RegistrationForm, BookmarkForm, NewUserRegistrationForm)
 from django.core import serializers
@@ -147,6 +147,9 @@ def activate_acccount(request, uidb64, token):
 
         # send welcome mail
         send_welcome_email(request, user)
+
+        # send slack notification
+        user_signup_notification(user)
 
         # login(request, user)
         messages.success(
@@ -496,6 +499,7 @@ def admin_configurations(request):
             'individual_label': data.get('individual_label'),
             'training_label': data.get('training_label'),
             'distribution_label': data.get('distribution_label'),
+            'household_label': data.get('household_label')
             # 'default_currency': data.get('default_currency')
         }
         organization = Organization.objects.filter(
@@ -694,12 +698,16 @@ def admin_indicator_settings(request):
     user = get_object_or_404(ActivityUser, user=request.user)
     organization = user.organization
 
-    nav_links = get_nav_links('Indicator')
+    # ! Unused variable
+    # nav_links = get_nav_links('Indicator')
+
     return render(
         request,
         'admin/indicator_settings.html',
-        {'organization': organization,
-        'active': 'indicator_settings'}
+        {
+            'organization': organization,
+            'active': 'indicator_settings'
+        }
     )
 
 
@@ -816,8 +824,6 @@ def update_user_access(request, pk, status):
         user_org_access.save()
 
     return redirect('/accounts/admin/users/all/all/')
-
-
 
 
 class BookmarkList(ListView):
@@ -1159,7 +1165,7 @@ def invite_existing_user(request, invite_uuid):
                 user_org_access.save()
 
                 messages.success(request,
-                               'You have successfully joined {}'.format(invite.organization.name))
+                                 'You have successfully joined {}'.format(invite.organization.name))
                 # TODO this renders the login form even if the user is logged in
                 return render(request, 'registration/login.html', {'invite_uuid': invite_uuid})
 

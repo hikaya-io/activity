@@ -1,0 +1,27 @@
+[{
+        "model": "workflow.sector",
+        "pk": 1,
+        "fields": {
+            "sector": "Test",
+            "create_date": null,
+            "edit_date": null
+        }
+    }, {
+        "model": "workflow.sector",
+        "pk": 2,
+        "fields": {
+            "sector": "Test 2",
+            "create_date": null,
+            "edit_date": null
+        }
+    }, {
+        "model": "workflow.sector",
+        "pk": 3,
+        "fields": {
+            "sector": "Test 3",
+            "create_date": null,
+            "edit_date": null
+        }
+    }
+
+]

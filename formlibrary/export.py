@@ -1,23 +1,15 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
-from import_export import resources
-from .models import TrainingAttendance, Distribution, Individual
-
-
-class TrainingAttendanceResource(resources.ModelResource):
-
-    class Meta:
-        model = TrainingAttendance
+from import_export import resources  # https://django-import-export.readthedocs.io/en/latest/
+from .models import (
+    Distribution,
+    Individual,
+)
 
 
 class DistributionResource(resources.ModelResource):
-
     class Meta:
         model = Distribution
 
 
 class IndividualResource(resources.ModelResource):
-
     class Meta:
         model = Individual

@@ -189,7 +189,7 @@ $(document).ready(() => {
                   `/indicators/collecteddata/add`,
                   {
                     actual: this.actual,
-                    target: '250',
+                    target: this.target,
                     date_collected: this.date_collected,
                     period: this.period,
                     indicator: indicatorId,

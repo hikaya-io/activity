@@ -6,7 +6,7 @@ metadata:
   labels:
     app: activity-app-${APPLICATION_ENV}
 spec:
-  replicas: 2
+  replicas: ${MIN_PODS}
   selector:
     matchLabels:
       app: activity-app-${APPLICATION_ENV}
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: activity-app-${APPLICATION_ENV}
-          image: docker.io/${REGISTRY_OWNER}/activity:${APPLICATION_NAME}-${APPLICATION_ENV}-${TRAVIS_COMMIT}
+          image: docker.io/${REGISTRY_OWNER}/activity:${APPLICATION_NAME}-${APPLICATION_ENV}-${GITHUB_SHA}
           imagePullPolicy: Always
           resources:
             limits:

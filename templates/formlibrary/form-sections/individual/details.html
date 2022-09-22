@@ -1,27 +1,46 @@
 {% load crispy_forms_tags %}
 <div class="row">
-	<div class="col-md-12">
+	<div class="col-md-4">
         {{ form.first_name | as_crispy_field }}
     </div>
-</div>
-
-<div class="row">
-	<div class="col-md-12">
-        {{ form.father_name | as_crispy_field }}
+    <div class="col-md-4">
+        {{ form.last_name | as_crispy_field }}
+    </div>
+    <div class="col-md-4">
+        {{ form.sex | as_crispy_field }}
     </div>
 </div>
 
 <div class="row">
+	<div class="col-md-6">
+        {{ form.date_of_birth | as_crispy_field }}
+    </div>
 	<div class="col-md-6">
         {{ form.age | as_crispy_field }}
     </div>
+</div>
+
+<div class="row">
 	<div class="col-md-6">
-        {{ form.gender | as_crispy_field }}
+        {{ form.id_number | as_crispy_field }}
+    </div>
+    <div class="col-md-6">
+        {{ form.primary_phone | as_crispy_field }}
     </div>
 </div>
 
 <div class="row">
-	<div class="col-md-12">
-        {{ form.remarks | as_crispy_field }}
+    <div class="col-md-4">
+        {{ form.household_id | as_crispy_field }}
+    </div>
+    <div class="col-md-4">
+        {{ form.head_of_household | as_crispy_field }}
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-12">
+        {{ form.program | as_crispy_field }}
+    </div>
+</div>
+

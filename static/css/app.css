@@ -1,17 +1,13 @@
 #App Specific CSS
 
-/* Sticky footer styles
--------------------------------------------------- */
 html {
   position: relative;
   min-height: 100%;
 }
 
 body {
-  /* Margin bottom by footer height */
   height: 100%;
   margin-top: 50px;
-  margin-bottom: 60px;
   font-family: "Lato", system-ui, sans-serif !important;
   background-color: #fafafa;
   font-size: 14px;
@@ -44,17 +40,18 @@ a:focus, a:hover {
   border-radius: 0;
 }
 
+/* Push footer to bottom of page */
+.activity-content {
+    min-height: calc(100vh - 120px);
+}
 
 #footer {
-  /* removing sticky footer */
-  /* position: fixed; */
-  bottom: 0px;
-  width: 100%;
+  /* bottom: 0; */
+  /* width: 100%; */
   /* Set the fixed height of the footer here */
-  height: 40px;
+  /* height: 40px; */
   border-top: 1px solid #fafafa;
   background-color: #fafafa;
-  vertical-align: top;
   color: rgb(50, 50, 50);
   font-family: 'Lato', sans-serif;
   font-weight: 300;
@@ -263,6 +260,11 @@ nav>div>.container {
 .alert {
   margin-top: 16px;
   margin-bottom: -20px;
+}
+
+.alert-password-success {
+  margin-top: 16px;
+  margin-bottom: 0px;
 }
 
 #footer > .container {
@@ -680,8 +682,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .auth-container {
-  min-height: 85vh;
-  padding-top: 5vh;
+  min-height: 90vh;
+  padding-top: 10vh;
 }
 
 .auth-container h1 {
@@ -1169,6 +1171,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   justify-content: center;
   align-items: center;
   margin: auto;
+  min-height: 90vh;
 }
 
 .error-page-content {
@@ -1369,3 +1372,74 @@ textarea:focus {
 #collectedDataTable th {
   border-top: none;
 }
+
+.report_filter .report_table{
+  background: #fff;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 0px 10px;
+}
+
+.report_table{
+  display: block;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-left: 50%;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #737581;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+

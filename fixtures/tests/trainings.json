@@ -1,0 +1,36 @@
+[
+    {
+        "model": "formlibrary.training",
+        "fields": {
+            "name": "Training 1",
+            "description": "Description training 1",
+            "duration": 25,
+            "created_by": 1,
+            "modified_by": 1,
+            "create_date": "2020-04-16T17:41:28+00:00",
+            "modified_date": "2020-04-16T17:41:28+00:00"
+        }
+    },
+    {
+        "model": "formlibrary.training",
+        "fields": {
+            "name": "Training 2",
+            "description": "Description training 2",
+            "duration": 25,
+            "created_by": 1,
+            "modified_by": 1,
+            "create_date": "2020-04-16T17:41:28+00:00",
+            "modified_date": "2020-04-16T17:41:28+00:00"        }
+    },
+    {
+        "model": "formlibrary.training",
+        "fields": {
+            "name": "Training 3",
+            "description": "Description training 3",
+            "duration": 25,
+            "created_by": 2,
+            "modified_by": 1,
+            "create_date": "2020-04-16T17:41:28+00:00",
+            "modified_date": "2020-04-16T17:41:28+00:00"        }
+    }
+]

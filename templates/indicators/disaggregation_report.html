@@ -1,17 +1,20 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
 
 <div class="container">
   {% block breadcrumbs %}
   <ul class="breadcrumb">
-    <li><a href="{% url 'index' %}">Home Dashboard</a></li>
-    <li class="active">Indicator Disaggregation Report</li>
+    <li><a href="{% url 'index' %}">{% trans 'Home Dashboard' %}</a></li>
+    <li class="active">{% trans 'Indicator Disaggregation Report' %}</li>
   </ul>
   {% endblock %}
 
   <!-- Sub navigation -->
   <div class="sub-navigation">
     <div class="sub-navigation-header">
-      <h4 class="page-title">Indicator Disaggregation Report</h4>
+      <h4 class="page-title">{% trans 'Indicator Disaggregation Report' %}</h4>
     </div>
     <div class="sub-navigation-actions">
       <div class="sub-nav-item">
@@ -24,20 +27,20 @@
     <table id="disrep_table" class="table table-bordered">
       <thead>
         <tr>
-          <th class="noExport" style="display:none;" rowspan="2">PID</th>
+          <th class="noExport" style="display:none;" rowspan="2">{% trans 'PID' %}</th>
           <th class="noExport" style="display:none;" rowspan="2">
-            IndicatorID
+            {% trans 'IndicatorID' %}
           </th>
-          <th rowspan="2">Number</th>
-          <th rowspan="2">Indicator</th>
-          <th rowspan="2">LOP Target</th>
-          <th rowspan="2">Actual Total</th>
-          <th colspan="3" class="text-center">Disaggregation</th>
+          <th rowspan="2">{% trans 'Number' %}</th>
+          <th rowspan="2">{% trans 'Indicator' %}</th>
+          <th rowspan="2">{% trans 'LOP Target' %}</th>
+          <th rowspan="2">{% trans 'Actual Total' %}</th>
+          <th colspan="3" class="text-center">{% trans 'Disaggregation' %}</th>
         </tr>
         <tr>
-          <th>Type</th>
-          <th>Label</th>
-          <th>Value</th>
+          <th>{% trans 'Type' %}</th>
+          <th>{% trans 'Label' %}</th>
+          <th>{% trans 'Value' %}</th>
         </tr>
       </thead>
       <tbody>
@@ -67,7 +70,7 @@
           <td>
             {{ row.Overall | floatformat:'-2' | default_if_none:'' }}
           </td>
-          <td>No Disaggregation</td>
+          <td>{% trans 'No Disaggregation' %}</td>
           <td></td>
           <td></td>
         </tr>

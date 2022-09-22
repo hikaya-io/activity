@@ -1,0 +1,78 @@
+<form method="POST">
+  <div class="modal-body">
+    {% csrf_token %}
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="firstName">First Name</label>
+        <input
+          type="text"
+          id="firstName"
+          name="first_name"
+          v-model="create_data.first_name"
+          class="form-control"
+          placeholder="First Name"
+          v-validate="'required'"
+        />
+
+        <span v-show="errors.has('first_name')" class="help is-danger">[[ errors.first('first_name') ]]</span>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="lastName">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          name="last_name"
+          v-model="create_data.last_name"
+          class="form-control"
+          placeholder="Last Name"
+          v-validate="'required'"
+        />
+
+        <span v-show="errors.has('last_name')" class="help is-danger">[[ errors.first('last_name') ]]</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="date_of_birth">Date of birth</label>
+        <input
+              type="date"
+              id="date_of_birth"
+              name="date_of_birth"
+              v-model="create_data.date_of_birth"
+              class="form-control"
+              style="width:200px;"
+              placeholder="Date of birth"/>
+
+        <span v-show="errors.has('date_of_birth')" class="help is-danger">[[ errors.first('date_of_birth') ]]</span>
+      </div>
+
+      <div 
+        :class="{
+                  'form-group': true
+              }" 
+        class="col-md-6"
+        >
+          <label for="programs">
+            [[ level_1_label ]]
+          </label>
+          <v-select
+                single
+                class="hikaya-select"
+                name="programs"
+                label="name"
+                :searchable="false"
+                v-model="create_data.program"
+                v-validate="'required'"
+                placeholder="Choose programs"
+                :options="programsList"
+                :reduce="program => program.id"
+            > 
+          </v-select>   
+
+        </div>
+    </div>
+
+  </div>
+</form>

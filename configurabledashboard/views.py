@@ -343,7 +343,7 @@ class CustomDashboardUpdate(UpdateView):
             get_component_order = json.loads(
                 get_custom_dashboard.component_map,
                 object_pairs_hook=OrderedDict)
-        except Exception as e:
+        except Exception:
             get_component_order = None
         context.update({'get_component_order': get_component_order})
 
