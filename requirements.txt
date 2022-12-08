@@ -10,7 +10,7 @@ cairocffi==1.2.0
     #   weasyprint
 cairosvg==2.5.2
     # via weasyprint
-certifi==2021.5.30
+certifi==2022.12.7
     # via requests
 cffi==1.14.6
     # via
@@ -107,7 +107,7 @@ pillow==9.0.1
     # via
     #   -r requirements.in
     #   cairosvg
-psycopg2-binary>=2.8,<2.9
+psycopg2-binary==2.8.6
     # via -r requirements.in
 pycparser==2.20
     # via cffi
