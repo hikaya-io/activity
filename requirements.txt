@@ -27,7 +27,7 @@ coreschema==0.0.4
     # via coreapi
 coverage==5.0.3
     # via -r requirements.in
-cryptography==3.4.8
+cryptography==39.0.1
     # via social-auth-core
 cssselect2==0.4.1
     # via
@@ -107,7 +107,7 @@ pillow==9.0.1
     # via
     #   -r requirements.in
     #   cairosvg
-psycopg2-binary>=2.8,<2.9
+psycopg2-binary==2.8.6
     # via -r requirements.in
 pycparser==2.20
     # via cffi
