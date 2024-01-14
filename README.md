@@ -72,10 +72,10 @@ docker-compose exec app python manage.py loaddata fixtures/sectors.json  # Add s
 2. Create a Django superuser/admin: `docker-compose exec app python manage.py createsuperuser`. You can now use it to login at http://localhost:8000/admin
 3. Signup with a new user on Activity. Activate it through Django Admin Dashboard on http://localhost:8000/admin/workflow/activityuser/
 
-# Deployment
+# Dockerization and Deployment
 
-## Setup with Ubuntu
-**Note:** This guide assumes you are using Ubuntu 22.04
+## Setup
+**Note:** This guide assumes you are using Ubuntu 22.04. For Mac and Windows users follow docker documentation [here](https://docs.docker.com/engine/install/) for steps 1-3.
 1. Update your depdendencies
 ```bash
 sudo apt-get update && sudo apt-get -y upgrade
