@@ -72,6 +72,39 @@ docker-compose exec app python manage.py loaddata fixtures/sectors.json  # Add s
 2. Create a Django superuser/admin: `docker-compose exec app python manage.py createsuperuser`. You can now use it to login at http://localhost:8000/admin
 3. Signup with a new user on Activity. Activate it through Django Admin Dashboard on http://localhost:8000/admin/workflow/activityuser/
 
+# Deployment
+
+## Setup with Ubuntu
+**Note:** This guide assumes you are using Ubuntu 22.04
+1. Update your depdendencies
+```bash
+sudo apt-get update && sudo apt-get -y upgrade
+```
+2. Install docker using instruction from [here](https://docs.docker.com/engine/install/ubuntu/)
+3. Once the installation is done, to run docker as a normal user, follow [these instructions](https://docs.docker.com/engine/install/linux-postinstall/)
+4. Run `docker run hello-world` to make sure everything has been set up correctly.
+5. In the home directory, clone **activity** using:
+```bash
+git clone https://github.com/hikaya-io/activity.git
+```
+6. Enter the newly cloned directory:
+7. Copy the settings file with `cd activity`:
+```bash
+cp settings/local-sample.py settings/local.py
+```
+8. Run `docker compose up -d ` to initialize the database and migrations (This might take a while).
+9. Run the following the commands to populate some default data
+```bash
+docker compose exec app python manage.py loaddata fixtures/auth_groups.json  # Add authorization groups
+docker compose exec app python manage.py loaddata fixtures/countries.json  # Add countries
+docker compose exec app python manage.py loaddata fixtures/sectors.json  # Add sectors
+```
+10. Run the following command to create a superuser.
+```bash
+docker compose exec app python manage.py createsuperuser
+```
+11. The activity app should now be running at http://localhost:8000. You can now set up your favourite reverse proxy and link a domain to expose the app to the public.
+
 # Contributing
 
 Activity is built and maintained by the team at [Hikaya](https://hikaya.io/team).
