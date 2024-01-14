@@ -32,19 +32,32 @@ If you'd like to run your own copy of Activity or contribute to its development,
 ## Requirements and recommendations
 
 - Git
-- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
+- [Docker](https://docs.docker.com/get-docker/)
 - Python 3.7+, preferably inside a Python virtual environment ([virtualenv](https://virtualenv.pypa.io/en/latest/), [pipenv](https://pipenv.pypa.io/en/latest/) or others)
+- Make sure your dependencies are up-to-date. Update depdendencies with
+```bash
+sudo apt-get update && sudo apt-get -y upgrade # Linux
+
+brew update && brew upgrade # Mac
+```
 
 ## Recommended setup
 
-> For the sake of similarity between developers environments and the deployment environments, we **strongly** recommend using [Docker Compose](https://docs.docker.com/compose/). For more details, see our [installation guide](./docs/installation).
+> For the sake of similarity between developers environments and the deployment environments, we **strongly** recommend using Docker. For more details, see the Docker [installation guide](https://docs.docker.com/engine/install/).
 
-Clone the repository and launch Activity and its PostgreSQL database using the following:
+### Clone the repository and go to Activity directory
 
 ```bash
 git clone --branch develop https://github.com/hikaya-io/activity.git && cd activity
-cp activity/settings/local-sample.py activity/settings/local.py
-docker-compose up
+```
+
+### Copy the settings file
+```bash
+cp settings/local-sample.py settings/local.py
+```
+### Launch Activity and its PostgreSQL database
+```bash
+docker compose up -d
 ```
 
 This will:
@@ -64,46 +77,55 @@ You can read more about Activity's expected environments variables in our [insta
 1. Apply the [Django fixtures](https://docs.djangoproject.com/en/3.2/howto/initial-data/#providing-data-with-fixtures) defined in the `fixtures` folder:
 
 ```bash
-docker-compose exec app python manage.py loaddata fixtures/auth_groups.json  # Add authorization groups
-docker-compose exec app python manage.py loaddata fixtures/countries.json  # Add countries
-docker-compose exec app python manage.py loaddata fixtures/sectors.json  # Add sectors
-```
-
-2. Create a Django superuser/admin: `docker-compose exec app python manage.py createsuperuser`. You can now use it to login at http://localhost:8000/admin
-3. Signup with a new user on Activity. Activate it through Django Admin Dashboard on http://localhost:8000/admin/workflow/activityuser/
-
-# Dockerization and Deployment
-
-## Setup
-**Note:** This guide assumes you are using Ubuntu 22.04. For Mac and Windows users follow docker documentation [here](https://docs.docker.com/engine/install/) for steps 1-3.
-1. Update your depdendencies
-```bash
-sudo apt-get update && sudo apt-get -y upgrade
-```
-2. Install docker using instruction from [here](https://docs.docker.com/engine/install/ubuntu/)
-3. Once the installation is done, to run docker as a normal user, follow [these instructions](https://docs.docker.com/engine/install/linux-postinstall/)
-4. Run `docker run hello-world` to make sure everything has been set up correctly.
-5. In the home directory, clone **activity** using:
-```bash
-git clone https://github.com/hikaya-io/activity.git
-```
-6. Enter the newly cloned directory:
-7. Copy the settings file with `cd activity`:
-```bash
-cp settings/local-sample.py settings/local.py
-```
-8. Run `docker compose up -d ` to initialize the database and migrations (This might take a while).
-9. Run the following the commands to populate some default data
-```bash
 docker compose exec app python manage.py loaddata fixtures/auth_groups.json  # Add authorization groups
 docker compose exec app python manage.py loaddata fixtures/countries.json  # Add countries
 docker compose exec app python manage.py loaddata fixtures/sectors.json  # Add sectors
 ```
-10. Run the following command to create a superuser.
-```bash
-docker compose exec app python manage.py createsuperuser
-```
-11. The activity app should now be running at http://localhost:8000. You can now set up your favourite reverse proxy and link a domain to expose the app to the public.
+
+2. Create a Django superuser/admin
+   ```bash
+   docker compose exec app python manage.py createsuperuser
+   ```
+   You can now use it to login at http://localhost:8000/admin
+3. Signup with a new user on Activity. Activate it through Django Admin Dashboard on http://localhost:8000/admin/workflow/activityuser/
+
+You can now set up your favourite reverse proxy and link a domain to expose the app to the public.
+
+# Hosting
+
+You can use any cloud hosting provider of your choice. 
+We have used Digital Ocean and used App services to easily deploy the app. Here is the setup documentmention on Digital Ocean for [Django app](https://docs.digitalocean.com/products/app-platform/getting-started/sample-apps/django/). The Basic plan of 512 MB RAM | 1 vCPU will suffice.
+
+If you want setup from a droplet here are the steps you can follow to set up deployment and hosting:
+
+1. Create an [account](https://cloud.digitalocean.com/registrations/new) on Digital Ocean.
+2. Create a [droplet](https://docs.digitalocean.com/products/droplets/how-to/create/). You can select a the Basic Ubuntu plan with at least 4GB RAM as Docker requires at least 4GB RAM droplet. RAM requirement can potentially be reduced by using Dockerhub.
+3. Add your SSH key as you create your droplet. This is required to access the server later.
+4. Once the droplet is created add your [domain and DNS information](https://docs.digitalocean.com/products/networking/dns/getting-started/quickstart/).
+5. Now your droplet is ready for adding your project data. On your local machine `cd` into the root project folder and [copy files](https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories) over to the server
+   ```bash
+   rsync -av -e "ssh -i $LINK/TO/SSH_KEY/FILE/DIRECTORY" PROJECT_FOLDER_NAME root@IP.ADDRESS:/root
+   ```
+6. SSH into your server to check if the files are copied correctly
+   ```bash
+   ssh -i $LINK/TO/SSH_KEY/FILE/DIRECTORY root@IP.ADDRESS
+   ```
+7. In your server, install docker. Here are the setup instructions for [Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+8. Copy the settings files
+   ```bash
+   cp settings/local-sample.py settings/local.py
+   ```
+9. Then build and run the project on docker
+    ```bash
+    docker compose up -d
+    ```
+10. You can check if containers are built correctly and running by running
+    ```bash
+    docker contain ls -a
+    ```
+11. Run through the 'post-installation' steps from the above section to make sure all the fixtures are in place.
+12. Make sure to add the [environment variables](https://docs.digitalocean.com/glossary/environment-variable/) on Digital Ocean.
+13. Your application should be ready and accessible on your domain.
 
 # Contributing
 
