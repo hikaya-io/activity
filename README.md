@@ -35,6 +35,7 @@ If you'd like to run your own copy of Activity or contribute to its development,
 - [Docker](https://docs.docker.com/get-docker/)
 - Python 3.7+, preferably inside a Python virtual environment ([virtualenv](https://virtualenv.pypa.io/en/latest/), [pipenv](https://pipenv.pypa.io/en/latest/) or others)
 - Make sure your dependencies are up-to-date. Update depdendencies with
+
 ```bash
 sudo apt-get update && sudo apt-get -y upgrade # Linux
 
@@ -52,10 +53,13 @@ git clone --branch develop https://github.com/hikaya-io/activity.git && cd activ
 ```
 
 ### Copy the settings file
+
 ```bash
 cp settings/local-sample.py settings/local.py
 ```
+
 ### Launch Activity and its PostgreSQL database
+
 ```bash
 docker compose up -d
 ```
@@ -67,7 +71,7 @@ This will:
 3. Build and launch Activity
 4. Run database migrations on the PostgreSQL instance
 
-It may take a while, but Activity should be accessible at http://localhost:8080
+It may take a while, but Activity should be accessible at `http://localhost:8080`
 
 This setup is using the environment variables defined in the file `.env.docker-compose`.
 You can read more about Activity's expected environments variables in our [installation guide](./docs/installation.md#envvars).
@@ -76,18 +80,21 @@ You can read more about Activity's expected environments variables in our [insta
 
 1. Apply the [Django fixtures](https://docs.djangoproject.com/en/3.2/howto/initial-data/#providing-data-with-fixtures) defined in the `fixtures` folder:
 
-```bash
-docker compose exec app python manage.py loaddata fixtures/auth_groups.json  # Add authorization groups
-docker compose exec app python manage.py loaddata fixtures/countries.json  # Add countries
-docker compose exec app python manage.py loaddata fixtures/sectors.json  # Add sectors
-```
+    ```bash
+    docker compose exec app python manage.py loaddata fixtures/auth_groups.json  # Add authorization groups
+    docker compose exec app python manage.py loaddata fixtures/countries.json  # Add countries
+    docker compose exec app python manage.py loaddata fixtures/sectors.json  # Add sectors
+    ```
 
 2. Create a Django superuser/admin
+
    ```bash
    docker compose exec app python manage.py createsuperuser
    ```
+
    You can now use it to login at http://localhost:8000/admin
-3. Signup with a new user on Activity. Activate it through Django Admin Dashboard on http://localhost:8000/admin/workflow/activityuser/
+
+3. Signup with a new user on Activity. Activate it through Django Admin Dashboard on `http://localhost:8000/admin/workflow/activityuser/`
 
 You can now set up your favourite reverse proxy and link a domain to expose the app to the public.
 
@@ -103,26 +110,36 @@ If you want setup from a droplet here are the steps you can follow to set up dep
 3. Add your SSH key as you create your droplet. This is required to access the server later.
 4. Once the droplet is created add your [domain and DNS information](https://docs.digitalocean.com/products/networking/dns/getting-started/quickstart/).
 5. Now your droplet is ready for adding your project data. On your local machine `cd` into the root project folder and [copy files](https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories) over to the server
+
    ```bash
    rsync -av -e "ssh -i $LINK/TO/SSH_KEY/FILE/DIRECTORY" PROJECT_FOLDER_NAME root@IP.ADDRESS:/root
    ```
+
 6. SSH into your server to check if the files are copied correctly
+
    ```bash
    ssh -i $LINK/TO/SSH_KEY/FILE/DIRECTORY root@IP.ADDRESS
    ```
+
 7. In your server, install docker. Here are the setup instructions for [Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
 8. Copy the settings files
+
    ```bash
    cp settings/local-sample.py settings/local.py
    ```
+
 9. Then build and run the project on docker
+
     ```bash
     docker compose up -d
     ```
+
 10. You can check if containers are built correctly and running by running
+
     ```bash
     docker contain ls -a
     ```
+
 11. Run through the 'post-installation' steps from the above section to make sure all the fixtures are in place.
 12. Make sure to add the [environment variables](https://docs.digitalocean.com/glossary/environment-variable/) on Digital Ocean.
 13. Your application should be ready and accessible on your domain.
