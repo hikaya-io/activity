@@ -101,7 +101,7 @@ You can now set up your favourite reverse proxy and link a domain to expose the 
 # Hosting
 
 You can use any cloud hosting provider of your choice. 
-We have used Digital Ocean and used App services to easily deploy the app. Here is the setup documentmention on Digital Ocean for [Django app](https://docs.digitalocean.com/products/app-platform/getting-started/sample-apps/django/). The Basic plan of 512 MB RAM | 1 vCPU will suffice.
+We have used Digital Ocean and used App services to easily deploy the app. Here is the setup documentmention on Digital Ocean for [Django app](https://docs.digitalocean.com/products/app-platform/getting-started/sample-apps/django/). The Digital Ocean Basic plan of 512 MB RAM | 1 vCPU will suffice. Possible option for database config for the app: 1 GB RAM / 1vCPU / 10 GB Disk / Primary only / PostgreSQL 15.
 
 If you want setup from a droplet here are the steps you can follow to set up deployment and hosting:
 
