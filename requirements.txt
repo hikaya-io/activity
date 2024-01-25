@@ -95,7 +95,7 @@ jinja2==3.0.1
     # via coreschema
 markupsafe==2.0.1
     # via jinja2
-oauthlib==3.2.1
+oauthlib==3.2.2
     # via
     #   requests-oauthlib
     #   social-auth-core
@@ -107,7 +107,7 @@ pillow==9.0.1
     # via
     #   -r requirements.in
     #   cairosvg
-psycopg2-binary>=2.8,<2.9
+psycopg2-binary==2.8.6
     # via -r requirements.in
 pycparser==2.20
     # via cffi
